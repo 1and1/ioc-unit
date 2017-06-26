@@ -3,7 +3,7 @@
   <parent>
     <groupId>net.oneandone</groupId>
     <artifactId>ejb-cdi-unit-parent</artifactId>
-    <version>1.0.3-SNAPSHOT</version>
+    <version>1.0.3</version>
   </parent>
 
   <artifactId>ejb-cdi-unit</artifactId>
@@ -34,7 +34,6 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <scope>test</scope>
     </dependency>
     <!-- J2EE 6 -->
     <dependency>
