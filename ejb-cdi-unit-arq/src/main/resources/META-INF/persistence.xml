@@ -1,0 +1,36 @@
+<persistence xmlns="http://java.sun.com/xml/ns/persistence">
+    <persistence-unit name="EjbTestPU" transaction-type="JTA">
+        <jta-data-source>java:jboss/datasources/ExampleDS</jta-data-source>
+        <exclude-unlisted-classes>false</exclude-unlisted-classes>
+
+        <properties>
+            <property name="hibernate.show_sql" value="false" />
+            <property name="hibernate.use_sql_comments" value="false" />
+            <property name="hibernate.format_sql" value="false" />
+
+            <property name="hibernate.generate_statistics" value="false" />
+            <property name="hibernate.ejb.naming_strategy" value="org.hibernate.cfg.ImprovedNamingStrategy" />
+
+            <property name="hibernate.hbm2ddl.auto" value="create-drop" />
+
+        </properties>
+
+    </persistence-unit>
+    <persistence-unit name="EjbTestPUOperating" transaction-type="JTA">
+        <jta-data-source>java:jboss/datasources/ExampleDS</jta-data-source>
+        <exclude-unlisted-classes>false</exclude-unlisted-classes>
+
+        <properties>
+            <property name="hibernate.show_sql" value="false" />
+            <property name="hibernate.use_sql_comments" value="false" />
+            <property name="hibernate.format_sql" value="false" />
+
+            <property name="hibernate.generate_statistics" value="false" />
+            <property name="hibernate.ejb.naming_strategy" value="org.hibernate.cfg.ImprovedNamingStrategy" />
+
+            <property name="hibernate.hbm2ddl.auto" value="create-drop" />
+
+        </properties>
+
+    </persistence-unit>
+</persistence>

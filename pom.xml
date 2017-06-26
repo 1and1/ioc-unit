@@ -1,0 +1,375 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.oneandone</groupId>
+    <artifactId>ejb-cdi-unit-parent</artifactId>
+    <version>1.0.2-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <modules>
+        <module>ejb-cdi-unit</module>
+        <module>ejb-cdi-unit-test-war</module>
+        <module>ejb-cdi-unit-tests</module>
+        <module>ejb-cdi-unit-arq</module>
+    </modules>
+
+    <name>com.oneandone:ejb-cdi-unit-parent</name>
+    <description>The parent-pom for ejb-cdi-unit a module developed to ease test driven ejb3.x service-development.</description>
+    <url>https://github.com/1and1/ejb-cdi-unit</url>
+
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Andreas Schörk</name>
+            <email>andreas.schoerk@1and1.com</email>
+            <organization>1and1</organization>
+            <organizationUrl>http://www.1and1.com</organizationUrl>
+        </developer>
+    </developers>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- apache plugin versions and configurations, please sort alphabetically -->
+        <maven-checkstyle-plugin.version>2.17</maven-checkstyle-plugin.version>
+        <maven-checkstyle-plugin.configLocation>site/checkstyle.xml</maven-checkstyle-plugin.configLocation>
+        <maven-checkstyle-plugin.suppressionsLocation>checkstyle_suppressions.xml</maven-checkstyle-plugin.suppressionsLocation>
+        <maven-dependency-plugin.version>2.8</maven-dependency-plugin.version>
+        <maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
+        <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
+        <maven-javadoc-plugin.version>2.10.3</maven-javadoc-plugin.version>
+
+        <maven-scm-plugin.version>1.8.1</maven-scm-plugin.version>
+        <maven-scm-publish-plugin.version>1.0-beta-2</maven-scm-publish-plugin.version>
+        <maven-release-plugin.version>2.4.1</maven-release-plugin.version>
+        <maven-resources-plugin.version>2.6</maven-resources-plugin.version>
+        <maven-site-plugin.version>3.3</maven-site-plugin.version>
+        <maven-source-plugin.version>2.2.1</maven-source-plugin.version>
+        <maven-surefire-plugin.version>2.19.1</maven-surefire-plugin.version>
+        <maven-war-plugin.version>2.1.1</maven-war-plugin.version>
+
+
+        <!-- external -->
+        <slf4j.version>1.7.21</slf4j.version>
+        <jboss.bom.version>1.0.0.Final</jboss.bom.version>
+        <jms.version>2.0</jms.version>
+        <persistence-api.version>1.0</persistence-api.version>
+        <jboss-ejb-api_3.1_spec.version>1.0.2.Final</jboss-ejb-api_3.1_spec.version>
+
+        <!-- test -->
+        <mockito.version>1.9.5</mockito.version>
+        <cdi-unit.version>3.1.4</cdi-unit.version>
+        <weld.version>1.1.14.Final</weld.version>
+        <hibernate-em.version>4.2.0.CR1</hibernate-em.version>
+        <junit.version>4.12</junit.version>
+        <mockrunner.version>1.1.2</mockrunner.version>
+
+        <deployment.port>10099</deployment.port>
+        <deployment.targetdir>${basedir}/target/</deployment.targetdir>
+        <mysql.connector.version>5.1.38</mysql.connector.version>
+
+        <site.deploy.base.url>http://maven-sites.server.lan</site.deploy.base.url>
+        <site-url>${site.deploy.base.url}/${project.groupId}/${project.version}</site-url>
+        <ci.base.url>https://accjenkins.server.lan/view/Mobile%20Provider%20Interfaces/job</ci.base.url>
+        <svn.base.path>https://svn.1and1.org/svn/consumer_development/java/com/oneandone/access/mobile</svn.base.path>
+         <javassist.version>3.20.0-GA</javassist.version>
+
+        <version.javaee_api>7.0</version.javaee_api>
+        <org-reflections.version>0.9.10</org-reflections.version>
+        <jaxrpc.version>1.1</jaxrpc.version>
+
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-api</artifactId>
+            <version>${version.javaee_api}</version>
+            <scope>provided</scope>
+        </dependency>
+
+    </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>ejb-cdi-unit</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.enterprise</groupId>
+                <artifactId>cdi-api</artifactId>
+                <version>1.2</version>
+            </dependency>
+
+            <dependency>
+                <groupId>javax</groupId>
+                <artifactId>javaee-api</artifactId>
+                <version>${version.javaee_api}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <!-- general apis -->
+            <dependency>
+                <groupId>javax.persistence</groupId>
+                <artifactId>persistence-api</artifactId>
+                <version>${persistence-api.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>javax.jms</groupId>
+                <artifactId>javax.jms-api</artifactId>
+                <version>${jms.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.xml</groupId>
+                <artifactId>jaxrpc-api</artifactId>
+                <version>${jaxrpc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-lang</groupId>
+                <artifactId>commons-lang</artifactId>
+                <version>2.6</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-dbcp2</artifactId>
+                <version>RELEASE</version>
+            </dependency>
+
+            <!-- logging -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-log4j12</artifactId>
+                <version>${slf4j.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-simple</artifactId>
+                <version>${slf4j.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <!-- testing -->
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>${mockito.version}</version>
+                <scope>test</scope>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>hamcrest-core</artifactId>
+                        <groupId>org.hamcrest</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>com.mockrunner</groupId>
+                <artifactId>mockrunner-jms</artifactId>
+                <version>${mockrunner.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.hamcrest</groupId>
+                <artifactId>hamcrest-all</artifactId>
+                <version>1.3</version>
+            </dependency>
+            <dependency>
+                <groupId>com.h2database</groupId>
+                <artifactId>h2</artifactId>
+                <version>1.4.193</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jglue.cdi-unit</groupId>
+                <artifactId>cdi-unit</artifactId>
+                <version>${cdi-unit.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.jboss.weld.se</groupId>
+                        <artifactId>weld-se-core</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-entitymanager</artifactId>
+                <version>${hibernate-em.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-validator</artifactId>
+                <version>${hibernate-em.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql.connector.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.javassist</groupId>
+                <artifactId>javassist</artifactId>
+                <version>${javassist.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.reflections</groupId>
+                <artifactId>reflections</artifactId>
+                <version>${org-reflections.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.weld.se</groupId>
+                <artifactId>weld-se-core</artifactId>
+                <version>${weld.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+
+        </dependencies>
+    </dependencyManagement>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${maven-checkstyle-plugin.version}</version>
+                <configuration>
+                    <configLocation>site/checkstyle.xml</configLocation>
+                    <suppressionsLocation>site/checkstyle_suppressions.xml</suppressionsLocation>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-scm-plugin</artifactId>
+                <version>${maven-scm-plugin.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-scm-publish-plugin</artifactId>
+                <version>${maven-scm-publish-plugin.version}</version>
+                <inherited>true</inherited>
+                <configuration>
+                    <pubScmUrl>${project.scm.developerConnection}</pubScmUrl>
+                    <scmBranch>gh-pages</scmBranch>
+                </configuration>
+            </plugin>
+        </plugins>
+
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>${maven-source-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>${maven-javadoc-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>${maven-release-plugin.version}</version>
+                    <inherited>true</inherited>
+                    <configuration>
+                        <!-- Workaround for passphrse prompting in gpg-plugin,
+                        http://jira.codehaus.org/browse/MRELEASE-263
+                        http://jira.codehaus.org/browse/MGPG-9
+                        -->
+                        <mavenExecutorId>forked-path</mavenExecutorId>
+                        <tagNameFormat>v@{project.version}</tagNameFormat>
+                        <autoVersionSubmodules>true</autoVersionSubmodules>
+                        <goals>clean deploy</goals>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <scm>
+        <url>https://github.com/1and1/ejb-cdi-unit</url>
+        <connection>scm:git:git://github.com/1and1/ejb-cdi-unit.git</connection>
+        <developerConnection>scm:git:git@github.com:1and1/ejb-cdi-unit.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/1and1/ejb-cdi-unit/issues/</url>
+    </issueManagement>
+    <inceptionYear>2017</inceptionYear>
+
+    <distributionManagement>
+        <site>
+            <!-- publish: mvn clean verify site site:stage scm-publish:publish-scm -->
+            <id>github</id>
+            <name>maven-reports at github</name>
+            <url>${project.scm.developerConnection}</url>
+        </site>
+        <snapshotRepository>
+            <!-- prepare release: mvn -B clean javadoc:jar source:jar repository:bundle-create -->
+            <id>sonatype-nexus-snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </snapshotRepository>
+        <repository>
+            <id>sonatype-nexus-staging</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+
+    <profiles>
+        <profile>
+            <id>release-sign-artifacts</id>
+            <activation>
+                <property>
+                    <name>performRelease</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>${maven-gpg-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+</project>
+

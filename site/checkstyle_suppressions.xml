@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE suppressions PUBLIC
+        "-//Puppy Crawl//DTD Suppressions 1.1//EN"
+        "http://www.puppycrawl.com/dtds/suppressions_1_1.dtd">
+
+<suppressions>
+    <!-- disable some checks for test code -->
+    <suppress checks="JavadocMethod" files=".*src/test/java/.*\.java$"/>
+    <suppress checks="JavadocPackage" files=".*src/test/java/.*\.java$"/>
+    <suppress checks="JavadocType" files=".*src/test/java/.*\.java$"/>
+    <suppress checks="MethodName" files=".*src/test/java/.*\.java$"/>
+    <suppress checks="MagicNumber" files=".*src/test/java/.*\.java$"/>
+
+
+    <!-- no checks of non-java files -->
+    <suppress checks=".*" files=".+\.(?:txt|xml|csv|env|properties)$"/>
+</suppressions>

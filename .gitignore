@@ -1,0 +1,7 @@
+.svn
+.idea
+*.iml
+*.swp
+target
+
+
