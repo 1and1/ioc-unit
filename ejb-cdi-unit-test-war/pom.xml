@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.oneandone</groupId>
+        <groupId>net.oneandone</groupId>
         <artifactId>ejb-cdi-unit-parent</artifactId>
         <version>1.0.3-SNAPSHOT</version>
     </parent>
@@ -12,7 +12,7 @@
     <packaging>war</packaging>
 
 
-    <name>com.oneandone:ejb-cdi-unit-test-war</name>
+    <name>net.oneandone:ejb-cdi-unit-test-war</name>
     <description>An ejb3.x deployable war used to test ejb-cdi-unit.
         Also can contain base classes for tests used in both ejb-cdi-unit-tests and ejb-cdi-unit-arq.</description>
     <url>https://github.com/1and1/ejb-cdi-unit</url>

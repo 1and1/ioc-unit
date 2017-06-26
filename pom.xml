@@ -1,18 +1,18 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.oneandone</groupId>
+    <groupId>net.oneandone</groupId>
     <artifactId>ejb-cdi-unit-parent</artifactId>
     <version>1.0.3-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
         <module>ejb-cdi-unit</module>
         <module>ejb-cdi-unit-test-war</module>
-        <!--module>ejb-cdi-unit-tests</module-->
-        <!--module>ejb-cdi-unit-arq</module-->
+        <module>ejb-cdi-unit-tests</module>
+        <module>ejb-cdi-unit-arq</module>
     </modules>
 
-    <name>com.oneandone:ejb-cdi-unit-parent</name>
+    <name>net.oneandone:ejb-cdi-unit-parent</name>
     <description>The parent-pom for ejb-cdi-unit a module developed to ease test driven ejb3.x service-development.</description>
     <url>https://github.com/1and1/ejb-cdi-unit</url>
 

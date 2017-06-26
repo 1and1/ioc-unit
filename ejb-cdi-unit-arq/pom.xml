@@ -3,16 +3,16 @@
    <modelVersion>4.0.0</modelVersion>
 
    <parent>
-      <groupId>com.oneandone</groupId>
+      <groupId>net.oneandone</groupId>
       <artifactId>ejb-cdi-unit-parent</artifactId>
-      <version>1.0.2-SNAPSHOT</version>
+      <version>1.0.3-SNAPSHOT</version>
    </parent>
 
 
    <artifactId>ejb-cdi-unit-arq</artifactId>
    <packaging>war</packaging>
 
-   <name>com.oneandone:ejb-cdi-unit arquillian tests</name>
+   <name>net.oneandone:ejb-cdi-unit arquillian tests</name>
    <description>Some arquillian tests using the same code as ejb-cdi-unit, to prove that the test-container works
       in the same way as wildfly 10.</description>
    <url>https://github.com/1and1/ejb-cdi-unit</url>

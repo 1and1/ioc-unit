@@ -93,7 +93,7 @@ The usage does not differ very much from cdiunit, except:
 * You need to include additionally:    
 
         <dependency>
-            <groupId>com.oneandone</groupId>
+            <groupId>net.oneandone</groupId>
             <artifactId>ejb-cdi-unit</artifactId>
             <version>${ejb-cdi-unit.version}</version>
             <scope>test</scope>
