@@ -327,8 +327,8 @@
 
     <scm>
         <url>https://github.com/1and1/ejb-cdi-unit</url>
-        <connection>scm:ssh://git@github.com/1and1/ejb-cdi-unit.git</connection>
-        <developerConnection>scm:ssh://git@github.com/1and1/ejb-cdi-unit.git</developerConnection>
+        <!--connection>scm:git:git://github.com/1and1/ejb-cdi-unit.git</connection-->
+        <developerConnection>scm:git:git@github.com/1and1/ejb-cdi-unit.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
     <issueManagement>
