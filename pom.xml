@@ -359,7 +359,7 @@
         <site>
             <id>github</id>
             <name>maven-reports at github</name>
-            <url>${project.scm.developerConnection}s</url>
+            <url>${project.scm.developerConnection}</url>
         </site>
         <snapshotRepository>
             <id>sonatype-nexus-snapshots</id>
