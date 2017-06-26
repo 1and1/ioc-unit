@@ -8,9 +8,9 @@
     <packaging>pom</packaging>
     <modules>
         <module>ejb-cdi-unit</module>
-        <module>ejb-cdi-unit-test-war</module>
+        <!--module>ejb-cdi-unit-test-war</module>
         <module>ejb-cdi-unit-tests</module>
-        <module>ejb-cdi-unit-arq</module>
+        <module>ejb-cdi-unit-arq</module-->
     </modules>
 
     <name>net.oneandone:ejb-cdi-unit-parent</name>
