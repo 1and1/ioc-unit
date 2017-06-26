@@ -46,7 +46,7 @@
 
         <maven-scm-plugin.version>1.8.1</maven-scm-plugin.version>
         <maven-scm-publish-plugin.version>1.0-beta-2</maven-scm-publish-plugin.version>
-        <maven-release-plugin.version>2.4.1</maven-release-plugin.version>
+        <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
         <maven-resources-plugin.version>2.6</maven-resources-plugin.version>
         <maven-site-plugin.version>3.3</maven-site-plugin.version>
         <maven-source-plugin.version>2.2.1</maven-source-plugin.version>
