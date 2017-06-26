@@ -15,6 +15,7 @@ What do we need to be able to achieve this:
     * Datasources must be simulated using an in memory database (H2)
     * Messagequeues must be simulated in memory (mockrunner)
     * TransactionAttributes on EJBs must be handled in a correct way (at least not ignored)
+    * @Startup-annotated Beans must be initialized so that other beans might refer to them indirectly. Sometimes there were problems because of the lazy initialization of ApplicationScoped Beans.
     * you must be able to fill @Resource annotated fields by "something", which handles the calls in a feasable way.
     * You must be able to handle or simulate arbitrary situations which are possible in an asynchronous working environment, as it is an ejb-server.
     * Sometimes it might be necessary to test using more than one thread. The test-container must be able to handle this as well.
@@ -39,7 +40,7 @@ What do we need to be able to achieve this:
 * SessionContextFactory provides a SessionContextSimulation which will be injected where necessary.
 
 
-## Other Approaches
+## Comparison of different approaches for automatic tests
 
 The following is a short description of different approaches used at our site:
 
@@ -89,13 +90,15 @@ The jumpstart to most of these extension was the EjbExtension which originally c
 
 The usage does not differ very much from cdiunit, except: 
 
-* You need to include additionally:
-    <dependency>
-        <groupId>com.oneandone</groupId>
-        <artifactId>ejb-cdi-unit</artifactId>
-        <version>${ejb-cdi-unit.version}</version>
-        <scope>test</scope>
-    </dependency> 
+* You need to include additionally:    
+
+        <dependency>
+            <groupId>com.oneandone</groupId>
+            <artifactId>ejb-cdi-unit</artifactId>
+            <version>${ejb-cdi-unit.version}</version>
+            <scope>test</scope>
+        </dependency>   
+
 * 
 
 
@@ -107,7 +110,7 @@ The usage does not differ very much from cdiunit, except:
 
 ## License
 
-Copyright {2017} Copyright 1&1 Internet AG, https://github.com/1and1/ejb-cdi-unit
+Copyright 2017 1&amp;1 Internet AG, https://github.com/1and1/ejb-cdi-unit
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
