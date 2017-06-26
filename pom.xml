@@ -3,7 +3,7 @@
 
     <groupId>net.oneandone</groupId>
     <artifactId>ejb-cdi-unit-parent</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.4-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
         <module>ejb-cdi-unit</module>
@@ -331,7 +331,7 @@
         <url>https://github.com/1and1/ejb-cdi-unit</url>
         <connection>scm:git:ssh://git@github.com/1and1/ejb-cdi-unit.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/1and1/ejb-cdi-unit.git</developerConnection>
-        <tag>ejb-cdi-unit-1.0.3</tag>
+        <tag>HEAD</tag>
     </scm>
     <issueManagement>
         <system>GitHub</system>
