@@ -5,20 +5,20 @@ Simplify test driven development of ejb-3.x Services.
 ## Motivation
 During the development of services, the necessity to implement automatic module-tests arises. In this context, a module means one deployable artifact.
 
-Given the development occurs, using an IDE (integrated development environment) like Eclipse or Intellij, the aim is to provide a module which makes it easy, to first write the test and then to develop the service. The standard approach to achieve this is to recreate a kind of server environment, including the destination server runtime, the destination datasources and messagequeues.
-The effort to recreate these target runtime conditions on the development machine is often quite substantial. Sometimes it is even avoided and all testing is done using testservers, testclients, oftenly in a not automatic way.
+Given the development occurs, using an IDE (integrated development environment) like Eclipse or Intellij, the aim is to provide a module which makes it easy, to first write the test and then to develop the service. The standard approach to achieve this is to recreate a kind of server environment, including the destination server runtime, the destination datasources and message queues.
+The effort to recreate these target runtime conditions on the development machine is often quite substantial. Sometimes it is even avoided and all testing is done using test servers or clients, often in a not automatic way.
 
-ejb-cdi-unit is an extension of cdi-unit which contains modules/classes as they became necessary to support automatic tests of about 10 different service artifacts at our site. The about 2000 Testfunctions in about 50000 lines of testcode run without special requirements on the machine except java 8.x and maven. No dbms, messaging or other external server is necessary to run these tests. Some of this testcode is implemented in a way so that the main code can also be used in an arquillian-test-environment.
+ejb-cdi-unit is an extension of cdi-unit which contains modules/classes as they became necessary to support automatic tests of about 10 different service artifacts at our site. The about 2000 test functions in about 50000 lines of test code run without special requirements on the machine except java 8.x and maven. No dbms, messaging or other external server is necessary to run these tests. Some of this testcode is implemented in a way so that the main code can also be used in an arquillian-test-environment.
 
 
 ## Requirements
 What do we need to be able to achieve this?
 
-* We need a kind of "testenabled" ejb-container
+* We need a kind of "test-enabled" ejb-container
     * A CDI-Environment to interconnect the components(beans) is necessary.
     * Datasources must be simulated using an in memory database (H2)
-    * Messagequeues must be simulated in memory (mockrunner)
-    * TransactionAttributes on EJBs must be handled in a correct way (at least not ignored)
+    * Message queues must be simulated in memory (mockrunner)
+    * @TransactionAttribute on EJBs must be handled in a correct way (at least not ignored)
     * @Startup-annotated Beans must be initialized so that other beans might refer to them indirectly. 
     * You must be able to fill @Resource annotated fields by "something", which handles the calls in a feasable way.
     * You must be able to handle or simulate arbitrary situations which are possible in an asynchronous working environment, as it is an ejb-server.
@@ -34,10 +34,10 @@ What do we need to be able to achieve this?
 * to define Alternatives to include mocks or simulators
 * provided an extension which could be used to scan the classes and manipulate injections as it is necessary to build up a (automatic-) test environment
 
-*ejbcdiunit* helps by extending the mentioned extensions so that ejb-specific injections are "doable" using cdi-technics. Additionally it provides helper classes which provide functionality that otherwise would have to be implemented in every Testclass or Testproject again.
+*ejbcdiunit* helps by extending the mentioned extensions so that ejb-specific injections are "doable" using cdi-technics. Additionally it provides helper classes which provide functionality that otherwise would have to be implemented in every test class or test project again.
 
-* *PersistenceFactory* allows it to use alternative datasources in a easy way. There is a default which always searches a persistenceunit named "test".
-* Transactionmanager handles per thread the stack of different transaction enviroments
+* *PersistenceFactory* allows it to use alternative datasources in a easy way. There is a default which always searches a persistence-unit named "test".
+* TransactionManager handles per thread the stack of different transaction enviroments
 * TransactionInterceptor is used by the extension to encapsulate calls to ejbs
 * AsynchronousManager is a singleton where asynchronously to be executed routines can be stored and later executed in a deterministic way.
 * AsynchronousInterceptor encapsulate beans have method annotated @Asynchronous
@@ -50,14 +50,14 @@ The following is a short description of different approaches used at our site:
 
 * pure JUnit testing - feasible for simple classes or combinations of classes. 
 * JUnit together with mocking frameworks (mockito, powermock...): 
-    * The DML is quite expressive. You can simulate quite flexible consumed services, databasecalls...
+    * The DML is quite expressive. You can simulate quite flexible consumed services, database calls...
     * often very much internal information must be used to mock effectivly this leads often to the breaking of tests 
     further development of the code.
     * Quirks of CDI-Injections are not tested.
-    * Interceptors are not active, transactionscontexts are not testable
+    * Interceptors are not active, transaction contexts are not testable
 * Arquillian
     * The module is tested in an environment, quite near to the productive environment.
-    * Transactioncontexts, Database-accesses can be tested in the future or a simulated database.
+    * Transaction contexts, database accesses can be tested in the future or a simulated database.
     * The configuration is quite complicated
     * The determinism of the tests often is questionable because of multithreaded execution.
     * Tests and debugging inside an IDE is often slow and complicated. 
@@ -66,13 +66,13 @@ The following is a short description of different approaches used at our site:
     configuration. @ActivatedAlternatives allows it quite easy to replace parts of the code by simulators, 
     alternative datasources or other resources. 
     * @AdditionalClasspath easily allows it to include a complete deployable module in the test.
-    * Testing and Debugging is as easy as JUnit-testing, very good integration in IDEs.
-    * Transactioncontexts, Database-accesses can be tested in the future or a simulated database.
-    * @Asynchronous, @Schedule, @Resource, @PersistenceContext ... the Ejb-Injections and Annotations are not 
-    recognized and Injections stay null.
+    * Testing and Debugging is as easy as JUnit-testing, with very good integration in IDEs.
+    * Transaction contexts, database accesses can be tested in the future or a simulated database.
+    * @Asynchronous, @Schedule, @Resource, @PersistenceContext ... the EJB-Injections and Annotations are not 
+    recognized and injections stay null.
     * TransactionAttributes are not recognized.
     
-Because of the very good integratability into an IDE and the most flexible way to create a deterministic test-environment 
+Because of the very good integration into an IDE and the very flexible way to create a deterministic test environment 
 cdiunit is used for most automatic module tests at about 10 services. To overcome the restrictions mentioned above, 
 some extensions have been developed and collected in the module ejb-cdi-unit.
 
