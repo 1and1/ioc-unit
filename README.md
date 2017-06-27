@@ -1,22 +1,26 @@
 # ejb-cdi-unit 
 
-Simplify test driven development of j2ee-3.x Services. 
+Simplify test driven development of ejb-3.x Services. 
 
 ## Motivation
-During the development of services the necessity of module-tests arrise. Here a module means one deployable.
+During the development of services, the necessity to implement automatic module-tests arises. In this context, a module means one deployable artifact.
 
-Given the development occurs using an IDE like Eclipse or Intellij, the aim is to provide a module which makes it easy to first write the test and then develop the service. To do this you might not have a real deployable yet, you might not have access to the target dbms or have a messaging solution or even the target container itself installed. The same holds for the system which should execute the test later. 
-Never the less to be able to develop by creating the tests first, I need to be able to formulate all usecases to be implemented as tests, and (re-)create all situations, which might arise, deterministic and automatically.
+Given the development occurs, using an IDE (integrated development environment) like Eclipse or Intellij, the aim is to provide a module which makes it easy, to first write the test and then to develop the service. The standard approach to achieve this is to recreate a kind of server environment, including the destination server runtime, the destination datasources and messagequeues.
+The effort to recreate these target runtime conditions on the development machine is often quite substantial. Sometimes it is even avoided and all testing is done using testservers, testclients, oftenly in a not automatic way.
+
+ejb-cdi-unit is an extension of cdi-unit which contains modules/classes as they became necessary to support automatic tests of about 10 different service artifacts at our site. The about 2000 Testfunctions in about 50000 lines of testcode run without special requirements on the machine except java 8.x and maven. No dbms, messaging or other external server is necessary to run these tests. Some of this testcode is implemented in a way so that the main code can also be used in an arquillian-test-environment.
+
 
 ## Requirements
-What do we need to be able to achieve this:
+What do we need to be able to achieve this?
 
-* We need a kind of testenabled ejb-container
+* We need a kind of "testenabled" ejb-container
+    * A CDI-Environment to interconnect the components(beans) is necessary.
     * Datasources must be simulated using an in memory database (H2)
     * Messagequeues must be simulated in memory (mockrunner)
     * TransactionAttributes on EJBs must be handled in a correct way (at least not ignored)
-    * @Startup-annotated Beans must be initialized so that other beans might refer to them indirectly. Sometimes there were problems because of the lazy initialization of ApplicationScoped Beans.
-    * you must be able to fill @Resource annotated fields by "something", which handles the calls in a feasable way.
+    * @Startup-annotated Beans must be initialized so that other beans might refer to them indirectly. 
+    * You must be able to fill @Resource annotated fields by "something", which handles the calls in a feasable way.
     * You must be able to handle or simulate arbitrary situations which are possible in an asynchronous working environment, as it is an ejb-server.
     * Sometimes it might be necessary to test using more than one thread. The test-container must be able to handle this as well.
     * The tests must be executable without much effort inside the IDE used for the test and application development.
@@ -68,23 +72,10 @@ The following is a short description of different approaches used at our site:
     recognized and Injections stay null.
     * TransactionAttributes are not recognized.
     
-Because of the very good integratability into a IDE and the most flexible way to create a deterministic test-environment 
+Because of the very good integratability into an IDE and the most flexible way to create a deterministic test-environment 
 cdiunit is used for most automatic module tests at about 10 services. To overcome the restrictions mentioned above, 
 some extensions have been developed and collected in the module ejb-cdi-unit.
 
-
-## What is ejb-cdi-unit
-
-This is a thin extension of [cdiunit](http://jglue.org/cdi-unit/) [source](https://github.com/BrynCooke/cdi-unit) supporting 
-
-* Injection of PersistenceContexts
-* Ejb-Transaction-Handling
-* JMS-Messaging
-* Injection of Resources
-* Creation of @Startup
-* Injection of Contexts (Session, Messaging, WebService)
-
-The jumpstart to most of these extension was the EjbExtension which originally can be found in cdi-unit.
 
 ## Usage
 
@@ -97,9 +88,12 @@ The usage does not differ very much from cdiunit, except:
             <artifactId>ejb-cdi-unit</artifactId>
             <version>${ejb-cdi-unit.version}</version>
             <scope>test</scope>
-        </dependency>   
+        </dependency> 
 
-* 
+  
+## Examples
+
+
 
 
 ## Acknowledgments

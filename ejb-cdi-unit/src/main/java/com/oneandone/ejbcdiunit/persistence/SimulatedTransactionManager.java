@@ -8,6 +8,8 @@ import static javax.ejb.TransactionAttributeType.SUPPORTS;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.ejb.TransactionAttributeType;
 import javax.persistence.TransactionRequiredException;
@@ -26,24 +28,38 @@ import javax.transaction.SystemException;
  */
 public class SimulatedTransactionManager {
 
-    private static ThreadLocal<Boolean> activeTransactionInterceptor = new ThreadLocal<>();
+    private static AtomicBoolean activeTransactionInterceptor = new AtomicBoolean();
+
+    private static ThreadLocal<ArrayList<ThreadLocalTransactionInformation>> transactionStack = new ThreadLocal<>();
+
+    private static ConcurrentLinkedQueue<ArrayList<ThreadLocalTransactionInformation>> allStacks
+            = new ConcurrentLinkedQueue<>();
+
 
     /**
      * called by EjbExtensionExtended to clear static data.
      */
     public void init() {
-        ArrayList<ThreadLocalTransactionInformation> stack = transactionStack.get();
-        if (stack != null) {
-            for (int i = stack.size() - 1; i >= 0; i--) {
-                for (TestTransactionBase ttb : stack.get(i).persistenceFactories) {
+        try {
+            for (ArrayList<ThreadLocalTransactionInformation> stack : allStacks) {
+                if (stack != null) {
                     try {
-                        ttb.close(true);
-                    } catch (Exception e) {
+                        for (int i = stack.size() - 1; i >= 0; i--) {
+                            for (TestTransactionBase ttb : stack.get(i).persistenceFactories) {
+                                try {
+                                    ttb.close(true);
+                                } catch (Throwable e) {
 
+                                }
+                            }
+                        }
+                    } finally {
+                        stack.clear();
                     }
                 }
             }
-            transactionStack.get().clear();
+        } finally {
+            activateTransactionInterceptor();
         }
     }
 
@@ -56,9 +72,6 @@ public class SimulatedTransactionManager {
     }
 
     public boolean hasActiveTransactionInterceptor() {
-        if (activeTransactionInterceptor.get() == null) {
-            activeTransactionInterceptor.set(true);
-        }
         return activeTransactionInterceptor.get();
     }
 
@@ -146,20 +159,24 @@ public class SimulatedTransactionManager {
         }
     }
 
-    private static ThreadLocal<ArrayList<ThreadLocalTransactionInformation>> transactionStack = new ThreadLocal<>();
-
     /**
      * Start next transactioncontext of this thread by pushing the {@link TransactionAttributeType} on the stack.
      *
      * @param transactionAttributeType The Transactionattribute to be stacked.
      */
     public void push(TransactionAttributeType transactionAttributeType) {
+        ArrayList<ThreadLocalTransactionInformation> stack = initStack();
+        stack.add(new ThreadLocalTransactionInformation(transactionAttributeType));
+    }
+
+    private ArrayList<ThreadLocalTransactionInformation> initStack() {
         ArrayList<ThreadLocalTransactionInformation> stack = transactionStack.get();
         if (stack == null) {
             stack = new ArrayList<>();
             transactionStack.set(stack);
+            allStacks.add(stack);
         }
-        stack.add(new ThreadLocalTransactionInformation(transactionAttributeType));
+        return stack;
     }
 
 
@@ -168,11 +185,7 @@ public class SimulatedTransactionManager {
      *
      */
     public void push() {
-        ArrayList<ThreadLocalTransactionInformation> stack = transactionStack.get();
-        if (stack == null) {
-            stack = new ArrayList<>();
-            transactionStack.set(stack);
-        }
+        ArrayList<ThreadLocalTransactionInformation> stack = initStack();
         stack.add(new ThreadLocalTransactionInformation());
     }
 
