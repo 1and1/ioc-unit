@@ -7,6 +7,8 @@
     <packaging>pom</packaging>
     <modules>
         <module>ex1-service1entity</module>
+        <module>ex2-service1syncconsumed</module>
+        <module>ex3-service1asyncconsumed</module>
     </modules>
 
     <name>net.oneandone:ejb-cdi-unit-examples</name>

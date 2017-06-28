@@ -9,7 +9,7 @@ import javax.ejb.Stateless;
 @Stateless
 public class Service implements ServiceIntf {
 
-    @EJB(name = "RemoteServiceIntf")
+    @EJB(mappedName = "RemoteServiceIntf")
     RemoteServiceIntf remoteService;
 
     @Override

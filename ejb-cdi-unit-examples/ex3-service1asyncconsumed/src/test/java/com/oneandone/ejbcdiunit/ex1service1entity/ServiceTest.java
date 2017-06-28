@@ -6,6 +6,8 @@ import static org.junit.Assert.assertThat;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.enterprise.inject.Default;
+import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 
 import org.jglue.cdiunit.AdditionalClasses;
@@ -13,18 +15,21 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.oneandone.ejbcdiunit.EjbUnitRunner;
+import com.oneandone.ejbcdiunit.cdiunit.EjbQualifier;
 
 /**
  * @author aschoerk
  */
 @RunWith(EjbUnitRunner.class)
-@AdditionalClasses({Service.class, RemoteServiceSimulator.class})
+@AdditionalClasses({Service.class})
 public class ServiceTest {
     @Inject
     ServiceIntf sut;
 
-    @Inject
-    RemoteServiceIntf remoteService;
+    @Produces
+    @EjbQualifier
+    @Default
+    RemoteServiceIntf remoteService = new RemoteServiceSimulator();
 
     @Test
     public void canServiceInsertEntity1Remotely() {
