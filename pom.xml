@@ -78,8 +78,6 @@
 
         <site.deploy.base.url>http://maven-sites.server.lan</site.deploy.base.url>
         <site-url>${site.deploy.base.url}/${project.groupId}/${project.version}</site-url>
-        <ci.base.url>https://accjenkins.server.lan/view/Mobile%20Provider%20Interfaces/job</ci.base.url>
-        <svn.base.path>https://svn.1and1.org/svn/consumer_development/java/com/oneandone/access/mobile</svn.base.path>
         <javassist.version>3.20.0-GA</javassist.version>
 
         <version.javaee_api>7.0</version.javaee_api>
