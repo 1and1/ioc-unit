@@ -6,15 +6,25 @@ import static org.junit.Assert.assertThat;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.NotSupportedException;
+import javax.transaction.RollbackException;
+import javax.transaction.SystemException;
+import javax.transaction.UserTransaction;
 
 import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.oneandone.ejbcdiunit.EjbUnitRunner;
+import com.oneandone.ejbcdiunit.persistence.PersistenceFactory;
+import com.oneandone.ejbcdiunit.persistence.TestClosure;
 import com.oneandone.ejbcdiunit.persistence.TestPersistenceFactory;
+import com.oneandone.ejbcdiunit.persistence.TestTransactionException;
 
 /**
  * @author aschoerk
@@ -52,5 +62,61 @@ public class ServiceTest {
         }
         // fetch the 6th inserted entity.
         assertThat(sut.getStringValueFor(ids.get(5)), is("string: 5"));
+    }
+
+    @Inject
+    UserTransaction userTransaction;
+
+    @Test
+    public void canReadTestDataUsingService() throws SystemException, NotSupportedException {
+        userTransaction.begin();
+        List<Entity1> entities = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            final Entity1 entity1 = new Entity1(i, "string: " + i);
+            entities.add(entity1);
+            entityManager.persist(entity1);
+        }
+        assertThat(sut.getStringValueFor(entities.get(5).getId()), is("string: 5"));
+        userTransaction.rollback();
+    }
+
+    @Inject
+    PersistenceFactory persistenceFactory;
+
+    @Test(expected = TestTransactionException.class)
+    public void cantReadTestDataUsingServiceInRequiredNew() throws SystemException, NotSupportedException {
+        userTransaction.begin();
+        List<Entity1> entities = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            final Entity1 entity1 = new Entity1(i, "string: " + i);
+            entities.add(entity1);
+            entityManager.persist(entity1);
+        }
+        persistenceFactory.transaction(TransactionAttributeType.REQUIRES_NEW, new TestClosure() {
+            @Override
+            public void execute() throws Exception {
+                sut.getStringValueFor(entities.get(5).getId());
+            }
+        });
+        userTransaction.rollback();
+    }
+
+    @Test
+    public void canReadCommittedTestDataUsingServiceInRequiredNew() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+        userTransaction.begin();
+        List<Entity1> entities = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            final Entity1 entity1 = new Entity1(i, "string: " + i);
+            entities.add(entity1);
+            entityManager.persist(entity1);
+        }
+        userTransaction.commit();
+        persistenceFactory.transaction(TransactionAttributeType.REQUIRES_NEW, new TestClosure() {
+            @Override
+            public void execute() throws Exception {
+                assertThat(sut.getStringValueFor(entities.get(5).getId()), is("string: 5"));
+            }
+        });
+
     }
 }
