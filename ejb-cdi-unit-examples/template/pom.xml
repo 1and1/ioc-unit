@@ -8,7 +8,7 @@
     </parent>
 
 
-    <artifactId>exampletemplate</artifactId>
+    <artifactId>&exampletemplate&</artifactId>
     <packaging>war</packaging>
 
     <licenses>
@@ -18,8 +18,8 @@
         </license>
     </licenses>
 
-    <name>template pom to be copied to new examples</name>
-    <description>example of testing a ejb-service handling one entity</description>
+    <name>&template pom to be copied to new examples&</name>
+    <description>&template for description of service&</description>
     <url>https://github.com/1and1/ejb-cdi-unit</url>
     <dependencies>
         <dependency>

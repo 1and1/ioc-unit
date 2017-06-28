@@ -18,20 +18,17 @@
         </license>
     </licenses>
 
-    <name>example 1 stateless service handling one entity</name>
+    <name>example1 service with one entitie</name>
     <description>example of testing a ejb-service handling one entity</description>
     <url>https://github.com/1and1/ejb-cdi-unit</url>
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>ejb-cdi-unit</artifactId>
-            <scope>test</scope>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <scope>test</scope>
         </dependency>
         <!-- J2EE 6 -->
         <dependency>
