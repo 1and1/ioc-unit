@@ -87,7 +87,7 @@ add an Entity to a database and to search for it by its id.
 
 [code](https://github.com/1and1/ejb-cdi-unit/tree/master/ejb-cdi-unit-examples/ex1-service1entity)
 
-To enable testing the [Test-Class](https://github.com/1and1/ejb-cdi-unit/blob/master/ejb-cdi-unit-examples/ex1-service1entity/src/test/java/com/oneandone/ejbcdiunit/ex1service1entity/ServiceTest.java) must be shaped as following:
+To enable testing the [Test-Class](https://github.com/1and1/ejb-cdi-unit/blob/master/ejb-cdi-unit-examples/ex1-service1entity/src/test/java/com/oneandone/ejbcdiunit/test/ServiceTest.java) must be shaped as following:
 
         @RunWith(EjbUnitRunner.class)
         @AdditionalClasses({Service.class, TestPersistenceFactory.class})
@@ -130,13 +130,25 @@ the call is done in a separate transaction which can't read the "yet dirty" data
 
 ### One Service and One Synchronously Consumed Service
 
-Another simple kind of service just provides a service-interface does some calculations and  synchronously consumes some interfaces from other services it uses. A suggestion how such a service can be tested using ejb-cdi-unit will be shown here.
+This simple kind of service just provides a service-interface does some calculations and  synchronously consumes some interfaces from other services it uses. A suggestion how such a service can be tested using ejb-cdi-unit will be shown [here](https://github.com/1and1/ejb-cdi-unit/blob/master/ejb-cdi-unit-examples/test).
 
--- not implemented yet
+In this sub-module several possibilities to inject remote services and to simulate those remote services by the Tests are shown.
+There are not many calculations done, the servicecall here is for demonstration purposes just propagated to the remote site.
+
+* [Service1]() to be tested hypothetically gets the remote callable interface injected via @EJB.
+      @EJB(mappedName = "RemoteServiceIntf/remote")
+      RemoteServiceIntf remoteService;
+might be code that allows to inject the reference to a remote bean. The following Tests use ejb-cdi-unit to test this configuration in 2 of many possible ways: 
+
+    * [ServiceTest]() simulates the remote Service by implementing the interface using a specific class. This is configured into the container inside the @AdditionalClasses Annotation.
+    * [ServiceTestWithMockito]() does not use an implementation of the remote interface, but mockito-expressions to generate the required behaviour.  
+
+* [Service2]() alternatively uses a Resources-Bean which handles the lookups of the remote bean. The Test [ServiceTestWithAlternative]() is used to demonstrate the usage of @ActivatedAlternatives.
+
 
 ### One Service and One Asynchronously Consumed Service
 
-The previous example will be extended to a service which calls the consumed service asynchronously. The original servicecall does works in a fire and forget manner.
+The synchronous example will be extended to a service which calls the consumed service asynchronously. This servicecall works in a fire and forget manner.
 
 -- not implemented yet
 

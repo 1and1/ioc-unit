@@ -1,6 +1,7 @@
 package com.oneandone.ejbcdiunit.test;
 
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 import java.util.ArrayList;
@@ -45,6 +46,7 @@ public class ReallyAsynchronousServiceTest {
     @Test
     public void canServiceInsertEntity1Remotely() throws ExecutionException, InterruptedException {
         ServiceIntf.CorrelationId id = sut.newRemoteEntity1(1, "test1");
+        assertThat(sut.pollId(id), nullValue());
         asynchronousManager.once();
         assertThat(sut.pollId(id), is(1L));
     }
@@ -55,6 +57,7 @@ public class ReallyAsynchronousServiceTest {
         for (int i = 0; i < 10; i++) {
             correlationIds.add(sut.newRemoteEntity1(i, "string: " + i));
         }
+        assertThat(sut.pollId(correlationIds.get(5)), nullValue());
         asynchronousManager.once();  // simulate remote answering
         // fetch the 6th inserted entity.
         final Long id = sut.pollId(correlationIds.get(5));
