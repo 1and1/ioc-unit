@@ -1,6 +1,24 @@
-# ejb-cdi-unit 
+<!-- TOC depthFrom:1 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
 
-Simplify test driven development of ejb-3.x Services. 
+- [ejb-cdi-unit](#ejb-cdi-unit)
+	- [Motivation](#motivation)
+	- [Requirements](#requirements)
+	- [Solution](#solution)
+	- [Usage](#usage)
+	- [Examples](#examples)
+		- [One Service and One Entity](#one-service-and-one-entity)
+		- [One Service and One Synchronously Consumed Service](#one-service-and-one-synchronously-consumed-service)
+		- [One Service and One Asynchronously Consumed Service](#one-service-and-one-asynchronously-consumed-service)
+		- [One Service and One Asynchronously Consumed Service Plus Asynchronous Callback](#one-service-and-one-asynchronously-consumed-service-plus-asynchronous-callback)
+		- [One Service and One Asynchronously Consumed Service internally using Messaging](#one-service-and-one-asynchronously-consumed-service-internally-using-messaging)
+	- [Acknowledgments](#acknowledgments)
+	- [License](#license)
+
+<!-- /TOC -->
+
+# ejb-cdi-unit
+
+Simplify test driven development of ejb-3.x Services.
 
 ## Motivation
 During the development of services, the necessity to implement automatic module-tests arises. In this context, a module means one deployable artifact.
@@ -19,7 +37,7 @@ What do we need to be able to achieve this?
     * Datasources must be simulated using an in memory database (H2)
     * Message queues must be simulated in memory (mockrunner)
     * @TransactionAttribute on EJBs must be handled in a correct way (at least not ignored)
-    * @Startup-annotated Beans must be initialized so that other beans might refer to them indirectly. 
+    * @Startup-annotated Beans must be initialized so that other beans might refer to them indirectly.
     * You must be able to fill @Resource annotated fields by "something", which handles the calls in a feasable way.
     * You must be able to handle or simulate arbitrary situations which are possible in an asynchronous working environment, as it is an ejb-server.
     * Sometimes it might be necessary to test using more than one thread. The test-container must be able to handle this as well.
@@ -27,7 +45,7 @@ What do we need to be able to achieve this?
 
 ## Solution
 
-[*cdiunit*](http://jglue.org/cdi-unit/) helps very much by making it very easy 
+[*cdiunit*](http://jglue.org/cdi-unit/) helps very much by making it very easy
 
 * to integrate the Weld SE
 * to define the components (classes) of an project to be tested
@@ -36,7 +54,7 @@ What do we need to be able to achieve this?
 
 *ejbcdiunit* helps by extending the mentioned extensions so that ejb-specific injections are "doable" using cdi-technics. Additionally it provides helper classes which provide functionality that otherwise would have to be implemented in every test class or test project again.
 
-* *PersistenceFactory* allows it to use alternative datasources in a easy way. There is a default which always searches a persistence-unit named "test".
+* *PersistenceFactory* allows it, to use alternative (test) datasources in a easy way. There is a default which always searches a persistence-unit named "test".
 * TransactionManager handles per thread the stack of different transaction environments
 * TransactionInterceptor is used by the extension to encapsulate calls to ejbs
 * AsynchronousManager is a singleton where asynchronously to be executed routines can be stored and later executed in a deterministic way.
@@ -47,7 +65,7 @@ What do we need to be able to achieve this?
 
 ## Usage
 
-The usage does not differ very much from cdiunit, except: 
+The usage does not differ very much from cdiunit, except:
 
 * You need to include additionally:    
 
@@ -56,15 +74,15 @@ The usage does not differ very much from cdiunit, except:
             <artifactId>ejb-cdi-unit</artifactId>
             <version>${ejb-cdi-unit.version}</version>
             <scope>test</scope>
-        </dependency> 
+        </dependency>
 
-  
+
 ## Examples
 
-There will be several examples which should demonstrate how different kinds of artifacts can be tested using ejb-cdi-unit. 
+There will be several examples which should demonstrate how different kinds of artifacts can be tested using ejb-cdi-unit.
 
 ### One Service and One Entity
-This example contains a Service implemented as stateless EJB which can return a constant number and offers the possibility to 
+This example contains a Service implemented as stateless EJB which can return a constant number and offers the possibility to
 add an Entity to a database and to search for it by its id.
 
 [code](https://github.com/1and1/ejb-cdi-unit/tree/master/ejb-cdi-unit-examples/ex1-service1entity)
@@ -76,19 +94,19 @@ To enable testing the [Test-Class](https://github.com/1and1/ejb-cdi-unit/blob/ma
         public class ServiceTest {
             @Inject
             ServiceIntf sut;
-        
+
             @Inject
             EntityManager entityManager;
 
 * EjbUnitRunner is an adapted CdiRunner which makes sure that the EjbExtensions are activated during the CDI-Initialization.
 * AdditionalClasses builds up the Test-Container.
     * Service defines a minimal Deployable containing the class to be tested and it's dependent classes.
-    * TestPersistenceFactory defines an object which is able to produce EntityManagers for the PersistenceUnit with name "test". 
+    * TestPersistenceFactory defines an object which is able to produce EntityManagers for the PersistenceUnit with name "test".
 * EntityManager is injected to allow access to the DBMS to be able to verify that the intended changes are there.
 * In the Test-Class there are further injections necessary for specific kinds of tests which will be shown during the description of the testing functions.
 
 
-To allow access to the database the resources/META-INF contains a file [persistence.xml](https://github.com/1and1/ejb-cdi-unit/blob/master/ejb-cdi-unit-examples/ex1-service1entity/src/test/resources/META-INF/persistence.xml). The testing happens using H2 working in Postgres-compatible mode. 
+To allow access to the database the resources/META-INF contains a file [persistence.xml](https://github.com/1and1/ejb-cdi-unit/blob/master/ejb-cdi-unit-examples/ex1-service1entity/src/test/resources/META-INF/persistence.xml). The testing happens using H2 working in Postgres-compatible mode.
 To allow hibernate to work with the Entity, this is added as class there.
 
 The Testfunctions:
@@ -107,11 +125,33 @@ The Testfunctions:
         });    
 the call is done in a separate transaction which can't read the "yet dirty" data, inserted previously in the testcode. Therefore the service call which previously assumed that exactly one entity should be found for this id, creates a NoResultException. The Testclosure embeds this Exception in a TestTransactionException.
 
-* *canReadCommittedTestDataUsingServiceInRequiredNew* see first the explanation of cantReadTestDataUsingServiceInRequiredNew. Since the transaction creating the testdata has been committed, the embedded transaction is able to read and the NoResultException does not occur. 
+* *canReadCommittedTestDataUsingServiceInRequiredNew* see first the explanation of cantReadTestDataUsingServiceInRequiredNew. Since the transaction creating the testdata has been committed, the embedded transaction is able to read and the NoResultException does not occur.
 
 
-### One Service and One Consumed Service
+### One Service and One Synchronously Consumed Service
 
+Another simple kind of service just provides a service-interface does some calculations and  synchronously consumes some interfaces from other services it uses. A suggestion how such a service can be tested using ejb-cdi-unit will be shown here.
+
+-- not implemented yet
+
+### One Service and One Asynchronously Consumed Service
+
+The previous example will be extended to a service which calls the consumed service asynchronously. The original servicecall does works in a fire and forget manner.
+
+-- not implemented yet
+
+### One Service and One Asynchronously Consumed Service Plus Asynchronous Callback
+
+The previous example gets extended in a way so that the original service consumes a special interface its client provides and calls back as soon as the answer is ready.
+
+-- not implemented yet
+
+### One Service and One Asynchronously Consumed Service internally using Messaging
+
+To provide a safe handling of service calls often message driven beans are used.
+In this way it can be made sure that requests are not lost even if a process or thread dies. Additionally in this way other cluster nodes can pick up in the processing.
+
+-- not implemented yet
 
 
 ## Acknowledgments
@@ -136,4 +176,3 @@ Copyright 2017 1&amp;1 Internet AG, https://github.com/1and1/ejb-cdi-unit
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-
