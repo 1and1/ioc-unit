@@ -1,4 +1,6 @@
-package com.oneandone.ejbcdiunit.test;
+package com.oneandone.ejbcdiunit.example3;
+
+import com.oneandone.ejbcdiunit.example3.RemoteServiceIntf;
 
 import java.util.concurrent.Future;
 

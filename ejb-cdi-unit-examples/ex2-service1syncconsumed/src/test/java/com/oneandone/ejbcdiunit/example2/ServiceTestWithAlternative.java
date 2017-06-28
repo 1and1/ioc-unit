@@ -1,4 +1,4 @@
-package com.oneandone.ejbcdiunit.test;
+package com.oneandone.ejbcdiunit.example2;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -10,39 +10,44 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.enterprise.inject.Default;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 
+import com.oneandone.ejbcdiunit.example2.RemoteServiceIntf;
+import com.oneandone.ejbcdiunit.example2.ServiceIntf;
 import org.jglue.cdiunit.AdditionalClasses;
+import org.jglue.cdiunit.ProducesAlternative;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
 import com.oneandone.ejbcdiunit.EjbUnitRunner;
-import com.oneandone.ejbcdiunit.cdiunit.EjbQualifier;
-import com.oneandone.ejbcdiunit.test.useejbinject.Service;
+import com.oneandone.ejbcdiunit.example2.uselookup.Resources;
+import com.oneandone.ejbcdiunit.example2.uselookup.ServiceWithLookup;
 
 /**
  * @author aschoerk
  */
 @RunWith(EjbUnitRunner.class)
-@AdditionalClasses({Service.class})
-public class ServiceTestWithMockito {
+@AdditionalClasses({ServiceWithLookup.class})
+public class ServiceTestWithAlternative {
     @Inject
     ServiceIntf sut;
 
-    @Produces
-    @EjbQualifier
-    @Default
     @Mock
     RemoteServiceIntf remoteService;
+
+    @ProducesAlternative
+    @Produces
+    @Mock
+    Resources resources;
 
     long idGenerator = 0;
 
     @Before
     public void beforeTestService() {
+        when(resources.lookupRemoteService()).thenReturn(remoteService);
         when(remoteService.newEntity1(anyInt(), anyString())).thenReturn(++idGenerator);
     }
 

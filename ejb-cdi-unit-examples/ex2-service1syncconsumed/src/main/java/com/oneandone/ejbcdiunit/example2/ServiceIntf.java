@@ -1,4 +1,4 @@
-package com.oneandone.ejbcdiunit.test;
+package com.oneandone.ejbcdiunit.example2;
 
 /**
  * Created by aschoerk on 28.06.17.

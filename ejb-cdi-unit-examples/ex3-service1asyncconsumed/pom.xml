@@ -32,13 +32,9 @@
         </dependency>
         <!-- J2EE 6 -->
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>ejb-cdi-unit</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>javax</groupId>
-            <artifactId>javaee-api</artifactId>
+            <groupId>javax.enterprise</groupId>
+            <artifactId>cdi-api</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.jglue.cdi-unit</groupId>

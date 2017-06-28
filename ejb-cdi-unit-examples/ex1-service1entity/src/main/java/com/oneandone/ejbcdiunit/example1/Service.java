@@ -1,4 +1,4 @@
-package com.oneandone.ejbcdiunit.test;
+package com.oneandone.ejbcdiunit.example1;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;

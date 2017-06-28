@@ -1,4 +1,4 @@
-package com.oneandone.ejbcdiunit.test;
+package com.oneandone.ejbcdiunit.example2;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -6,6 +6,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Default;
 
 import com.oneandone.ejbcdiunit.cdiunit.EjbQualifier;
+import com.oneandone.ejbcdiunit.example2.RemoteServiceIntf;
 
 /**
  * @author aschoerk

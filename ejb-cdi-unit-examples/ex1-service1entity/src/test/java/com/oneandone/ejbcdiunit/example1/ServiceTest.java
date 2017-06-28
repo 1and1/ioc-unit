@@ -1,4 +1,4 @@
-package com.oneandone.ejbcdiunit.test;
+package com.oneandone.ejbcdiunit.example1;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;

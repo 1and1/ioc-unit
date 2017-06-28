@@ -1,4 +1,4 @@
-package com.oneandone.ejbcdiunit.test;
+package com.oneandone.ejbcdiunit.example3;
 
 import java.util.concurrent.ExecutionException;
 
