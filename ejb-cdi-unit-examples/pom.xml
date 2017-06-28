@@ -6,8 +6,7 @@
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
-        <module>ex1-service1dao1entity</module>
-        <module>ex2-service1entity</module>
+        <module>ex1-service1entity</module>
     </modules>
 
     <name>net.oneandone:ejb-cdi-unit-examples</name>
@@ -76,8 +75,6 @@
 
         <site.deploy.base.url>http://maven-sites.server.lan</site.deploy.base.url>
         <site-url>${site.deploy.base.url}/${project.groupId}/${project.version}</site-url>
-        <ci.base.url>https://accjenkins.server.lan/view/Mobile%20Provider%20Interfaces/job</ci.base.url>
-        <svn.base.path>https://svn.1and1.org/svn/consumer_development/java/com/oneandone/access/mobile</svn.base.path>
         <javassist.version>3.20.0-GA</javassist.version>
 
         <version.javaee_api>7.0</version.javaee_api>
@@ -221,12 +218,6 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>mysql</groupId>
-                <artifactId>mysql-connector-java</artifactId>
-                <version>${mysql.connector.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
                 <groupId>org.javassist</groupId>
                 <artifactId>javassist</artifactId>
                 <version>${javassist.version}</version>
@@ -269,21 +260,6 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-scm-plugin</artifactId>
-                <version>${maven-scm-plugin.version}</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-scm-publish-plugin</artifactId>
-                <version>${maven-scm-publish-plugin.version}</version>
-                <inherited>true</inherited>
-                <configuration>
-                    <pubScmUrl>${project.scm.developerConnection}</pubScmUrl>
-                    <scmBranch>gh-pages</scmBranch>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <configuration>
                     <notimestamp>true</notimestamp>
@@ -295,6 +271,14 @@
                         <link>http://junit-team.github.com/junit/javadoc/latest/</link>
                         <link>http://www.slf4j.org/apidocs/</link>
                     </links>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>${maven-deploy-plugin.version}</version>
+                <configuration>
+                    <skip>true</skip>
                 </configuration>
             </plugin>
         </plugins>
@@ -311,20 +295,6 @@
                     <artifactId>maven-javadoc-plugin</artifactId>
                     <version>${maven-javadoc-plugin.version}</version>
                 </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-release-plugin</artifactId>
-                    <version>${maven-release-plugin.version}</version>
-                    <inherited>true</inherited>
-                    <dependencies>
-                        <dependency>
-                            <groupId>org.apache.maven.scm</groupId>
-                            <artifactId>maven-scm-provider-gitexe</artifactId>
-                            <version>1.9.2</version>
-                        </dependency>
-                    </dependencies>
-
-                </plugin>
             </plugins>
         </pluginManagement>
     </build>
@@ -340,62 +310,6 @@
         <url>https://github.com/1and1/ejb-cdi-unit/issues/</url>
     </issueManagement>
     <inceptionYear>2017</inceptionYear>
-
-    <!--distributionManagement>
-        <repository>
-            <uniqueVersion>false</uniqueVersion>
-            <id>artifactory-releases</id>
-            <name>access-release</name>
-            <url>https://artifactory.1and1.org/artifactory/access-release</url>
-        </repository>
-        <snapshotRepository>
-            <uniqueVersion>true</uniqueVersion>
-            <id>artifactory-snapshots</id>
-            <name>access-snapshot</name>
-            <url>https://artifactory.1and1.org/artifactory/access-snapshot</url>
-        </snapshotRepository>
-    </distributionManagement-->
-
-    <distributionManagement>
-        <snapshotRepository>
-            <id>sonatype-nexus-snapshots</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-        </snapshotRepository>
-        <repository>
-            <id>sonatype-nexus-staging</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
-    </distributionManagement>
-
-    <profiles>
-        <profile>
-            <id>release-sign-artifacts</id>
-            <activation>
-                <property>
-                    <name>performRelease</name>
-                    <value>true</value>
-                </property>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                        <version>${maven-gpg-plugin.version}</version>
-                        <executions>
-                            <execution>
-                                <id>sign-artifacts</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 
 </project>
 

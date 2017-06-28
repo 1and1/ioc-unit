@@ -1,8 +1,8 @@
 package com.oneandone.ejbcdiunit.ex1service1entity;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import java.math.BigInteger;
 
 /**
  * Created by aschoerk on 28.06.17.
@@ -10,8 +10,25 @@ import java.math.BigInteger;
 @Entity
 public class Entity1 {
     @Id
-    private BigInteger id;
+    @GeneratedValue
+    private Long id;
     private int intValue;
     private String stringValue;
 
+    public Entity1(int intValue, String stringValue) {
+        this.intValue = intValue;
+        this.stringValue = stringValue;
+    }
+
+    public int getIntValue() {
+        return intValue;
+    }
+
+    public String getStringValue() {
+        return stringValue;
+    }
+
+    public Long getId() {
+        return id;
+    }
 }

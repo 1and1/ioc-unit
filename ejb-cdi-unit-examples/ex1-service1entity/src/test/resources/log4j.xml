@@ -5,27 +5,21 @@
     <appender name="STDOUT" class="org.apache.log4j.ConsoleAppender">
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern"
-                   value="%d %-5p %X{host} [%X{mssVersion}] (%X{correlationId}: [%X{clientName} %X{clientVersion} %X{clientApiVersion}] %X{extSubscriberID} %X{providerShortName}) [%c] (%t) %m%n"/>
+                   value="%d %-5p %X{host} (%X{correlationId}: [%X{clientName} %X{clientVersion} %X{clientApiVersion}] %X{extSubscriberID} %X{providerShortName}) [%c] (%t) %m%n"/>
         </layout>
     </appender>
     <appender name="FILE" class="org.apache.log4j.FileAppender">
-        <param name="File" value="mss.log"/>
+        <param name="File" value="test.log"/>
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern"
-                   value="%d %-5p %X{host} [%X{mssVersion}] (%X{correlationId}: [%X{clientName} %X{clientVersion} %X{clientApiVersion}] %X{extSubscriberID} %X{providerShortName}) [%c] (%t) %m%n"/>
+                   value="%d %-5p %X{host} (%X{correlationId}: [%X{clientName} %X{clientVersion} %X{clientApiVersion}] %X{extSubscriberID} %X{providerShortName}) [%c] (%t) %m%n"/>
         </layout>
     </appender>
     <root>
         <level value="info"/>
         <appender-ref ref="STDOUT"/>
-
-        <!-- Enables mss.log for every module -->
-        <!-- <appender-ref ref="FILE" /> -->
     </root>
 
-    <!-- Enables debug level for MSS -->
-    <!-- <logger name="com.oneandone.access.mobile.mss">
-        <level value="debug" />
-    </logger> -->
+
 
 </log4j:configuration>
