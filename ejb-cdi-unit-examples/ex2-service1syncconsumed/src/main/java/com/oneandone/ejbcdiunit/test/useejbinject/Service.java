@@ -1,7 +1,10 @@
-package com.oneandone.ejbcdiunit.ex1service1entity;
+package com.oneandone.ejbcdiunit.test.useejbinject;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+
+import com.oneandone.ejbcdiunit.test.RemoteServiceIntf;
+import com.oneandone.ejbcdiunit.test.ServiceIntf;
 
 /**
  * Created by aschoerk on 28.06.17.

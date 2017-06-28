@@ -1,12 +1,15 @@
-package com.oneandone.ejbcdiunit.ex1service1entity;
+package com.oneandone.ejbcdiunit.test;
 
 /**
- * @author aschoerk
+ * Created by aschoerk on 28.06.17.
  */
-public interface RemoteServiceIntf {
+public interface ServiceIntf {
+
     int returnFive();
 
     long newEntity1(int intValue, String stringValue);
 
     String getStringValueFor(long id);
+
+
 }

@@ -1,30 +1,50 @@
-package com.oneandone.ejbcdiunit.ex1service1entity;
+package com.oneandone.ejbcdiunit.test;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.enterprise.inject.Default;
+import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 
 import org.jglue.cdiunit.AdditionalClasses;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 
 import com.oneandone.ejbcdiunit.EjbUnitRunner;
+import com.oneandone.ejbcdiunit.cdiunit.EjbQualifier;
+import com.oneandone.ejbcdiunit.test.useejbinject.Service;
 
 /**
  * @author aschoerk
  */
 @RunWith(EjbUnitRunner.class)
-@AdditionalClasses({Service.class, RemoteServiceSimulator.class})
-public class ServiceTest {
+@AdditionalClasses({Service.class})
+public class ServiceTestWithMockito {
     @Inject
     ServiceIntf sut;
 
-    @Inject
+    @Produces
+    @EjbQualifier
+    @Default
+    @Mock
     RemoteServiceIntf remoteService;
+
+    long idGenerator = 0;
+
+    @Before
+    public void beforeTestService() {
+        when(remoteService.newEntity1(anyInt(), anyString())).thenReturn(++idGenerator);
+    }
 
     @Test
     public void canServiceInsertEntity1Remotely() {
@@ -34,6 +54,7 @@ public class ServiceTest {
 
     @Test
     public void canReadEntity1AfterInsertion() {
+        when(remoteService.getStringValueFor(anyLong())).thenReturn("something");
         List<Long> ids = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             ids.add(sut.newRemoteEntity1(i, "string: " + i));

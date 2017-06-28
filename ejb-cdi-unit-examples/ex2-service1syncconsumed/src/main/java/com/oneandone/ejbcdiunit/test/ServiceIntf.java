@@ -1,4 +1,4 @@
-package com.oneandone.ejbcdiunit.ex1service1entity;
+package com.oneandone.ejbcdiunit.test;
 
 /**
  * Created by aschoerk on 28.06.17.

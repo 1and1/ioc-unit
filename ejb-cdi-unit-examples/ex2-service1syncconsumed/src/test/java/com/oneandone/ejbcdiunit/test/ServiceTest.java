@@ -1,4 +1,4 @@
-package com.oneandone.ejbcdiunit.ex1service1entity;
+package com.oneandone.ejbcdiunit.test;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -6,8 +6,6 @@ import static org.junit.Assert.assertThat;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.enterprise.inject.Default;
-import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 
 import org.jglue.cdiunit.AdditionalClasses;
@@ -15,21 +13,19 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.oneandone.ejbcdiunit.EjbUnitRunner;
-import com.oneandone.ejbcdiunit.cdiunit.EjbQualifier;
+import com.oneandone.ejbcdiunit.test.useejbinject.Service;
 
 /**
  * @author aschoerk
  */
 @RunWith(EjbUnitRunner.class)
-@AdditionalClasses({Service.class})
+@AdditionalClasses({Service.class, RemoteServiceSimulator.class})
 public class ServiceTest {
     @Inject
     ServiceIntf sut;
 
-    @Produces
-    @EjbQualifier
-    @Default
-    RemoteServiceIntf remoteService = new RemoteServiceSimulator();
+    @Inject
+    RemoteServiceIntf remoteService;
 
     @Test
     public void canServiceInsertEntity1Remotely() {

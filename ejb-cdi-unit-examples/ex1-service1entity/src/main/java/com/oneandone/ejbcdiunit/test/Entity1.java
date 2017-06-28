@@ -1,4 +1,4 @@
-package com.oneandone.ejbcdiunit.ex1service1entity;
+package com.oneandone.ejbcdiunit.test;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
