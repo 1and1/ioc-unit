@@ -138,7 +138,7 @@ There are not many calculations done, the servicecall here is for demonstration 
 * [Service1]() to be tested hypothetically gets the remote callable interface injected via @EJB.
       @EJB(mappedName = "RemoteServiceIntf/remote")
       RemoteServiceIntf remoteService;
-might be code that allows to inject the reference to a remote bean. The following Tests use ejb-cdi-unit to test this configuration in 2 of many possible ways: 
+might be code that allows to inject the reference to a remote bean. The following Tests use ejb-cdi-unit to test this configuration in 2 of many possible ways:
 
     * [ServiceTest]() simulates the remote Service by implementing the interface using a specific class. This is configured into the container inside the @AdditionalClasses Annotation.
     * [ServiceTestWithMockito]() does not use an implementation of the remote interface, but mockito-expressions to generate the required behaviour.  
@@ -148,9 +148,19 @@ might be code that allows to inject the reference to a remote bean. The followin
 
 ### One Service and One Asynchronously Consumed Service
 
-The synchronous example will be extended to a service which calls the consumed service asynchronously. This servicecall works in a fire and forget manner.
+The service-interface of the previous tests has been changed, so that the answer of the remote service will not be awaited. Instead of returning the actual result, a CorrelationId is returned which later can be used to query for the result itself. For this query 2 function pollId and pollString have been added. They return null, if the result is not ready yet.
+The Servercode achieves the asynchronous behaviour by using the @Asynchronous annotation. Each request to the consumed service is forwarded to a bean that delegates these calls to the remote interface inside asynchronous methods. These Methods return "Future"-object which can be used to check, whether the call has been completed, and when, which return the result.
 
--- not implemented yet
+The EjbExtensions which are initiated by EjbUnitRunner intercept these calls by AsynchronousInterceptor which generates a special future. There are two modes of operation possible. Either the future methods: "isDone" and "get" lead to synchronous calls, or the future checks if a lambda routine created to handle the embedded call is completed. In the second mode the AsynchronousManager-Singleton is responsible to handle the call.
+
+To illustrate this two Tests are created
+* [ServiceTest]()
+ 	* the poll-Routines can be called without further actions, they query the furtures which internally do direct calls
+* [ReallyAsynchronousServiceTest]()
+	* the poll-Routines will return null as long as the asynchronous handling is not initiated yet. Using AsynchronousManager#once works through all current queued activities and handle these synchronously. In this way the test itself can decide in a deterministic way, when the handling is to be done.
+	  
+
+
 
 ### One Service and One Asynchronously Consumed Service Plus Asynchronous Callback
 
