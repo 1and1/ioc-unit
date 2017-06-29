@@ -1,4 +1,4 @@
-package com.oneandone.ejbcdiunit.test;
+package com.oneandone.ejbcdiunit.example3;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -24,6 +24,7 @@ import com.oneandone.ejbcdiunit.cdiunit.EjbQualifier;
 @RunWith(EjbUnitRunner.class)
 @AdditionalClasses({Service.class})
 public class ServiceTest {
+
     @Inject
     ServiceIntf sut;
 

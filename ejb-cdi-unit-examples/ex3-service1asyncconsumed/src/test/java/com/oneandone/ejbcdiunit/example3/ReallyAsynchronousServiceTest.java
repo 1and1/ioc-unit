@@ -1,4 +1,4 @@
-package com.oneandone.ejbcdiunit.test;
+package com.oneandone.ejbcdiunit.example3;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
