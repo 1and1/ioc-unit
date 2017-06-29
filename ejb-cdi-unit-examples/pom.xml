@@ -6,9 +6,12 @@
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
-        <module>ex1-service1entity</module>
-        <module>ex2-service1syncconsumed</module>
-        <module>ex3-service1asyncconsumed</module>
+        <module>ex1-1entity</module>
+        <module>ex2-syncconsumed</module>
+        <module>ex3-asyncconsumedpoll</module>
+        <module>ex4-asyncconsumedpush</module>
+        <module>ex5-asyncconsumedjms1</module>
+        <module>ex6-asyncconsumedjms2</module>
     </modules>
 
     <name>net.oneandone:ejb-cdi-unit-examples</name>
@@ -236,8 +239,6 @@
                 <version>${weld.version}</version>
                 <scope>test</scope>
             </dependency>
-
-
         </dependencies>
     </dependencyManagement>
     <build>

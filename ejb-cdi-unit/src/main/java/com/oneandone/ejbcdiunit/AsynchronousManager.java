@@ -151,10 +151,14 @@ public class AsynchronousManager {
                     long time = System.currentTimeMillis();
                     try {
                         int done = once();
-                        logger.trace("AsynchronousManager handled {} runners", done);
+                        if (done > 0) {
+                            logger.info("AsynchronousManager handled {} runners", done);
+                        }
                         while (thereAreOnces() && System.currentTimeMillis() - time < TIME_TO_STOP_LOOPING_ONCE) {
                             done = once();
-                            logger.trace("AsynchronousManager handled {} runners", done);
+                            if (done > 0) {
+                                logger.info("AsynchronousManager handled {} runners", done);
+                            }
                         }
                     } catch (InterruptThreadException e) {
                         logger.info("Asynchronous Manager Thread received end signal");
