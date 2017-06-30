@@ -58,6 +58,13 @@ public class TestAsynch {
     }
 
     @Test
+    public void testNotAsyncMethod() throws ExecutionException, InterruptedException {
+        assertThat(statelessAsynchEJB.notAsynchronousMethodReturnsOneImmediately(), is(1));
+
+        assertThat(asynchronousManager.thereAreOnces(), is(false));
+    }
+
+    @Test
     public void testTimer() {
         SingletonTimerEJB a = new SingletonTimerEJB();
         a.logcall();

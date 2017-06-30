@@ -24,4 +24,8 @@ public class StatelessAsynchEJB extends CountingBean  {
         logcall();
         return new AsyncResult<>(result);
     }
+
+    public int notAsynchronousMethodReturnsOneImmediately() {
+        return 1;
+    }
 }
