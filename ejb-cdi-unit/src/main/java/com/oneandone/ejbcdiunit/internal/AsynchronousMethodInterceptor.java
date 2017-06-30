@@ -6,6 +6,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import javax.ejb.Asynchronous;
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
@@ -150,10 +151,18 @@ public class AsynchronousMethodInterceptor {
      */
     @AroundInvoke
     public Object invoking(final InvocationContext ctx) throws Exception {
-        logger.info("calling AsynchronousMethodIntercepted Class");
         if (inInvoking.get()) {
             return ctx.proceed();
         } else {
+            logger.info("calling AsynchronousMethodIntercepted Class");
+            final Class<?> declaringClass = ctx.getMethod().getDeclaringClass();
+            boolean classIsAsynchronous = declaringClass.getAnnotation(Asynchronous.class) != null;
+            if (!classIsAsynchronous) {
+                if (ctx.getMethod().getAnnotation(Asynchronous.class) == null) {
+                    return ctx.proceed();
+                }
+            }
+
             final InterceptedAsyncResult asyncResult = new InterceptedAsyncResult();
             final Method m = ctx.getMethod();
             final Object[] p = ctx.getParameters();

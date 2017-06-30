@@ -397,7 +397,7 @@ public class AsynchronousManager {
         });
     }
 
-    private boolean thereAreOnces() {
+    public boolean thereAreOnces() {
         for (AsynchronousRunnable r: runnables) {
             if (r instanceof AsynchronousOnetimeRunnable) {
                 return true;

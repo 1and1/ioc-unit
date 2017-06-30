@@ -244,6 +244,9 @@ public class EjbExtensionExtended implements Extension {
 
         boolean isTimer = false;
         boolean isAsynch = false;
+        if (at.isAnnotationPresent(Asynchronous.class)) {
+            return true;
+        }
 
         for (AnnotatedMethod<? super X> m: at.getMethods()) {
             if (!isTimer && (m.isAnnotationPresent(Timeout.class)
