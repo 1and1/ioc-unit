@@ -1,0 +1,454 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+        xmlns:dc="http://purl.org/dc/elements/1.1/"
+        xmlns:cc="http://creativecommons.org/ns#"
+        xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+        xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+        contentScriptType="application/ecmascript"
+        contentStyleType="text/css"
+        height="407px"
+        preserveAspectRatio="none"
+        style="width:457px;height:407px;"
+        version="1.1"
+        viewBox="0 0 457 407"
+        width="457px"
+        zoomAndPan="magnify"
+        id="svg2"
+        inkscape:version="0.91 r13725"
+        sodipodi:docname="canInsertEntity1-2.svg">
+  <metadata
+     id="metadata103">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="640"
+     inkscape:window-height="480"
+     id="namedview101"
+     showgrid="false"
+     inkscape:zoom="0.57985258"
+     inkscape:cx="228.5"
+     inkscape:cy="203.5"
+     inkscape:window-x="24"
+     inkscape:window-y="24"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg2" />
+  <defs
+     id="defs4">
+    <filter
+       height="300%"
+       id="f1ms5sdecse9zg"
+       width="300%"
+       x="-1"
+       y="-1">
+      <feGaussianBlur
+         result="blurOut"
+         stdDeviation="2.0"
+         id="feGaussianBlur7" />
+      <feColorMatrix
+         in="blurOut"
+         result="blurOut2"
+         type="matrix"
+         values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"
+         id="feColorMatrix9" />
+      <feOffset
+         dx="4.0"
+         dy="4.0"
+         in="blurOut2"
+         result="blurOut3"
+         id="feOffset11" />
+      <feBlend
+         in="SourceGraphic"
+         in2="blurOut3"
+         mode="normal"
+         id="feBlend13" />
+    </filter>
+  </defs>
+  <g
+     id="g15">
+    <text
+       fill="#000000"
+       font-family="sans-serif"
+       font-size="14"
+       font-weight="bold"
+       lengthAdjust="spacingAndGlyphs"
+       textLength="203"
+       x="128.5"
+       y="22.9951"
+       id="text17">ServiceWithSimulatorTest</text>
+    <text
+       fill="#000000"
+       font-family="sans-serif"
+       font-size="14"
+       font-weight="bold"
+       lengthAdjust="spacingAndGlyphs"
+       textLength="260"
+       x="100"
+       y="39.292"
+       id="text19">canServiceInsertEntity1Remotely</text>
+    <line
+       style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;"
+       x1="26"
+       x2="26"
+       y1="132.8906"
+       y2="323.6875"
+       id="line21" />
+    <line
+       style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;"
+       x1="183.5"
+       x2="183.5"
+       y1="132.8906"
+       y2="323.6875"
+       id="line23" />
+    <line
+       style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;"
+       x1="301"
+       x2="301"
+       y1="132.8906"
+       y2="323.6875"
+       id="line25" />
+    <text
+       fill="#000000"
+       font-family="sans-serif"
+       font-size="14"
+       lengthAdjust="spacingAndGlyphs"
+       textLength="31"
+       x="8"
+       y="129.5889"
+       id="text27">Test</text>
+    <ellipse
+       cx="26.5"
+       cy="59.5938"
+       fill="#FEFECE"
+       filter="url(#f1ms5sdecse9zg)"
+       rx="8"
+       ry="8"
+       style="stroke: #A80036; stroke-width: 2.0;"
+       id="ellipse29" />
+    <path
+       d="M26.5,67.5938 L26.5,94.5938 M13.5,75.5938 L39.5,75.5938 M26.5,94.5938 L13.5,109.5938 M26.5,94.5938 L39.5,109.5938 "
+       fill="#FEFECE"
+       filter="url(#f1ms5sdecse9zg)"
+       style="stroke: #A80036; stroke-width: 2.0;"
+       id="path31" />
+    <text
+       fill="#000000"
+       font-family="sans-serif"
+       font-size="14"
+       lengthAdjust="spacingAndGlyphs"
+       textLength="31"
+       x="8"
+       y="335.6826"
+       id="text33">Test</text>
+    <ellipse
+       cx="26.5"
+       cy="348.9844"
+       fill="#FEFECE"
+       filter="url(#f1ms5sdecse9zg)"
+       rx="8"
+       ry="8"
+       style="stroke: #A80036; stroke-width: 2.0;"
+       id="ellipse35" />
+    <path
+       d="M26.5,356.9844 L26.5,383.9844 M13.5,364.9844 L39.5,364.9844 M26.5,383.9844 L13.5,398.9844 M26.5,383.9844 L39.5,398.9844 "
+       fill="#FEFECE"
+       filter="url(#f1ms5sdecse9zg)"
+       style="stroke: #A80036; stroke-width: 2.0;"
+       id="path37" />
+    <rect
+       fill="#FEFECE"
+       filter="url(#f1ms5sdecse9zg)"
+       height="30.2969"
+       style="stroke: #A80036; stroke-width: 1.5;"
+       width="64"
+       x="149.5"
+       y="97.5938"
+       id="rect39" />
+    <text
+       fill="#000000"
+       font-family="sans-serif"
+       font-size="14"
+       lengthAdjust="spacingAndGlyphs"
+       textLength="50"
+       x="156.5"
+       y="117.5889"
+       id="text41">Service</text>
+    <rect
+       fill="#FEFECE"
+       filter="url(#f1ms5sdecse9zg)"
+       height="30.2969"
+       style="stroke: #A80036; stroke-width: 1.5;"
+       width="64"
+       x="149.5"
+       y="322.6875"
+       id="rect43" />
+    <text
+       fill="#000000"
+       font-family="sans-serif"
+       font-size="14"
+       lengthAdjust="spacingAndGlyphs"
+       textLength="50"
+       x="156.5"
+       y="342.6826"
+       id="text45">Service</text>
+    <rect
+       fill="#FEFECE"
+       filter="url(#f1ms5sdecse9zg)"
+       height="46.5938"
+       style="stroke: #A80036; stroke-width: 1.5;"
+       width="119"
+       x="240"
+       y="81.2969"
+       id="rect47" />
+    <text
+       fill="#000000"
+       font-family="sans-serif"
+       font-size="14"
+       lengthAdjust="spacingAndGlyphs"
+       textLength="105"
+       x="247"
+       y="101.292"
+       id="text49">RemoteService</text>
+    <text
+       fill="#000000"
+       font-family="sans-serif"
+       font-size="14"
+       lengthAdjust="spacingAndGlyphs"
+       textLength="64"
+       x="267.5"
+       y="117.5889"
+       id="text51">Simulator</text>
+    <rect
+       fill="#FEFECE"
+       filter="url(#f1ms5sdecse9zg)"
+       height="46.5938"
+       style="stroke: #A80036; stroke-width: 1.5;"
+       width="119"
+       x="240"
+       y="322.6875"
+       id="rect53" />
+    <text
+       fill="#000000"
+       font-family="sans-serif"
+       font-size="14"
+       lengthAdjust="spacingAndGlyphs"
+       textLength="105"
+       x="247"
+       y="342.6826"
+       id="text55">RemoteService</text>
+    <text
+       fill="#000000"
+       font-family="sans-serif"
+       font-size="14"
+       lengthAdjust="spacingAndGlyphs"
+       textLength="64"
+       x="267.5"
+       y="358.9795"
+       id="text57">Simulator</text>
+    <polygon
+       fill="#A80036"
+       points="171.5,159.8906,181.5,163.8906,171.5,167.8906,175.5,163.8906"
+       style="stroke: #A80036; stroke-width: 1.0;"
+       id="polygon59" />
+    <line
+       style="stroke: #A80036; stroke-width: 1.0;"
+       x1="26.5"
+       x2="177.5"
+       y1="163.8906"
+       y2="163.8906"
+       id="line61" />
+    <text
+       fill="#000000"
+       font-family="sans-serif"
+       font-size="13"
+       font-weight="bold"
+       lengthAdjust="spacingAndGlyphs"
+       textLength="21"
+       x="33.5"
+       y="158.9575"
+       id="text63">[1]</text>
+    <text
+       fill="#000000"
+       font-family="sans-serif"
+       font-size="13"
+       lengthAdjust="spacingAndGlyphs"
+       textLength="108"
+       x="58.5"
+       y="158.9575"
+       id="text65">newRemoteEntry</text>
+    <polygon
+       fill="#A80036"
+       points="289.5,189.0234,299.5,193.0234,289.5,197.0234,293.5,193.0234"
+       style="stroke: #A80036; stroke-width: 1.0;"
+       id="polygon67" />
+    <line
+       style="stroke: #A80036; stroke-width: 1.0;"
+       x1="183.5"
+       x2="295.5"
+       y1="193.0234"
+       y2="193.0234"
+       id="line69" />
+    <text
+       fill="#000000"
+       font-family="sans-serif"
+       font-size="13"
+       font-weight="bold"
+       lengthAdjust="spacingAndGlyphs"
+       textLength="21"
+       x="190.5"
+       y="188.0903"
+       id="text71">[2]</text>
+    <text
+       fill="#000000"
+       font-family="sans-serif"
+       font-size="13"
+       lengthAdjust="spacingAndGlyphs"
+       textLength="69"
+       x="215.5"
+       y="188.0903"
+       id="text73">newEntity1</text>
+    <polygon
+       fill="#FBFB77"
+       filter="url(#f1ms5sdecse9zg)"
+       points="306,206.1563,306,246.1563,448,246.1563,448,216.1563,438,206.1563,306,206.1563"
+       style="stroke: #A80036; stroke-width: 1.0;"
+       id="polygon75" />
+    <line
+       style="stroke: #A80036; stroke-width: 1.0;"
+       x1="438"
+       x2="438"
+       y1="206.1563"
+       y2="216.1563"
+       id="line77" />
+    <line
+       style="stroke: #A80036; stroke-width: 1.0;"
+       x1="448"
+       x2="438"
+       y1="216.1563"
+       y2="216.1563"
+       id="line79" />
+    <text
+       fill="#000000"
+       font-family="sans-serif"
+       font-size="13"
+       lengthAdjust="spacingAndGlyphs"
+       textLength="121"
+       x="312"
+       y="223.2231"
+       id="text81">simulates insertion</text>
+    <text
+       fill="#000000"
+       font-family="sans-serif"
+       font-size="13"
+       lengthAdjust="spacingAndGlyphs"
+       textLength="106"
+       x="312"
+       y="238.356"
+       id="text83">by creating an id</text>
+    <polygon
+       fill="#A80036"
+       points="194.5,272.4219,184.5,276.4219,194.5,280.4219,190.5,276.4219"
+       style="stroke: #A80036; stroke-width: 1.0;"
+       id="polygon85" />
+    <line
+       style="stroke: #A80036; stroke-width: 1.0;"
+       x1="188.5"
+       x2="300.5"
+       y1="276.4219"
+       y2="276.4219"
+       id="line87" />
+    <text
+       fill="#000000"
+       font-family="sans-serif"
+       font-size="13"
+       font-weight="bold"
+       lengthAdjust="spacingAndGlyphs"
+       textLength="21"
+       x="200.5"
+       y="271.4888"
+       id="text89">[3]</text>
+    <text
+       fill="#000000"
+       font-family="sans-serif"
+       font-size="13"
+       lengthAdjust="spacingAndGlyphs"
+       textLength="11"
+       x="225.5"
+       y="271.4888"
+       id="text91">id</text>
+    <polygon
+       fill="#A80036"
+       points="37.5,301.5547,27.5,305.5547,37.5,309.5547,33.5,305.5547"
+       style="stroke: #A80036; stroke-width: 1.0;"
+       id="polygon93" />
+    <line
+       style="stroke: #A80036; stroke-width: 1.0;"
+       x1="31.5"
+       x2="182.5"
+       y1="305.5547"
+       y2="305.5547"
+       id="line95" />
+    <text
+       fill="#000000"
+       font-family="sans-serif"
+       font-size="13"
+       font-weight="bold"
+       lengthAdjust="spacingAndGlyphs"
+       textLength="21"
+       x="43.5"
+       y="300.6216"
+       id="text97">[4]</text>
+    <text
+       fill="#000000"
+       font-family="sans-serif"
+       font-size="13"
+       lengthAdjust="spacingAndGlyphs"
+       textLength="11"
+       x="68.5"
+       y="300.6216"
+       id="text99">id</text>
+    <!--
+@startuml
+title: ServiceWithSimulatorTest\ncanServiceInsertEntity1Remotely
+
+actor Test as t
+participant Service as s
+participant "RemoteService\nSimulator" as rss
+autonumber  "<b>[##]"
+t->s: newRemoteEntry
+s->rss: newEntity1
+note right of rss: simulates insertion\nby creating an id
+rss->s: id
+s->t: id
+@enduml
+
+PlantUML version 1.2017.12(Wed Apr 26 18:06:36 CEST 2017)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Java Version: 1.8.0_112-release-736-b21
+Operating System: Linux
+OS Version: 4.8.0-49-generic
+Default Encoding: UTF-8
+Language: en
+Country: US
+-->
+  </g>
+</svg>

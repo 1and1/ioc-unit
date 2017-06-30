@@ -1,0 +1,583 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+        xmlns:dc="http://purl.org/dc/elements/1.1/"
+        xmlns:cc="http://creativecommons.org/ns#"
+        xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+        xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+        contentScriptType="application/ecmascript"
+        contentStyleType="text/css"
+        height="565px"
+        preserveAspectRatio="none"
+        style="width:420px;height:565px;"
+        version="1.1"
+        viewBox="0 0 420 565"
+        width="420px"
+        zoomAndPan="magnify"
+        id="svg2"
+        inkscape:version="0.91 r13725"
+        sodipodi:docname="CanServiceInsertEntity.svg">
+  <metadata
+     id="metadata143">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="640"
+     inkscape:window-height="480"
+     id="namedview141"
+     showgrid="false"
+     inkscape:zoom="0.41769912"
+     inkscape:cx="210"
+     inkscape:cy="282.5"
+     inkscape:window-x="24"
+     inkscape:window-y="24"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg2" />
+  <defs
+     id="defs4">
+    <filter
+       height="300%"
+       id="fdibbqr5wvtm3"
+       width="300%"
+       x="-1"
+       y="-1">
+      <feGaussianBlur
+         result="blurOut"
+         stdDeviation="2.0"
+         id="feGaussianBlur7" />
+      <feColorMatrix
+         in="blurOut"
+         result="blurOut2"
+         type="matrix"
+         values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"
+         id="feColorMatrix9" />
+      <feOffset
+         dx="4.0"
+         dy="4.0"
+         in="blurOut2"
+         result="blurOut3"
+         id="feOffset11" />
+      <feBlend
+         in="SourceGraphic"
+         in2="blurOut3"
+         mode="normal"
+         id="feBlend13" />
+    </filter>
+  </defs>
+  <g
+     id="g15">
+    <text
+       fill="#000000"
+       font-family="sans-serif"
+       font-size="14"
+       font-weight="bold"
+       lengthAdjust="spacingAndGlyphs"
+       textLength="202"
+       x="109.5"
+       y="22.9951"
+       id="text17">Can Service insert Entity?</text>
+    <line
+       style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;"
+       x1="26"
+       x2="26"
+       y1="116.5938"
+       y2="481.1875"
+       id="line19" />
+    <line
+       style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;"
+       x1="170"
+       x2="170"
+       y1="116.5938"
+       y2="481.1875"
+       id="line21" />
+    <line
+       style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;"
+       x1="319"
+       x2="319"
+       y1="116.5938"
+       y2="481.1875"
+       id="line23" />
+    <line
+       style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;"
+       x1="395"
+       x2="395"
+       y1="116.5938"
+       y2="481.1875"
+       id="line25" />
+    <text
+       fill="#000000"
+       font-family="sans-serif"
+       font-size="14"
+       lengthAdjust="spacingAndGlyphs"
+       textLength="31"
+       x="8"
+       y="113.292"
+       id="text27">Test</text>
+    <ellipse
+       cx="26.5"
+       cy="43.2969"
+       fill="#FEFECE"
+       filter="url(#fdibbqr5wvtm3)"
+       rx="8"
+       ry="8"
+       style="stroke: #A80036; stroke-width: 2.0;"
+       id="ellipse29" />
+    <path
+       d="M26.5,51.2969 L26.5,78.2969 M13.5,59.2969 L39.5,59.2969 M26.5,78.2969 L13.5,93.2969 M26.5,78.2969 L39.5,93.2969 "
+       fill="#FEFECE"
+       filter="url(#fdibbqr5wvtm3)"
+       style="stroke: #A80036; stroke-width: 2.0;"
+       id="path31" />
+    <text
+       fill="#000000"
+       font-family="sans-serif"
+       font-size="14"
+       lengthAdjust="spacingAndGlyphs"
+       textLength="31"
+       x="8"
+       y="493.1826"
+       id="text33">Test</text>
+    <ellipse
+       cx="26.5"
+       cy="506.4844"
+       fill="#FEFECE"
+       filter="url(#fdibbqr5wvtm3)"
+       rx="8"
+       ry="8"
+       style="stroke: #A80036; stroke-width: 2.0;"
+       id="ellipse35" />
+    <path
+       d="M26.5,514.4844 L26.5,541.4844 M13.5,522.4844 L39.5,522.4844 M26.5,541.4844 L13.5,556.4844 M26.5,541.4844 L39.5,556.4844 "
+       fill="#FEFECE"
+       filter="url(#fdibbqr5wvtm3)"
+       style="stroke: #A80036; stroke-width: 2.0;"
+       id="path37" />
+    <rect
+       fill="#FEFECE"
+       filter="url(#fdibbqr5wvtm3)"
+       height="30.2969"
+       style="stroke: #A80036; stroke-width: 1.5;"
+       width="63"
+       x="137"
+       y="81.2969"
+       id="rect39" />
+    <text
+       fill="#000000"
+       font-family="sans-serif"
+       font-size="14"
+       lengthAdjust="spacingAndGlyphs"
+       textLength="49"
+       x="144"
+       y="101.292"
+       id="text41">service</text>
+    <rect
+       fill="#FEFECE"
+       filter="url(#fdibbqr5wvtm3)"
+       height="30.2969"
+       style="stroke: #A80036; stroke-width: 1.5;"
+       width="63"
+       x="137"
+       y="480.1875"
+       id="rect43" />
+    <text
+       fill="#000000"
+       font-family="sans-serif"
+       font-size="14"
+       lengthAdjust="spacingAndGlyphs"
+       textLength="49"
+       x="144"
+       y="500.1826"
+       id="text45">service</text>
+    <rect
+       fill="#FEFECE"
+       filter="url(#fdibbqr5wvtm3)"
+       height="46.5938"
+       style="stroke: #A80036; stroke-width: 1.5;"
+       width="91"
+       x="272"
+       y="65"
+       id="rect47" />
+    <text
+       fill="#000000"
+       font-family="sans-serif"
+       font-size="14"
+       lengthAdjust="spacingAndGlyphs"
+       textLength="77"
+       x="279"
+       y="84.9951"
+       id="text49">transaction</text>
+    <text
+       fill="#000000"
+       font-family="sans-serif"
+       font-size="14"
+       lengthAdjust="spacingAndGlyphs"
+       textLength="61"
+       x="287"
+       y="101.292"
+       id="text51">manager</text>
+    <rect
+       fill="#FEFECE"
+       filter="url(#fdibbqr5wvtm3)"
+       height="46.5938"
+       style="stroke: #A80036; stroke-width: 1.5;"
+       width="91"
+       x="272"
+       y="480.1875"
+       id="rect53" />
+    <text
+       fill="#000000"
+       font-family="sans-serif"
+       font-size="14"
+       lengthAdjust="spacingAndGlyphs"
+       textLength="77"
+       x="279"
+       y="500.1826"
+       id="text55">transaction</text>
+    <text
+       fill="#000000"
+       font-family="sans-serif"
+       font-size="14"
+       lengthAdjust="spacingAndGlyphs"
+       textLength="61"
+       x="287"
+       y="516.4795"
+       id="text57">manager</text>
+    <text
+       fill="#000000"
+       font-family="sans-serif"
+       font-size="14"
+       lengthAdjust="spacingAndGlyphs"
+       textLength="18"
+       x="383"
+       y="113.292"
+       id="text59">db</text>
+    <path
+       d="M377,64.2969 C377,54.2969 395,54.2969 395,54.2969 C395,54.2969 413,54.2969 413,64.2969 L413,90.2969 C413,100.2969 395,100.2969 395,100.2969 C395,100.2969 377,100.2969 377,90.2969 L377,64.2969 "
+       fill="#FEFECE"
+       filter="url(#fdibbqr5wvtm3)"
+       style="stroke: #000000; stroke-width: 1.5;"
+       id="path61" />
+    <path
+       d="M377,64.2969 C377,74.2969 395,74.2969 395,74.2969 C395,74.2969 413,74.2969 413,64.2969 "
+       fill="none"
+       style="stroke: #000000; stroke-width: 1.5;"
+       id="path63" />
+    <text
+       fill="#000000"
+       font-family="sans-serif"
+       font-size="14"
+       lengthAdjust="spacingAndGlyphs"
+       textLength="18"
+       x="383"
+       y="493.1826"
+       id="text65">db</text>
+    <path
+       d="M377,506.4844 C377,496.4844 395,496.4844 395,496.4844 C395,496.4844 413,496.4844 413,506.4844 L413,532.4844 C413,542.4844 395,542.4844 395,542.4844 C395,542.4844 377,542.4844 377,532.4844 L377,506.4844 "
+       fill="#FEFECE"
+       filter="url(#fdibbqr5wvtm3)"
+       style="stroke: #000000; stroke-width: 1.5;"
+       id="path67" />
+    <path
+       d="M377,506.4844 C377,516.4844 395,516.4844 395,516.4844 C395,516.4844 413,516.4844 413,506.4844 "
+       fill="none"
+       style="stroke: #000000; stroke-width: 1.5;"
+       id="path69" />
+    <polygon
+       fill="#A80036"
+       points="158.5,143.5938,168.5,147.5938,158.5,151.5938,162.5,147.5938"
+       style="stroke: #A80036; stroke-width: 1.0;"
+       id="polygon71" />
+    <line
+       style="stroke: #A80036; stroke-width: 1.0;"
+       x1="26.5"
+       x2="164.5"
+       y1="147.5938"
+       y2="147.5938"
+       id="line73" />
+    <text
+       fill="#000000"
+       font-family="sans-serif"
+       font-size="13"
+       lengthAdjust="spacingAndGlyphs"
+       textLength="120"
+       x="33.5"
+       y="142.6606"
+       id="text75">newEntity(1, test1)</text>
+    <polygon
+       fill="#FBFB77"
+       filter="url(#fdibbqr5wvtm3)"
+       points="175,160.7266,175,215.7266,309,215.7266,309,170.7266,299,160.7266,175,160.7266"
+       style="stroke: #A80036; stroke-width: 1.0;"
+       id="polygon77" />
+    <line
+       style="stroke: #A80036; stroke-width: 1.0;"
+       x1="299"
+       x2="299"
+       y1="160.7266"
+       y2="170.7266"
+       id="line79" />
+    <line
+       style="stroke: #A80036; stroke-width: 1.0;"
+       x1="309"
+       x2="299"
+       y1="170.7266"
+       y2="170.7266"
+       id="line81" />
+    <text
+       fill="#000000"
+       font-family="sans-serif"
+       font-size="13"
+       lengthAdjust="spacingAndGlyphs"
+       textLength="113"
+       x="181"
+       y="177.7935"
+       id="text83">REQUIRED means</text>
+    <text
+       fill="#000000"
+       font-family="sans-serif"
+       font-size="13"
+       lengthAdjust="spacingAndGlyphs"
+       textLength="86"
+       x="181"
+       y="192.9263"
+       id="text85">transaction is</text>
+    <text
+       fill="#000000"
+       font-family="sans-serif"
+       font-size="13"
+       lengthAdjust="spacingAndGlyphs"
+       textLength="65"
+       x="181"
+       y="208.0591"
+       id="text87">necessary</text>
+    <polygon
+       fill="#A80036"
+       points="307.5,242.125,317.5,246.125,307.5,250.125,311.5,246.125"
+       style="stroke: #A80036; stroke-width: 1.0;"
+       id="polygon89" />
+    <line
+       style="stroke: #A80036; stroke-width: 1.0;"
+       x1="170.5"
+       x2="313.5"
+       y1="246.125"
+       y2="246.125"
+       id="line91" />
+    <text
+       fill="#000000"
+       font-family="sans-serif"
+       font-size="13"
+       lengthAdjust="spacingAndGlyphs"
+       textLength="111"
+       x="177.5"
+       y="241.1919"
+       id="text93">begin transaction</text>
+    <polygon
+       fill="#A80036"
+       points="383,271.2578,393,275.2578,383,279.2578,387,275.2578"
+       style="stroke: #A80036; stroke-width: 1.0;"
+       id="polygon95" />
+    <line
+       style="stroke: #A80036; stroke-width: 1.0;"
+       x1="170.5"
+       x2="389"
+       y1="275.2578"
+       y2="275.2578"
+       id="line97" />
+    <text
+       fill="#000000"
+       font-family="sans-serif"
+       font-size="13"
+       lengthAdjust="spacingAndGlyphs"
+       textLength="76"
+       x="177.5"
+       y="270.3247"
+       id="text99">insert entity</text>
+    <polygon
+       fill="#A80036"
+       points="181.5,300.3906,171.5,304.3906,181.5,308.3906,177.5,304.3906"
+       style="stroke: #A80036; stroke-width: 1.0;"
+       id="polygon101" />
+    <line
+       style="stroke: #A80036; stroke-width: 1.0;"
+       x1="175.5"
+       x2="394"
+       y1="304.3906"
+       y2="304.3906"
+       id="line103" />
+    <text
+       fill="#000000"
+       font-family="sans-serif"
+       font-size="13"
+       lengthAdjust="spacingAndGlyphs"
+       textLength="73"
+       x="187.5"
+       y="299.4575"
+       id="text105">generate id</text>
+    <polygon
+       fill="#A80036"
+       points="307.5,329.5234,317.5,333.5234,307.5,337.5234,311.5,333.5234"
+       style="stroke: #A80036; stroke-width: 1.0;"
+       id="polygon107" />
+    <line
+       style="stroke: #A80036; stroke-width: 1.0;"
+       x1="170.5"
+       x2="313.5"
+       y1="333.5234"
+       y2="333.5234"
+       id="line109" />
+    <text
+       fill="#000000"
+       font-family="sans-serif"
+       font-size="13"
+       lengthAdjust="spacingAndGlyphs"
+       textLength="125"
+       x="177.5"
+       y="328.5903"
+       id="text111">commit transaction</text>
+    <polygon
+       fill="#A80036"
+       points="37.5,358.6563,27.5,362.6563,37.5,366.6563,33.5,362.6563"
+       style="stroke: #A80036; stroke-width: 1.0;"
+       id="polygon113" />
+    <line
+       style="stroke: #A80036; stroke-width: 1.0;"
+       x1="31.5"
+       x2="169.5"
+       y1="362.6563"
+       y2="362.6563"
+       id="line115" />
+    <text
+       fill="#000000"
+       font-family="sans-serif"
+       font-size="13"
+       lengthAdjust="spacingAndGlyphs"
+       textLength="11"
+       x="43.5"
+       y="357.7231"
+       id="text117">id</text>
+    <polygon
+       fill="#A80036"
+       points="383,387.7891,393,391.7891,383,395.7891,387,391.7891"
+       style="stroke: #A80036; stroke-width: 1.0;"
+       id="polygon119" />
+    <line
+       style="stroke: #A80036; stroke-width: 1.0;"
+       x1="26.5"
+       x2="389"
+       y1="391.7891"
+       y2="391.7891"
+       id="line121" />
+    <text
+       fill="#000000"
+       font-family="sans-serif"
+       font-size="13"
+       lengthAdjust="spacingAndGlyphs"
+       textLength="50"
+       x="33.5"
+       y="386.856"
+       id="text123">read(id)</text>
+    <polygon
+       fill="#A80036"
+       points="37.5,416.9219,27.5,420.9219,37.5,424.9219,33.5,420.9219"
+       style="stroke: #A80036; stroke-width: 1.0;"
+       id="polygon125" />
+    <line
+       style="stroke: #A80036; stroke-width: 1.0;"
+       x1="31.5"
+       x2="394"
+       y1="420.9219"
+       y2="420.9219"
+       id="line127" />
+    <text
+       fill="#000000"
+       font-family="sans-serif"
+       font-size="13"
+       lengthAdjust="spacingAndGlyphs"
+       textLength="36"
+       x="43.5"
+       y="415.9888"
+       id="text129">entity</text>
+    <line
+       style="stroke: #A80036; stroke-width: 1.0;"
+       x1="26.5"
+       x2="68.5"
+       y1="450.1875"
+       y2="450.1875"
+       id="line131" />
+    <line
+       style="stroke: #A80036; stroke-width: 1.0;"
+       x1="68.5"
+       x2="68.5"
+       y1="450.1875"
+       y2="463.1875"
+       id="line133" />
+    <line
+       style="stroke: #A80036; stroke-width: 1.0;"
+       x1="27.5"
+       x2="68.5"
+       y1="463.1875"
+       y2="463.1875"
+       id="line135" />
+    <polygon
+       fill="#A80036"
+       points="37.5,459.1875,27.5,463.1875,37.5,467.1875,33.5,463.1875"
+       style="stroke: #A80036; stroke-width: 1.0;"
+       id="polygon137" />
+    <text
+       fill="#000000"
+       font-family="sans-serif"
+       font-size="13"
+       lengthAdjust="spacingAndGlyphs"
+       textLength="77"
+       x="33.5"
+       y="445.1216"
+       id="text139">check entity</text>
+    <!--
+@startuml
+title: Can Service insert Entity?
+actor Test as t
+participant service as s
+participant "transaction\nmanager" as tm
+database db
+t -> s: newEntity(1, test1)
+note right of s: REQUIRED means\ntransaction is \nnecessary
+s -> tm: begin transaction
+s -> db: insert entity
+db -> s: generate id
+s -> tm: commit transaction
+s -> t: id
+t -> db: read(id)
+db -> t: entity
+t -> t: check entity
+@enduml
+
+PlantUML version 1.2017.12(Wed Apr 26 18:06:36 CEST 2017)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Java Version: 1.8.0_112-release-736-b21
+Operating System: Linux
+OS Version: 4.8.0-49-generic
+Default Encoding: UTF-8
+Language: en
+Country: US
+-->
+  </g>
+</svg>

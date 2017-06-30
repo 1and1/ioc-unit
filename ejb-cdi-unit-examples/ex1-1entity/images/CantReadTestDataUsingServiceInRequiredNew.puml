@@ -1,0 +1,20 @@
+@startuml
+title: Can't Read Testdata using Service RequiresNew?
+actor Test as t
+participant service as s
+participant "transaction\nmanager" as tm
+database db
+t -> tm: begin Transaction 1
+t -> db: insert testdata
+db -> t: return generated ids
+t -> tm: start RequiresNew Transaction 2
+t -> s: read Data(id)
+note right of s:  s will use the\nrunning\ntransaction
+s -> db: read by id
+note right of db: dirty read\nis not possible
+db -> s: don't know id (yet)
+s -> t: return null
+t -> tm: commit transaction 2
+t -> t: check
+t -> tm: commit transaction 1
+@enduml

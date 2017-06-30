@@ -1,0 +1,14 @@
+@startuml
+title: ServiceWithSimulatorTest\ncanServiceInsertEntity1Remotely
+
+actor Test as t
+participant Service as s
+participant "RemoteService\nSimulator" as rss
+autonumber  "<b>[##]"
+t->s: newRemoteEntry
+s->rss: newEntity1
+note right of rss: simulates insertion\nby creating an id
+rss->s: id
+s->t: id
+t->t: checkid
+@enduml

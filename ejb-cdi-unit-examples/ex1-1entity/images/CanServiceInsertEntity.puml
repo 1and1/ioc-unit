@@ -1,0 +1,17 @@
+@startuml
+title: Can Service insert Entity?
+actor Test as t
+participant service as s
+participant "transaction\nmanager" as tm
+database db
+t -> s: newEntity(1, test1)
+note right of s: REQUIRED means\ntransaction is \nnecessary
+s -> tm: begin transaction
+s -> db: insert entity
+db -> s: generate id
+s -> tm: commit transaction
+s -> t: id
+t -> db: read(id)
+db -> t: entity
+t -> t: check entity
+@enduml
