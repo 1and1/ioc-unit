@@ -44,7 +44,7 @@ The Testfunctions:
             }
         });    
 the call is done in a separate transaction which can't read the "yet dirty" data, inserted previously in the testcode. Therefore the service call which previously assumed that exactly one entity should be found for this id, creates a NoResultException. The Testclosure embeds this Exception in a TestTransactionException.
-![image](images/CantReadTestDataUsingServiceInRequiredNew.svg)
+![image](images/CantReadTestDataUsingServiceInRequiredNew.png)
 
 * *canReadCommittedTestDataUsingServiceInRequiredNew* see first the explanation of cantReadTestDataUsingServiceInRequiredNew. Since the transaction creating the testdata has been committed, the embedded transaction is able to read and the NoResultException does not occur.
 ![image](images/CanReadCommittedTestDataUsingServiceInRequiredNew.svg)
