@@ -85,47 +85,24 @@ There will be several examples which should demonstrate how different kinds of a
 This example contains a Service implemented as stateless EJB which can return a constant number and offers the possibility to
 add an Entity to a database and to search for it by its id.
 
-[see](https://github.com/1and1/ejb-cdi-unit/tree/master/ejb-cdi-unit-examples/ex1-1entity)
+[see](https://github.com/1and1/ejb-cdi-unit/tree/master/examples/ex1-1entity)
 
 
 ### One Service and One Synchronously Consumed Service
 
-This simple kind of service just provides a service-interface does some calculations and  synchronously consumes some interfaces from other services it uses. A suggestion how such a service can be tested using ejb-cdi-unit will be shown [here](https://github.com/1and1/ejb-cdi-unit/blob/master/ejb-cdi-unit-examples/test).
-
-In this sub-module several possibilities to inject remote services and to simulate those remote services by the Tests are shown.
-There are not many calculations done, the servicecall here is for demonstration purposes just propagated to the remote site.
-
-* [Service1]() to be tested hypothetically gets the remote callable interface injected via @EJB.
-      @EJB(mappedName = "RemoteServiceIntf/remote")
-      RemoteServiceIntf remoteService;
-might be code that allows to inject the reference to a remote bean. The following Tests use ejb-cdi-unit to test this configuration in 2 of many possible ways:
-
-    * [ServiceTest]() simulates the remote Service by implementing the interface using a specific class. This is configured into the container inside the @AdditionalClasses Annotation.
-    * [ServiceTestWithMockito]() does not use an implementation of the remote interface, but mockito-expressions to generate the required behaviour.  
-
-* [Service2]() alternatively uses a Resources-Bean which handles the lookups of the remote bean. The Test [ServiceTestWithAlternative]() is used to demonstrate the usage of @ActivatedAlternatives.
+This simple kind of service just provides a service-interface does some calculations and  synchronously consumes some interfaces from other services it uses. A suggestion how such a service can be tested using ejb-cdi-unit will be shown [here](https://github.com/1and1/ejb-cdi-unit/blob/master/examples/test).
 
 
 ### One Service and One Asynchronously Consumed Service
 
-The service-interface of the previous tests has been changed, so that the answer of the remote service will not be awaited. Instead of returning the actual result, a CorrelationId is returned which later can be used to query for the result itself. For this query 2 function pollId and pushString have been added. They return null, if the result is not ready yet.
-The Servercode achieves the asynchronous behaviour by using the @Asynchronous annotation. Each request to the consumed service is forwarded to a bean that delegates these calls to the remote interface inside asynchronous methods. These Methods return "Future"-object which can be used to check, whether the call has been completed, and when, which return the result.
-
-The EjbExtensions which are initiated by EjbUnitRunner intercept these calls by AsynchronousInterceptor which generates a special future. There are two modes of operation possible. Either the future methods: "isDone" and "get" lead to synchronous calls, or the future checks if a lambda routine created to handle the embedded call is completed. In the second mode the AsynchronousManager-Singleton is responsible to handle the call.
-
-To illustrate this two Tests are created
-* [ServiceTest]()
- 	* the poll-Routines can be called without further actions, they query the furtures which internally do direct calls
-* [AsynchronousServiceTestDeterministic]()
-	* the poll-Routines will return null as long as the asynchronous handling is not initiated yet. Using AsynchronousManager#once works through all current queued activities and handle these synchronously. In this way the test itself can decide in a deterministic way, when the handling is to be done.
-* [AsynchronousServiceTestMultithreaded]()
-	* AsynchronousInterceptor works in non-implicit mode. Additionally using AsynchronousManager#startThread a thread is started that handles the queued routines in background. To make this test deterministic all poll-queries must loop until they return null.
+[see](https://github.com/1and1/ejb-cdi-unit/tree/master/examples/ex3-asyncconsumedpoll)
 
 ### One Service and One Asynchronously Consumed Service Plus Asynchronous Callback
 
 The previous example gets extended in a way so that the original service consumes a special interface its client provides and calls back as soon as the answer is ready.
 
--- not implemented yet
+[see](https://github.com/1and1/ejb-cdi-unit/tree/master/examples/ex4-asyncconsumedpush)
+
 
 ### One Service and One Asynchronously Consumed Service internally using Messaging
 
