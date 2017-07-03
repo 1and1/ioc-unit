@@ -1,0 +1,11 @@
+@startuml
+title: Synchronous Service Call simulated Remote Service
+
+actor Test as t
+participant "Service" as s
+participant "Remote\nService\nSimulator" as rs
+t -> s: newRemoteEntity
+s -> rs: newEntity
+rs --> s: id
+s --> t: id
+@enduml

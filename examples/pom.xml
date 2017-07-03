@@ -12,6 +12,7 @@
         <module>ex4-asyncconsumedpush</module>
         <module>ex5-asyncconsumedjms1</module>
         <module>ex6-asyncconsumedjms2</module>
+        <module>ex7-simplerest</module>
     </modules>
 
     <name>net.oneandone:ejb-cdi-unit-examples</name>

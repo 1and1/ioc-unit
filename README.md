@@ -18,7 +18,6 @@ Simplify test driven development of ejb-3.x Services. ![Build Status](https://tr
 	- [One Service and One Asynchronously Consumed Service Plus Asynchronous Callback](#one-service-and-one-asynchronously-consumed-service-plus-asynchronous-callback)
 	- [One Service and One Asynchronously Consumed Service internally using Messaging](#one-service-and-one-asynchronously-consumed-service-internally-using-messaging)
 	- [Test of a Rest-Service](#test-of-a-rest-service)
-	- [](#)
 - [Restrictions](#restrictions)
 - [Acknowledgments](#acknowledgments)
 - [License](#license)
@@ -79,7 +78,7 @@ What do we need to be able to achieve this?
 
 # Usage
 
-The usage does not differ very much from cdiunit, except:
+The usage does not differ very much from cdi-unit:
 
 * You need to include additionally:    
 
@@ -91,9 +90,10 @@ The usage does not differ very much from cdiunit, except:
         </dependency>
 
 * Instead @RunWith(CdiRunner) use @RunWith(EjbUnitRunner)
-* It might be necessary to provide a specific persistence.xml using H2 and declaring the Entity-classes that are used during tests.
-* Some @Resource or @Ejb-injected objects might need Simulations either using Mockito or Helper classes in tests which are added as Alternatives or normal beans in @AdditionalClasses.
-* Services consumed by the Artifact might need Simulations.  
+* It might be necessary to provide a specific persistence.xml using H2 and declaring the Entity-classes that are used during tests. When the name of the persistence-unit is test, the provided class TestPersistenceFactory can be used without further ado, to produce EntityManager-, Database- and UserTransaction-Objects.
+* Some @Resource or @Ejb -injected objects might need Simulations either using Mockito or Helper classes in tests which are added as Alternatives or normal beans in @AdditionalClasses. Standard cdi-unit would leave those null.
+* Services consumed by the Artifact might need Simulations. (same as cdi-unit)
+* Rest-Services: Good experiences have been made in using the RestEasy MockDispatcherFactory.  (same as cdi-unit)
 
 # Modules
 
@@ -151,9 +151,7 @@ Using one queue, mdbs are triggered by a defined messageSelector.
 
 This example shows how it is easily possible to test a artifact by it's rest-interface and being able to use the database at the same time.
 
--- to be implemented yet.
-
-##
+[see](https://github.com/1and1/ejb-cdi-unit/tree/master/examples/ex7-simplerest)
 
 
 # Restrictions
