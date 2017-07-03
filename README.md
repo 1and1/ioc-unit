@@ -2,7 +2,28 @@ ejb-cdi-unit
 ============
 Simplify test driven development of ejb-3.x Services. ![Build Status](https://travis-ci.org/1and1/ejb-cdi-unit.svg?branch=master)
 # Contents
+<!-- TOC depthFrom:1 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
 
+- [Contents](#contents)
+- [Motivation](#motivation)
+- [History](#history)
+- [Requirements](#requirements)
+- [Solution](#solution)
+- [Usage](#usage)
+- [Modules](#modules)
+- [Examples](#examples)
+	- [One Service and One Entity](#one-service-and-one-entity)
+	- [One Service and One Synchronously Consumed Service](#one-service-and-one-synchronously-consumed-service)
+	- [One Service and One Asynchronously Consumed Service](#one-service-and-one-asynchronously-consumed-service)
+	- [One Service and One Asynchronously Consumed Service Plus Asynchronous Callback](#one-service-and-one-asynchronously-consumed-service-plus-asynchronous-callback)
+	- [One Service and One Asynchronously Consumed Service internally using Messaging](#one-service-and-one-asynchronously-consumed-service-internally-using-messaging)
+	- [Test of a Rest-Service](#test-of-a-rest-service)
+	- [](#)
+- [Restrictions](#restrictions)
+- [Acknowledgments](#acknowledgments)
+- [License](#license)
+
+<!-- /TOC -->
 
 
 # Motivation
@@ -48,7 +69,7 @@ What do we need to be able to achieve this?
 *ejbcdiunit* helps by extending the mentioned extensions so that ejb-specific injections are "doable" using cdi-technics. Additionally it provides helper classes which provide functionality that otherwise would have to be implemented in every test class or test project again.
 
 * *PersistenceFactory* allows it, to use alternative (test) datasources in a easy way. There is a default which always searches a persistence-unit named "test".
-* TransactionManager handles per thread the stack of different transaction environments
+* TransactionManager handles per thread the stack of different transaction environmentsfixed
 * TransactionInterceptor is used by the extension to encapsulate calls to ejbs
 * AsynchronousManager is a singleton where asynchronously to be executed routines can be stored and later executed in a deterministic way.
 * AsynchronousInterceptor encapsulate beans have method annotated @Asynchronous
@@ -132,7 +153,7 @@ This example shows how it is easily possible to test a artifact by it's rest-int
 
 -- to be implemented yet.
 
-## 
+##
 
 
 # Restrictions
