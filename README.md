@@ -15,7 +15,6 @@ Simplify test driven development of ejb-3.x Services. ![Build Status](https://tr
 - [Examples](#examples)
 	- [One Service and One Entity](#one-service-and-one-entity)
 	- [One Service and One Synchronously Consumed Service](#one-service-and-one-synchronously-consumed-service)
-- [ejb-cdi-unit](#ejb-cdi-unit)
 	- [One Service and One Asynchronously Consumed Service](#one-service-and-one-asynchronously-consumed-service)
 	- [One Service and One Asynchronously Consumed Service Plus Asynchronous Callback](#one-service-and-one-asynchronously-consumed-service-plus-asynchronous-callback)
 	- [One Service and One Asynchronously Consumed Service internally using Messaging](#one-service-and-one-asynchronously-consumed-service-internally-using-messaging)
@@ -130,11 +129,12 @@ add an Entity to a database and to search for it by its id.
 ## One Service and One Synchronously Consumed Service
 
 This simple kind of service just provides a service-interface does some calculations and  synchronously consumes some interfaces from other services it uses. A suggestion how such a service can be tested using ejb-cdi-unit will be shown
-# ejb-cdi-unit
- [see](https://github.com/1and1/ejb-cdi-unit/blob/master/examples/ex2-syncconsumed).
+
+ [see](https://github.com/1and1/ejb-cdi-unit/blob/master/examples/ex2-syncconsumed)
 
 
 ## One Service and One Asynchronously Consumed Service
+The handling of @Asynchronous is demonstrated in the following examples.
 
 [see](https://github.com/1and1/ejb-cdi-unit/tree/master/examples/ex3-asyncconsumedpoll)
 
@@ -150,7 +150,15 @@ The previous example gets extended in a way so that the original service consume
 To provide a safe handling of service calls often message driven beans are used.
 In this way it can be made sure that requests are not lost even if a process or thread dies. Additionally in this way other cluster nodes can pick up in the processing.
 
--- not implemented yet
+Using two separate queues:
+
+[see](https://github.com/1and1/ejb-cdi-unit/tree/master/examples/ex5-asyncconsumedjms1)
+
+Using one queue, mdbs are triggered by a defined messageSelector.
+
+[see](https://github.com/1and1/ejb-cdi-unit/tree/master/examples/ex6-asyncconsumedjms2)
+
+
 # Restrictions
 The helpers have been developed as required, therefore it was not necessarily a  goal to fully adhere to the J2EE-standard:
 
