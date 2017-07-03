@@ -1,40 +1,53 @@
+ejb-cdi-unit
+============
+Simplify test driven development of ejb-3.x Services. ![Build Status](https://travis-ci.org/1and1/ejb-cdi-unit.svg?branch=master)
+# Contents
+
 <!-- TOC depthFrom:1 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
 
+- [Contents](#contents)
+- [Motivation](#motivation)
+- [History](#history)
+- [Requirements](#requirements)
+- [Solution](#solution)
+- [Usage](#usage)
+- [Modules](#modules)
+- [Examples](#examples)
+	- [One Service and One Entity](#one-service-and-one-entity)
+	- [One Service and One Synchronously Consumed Service](#one-service-and-one-synchronously-consumed-service)
 - [ejb-cdi-unit](#ejb-cdi-unit)
-	- [Motivation](#motivation)
-	- [Requirements](#requirements)
-	- [Solution](#solution)
-	- [Usage](#usage)
-	- [Examples](#examples)
-		- [One Service and One Entity](#one-service-and-one-entity)
-		- [One Service and One Synchronously Consumed Service](#one-service-and-one-synchronously-consumed-service)
-		- [One Service and One Asynchronously Consumed Service](#one-service-and-one-asynchronously-consumed-service)
-		- [One Service and One Asynchronously Consumed Service Plus Asynchronous Callback](#one-service-and-one-asynchronously-consumed-service-plus-asynchronous-callback)
-		- [One Service and One Asynchronously Consumed Service internally using Messaging](#one-service-and-one-asynchronously-consumed-service-internally-using-messaging)
-	- [Acknowledgments](#acknowledgments)
-	- [License](#license)
+	- [One Service and One Asynchronously Consumed Service](#one-service-and-one-asynchronously-consumed-service)
+	- [One Service and One Asynchronously Consumed Service Plus Asynchronous Callback](#one-service-and-one-asynchronously-consumed-service-plus-asynchronous-callback)
+	- [One Service and One Asynchronously Consumed Service internally using Messaging](#one-service-and-one-asynchronously-consumed-service-internally-using-messaging)
+- [Restrictions](#restrictions)
+- [Acknowledgments](#acknowledgments)
+- [License](#license)
 
 <!-- /TOC -->
-# ejb-cdi-unit
 
-Simplify test driven development of ejb-3.x Services.
-
-![Build Status](https://travis-ci.org/1and1/ejb-cdi-unit.svg?branch=master)
-
-
-## Motivation
-During the development of services, the necessity to implement automatic module-tests arises. In this context, a module means one deployable artifact.
+# Motivation
+During the dvelopment of services, the necessity to implement automatic module-tests arises. In this context, a module means one deployable artifact.
 
 Given the development occurs using an IDE (integrated development environment) like Eclipse or Intellij, the aim is to provide a module which makes it easy, to first write the test and then to develop the service. The standard approach to achieve this is to recreate a kind of server environment, including the destination server runtime, the destination datasources and message queues.
 The effort to recreate these target runtime conditions on the development machine is often quite substantial. Sometimes it is even avoided and all testing is done using test servers or clients, often in a non automatic way.
 
 ejb-cdi-unit is an extension of cdi-unit which contains modules/classes as they became necessary to support automatic tests of about 10 different service artifacts at our site. The about 2000 test functions in about 50000 lines of test code run without special requirements on the machine except java 8.x and maven. No dbms, messaging or other external server is necessary to run these tests. Some of this testcode is implemented in a way so that the main code can also be used in an arquillian-test-environment.
 
+# History
 
-## Requirements
+1. In the beginning CDI-Alternatives where developed which helped to create a test environment.
+1. As soon as multiple projects had to use the Alternatives they where extracted into a separate maven project and used from there.
+1. Using the EjbExtension from cdi-unit some extensive changes have been made in the module to better simulate an ejb-test-environment.
+1. CdiRunner was replaced by EjbUnitRunner to get rid of some initialitions and annotations which always were necessary.
+
+
+
+
+# Requirements
+
 What do we need to be able to achieve this?
 
-* We need a kind of "test-enabled" ejb-containerhttps://travis-ci.org/1and1/ejb-cdi-unit.svg?branch=https://travis-ci.org/1and1/ejb-cdi-unit.svg?branch=master
+* We need a kind of "test-enabled" ejb-container
     * Message queues must be simulated in memory (mockrunner)
     * @TransactionAttribute on EJBs must be handled in a correct way (at least not ignored)
     * @Startup-annotated Beans must be initialized so that other beans might refer to them indirectly.
@@ -43,7 +56,7 @@ What do we need to be able to achieve this?
     * Sometimes it might be necessary to test using more than one thread. The test-container must be able to handle this as well.
     * The tests must be executable without much effort inside the IDE used for the test and application development.
 
-## Solution
+# Solution
 
 [*cdiunit*](http://jglue.org/cdi-unit/) helps very much by making it very easy
 
@@ -63,7 +76,7 @@ What do we need to be able to achieve this?
 
 
 
-## Usage
+# Usage
 
 The usage does not differ very much from cdiunit, except:
 
@@ -76,50 +89,93 @@ The usage does not differ very much from cdiunit, except:
             <scope>test</scope>
         </dependency>
 
+* Instead @RunWith(CdiRunner) use @RunWith(EjbUnitRunner)
 
-## Examples
+# Modules
 
-There will be several examples which should demonstrate how different kinds of artifacts can be tested using ejb-cdi-unit.
+* ejb-cdi-unit is the mo# Restrictions
+The helpers have been developed as required, therefore it was not necessarily a  goal to fully adhere to the J2EE-standard:
 
-### One Service and One Entity
+* **Transactions** are simulated for JPA adhering to  TransactionAttributes-Annotations of methods and classes. The TransactionManager handling this:
+	* does not handle distributed Transactions
+	* the attributes are only supported for JPA-Objects (EntityManager), JDBC is not included.
+	* JMS-Objects are not included.
+	* Allows it to use UserTransactions everywhere. This is reasonable in test-code, but mostly not allowed in the module-code.
+* **JMS-Simulation**
+  * works in memory
+ 	* Name matching between objects (topics, queue) and Mdb is done using the last part of the names.
+	* Does not react to rollbacks of the TransactionManager-Simulation.
+* **SessionContextSimulation** was mainly developed to support the getBusinessObject-Method and to return something reasonable when asked for a principal.
+* **TimerServiceSimulation, MessageContextSimulation, SimulatedUserTransaction, WebServiceContextSimulation** provide mocks which will be injected as resources, but do not provide much functionality.
+
+
+dule providing the test extensions
+* ejb-cdi-unit-test-war is code used by
+	* ejb-cdi-unit-tests in regression tests
+	* ejb-cdi-unit-arq to prove that the modules behaviour fits to wildfly
+* examples contains showcases including some diagrams which should show the usage together with the internal working of ejb-cdi-unit. Some proposed solutions for easy simulation of remote Services and callbacks are also shown there.
+
+
+# Examples
+
+Several examples which should demonstrate how different kinds of artifacts can be tested using ejb-cdi-unit.
+
+## One Service and One Entity
 This example contains a Service implemented as stateless EJB which can return a constant number and offers the possibility to
 add an Entity to a database and to search for it by its id.
 
 [see](https://github.com/1and1/ejb-cdi-unit/tree/master/examples/ex1-1entity)
 
 
-### One Service and One Synchronously Consumed Service
+## One Service and One Synchronously Consumed Service
 
-This simple kind of service just provides a service-interface does some calculations and  synchronously consumes some interfaces from other services it uses. A suggestion how such a service can be tested using ejb-cdi-unit will be shown [here](https://github.com/1and1/ejb-cdi-unit/blob/master/examples/test).
+This simple kind of service just provides a service-interface does some calculations and  synchronously consumes some interfaces from other services it uses. A suggestion how such a service can be tested using ejb-cdi-unit will be shown
+# ejb-cdi-unit
+ [see](https://github.com/1and1/ejb-cdi-unit/blob/master/examples/ex2-syncconsumed).
 
 
-### One Service and One Asynchronously Consumed Service
+## One Service and One Asynchronously Consumed Service
 
 [see](https://github.com/1and1/ejb-cdi-unit/tree/master/examples/ex3-asyncconsumedpoll)
 
-### One Service and One Asynchronously Consumed Service Plus Asynchronous Callback
+## One Service and One Asynchronously Consumed Service Plus Asynchronous Callback
 
 The previous example gets extended in a way so that the original service consumes a special interface its client provides and calls back as soon as the answer is ready.
 
 [see](https://github.com/1and1/ejb-cdi-unit/tree/master/examples/ex4-asyncconsumedpush)
 
 
-### One Service and One Asynchronously Consumed Service internally using Messaging
+## One Service and One Asynchronously Consumed Service internally using Messaging
 
 To provide a safe handling of service calls often message driven beans are used.
 In this way it can be made sure that requests are not lost even if a process or thread dies. Additionally in this way other cluster nodes can pick up in the processing.
 
 -- not implemented yet
+# Restrictions
+The helpers have been developed as required, therefore it was not necessarily a  goal to fully adhere to the J2EE-standard:
+
+* **Transactions** are simulated for JPA adhering to  TransactionAttributes-Annotations of methods and classes. The TransactionManager handling this:
+	* does not handle distributed Transactions
+	* the attributes are only supported for JPA-Objects (EntityManager), JDBC is not included.
+	* JMS-Objects are not included.
+	* Allows it to use UserTransactions everywhere. This is reasonable in test-code, but mostly not allowed in the module-code.
+* **JMS-Simulation**
+  * works in memory
+ 	* Name matching between objects (topics, queue) and Mdb is done using the last part of the names.
+	* Does not react to rollbacks of the TransactionManager-Simulation.
+* **SessionContextSimulation** was mainly developed to support the getBusinessObject-Method and to return something reasonable when asked for a principal.
+* **TimerServiceSimulation, MessageContextSimulation, SimulatedUserTransaction, WebServiceContextSimulation** provide mocks which will be injected as resources, but do not provide much functionality.
 
 
-## Acknowledgments
+
+# Acknowledgments
 
 * The base and idea for this module comes from [cdiunit](https://github.com/BrynCooke/cdi-unit). Some of the code has been shamelessly copied from there.
 * [mockrunner](http://mockrunner.github.io/) is used for all jms-simulations.
 * [weld](http://weld.cdi-spec.org/) is the cdi-container used for the tests as it is also determined because of the usage of cdi-unit. Since on our site jboss7  is yet in use, compatibility to 1.1.14 is required throughout.
 
 
-## License
+# License
 
 Copyright 2017 1&amp;1 Internet AG, https://github.com/1and1/ejb-cdi-unit
 
