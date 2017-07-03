@@ -1,0 +1,37 @@
+@startuml
+title: Asynchronous Service Call, Deterministic, Results Pushed to Callback
+
+actor Test as t
+participant "Asynchronous\nService" as aS
+participant "Callback\nSimulator" as cb
+participant "Callback\nResults" as cbr
+participant "Asynchronous\nInterceptor" as aI
+participant Future as f
+participant Runnable as r
+participant "Asynchronous\nManager" as aM
+participant "Asynchronous\nWrapper" as aW
+participant "Remote\nService\nSimulator" as rs
+t -> aS: newRemoteEntity(..)
+aS -> aI: newRemoteEntity(correlationId, ..)
+create f
+aI -> f: new(correlationId,..)
+create r
+aI -> r: new(f)
+note right of r: f must later get result
+aI -> aM: enque(r)
+aS --> t: correlationId
+t -> aM: once
+aM -> r: run
+r -> aW: newRemoteEntity()
+aW -> rs: newEntity
+rs -> aW: id
+aW --> cb: correlationId, id
+cb -> cbr: put(correlationId, id)
+r -> f: store id, set done
+destroy f
+r --> aM
+destroy r
+aM --> t: done
+t -> cbr: get(correlationId)
+cbr --> t: id
+@enduml
