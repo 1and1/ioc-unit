@@ -31,7 +31,7 @@ The Testfunctions:
 
 * *canServiceReturnFive* shows that Service can be called and returns a constant value.
 * *canServiceInsertEntity1* shows that the Service can be called. After the call it is verified, that the Entity has actually been inserted into the database. Since the call was done without a running transaction, the attribute "REQUIRED" of newEntity1() made sure, that the entity is inserted into the database using one completed transaction. The test assures that by reading itself the object using the assumed id 1. You can safely assume this since H2 should be cleared after each test and reinitialized before.
-![image](images/CanServiceInsertEntity.svg)
+![image](images/CanServiceInsertEntity.png)
 
 * *canReadEntity1AfterInsertion* shows that the service is able to read data previously inserted using service methods. The testing works without transaction therefore each call is run in a separate completed transaction.
 * *canReadTestDataUsingService* demonstrates how a test-function can prepare testdata. Since the function must change in the dbms, it becomes necessary to begin a transaction. To be able to do this Usertransaction can be injected and used. Since the Servicecalls are attributed by "REQUIRED", you have to be aware, that changes possibly are not saved yet. Since the data is only inserted and is so in reality because of the necessary determination of the id, the service-call really is able to find the required object.
@@ -47,4 +47,4 @@ the call is done in a separate transaction which can't read the "yet dirty" data
 ![image](images/CantReadTestDataUsingServiceInRequiredNew.png)
 
 * *canReadCommittedTestDataUsingServiceInRequiredNew* see first the explanation of cantReadTestDataUsingServiceInRequiredNew. Since the transaction creating the testdata has been committed, the embedded transaction is able to read and the NoResultException does not occur.
-![image](images/CanReadCommittedTestDataUsingServiceInRequiredNew.svg)
+![image](images/CanReadCommittedTestDataUsingServiceInRequiredNew.png)
