@@ -3,26 +3,7 @@ ejb-cdi-unit
 Simplify test driven development of ejb-3.x Services. ![Build Status](https://travis-ci.org/1and1/ejb-cdi-unit.svg?branch=master)
 # Contents
 
-<!-- TOC depthFrom:1 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
 
-- [Contents](#contents)
-- [Motivation](#motivation)
-- [History](#history)
-- [Requirements](#requirements)
-- [Solution](#solution)
-- [Usage](#usage)
-- [Modules](#modules)
-- [Examples](#examples)
-	- [One Service and One Entity](#one-service-and-one-entity)
-	- [One Service and One Synchronously Consumed Service](#one-service-and-one-synchronously-consumed-service)
-	- [One Service and One Asynchronously Consumed Service](#one-service-and-one-asynchronously-consumed-service)
-	- [One Service and One Asynchronously Consumed Service Plus Asynchronous Callback](#one-service-and-one-asynchronously-consumed-service-plus-asynchronous-callback)
-	- [One Service and One Asynchronously Consumed Service internally using Messaging](#one-service-and-one-asynchronously-consumed-service-internally-using-messaging)
-- [Restrictions](#restrictions)
-- [Acknowledgments](#acknowledgments)
-- [License](#license)
-
-<!-- /TOC -->
 
 # Motivation
 During the dvelopment of services, the necessity to implement automatic module-tests arises. In this context, a module means one deployable artifact.
@@ -89,26 +70,13 @@ The usage does not differ very much from cdiunit, except:
         </dependency>
 
 * Instead @RunWith(CdiRunner) use @RunWith(EjbUnitRunner)
+* It might be necessary to provide a specific persistence.xml using H2 and declaring the Entity-classes that are used during tests.
+* Some @Resource or @Ejb-injected objects might need Simulations either using Mockito or Helper classes in tests which are added as Alternatives or normal beans in @AdditionalClasses.
+* Services consumed by the Artifact might need Simulations.  
 
 # Modules
 
-* ejb-cdi-unit is the mo# Restrictions
-The helpers have been developed as required, therefore it was not necessarily a  goal to fully adhere to the J2EE-standard:
-
-* **Transactions** are simulated for JPA adhering to  TransactionAttributes-Annotations of methods and classes. The TransactionManager handling this:
-	* does not handle distributed Transactions
-	* the attributes are only supported for JPA-Objects (EntityManager), JDBC is not included.
-	* JMS-Objects are not included.
-	* Allows it to use UserTransactions everywhere. This is reasonable in test-code, but mostly not allowed in the module-code.
-* **JMS-Simulation**
-  * works in memory
- 	* Name matching between objects (topics, queue) and Mdb is done using the last part of the names.
-	* Does not react to rollbacks of the TransactionManager-Simulation.
-* **SessionContextSimulation** was mainly developed to support the getBusinessObject-Method and to return something reasonable when asked for a principal.
-* **TimerServiceSimulation, MessageContextSimulation, SimulatedUserTransaction, WebServiceContextSimulation** provide mocks which will be injected as resources, but do not provide much functionality.
-
-
-dule providing the test extensions
+* ejb-cdi-unit is the module providing the test extensions, it is available from maven central
 * ejb-cdi-unit-test-war is code used by
 	* ejb-cdi-unit-tests in regression tests
 	* ejb-cdi-unit-arq to prove that the modules behaviour fits to wildfly
@@ -157,6 +125,14 @@ Using two separate queues:
 Using one queue, mdbs are triggered by a defined messageSelector.
 
 [see](https://github.com/1and1/ejb-cdi-unit/tree/master/examples/ex6-asyncconsumedjms2)
+
+## Test of a Rest-Service
+
+This example shows how it is easily possible to test a artifact by it's rest-interface and being able to use the database at the same time.
+
+-- to be implemented yet.
+
+## 
 
 
 # Restrictions
