@@ -1,0 +1,50 @@
+@startuml
+title: Asynchronous Service Call Deterministic simulated
+
+actor Test as t
+participant "Asynchronous\nService" as aS
+participant "Asynchronous\nInterceptor" as aI
+participant FuturesStore as fs
+participant Future as f
+participant Runnable as r
+participant "Asynchronous\nManager" as aM
+participant "Asynchronous\nWrapper" as aW
+participant "Remote\nService\nSimulator" as rs
+t -> aS: newRemoteEntity
+aS -> aI: newRemoteEntity
+create f
+aI -> f: new
+create r
+aI -> r: new(f)
+note right of r: f must later get result
+aI -> aM: enque(r)
+aI --> aS: f
+aS -> fs: store(f)
+fs -> aS: correlationId
+aS --> t: correlationId
+t -> aS: poll(correlationId)
+aS -> fs: get(correlationId)
+fs --> aS: f
+aS -> f: get
+note right of f: no result set yet
+f -> aS: null
+aS --> t: null
+t -> aM: once
+aM -> r: run
+r -> aW: newRemoteEntity()
+aW -> rs: newEntity
+rs -> aW: id
+aW --> r: id
+r -> f: store id, set done
+r --> aM
+destroy r
+aM --> t
+t -> aS: pollId(correlationId)
+aS -> fs: get(correlationId)
+fs -> aS: f
+aS -> f: get
+f --> aS: id
+aS -> fs: remove f
+destroy f
+aS -> t: id
+@enduml

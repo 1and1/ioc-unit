@@ -48,7 +48,11 @@ public class AsynchonousService implements AsynchronousServiceIntf {
     @Override
     public Long pollId(CorrelationId correlationId) throws ExecutionException, InterruptedException {
         Future<?> future = getFuture(correlationId);
-        return future.isDone() ? (Long)future.get() : null;
+        if (future.isDone()) {
+            futures.remove(correlationId);
+            return (Long)future.get();
+        }
+        else return  null;
     }
 
     private Future<?> getFuture(AsynchronousServiceIntf.CorrelationId correlationId) {
