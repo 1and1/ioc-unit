@@ -21,13 +21,13 @@ public class BaseMdbClient {
     @Inject
     Logger logger;
 
-    @Resource(lookup = "java:/ConnectionFactory")
+    @Resource(lookup = "openejb:Resource/MyConnectionFactory")
     ConnectionFactory connectionFactory;
 
-    @Resource(lookup = "java:/test/env/myQueue1")
+    @Resource(lookup = "openejb:Resource/myQueue1")
     Queue queue;
 
-    @Resource(lookup = "java:/test/env/myTopic")
+    @Resource(lookup = "openejb:Resource/myTopic")
     Topic topic;
 
     /**

@@ -304,10 +304,9 @@
         <subsystem xmlns="urn:jboss:domain:messaging-activemq:1.0">
             <server name="default">
 
-                <jms-queue name="myQueue1"
-                           entries="java:/test/env/myQueue1" />
+                <jms-queue name="myQueue1" entries="java:/test/env/myQueue1 openejb:Resource/myQueue1" />
                 <jms-topic name="myTopic"
-                           entries="java:/test/env/myTopic" />
+                           entries="java:/test/env/myTopic openejb:Resource/myTopic" />
 
                 <security-setting name="#">
                     <role name="guest" send="true" consume="true" create-non-durable-queue="true" delete-non-durable-queue="true"/>
@@ -326,7 +325,7 @@
                 <in-vm-acceptor name="in-vm" server-id="0"/>
                 <jms-queue name="ExpiryQueue" entries="java:/jms/queue/ExpiryQueue"/>
                 <jms-queue name="DLQ" entries="java:/jms/queue/DLQ"/>
-                <connection-factory name="InVmConnectionFactory" entries="java:/ConnectionFactory" connectors="in-vm"/>
+                <connection-factory name="InVmConnectionFactory" entries="java:/ConnectionFactory openejb:Resource/MyConnectionFactory" connectors="in-vm"/>
                 <connection-factory name="RemoteConnectionFactory" connectors="http-connector" entries="java:jboss/exported/jms/RemoteConnectionFactory"/>
                 <pooled-connection-factory name="activemq-ra" entries="java:/JmsXA java:jboss/DefaultJMSConnectionFactory" connectors="in-vm" transaction="xa"/>
             </server>
