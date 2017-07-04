@@ -23,6 +23,7 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -189,11 +190,13 @@ public class ServiceTest extends EJBTransactionTestBase {
     }
 
     @Test
+    @Ignore
     public void indirectSaveRequiresNewLocalAsBusinessObject() throws Exception {
         super.indirectSaveRequiresNewLocalAsBusinessObject();
     }
 
     @Test
+    @Ignore
     public void indirectSaveRequiresNewLocalAsBusinessObjectAndThrow() throws Exception {
         super.indirectSaveRequiresNewLocalAsBusinessObjectAndThrow();
     }
