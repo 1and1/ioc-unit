@@ -76,6 +76,9 @@ public class ServiceTest extends EJBTransactionTestBase {
             }
             catch (RuntimeException r) {
                 exceptionHappened = true;
+                if (exceptionExpected != exceptionHappened) {
+                    logger.error("Exception not expected",r);
+                }
                 logger.info("TransactionStatus: {}", userTransaction.getStatus());
                 if (userTransaction.getStatus() == Status.STATUS_MARKED_ROLLBACK) {
                     userTransaction.rollback();
@@ -86,7 +89,8 @@ public class ServiceTest extends EJBTransactionTestBase {
 
             }
             Assert.assertThat(exceptionHappened, is(exceptionExpected));
-            entityManager.persist(new TestEntity1());
+            TestEntity1 entity = new TestEntity1();
+            entityManager.persist(entity);
             checkEntityNumber(num);
         }
         finally {
@@ -190,13 +194,11 @@ public class ServiceTest extends EJBTransactionTestBase {
     }
 
     @Test
-    @Ignore
     public void indirectSaveRequiresNewLocalAsBusinessObject() throws Exception {
         super.indirectSaveRequiresNewLocalAsBusinessObject();
     }
 
     @Test
-    @Ignore
     public void indirectSaveRequiresNewLocalAsBusinessObjectAndThrow() throws Exception {
         super.indirectSaveRequiresNewLocalAsBusinessObjectAndThrow();
     }

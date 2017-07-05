@@ -86,9 +86,7 @@ public class ServiceTest extends EJBTransactionTestBase {
             boolean exceptionHappened = false;
             try {
                 saver.save(testEntity1);
-                while (testEntity1.getId() == null) {  // make sure entity is used otherwise insertion is not done.
-                    entityManager.flush();
-                }
+                logger.info("first entity: {}", testEntity1.getId());
             }
             catch (RuntimeException r) {
                 exceptionHappened = true;
@@ -104,9 +102,8 @@ public class ServiceTest extends EJBTransactionTestBase {
             Assert.assertThat(exceptionHappened, is(exceptionExpected));
             final TestEntity1 entity2 = new TestEntity1();
             entityManager.persist(entity2);
-            while (entity2.getId() == null) { // make sure entity is used otherwise insertion is not done.
-                entityManager.flush();
-            }
+            entityManager.flush();
+            logger.info("second entity: {}", entity2.getId());
             checkEntityNumber(num);
         }
         finally {
