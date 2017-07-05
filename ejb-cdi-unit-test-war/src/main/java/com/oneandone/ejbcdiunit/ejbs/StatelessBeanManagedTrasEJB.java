@@ -41,12 +41,13 @@ public class StatelessBeanManagedTrasEJB {
     @Inject
     EntityManager entityManager;
 
-    @Resource
+    @Inject
     UserTransaction userTransaction;
 
     public TestEntity1 insertWithoutTra(TestEntity1 testEntity1) {
         logger.info("output public variable {}", publicInteger);
         entityManager.persist(testEntity1);
+        entityManager.flush();
         return testEntity1;
     }
 

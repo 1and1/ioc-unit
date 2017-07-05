@@ -2,42 +2,43 @@ package ejbcdiunit;
 
 import static org.hamcrest.core.Is.is;
 
-import java.sql.SQLException;
 import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.EJBException;
-import javax.ejb.embeddable.EJBContainer;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
-import javax.naming.Context;
-import javax.naming.NamingException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceContextType;
-import javax.transaction.HeuristicMixedException;
-import javax.transaction.HeuristicRollbackException;
-import javax.transaction.NotSupportedException;
-import javax.transaction.RollbackException;
 import javax.transaction.Status;
-import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 
-import org.junit.After;
+import org.apache.openejb.config.EjbModule;
+import org.apache.openejb.jee.Beans;
+import org.apache.openejb.jee.EjbJar;
+import org.apache.openejb.jee.SingletonBean;
+import org.apache.openejb.jee.StatelessBean;
+import org.apache.openejb.jee.jpa.unit.PersistenceUnit;
+import org.apache.openejb.junit.ApplicationComposer;
+import org.apache.openejb.testing.Configuration;
+import org.apache.openejb.testing.Module;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 
+import com.oneandone.ejbcdiunit.ejbs.CDIClass;
+import com.oneandone.ejbcdiunit.ejbs.OuterClass;
 import com.oneandone.ejbcdiunit.ejbs.SingletonEJB;
+import com.oneandone.ejbcdiunit.ejbs.StatelessBeanManagedTrasEJB;
 import com.oneandone.ejbcdiunit.ejbs.StatelessEJB;
 import com.oneandone.ejbcdiunit.entities.TestEntity1;
+import com.oneandone.ejbcdiunit.jpa.TomeeResources;
 import com.oneandone.ejbcdiunit.testbases.EJBTransactionTestBase;
 import com.oneandone.ejbcdiunit.testbases.TestEntity1Saver;
 
-@RunWith(JUnit4.class)
+@RunWith(ApplicationComposer.class)
 public class ServiceTest extends EJBTransactionTestBase {
 
     @Produces
@@ -53,32 +54,58 @@ public class ServiceTest extends EJBTransactionTestBase {
     @Resource
     UserTransaction userTransaction;
 
-    static EJBContainer container;
 
-    Context context;
-
-    @Before
-    public void beforeServiceTest() throws NamingException, SystemException, NotSupportedException {
-        final Properties p = new Properties();
-
-        p.put("exampleDS", "new://Resource?type=DataSource");
-        p.put("exampleDS.JdbcDriver", "org.h2.Driver");
-        p.put("exampleDS.JdbcUrl", "jdbc:h2:mem:test;MODE=MySQL;DB_CLOSE_DELAY=0");
-
-        container = EJBContainer.createEJBContainer(p);
-        context = container.getContext();
-        context.bind("inject", this);
-        entityManager.getDelegate();   // initiate initial creation of CDI-Bean behind.
+    @Module
+    public PersistenceUnit persistence1() {
+        return persistence("test-unit");
+    }
+    @Module
+    public PersistenceUnit persistence2() {
+        return persistence("EjbTestPU");
+    }
+    @Module
+    public PersistenceUnit persistence3() {
+        return persistence("EjbTestPUOperating");
     }
 
-    @After
-    public void afterServiceTest() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException, SQLException {
-        container.close();
+    public PersistenceUnit persistence(String name) {
+        PersistenceUnit unit = new PersistenceUnit(name);
+        unit.setJtaDataSource(name + "Database");
+        unit.setNonJtaDataSource(name + "DatabaseUnmanaged");
+        unit.getClazz().add(TestEntity1.class.getName());
+        unit.setProperty("openjpa.jdbc.SynchronizeMappings", "buildSchema(ForeignKeys=true)");
+        return unit;
+    }
+
+    @Module
+    public EjbModule module() {
+        EjbModule module = new EjbModule(new EjbJar("test-beans")
+                .enterpriseBean(new StatelessBean(StatelessEJB.class))
+                .enterpriseBean(new StatelessBean(OuterClass.class))
+                .enterpriseBean(new StatelessBean(StatelessBeanManagedTrasEJB.class))
+                .enterpriseBean(new SingletonBean(SingletonEJB.class))
+                );
+        Beans beans = new Beans();
+        beans
+                .managedClass(TomeeResources.class.getName())
+                .managedClass(CDIClass.class.getName());
+        module.setBeans(beans);
+        module.setModuleId("test-module");
+        return module;
+    }
+
+
+    @Configuration
+    public Properties config() throws Exception {
+        Properties p = new Properties();
+        p.put("testDatabase", "new://Resource?type=DataSource");
+        p.put("testDatabase.JdbcDriver", "org.h2.Driver");
+        p.put("testDatabase.JdbcUrl", "jdbc:h2:mem:test;MODE=MySQL;DB_CLOSE_DELAY=0");
+        return p;
     }
 
     @Override
     public void runTestInRolledBackTransaction(TestEntity1Saver saver, int num, boolean exceptionExpected) throws Exception {
-
         logger.info("runTestInRolledBackTransaction for arquillian: num: {} exceptionExpected {}",num, exceptionExpected);
         userTransaction.begin();
         try {
@@ -86,10 +113,12 @@ public class ServiceTest extends EJBTransactionTestBase {
             boolean exceptionHappened = false;
             try {
                 saver.save(testEntity1);
-                logger.info("first entity: {}", testEntity1.getId());
             }
             catch (RuntimeException r) {
                 exceptionHappened = true;
+                if (exceptionExpected != exceptionHappened) {
+                    logger.error("Exception not expected",r);
+                }
                 logger.info("TransactionStatus: {}", userTransaction.getStatus());
                 if (userTransaction.getStatus() == Status.STATUS_MARKED_ROLLBACK) {
                     userTransaction.rollback();
@@ -100,10 +129,8 @@ public class ServiceTest extends EJBTransactionTestBase {
 
             }
             Assert.assertThat(exceptionHappened, is(exceptionExpected));
-            final TestEntity1 entity2 = new TestEntity1();
-            entityManager.persist(entity2);
-            entityManager.flush();
-            logger.info("second entity: {}", entity2.getId());
+            TestEntity1 entity = new TestEntity1();
+            entityManager.persist(entity);
             checkEntityNumber(num);
         }
         finally {

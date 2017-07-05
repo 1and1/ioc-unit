@@ -9,12 +9,11 @@
    </parent>
 
 
-   <artifactId>ejb-cdi-unit-tomee</artifactId>
+   <artifactId>ejb-cdi-unit-tomee-repro</artifactId>
    <packaging>war</packaging>
 
-   <name>net.oneandone:ejb-cdi-unit tomee tests</name>
-   <description>Some tomee tests using the same code as ejb-cdi-unit, to prove that the test-container works
-      in the same way as tomee.</description>
+   <name>net.oneandone:ejb-cdi-unit tomee repros</name>
+   <description>Some simpler tests to reproduce strange tomee scenarios.</description>
    <url>https://github.com/1and1/ejb-cdi-unit</url>
 
    <licenses>
@@ -51,12 +50,6 @@
          <scope>provided</scope>
       </dependency>
       <dependency>
-         <groupId>${project.groupId}</groupId>
-         <artifactId>ejb-cdi-unit-test-war</artifactId>
-         <classifier>classes</classifier>
-         <version>${project.version}</version>
-      </dependency>
-      <dependency>
          <groupId>org.apache.tomee</groupId>
          <artifactId>openejb-core</artifactId>
          <version>${version.tomee}</version>
@@ -74,14 +67,16 @@
          <version>${version.junit}</version>
       </dependency>
       <dependency>
-         <groupId>org.hibernate</groupId>
-         <artifactId>hibernate-entitymanager</artifactId>
-         <scope>test</scope>
+         <groupId>org.slf4j</groupId>
+         <artifactId>slf4j-api</artifactId>
       </dependency>
       <dependency>
-         <groupId>org.hibernate</groupId>
-         <artifactId>hibernate-validator</artifactId>
-         <scope>test</scope>
+         <groupId>org.slf4j</groupId>
+         <artifactId>slf4j-log4j12</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.slf4j</groupId>
+         <artifactId>slf4j-simple</artifactId>
       </dependency>
    </dependencies>
 

@@ -16,7 +16,6 @@ import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -233,14 +232,12 @@ public class TestEjb extends EJBTransactionTestBase {
         userTransaction.commit();
     }
 
-    @Ignore
     @Override
     @Test(expected = TransactionRequiredException.class)
     public void testBeanManagedTransactionsWOTra() throws Exception {
         super.testBeanManagedTransactionsWOTra();
     }
 
-    @Ignore
     @Override
     @Test(expected = TransactionRequiredException.class)
     public void testBeanManagedTransactionsWOTraButOuter() throws Exception {
