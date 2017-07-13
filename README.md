@@ -18,6 +18,7 @@ Simplify test driven development of ejb-3.x Services. ![Build Status](https://tr
 	- [One Service and One Asynchronously Consumed Service Plus Asynchronous Callback](#one-service-and-one-asynchronously-consumed-service-plus-asynchronous-callback)
 	- [One Service and One Asynchronously Consumed Service internally using Messaging](#one-service-and-one-asynchronously-consumed-service-internally-using-messaging)
 	- [Test of a Rest-Service](#test-of-a-rest-service)
+	- [Test of a camunda BPM processing](#test-of-a-camunda-bpm-processing)
 - [Restrictions](#restrictions)
 - [Acknowledgments](#acknowledgments)
 - [License](#license)
@@ -51,7 +52,28 @@ What do we need to be able to achieve this?
     * Message queues must be simulated in memory (mockrunner)
     * @TransactionAttribute on EJBs must be handled in a correct way (at least not ignored)
     * @Startup-annotated Beans must be initialized so that other beans might refer to them indirectly.
-    * You must be able to fill @Resource annotated fields by "something", which handles the calls in a feasable way.
+    * You must be able to fill @Resource annotated fields by "something", which handles the calls in a feasable way.BusinessProcessScope<!-- TOC depthFrom:1 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
+
+- [Contents](#contents)
+- [Motivation](#motivation)
+- [History](#history)
+- [Requirements](#requirements)
+- [Solution](#solution)
+- [Usage](#usage)
+- [Modules](#modules)
+- [Examples](#examples)
+	- [One Service and One Entity](#one-service-and-one-entity)
+	- [One Service and One Synchronously Consumed Service](#one-service-and-one-synchronously-consumed-service)
+	- [One Service and One Asynchronously Consumed Service](#one-service-and-one-asynchronously-consumed-service)
+	- [One Service and One Asynchronously Consumed Service Plus Asynchronous Callback](#one-service-and-one-asynchronously-consumed-service-plus-asynchronous-callback)
+	- [One Service and One Asynchronously Consumed Service internally using Messaging](#one-service-and-one-asynchronously-consumed-service-internally-using-messaging)
+	- [Test of a Rest-Service](#test-of-a-rest-service)
+	- [Test of a camunda BPM processing](#test-of-a-camunda-bpm-processing)
+- [Restrictions](#restrictions)
+- [Acknowledgments](#acknowledgments)
+- [License](#license)
+
+<!-- /TOC -->
     * You must be able to handle or simulate arbitrary situations which are possible in an asynchronous working environment, as it is an ejb-server.
     * Sometimes it might be necessary to test using more than one thread. The test-container must be able to handle this as well.
     * The tests must be executable without much effort inside the IDE used for the test and application development.
