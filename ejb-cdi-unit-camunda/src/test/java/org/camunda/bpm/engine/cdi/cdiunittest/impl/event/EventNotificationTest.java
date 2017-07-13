@@ -23,7 +23,6 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
 import org.camunda.bpm.engine.cdi.BusinessProcessEvent;
-import org.camunda.bpm.engine.cdi.cdiunittest.CdiProcessEngineTestCase;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.task.Task;
 import org.camunda.bpm.engine.test.Deployment;
@@ -32,6 +31,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.oneandone.ejbcdiunit.EjbUnitRunner;
+import com.oneandone.ejbcdiunit.camunda.CdiProcessEngineTestCase;
 
 @RunWith(EjbUnitRunner.class)
 @AdditionalClasses({TestEventListener.class})

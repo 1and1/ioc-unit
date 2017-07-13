@@ -17,12 +17,13 @@ import java.util.Set;
 import javax.enterprise.inject.AmbiguousResolutionException;
 import javax.enterprise.inject.spi.Bean;
 
-import org.camunda.bpm.engine.cdi.cdiunittest.CdiProcessEngineTestCase;
 import org.camunda.bpm.engine.cdi.compat.CamundaTaskForm;
 import org.camunda.bpm.engine.cdi.compat.FoxTaskForm;
 import org.camunda.bpm.engine.cdi.jsf.TaskForm;
 import org.junit.Assert;
 import org.junit.Test;
+
+import com.oneandone.ejbcdiunit.camunda.CdiProcessEngineTestCase;
 
 /**
  * @author Daniel Meyer

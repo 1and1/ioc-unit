@@ -14,9 +14,10 @@ package org.camunda.bpm.engine.cdi.cdiunittest.api.annotation;
 
 import static org.junit.Assert.assertNotNull;
 
-import org.camunda.bpm.engine.cdi.cdiunittest.CdiProcessEngineTestCase;
 import org.camunda.bpm.engine.test.Deployment;
 import org.junit.Test;
+
+import com.oneandone.ejbcdiunit.camunda.CdiProcessEngineTestCase;
 
 /**
  * 

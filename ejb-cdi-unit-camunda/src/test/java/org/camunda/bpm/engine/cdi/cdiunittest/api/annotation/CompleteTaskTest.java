@@ -16,12 +16,13 @@ import static org.junit.Assert.assertNull;
 
 import javax.inject.Inject;
 
-import org.camunda.bpm.engine.cdi.cdiunittest.CdiProcessEngineTestCase;
 import org.camunda.bpm.engine.cdi.cdiunittest.impl.beans.DeclarativeProcessController;
 import org.camunda.bpm.engine.cdi.impl.annotation.CompleteTaskInterceptor;
 import org.camunda.bpm.engine.task.Task;
 import org.camunda.bpm.engine.test.Deployment;
 import org.junit.Test;
+
+import com.oneandone.ejbcdiunit.camunda.CdiProcessEngineTestCase;
 
 /**
  * Testcase for assuring that the {@link CompleteTaskInterceptor} works as

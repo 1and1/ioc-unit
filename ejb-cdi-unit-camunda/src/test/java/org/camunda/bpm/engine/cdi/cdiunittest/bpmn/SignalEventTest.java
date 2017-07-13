@@ -21,50 +21,19 @@ import javax.inject.Named;
 
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.cdi.BusinessProcess;
-import org.camunda.bpm.engine.cdi.cdiunittest.CdiProcessEngineTestCase;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.test.Deployment;
 import org.jglue.cdiunit.AdditionalClasses;
-import org.junit.Ignore;
 import org.junit.Test;
+
+import com.oneandone.ejbcdiunit.camunda.CdiProcessEngineTestCase;
 
 @AdditionalClasses({SignalEventTest.SignalReceivedDelegate.class, SignalEventTest.SendSignalDelegate.class})
 public class SignalEventTest extends CdiProcessEngineTestCase {
   
   
-  @Named
-  public static class SignalReceivedDelegate implements JavaDelegate {    
-    
-    @Inject
-    private BusinessProcess businessProcess;
-    
-    public void execute(DelegateExecution execution) {
-      businessProcess.setVariable("processName", "catchSignal-visited (was " + businessProcess.getVariable("processName")  + ")");
-    }
-  }
-
-  @Named
-  public static class SendSignalDelegate implements JavaDelegate {
-
-    @Inject
-    private RuntimeService runtimeService;  
-
-    @Inject
-    private BusinessProcess businessProcess;   
-
-    public void execute(DelegateExecution execution) throws Exception {
-      businessProcess.setVariable("processName", "throwSignal-visited (was " + businessProcess.getVariable("processName")  + ")");
-
-      String signalProcessInstanceId = (String) execution.getVariable("signalProcessInstanceId");      
-      String executionId = runtimeService.createExecutionQuery().processInstanceId(signalProcessInstanceId).signalEventSubscriptionName("alert").singleResult().getId();      
-      
-      runtimeService.signalEventReceived("alert", executionId);
-    }
-
-  }
-
   @Test
   @Deployment(resources = {"org/camunda/bpm/engine/cdi/cdiunittest/bpmn/SignalEventTests.catchAlertSignalBoundaryWithReceiveTask.bpmn20.xml",
                           "org/camunda/bpm/engine/cdi/cdiunittest/bpmn/SignalEventTests.throwAlertSignalWithDelegate.bpmn20.xml"})
@@ -72,15 +41,15 @@ public class SignalEventTest extends CdiProcessEngineTestCase {
     HashMap<String, Object> variables1 = new HashMap<String, Object>();
     variables1.put("processName", "catchSignal");
     ProcessInstance piCatchSignal = runtimeService.startProcessInstanceByKey("catchSignal", variables1);
-        
+
     HashMap<String, Object> variables2 = new HashMap<String, Object>();
     variables2.put("processName", "throwSignal");
     variables2.put("signalProcessInstanceId", piCatchSignal.getProcessInstanceId());
     ProcessInstance piThrowSignal = runtimeService.startProcessInstanceByKey("throwSignal", variables2);
-    
+
     assertEquals(1, runtimeService.createExecutionQuery().processInstanceId(piCatchSignal.getProcessInstanceId()).activityId("receiveTask").count());
     assertEquals(1, runtimeService.createExecutionQuery().processInstanceId(piThrowSignal.getProcessInstanceId()).activityId("receiveTask").count());
-    
+
     assertEquals("catchSignal-visited (was catchSignal)", runtimeService.getVariable(piCatchSignal.getId(), "processName"));
     assertEquals("throwSignal-visited (was throwSignal)", runtimeService.getVariable(piThrowSignal.getId(), "processName"));
 
@@ -88,5 +57,37 @@ public class SignalEventTest extends CdiProcessEngineTestCase {
     runtimeService.signal(piCatchSignal.getId());
     runtimeService.signal(piThrowSignal.getId());
   }
+
+    @Named
+    public static class SignalReceivedDelegate implements JavaDelegate {
+
+        @Inject
+        private BusinessProcess businessProcess;
+
+        public void execute(DelegateExecution execution) {
+            businessProcess.setVariable("processName", "catchSignal-visited (was " + businessProcess.getVariable("processName") + ")");
+        }
+    }
+
+    @Named
+    public static class SendSignalDelegate implements JavaDelegate {
+
+        @Inject
+        private RuntimeService runtimeService;
+
+        @Inject
+        private BusinessProcess businessProcess;
+
+        public void execute(DelegateExecution execution) throws Exception {
+            businessProcess.setVariable("processName", "throwSignal-visited (was " + businessProcess.getVariable("processName") + ")");
+
+            String signalProcessInstanceId = (String) execution.getVariable("signalProcessInstanceId");
+            String executionId = runtimeService.createExecutionQuery().processInstanceId(signalProcessInstanceId).signalEventSubscriptionName("alert")
+                    .singleResult().getId();
+
+            runtimeService.signalEventReceived("alert", executionId);
+        }
+
+    }
 
 }

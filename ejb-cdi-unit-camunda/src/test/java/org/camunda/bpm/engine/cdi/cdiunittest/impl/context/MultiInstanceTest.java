@@ -14,11 +14,12 @@ package org.camunda.bpm.engine.cdi.cdiunittest.impl.context;
 
 import java.util.Arrays;
 
-import org.camunda.bpm.engine.cdi.cdiunittest.CdiProcessEngineTestCase;
 import org.camunda.bpm.engine.cdi.cdiunittest.impl.context.beans.LocalVariableBean;
 import org.camunda.bpm.engine.test.Deployment;
 import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.Test;
+
+import com.oneandone.ejbcdiunit.camunda.CdiProcessEngineTestCase;
 
 /**
  * @author Daniel Meyer

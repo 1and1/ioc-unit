@@ -17,13 +17,14 @@ import static org.junit.Assert.assertNotNull;
 
 import javax.inject.Inject;
 
-import org.camunda.bpm.engine.cdi.cdiunittest.CdiProcessEngineTestCase;
 import org.camunda.bpm.engine.cdi.cdiunittest.impl.beans.CreditCard;
 import org.camunda.bpm.engine.cdi.cdiunittest.impl.beans.ProcessScopedMessageBean;
 import org.camunda.bpm.engine.test.Deployment;
 import org.jglue.cdiunit.AdditionalPackages;
 import org.junit.Assert;
 import org.junit.Test;
+
+import com.oneandone.ejbcdiunit.camunda.CdiProcessEngineTestCase;
 
 /**
  * 

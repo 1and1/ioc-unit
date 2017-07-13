@@ -1,20 +1,22 @@
 package org.camunda.bpm.engine.cdi.cdiunittest.impl.util;
 
-import com.oneandone.ejbcdiunit.EjbUnitRunner;
 import org.camunda.bpm.BpmPlatform;
 import org.camunda.bpm.container.RuntimeContainerDelegate;
 import org.camunda.bpm.engine.cdi.BusinessProcess;
-import org.camunda.bpm.engine.cdi.cdiunittest.CdiUnitContextAssociationManager;
-import org.camunda.bpm.engine.cdi.cdiunittest.impl.beans.CreditCard;
 import org.camunda.bpm.engine.cdi.cdiunittest.impl.beans.InjectedProcessEngineBean;
 import org.camunda.bpm.engine.cdi.impl.util.ProgrammaticBeanLookup;
 import org.camunda.bpm.engine.test.ProcessEngineRule;
 import org.jglue.cdiunit.ActivatedAlternatives;
-import org.jglue.cdiunit.AdditionalClasses;
 import org.jglue.cdiunit.AdditionalClasspaths;
-import org.jglue.cdiunit.AdditionalPackages;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import com.oneandone.ejbcdiunit.EjbUnitRunner;
+import com.oneandone.ejbcdiunit.camunda.CdiUnitContextAssociationManager;
 
 /**
  * @author Christopher Zell <christopher.zell@camunda.com>
@@ -24,12 +26,12 @@ import org.junit.runner.RunWith;
 @ActivatedAlternatives({CdiUnitContextAssociationManager.class})
 public class InjectDefaultProcessEngineTest {
 
+    private ProcessEngineRule processEngineRule = new ProcessEngineRule();
+
   @Rule
   public ProcessEngineRule getProcessEngineRule() {
     return processEngineRule;
   }
-
-  private ProcessEngineRule processEngineRule = new ProcessEngineRule();
 
   @Before
   public void init() {

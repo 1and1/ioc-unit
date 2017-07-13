@@ -1,15 +1,14 @@
-package org.camunda.bpm.engine.cdi.cdiunittest;
+package com.oneandone.ejbcdiunit.camunda;
 
-import org.camunda.bpm.engine.cdi.impl.context.DefaultContextAssociationManager;
-import org.jglue.cdiunit.ProducesAlternative;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Alternative;
-import javax.enterprise.inject.Default;
-import javax.ws.rs.Produces;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Alternative;
+import javax.ws.rs.Produces;
+
+import org.camunda.bpm.engine.cdi.impl.context.DefaultContextAssociationManager;
 
 /**
  * @author aschoerk
@@ -19,11 +18,6 @@ import java.util.List;
 public class CdiUnitContextAssociationManager extends DefaultContextAssociationManager {
 
     private static final long serialVersionUID = -1456230354054346930L;
-
-    @ApplicationScoped
-    public static class ApplicationScopedAssociation extends ScopedAssociation implements Serializable {
-        private static final long serialVersionUID = 3924846638712987532L;
-    }
 
     @Produces
     ApplicationScopedAssociation createApplicationScopedAssociation() {
@@ -36,5 +30,10 @@ public class CdiUnitContextAssociationManager extends DefaultContextAssociationM
         scopeTypes.add(RequestScopedAssociation.class);
         scopeTypes.add(ApplicationScopedAssociation.class);
         return scopeTypes;
+    }
+
+    @ApplicationScoped
+    public static class ApplicationScopedAssociation extends ScopedAssociation implements Serializable {
+        private static final long serialVersionUID = 3924846638712987532L;
     }
 }

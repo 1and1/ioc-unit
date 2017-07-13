@@ -1,9 +1,9 @@
 package org.camunda.bpm.engine.cdi.cdiunittest.impl.task;
 
-import org.camunda.bpm.engine.cdi.cdiunittest.CdiProcessEngineTestCase;
 import org.camunda.bpm.engine.task.Task;
-import org.camunda.bpm.engine.test.Deployment;
 import org.junit.Test;
+
+import com.oneandone.ejbcdiunit.camunda.CdiProcessEngineTestCase;
 
 
 public class CdiTaskServiceTest extends CdiProcessEngineTestCase {

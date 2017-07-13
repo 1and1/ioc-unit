@@ -18,13 +18,14 @@ import java.util.Arrays;
 
 import javax.inject.Inject;
 
-import org.camunda.bpm.engine.cdi.cdiunittest.CdiProcessEngineTestCase;
 import org.camunda.bpm.engine.cdi.cdiunittest.impl.beans.MessageBean;
 import org.camunda.bpm.engine.cdi.cdiunittest.impl.el.beans.DependentScopedBean;
 import org.camunda.bpm.engine.test.Deployment;
 import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import com.oneandone.ejbcdiunit.camunda.CdiProcessEngineTestCase;
 
 /**
  * @author Daniel Meyer
