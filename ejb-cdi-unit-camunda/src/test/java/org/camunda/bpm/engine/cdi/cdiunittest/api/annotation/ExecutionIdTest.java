@@ -19,14 +19,16 @@ import java.util.Set;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
 
-import com.oneandone.ejbcdiunit.EjbUnitRunner;
-import org.camunda.bpm.engine.cdi.BusinessProcess;
 import org.camunda.bpm.engine.cdi.annotation.ExecutionIdLiteral;
 import org.camunda.bpm.engine.cdi.cdiunittest.CdiProcessEngineTestCase;
-import org.camunda.bpm.engine.test.Deployment;;
+import org.camunda.bpm.engine.test.Deployment;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import com.oneandone.ejbcdiunit.EjbUnitRunner;
+
+;
 
 /**
  * 
@@ -34,11 +36,11 @@ import org.junit.runner.RunWith;
  */
 @RunWith(EjbUnitRunner.class)
 public class ExecutionIdTest extends CdiProcessEngineTestCase {
-  
+
   @Test
   @Deployment
   public void testExecutionIdInjectableByName() {
-    getBeanInstance(BusinessProcess.class).startProcessByKey("keyOfTheProcess");
+        businessProcess.startProcessByKey("keyOfTheProcess");
     String processInstanceId = (String) getBeanInstance("processInstanceId");
     Assert.assertNotNull(processInstanceId);
     String executionId = (String) getBeanInstance("executionId");
@@ -50,7 +52,7 @@ public class ExecutionIdTest extends CdiProcessEngineTestCase {
   @Test
   @Deployment
   public void testExecutionIdInjectableByQualifier() {
-    getBeanInstance(BusinessProcess.class).startProcessByKey("keyOfTheProcess");
+        businessProcess.startProcessByKey("keyOfTheProcess");
     
     Set<Bean<?>> beans = beanManager.getBeans(String.class, new ExecutionIdLiteral());    
     Bean<String> bean = (Bean<java.lang.String>) beanManager.resolve(beans);

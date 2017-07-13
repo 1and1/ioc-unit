@@ -18,12 +18,14 @@ import static org.junit.Assert.assertNull;
 import org.camunda.bpm.engine.cdi.cdiunittest.CdiProcessEngineTestCase;
 import org.camunda.bpm.engine.cdi.cdiunittest.impl.beans.ProcessScopedMessageBean;
 import org.camunda.bpm.engine.test.Deployment;
+import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.Test;
 
 /**
  * 
  * @author Daniel Meyer
  */
+@AdditionalClasses({ ProcessScopedMessageBean.class })
 public class ThreadContextAssociationTest extends CdiProcessEngineTestCase {
   
   @Test
@@ -35,7 +37,8 @@ public class ThreadContextAssociationTest extends CdiProcessEngineTestCase {
         
     assertNull(managementService.createJobQuery().singleResult());
     
-    ProcessScopedMessageBean messageBean = (ProcessScopedMessageBean) runtimeService.getVariable(pid, "processScopedMessageBean");
+        ProcessScopedMessageBean messageBean = (ProcessScopedMessageBean) runtimeService.getVariable(pid,
+                "processScopedMessageBean");
     assertEquals("test", messageBean.getMessage());
     
     runtimeService.signal(pid);

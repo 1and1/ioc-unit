@@ -17,14 +17,16 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import org.camunda.bpm.engine.cdi.BusinessProcess;
+import javax.inject.Inject;
+
 import org.camunda.bpm.engine.cdi.cdiunittest.CdiProcessEngineTestCase;
-import org.camunda.bpm.engine.cdi.impl.annotation.StartProcessInterceptor;
 import org.camunda.bpm.engine.cdi.cdiunittest.impl.beans.DeclarativeProcessController;
+import org.camunda.bpm.engine.cdi.impl.annotation.StartProcessInterceptor;
 import org.camunda.bpm.engine.test.Deployment;
 import org.camunda.bpm.engine.variable.type.ValueType;
 import org.camunda.bpm.engine.variable.value.StringValue;
 import org.camunda.bpm.engine.variable.value.TypedValue;
+import org.jglue.cdiunit.AdditionalPackages;
 import org.junit.Test;
 
 /**
@@ -33,7 +35,11 @@ import org.junit.Test;
  *
  * @author Daniel Meyer
  */
+@AdditionalPackages({ DeclarativeProcessController.class })
 public class StartProcessTest extends CdiProcessEngineTestCase {
+
+    @Inject
+    DeclarativeProcessController declarativeProcessController;
 
   @Test
   @Deployment(resources = "org/camunda/bpm/engine/cdi/cdiunittest/api/annotation/StartProcessTest.bpmn20.xml")
@@ -41,8 +47,8 @@ public class StartProcessTest extends CdiProcessEngineTestCase {
 
     assertNull(runtimeService.createProcessInstanceQuery().singleResult());
 
-    getBeanInstance(DeclarativeProcessController.class).startProcessByKey();
-    BusinessProcess businessProcess = getBeanInstance(BusinessProcess.class);
+        declarativeProcessController.startProcessByKey();
+
 
     assertNotNull(runtimeService.createProcessInstanceQuery().singleResult());
 

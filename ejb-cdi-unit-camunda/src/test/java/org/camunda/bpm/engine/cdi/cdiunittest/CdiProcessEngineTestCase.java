@@ -17,11 +17,9 @@ import java.util.TimerTask;
 import java.util.concurrent.Callable;
 import java.util.logging.Logger;
 
-import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 
-import com.oneandone.ejbcdiunit.EjbUnitRunner;
 import org.camunda.bpm.BpmPlatform;
 import org.camunda.bpm.container.RuntimeContainerDelegate;
 import org.camunda.bpm.engine.AuthorizationService;
@@ -39,48 +37,29 @@ import org.camunda.bpm.engine.RepositoryService;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.TaskService;
 import org.camunda.bpm.engine.cdi.BusinessProcess;
-import org.camunda.bpm.engine.cdi.cdiunittest.impl.beans.CreditCard;
-import org.camunda.bpm.engine.cdi.cdiunittest.impl.context.beans.LocalVariableBean;
-import org.camunda.bpm.engine.cdi.cdiunittest.impl.el.beans.CdiTaskListenerBean;
-import org.camunda.bpm.engine.cdi.cdiunittest.impl.el.beans.DependentScopedBean;
 import org.camunda.bpm.engine.cdi.impl.util.ProgrammaticBeanLookup;
 import org.camunda.bpm.engine.impl.ProcessEngineImpl;
 import org.camunda.bpm.engine.impl.cfg.ProcessEngineConfigurationImpl;
 import org.camunda.bpm.engine.impl.jobexecutor.JobExecutor;
-import org.camunda.bpm.engine.impl.util.LogUtil;
 import org.camunda.bpm.engine.test.ProcessEngineRule;
 import org.jglue.cdiunit.ActivatedAlternatives;
-import org.jglue.cdiunit.AdditionalClasses;
 import org.jglue.cdiunit.AdditionalClasspaths;
-import org.jglue.cdiunit.AdditionalPackages;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.runner.RunWith;
-import org.slf4j.bridge.SLF4JBridgeHandler;
+
+import com.oneandone.ejbcdiunit.EjbUnitRunner;
 
 /**
  * @author Daniel Meyer
  */
 @RunWith(EjbUnitRunner.class)
 @AdditionalClasspaths({BusinessProcess.class})
-@AdditionalPackages({CreditCard.class, LocalVariableBean.class,})
-@AdditionalClasses({ CdiTaskListenerBean.class, DependentScopedBean.class})
 @ActivatedAlternatives({CdiUnitContextAssociationManager.class})
 public abstract class CdiProcessEngineTestCase {
 
-  @Inject
-  CdiUnitContextAssociationManager.ApplicationScopedAssociation applicationScopedAssociation;
-
   protected Logger logger = Logger.getLogger(getClass().getName());
-
-  @Rule
-  public ProcessEngineRule getProcessEngineRule() {
-    return processEngineRule;
-  }
-
-  private ProcessEngineRule processEngineRule = new ProcessEngineRule();
-
   @Inject
   protected BeanManager beanManager;
   @Inject
@@ -109,9 +88,17 @@ public abstract class CdiProcessEngineTestCase {
   protected CaseService caseService;
   @Inject
   protected DecisionService decisionService;
-
+    @Inject
+    protected BusinessProcess businessProcess;
   protected ProcessEngineConfigurationImpl processEngineConfiguration;
+    @Inject
+    CdiUnitContextAssociationManager.ApplicationScopedAssociation applicationScopedAssociation;
+    private ProcessEngineRule processEngineRule = new ProcessEngineRule();
 
+    @Rule
+    public ProcessEngineRule getProcessEngineRule() {
+        return processEngineRule;
+    }
 
   @Before
   public void setUpCdiProcessEngineTestCase() throws Exception {
@@ -120,32 +107,12 @@ public abstract class CdiProcessEngineTestCase {
     }
 
     processEngineConfiguration = ((ProcessEngineImpl)BpmPlatform.getProcessEngineService().getDefaultProcessEngine()).getProcessEngineConfiguration();
-
-    /*
-    formService = processEngine.getFormService();
-    historyService = processEngine.getHistoryService();
-    identityService = processEngine.getIdentityService();
-    managementService = processEngine.getManagementService();
-    repositoryService = processEngine.getRepositoryService();
-    // runtimeService = processEngine.getRuntimeService();
-    taskService = processEngine.getTaskService();
-    authorizationService = processEngine.getAuthorizationService();
-    filterService = processEngine.getFilterService();
-    externalTaskService = processEngine.getExternalTaskService();
-    caseService = processEngine.getCaseService();
-    decisionService = processEngine.getDecisionService();
-    */
   }
 
   @After
   public void tearDownCdiProcessEngineTestCase() throws Exception {
-    // RuntimeContainerDelegate.INSTANCE.get().unregisterProcessEngine(processEngine);
-   //  beanManager = null;
   }
 
-  protected void endConversationAndBeginNew(String processInstanceId) {
-    getBeanInstance(BusinessProcess.class).associateExecutionById(processInstanceId);
-  }
 
   protected <T> T getBeanInstance(Class<T> clazz) {
     return ProgrammaticBeanLookup.lookup(clazz);

@@ -12,7 +12,16 @@
  */
 package org.camunda.bpm.engine.cdi.cdiunittest.impl.event;
 
-import com.oneandone.ejbcdiunit.EjbUnitRunner;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+
+import javax.inject.Inject;
+
 import org.camunda.bpm.engine.cdi.BusinessProcessEvent;
 import org.camunda.bpm.engine.cdi.cdiunittest.CdiProcessEngineTestCase;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
@@ -22,22 +31,18 @@ import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import com.oneandone.ejbcdiunit.EjbUnitRunner;
 
 @RunWith(EjbUnitRunner.class)
 @AdditionalClasses({TestEventListener.class})
 public class EventNotificationTest extends CdiProcessEngineTestCase {
 
+    @Inject
+    TestEventListener listenerBean;
+
   @Test
   @Deployment(resources = {"org/camunda/bpm/engine/cdi/cdiunittest/impl/event/EventNotificationTest.process1.bpmn20.xml"})
   public void testReceiveAll() {
-    TestEventListener listenerBean = getBeanInstance(TestEventListener.class);
     listenerBean.reset();
 
     // assert that the bean has received 0 events
@@ -56,7 +61,6 @@ public class EventNotificationTest extends CdiProcessEngineTestCase {
       "org/camunda/bpm/engine/cdi/cdiunittest/impl/event/EventNotificationTest.process1.bpmn20.xml",
       "org/camunda/bpm/engine/cdi/cdiunittest/impl/event/EventNotificationTest.process2.bpmn20.xml" })
   public void testSelectEventsPerProcessDefinition() {
-    TestEventListener listenerBean = getBeanInstance(TestEventListener.class);
     listenerBean.reset();
 
     assertEquals(0, listenerBean.getEventsReceivedByKey().size());
@@ -71,7 +75,6 @@ public class EventNotificationTest extends CdiProcessEngineTestCase {
   @Test
   @Deployment(resources = {"org/camunda/bpm/engine/cdi/cdiunittest/impl/event/EventNotificationTest.process1.bpmn20.xml"})
   public void testSelectEventsPerActivity() {
-    TestEventListener listenerBean = getBeanInstance(TestEventListener.class);
     listenerBean.reset();
 
     assertEquals(0, listenerBean.getEndActivityService1());
@@ -90,7 +93,6 @@ public class EventNotificationTest extends CdiProcessEngineTestCase {
   @Test
   @Deployment(resources = {"org/camunda/bpm/engine/cdi/cdiunittest/impl/event/EventNotificationTest.process1.bpmn20.xml"})
   public void testSelectEventsPerTask() {
-    TestEventListener listenerBean = getBeanInstance(TestEventListener.class);
     listenerBean.reset();
 
     assertEquals(0, listenerBean.getCreateTaskUser1());
@@ -124,10 +126,10 @@ public class EventNotificationTest extends CdiProcessEngineTestCase {
     assertEquals(1, listenerBean.getDeleteTaskUser1());
   }
 
+
   @Test
   @Deployment
   public void testMultiInstanceEvents(){
-    TestEventListener listenerBean = getBeanInstance(TestEventListener.class);
     listenerBean.reset();
 
     assertThat(listenerBean.getEventsReceived().size(), is(0));
@@ -156,7 +158,6 @@ public class EventNotificationTest extends CdiProcessEngineTestCase {
 
     runtimeService.startProcessInstanceByKey("process");
 
-    TestEventListener listenerBean = getBeanInstance(TestEventListener.class);
     listenerBean.reset();
 
     List<Task> tasks = taskService.createTaskQuery().list();

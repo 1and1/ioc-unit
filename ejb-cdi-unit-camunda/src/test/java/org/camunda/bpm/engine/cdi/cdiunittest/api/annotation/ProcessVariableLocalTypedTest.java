@@ -16,7 +16,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import org.camunda.bpm.engine.cdi.BusinessProcess;
+import javax.inject.Inject;
+
 import org.camunda.bpm.engine.cdi.cdiunittest.CdiProcessEngineTestCase;
 import org.camunda.bpm.engine.cdi.cdiunittest.impl.beans.DeclarativeProcessController;
 import org.camunda.bpm.engine.test.Deployment;
@@ -25,23 +26,28 @@ import org.camunda.bpm.engine.variable.Variables;
 import org.camunda.bpm.engine.variable.type.ValueType;
 import org.camunda.bpm.engine.variable.value.StringValue;
 import org.camunda.bpm.engine.variable.value.TypedValue;
+import org.jglue.cdiunit.AdditionalPackages;
 import org.junit.Test;
 
 /**
  * @author Roman Smirnov
  *
  */
+@AdditionalPackages({ DeclarativeProcessController.class })
 public class ProcessVariableLocalTypedTest extends CdiProcessEngineTestCase {
+
+    @Inject
+    DeclarativeProcessController declarativeProcessController;
 
   @Test
   @Deployment(resources = "org/camunda/bpm/engine/cdi/cdiunittest/api/annotation/CompleteTaskTest.bpmn20.xml")
   public void testProcessVariableLocalTypeAnnotation() {
-    BusinessProcess businessProcess = getBeanInstance(BusinessProcess.class);
+
 
     VariableMap variables = Variables.createVariables().putValue("injectedLocalValue", "camunda");
     businessProcess.startProcessByKey("keyOfTheProcess", variables);
 
-    TypedValue value = getBeanInstance(DeclarativeProcessController.class).getInjectedLocalValue();
+        TypedValue value = declarativeProcessController.getInjectedLocalValue();
     assertNotNull(value);
     assertTrue(value instanceof StringValue);
     assertEquals(ValueType.STRING, value.getType());

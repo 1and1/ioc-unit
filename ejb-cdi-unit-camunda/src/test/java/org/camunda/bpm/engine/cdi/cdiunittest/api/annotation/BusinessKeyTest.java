@@ -12,7 +12,6 @@
  */
 package org.camunda.bpm.engine.cdi.cdiunittest.api.annotation;
 
-import org.camunda.bpm.engine.cdi.BusinessProcess;
 import org.camunda.bpm.engine.cdi.cdiunittest.CdiProcessEngineTestCase;
 import org.camunda.bpm.engine.cdi.impl.util.ProgrammaticBeanLookup;
 import org.camunda.bpm.engine.test.Deployment;
@@ -30,7 +29,7 @@ public class BusinessKeyTest extends CdiProcessEngineTestCase {
   public void testBusinessKeyInjectable() {
     String businessKey = "Activiti";
     String pid = runtimeService.startProcessInstanceByKey("keyOfTheProcess", businessKey).getId();
-    getBeanInstance(BusinessProcess.class).associateExecutionById(pid);
+        businessProcess.associateExecutionById(pid);
     
     // assert that now the businessKey-Bean can be looked up:
     Assert.assertEquals(businessKey, ProgrammaticBeanLookup.lookup("businessKey"));

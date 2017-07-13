@@ -4,14 +4,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
-import org.camunda.bpm.engine.cdi.BusinessProcess;
 import org.camunda.bpm.engine.cdi.cdiunittest.CdiProcessEngineTestCase;
 import org.camunda.bpm.engine.test.Deployment;
 import org.camunda.bpm.engine.variable.VariableMap;
 import org.camunda.bpm.engine.variable.Variables;
 import org.camunda.bpm.engine.variable.type.ValueType;
 import org.camunda.bpm.engine.variable.value.TypedValue;
-import org.jglue.cdiunit.InRequestScope;
 import org.junit.Test;
 
 /**
@@ -24,7 +22,7 @@ public class ProcessVariableMapTest extends CdiProcessEngineTestCase {
 
   @Test
   public void testProcessVariableMap() {
-    BusinessProcess businessProcess = getBeanInstance(BusinessProcess.class);
+
 
     VariableMap variables = (VariableMap) getBeanInstance("processVariableMap");
     assertNotNull(variables);
@@ -70,7 +68,7 @@ public class ProcessVariableMapTest extends CdiProcessEngineTestCase {
   @Test
   @Deployment(resources = "org/camunda/bpm/engine/cdi/cdiunittest/api/BusinessProcessBeanTest.test.bpmn20.xml")
   public void testProcessVariableMapLocal() {
-    BusinessProcess businessProcess = getBeanInstance(BusinessProcess.class);
+
     businessProcess.startProcessByKey("businessProcessBeanTest");
 
     VariableMap variables = (VariableMap) getBeanInstance("processVariableMapLocal");

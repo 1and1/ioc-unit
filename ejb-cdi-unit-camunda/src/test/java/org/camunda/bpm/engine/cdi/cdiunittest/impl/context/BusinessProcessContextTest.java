@@ -15,14 +15,13 @@ package org.camunda.bpm.engine.cdi.cdiunittest.impl.context;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import org.camunda.bpm.engine.cdi.BusinessProcess;
+import javax.inject.Inject;
+
 import org.camunda.bpm.engine.cdi.cdiunittest.CdiProcessEngineTestCase;
-import org.camunda.bpm.engine.cdi.cdiunittest.impl.beans.ProcessScopedMessageBean;
 import org.camunda.bpm.engine.cdi.cdiunittest.impl.beans.CreditCard;
+import org.camunda.bpm.engine.cdi.cdiunittest.impl.beans.ProcessScopedMessageBean;
 import org.camunda.bpm.engine.test.Deployment;
-import org.jglue.cdiunit.AdditionalClasses;
 import org.jglue.cdiunit.AdditionalPackages;
-import org.jglue.cdiunit.InRequestScope;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -30,43 +29,47 @@ import org.junit.Test;
  * 
  * @author Daniel Meyer
  */
-@InRequestScope
 @AdditionalPackages({CreditCard.class})
 public class BusinessProcessContextTest extends CdiProcessEngineTestCase {
 
 
+    @Inject
+    ProcessScopedMessageBean processScopedMessageBean;
+    @Inject
+    CreditCard creditCard;
+
   @Test
   @Deployment
   public void testResolution() throws Exception {
-    BusinessProcess businessProcess = getBeanInstance(BusinessProcess.class);
+
 
     businessProcess.startProcessByKey("testResolution").getId();
 
-    assertNotNull(getBeanInstance(CreditCard.class));    
+        assertNotNull(creditCard);
   }
 
   @Test
   // no @Deployment for this test
   public void testResolutionBeforeProcessStart() throws Exception {
     // assert that @BusinessProcessScoped beans can be resolved in the absence of an underlying process instance:
-    assertNotNull(getBeanInstance(CreditCard.class));
+        assertNotNull(creditCard);
   }
 
   @Test
   @Deployment
   public void testConversationalBeanStoreFlush() throws Exception {
-    
-    getBeanInstance(BusinessProcess.class).setVariable("testVariable", "testValue");
-    String pid =  getBeanInstance(BusinessProcess.class).startProcessByKey("testConversationalBeanStoreFlush").getId();
 
-    getBeanInstance(BusinessProcess.class).associateExecutionById(pid);
+        businessProcess.setVariable("testVariable", "testValue");
+        String pid = businessProcess.startProcessByKey("testConversationalBeanStoreFlush").getId();
 
-    // assert that the variable assigned on the businessProcess bean is flushed 
+        businessProcess.associateExecutionById(pid);
+
+        // assert that the variable assigned on the businessProcess bean is flushed
     assertEquals("testValue", runtimeService.getVariable(pid, "testVariable"));
 
     // assert that the value set to the message bean in the first service task is flushed
-    Assert.assertEquals("Hello from Activiti", getBeanInstance(ProcessScopedMessageBean.class).getMessage());
-    
+        Assert.assertEquals("Hello from Activiti", processScopedMessageBean.getMessage());
+
     // complete the task to allow the process instance to terminate
     taskService.complete(taskService.createTaskQuery().singleResult().getId());
   }
@@ -76,19 +79,19 @@ public class BusinessProcessContextTest extends CdiProcessEngineTestCase {
   public void testChangeProcessScopedBeanProperty() throws Exception {
     
     // resolve the creditcard bean (@BusinessProcessScoped) and set a value:
-    getBeanInstance(CreditCard.class).setCreditcardNumber("123");
-    String pid = getBeanInstance(BusinessProcess.class).startProcessByKey("testConversationalBeanStoreFlush").getId();
+        creditCard.setCreditcardNumber("123");
+        String pid = businessProcess.startProcessByKey("testConversationalBeanStoreFlush").getId();
     
-    getBeanInstance(BusinessProcess.class).startTask(taskService.createTaskQuery().singleResult().getId());
+        businessProcess.startTask(taskService.createTaskQuery().singleResult().getId());
         
     // assert that the value of creditCardNumber is '123'
     assertEquals("123", getBeanInstance(CreditCard.class).getCreditcardNumber());
     // set a different value:
-    getBeanInstance(CreditCard.class).setCreditcardNumber("321");
+        creditCard.setCreditcardNumber("321");
     // complete the task
-    getBeanInstance(BusinessProcess.class).completeTask();
+        businessProcess.completeTask();
     
-    getBeanInstance(BusinessProcess.class).associateExecutionById(pid);
+        businessProcess.associateExecutionById(pid);
 
     // now assert that the value of creditcard is "321":
     assertEquals("321", getBeanInstance(CreditCard.class).getCreditcardNumber());

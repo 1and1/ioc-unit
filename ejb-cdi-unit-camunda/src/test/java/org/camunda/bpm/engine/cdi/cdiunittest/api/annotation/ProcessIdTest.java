@@ -12,7 +12,6 @@
  */
 package org.camunda.bpm.engine.cdi.cdiunittest.api.annotation;
 
-import com.oneandone.ejbcdiunit.EjbUnitRunner;
 import org.camunda.bpm.engine.cdi.BusinessProcess;
 import org.camunda.bpm.engine.cdi.cdiunittest.CdiProcessEngineTestCase;
 import org.camunda.bpm.engine.test.Deployment;
@@ -20,6 +19,8 @@ import org.jglue.cdiunit.AdditionalClasspaths;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import com.oneandone.ejbcdiunit.EjbUnitRunner;
 
 /**
  * 
@@ -32,7 +33,7 @@ public class ProcessIdTest extends CdiProcessEngineTestCase {
   @Test
   @Deployment
   public void testProcessIdInjectable() {
-    getBeanInstance(BusinessProcess.class).startProcessByKey("keyOfTheProcess");    
+        businessProcess.startProcessByKey("keyOfTheProcess");
     Assert.assertNotNull(getBeanInstance("processInstanceId"));
   }
   

@@ -17,7 +17,6 @@ import static org.junit.Assert.assertEquals;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.camunda.bpm.engine.cdi.BusinessProcess;
 import org.camunda.bpm.engine.cdi.cdiunittest.CdiProcessEngineTestCase;
 import org.camunda.bpm.engine.test.Deployment;
 import org.junit.Ignore;
@@ -29,7 +28,7 @@ public class ProcessVariablesTest extends CdiProcessEngineTestCase {
   @Test
   @Deployment(resources = "org/activiti/cdi/BusinessProcessBeanTest.test.bpmn20.xml")
   public void testResolveString() {
-    BusinessProcess businessProcess = getBeanInstance(BusinessProcess.class);
+
 
     Map<String, Object> processVariables = new HashMap<String, Object>();
     businessProcess.setVariable("testKeyString", "testValue");

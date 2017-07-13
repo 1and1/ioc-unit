@@ -12,6 +12,7 @@
  */
 package org.camunda.bpm.engine.cdi.cdiunittest.impl.beans;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import org.camunda.bpm.engine.cdi.annotation.CompleteTask;
@@ -27,6 +28,7 @@ import org.camunda.bpm.engine.variable.value.TypedValue;
  *
  * @author Daniel Meyer
  */
+@ApplicationScoped
 public class DeclarativeProcessController {
 
   @ProcessVariable

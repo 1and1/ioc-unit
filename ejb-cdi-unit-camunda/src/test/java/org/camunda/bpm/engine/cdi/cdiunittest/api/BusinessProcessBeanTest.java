@@ -19,18 +19,10 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
-import org.camunda.bpm.engine.TaskService;
-import org.camunda.bpm.engine.cdi.BusinessProcess;
 import org.camunda.bpm.engine.cdi.ProcessEngineCdiException;
 import org.camunda.bpm.engine.cdi.cdiunittest.CdiProcessEngineTestCase;
-import org.camunda.bpm.engine.cdi.cdiunittest.CdiUnitContextAssociationManager;
-import org.camunda.bpm.engine.cdi.impl.context.ContextAssociationManager;
-import org.camunda.bpm.engine.cdi.impl.context.DefaultContextAssociationManager;
 import org.camunda.bpm.engine.runtime.Execution;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.task.Task;
@@ -38,16 +30,7 @@ import org.camunda.bpm.engine.test.Deployment;
 import org.camunda.bpm.engine.variable.Variables;
 import org.camunda.bpm.engine.variable.type.ValueType;
 import org.camunda.bpm.engine.variable.value.TypedValue;
-import org.jglue.cdiunit.ActivatedAlternatives;
-import org.jglue.cdiunit.InRequestScope;
-import org.jglue.cdiunit.ProducesAlternative;
 import org.junit.Test;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.Dependent;
-import javax.enterprise.context.RequestScoped;
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
 
 /**
  * @author Daniel Meyer
@@ -63,7 +46,7 @@ public class BusinessProcessBeanTest extends CdiProcessEngineTestCase {
   @Deployment
   public void test() throws Exception {
 
-    BusinessProcess businessProcess = getBeanInstance(BusinessProcess.class);
+
 
     // start the process
     businessProcess.startProcessByKey("businessProcessBeanTest").getId();
@@ -109,7 +92,7 @@ public class BusinessProcessBeanTest extends CdiProcessEngineTestCase {
   @Test
   @Deployment
   public void testProcessWithoutWatestate() {
-    BusinessProcess businessProcess = getBeanInstance(BusinessProcess.class);
+
 
     // start the process
     businessProcess.startProcessByKey("businessProcessBeanTest").getId();
@@ -121,7 +104,7 @@ public class BusinessProcessBeanTest extends CdiProcessEngineTestCase {
   @Test
   @Deployment(resources = "org/camunda/bpm/engine/cdi/cdiunittest/api/BusinessProcessBeanTest.test.bpmn20.xml")
   public void testResolveProcessInstanceBean() {
-    BusinessProcess businessProcess = getBeanInstance(BusinessProcess.class);
+
 
     assertNull(getBeanInstance(ProcessInstance.class));
     assertNull(getBeanInstance("processInstanceId"));
@@ -142,7 +125,7 @@ public class BusinessProcessBeanTest extends CdiProcessEngineTestCase {
   @Test
   @Deployment(resources = "org/camunda/bpm/engine/cdi/cdiunittest/api/BusinessProcessBeanTest.test.bpmn20.xml")
   public void testResolveTaskBean() {
-    BusinessProcess businessProcess = getBeanInstance(BusinessProcess.class);
+
 
     assertNull(getBeanInstance(Task.class));
     assertNull(getBeanInstance("taskId"));
@@ -164,7 +147,7 @@ public class BusinessProcessBeanTest extends CdiProcessEngineTestCase {
   @Deployment(resources = "org/camunda/bpm/engine/cdi/cdiunittest/api/BusinessProcessBeanTest.test.bpmn20.xml")
   @SuppressWarnings("deprecation")
   public void testGetVariableCache() {
-    BusinessProcess businessProcess = getBeanInstance(BusinessProcess.class);
+
 
     // initially the variable cache is empty
     assertEquals(Collections.EMPTY_MAP, businessProcess.getVariableCache());
@@ -193,7 +176,7 @@ public class BusinessProcessBeanTest extends CdiProcessEngineTestCase {
   @Test
   @Deployment(resources = "org/camunda/bpm/engine/cdi/cdiunittest/api/BusinessProcessBeanTest.test.bpmn20.xml")
   public void testGetCachedVariableMap() {
-    BusinessProcess businessProcess = getBeanInstance(BusinessProcess.class);
+
 
     // initially the variable cache is empty
     assertEquals(Collections.EMPTY_MAP, businessProcess.getCachedVariableMap());
@@ -223,7 +206,7 @@ public class BusinessProcessBeanTest extends CdiProcessEngineTestCase {
   @Deployment(resources = "org/camunda/bpm/engine/cdi/cdiunittest/api/BusinessProcessBeanTest.test.bpmn20.xml")
   @SuppressWarnings("deprecation")
   public void testGetAndClearVariableCache() {
-    BusinessProcess businessProcess = getBeanInstance(BusinessProcess.class);
+
 
     // initially the variable cache is empty
     assertEquals(Collections.EMPTY_MAP, businessProcess.getAndClearVariableCache());
@@ -252,7 +235,7 @@ public class BusinessProcessBeanTest extends CdiProcessEngineTestCase {
   @Test
   @Deployment(resources = "org/camunda/bpm/engine/cdi/cdiunittest/api/BusinessProcessBeanTest.test.bpmn20.xml")
   public void testGetAndClearCachedVariableMap() {
-    BusinessProcess businessProcess = getBeanInstance(BusinessProcess.class);
+
 
     // initially the variable cache is empty
     assertEquals(Collections.EMPTY_MAP, businessProcess.getAndClearCachedVariableMap());
@@ -282,7 +265,7 @@ public class BusinessProcessBeanTest extends CdiProcessEngineTestCase {
   @Deployment(resources = "org/camunda/bpm/engine/cdi/cdiunittest/api/BusinessProcessBeanTest.test.bpmn20.xml")
   @SuppressWarnings("deprecation")
   public void testGetVariableLocalCache() {
-    BusinessProcess businessProcess = getBeanInstance(BusinessProcess.class);
+
 
     // initially the variable cache is empty
     assertEquals(Collections.EMPTY_MAP, businessProcess.getVariableLocalCache());
@@ -314,7 +297,7 @@ public class BusinessProcessBeanTest extends CdiProcessEngineTestCase {
   @Test
   @Deployment(resources = "org/camunda/bpm/engine/cdi/cdiunittest/api/BusinessProcessBeanTest.test.bpmn20.xml")
   public void testGetCachedLocalVariableMap() {
-    BusinessProcess businessProcess = getBeanInstance(BusinessProcess.class);
+
 
     // initially the variable cache is empty
     assertEquals(Collections.EMPTY_MAP, businessProcess.getCachedLocalVariableMap());
@@ -347,10 +330,9 @@ public class BusinessProcessBeanTest extends CdiProcessEngineTestCase {
   @Deployment(resources = "org/camunda/bpm/engine/cdi/cdiunittest/api/BusinessProcessBeanTest.test.bpmn20.xml")
   public void testGetVariableLocal()
   {
-    BusinessProcess businessProcess = getBeanInstance(BusinessProcess.class);
+
     ProcessInstance processInstance = businessProcess.startProcessByKey("businessProcessBeanTest");
 
-    TaskService taskService = getBeanInstance(TaskService.class);
     Task task = taskService.createTaskQuery().processInstanceId(processInstance.getId()).singleResult();
 
     assertNotNull(task);
@@ -369,7 +351,7 @@ public class BusinessProcessBeanTest extends CdiProcessEngineTestCase {
   @Deployment(resources = "org/camunda/bpm/engine/cdi/cdiunittest/api/BusinessProcessBeanTest.test.bpmn20.xml")
   @SuppressWarnings("deprecation")
   public void testGetAndClearVariableLocalCache() {
-    BusinessProcess businessProcess = getBeanInstance(BusinessProcess.class);
+
 
     // initially the variable cache is empty
     assertEquals(Collections.EMPTY_MAP, businessProcess.getAndClearVariableLocalCache());
@@ -401,7 +383,7 @@ public class BusinessProcessBeanTest extends CdiProcessEngineTestCase {
   @Test
   @Deployment(resources = "org/camunda/bpm/engine/cdi/cdiunittest/api/BusinessProcessBeanTest.test.bpmn20.xml")
   public void testGetAndClearCachedLocalVariableMap() {
-    BusinessProcess businessProcess = getBeanInstance(BusinessProcess.class);
+
 
     // initially the variable cache is empty
     assertEquals(Collections.EMPTY_MAP, businessProcess.getAndClearCachedLocalVariableMap());
@@ -433,7 +415,7 @@ public class BusinessProcessBeanTest extends CdiProcessEngineTestCase {
   @Test
   @Deployment(resources = "org/camunda/bpm/engine/cdi/cdiunittest/api/BusinessProcessBeanTest.test.bpmn20.xml")
   public void testFlushVariableCache() {
-    BusinessProcess businessProcess = getBeanInstance(BusinessProcess.class);
+
 
     // cannot flush variable cache in absence of an association:
     try {
@@ -479,7 +461,7 @@ public class BusinessProcessBeanTest extends CdiProcessEngineTestCase {
   @Test
   @Deployment(resources = "org/camunda/bpm/engine/cdi/cdiunittest/api/BusinessProcessBeanTest.test.bpmn20.xml")
   public void testSaveTask() {
-    BusinessProcess businessProcess = getBeanInstance(BusinessProcess.class);
+
 
     // cannot save task in absence of an association:
     try {
@@ -516,7 +498,7 @@ public class BusinessProcessBeanTest extends CdiProcessEngineTestCase {
   @Test
   @Deployment(resources = "org/camunda/bpm/engine/cdi/cdiunittest/api/BusinessProcessBeanTest.test.bpmn20.xml")
   public void testStopTask() {
-    BusinessProcess businessProcess = getBeanInstance(BusinessProcess.class);
+
 
     // cannot stop task in absence of an association:
     try {

@@ -13,20 +13,25 @@
 
 package org.camunda.bpm.engine.cdi.cdiunittest.impl.el;
 
-import org.camunda.bpm.engine.cdi.cdiunittest.CdiProcessEngineTestCase;
-import org.camunda.bpm.engine.task.Task;
-import org.camunda.bpm.engine.test.Deployment;
-import org.junit.Test;
+import static org.camunda.bpm.engine.cdi.cdiunittest.impl.el.beans.CdiTaskListenerBean.INITIAL_VALUE;
+import static org.camunda.bpm.engine.cdi.cdiunittest.impl.el.beans.CdiTaskListenerBean.UPDATED_VALUE;
+import static org.camunda.bpm.engine.cdi.cdiunittest.impl.el.beans.CdiTaskListenerBean.VARIABLE_NAME;
+import static org.junit.Assert.assertEquals;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.camunda.bpm.engine.cdi.cdiunittest.impl.el.beans.CdiTaskListenerBean.*;
-import static org.junit.Assert.assertEquals;
+import org.camunda.bpm.engine.cdi.cdiunittest.CdiProcessEngineTestCase;
+import org.camunda.bpm.engine.cdi.cdiunittest.impl.el.beans.CdiTaskListenerBean;
+import org.camunda.bpm.engine.task.Task;
+import org.camunda.bpm.engine.test.Deployment;
+import org.jglue.cdiunit.AdditionalClasses;
+import org.junit.Test;
 
 /**
  * @author Sebastian Menski
  */
+@AdditionalClasses({ CdiTaskListenerBean.class })
 public class TaskListenerInvocationTest extends CdiProcessEngineTestCase {
 
   @Test

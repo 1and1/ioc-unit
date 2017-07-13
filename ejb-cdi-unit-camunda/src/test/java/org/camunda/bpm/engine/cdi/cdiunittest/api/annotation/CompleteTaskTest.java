@@ -14,10 +14,11 @@ package org.camunda.bpm.engine.cdi.cdiunittest.api.annotation;
 
 import static org.junit.Assert.assertNull;
 
-import org.camunda.bpm.engine.cdi.BusinessProcess;
+import javax.inject.Inject;
+
 import org.camunda.bpm.engine.cdi.cdiunittest.CdiProcessEngineTestCase;
-import org.camunda.bpm.engine.cdi.impl.annotation.CompleteTaskInterceptor;
 import org.camunda.bpm.engine.cdi.cdiunittest.impl.beans.DeclarativeProcessController;
+import org.camunda.bpm.engine.cdi.impl.annotation.CompleteTaskInterceptor;
 import org.camunda.bpm.engine.task.Task;
 import org.camunda.bpm.engine.test.Deployment;
 import org.junit.Test;
@@ -30,11 +31,14 @@ import org.junit.Test;
  */
 public class CompleteTaskTest extends CdiProcessEngineTestCase {
 
+    @Inject
+    DeclarativeProcessController declarativeProcessController;
+
   @Test
   @Deployment(resources = "org/camunda/bpm/engine/cdi/cdiunittest/api/annotation/CompleteTaskTest.bpmn20.xml")
   public void testCompleteTask() {
 
-    BusinessProcess businessProcess = getBeanInstance(BusinessProcess.class);
+
 
     businessProcess.startProcessByKey("keyOfTheProcess");
 
@@ -43,7 +47,7 @@ public class CompleteTaskTest extends CdiProcessEngineTestCase {
     // associate current unit of work with the task:
     businessProcess.startTask(task.getId());
 
-    getBeanInstance(DeclarativeProcessController.class).completeTask();
+        declarativeProcessController.completeTask();
 
     // assert that now the task is completed
     assertNull(taskService.createTaskQuery().singleResult());

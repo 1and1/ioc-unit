@@ -12,27 +12,32 @@
  */
 package org.camunda.bpm.engine.cdi.cdiunittest.impl.el;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
+
+import javax.inject.Inject;
 
 import org.camunda.bpm.engine.cdi.cdiunittest.CdiProcessEngineTestCase;
 import org.camunda.bpm.engine.cdi.cdiunittest.impl.beans.MessageBean;
 import org.camunda.bpm.engine.cdi.cdiunittest.impl.el.beans.DependentScopedBean;
 import org.camunda.bpm.engine.test.Deployment;
-import org.jglue.cdiunit.InRequestScope;
+import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.Ignore;
 import org.junit.Test;
 
 /**
  * @author Daniel Meyer
  */
+@AdditionalClasses({ DependentScopedBean.class })
 public class ElTest extends CdiProcessEngineTestCase {
+
+    @Inject
+    MessageBean messageBean;
 
   @Test
   @Deployment
   public void testSetBeanProperty() throws Exception {
-    MessageBean messageBean = getBeanInstance(MessageBean.class);
     runtimeService.startProcessInstanceByKey("setBeanProperty");
     assertEquals("Greetings from Berlin", messageBean.getMessage());
   }

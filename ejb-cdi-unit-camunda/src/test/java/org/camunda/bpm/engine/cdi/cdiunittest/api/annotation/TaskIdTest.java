@@ -14,7 +14,6 @@ package org.camunda.bpm.engine.cdi.cdiunittest.api.annotation;
 
 import static org.junit.Assert.assertNotNull;
 
-import org.camunda.bpm.engine.cdi.BusinessProcess;
 import org.camunda.bpm.engine.cdi.cdiunittest.CdiProcessEngineTestCase;
 import org.camunda.bpm.engine.test.Deployment;
 import org.junit.Test;
@@ -28,8 +27,7 @@ public class TaskIdTest extends CdiProcessEngineTestCase {
   @Test
   @Deployment
   public void testTaskIdInjectable() {
-    BusinessProcess businessProcess = getBeanInstance(BusinessProcess.class);
-    businessProcess.startProcessByKey("keyOfTheProcess");  
+        businessProcess.startProcessByKey("keyOfTheProcess");
     
     businessProcess.startTask(taskService.createTaskQuery().singleResult().getId());   
     
