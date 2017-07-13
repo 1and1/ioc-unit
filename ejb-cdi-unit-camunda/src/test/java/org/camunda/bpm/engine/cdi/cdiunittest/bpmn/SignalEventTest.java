@@ -26,9 +26,11 @@ import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.test.Deployment;
+import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.Ignore;
 import org.junit.Test;
 
+@AdditionalClasses({SignalEventTest.SignalReceivedDelegate.class, SignalEventTest.SendSignalDelegate.class})
 public class SignalEventTest extends CdiProcessEngineTestCase {
   
   
@@ -64,7 +66,6 @@ public class SignalEventTest extends CdiProcessEngineTestCase {
   }
 
   @Test
-  @Ignore
   @Deployment(resources = {"org/camunda/bpm/engine/cdi/cdiunittest/bpmn/SignalEventTests.catchAlertSignalBoundaryWithReceiveTask.bpmn20.xml",
                           "org/camunda/bpm/engine/cdi/cdiunittest/bpmn/SignalEventTests.throwAlertSignalWithDelegate.bpmn20.xml"})
   public void testSignalCatchBoundaryWithVariables() {

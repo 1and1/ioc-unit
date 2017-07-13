@@ -72,10 +72,6 @@ public abstract class CdiProcessEngineTestCase {
   @Inject
   CdiUnitContextAssociationManager.ApplicationScopedAssociation applicationScopedAssociation;
 
-  static {
-    LogUtil.readJavaUtilLoggingConfigFromClasspath();
-  }
-
   protected Logger logger = Logger.getLogger(getClass().getName());
 
   @Rule
@@ -85,20 +81,33 @@ public abstract class CdiProcessEngineTestCase {
 
   private ProcessEngineRule processEngineRule = new ProcessEngineRule();
 
+  @Inject
   protected BeanManager beanManager;
-
+  @Inject
   protected ProcessEngine processEngine;
+  @Inject
   protected FormService formService;
+  @Inject
   protected HistoryService historyService;
+  @Inject
   protected IdentityService identityService;
+  @Inject
   protected ManagementService managementService;
+  @Inject
   protected RepositoryService repositoryService;
+  @Inject
   protected RuntimeService runtimeService;
+  @Inject
   protected TaskService taskService;
+  @Inject
   protected AuthorizationService authorizationService;
+  @Inject
   protected FilterService filterService;
+  @Inject
   protected ExternalTaskService externalTaskService;
+  @Inject
   protected CaseService caseService;
+  @Inject
   protected DecisionService decisionService;
 
   protected ProcessEngineConfigurationImpl processEngineConfiguration;
@@ -110,21 +119,22 @@ public abstract class CdiProcessEngineTestCase {
       RuntimeContainerDelegate.INSTANCE.get().registerProcessEngine(processEngineRule.getProcessEngine());
     }
 
-    beanManager = ProgrammaticBeanLookup.lookup(BeanManager.class);
-    processEngine = ProgrammaticBeanLookup.lookup(ProcessEngine.class);
     processEngineConfiguration = ((ProcessEngineImpl)BpmPlatform.getProcessEngineService().getDefaultProcessEngine()).getProcessEngineConfiguration();
+
+    /*
     formService = processEngine.getFormService();
     historyService = processEngine.getHistoryService();
     identityService = processEngine.getIdentityService();
     managementService = processEngine.getManagementService();
     repositoryService = processEngine.getRepositoryService();
-    runtimeService = processEngine.getRuntimeService();
+    // runtimeService = processEngine.getRuntimeService();
     taskService = processEngine.getTaskService();
     authorizationService = processEngine.getAuthorizationService();
     filterService = processEngine.getFilterService();
     externalTaskService = processEngine.getExternalTaskService();
     caseService = processEngine.getCaseService();
     decisionService = processEngine.getDecisionService();
+    */
   }
 
   @After
