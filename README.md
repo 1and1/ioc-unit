@@ -159,7 +159,8 @@ This example shows how it is easily possible to test a artifact by it's rest-int
 
 ## Test of a camunda BPM processing
 
-To support testing of processes ejb-cdi-unit contains CdiProcessEngineTestCase. Tests derived from that can start processes, ... The test from engine-cdi are ported to ejb-cdi-unit-camunda.
+To support testing of processes ejb-cdi-unit contains CdiProcessEngineTestCase. Tests derived from that class can start processes, use/change Variables ... .
+The test of camunda-bpm-platform/engine-cdi are ported to [ejb-cdi-unit-camunda](https://github.com/1and1/ejb-cdi-unit/tree/master/ejb-cdi-unit-camunda/src/test/java/org/camunda/bpm/engine/cdi/cdiunittest).
 
 # Restrictions
 The helpers have been developed as required, therefore it was not necessarily a  goal to fully adhere to the J2EE-standard:
@@ -183,6 +184,7 @@ The helpers have been developed as required, therefore it was not necessarily a 
 * The base and idea for this module comes from [cdiunit](https://github.com/BrynCooke/cdi-unit). Some of the code has been shamelessly copied from there.
 * [mockrunner](http://mockrunner.github.io/) is used for all jms-simulations.
 * [weld](http://weld.cdi-spec.org/) is the cdi-container used for the tests as it is also determined because of the usage of cdi-unit. Since on our site jboss7  is yet in use, compatibility to 1.1.14 is required throughout.
+* [camunda](https://github.com/camunda/camunda-bpm-platform) the github-project supporting camunda-bpm-platform.
 
 
 # License
