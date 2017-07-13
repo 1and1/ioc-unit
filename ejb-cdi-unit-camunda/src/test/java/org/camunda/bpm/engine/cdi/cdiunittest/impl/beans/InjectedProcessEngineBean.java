@@ -1,9 +1,9 @@
 package org.camunda.bpm.engine.cdi.cdiunittest.impl.beans;
 
-import org.camunda.bpm.engine.ProcessEngine;
-
 import javax.inject.Inject;
 import javax.inject.Named;
+
+import org.camunda.bpm.engine.ProcessEngine;
 
 /**
  * @author Christopher Zell <christopher.zell@camunda.com>
@@ -11,6 +11,6 @@ import javax.inject.Named;
 @Named
 public class InjectedProcessEngineBean {
 
-  @Inject
-  public ProcessEngine processEngine;
+    @Inject
+    public ProcessEngine processEngine;
 }

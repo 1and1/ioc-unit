@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<definitions id="definitions"
-  xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
-  xmlns:camunda="http://camunda.org/schema/1.0/bpmn" 
-  targetNamespace="Examples">
+<definitions xmlns:camunda="http://camunda.org/schema/1.0/bpmn"
+             id="definitions"
+             xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             targetNamespace="Examples">
 
-  <signal id="alertSignal" name="alert" />
+    <signal id="alertSignal" name="alert"/>
 
-  <process id="catchSignal" isExecutable="true">
+    <process id="catchSignal" isExecutable="true">
 
-    <startEvent id="start" />
+        <startEvent id="start"/>
 
-    <sequenceFlow sourceRef="start" targetRef="task" />
+        <sequenceFlow sourceRef="start" targetRef="task"/>
 
-    <userTask id="task" camunda:assignee="kermit" />     
-    
-    <boundaryEvent id="boundary" attachedToRef="task" cancelActivity="true">       
-          <signalEventDefinition signalRef="alertSignal"/>
-    </boundaryEvent>
+        <userTask id="task" camunda:assignee="kermit"/>
 
-    <sequenceFlow sourceRef="task" targetRef="end" />
-    <sequenceFlow sourceRef="boundary" targetRef="serviceTask" />
+        <boundaryEvent id="boundary" attachedToRef="task" cancelActivity="true">
+            <signalEventDefinition signalRef="alertSignal"/>
+        </boundaryEvent>
 
-    <serviceTask id="serviceTask" camunda:delegateExpression="#{signalReceivedDelegate}" />
-    <sequenceFlow sourceRef="serviceTask" targetRef="receiveTask" />
-    
-    <receiveTask id="receiveTask" />
-    <sequenceFlow sourceRef="receiveTask" targetRef="end" />
+        <sequenceFlow sourceRef="task" targetRef="end"/>
+        <sequenceFlow sourceRef="boundary" targetRef="serviceTask"/>
 
-    <endEvent id="end" />
+        <serviceTask id="serviceTask" camunda:delegateExpression="#{signalReceivedDelegate}"/>
+        <sequenceFlow sourceRef="serviceTask" targetRef="receiveTask"/>
 
-  </process>
+        <receiveTask id="receiveTask"/>
+        <sequenceFlow sourceRef="receiveTask" targetRef="end"/>
+
+        <endEvent id="end"/>
+
+    </process>
 </definitions>

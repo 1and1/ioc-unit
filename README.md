@@ -100,7 +100,10 @@ The usage does not differ very much from cdi-unit:
 * ejb-cdi-unit is the module providing the test extensions, it is available from maven central
 * ejb-cdi-unit-test-war is code used by
 	* ejb-cdi-unit-tests in regression tests
+	* ejb-cdi-unit-tomee to show how the tests can be implemented using tomee embedded
 	* ejb-cdi-unit-arq to prove that the modules behaviour fits to wildfly
+* ejb-cdi-unit-tomee-simple contains some code doing simple tests only with tomee. ejb-cdi-unit is not used here.
+* ejb-cdi-unit-camunda contains the camunda-bpm-platform/engine-cdi - tests ported from arquillian to ejb-cdi-unit.
 * examples contains showcases including some diagrams which should show the usage together with the internal working of ejb-cdi-unit. Some proposed solutions for easy simulation of remote Services and callbacks are also shown there.
 
 

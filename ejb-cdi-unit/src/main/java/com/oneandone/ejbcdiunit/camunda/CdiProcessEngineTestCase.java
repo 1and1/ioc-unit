@@ -59,38 +59,40 @@ import com.oneandone.ejbcdiunit.EjbUnitRunner;
 @ActivatedAlternatives({CdiUnitContextAssociationManager.class})
 public abstract class CdiProcessEngineTestCase {
 
-  protected Logger logger = Logger.getLogger(getClass().getName());
-  @Inject
-  protected BeanManager beanManager;
-  @Inject
-  protected ProcessEngine processEngine;
-  @Inject
-  protected FormService formService;
-  @Inject
-  protected HistoryService historyService;
-  @Inject
-  protected IdentityService identityService;
-  @Inject
-  protected ManagementService managementService;
-  @Inject
-  protected RepositoryService repositoryService;
-  @Inject
-  protected RuntimeService runtimeService;
-  @Inject
-  protected TaskService taskService;
-  @Inject
-  protected AuthorizationService authorizationService;
-  @Inject
-  protected FilterService filterService;
-  @Inject
-  protected ExternalTaskService externalTaskService;
-  @Inject
-  protected CaseService caseService;
-  @Inject
-  protected DecisionService decisionService;
+    protected Logger logger = Logger.getLogger(getClass().getName());
+    @Inject
+    protected BeanManager beanManager;
+    @Inject
+    protected ProcessEngine processEngine;
+    @Inject
+    protected FormService formService;
+    @Inject
+    protected HistoryService historyService;
+    @Inject
+    protected IdentityService identityService;
+    @Inject
+    protected ManagementService managementService;
+    @Inject
+    protected RepositoryService repositoryService;
+    @Inject
+    protected RuntimeService runtimeService;
+    @Inject
+    protected TaskService taskService;
+    @Inject
+    protected AuthorizationService authorizationService;
+    @Inject
+    protected FilterService filterService;
+    @Inject
+    protected ExternalTaskService externalTaskService;
+    @Inject
+    protected CaseService caseService;
+    @Inject
+    protected DecisionService decisionService;
+
     @Inject
     protected BusinessProcess businessProcess;
-  protected ProcessEngineConfigurationImpl processEngineConfiguration;
+
+    protected ProcessEngineConfigurationImpl processEngineConfiguration;
     @Inject
     CdiUnitContextAssociationManager.ApplicationScopedAssociation applicationScopedAssociation;
     private ProcessEngineRule processEngineRule = new ProcessEngineRule();

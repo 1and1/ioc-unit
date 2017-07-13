@@ -1,14 +1,8 @@
-/* Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a
+ * copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software distributed
+ * under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for
+ * the specific language governing permissions and limitations under the License.
  */
 package org.camunda.bpm.engine.cdi.cdiunittest.impl.context;
 
@@ -27,10 +21,9 @@ import org.junit.Test;
 import com.oneandone.ejbcdiunit.camunda.CdiProcessEngineTestCase;
 
 /**
- * 
  * @author Daniel Meyer
  */
-@AdditionalPackages({CreditCard.class})
+@AdditionalPackages({ CreditCard.class })
 public class BusinessProcessContextTest extends CdiProcessEngineTestCase {
 
 
@@ -39,26 +32,26 @@ public class BusinessProcessContextTest extends CdiProcessEngineTestCase {
     @Inject
     CreditCard creditCard;
 
-  @Test
-  @Deployment
-  public void testResolution() throws Exception {
+    @Test
+    @Deployment
+    public void testResolution() throws Exception {
 
 
-    businessProcess.startProcessByKey("testResolution").getId();
+        businessProcess.startProcessByKey("testResolution").getId();
 
         assertNotNull(creditCard);
-  }
+    }
 
-  @Test
-  // no @Deployment for this test
-  public void testResolutionBeforeProcessStart() throws Exception {
-    // assert that @BusinessProcessScoped beans can be resolved in the absence of an underlying process instance:
+    @Test
+    // no @Deployment for this test
+    public void testResolutionBeforeProcessStart() throws Exception {
+        // assert that @BusinessProcessScoped beans can be resolved in the absence of an underlying process instance:
         assertNotNull(creditCard);
-  }
+    }
 
-  @Test
-  @Deployment
-  public void testConversationalBeanStoreFlush() throws Exception {
+    @Test
+    @Deployment
+    public void testConversationalBeanStoreFlush() throws Exception {
 
         businessProcess.setVariable("testVariable", "testValue");
         String pid = businessProcess.startProcessByKey("testConversationalBeanStoreFlush").getId();
@@ -66,40 +59,40 @@ public class BusinessProcessContextTest extends CdiProcessEngineTestCase {
         businessProcess.associateExecutionById(pid);
 
         // assert that the variable assigned on the businessProcess bean is flushed
-    assertEquals("testValue", runtimeService.getVariable(pid, "testVariable"));
+        assertEquals("testValue", runtimeService.getVariable(pid, "testVariable"));
 
-    // assert that the value set to the message bean in the first service task is flushed
+        // assert that the value set to the message bean in the first service task is flushed
         Assert.assertEquals("Hello from Activiti", processScopedMessageBean.getMessage());
 
-    // complete the task to allow the process instance to terminate
-    taskService.complete(taskService.createTaskQuery().singleResult().getId());
-  }
+        // complete the task to allow the process instance to terminate
+        taskService.complete(taskService.createTaskQuery().singleResult().getId());
+    }
 
-  @Test
-  @Deployment
-  public void testChangeProcessScopedBeanProperty() throws Exception {
-    
-    // resolve the creditcard bean (@BusinessProcessScoped) and set a value:
+    @Test
+    @Deployment
+    public void testChangeProcessScopedBeanProperty() throws Exception {
+
+        // resolve the creditcard bean (@BusinessProcessScoped) and set a value:
         creditCard.setCreditcardNumber("123");
         String pid = businessProcess.startProcessByKey("testConversationalBeanStoreFlush").getId();
-    
+
         businessProcess.startTask(taskService.createTaskQuery().singleResult().getId());
-        
-    // assert that the value of creditCardNumber is '123'
-    assertEquals("123", getBeanInstance(CreditCard.class).getCreditcardNumber());
-    // set a different value:
+
+        // assert that the value of creditCardNumber is '123'
+        assertEquals("123", getBeanInstance(CreditCard.class).getCreditcardNumber());
+        // set a different value:
         creditCard.setCreditcardNumber("321");
-    // complete the task
+        // complete the task
         businessProcess.completeTask();
-    
+
         businessProcess.associateExecutionById(pid);
 
-    // now assert that the value of creditcard is "321":
-    assertEquals("321", getBeanInstance(CreditCard.class).getCreditcardNumber());
-    
-    // complete the task to allow the process instance to terminate
-    taskService.complete(taskService.createTaskQuery().singleResult().getId());
-    
-  }
-    
+        // now assert that the value of creditcard is "321":
+        assertEquals("321", getBeanInstance(CreditCard.class).getCreditcardNumber());
+
+        // complete the task to allow the process instance to terminate
+        taskService.complete(taskService.createTaskQuery().singleResult().getId());
+
+    }
+
 }

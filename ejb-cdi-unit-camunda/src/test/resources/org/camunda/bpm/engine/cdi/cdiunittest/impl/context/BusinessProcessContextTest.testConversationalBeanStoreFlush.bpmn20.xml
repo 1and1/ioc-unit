@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<definitions id="taskAssigneeExample"
-	xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:camunda="http://camunda.org/schema/1.0/bpmn"
-	targetNamespace="Examples">
+<definitions xmlns:camunda="http://camunda.org/schema/1.0/bpmn"
+             id="taskAssigneeExample" xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             targetNamespace="Examples">
 
-	<process id="testConversationalBeanStoreFlush" isExecutable="true">
+    <process id="testConversationalBeanStoreFlush" isExecutable="true">
 
-		<startEvent id="startEvent" />
-		
-		<serviceTask id="serviceTask" camunda:expression="#{processScopedMessageBean.setMessage('Hello from Activiti')}" />
+        <startEvent id="startEvent"/>
 
-		<userTask id="wait" />
+        <serviceTask id="serviceTask"
+                     camunda:expression="#{processScopedMessageBean.setMessage('Hello from Activiti')}"/>
 
-		<endEvent id="endEvent" />
+        <userTask id="wait"/>
 
-		<sequenceFlow targetRef="serviceTask" sourceRef="startEvent" />	
-		<sequenceFlow targetRef="wait" sourceRef="serviceTask" />
-		<sequenceFlow targetRef="endEvent" sourceRef="wait" />
+        <endEvent id="endEvent"/>
 
-	</process>
+        <sequenceFlow targetRef="serviceTask" sourceRef="startEvent"/>
+        <sequenceFlow targetRef="wait" sourceRef="serviceTask"/>
+        <sequenceFlow targetRef="endEvent" sourceRef="wait"/>
+
+    </process>
 </definitions>

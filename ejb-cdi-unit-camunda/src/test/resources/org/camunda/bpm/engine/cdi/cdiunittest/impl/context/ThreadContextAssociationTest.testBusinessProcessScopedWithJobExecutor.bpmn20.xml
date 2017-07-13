@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<definitions id="taskAssigneeExample"
-	xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:camunda="http://camunda.org/schema/1.0/bpmn"
-	targetNamespace="Examples">
+<definitions xmlns:camunda="http://camunda.org/schema/1.0/bpmn"
+             id="taskAssigneeExample" xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             targetNamespace="Examples">
 
-	<process id="processkey" isExecutable="true">
+    <process id="processkey" isExecutable="true">
 
-		<startEvent id="startEvent" />
+        <startEvent id="startEvent"/>
 
-		<serviceTask id="jobTask" camunda:async="true" camunda:expression="#{processScopedMessageBean.setMessage('test')}" />	
-		
-		<receiveTask id="waitState" name="wait" />  
+        <serviceTask id="jobTask" camunda:async="true"
+                     camunda:expression="#{processScopedMessageBean.setMessage('test')}"/>
 
-		<endEvent id="endEvent" />
+        <receiveTask id="waitState" name="wait"/>
 
-		<sequenceFlow targetRef="jobTask" sourceRef="startEvent" />
-		<sequenceFlow targetRef="waitState" sourceRef="jobTask" />
-		<sequenceFlow targetRef="endEvent" sourceRef="waitState" />
+        <endEvent id="endEvent"/>
 
-	</process>
+        <sequenceFlow targetRef="jobTask" sourceRef="startEvent"/>
+        <sequenceFlow targetRef="waitState" sourceRef="jobTask"/>
+        <sequenceFlow targetRef="endEvent" sourceRef="waitState"/>
+
+    </process>
 </definitions>

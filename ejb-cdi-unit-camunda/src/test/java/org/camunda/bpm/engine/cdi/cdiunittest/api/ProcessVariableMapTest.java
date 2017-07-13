@@ -18,98 +18,98 @@ import com.oneandone.ejbcdiunit.camunda.CdiProcessEngineTestCase;
  */
 public class ProcessVariableMapTest extends CdiProcessEngineTestCase {
 
-  private static final String VARNAME_1 = "aVariable";
-  private static final String VARNAME_2 = "anotherVariable";
+    private static final String VARNAME_1 = "aVariable";
+    private static final String VARNAME_2 = "anotherVariable";
 
-  @Test
-  public void testProcessVariableMap() {
+    @Test
+    public void testProcessVariableMap() {
 
 
-    VariableMap variables = (VariableMap) getBeanInstance("processVariableMap");
-    assertNotNull(variables);
+        VariableMap variables = (VariableMap) getBeanInstance("processVariableMap");
+        assertNotNull(variables);
 
-    ///////////////////////////////////////////////////////////////////
-    // Put a variable via BusinessProcess and get it via VariableMap //
-    ///////////////////////////////////////////////////////////////////
-    String aValue = "aValue";
-    businessProcess.setVariable(VARNAME_1, Variables.stringValue(aValue));
+        ///////////////////////////////////////////////////////////////////
+        // Put a variable via BusinessProcess and get it via VariableMap //
+        ///////////////////////////////////////////////////////////////////
+        String aValue = "aValue";
+        businessProcess.setVariable(VARNAME_1, Variables.stringValue(aValue));
 
-    // Legacy API
-    assertEquals(aValue, variables.get(VARNAME_1));
+        // Legacy API
+        assertEquals(aValue, variables.get(VARNAME_1));
 
-    // Typed variable API
-    TypedValue aTypedValue = variables.getValueTyped(VARNAME_1);
-    assertEquals(ValueType.STRING, aTypedValue.getType());
-    assertEquals(aValue, aTypedValue.getValue());
-    assertEquals(aValue, variables.getValue(VARNAME_1, String.class));
+        // Typed variable API
+        TypedValue aTypedValue = variables.getValueTyped(VARNAME_1);
+        assertEquals(ValueType.STRING, aTypedValue.getType());
+        assertEquals(aValue, aTypedValue.getValue());
+        assertEquals(aValue, variables.getValue(VARNAME_1, String.class));
 
-    // Type API with wrong type
-    try {
-      variables.getValue(VARNAME_1, Integer.class);
-      fail("ClassCastException expected!");
-    } catch(ClassCastException ex) {
-      assertEquals("Cannot cast variable named 'aVariable' with value 'aValue' to type 'class java.lang.Integer'.", ex.getMessage());
+        // Type API with wrong type
+        try {
+            variables.getValue(VARNAME_1, Integer.class);
+            fail("ClassCastException expected!");
+        } catch (ClassCastException ex) {
+            assertEquals("Cannot cast variable named 'aVariable' with value 'aValue' to type 'class java.lang.Integer'.", ex.getMessage());
+        }
+
+        ///////////////////////////////////////////////////////////////////
+        // Put a variable via VariableMap and get it via BusinessProcess //
+        ///////////////////////////////////////////////////////////////////
+        String anotherValue = "anotherValue";
+        variables.put(VARNAME_2, Variables.stringValue(anotherValue));
+
+        // Legacy API
+        assertEquals(anotherValue, businessProcess.getVariable(VARNAME_2));
+
+        // Typed variable API
+        TypedValue anotherTypedValue = businessProcess.getVariableTyped(VARNAME_2);
+        assertEquals(ValueType.STRING, anotherTypedValue.getType());
+        assertEquals(anotherValue, anotherTypedValue.getValue());
     }
 
-    ///////////////////////////////////////////////////////////////////
-    // Put a variable via VariableMap and get it via BusinessProcess //
-    ///////////////////////////////////////////////////////////////////
-    String anotherValue = "anotherValue";
-    variables.put(VARNAME_2, Variables.stringValue(anotherValue));
+    @Test
+    @Deployment(resources = "org/camunda/bpm/engine/cdi/cdiunittest/api/BusinessProcessBeanTest.test.bpmn20.xml")
+    public void testProcessVariableMapLocal() {
 
-    // Legacy API
-    assertEquals(anotherValue, businessProcess.getVariable(VARNAME_2));
+        businessProcess.startProcessByKey("businessProcessBeanTest");
 
-    // Typed variable API
-    TypedValue anotherTypedValue = businessProcess.getVariableTyped(VARNAME_2);
-    assertEquals(ValueType.STRING, anotherTypedValue.getType());
-    assertEquals(anotherValue, anotherTypedValue.getValue());
-  }
+        VariableMap variables = (VariableMap) getBeanInstance("processVariableMapLocal");
+        assertNotNull(variables);
 
-  @Test
-  @Deployment(resources = "org/camunda/bpm/engine/cdi/cdiunittest/api/BusinessProcessBeanTest.test.bpmn20.xml")
-  public void testProcessVariableMapLocal() {
+        ///////////////////////////////////////////////////////////////////
+        // Put a variable via BusinessProcess and get it via VariableMap //
+        ///////////////////////////////////////////////////////////////////
+        String aValue = "aValue";
+        businessProcess.setVariableLocal(VARNAME_1, Variables.stringValue(aValue));
 
-    businessProcess.startProcessByKey("businessProcessBeanTest");
+        // Legacy API
+        assertEquals(aValue, variables.get(VARNAME_1));
 
-    VariableMap variables = (VariableMap) getBeanInstance("processVariableMapLocal");
-    assertNotNull(variables);
+        // Typed variable API
+        TypedValue aTypedValue = variables.getValueTyped(VARNAME_1);
+        assertEquals(ValueType.STRING, aTypedValue.getType());
+        assertEquals(aValue, aTypedValue.getValue());
+        assertEquals(aValue, variables.getValue(VARNAME_1, String.class));
 
-    ///////////////////////////////////////////////////////////////////
-    // Put a variable via BusinessProcess and get it via VariableMap //
-    ///////////////////////////////////////////////////////////////////
-    String aValue = "aValue";
-    businessProcess.setVariableLocal(VARNAME_1, Variables.stringValue(aValue));
+        // Type API with wrong type
+        try {
+            variables.getValue(VARNAME_1, Integer.class);
+            fail("ClassCastException expected!");
+        } catch (ClassCastException ex) {
+            assertEquals("Cannot cast variable named 'aVariable' with value 'aValue' to type 'class java.lang.Integer'.", ex.getMessage());
+        }
 
-    // Legacy API
-    assertEquals(aValue, variables.get(VARNAME_1));
+        ///////////////////////////////////////////////////////////////////
+        // Put a variable via VariableMap and get it via BusinessProcess //
+        ///////////////////////////////////////////////////////////////////
+        String anotherValue = "anotherValue";
+        variables.put(VARNAME_2, Variables.stringValue(anotherValue));
 
-    // Typed variable API
-    TypedValue aTypedValue = variables.getValueTyped(VARNAME_1);
-    assertEquals(ValueType.STRING, aTypedValue.getType());
-    assertEquals(aValue, aTypedValue.getValue());
-    assertEquals(aValue, variables.getValue(VARNAME_1, String.class));
+        // Legacy API
+        assertEquals(anotherValue, businessProcess.getVariableLocal(VARNAME_2));
 
-    // Type API with wrong type
-    try {
-      variables.getValue(VARNAME_1, Integer.class);
-      fail("ClassCastException expected!");
-    } catch(ClassCastException ex) {
-      assertEquals("Cannot cast variable named 'aVariable' with value 'aValue' to type 'class java.lang.Integer'.", ex.getMessage());
+        // Typed variable API
+        TypedValue anotherTypedValue = businessProcess.getVariableLocalTyped(VARNAME_2);
+        assertEquals(ValueType.STRING, anotherTypedValue.getType());
+        assertEquals(anotherValue, anotherTypedValue.getValue());
     }
-
-    ///////////////////////////////////////////////////////////////////
-    // Put a variable via VariableMap and get it via BusinessProcess //
-    ///////////////////////////////////////////////////////////////////
-    String anotherValue = "anotherValue";
-    variables.put(VARNAME_2, Variables.stringValue(anotherValue));
-
-    // Legacy API
-    assertEquals(anotherValue, businessProcess.getVariableLocal(VARNAME_2));
-
-    // Typed variable API
-    TypedValue anotherTypedValue = businessProcess.getVariableLocalTyped(VARNAME_2);
-    assertEquals(ValueType.STRING, anotherTypedValue.getType());
-    assertEquals(anotherValue, anotherTypedValue.getValue());
-  }
 }

@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<definitions id="taskAssigneeExample" xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" targetNamespace="Examples">
+<definitions xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="taskAssigneeExample"
+             xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" targetNamespace="Examples">
 
-  <process id="process" isExecutable="true">
-    <startEvent id="startEvent" />
+    <process id="process" isExecutable="true">
+        <startEvent id="startEvent"/>
 
-    <userTask id="userTask">
-      <extensionElements>
-        <camunda:taskListener event="assignment" delegateExpression="${cdiTaskListenerBean}"/>
-      </extensionElements>
-    </userTask>
-    <endEvent id="endEvent" />
+        <userTask id="userTask">
+            <extensionElements>
+                <camunda:taskListener event="assignment" delegateExpression="${cdiTaskListenerBean}"/>
+            </extensionElements>
+        </userTask>
+        <endEvent id="endEvent"/>
 
-    <sequenceFlow sourceRef="startEvent" targetRef="userTask"/>
-    <sequenceFlow sourceRef="userTask" targetRef="endEvent"/>
+        <sequenceFlow sourceRef="startEvent" targetRef="userTask"/>
+        <sequenceFlow sourceRef="userTask" targetRef="endEvent"/>
 
-  </process>
+    </process>
 </definitions>

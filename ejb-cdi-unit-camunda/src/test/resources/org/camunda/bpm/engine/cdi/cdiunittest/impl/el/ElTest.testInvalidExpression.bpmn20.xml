@@ -1,27 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<definitions id="taskAssigneeExample" xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" targetNamespace="Examples">
+<definitions xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="taskAssigneeExample"
+             xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" targetNamespace="Examples">
 
-  <process id="invalidExpression" isExecutable="true">
-    <startEvent id="startEvent1" />
+    <process id="invalidExpression" isExecutable="true">
+        <startEvent id="startEvent1"/>
 
-    <serviceTask id="service1" camunda:resultVariable="test" camunda:expression="xxx" />
-    <receiveTask id="receive1" camunda:resultVariable="test" camunda:expression="xxx" />
+        <serviceTask id="service1" camunda:resultVariable="test" camunda:expression="xxx"/>
+        <receiveTask id="receive1" camunda:resultVariable="test" camunda:expression="xxx"/>
 
-    <endEvent id="endEvent1" />
+        <endEvent id="endEvent1"/>
 
-    <sequenceFlow targetRef="service1" sourceRef="startEvent1" />
-    <sequenceFlow targetRef="receive1" sourceRef="service1" />
-    <sequenceFlow targetRef="endEvent1" sourceRef="receive1" />
-  </process>
-  
-  <process id="invalidExpressionDelegate" isExecutable="true">
-    <startEvent id="startEvent2" />
+        <sequenceFlow targetRef="service1" sourceRef="startEvent1"/>
+        <sequenceFlow targetRef="receive1" sourceRef="service1"/>
+        <sequenceFlow targetRef="endEvent1" sourceRef="receive1"/>
+    </process>
 
-    <serviceTask id="service2" camunda:delegateExpression="xxx" />
+    <process id="invalidExpressionDelegate" isExecutable="true">
+        <startEvent id="startEvent2"/>
 
-    <endEvent id="endEvent2" />
+        <serviceTask id="service2" camunda:delegateExpression="xxx"/>
 
-    <sequenceFlow targetRef="service2" sourceRef="startEvent2" />
-    <sequenceFlow targetRef="endEvent2" sourceRef="service2" />
-  </process>
+        <endEvent id="endEvent2"/>
+
+        <sequenceFlow targetRef="service2" sourceRef="startEvent2"/>
+        <sequenceFlow targetRef="endEvent2" sourceRef="service2"/>
+    </process>
 </definitions>

@@ -22,38 +22,38 @@ import com.oneandone.ejbcdiunit.camunda.CdiUnitContextAssociationManager;
  * @author Christopher Zell <christopher.zell@camunda.com>
  */
 @RunWith(EjbUnitRunner.class)
-@AdditionalClasspaths({BusinessProcess.class, InjectedProcessEngineBean.class})
-@ActivatedAlternatives({CdiUnitContextAssociationManager.class})
+@AdditionalClasspaths({ BusinessProcess.class, InjectedProcessEngineBean.class })
+@ActivatedAlternatives({ CdiUnitContextAssociationManager.class })
 public class InjectDefaultProcessEngineTest {
 
     private ProcessEngineRule processEngineRule = new ProcessEngineRule();
 
-  @Rule
-  public ProcessEngineRule getProcessEngineRule() {
-    return processEngineRule;
-  }
-
-  @Before
-  public void init() {
-    if(BpmPlatform.getProcessEngineService().getDefaultProcessEngine() == null) {
-      RuntimeContainerDelegate.INSTANCE.get().registerProcessEngine(processEngineRule.getProcessEngine());
+    @Rule
+    public ProcessEngineRule getProcessEngineRule() {
+        return processEngineRule;
     }
-  }
 
-  @After
-  public void tearDownCdiProcessEngineTestCase() throws Exception {
-    RuntimeContainerDelegate.INSTANCE.get().unregisterProcessEngine(processEngineRule.getProcessEngine());
-  }
+    @Before
+    public void init() {
+        if (BpmPlatform.getProcessEngineService().getDefaultProcessEngine() == null) {
+            RuntimeContainerDelegate.INSTANCE.get().registerProcessEngine(processEngineRule.getProcessEngine());
+        }
+    }
 
-  @Test
-  public void testProcessEngineInject() {
-    //given only default engine exist
+    @After
+    public void tearDownCdiProcessEngineTestCase() throws Exception {
+        RuntimeContainerDelegate.INSTANCE.get().unregisterProcessEngine(processEngineRule.getProcessEngine());
+    }
 
-    //when TestClass is created
-    InjectedProcessEngineBean testClass = ProgrammaticBeanLookup.lookup(InjectedProcessEngineBean.class);
-    Assert.assertNotNull(testClass);
+    @Test
+    public void testProcessEngineInject() {
+        // given only default engine exist
 
-    //then default engine is injected
-    Assert.assertEquals("default", testClass.processEngine.getName());
-  }
+        // when TestClass is created
+        InjectedProcessEngineBean testClass = ProgrammaticBeanLookup.lookup(InjectedProcessEngineBean.class);
+        Assert.assertNotNull(testClass);
+
+        // then default engine is injected
+        Assert.assertEquals("default", testClass.processEngine.getName());
+    }
 }

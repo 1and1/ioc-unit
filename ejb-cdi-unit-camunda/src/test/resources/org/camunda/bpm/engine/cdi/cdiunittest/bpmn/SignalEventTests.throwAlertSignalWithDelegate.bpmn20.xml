@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<definitions id="definitions"
-  xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
-  xmlns:camunda="http://camunda.org/schema/1.0/bpmn" 
-  targetNamespace="Examples">
-  
-  <signal id="alertSignal" name="alert" />
+<definitions xmlns:camunda="http://camunda.org/schema/1.0/bpmn"
+             id="definitions"
+             xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             targetNamespace="Examples">
 
-  <process id="throwSignal" isExecutable="true">
+    <signal id="alertSignal" name="alert"/>
 
-    <startEvent id="start" />
+    <process id="throwSignal" isExecutable="true">
 
-    <sequenceFlow sourceRef="start" targetRef="signalServiceTask" />
+        <startEvent id="start"/>
 
-    <serviceTask id="signalServiceTask" camunda:delegateExpression="#{sendSignalDelegate}" />
+        <sequenceFlow sourceRef="start" targetRef="signalServiceTask"/>
 
-    <sequenceFlow sourceRef="signalServiceTask" targetRef="receiveTask" />
-    
-    <receiveTask id="receiveTask" />
+        <serviceTask id="signalServiceTask" camunda:delegateExpression="#{sendSignalDelegate}"/>
 
-    <sequenceFlow sourceRef="receiveTask" targetRef="end" />
-    
-    <endEvent id="end" />
+        <sequenceFlow sourceRef="signalServiceTask" targetRef="receiveTask"/>
 
-  </process>
+        <receiveTask id="receiveTask"/>
+
+        <sequenceFlow sourceRef="receiveTask" targetRef="end"/>
+
+        <endEvent id="end"/>
+
+    </process>
 
 </definitions>
