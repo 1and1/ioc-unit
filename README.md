@@ -156,6 +156,9 @@ This example shows how it is easily possible to test a artifact by it's rest-int
 
 [see](https://github.com/1and1/ejb-cdi-unit/tree/master/examples/ex7-simplerest)
 
+## Test of a camunda BPM processing
+
+To support testing of processes ejb-cdi-unit contains CdiProcessEngineTestCase. Tests derived from that can start processes, ... The test from engine-cdi are ported to ejb-cdi-unit-camunda.
 
 # Restrictions
 The helpers have been developed as required, therefore it was not necessarily a  goal to fully adhere to the J2EE-standard:
