@@ -58,6 +58,7 @@ public class SimulatedTransactionManager {
                     }
                 }
             }
+            PersistenceFactory.clearPersistenceUnitNames();
         } finally {
             activateTransactionInterceptor();
         }
@@ -73,90 +74,6 @@ public class SimulatedTransactionManager {
 
     public boolean hasActiveTransactionInterceptor() {
         return activeTransactionInterceptor.get();
-    }
-
-    /**
-     * used as thread local information stacked to reflect ejb-transaction-contextes.
-     * Persistence-Factories taking part a added on demand.
-     */
-    static class ThreadLocalTransactionInformation {
-        private boolean rolledBack;
-        ThreadLocalTransactionInformation previous = calcPrevious();
-
-        public ThreadLocalTransactionInformation getPrevious() {
-            return previous;
-        }
-
-        private ThreadLocalTransactionInformation calcPrevious() {
-            ArrayList<ThreadLocalTransactionInformation> stack = transactionStack.get();
-            if (!stack.isEmpty()) {
-                return stack.get(stack.size() - 1);
-            } else {
-                return null;
-            }
-        }
-
-        ThreadLocalTransactionInformation(TransactionAttributeType transactionAttributeType) {
-            this.transactionAttributeType = transactionAttributeType;
-            userTransaction = false;
-        }
-
-        ThreadLocalTransactionInformation() {
-            this.transactionAttributeType = REQUIRES_NEW;
-            userTransaction = true;
-        }
-
-        TransactionAttributeType transactionAttributeType;
-        boolean rollbackOnly = false;
-        boolean userTransaction = false;
-        List<TestTransactionBase> persistenceFactories = new ArrayList<>();
-
-        void setRollbackOnly() {
-            rollbackOnly = true;
-        }
-
-        boolean getRollbackOnly() {
-            return rollbackOnly;
-        }
-
-        boolean isUserTransaction() {
-            return userTransaction;
-        }
-
-        public void setRolledBack() {
-            rolledBack = true;
-            if (previous != null) {
-                if (transactionAttributeType == REQUIRED
-                        || transactionAttributeType == SUPPORTS
-                        || transactionAttributeType == MANDATORY) {
-                    if (previous.transactionAttributeType != NOT_SUPPORTED) {
-                        previous.setRolledBack();
-                    }
-                }
-            }
-        }
-
-        public boolean isRolledBack() {
-            return rolledBack;
-        }
-
-        public int getStatus() {
-            if (isUserTransaction() || transactionAttributeType == REQUIRED
-                    || transactionAttributeType == REQUIRES_NEW
-                    || transactionAttributeType == MANDATORY) {
-                if (getRollbackOnly()) {
-                    return Status.STATUS_MARKED_ROLLBACK;
-                } else if (isRolledBack()) {
-                    return Status.STATUS_NO_TRANSACTION;
-                } else {
-                    return Status.STATUS_ACTIVE;
-                }
-            } else if (transactionAttributeType == SUPPORTS) {
-                return getPrevious().getStatus();
-            } else {
-                return Status.STATUS_NO_TRANSACTION;
-            }
-        }
     }
 
     /**
@@ -178,7 +95,6 @@ public class SimulatedTransactionManager {
         }
         return stack;
     }
-
 
     /**
      * Start next transactioncontext of this thread by pushing the {@link TransactionAttributeType} on the stack.
@@ -211,7 +127,6 @@ public class SimulatedTransactionManager {
         }
         return -1;
     }
-
 
     /**
      * Let the PersistenceContext take part in the current transaction. If there are further nested contextes to handle,
@@ -361,7 +276,6 @@ public class SimulatedTransactionManager {
         }
     }
 
-
     /**
      * End of current transactioncontext for all persistencecontexts which take part.
      * This might mean, that no action is done, e.g. in case of nested Required.
@@ -396,6 +310,88 @@ public class SimulatedTransactionManager {
         ThreadLocalTransactionInformation element = stack.get(stack.size() - 1);
 
         return element.getStatus();
+    }
+
+    /**
+     * used as thread local information stacked to reflect ejb-transaction-contextes. Persistence-Factories taking part a added on demand.
+     */
+    static class ThreadLocalTransactionInformation {
+        ThreadLocalTransactionInformation previous = calcPrevious();
+        TransactionAttributeType transactionAttributeType;
+        boolean rollbackOnly = false;
+        boolean userTransaction = false;
+        List<TestTransactionBase> persistenceFactories = new ArrayList<>();
+        private boolean rolledBack;
+
+        ThreadLocalTransactionInformation(TransactionAttributeType transactionAttributeType) {
+            this.transactionAttributeType = transactionAttributeType;
+            userTransaction = false;
+        }
+
+        ThreadLocalTransactionInformation() {
+            this.transactionAttributeType = REQUIRES_NEW;
+            userTransaction = true;
+        }
+
+        public ThreadLocalTransactionInformation getPrevious() {
+            return previous;
+        }
+
+        private ThreadLocalTransactionInformation calcPrevious() {
+            ArrayList<ThreadLocalTransactionInformation> stack = transactionStack.get();
+            if (!stack.isEmpty()) {
+                return stack.get(stack.size() - 1);
+            } else {
+                return null;
+            }
+        }
+
+        void setRollbackOnly() {
+            rollbackOnly = true;
+        }
+
+        boolean getRollbackOnly() {
+            return rollbackOnly;
+        }
+
+        boolean isUserTransaction() {
+            return userTransaction;
+        }
+
+        public void setRolledBack() {
+            rolledBack = true;
+            if (previous != null) {
+                if (transactionAttributeType == REQUIRED
+                        || transactionAttributeType == SUPPORTS
+                        || transactionAttributeType == MANDATORY) {
+                    if (previous.transactionAttributeType != NOT_SUPPORTED) {
+                        previous.setRolledBack();
+                    }
+                }
+            }
+        }
+
+        public boolean isRolledBack() {
+            return rolledBack;
+        }
+
+        public int getStatus() {
+            if (isUserTransaction() || transactionAttributeType == REQUIRED
+                    || transactionAttributeType == REQUIRES_NEW
+                    || transactionAttributeType == MANDATORY) {
+                if (getRollbackOnly()) {
+                    return Status.STATUS_MARKED_ROLLBACK;
+                } else if (isRolledBack()) {
+                    return Status.STATUS_NO_TRANSACTION;
+                } else {
+                    return Status.STATUS_ACTIVE;
+                }
+            } else if (transactionAttributeType == SUPPORTS) {
+                return getPrevious().getStatus();
+            } else {
+                return Status.STATUS_NO_TRANSACTION;
+            }
+        }
     }
 
 }

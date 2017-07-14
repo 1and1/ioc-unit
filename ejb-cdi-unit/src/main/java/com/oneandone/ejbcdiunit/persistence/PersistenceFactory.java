@@ -35,14 +35,20 @@ import com.oneandone.ejbcdiunit.resourcesimulators.SimulatedUserTransaction;
 public abstract class PersistenceFactory {
 
     private static final HashSet<String> PERSISTENCE_UNIT_NAMES = new HashSet<>();
-
     private final Logger logger = LoggerFactory.getLogger(PersistenceFactory.class);
     private final ThreadLocal<Stack<EntityManager>> emStackThreadLocal = new ThreadLocal<>();
     private EntityManagerFactory emf = null;
+    private SimulatedTransactionManager transactionManager = new SimulatedTransactionManager();
+    private ConcurrentLinkedQueue<Stack<EntityManager>> threadlocalStacks = new ConcurrentLinkedQueue<>();
+
+    /**
+     * allow to reset between Tests.
+     */
+    public static void clearPersistenceUnitNames() {
+        PERSISTENCE_UNIT_NAMES.clear();
+    }
 
     protected abstract String getPersistenceUnitName();
-
-    private SimulatedTransactionManager transactionManager = new SimulatedTransactionManager();
 
     private ThreadLocal<Stack<EntityManager>> getEmStackThreadLocal() {
         return emStackThreadLocal;
@@ -55,8 +61,6 @@ public abstract class PersistenceFactory {
     private void setEmf(EntityManagerFactory emfP) {
         this.emf = emfP;
     }
-
-    private ConcurrentLinkedQueue<Stack<EntityManager>> threadlocalStacks = new ConcurrentLinkedQueue<>();
 
     /**
      * prepare EntityManagerFactory
