@@ -68,12 +68,13 @@ What do we need to be able to achieve this?
 
 *ejbcdiunit* helps by extending the mentioned extensions so that ejb-specific injections are "doable" using cdi-technics. Additionally it provides helper classes which provide functionality that otherwise would have to be implemented in every test class or test project again.
 
-* *PersistenceFactory* allows it, to use alternative (test) datasources in a easy way. There is a default which always searches a persistence-unit named "test".
-* TransactionManager handles per thread the stack of different transaction environmentsfixed
-* TransactionInterceptor is used by the extension to encapsulate calls to ejbs
-* AsynchronousManager is a singleton where asynchronously to be executed routines can be stored and later executed in a deterministic way.
-* AsynchronousInterceptor encapsulate beans have method annotated @Asynchronous
-* SessionContextFactory provides a SessionContextSimulation which will be injected where necessary.
+* **PersistenceFactory** allows it, to use alternative (test) datasources in a easy way. There is a default which always searches a persistence-unit named "test".
+* **SimulatedTransactionManager** handles per thread the stack of different transaction environmentsfixed
+* **TransactionInterceptor** is used by the extension to encapsulate calls to ejbs
+* **AsynchronousManager** is a singleton where asynchronously to be executed routines can be stored and later executed in a deterministic way.
+* **AsynchronousInterceptor** encapsulate beans have method annotated @Asynchronous
+* **SessionContextFactory** provides a SessionContextSimulation which will be injected where necessary.
+* **TestPersistenceFactory** searches for persistence-unit "test", if it does not exist, using HibernatePersistenceProvider a configuration is created which can be used. Additionally, Entity-Classes will be discovered, if they are added via @AdditionalClasses, @AdditionalClassPath or @AdditionalPackage.
 
 
 

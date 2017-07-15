@@ -40,6 +40,7 @@ import javax.enterprise.inject.spi.ProcessAnnotatedType;
 import javax.enterprise.inject.spi.ProcessManagedBean;
 import javax.enterprise.util.AnnotationLiteral;
 import javax.inject.Inject;
+import javax.persistence.Entity;
 import javax.persistence.PersistenceContext;
 
 import org.apache.deltaspike.core.util.metadata.AnnotationInstanceProvider;
@@ -65,11 +66,34 @@ public class EjbExtensionExtended implements Extension {
 
     private List<Class<?>> timerClasses = new ArrayList<>();
 
+    private List<Class<?>> entityClasses = new ArrayList<>();
+    private List<Class<?>> startupSingletons = new ArrayList<>();
+
+    private static AnnotationLiteral<Default> createDefaultAnnotation() {
+        return new AnnotationLiteral<Default>() {
+            private static final long serialVersionUID = 1L;
+        };
+    }
+
+    private static AnnotationLiteral<Dependent> createDependentAnnotation() {
+        return new AnnotationLiteral<Dependent>() {
+            private static final long serialVersionUID = 1L;
+        };
+    }
+
+    private static AnnotationLiteral<ApplicationScoped> createApplicationScopedAnnotation() {
+        return new AnnotationLiteral<ApplicationScoped>() {
+            private static final long serialVersionUID = 1L;
+        };
+    }
+
+    public List<Class<?>> getEntityClasses() {
+        return entityClasses;
+    }
+
     public List<Class<?>> getTimerClasses() {
         return timerClasses;
     }
-
-    private List<Class<?>> startupSingletons = new ArrayList<>();
 
     public List<Class<?>> getStartupSingletons() {
         return startupSingletons;
@@ -104,24 +128,6 @@ public class EjbExtensionExtended implements Extension {
         }
     }
 
-    private static AnnotationLiteral<Default> createDefaultAnnotation() {
-        return new AnnotationLiteral<Default>() {
-            private static final long serialVersionUID = 1L;
-        };
-    }
-
-    private static AnnotationLiteral<Dependent> createDependentAnnotation() {
-        return new AnnotationLiteral<Dependent>() {
-            private static final long serialVersionUID = 1L;
-        };
-    }
-
-    private static AnnotationLiteral<ApplicationScoped> createApplicationScopedAnnotation() {
-        return new AnnotationLiteral<ApplicationScoped>() {
-            private static final long serialVersionUID = 1L;
-        };
-    }
-
     /**
      * Handle Bean classes, if EJB-Annotations are recognized change, add, remove as fitting.
      *
@@ -139,6 +145,11 @@ public class EjbExtensionExtended implements Extension {
                         || annotatedType.isAnnotationPresent(Dependent.class)
                         || annotatedType.isAnnotationPresent(RequestScoped.class)
                         || annotatedType.isAnnotationPresent(SessionScoped.class);
+
+        Entity entity = annotatedType.getAnnotation(Entity.class);
+        if (entity != null) {
+            entityClasses.add(annotatedType.getJavaClass());
+        }
 
         Stateless stateless = annotatedType.getAnnotation(Stateless.class);
 

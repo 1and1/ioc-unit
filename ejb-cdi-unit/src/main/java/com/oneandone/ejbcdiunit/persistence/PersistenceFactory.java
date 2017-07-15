@@ -72,11 +72,12 @@ public abstract class PersistenceFactory {
             if (PERSISTENCE_UNIT_NAMES.contains(getPersistenceUnitName())) {
                 throw new RuntimeException("Repeated construction of currently existing PersistenceFactory for " + getPersistenceUnitName());
             } else {
-                setEmf(Persistence.createEntityManagerFactory(getPersistenceUnitName()));
+                setEmf(createEntityManagerFactory());
                 PERSISTENCE_UNIT_NAMES.add(getPersistenceUnitName());
             }
         }
     }
+
 
     /**
      * make sure all connections will be closed
@@ -227,11 +228,20 @@ public abstract class PersistenceFactory {
     public DataSource produceDataSource() {
         BasicDataSource newDataSource = new BasicDataSource();
         Map props = emf.getProperties();
-        newDataSource.setDriverClassName((String) props.get("javax.persistence.jdbc.driver"));
-        newDataSource.setUrl((String) props.get("javax.persistence.jdbc.url"));
-        newDataSource.setUsername((String) props.get("javax.persistence.jdbc.user"));
-        newDataSource.setPassword((String) props.get("javax.persistence.jdbc.password"));
-        return newDataSource;
+        DataSource emfDatasource = (DataSource) props.get("hibernate.connection.datasource");
+        if (emfDatasource != null) {
+            return emfDatasource;
+        } else {
+            newDataSource.setDriverClassName((String) props.get("javax.persistence.jdbc.driver"));
+            newDataSource.setUrl((String) props.get("javax.persistence.jdbc.url"));
+            newDataSource.setUsername((String) props.get("javax.persistence.jdbc.user"));
+            newDataSource.setPassword((String) props.get("javax.persistence.jdbc.password"));
+            return newDataSource;
+        }
+    }
+
+    protected EntityManagerFactory createEntityManagerFactory() {
+        return Persistence.createEntityManagerFactory(getPersistenceUnitName());
     }
 
     @Override

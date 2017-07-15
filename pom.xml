@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>net.oneandone</groupId>
@@ -11,9 +12,9 @@
         <module>ejb-cdi-unit-tests</module>
         <module>ejb-cdi-unit-camunda</module>
         <module>ejb-cdi-unit-arq</module>
-        <!--module>ejb-cdi-unit-tomee</module>
+        <module>ejb-cdi-unit-tomee</module>
         <module>ejb-cdi-unit-tomee-simple</module>
-        <module>examples</module-->
+        <module>examples</module>
     </modules>
 
     <name>net.oneandone:ejb-cdi-unit-parent</name>
@@ -65,6 +66,7 @@
         <persistence-api.version>1.0</persistence-api.version>
 
         <!-- test -->
+        <mockito.version>2.7.15</mockito.version>
         <cdi-unit.version>3.1.4</cdi-unit.version>
         <weld.version>1.1.14.Final</weld.version>
         <hibernate-em.version>4.2.0.CR1</hibernate-em.version>
@@ -82,6 +84,8 @@
         <version.javaee_api>7.0</version.javaee_api>
         <org-reflections.version>0.9.10</org-reflections.version>
         <jaxrpc.version>1.1</jaxrpc.version>
+
+        <camunda-engine.version>7.5.0</camunda-engine.version>
 
     </properties>
 
@@ -233,6 +237,18 @@
                 <version>${weld.version}</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>org.camunda.bpm</groupId>
+                <artifactId>camunda-engine</artifactId>
+                <version>${camunda-engine.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.camunda.bpm</groupId>
+                <artifactId>camunda-engine-cdi</artifactId>
+                <version>${camunda-engine.version}</version>
+                <scope>provided</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <build>
@@ -268,6 +284,17 @@
                 <configuration>
                     <pubScmUrl>${project.scm.developerConnection}</pubScmUrl>
                     <scmBranch>gh-pages</scmBranch>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+                <configuration>
+                    <reportFormat>plain</reportFormat>
+                    <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                    <!-- Sets the VM argument line used when unit tests are run. -->
+                    <!-- argLine>-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005</argLine-->
                 </configuration>
             </plugin>
             <plugin>

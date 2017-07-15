@@ -1,4 +1,5 @@
- <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>net.oneandone</groupId>
@@ -67,7 +68,9 @@
         <mockito.version>1.10.19</mockito.version>
         <cdi-unit.version>3.1.4</cdi-unit.version>
         <weld.version>1.1.14.Final</weld.version>
-        <hibernate-em.version>4.2.0.CR1</hibernate-em.version>
+        <!--hibernate-em.version>4.2.0.CR1</hibernate-em.version-->
+        <hibernate-em.version>4.3.9.Final</hibernate-em.version>
+        <hibernate-validator.version>4.3.2.Final</hibernate-validator.version>
         <junit.version>4.12</junit.version>
         <mockrunner.version>1.1.2</mockrunner.version>
 
@@ -82,7 +85,7 @@
         <version.javaee_api>7.0</version.javaee_api>
         <org-reflections.version>0.9.10</org-reflections.version>
         <jaxrpc.version>1.1</jaxrpc.version>
-        <ejb-cdi-unit.version>1.0.7</ejb-cdi-unit.version>
+        <ejb-cdi-unit.version>1.0.10-SNAPSHOT</ejb-cdi-unit.version>
 
     </properties>
 
@@ -206,7 +209,7 @@
             <dependency>
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-validator</artifactId>
-                <version>${hibernate-em.version}</version>
+                <version>${hibernate-validator.version}</version>
             </dependency>
             <dependency>
                 <groupId>junit</groupId>
