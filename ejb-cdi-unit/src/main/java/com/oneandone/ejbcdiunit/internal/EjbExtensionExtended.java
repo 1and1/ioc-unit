@@ -51,7 +51,6 @@ import org.slf4j.LoggerFactory;
 
 import com.oneandone.ejbcdiunit.SupportEjbExtended;
 import com.oneandone.ejbcdiunit.cdiunit.EjbName;
-import com.oneandone.ejbcdiunit.cdiunit.EjbQualifier;
 import com.oneandone.ejbcdiunit.persistence.SimulatedTransactionManager;
 
 /**
@@ -120,7 +119,6 @@ public class EjbExtensionExtended implements Extension {
         }
 
         builder.addToClass(createDefaultAnnotation());
-        builder.addToClass(EjbQualifier.EjbQualifierLiteral.INSTANCE);
         if (!name.isEmpty()) {
             builder.addToClass(new EjbName.EjbNameLiteral(name));
         } else {
@@ -180,7 +178,6 @@ public class EjbExtensionExtended implements Extension {
         for (AnnotatedMethod<? super T> method : annotatedType.getMethods()) {
             EJB ejb = method.getAnnotation(EJB.class);
             if (ejb != null) {
-                builder.addToMethod(method, EjbQualifier.EjbQualifierLiteral.INSTANCE);
                 builder.removeFromMethod(method, EJB.class);
                 modified = true;
                 if (!ejb.beanName().isEmpty()) {
@@ -200,7 +197,6 @@ public class EjbExtensionExtended implements Extension {
                 addInject = true;
 
                 builder.removeFromField(field, EJB.class);
-                builder.addToField(field, EjbQualifier.EjbQualifierLiteral.INSTANCE);
                 if (!ejb.beanName().isEmpty()) {
                     builder.addToField(field, new EjbName.EjbNameLiteral(ejb.beanName()));
                 } else {

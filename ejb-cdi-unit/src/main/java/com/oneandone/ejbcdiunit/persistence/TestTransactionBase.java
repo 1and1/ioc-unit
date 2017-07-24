@@ -39,10 +39,7 @@ public class TestTransactionBase {
         EntityTransaction tra = embedding == null ? null : persistenceFactory.get().getTransaction();
         switch (transactionAttribute) {
             case SUPPORTS:
-                if (embedding == null || !tra.isActive()) {
-                    persistenceFactory.createAndRegister();
-                    dropEntityManager = true;
-                }
+                // no action necessary
                 break;
             case NOT_SUPPORTED:
                 persistenceFactory.createAndRegister();

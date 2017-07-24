@@ -387,7 +387,7 @@ public class SimulatedTransactionManager {
                     return Status.STATUS_ACTIVE;
                 }
             } else if (transactionAttributeType == SUPPORTS) {
-                return getPrevious().getStatus();
+                return getPrevious() != null ? getPrevious().getStatus() : Status.STATUS_NO_TRANSACTION;
             } else {
                 return Status.STATUS_NO_TRANSACTION;
             }

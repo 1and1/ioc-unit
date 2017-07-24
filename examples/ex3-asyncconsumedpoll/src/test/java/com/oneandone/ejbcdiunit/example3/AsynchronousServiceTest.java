@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import javax.enterprise.inject.Default;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 
@@ -16,7 +15,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.oneandone.ejbcdiunit.EjbUnitRunner;
-import com.oneandone.ejbcdiunit.cdiunit.EjbQualifier;
 
 /**
  * @author aschoerk
@@ -29,8 +27,6 @@ public class AsynchronousServiceTest {
     AsynchronousServiceIntf sut;
 
     @Produces
-    @EjbQualifier
-    @Default
     RemoteServiceIntf remoteService = new RemoteServiceSimulator();
 
     @Test

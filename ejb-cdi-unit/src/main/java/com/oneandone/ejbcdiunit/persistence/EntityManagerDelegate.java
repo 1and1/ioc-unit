@@ -11,6 +11,7 @@ import javax.persistence.FlushModeType;
 import javax.persistence.LockModeType;
 import javax.persistence.Query;
 import javax.persistence.StoredProcedureQuery;
+import javax.persistence.TransactionRequiredException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaDelete;
@@ -37,22 +38,34 @@ class EntityManagerDelegate implements EntityManager {
          * make sure the transaction context is correctly started, if necessary, then return the workable EntityManager
          * of the thread.
          */
-        return entityManagerStore.getTransactional();
+        try {
+            return entityManagerStore.getTransactional(false);
+        } catch (TransactionRequiredException e) {
+            throw new RuntimeException("not expected exception: ", e);
+        }
+    }
+
+
+    private EntityManager getEmbeddedEntityManager(boolean expectTransaction) {
+        /*
+         * make sure the transaction context is correctly started, if necessary, then return the workable EntityManager of the thread.
+         */
+        return entityManagerStore.getTransactional(expectTransaction);
     }
 
     @Override
     public void persist(final Object entity) {
-        getEmbeddedEntityManager().persist(entity);
+        getEmbeddedEntityManager(true).persist(entity);
     }
 
     @Override
     public <T> T merge(final T entity) {
-        return getEmbeddedEntityManager().merge(entity);
+        return getEmbeddedEntityManager(true).merge(entity);
     }
 
     @Override
     public void remove(final Object entity) {
-        getEmbeddedEntityManager().remove(entity);
+        getEmbeddedEntityManager(true).remove(entity);
     }
 
     @Override
@@ -83,7 +96,7 @@ class EntityManagerDelegate implements EntityManager {
 
     @Override
     public void flush() {
-        getEmbeddedEntityManager().flush();
+        getEmbeddedEntityManager(true).flush();
     }
 
     @Override
@@ -98,32 +111,32 @@ class EntityManagerDelegate implements EntityManager {
 
     @Override
     public void lock(final Object entity, final LockModeType lockMode) {
-        getEmbeddedEntityManager().lock(entity, lockMode);
+        getEmbeddedEntityManager(true).lock(entity, lockMode);
     }
 
     @Override
     public void lock(final Object entity, final LockModeType lockMode, final Map<String, Object> properties) {
-        getEmbeddedEntityManager().lock(entity, lockMode, properties);
+        getEmbeddedEntityManager(true).lock(entity, lockMode, properties);
     }
 
     @Override
     public void refresh(final Object entity) {
-        getEmbeddedEntityManager().refresh(entity);
+        getEmbeddedEntityManager(true).refresh(entity);
     }
 
     @Override
     public void refresh(final Object entity, final Map<String, Object> properties) {
-        getEmbeddedEntityManager().refresh(entity, properties);
+        getEmbeddedEntityManager(true).refresh(entity, properties);
     }
 
     @Override
     public void refresh(final Object entity, final LockModeType lockMode) {
-        getEmbeddedEntityManager().refresh(entity, lockMode);
+        getEmbeddedEntityManager(true).refresh(entity, lockMode);
     }
 
     @Override
     public void refresh(final Object entity, final LockModeType lockMode, final Map<String, Object> properties) {
-        getEmbeddedEntityManager().refresh(entity, lockMode, properties);
+        getEmbeddedEntityManager(true).refresh(entity, lockMode, properties);
     }
 
     @Override
@@ -143,7 +156,7 @@ class EntityManagerDelegate implements EntityManager {
 
     @Override
     public LockModeType getLockMode(final Object entity) {
-        return getEmbeddedEntityManager().getLockMode(entity);
+        return getEmbeddedEntityManager(true).getLockMode(entity);
     }
 
     @Override

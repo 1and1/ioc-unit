@@ -6,6 +6,11 @@ import javax.ejb.EJB;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.NotSupportedException;
+import javax.transaction.RollbackException;
+import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 
 import org.junit.Assert;
@@ -248,4 +253,36 @@ public abstract class EJBTransactionTestBase {
         statelessBeanManagedTrasEJB.insertWithoutTra(new TestEntity1());
     }
 
+
+    public void testBeanManagedWOTraInTestCode() {
+        TestEntity1 e = new TestEntity1();
+        entityManager.persist(e);
+    }
+
+    public void testBeanManagedWithTraInTestCodeInSupported()
+            throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+        userTransaction.begin();
+        statelessEJB.saveInSupportedTransaction(new TestEntity1());
+        userTransaction.commit();
+    }
+
+    public void tryTestBeanManagedWOTraInTestCodeInSupported()
+            throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+        statelessEJB.saveInSupportedTransaction(new TestEntity1());
+    }
+
+
+    public void testBeanManagedWithTraInTestCodeTryInNotSupported()
+            throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+        userTransaction.begin();
+        statelessEJB.trySaveInNotSupportedTransaction(new TestEntity1());
+        userTransaction.commit();
+    }
+
+    public void testBeanManagedWOTraInTestCodeTryInNotSupported()
+            throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+        userTransaction.begin();
+        statelessEJB.trySaveInNotSupportedTransaction(new TestEntity1());
+        userTransaction.commit();
+    }
 }

@@ -12,7 +12,13 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceContextType;
+import javax.persistence.TransactionRequiredException;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.NotSupportedException;
+import javax.transaction.RollbackException;
 import javax.transaction.Status;
+import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 
 import org.apache.openejb.config.EjbModule;
@@ -41,19 +47,15 @@ import com.oneandone.ejbcdiunit.testbases.TestEntity1Saver;
 @RunWith(ApplicationComposer.class)
 public class ServiceTest extends EJBTransactionTestBase {
 
+    @EJB
+    SingletonEJB singletonEJB;
+    @Inject
+    StatelessEJB statelessEJB;
+    @Resource
+    UserTransaction userTransaction;
     @Produces
     @PersistenceContext(unitName = "test-unit", type = PersistenceContextType.TRANSACTION)
     private EntityManager entityManager;
-
-    @EJB
-    SingletonEJB singletonEJB;
-
-    @Inject
-    StatelessEJB statelessEJB;
-
-    @Resource
-    UserTransaction userTransaction;
-
 
     @Module
     public PersistenceUnit persistence1() {
@@ -249,6 +251,40 @@ public class ServiceTest extends EJBTransactionTestBase {
         testEntity1.setStringAttribute("string");
         statelessEJB.saveInCurrentTransaction(testEntity1);
 
+    }
+
+    @Override
+    @Test(expected = TransactionRequiredException.class)
+    public void testBeanManagedWOTraInTestCode() {
+        super.testBeanManagedWOTraInTestCode();
+    }
+
+    @Override
+    @Test
+    public void testBeanManagedWithTraInTestCodeInSupported()
+            throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+        super.testBeanManagedWithTraInTestCodeInSupported();
+    }
+
+    @Override
+    @Test(expected = EJBException.class)
+    public void tryTestBeanManagedWOTraInTestCodeInSupported()
+            throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+        super.tryTestBeanManagedWOTraInTestCodeInSupported();
+    }
+
+    @Override
+    @Test(expected = EJBException.class)
+    public void testBeanManagedWithTraInTestCodeTryInNotSupported()
+            throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+        super.testBeanManagedWithTraInTestCodeTryInNotSupported();
+    }
+
+    @Override
+    @Test(expected = EJBException.class)
+    public void testBeanManagedWOTraInTestCodeTryInNotSupported()
+            throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+        super.testBeanManagedWOTraInTestCodeTryInNotSupported();
     }
 
 }

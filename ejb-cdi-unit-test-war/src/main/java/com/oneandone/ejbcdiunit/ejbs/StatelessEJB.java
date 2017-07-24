@@ -26,16 +26,13 @@ public class StatelessEJB {
 
     @Resource
     SessionContext sessionContext;
-
+    @Inject
+    EntityManager entityManager;
     private int publicInteger = 200;
 
     public void method1() {
         logger.info("StatelessEJB: method1 called");
     }
-
-
-    @Inject
-    EntityManager entityManager;
 
     public TestEntity1 saveInCurrentTransactionDefaultTraAttribute(TestEntity1 testEntity1) {
         logger.info("output public variable {}", publicInteger);
@@ -51,6 +48,18 @@ public class StatelessEJB {
 
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public TestEntity1 saveInNewTransaction(TestEntity1 testEntity1) {
+        entityManager.persist(testEntity1);
+        return testEntity1;
+    }
+
+    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    public TestEntity1 saveInSupportedTransaction(TestEntity1 testEntity1) {
+        entityManager.persist(testEntity1);
+        return testEntity1;
+    }
+
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+    public TestEntity1 trySaveInNotSupportedTransaction(TestEntity1 testEntity1) {
         entityManager.persist(testEntity1);
         return testEntity1;
     }

@@ -122,7 +122,7 @@ public class TestPersistenceFactory extends PersistenceFactory {
             public DataSource getNonJtaDataSource() {
                 BasicDataSource bds = new BasicDataSource();
                 bds.setDriverClassName("org.h2.Driver");
-                bds.setUrl("jdbc:h2:mem:test;MODE=MySQL;DB_CLOSE_DELAY=0");
+                bds.setUrl("jdbc:h2:mem:test;MODE=MySQL;DB_CLOSE_DELAY=0;LOCK_MODE=0");
                 bds.setUsername("sa");
                 bds.setPassword("");
                 return bds;

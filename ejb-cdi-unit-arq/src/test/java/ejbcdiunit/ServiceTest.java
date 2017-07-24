@@ -8,6 +8,7 @@ import java.util.Arrays;
 
 import javax.ejb.EJBException;
 import javax.inject.Inject;
+import javax.persistence.TransactionRequiredException;
 import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
 import javax.transaction.NotSupportedException;
@@ -23,7 +24,6 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -34,6 +34,9 @@ import com.oneandone.ejbcdiunit.testbases.TestEntity1Saver;
 @RunWith(Arquillian.class)
 public class ServiceTest extends EJBTransactionTestBase {
 
+
+    @Inject
+    protected UserTransaction userTransaction;
 
     public static WebArchive getWarFromTargetFolder() {
         File folder = new File("../ejb-cdi-unit-test-war/target/");
@@ -52,16 +55,10 @@ public class ServiceTest extends EJBTransactionTestBase {
         }
     }
 
-
     @Deployment
     public static Archive<?> createTestArchive() {
         return getWarFromTargetFolder();
     }
-
-
-    @Inject
-    protected UserTransaction userTransaction;
-
 
     @Override
     public void runTestInRolledBackTransaction(TestEntity1Saver saver, int num, boolean exceptionExpected) throws Exception {
@@ -218,5 +215,40 @@ public class ServiceTest extends EJBTransactionTestBase {
     @Test(expected = EJBException.class)
     public void testBeanManagedTransactionsWOTra() throws Exception {
         super.testBeanManagedTransactionsWOTra();
+    }
+
+
+    @Override
+    @Test(expected = TransactionRequiredException.class)
+    public void testBeanManagedWOTraInTestCode() {
+        super.testBeanManagedWOTraInTestCode();
+    }
+
+    @Override
+    @Test
+    public void testBeanManagedWithTraInTestCodeInSupported()
+            throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+        super.testBeanManagedWithTraInTestCodeInSupported();
+    }
+
+    @Override
+    @Test(expected = EJBException.class)
+    public void tryTestBeanManagedWOTraInTestCodeInSupported()
+            throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+        super.tryTestBeanManagedWOTraInTestCodeInSupported();
+    }
+
+    @Override
+    @Test(expected = EJBException.class)
+    public void testBeanManagedWithTraInTestCodeTryInNotSupported()
+            throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+        super.testBeanManagedWithTraInTestCodeTryInNotSupported();
+    }
+
+    @Override
+    @Test(expected = EJBException.class)
+    public void testBeanManagedWOTraInTestCodeTryInNotSupported()
+            throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+        super.testBeanManagedWOTraInTestCodeTryInNotSupported();
     }
 }

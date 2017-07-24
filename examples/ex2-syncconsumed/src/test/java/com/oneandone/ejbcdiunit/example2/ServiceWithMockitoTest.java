@@ -10,7 +10,6 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.enterprise.inject.Default;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 
@@ -21,7 +20,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
 import com.oneandone.ejbcdiunit.EjbUnitRunner;
-import com.oneandone.ejbcdiunit.cdiunit.EjbQualifier;
 import com.oneandone.ejbcdiunit.example2.useejbinject.Service;
 
 /**
@@ -34,8 +32,6 @@ public class ServiceWithMockitoTest {
     ServiceIntf sut;
 
     @Produces
-    @EjbQualifier
-    @Default
     @Mock
     RemoteServiceIntf remoteService;
 

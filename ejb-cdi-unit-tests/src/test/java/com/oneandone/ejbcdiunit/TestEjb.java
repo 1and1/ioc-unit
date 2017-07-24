@@ -8,8 +8,12 @@ import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.TransactionRequiredException;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.NotSupportedException;
 import javax.transaction.RollbackException;
 import javax.transaction.Status;
+import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 
 import org.jglue.cdiunit.AdditionalClasses;
@@ -41,10 +45,8 @@ import com.oneandone.ejbcdiunit.testbases.TestEntity1Saver;
         QMdbEjb.class, MdbEjbInfoSingleton.class, LoggerGenerator.class })
 public class TestEjb extends EJBTransactionTestBase {
 
-    @Before
-    public void setupProfiler() throws InterruptedException  {
-        initMemory();
-    }
+    @Inject
+    SinglePersistenceFactory persistenceFactory;
 
     @AfterClass
     public static void tearDownProfiler() throws InterruptedException {
@@ -66,24 +68,10 @@ public class TestEjb extends EJBTransactionTestBase {
         runtime.runFinalization();
     }
 
-    @ApplicationScoped
-    public static class TestDbPersistenceFactory extends SinglePersistenceFactory {
-
-        @Produces
-        @Override
-        public EntityManager newEm() {
-            return produceEntityManager();
-        }
-
-        @Produces
-        public UserTransaction userTransaction() {
-            return produceUserTransaction();
-        }
+    @Before
+    public void setupProfiler() throws InterruptedException {
+        initMemory();
     }
-
-    @Inject
-    SinglePersistenceFactory persistenceFactory;
-
 
     @Test
     public void everythingNotNull() {
@@ -96,7 +84,6 @@ public class TestEjb extends EJBTransactionTestBase {
         Assert.assertNotNull(statelessEJB);
         Assert.assertNotNull(singletonEJB);
     }
-
 
     @Override
     public void runTestInRolledBackTransaction(TestEntity1Saver saver, int num, boolean exceptionExpected) throws Exception {
@@ -125,13 +112,11 @@ public class TestEjb extends EJBTransactionTestBase {
         }
     }
 
-
     @Override
     @Test
     public void requiresNewMethodWorks() throws Exception {
         super.requiresNewMethodWorks();
     }
-
 
     @Override
     @Test
@@ -242,5 +227,54 @@ public class TestEjb extends EJBTransactionTestBase {
     @Test(expected = TransactionRequiredException.class)
     public void testBeanManagedTransactionsWOTraButOuter() throws Exception {
         super.testBeanManagedTransactionsWOTraButOuter();
+    }
+
+    @Override
+    @Test(expected = TransactionRequiredException.class)
+    public void testBeanManagedWOTraInTestCode() {
+        super.testBeanManagedWOTraInTestCode();
+    }
+
+    @Override
+    @Test
+    public void testBeanManagedWithTraInTestCodeInSupported()
+            throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+        super.testBeanManagedWithTraInTestCodeInSupported();
+    }
+
+    @Override
+    @Test(expected = TransactionRequiredException.class)
+    public void tryTestBeanManagedWOTraInTestCodeInSupported()
+            throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+        super.tryTestBeanManagedWOTraInTestCodeInSupported();
+    }
+
+    @Override
+    @Test(expected = TransactionRequiredException.class)
+    public void testBeanManagedWithTraInTestCodeTryInNotSupported()
+            throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+        super.testBeanManagedWithTraInTestCodeTryInNotSupported();
+    }
+
+    @Override
+    @Test(expected = TransactionRequiredException.class)
+    public void testBeanManagedWOTraInTestCodeTryInNotSupported()
+            throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+        super.testBeanManagedWOTraInTestCodeTryInNotSupported();
+    }
+
+    @ApplicationScoped
+    public static class TestDbPersistenceFactory extends SinglePersistenceFactory {
+
+        @Produces
+        @Override
+        public EntityManager newEm() {
+            return produceEntityManager();
+        }
+
+        @Produces
+        public UserTransaction userTransaction() {
+            return produceUserTransaction();
+        }
     }
 }

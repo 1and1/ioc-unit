@@ -12,7 +12,10 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.TransactionRequiredException;
 import javax.sql.DataSource;
+import javax.transaction.Status;
+import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 
 import org.apache.commons.dbcp2.BasicDataSource;
@@ -111,13 +114,20 @@ public abstract class PersistenceFactory {
     }
 
     /**
-     * Looks for the current entity manager and returns it. If no entity manager was found, this method logs a warn
-     * message and returns null. This will cause a NullPointerException in most cases and will cause a stack trace
-     * starting from your service method.
+     * Looks for the current entity manager and returns it. If no entity manager was found, this method logs a warn message and returns null. This
+     * will cause a NullPointerException in most cases and will cause a stack trace starting from your service method.
      *
      * @return the currently used entity manager on top of stack. Don't use this in producers!
+     * @param expectTransaction
+     *            if no transaction is running throw transaction required exception
      */
-    EntityManager getTransactional() {
+    EntityManager getTransactional(boolean expectTransaction) {
+        try {
+            if (expectTransaction && transactionManager.getStatus() == Status.STATUS_NO_TRANSACTION)
+                throw new TransactionRequiredException("Ejb-Simulation");
+        } catch (SystemException e) {
+            throw new RuntimeException(e);
+        }
         transactionManager.takePart(this);
         return get();
     }
