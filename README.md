@@ -4,6 +4,9 @@ Simplify test driven development of ejb-3.x Services. ![Build Status](https://tr
 
 # First Example
 
+[sourcecode](https://github.com/1and1/ejb-cdi-unit/blob/master/examples/ex2-syncconsumed)
+
+
 **Example Service to be tested**
 
 ![Service to be tested](images/SampleServiceToBeTested.png)
