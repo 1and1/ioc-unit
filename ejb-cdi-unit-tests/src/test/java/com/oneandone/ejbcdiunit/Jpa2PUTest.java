@@ -8,9 +8,15 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.RollbackException;
+import javax.transaction.SystemException;
+import javax.transaction.UserTransaction;
 
 import org.jglue.cdiunit.ActivatedAlternatives;
 import org.jglue.cdiunit.AdditionalClasses;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,9 +46,9 @@ public class Jpa2PUTest {
 
     @Inject
     ClassWithTwoDifferentEntityManagers sut;
-
+    @Inject
+    UserTransaction userTransaction;
     private TestEntity1 testEntity1a;
-
     private TestEntity1 testEntity1b;
 
     @Produces
@@ -61,6 +67,7 @@ public class Jpa2PUTest {
 
     @Before
     public void initEntities() throws Exception {
+        userTransaction.begin();
         testEntity1a = new TestEntity1();
         testEntity1b = new TestEntity1();
 
@@ -76,6 +83,12 @@ public class Jpa2PUTest {
 
         testEntity1a.setStringAttribute(null);
         testEntity1b.setStringAttribute(null);
+
+    }
+
+    @After
+    public void afterJpa2PUTest() throws HeuristicRollbackException, RollbackException, HeuristicMixedException, SystemException {
+        userTransaction.commit();
     }
 
     @Test
@@ -95,8 +108,9 @@ public class Jpa2PUTest {
 
         }
 
-        factory1.produceEntityManager().refresh(testEntity1a);
-        factory2.produceEntityManager().refresh(testEntity1b);
+
+        factory1.produceEntityManager().find(TestEntity1.class, testEntity1a.getId());
+        factory2.produceEntityManager().find(TestEntity1.class, testEntity1b.getId());
 
         assertThat(testEntity1a.getIntAttribute(), is(10));
         assertThat(testEntity1b.getIntAttribute(), is(20));

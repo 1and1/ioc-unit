@@ -1,9 +1,27 @@
 ejb-cdi-unit
 ============
 Simplify test driven development of ejb-3.x Services. ![Build Status](https://travis-ci.org/1and1/ejb-cdi-unit.svg?branch=master)
+
+# First Example
+
+**Example Service to be tested**
+
+![Service to be tested](images/SampleServiceToBeTested.png)
+
+**Test Exampleservice using ejb-cdi-unit and Mockito**
+
+![Test for Service](images/TestServiceSimulateUsingMockito.png)
+
+**Test Exampleservice using ejb-cdi-unit and Simulatorclass for consumed Service**
+
+![Test for Service](images/SampleEjbUnitTest.png)
+
+
+
 # Contents
 <!-- TOC depthFrom:1 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
 
+- [First Example](#first-example)
 - [Contents](#contents)
 - [Motivation](#motivation)
 - [History](#history)

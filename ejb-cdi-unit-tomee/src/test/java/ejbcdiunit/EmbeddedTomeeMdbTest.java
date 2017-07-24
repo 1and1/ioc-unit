@@ -36,30 +36,23 @@ import com.oneandone.ejbcdiunit.ejbs.SingletonMdbClient;
  * @author aschoerk
  */
 @RunWith(JUnit4.class)
-public class MdbTest {
+public class EmbeddedTomeeMdbTest {
 
+    static EJBContainer container;
     @Inject
     SingletonMdbClient singletonMdbClient;
-
     @Inject
     CdiMdbClient cdiMdbClient;
-
     @Inject
     MdbEjbInfoSingleton mdbEjbInfoSingleton;
-
+    Context context;
     @Produces
     @Resource(name = "MyJmsConnectionFactory")
     private ConnectionFactory connectionFactory;
-
     @Resource(name = "myQueue1")
     private Queue myQueue1;
-
     @Resource(name = "myTopic")
     private Topic topic;
-
-    static EJBContainer container;
-
-    Context context;
 
     @Before
     public void beforeServiceTest() throws NamingException, SystemException, NotSupportedException, JMSException {

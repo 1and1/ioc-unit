@@ -18,21 +18,18 @@ import com.oneandone.ejbcdiunit.ejbs.SingletonMdbClient;
  * @author aschoerk
  */
 @RunWith(Arquillian.class)
-public class MdbTest {
-    @Deployment
-    public static Archive<?> createTestArchive() {
-        return ServiceTest.createTestArchive();
-    }
-
+public class WildflyArquillianMdbTest {
     @Inject
     SingletonMdbClient singletonMdbClient;
-
     @Inject
     CdiMdbClient cdiMdbClient;
-
     @Inject
     MdbEjbInfoSingleton mdbEjbInfoSingleton;
 
+    @Deployment
+    public static Archive<?> createTestArchive() {
+        return WildflyArquillianTransactionTest.createTestArchive();
+    }
 
     @Test
     public void testQueue() {

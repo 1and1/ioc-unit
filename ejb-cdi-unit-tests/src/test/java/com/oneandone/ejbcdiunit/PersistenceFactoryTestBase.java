@@ -13,6 +13,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceException;
 import javax.persistence.TransactionRequiredException;
 import javax.sql.DataSource;
 import javax.transaction.HeuristicMixedException;
@@ -109,21 +110,25 @@ public abstract class PersistenceFactoryTestBase {
             entity1.setIntAttribute(10);
             em.persist(entity1);
         }
+        userTransaction.begin();
         entity1.setIntAttribute(0);
         em.refresh(entity1);
+        userTransaction.commit();
         // entity not managed leads to illegal argument exception
     }
 
-    @Test
+    @Test(expected = PersistenceException.class)
     public void requiresNewDoesInsertInSameEm() throws Exception {
+        userTransaction.begin();
         TestEntity1 entity1 = new TestEntity1();
         try (TestTransaction resource = persistenceFactory.transaction(REQUIRED)) {
             entity1.setIntAttribute(10);
             em.persist(entity1);
         }
         entity1.setIntAttribute(0);
-        em.refresh(entity1);
+        em.refresh(entity1); // fails because not saved yet.
         assertThat(entity1.getIntAttribute(), is(10));
+        userTransaction.commit();
     }
 
     @Test(expected = TransactionRequiredException.class)

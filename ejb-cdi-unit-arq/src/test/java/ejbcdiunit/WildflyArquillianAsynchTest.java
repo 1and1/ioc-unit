@@ -25,19 +25,17 @@ import com.oneandone.ejbcdiunit.ejbs.StatelessAsynchEJB;
  * @author aschoerk
  */
 @RunWith(Arquillian.class)
-public class AsynchTest {
-    @Deployment
-    public static Archive<?> createTestArchive() {
-        return ServiceTest.createTestArchive();
-    }
-
+public class WildflyArquillianAsynchTest {
     Logger logger = LoggerFactory.getLogger("AsynchTest");
-
     @Inject
     StatelessAsynchEJB statelessAsynchEJB;
-
     @Inject
     CdiAsynchronousBean cdiAsynchronousBean;
+
+    @Deployment
+    public static Archive<?> createTestArchive() {
+        return WildflyArquillianTransactionTest.createTestArchive();
+    }
 
     @Test
     public void testAsynchStateless() throws ExecutionException, InterruptedException {

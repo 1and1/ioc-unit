@@ -2,16 +2,12 @@ package ejbcdiunit;
 
 import static org.hamcrest.core.Is.is;
 
-import java.util.Properties;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.util.Arrays;
 
-import javax.annotation.Resource;
-import javax.ejb.EJB;
 import javax.ejb.EJBException;
-import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceContextType;
 import javax.persistence.TransactionRequiredException;
 import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
@@ -21,93 +17,52 @@ import javax.transaction.Status;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 
-import org.apache.openejb.config.EjbModule;
-import org.apache.openejb.jee.Beans;
-import org.apache.openejb.jee.EjbJar;
-import org.apache.openejb.jee.SingletonBean;
-import org.apache.openejb.jee.StatelessBean;
-import org.apache.openejb.jee.jpa.unit.PersistenceUnit;
-import org.apache.openejb.junit.ApplicationComposer;
-import org.apache.openejb.testing.Configuration;
-import org.apache.openejb.testing.Module;
+import org.jboss.arquillian.container.test.api.Deployment;
+import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.oneandone.ejbcdiunit.ejbs.CDIClass;
-import com.oneandone.ejbcdiunit.ejbs.OuterClass;
-import com.oneandone.ejbcdiunit.ejbs.SingletonEJB;
-import com.oneandone.ejbcdiunit.ejbs.StatelessBeanManagedTrasEJB;
-import com.oneandone.ejbcdiunit.ejbs.StatelessEJB;
 import com.oneandone.ejbcdiunit.entities.TestEntity1;
-import com.oneandone.ejbcdiunit.jpa.TomeeResources;
 import com.oneandone.ejbcdiunit.testbases.EJBTransactionTestBase;
 import com.oneandone.ejbcdiunit.testbases.TestEntity1Saver;
 
-@RunWith(ApplicationComposer.class)
-public class ServiceTest extends EJBTransactionTestBase {
+@RunWith(Arquillian.class)
+public class WildflyArquillianTransactionTest extends EJBTransactionTestBase {
 
-    @EJB
-    SingletonEJB singletonEJB;
+
     @Inject
-    StatelessEJB statelessEJB;
-    @Resource
-    UserTransaction userTransaction;
-    @Produces
-    @PersistenceContext(unitName = "test-unit", type = PersistenceContextType.TRANSACTION)
-    private EntityManager entityManager;
+    protected UserTransaction userTransaction;
 
-    @Module
-    public PersistenceUnit persistence1() {
-        return persistence("test-unit");
-    }
-    @Module
-    public PersistenceUnit persistence2() {
-        return persistence("EjbTestPU");
-    }
-    @Module
-    public PersistenceUnit persistence3() {
-        return persistence("EjbTestPUOperating");
-    }
-
-    public PersistenceUnit persistence(String name) {
-        PersistenceUnit unit = new PersistenceUnit(name);
-        unit.setJtaDataSource(name + "Database");
-        unit.setNonJtaDataSource(name + "DatabaseUnmanaged");
-        unit.getClazz().add(TestEntity1.class.getName());
-        unit.setProperty("openjpa.jdbc.SynchronizeMappings", "buildSchema(ForeignKeys=true)");
-        return unit;
+    public static WebArchive getWarFromTargetFolder() {
+        File folder = new File("../ejb-cdi-unit-test-war/target/");
+        File[] files = folder.listFiles(new FilenameFilter() {
+            public boolean accept(File dir, String name) {
+                return name.toLowerCase().endsWith(".war");
+            }
+        });
+        if(files == null) {
+            throw new IllegalArgumentException("Could not find directory " + folder.toString());
+        } else if(files.length != 1) {
+            throw new IllegalArgumentException("Exactly 1 war file expected, but found " + Arrays.toString(files));
+        } else {
+            WebArchive war = (WebArchive)ShrinkWrap.createFromZipFile(WebArchive.class, files[0]);
+            return war;
+        }
     }
 
-    @Module
-    public EjbModule module() {
-        EjbModule module = new EjbModule(new EjbJar("test-beans")
-                .enterpriseBean(new StatelessBean(StatelessEJB.class))
-                .enterpriseBean(new StatelessBean(OuterClass.class))
-                .enterpriseBean(new StatelessBean(StatelessBeanManagedTrasEJB.class))
-                .enterpriseBean(new SingletonBean(SingletonEJB.class))
-                );
-        Beans beans = new Beans();
-        beans
-                .managedClass(TomeeResources.class.getName())
-                .managedClass(CDIClass.class.getName());
-        module.setBeans(beans);
-        module.setModuleId("test-module");
-        return module;
-    }
-
-
-    @Configuration
-    public Properties config() throws Exception {
-        Properties p = new Properties();
-        p.put("testDatabase", "new://Resource?type=DataSource");
-        p.put("testDatabase.JdbcDriver", "org.h2.Driver");
-        p.put("testDatabase.JdbcUrl", "jdbc:h2:mem:test;MODE=MySQL;DB_CLOSE_DELAY=0");
-        return p;
+    @Deployment
+    public static Archive<?> createTestArchive() {
+        return getWarFromTargetFolder();
     }
 
     @Override
     public void runTestInRolledBackTransaction(TestEntity1Saver saver, int num, boolean exceptionExpected) throws Exception {
+
         logger.info("runTestInRolledBackTransaction for arquillian: num: {} exceptionExpected {}",num, exceptionExpected);
         userTransaction.begin();
         try {
@@ -140,6 +95,30 @@ public class ServiceTest extends EJBTransactionTestBase {
         }
     }
 
+    @Before
+    public void setup() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+        userTransaction.begin();
+        entityManager.createQuery("delete from TestEntity1 e").executeUpdate();
+        userTransaction.commit();
+    }
+
+    @Test
+    public void test1() throws Exception {
+        runTestInRolledBackTransaction(e -> statelessEJB.saveInNewTransaction(e), 2, false);
+        checkEntityNumber(1);
+    }
+
+
+    @Test
+    public void firstTraTest() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+        userTransaction.begin();
+        statelessEJB.saveInNewTransaction(new TestEntity1());
+        userTransaction.rollback();
+
+        final int expected = 1;
+        checkEntityNumber(expected);
+    }
+
     private void checkEntityNumber(int expected) {
         Number res = entityManager.createQuery("select count(e) from TestEntity1 e", Number.class).getSingleResult();
         Assert.assertThat(res.intValue(), is(expected));
@@ -149,6 +128,7 @@ public class ServiceTest extends EJBTransactionTestBase {
     public void requiresNewMethodWorks() throws Exception {
         super.requiresNewMethodWorks();
     }
+
 
     @Test
     public void defaultMethodWorks() throws Exception {
@@ -237,21 +217,6 @@ public class ServiceTest extends EJBTransactionTestBase {
         super.testBeanManagedTransactionsWOTra();
     }
 
-    @Test
-    public void test2() throws Exception {
-        // Movies movies = (Movies) context.lookup("java:global/ejb-cdi-unit-tomee/Movies");
-
-        singletonEJB.method1();
-
-        statelessEJB.method1();
-
-
-        TestEntity1 testEntity1 = new TestEntity1();
-        testEntity1.setIntAttribute(11);
-        testEntity1.setStringAttribute("string");
-        statelessEJB.saveInCurrentTransaction(testEntity1);
-
-    }
 
     @Override
     @Test(expected = TransactionRequiredException.class)
@@ -286,5 +251,4 @@ public class ServiceTest extends EJBTransactionTestBase {
             throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
         super.testBeanManagedWOTraInTestCodeTryInNotSupported();
     }
-
 }

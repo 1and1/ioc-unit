@@ -11,6 +11,12 @@ import java.sql.Statement;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.sql.DataSource;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.NotSupportedException;
+import javax.transaction.RollbackException;
+import javax.transaction.SystemException;
+import javax.transaction.UserTransaction;
 
 import org.jglue.cdiunit.ActivatedAlternatives;
 import org.jglue.cdiunit.AdditionalClasses;
@@ -44,6 +50,9 @@ public class MySqlTest {
     EntityManager em;
 
     @Inject
+    UserTransaction userTransaction;
+
+    @Inject
     DataSource dataSource;
 
     @Test
@@ -66,7 +75,9 @@ public class MySqlTest {
     }
 
     @Test
-    public void test2() throws SQLException {
+    public void test2()
+            throws SQLException, SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+        userTransaction.begin();
         TestEntity1 entity1 = new TestEntity1();
         em.persist(entity1);
         try (Connection conn = dataSource.getConnection()) {
@@ -75,7 +86,7 @@ public class MySqlTest {
                 Assert.assertThat(stmt.executeUpdate(), is(1));
             }
         }
-
+        userTransaction.commit();
     }
 
 }
