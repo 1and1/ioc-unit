@@ -126,6 +126,13 @@ public class EjbExtensionExtended implements Extension {
         }
     }
 
+    String beanNameOrName(EJB ejb) {
+        if (!ejb.name().isEmpty())
+            return ejb.name();
+        else
+            return ejb.beanName();
+    }
+
     /**
      * Handle Bean classes, if EJB-Annotations are recognized change, add, remove as fitting.
      *
@@ -180,8 +187,8 @@ public class EjbExtensionExtended implements Extension {
             if (ejb != null) {
                 builder.removeFromMethod(method, EJB.class);
                 modified = true;
-                if (!ejb.beanName().isEmpty()) {
-                    builder.addToMethod(method, new EjbName.EjbNameLiteral(ejb.beanName()));
+                if (!beanNameOrName(ejb).isEmpty()) {
+                    builder.addToMethod(method, new EjbName.EjbNameLiteral(beanNameOrName(ejb)));
                 } else {
                     builder.addToMethod(method, DefaultLiteral.INSTANCE);
                 }
@@ -197,8 +204,8 @@ public class EjbExtensionExtended implements Extension {
                 addInject = true;
 
                 builder.removeFromField(field, EJB.class);
-                if (!ejb.beanName().isEmpty()) {
-                    builder.addToField(field, new EjbName.EjbNameLiteral(ejb.beanName()));
+                if (!beanNameOrName(ejb).isEmpty()) {
+                    builder.addToField(field, new EjbName.EjbNameLiteral(beanNameOrName(ejb)));
                 } else {
                     builder.addToField(field, DefaultLiteral.INSTANCE);
                 }
