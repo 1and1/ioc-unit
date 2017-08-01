@@ -18,7 +18,7 @@ import com.oneandone.ejbcdiunit.entities.TestEntity1;
 /**
  * @author aschoerk
  */
-@Stateless
+@Stateless(name = "StatelessEJB")
 public class StatelessEJB {
 
     @Inject
