@@ -1,4 +1,4 @@
-package com.oneandone.ejbcdiunit;
+package com.oneandone.ejbcdiunit.persistencefactory;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
@@ -9,6 +9,7 @@ import javax.transaction.UserTransaction;
 import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.runner.RunWith;
 
+import com.oneandone.ejbcdiunit.EjbUnitRunner;
 import com.oneandone.ejbcdiunit.persistence.SinglePersistenceFactory;
 
 /**

@@ -1,4 +1,4 @@
-package com.oneandone.ejbcdiunit;
+package com.oneandone.ejbcdiunit.persistencefactory;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -22,6 +22,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.oneandone.ejbcdiunit.ClassWithTwoDifferentEntityManagers;
+import com.oneandone.ejbcdiunit.EjbUnitRunner;
 import com.oneandone.ejbcdiunit.cdiunit.Pu1Em;
 import com.oneandone.ejbcdiunit.cdiunit.Pu2Em;
 import com.oneandone.ejbcdiunit.entities.TestEntity1;

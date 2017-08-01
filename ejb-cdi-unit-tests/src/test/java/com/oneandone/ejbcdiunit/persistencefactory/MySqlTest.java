@@ -1,4 +1,4 @@
-package com.oneandone.ejbcdiunit;
+package com.oneandone.ejbcdiunit.persistencefactory;
 
 import static org.hamcrest.Matchers.is;
 
@@ -26,6 +26,7 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.oneandone.ejbcdiunit.EjbUnitRunner;
 import com.oneandone.ejbcdiunit.entities.TestEntity1;
 import com.oneandone.ejbcdiunit.helpers.J2eeSimMySqlFactory;
 import com.oneandone.ejbcdiunit.helpers.MySqlStarter;

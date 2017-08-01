@@ -1,4 +1,4 @@
-package com.oneandone.ejbcdiunit;
+package com.oneandone.ejbcdiunit.asynchmdb;
 
 import static org.hamcrest.core.Is.is;
 
@@ -10,6 +10,9 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.oneandone.ejbcdiunit.AsynchronousManager;
+import com.oneandone.ejbcdiunit.EjbUnitRunner;
+import com.oneandone.ejbcdiunit.SessionContextFactory;
 import com.oneandone.ejbcdiunit.ejbs.CdiMdbClient;
 import com.oneandone.ejbcdiunit.ejbs.MdbEjbInfoSingleton;
 import com.oneandone.ejbcdiunit.ejbs.QMdbEjb;

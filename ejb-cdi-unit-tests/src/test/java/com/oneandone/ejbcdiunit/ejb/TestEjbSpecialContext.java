@@ -1,4 +1,4 @@
-package com.oneandone.ejbcdiunit;
+package com.oneandone.ejbcdiunit.ejb;
 
 import javax.ejb.EJB;
 import javax.enterprise.context.ApplicationScoped;
@@ -13,6 +13,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.oneandone.ejbcdiunit.EjbUnitRunner;
 import com.oneandone.ejbcdiunit.ejbs.SingletonEJB;
 import com.oneandone.ejbcdiunit.helpers.J2eeSimTest1Factory;
 import com.oneandone.ejbcdiunit.helpers.LoggerGenerator;
@@ -28,15 +29,14 @@ public class TestEjbSpecialContext {
 
     @Inject
     J2eeSimTest1Factory persistenceFactory;
+    @EJB
+    SingletonEJB singletonEJB;
 
     @Produces
     @ApplicationScoped
     EntityManager createEntityManager() {
         return persistenceFactory.produceEntityManager();
     }
-
-    @EJB
-    SingletonEJB singletonEJB;
 
     @Test
     public void checkContextAlternative() {

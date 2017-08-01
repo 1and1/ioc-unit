@@ -1,7 +1,9 @@
-package com.oneandone.ejbcdiunit;
+package com.oneandone.ejbcdiunit.ejb;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
+import javax.ejb.EJBException;
 import javax.ejb.TransactionAttributeType;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
@@ -23,6 +25,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.oneandone.ejbcdiunit.EjbUnitRunner;
+import com.oneandone.ejbcdiunit.SessionContextFactory;
 import com.oneandone.ejbcdiunit.ejbs.MdbEjbInfoSingleton;
 import com.oneandone.ejbcdiunit.ejbs.QMdbEjb;
 import com.oneandone.ejbcdiunit.ejbs.SingletonEJB;
@@ -71,6 +75,7 @@ public class TestEjb extends EJBTransactionTestBase {
     @Before
     public void setupProfiler() throws InterruptedException {
         initMemory();
+        System.getProperties().setProperty("hibernate.show_sql", "true");
     }
 
     @Test
@@ -218,13 +223,13 @@ public class TestEjb extends EJBTransactionTestBase {
     }
 
     @Override
-    @Test(expected = TransactionRequiredException.class)
+    @Test(expected = EJBException.class)
     public void testBeanManagedTransactionsWOTra() throws Exception {
         super.testBeanManagedTransactionsWOTra();
     }
 
     @Override
-    @Test(expected = TransactionRequiredException.class)
+    @Test(expected = EJBException.class)
     public void testBeanManagedTransactionsWOTraButOuter() throws Exception {
         super.testBeanManagedTransactionsWOTraButOuter();
     }
@@ -243,24 +248,40 @@ public class TestEjb extends EJBTransactionTestBase {
     }
 
     @Override
-    @Test(expected = TransactionRequiredException.class)
+    @Test(expected = EJBException.class)
     public void tryTestBeanManagedWOTraInTestCodeInSupported()
             throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
         super.tryTestBeanManagedWOTraInTestCodeInSupported();
     }
 
     @Override
-    @Test(expected = TransactionRequiredException.class)
+    @Test(expected = EJBException.class)
     public void testBeanManagedWithTraInTestCodeTryInNotSupported()
             throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
         super.testBeanManagedWithTraInTestCodeTryInNotSupported();
     }
 
     @Override
-    @Test(expected = TransactionRequiredException.class)
+    @Test(expected = EJBException.class)
     public void testBeanManagedWOTraInTestCodeTryInNotSupported()
             throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
         super.testBeanManagedWOTraInTestCodeTryInNotSupported();
+    }
+
+    @Test
+    public void testCacheWOTransaction() throws Exception {
+        TestEntity1 entity1 = new TestEntity1();
+        entity1.setIntAttribute(1);
+        try (TestTransaction newTransaction = new TestTransaction(TransactionAttributeType.REQUIRES_NEW)) {
+            entityManager.persist(entity1);
+        }
+        entity1 = entityManager.find(TestEntity1.class, entity1.getId());
+        try (TestTransaction newTransaction = new TestTransaction(TransactionAttributeType.REQUIRES_NEW)) {
+            TestEntity1 entity11 = entityManager.find(TestEntity1.class, entity1.getId());
+            entity11.setIntAttribute(2);
+        }
+        TestEntity1 entity12 = entityManager.find(TestEntity1.class, entity1.getId());
+        assertThat(entity12.getIntAttribute(), is(2));
     }
 
     @ApplicationScoped

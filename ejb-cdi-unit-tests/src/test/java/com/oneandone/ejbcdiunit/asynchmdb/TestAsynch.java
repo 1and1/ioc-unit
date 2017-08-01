@@ -1,4 +1,4 @@
-package com.oneandone.ejbcdiunit;
+package com.oneandone.ejbcdiunit.asynchmdb;
 
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
@@ -15,6 +15,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 
+import com.oneandone.ejbcdiunit.AsynchronousManager;
+import com.oneandone.ejbcdiunit.EjbUnitRunner;
 import com.oneandone.ejbcdiunit.ejbs.CdiAsynchronousBean;
 import com.oneandone.ejbcdiunit.ejbs.CountingBean;
 import com.oneandone.ejbcdiunit.ejbs.SingletonTimerEJB;

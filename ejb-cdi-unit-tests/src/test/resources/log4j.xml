@@ -15,6 +15,9 @@
                    value="%d %-5p %X{host} (%X{correlationId}: [%X{clientName} %X{clientVersion} %X{clientApiVersion}] %X{extSubscriberID} %X{providerShortName}) [%c] (%t) %m%n"/>
         </layout>
     </appender>
+    <category name="org.hibernate.ejb.packaging">
+        <priority value="ERROR"/>
+    </category>
     <root>
         <level value="info"/>
         <appender-ref ref="STDOUT"/>

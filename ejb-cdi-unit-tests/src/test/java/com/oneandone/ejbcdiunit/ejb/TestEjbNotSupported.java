@@ -1,4 +1,4 @@
-package com.oneandone.ejbcdiunit;
+package com.oneandone.ejbcdiunit.ejb;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -15,6 +15,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.oneandone.ejbcdiunit.EjbUnitRunner;
+import com.oneandone.ejbcdiunit.SessionContextFactory;
 import com.oneandone.ejbcdiunit.ejbs.SingletonEJB;
 import com.oneandone.ejbcdiunit.ejbs.StatelessEJB;
 import com.oneandone.ejbcdiunit.ejbs.StatelessNotSupportedEJB;
@@ -30,22 +32,10 @@ import com.oneandone.ejbcdiunit.persistence.SinglePersistenceFactory;
         TestEjb.TestDbPersistenceFactory.class, SessionContextFactory.class, LoggerGenerator.class})
 public class TestEjbNotSupported {
 
-    @ApplicationScoped
-    public static class TestDbPersistenceFactory extends SinglePersistenceFactory {
-
-        @Produces
-        @Override
-        public EntityManager newEm() {
-            return produceEntityManager();
-        }
-    }
-
     @Inject
     EntityManager em;
-
     @Inject
     SinglePersistenceFactory persistenceFactory;
-
     @Inject
     StatelessNotSupportedEJB statelessNotSupportedEJB;
 
@@ -68,6 +58,7 @@ public class TestEjbNotSupported {
     public void testRequiresNewTraPlusIOException() throws IOException {
         statelessNotSupportedEJB.testRequiresNewTraPlusIOException();
     }
+
     @Test(expected = RuntimeException.class)
     public void testRequiredIndirectTraPlusRTException() {
         statelessNotSupportedEJB.testRequiredIndirectTraPlusRTException();
@@ -98,5 +89,15 @@ public class TestEjbNotSupported {
     @Test
     public void persistRequiresNewGetRollbackOnlyBySessionContext() throws IOException {
         assertThat(statelessNotSupportedEJB.persistRequiresNewGetRollbackOnlyBySessionContext(new TestEntity1()), is(false));
+    }
+
+    @ApplicationScoped
+    public static class TestDbPersistenceFactory extends SinglePersistenceFactory {
+
+        @Produces
+        @Override
+        public EntityManager newEm() {
+            return produceEntityManager();
+        }
     }
 }
