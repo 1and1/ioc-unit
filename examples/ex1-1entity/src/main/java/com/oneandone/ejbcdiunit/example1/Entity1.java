@@ -15,6 +15,8 @@ public class Entity1 {
     private int intValue;
     private String stringValue;
 
+    public Entity1() {}
+
     public Entity1(int intValue, String stringValue) {
         this.intValue = intValue;
         this.stringValue = stringValue;
