@@ -35,7 +35,7 @@ public abstract class EJBTransactionTestBase {
     @Inject
     protected CDIClass cdiClass;
 
-    @EJB
+    @EJB(name = "StatelessEJB")
     protected StatelessEJB statelessEJB;
 
     @EJB
