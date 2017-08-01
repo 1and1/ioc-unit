@@ -41,7 +41,7 @@ public class TestTransaction implements AutoCloseable, UserTransaction {
      */
     @Override
     public void close() throws Exception {
-        new SimulatedTransactionManager().commit(null);
+        new SimulatedTransactionManager().pop();
     }
 
     @Override
@@ -67,6 +67,12 @@ public class TestTransaction implements AutoCloseable, UserTransaction {
 
     @Override
     public void begin() {
+        try {
+            new SimulatedTransactionManager().pop();
+        } catch (Exception e) {
+            new SimulatedTransactionManager().push(TransactionAttributeType.NOT_SUPPORTED);
+            throw new RuntimeException(e);
+        }
         new SimulatedTransactionManager().push(TransactionAttributeType.REQUIRES_NEW);
     }
 
