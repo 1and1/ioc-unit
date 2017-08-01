@@ -142,7 +142,15 @@ public abstract class PersistenceFactory {
     EntityManager get() {
         final Stack<EntityManager> entityManagerStack = getEmStackThreadLocal().get();
         if (entityManagerStack == null || entityManagerStack.isEmpty()) {
-            createAndRegister();
+            return getEntityManager();
+        }
+        return getEmStackThreadLocal().get().peek();
+    }
+
+    EntityManager getEntityManager() {
+        final Stack<EntityManager> entityManagerStack = getEmStackThreadLocal().get();
+        if (entityManagerStack == null || entityManagerStack.isEmpty()) {
+            createAndRegister(); // throw new RuntimeException("Should never be null!!!");
         }
         return getEmStackThreadLocal().get().peek();
     }
@@ -184,6 +192,7 @@ public abstract class PersistenceFactory {
             // logger.info("Dropping EntityManager with active Transaction");
             throw new IllegalStateException("Popping with active transaction");
         }
+        entityManager.close();
     }
 
     /**
