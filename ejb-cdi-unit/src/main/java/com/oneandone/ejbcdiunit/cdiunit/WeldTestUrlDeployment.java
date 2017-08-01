@@ -98,11 +98,11 @@ import com.google.common.base.Predicate;
 import com.oneandone.ejbcdiunit.SupportEjbExtended;
 
 public class WeldTestUrlDeployment implements Deployment {
-    private final BeanDeploymentArchive beanDeploymentArchive;
-    private Collection<Metadata<Extension>> extensions = new ArrayList<Metadata<Extension>>();
     private static Logger log = LoggerFactory.getLogger(WeldTestUrlDeployment.class);
-    private Set<URL> cdiClasspathEntries = new HashSet<URL>();
+    private final BeanDeploymentArchive beanDeploymentArchive;
     private final ServiceRegistry serviceRegistry = new SimpleServiceRegistry();
+    private Collection<Metadata<Extension>> extensions = new ArrayList<Metadata<Extension>>();
+    private Set<URL> cdiClasspathEntries = new HashSet<URL>();
 
     public WeldTestUrlDeployment(ResourceLoader resourceLoader, Bootstrap bootstrap, Class<?> testClass, Method testMethod) throws IOException {
 
@@ -318,10 +318,10 @@ public class WeldTestUrlDeployment implements Deployment {
 
         beanDeploymentArchive = new BeanDeploymentArchiveImpl("cdi-unit" + UUID.randomUUID(), discoveredClasses, beansXml);
         beanDeploymentArchive.getServices().add(ResourceLoader.class, resourceLoader);
-        log.debug("CDI-Unit discovered:");
+        log.trace("CDI-Unit discovered:");
         for (String clazz : discoveredClasses) {
             if (!clazz.startsWith("org.jglue.cdiunit.internal.")) {
-                log.debug(clazz);
+                log.trace(clazz);
             }
         }
 
@@ -425,9 +425,9 @@ public class WeldTestUrlDeployment implements Deployment {
                 }
             }
         }
-        log.debug("CDI classpath entries discovered:");
+        log.trace("CDI classpath entries discovered:");
         for (URL url : cdiClasspathEntries) {
-            log.debug("{}", url);
+            log.trace("{}", url);
         }
 
     }
