@@ -12,6 +12,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.ejb.TransactionAttributeType;
+import javax.ejb.TransactionRolledbackLocalException;
 import javax.persistence.TransactionRequiredException;
 import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
@@ -35,6 +36,18 @@ public class SimulatedTransactionManager {
     private static ConcurrentLinkedQueue<ArrayList<ThreadLocalTransactionInformation>> allStacks
             = new ConcurrentLinkedQueue<>();
 
+    private static TestTransactionBase getTestTransactionBase(int i, PersistenceFactory persistenceFactory) {
+        if (i < 0) {
+            return null;
+        }
+        ArrayList<ThreadLocalTransactionInformation> stack = transactionStack.get();
+        for (TestTransactionBase testTransactionBase : stack.get(i).persistenceFactories) {
+            if (testTransactionBase.getPersistenceFactory().equals(persistenceFactory)) {
+                return testTransactionBase;
+            }
+        }
+        return null;
+    }
 
     /**
      * called by EjbExtensionExtended to clear static data.
@@ -105,19 +118,6 @@ public class SimulatedTransactionManager {
         stack.add(new ThreadLocalTransactionInformation());
     }
 
-    private TestTransactionBase getTestTransactionBase(int i, PersistenceFactory persistenceFactory) {
-        if (i < 0) {
-            return null;
-        }
-        ArrayList<ThreadLocalTransactionInformation> stack = transactionStack.get();
-        for (TestTransactionBase testTransactionBase: stack.get(i).persistenceFactories) {
-            if (testTransactionBase.getPersistenceFactory().equals(persistenceFactory)) {
-                return testTransactionBase;
-            }
-        }
-        return null;
-    }
-
     private int findTestTransactionBase(PersistenceFactory persistenceFactory) {
         ArrayList<ThreadLocalTransactionInformation> stack = transactionStack.get();
         for (int i = stack.size() - 1; i >= 0; i--) {
@@ -137,7 +137,12 @@ public class SimulatedTransactionManager {
     public void takePart(PersistenceFactory persistenceFactory) {
         ArrayList<ThreadLocalTransactionInformation> stack = transactionStack.get();
         if (stack == null || stack.isEmpty()) {
-            return;
+            push(TransactionAttributeType.NOT_SUPPORTED);
+            transactionStack.get().get(0).setTestTransaction();
+            stack = transactionStack.get();
+        }
+        if (stack.get(stack.size() - 1).isRolledBack()) {
+            throw new TransactionRolledbackLocalException("Simulated Transaction Manager");
         }
         int pos = findTestTransactionBase(persistenceFactory);
         if (pos == stack.size() - 1) {
@@ -205,7 +210,10 @@ public class SimulatedTransactionManager {
             SecurityException, IllegalStateException, SystemException {
         ArrayList<ThreadLocalTransactionInformation> stack = transactionStack.get();
         handleUserTransactionOrNot(expectUserTransaction, stack);
-        ThreadLocalTransactionInformation element = stack.remove(stack.size() - 1);
+        if (stack.get(stack.size() - 1).isRolledBack()) {
+            throw new RollbackException("Can't commit because rolled back");
+        }
+        ThreadLocalTransactionInformation element = stack.get(stack.size() - 1);
         boolean setRollbackOnly = element.getRollbackOnly();
         ArrayList<Exception> exceptions = new ArrayList<>();
         for (TestTransactionBase testTransactionBase: element.persistenceFactories) {
@@ -214,6 +222,9 @@ public class SimulatedTransactionManager {
             } catch (Exception e) {
                 exceptions.add(e);
             }
+        }
+        if (element.isUserTransaction()) {
+            stack.remove(stack.size() - 1);
         }
         if (setRollbackOnly && element.isUserTransaction()) {
             throw new RollbackException("Test Transaction fails.");
@@ -320,6 +331,7 @@ public class SimulatedTransactionManager {
         TransactionAttributeType transactionAttributeType;
         boolean rollbackOnly = false;
         boolean userTransaction = false;
+        boolean testTransaction = false;
         List<TestTransactionBase> persistenceFactories = new ArrayList<>();
         private boolean rolledBack;
 
@@ -331,6 +343,14 @@ public class SimulatedTransactionManager {
         ThreadLocalTransactionInformation() {
             this.transactionAttributeType = REQUIRES_NEW;
             userTransaction = true;
+        }
+
+        public boolean isTestTransaction() {
+            return testTransaction;
+        }
+
+        public void setTestTransaction() {
+            this.testTransaction = true;
         }
 
         public ThreadLocalTransactionInformation getPrevious() {
