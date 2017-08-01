@@ -31,7 +31,6 @@ import org.jglue.cdiunit.AdditionalClasses;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.ImmutableMap;
 import com.oneandone.ejbcdiunit.SessionContextFactory;
 import com.oneandone.ejbcdiunit.SupportEjbExtended;
 import com.oneandone.ejbcdiunit.internal.EjbExtensionExtended;
@@ -121,10 +120,10 @@ public class TestPersistenceFactory extends PersistenceFactory {
             @Override
             public DataSource getNonJtaDataSource() {
                 BasicDataSource bds = new BasicDataSource();
-                bds.setDriverClassName("org.h2.Driver");
-                bds.setUrl("jdbc:h2:mem:test;MODE=MySQL;DB_CLOSE_DELAY=0;LOCK_MODE=0");
-                bds.setUsername("sa");
-                bds.setPassword("");
+                bds.setDriverClassName(System.getProperty("hibernate.connection.driverclass", "org.h2.Driver"));
+                bds.setUrl(System.getProperty("hibernate.connection.url", "jdbc:h2:mem:test;MODE=MySQL;DB_CLOSE_DELAY=0;LOCK_MODE=0"));
+                bds.setUsername(System.getProperty("hibernate.connection.username", "sa"));
+                bds.setPassword(System.getProperty("hibernate.connection.password", ""));
                 return bds;
             }
 
@@ -226,20 +225,17 @@ public class TestPersistenceFactory extends PersistenceFactory {
             }
         }
 
-        HashMap<String, Object> systemProperties = new HashMap<>();
+        HashMap<String, Object> properties = new HashMap<>();
+        properties.put("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
+        properties.put("hibernate.show_sql", true);
+        properties.put("hibernate.hbm2ddl.auto", "create-drop");
+        properties.put("hibernate.id.new_generator_mappings", false);
+        properties.put("hibernate.archive.autodetection", "class");
+        // possibly override properties using system properties
         for (Map.Entry<Object, Object> p : System.getProperties().entrySet()) {
-            systemProperties.put((String) p.getKey(), p.getValue());
+            properties.put((String) p.getKey(), p.getValue());
         }
 
-        final ImmutableMap<String, Object> properties = ImmutableMap.<String, Object> builder()
-                // TODO: make anyhow configurable
-                .putAll(systemProperties)
-                .put("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect")
-                .put("hibernate.show_sql", true)
-                .put("hibernate.hbm2ddl.auto", "create-drop")
-                .put("hibernate.id.new_generator_mappings", false)
-                .put("hibernate.archive.autodetection", "class")
-                .build();
         final PersistenceUnitInfo persistenceUnitInfo = testPersistenceUnitInfo();
         try {
             return new HibernatePersistence().createContainerEntityManagerFactory(persistenceUnitInfo,
