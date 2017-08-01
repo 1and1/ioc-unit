@@ -8,7 +8,6 @@ import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.EJBException;
 import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceContextType;
@@ -27,12 +26,13 @@ import org.apache.openejb.jee.EjbJar;
 import org.apache.openejb.jee.SingletonBean;
 import org.apache.openejb.jee.StatelessBean;
 import org.apache.openejb.jee.jpa.unit.PersistenceUnit;
-import org.apache.openejb.junit.ApplicationComposer;
+import org.apache.openejb.junit.ApplicationComposerRule;
 import org.apache.openejb.testing.Configuration;
 import org.apache.openejb.testing.Module;
 import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import com.oneandone.ejbcdiunit.ejbs.CDIClass;
 import com.oneandone.ejbcdiunit.ejbs.OuterClass;
@@ -44,12 +44,15 @@ import com.oneandone.ejbcdiunit.jpa.TomeeResources;
 import com.oneandone.ejbcdiunit.testbases.EJBTransactionTestBase;
 import com.oneandone.ejbcdiunit.testbases.TestEntity1Saver;
 
-@RunWith(ApplicationComposer.class)
 public class EmbeddedTomeeTransactionTest extends EJBTransactionTestBase {
+
+    @Rule
+    public ApplicationComposerRule applicationComposerRule = new ApplicationComposerRule(this);
 
     @EJB
     SingletonEJB singletonEJB;
-    @Inject
+
+    @EJB(name = "shsgdhasghdasg") // tomee does not care about those names
     StatelessEJB statelessEJB;
     @Resource
     UserTransaction userTransaction;
@@ -77,6 +80,14 @@ public class EmbeddedTomeeTransactionTest extends EJBTransactionTestBase {
         unit.getClazz().add(TestEntity1.class.getName());
         unit.setProperty("openjpa.jdbc.SynchronizeMappings", "buildSchema(ForeignKeys=true)");
         return unit;
+    }
+
+    @Before
+    public void beforeEmbeddedTomeeTransactionTest()
+            throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+        userTransaction.begin();
+        entityManager.createQuery("delete from TestEntity1 e").executeUpdate();
+        userTransaction.commit();
     }
 
     @Module
