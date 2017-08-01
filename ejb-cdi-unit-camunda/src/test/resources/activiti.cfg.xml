@@ -4,14 +4,22 @@
        xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans   http://www.springframework.org/schema/beans/spring-beans.xsd">
 
+    <bean id="ejbcdiunitTransactionContextFactory"
+          class="com.oneandone.ejbcdiunit.camunda.EjbCdiUnitTransactionContextFactory">
+    </bean>
+
     <bean id="processEngineConfiguration"
           class="org.camunda.bpm.engine.cdi.CdiStandaloneProcessEngineConfiguration">
 
-        <property name="jdbcUrl" value="jdbc:h2:mem:activiti"/>
+        <property name="jdbcUrl" value="jdbc:h2:mem:test;MODE=MySQL;DB_CLOSE_DELAY=0;LOCK_MODE=0"/>
+        <property name="jdbcDriver" value="org.h2.Driver"/>
+        <property name="jdbcUsername" value="sa"/>
+        <property name="jdbcPassword" value=""/>
         <property name="databaseSchemaUpdate" value="true"/>
         <property name="jobExecutorActivate" value="false"/>
         <property name="mailServerPort" value="5025"/>
         <property name="enableExpressionsInAdhocQueries" value="true"/>
+        <property name="transactionContextFactory" ref="ejbcdiunitTransactionContextFactory"/>
 
         <!-- turn off metrics reporter -->
         <property name="dbMetricsReporterActivate" value="false"/>
