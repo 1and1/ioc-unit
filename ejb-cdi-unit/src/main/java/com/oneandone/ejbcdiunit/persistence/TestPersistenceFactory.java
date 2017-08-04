@@ -23,7 +23,6 @@ import javax.persistence.spi.ClassTransformer;
 import javax.persistence.spi.PersistenceUnitInfo;
 import javax.persistence.spi.PersistenceUnitTransactionType;
 import javax.sql.DataSource;
-import javax.transaction.UserTransaction;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.hibernate.ejb.HibernatePersistence;
@@ -55,16 +54,6 @@ public class TestPersistenceFactory extends PersistenceFactory {
     @Override
     protected String getPersistenceUnitName() {
         return "test";
-    }
-
-    /**
-     * @return Usertransaction injectable
-     */
-    @Produces
-    @Default
-    @Override
-    public UserTransaction produceUserTransaction() {
-        return super.produceUserTransaction();
     }
 
     /**

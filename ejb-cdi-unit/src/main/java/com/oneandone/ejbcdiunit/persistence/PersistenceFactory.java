@@ -16,14 +16,12 @@ import javax.persistence.TransactionRequiredException;
 import javax.sql.DataSource;
 import javax.transaction.Status;
 import javax.transaction.SystemException;
-import javax.transaction.UserTransaction;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.oneandone.ejbcdiunit.SupportEjbExtended;
-import com.oneandone.ejbcdiunit.resourcesimulators.SimulatedUserTransaction;
 
 
 /**
@@ -219,15 +217,6 @@ public abstract class PersistenceFactory {
         } catch (Exception e) {
             throw new TestTransactionException(e);
         }
-    }
-
-
-    /**
-     *
-     * @return Usertransaction injectable
-     */
-    public UserTransaction produceUserTransaction() {
-        return new SimulatedUserTransaction();
     }
 
     /**

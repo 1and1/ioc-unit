@@ -26,8 +26,6 @@ class EjbUnitBeanInitializerClass {
     @Inject
     BeanManager bm;
 
-
-
     @Inject
     AsynchronousManager asynchronousManager;
 

@@ -18,6 +18,7 @@ import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
 import javax.transaction.RollbackException;
 import javax.transaction.Status;
+import javax.transaction.Synchronization;
 import javax.transaction.SystemException;
 
 /**
@@ -33,6 +34,8 @@ public class SimulatedTransactionManager {
 
     private static ThreadLocal<ArrayList<ThreadLocalTransactionInformation>> transactionStack = new ThreadLocal<>();
 
+    private static ThreadLocal<ArrayList<Synchronization>> synchronizations = new ThreadLocal<>();
+
     private static ConcurrentLinkedQueue<ArrayList<ThreadLocalTransactionInformation>> allStacks
             = new ConcurrentLinkedQueue<>();
 
@@ -47,6 +50,27 @@ public class SimulatedTransactionManager {
             }
         }
         return null;
+    }
+
+    public void registerSynchronisation(Synchronization synchronization) {
+        ArrayList<Synchronization> synchs = initSynchronizations();
+        synchs.add(synchronization);
+    }
+
+    public void synchBeforeCompletion() {
+        if (synchronizations.get() != null) {
+            for (Synchronization s : synchronizations.get()) {
+                s.beforeCompletion();
+            }
+        }
+    }
+
+    public void synchAfterCompletion(int res) {
+        if (synchronizations.get() != null) {
+            for (Synchronization s : synchronizations.get()) {
+                s.afterCompletion(res);
+            }
+        }
     }
 
     /**
@@ -97,6 +121,15 @@ public class SimulatedTransactionManager {
     public void push(TransactionAttributeType transactionAttributeType) {
         ArrayList<ThreadLocalTransactionInformation> stack = initStack();
         stack.add(new ThreadLocalTransactionInformation(transactionAttributeType));
+    }
+
+    private ArrayList<Synchronization> initSynchronizations() {
+        ArrayList<Synchronization> synchs = synchronizations.get();
+        if (synchs == null) {
+            synchs = new ArrayList<>();
+            synchronizations.set(synchs);
+        }
+        return synchs;
     }
 
     private ArrayList<ThreadLocalTransactionInformation> initStack() {
@@ -169,6 +202,7 @@ public class SimulatedTransactionManager {
      * @throws SystemException used to simulated UserTransactionInterface
      */
     public void rollback(Boolean expectUserTransaction) throws IllegalStateException, SecurityException, SystemException {
+        synchBeforeCompletion();
         ArrayList<ThreadLocalTransactionInformation> stack = transactionStack.get();
         handleUserTransactionOrNot(expectUserTransaction, stack);
         ThreadLocalTransactionInformation element = stack.get(stack.size() - 1);
@@ -190,6 +224,7 @@ public class SimulatedTransactionManager {
         } catch (RollbackException e) {
             throw new RuntimeException(e);
         }
+        synchAfterCompletion(Status.STATUS_ROLLEDBACK);
 
     }
 
@@ -208,6 +243,7 @@ public class SimulatedTransactionManager {
      */
     public void commit(Boolean expectUserTransaction) throws RollbackException, HeuristicMixedException, HeuristicRollbackException,
             SecurityException, IllegalStateException, SystemException {
+        synchBeforeCompletion();
         ArrayList<ThreadLocalTransactionInformation> stack = transactionStack.get();
         handleUserTransactionOrNot(expectUserTransaction, stack);
         if (stack.get(stack.size() - 1).isRolledBack()) {
@@ -230,6 +266,7 @@ public class SimulatedTransactionManager {
             throw new RollbackException("Test Transaction fails.");
         }
         handleExceptions(exceptions);
+        synchAfterCompletion(Status.STATUS_COMMITTED);
     }
 
     private void handleUserTransactionOrNot(Boolean expectUserTransaction,

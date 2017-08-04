@@ -28,6 +28,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -54,7 +55,6 @@ import javax.interceptor.Interceptor;
 
 import org.jboss.weld.bootstrap.api.Bootstrap;
 import org.jboss.weld.bootstrap.api.ServiceRegistry;
-import org.jboss.weld.bootstrap.api.helpers.SimpleServiceRegistry;
 import org.jboss.weld.bootstrap.spi.BeanDeploymentArchive;
 import org.jboss.weld.bootstrap.spi.BeanDiscoveryMode;
 import org.jboss.weld.bootstrap.spi.BeansXml;
@@ -95,17 +95,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Predicate;
-import com.oneandone.ejbcdiunit.SupportEjbExtended;
+import com.oneandone.ejbcdiunit.CdiTestConfig;
 
 public class WeldTestUrlDeployment implements Deployment {
     private static Logger log = LoggerFactory.getLogger(WeldTestUrlDeployment.class);
     private final BeanDeploymentArchive beanDeploymentArchive;
-    private final ServiceRegistry serviceRegistry = new SimpleServiceRegistry();
     private Collection<Metadata<Extension>> extensions = new ArrayList<Metadata<Extension>>();
     private Set<URL> cdiClasspathEntries = new HashSet<URL>();
 
-    public WeldTestUrlDeployment(ResourceLoader resourceLoader, Bootstrap bootstrap, Class<?> testClass, Method testMethod) throws IOException {
+    public WeldTestUrlDeployment(ResourceLoader resourceLoader, Bootstrap bootstrap, WeldTestConfig weldTestConfig) throws IOException {
 
+        Class<?> testClass = weldTestConfig.getClazz();
+        Method testMethod = weldTestConfig.getMethod();
         populateCdiClasspathSet();
         BeansXml beansXml;
         try {
@@ -129,6 +130,7 @@ public class WeldTestUrlDeployment implements Deployment {
         Set<Class<?>> classesToProcess = new LinkedHashSet<Class<?>>();
         Set<Class<?>> classesProcessed = new HashSet<Class<?>>();
         Set<Class<?>> classesToIgnore = findMockedClassesOfTest(testClass);
+        classesToIgnore.addAll(weldTestConfig.getExcludedClasses());
 
         classesToProcess.add(testClass);
         extensions.add(new MetadataImpl<Extension>(new TestScopeExtension(testClass), TestScopeExtension.class.getName()));
@@ -165,7 +167,18 @@ public class WeldTestUrlDeployment implements Deployment {
         } catch (ClassNotFoundException e) {
         }
 
-        classesToProcess.add(SupportEjbExtended.class);
+
+        classesToProcess.addAll(weldTestConfig.getAdditionalClasses());
+        for (Class<?> c : weldTestConfig.getAdditionalClassPathes()) {
+            addClassPath(classesToProcess, c);
+        }
+        for (Class<?> c : weldTestConfig.getAdditionalClassPackages()) {
+            addPackage(classesToProcess, c);
+        }
+        for (Class<?> c : weldTestConfig.getActivatedAlternatives()) {
+            addAlternative(alternatives, classesToProcess, c);
+        }
+
 
         while (!classesToProcess.isEmpty()) {
 
@@ -213,37 +226,14 @@ public class WeldTestUrlDeployment implements Deployment {
                 if (additionalClasspaths != null) {
                     for (Class<?> additionalClasspath : additionalClasspaths.value()) {
 
-                        Reflections reflections = new Reflections(new ConfigurationBuilder().setScanners(new TypesScanner())
-                                .setUrls(
-                                        new File(additionalClasspath.getProtectionDomain().getCodeSource().getLocation()
-                                                .getPath()).toURI().toURL()));
-
-                        classesToProcess.addAll(ReflectionUtils.forNames(
-                                reflections.getStore().get(TypesScanner.class.getSimpleName()).keySet(),
-                                new ClassLoader[] { getClass().getClassLoader() }));
+                        addClassPath(classesToProcess, additionalClasspath);
                     }
                 }
 
                 AdditionalPackages additionalPackages = c.getAnnotation(AdditionalPackages.class);
                 if (additionalPackages != null) {
                     for (Class<?> additionalPackage : additionalPackages.value()) {
-                        final String packageName = additionalPackage.getPackage().getName();
-                        Reflections reflections = new Reflections(new ConfigurationBuilder()
-                                .setScanners(new TypesScanner())
-                                .setUrls(
-                                        new File(additionalPackage.getProtectionDomain().getCodeSource().getLocation().getPath())
-                                                .toURI().toURL()).filterInputsBy(new Predicate<String>() {
-
-                                    @Override
-                                    public boolean apply(String input) {
-                                        return input.startsWith(packageName)
-                                                && !input.substring(packageName.length() + 1, input.length() - 6).contains(".");
-
-                                    }
-                                }));
-                        classesToProcess.addAll(ReflectionUtils.forNames(
-                                reflections.getStore().get(TypesScanner.class.getSimpleName()).keySet(),
-                                new ClassLoader[] { getClass().getClassLoader() }));
+                        addPackage(classesToProcess, additionalPackage);
 
                     }
                 }
@@ -251,11 +241,7 @@ public class WeldTestUrlDeployment implements Deployment {
                 ActivatedAlternatives alternativeClasses = c.getAnnotation(ActivatedAlternatives.class);
                 if (alternativeClasses != null) {
                     for (Class<?> alternativeClass : alternativeClasses.value()) {
-                        classesToProcess.add(alternativeClass);
-
-                        if (!isAlternativeStereotype(alternativeClass)) {
-                            alternatives.add(alternativeClass.getName());
-                        }
+                        addAlternative(alternatives, classesToProcess, alternativeClass);
                     }
                 }
 
@@ -318,6 +304,10 @@ public class WeldTestUrlDeployment implements Deployment {
 
         beanDeploymentArchive = new BeanDeploymentArchiveImpl("cdi-unit" + UUID.randomUUID(), discoveredClasses, beansXml);
         beanDeploymentArchive.getServices().add(ResourceLoader.class, resourceLoader);
+        for (CdiTestConfig.ServiceConfig serviceConfig : weldTestConfig.getServiceConfigs()) {
+            beanDeploymentArchive.getServices().add(serviceConfig.getServiceClass(), serviceConfig.getService());
+        }
+
         log.trace("CDI-Unit discovered:");
         for (String clazz : discoveredClasses) {
             if (!clazz.startsWith("org.jglue.cdiunit.internal.")) {
@@ -326,6 +316,47 @@ public class WeldTestUrlDeployment implements Deployment {
         }
 
     }
+
+    private void addAlternative(Set<String> alternatives, Set<Class<?>> classesToProcess, Class<?> alternativeClass) {
+        classesToProcess.add(alternativeClass);
+
+        if (!isAlternativeStereotype(alternativeClass)) {
+            alternatives.add(alternativeClass.getName());
+        }
+    }
+
+    private void addPackage(Set<Class<?>> classesToProcess, Class<?> additionalPackage) throws MalformedURLException {
+        final String packageName = additionalPackage.getPackage().getName();
+        Reflections reflections = new Reflections(new ConfigurationBuilder()
+                .setScanners(new TypesScanner())
+                .setUrls(
+                        new File(additionalPackage.getProtectionDomain().getCodeSource().getLocation().getPath())
+                                .toURI().toURL())
+                .filterInputsBy(new Predicate<String>() {
+
+                    @Override
+                    public boolean apply(String input) {
+                        return input.startsWith(packageName)
+                                && !input.substring(packageName.length() + 1, input.length() - 6).contains(".");
+
+                    }
+                }));
+        classesToProcess.addAll(ReflectionUtils.forNames(
+                reflections.getStore().get(TypesScanner.class.getSimpleName()).keySet(),
+                new ClassLoader[] { getClass().getClassLoader() }));
+    }
+
+    private void addClassPath(Set<Class<?>> classesToProcess, Class<?> additionalClasspath) throws MalformedURLException {
+        Reflections reflections = new Reflections(new ConfigurationBuilder().setScanners(new TypesScanner())
+                .setUrls(
+                        new File(additionalClasspath.getProtectionDomain().getCodeSource().getLocation()
+                                .getPath()).toURI().toURL()));
+
+        classesToProcess.addAll(ReflectionUtils.forNames(
+                reflections.getStore().get(TypesScanner.class.getSimpleName()).keySet(),
+                new ClassLoader[] { getClass().getClassLoader() }));
+    }
+
 
     private void addClassesToProcess(Collection<Class<?>> classesToProcess, Type type) {
 
@@ -465,6 +496,6 @@ public class WeldTestUrlDeployment implements Deployment {
 
     @Override
     public ServiceRegistry getServices() {
-        return serviceRegistry;
+        return beanDeploymentArchive.getServices();
     }
 }
