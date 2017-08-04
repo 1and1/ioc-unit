@@ -10,6 +10,7 @@ import org.camunda.bpm.engine.impl.interceptor.CommandContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.oneandone.ejbcdiunit.persistence.SimulatedTransactionManager;
 import com.oneandone.ejbcdiunit.persistence.TestTransaction;
 
 /**
@@ -37,7 +38,7 @@ public class EjbCdiUnitTransactionContextFactory implements TransactionContextFa
         public EjbCdiUnitTransactionContext(CommandContext commandContext) {
             super(commandContext);
             logger.trace("********* Start context for {}", Thread.currentThread().getName());
-            testTransaction = new TestTransaction(TransactionAttributeType.NOT_SUPPORTED);
+            new SimulatedTransactionManager().push(TransactionAttributeType.NOT_SUPPORTED);
         }
 
         @Override
@@ -45,7 +46,7 @@ public class EjbCdiUnitTransactionContextFactory implements TransactionContextFa
             logger.trace("********* Commit context for {}", Thread.currentThread().getName());
             super.commit();
             try {
-                testTransaction.commit();
+                new SimulatedTransactionManager().pop();
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -56,7 +57,8 @@ public class EjbCdiUnitTransactionContextFactory implements TransactionContextFa
             logger.trace("******* Rollback context for {}", Thread.currentThread().getName());
             super.rollback();
             try {
-                testTransaction.rollback();
+                new SimulatedTransactionManager().setRollbackOnly(false);
+                new SimulatedTransactionManager().pop();
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
