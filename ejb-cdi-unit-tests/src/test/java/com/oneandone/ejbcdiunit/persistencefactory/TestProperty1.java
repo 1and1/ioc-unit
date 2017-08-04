@@ -45,7 +45,7 @@ public class TestProperty1 extends PersistenceFactoryTestBase {
 
     @After
     public void checkSchema() {
-        entityManager.createNativeQuery("select * from schema.testentity1").getResultList();
+        entityManager.createNativeQuery("select * from schema.test_entity_1").getResultList();
     }
 
     @Test
