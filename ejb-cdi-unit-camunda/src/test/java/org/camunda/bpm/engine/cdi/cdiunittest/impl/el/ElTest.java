@@ -12,23 +12,32 @@ import java.util.Arrays;
 
 import javax.inject.Inject;
 
+import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.cdi.cdiunittest.impl.beans.MessageBean;
 import org.camunda.bpm.engine.cdi.cdiunittest.impl.el.beans.DependentScopedBean;
 import org.camunda.bpm.engine.test.Deployment;
 import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
 
-import com.oneandone.ejbcdiunit.camunda.CdiProcessEngineTestCase;
+import com.oneandone.ejbcdiunit.camunda.EjbCamundaUnitRule;
 
 /**
  * @author Daniel Meyer
  */
 @AdditionalClasses({ DependentScopedBean.class })
-public class ElTest extends CdiProcessEngineTestCase {
+public class ElTest {
 
     @Inject
+    RuntimeService runtimeService;
+    @Inject
     MessageBean messageBean;
+
+    @Rule
+    public EjbCamundaUnitRule getEjbCamundaUnitRule() {
+        return new EjbCamundaUnitRule(this);
+    }
 
     @Test
     @Deployment

@@ -22,12 +22,10 @@ import org.camunda.bpm.engine.task.Task;
 import org.camunda.bpm.engine.test.Deployment;
 import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
-import com.oneandone.ejbcdiunit.EjbUnitRunner;
 import com.oneandone.ejbcdiunit.camunda.CdiProcessEngineTestCase;
 
-@RunWith(EjbUnitRunner.class)
+
 @AdditionalClasses({ TestEventListener.class })
 public class EventNotificationTest extends CdiProcessEngineTestCase {
 

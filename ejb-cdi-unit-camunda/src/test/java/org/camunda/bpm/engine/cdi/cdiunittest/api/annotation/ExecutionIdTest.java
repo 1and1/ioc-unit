@@ -17,9 +17,7 @@ import org.camunda.bpm.engine.cdi.annotation.ExecutionIdLiteral;
 import org.camunda.bpm.engine.test.Deployment;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
-import com.oneandone.ejbcdiunit.EjbUnitRunner;
 import com.oneandone.ejbcdiunit.camunda.CdiProcessEngineTestCase;
 
 ;
@@ -27,7 +25,6 @@ import com.oneandone.ejbcdiunit.camunda.CdiProcessEngineTestCase;
 /**
  * @author Daniel Meyer
  */
-@RunWith(EjbUnitRunner.class)
 public class ExecutionIdTest extends CdiProcessEngineTestCase {
 
     @Test
