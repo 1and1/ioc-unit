@@ -20,8 +20,6 @@ import java.util.logging.Logger;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 
-import org.camunda.bpm.BpmPlatform;
-import org.camunda.bpm.container.RuntimeContainerDelegate;
 import org.camunda.bpm.engine.AuthorizationService;
 import org.camunda.bpm.engine.CaseService;
 import org.camunda.bpm.engine.DecisionService;
@@ -38,23 +36,17 @@ import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.TaskService;
 import org.camunda.bpm.engine.cdi.BusinessProcess;
 import org.camunda.bpm.engine.cdi.impl.util.ProgrammaticBeanLookup;
-import org.camunda.bpm.engine.impl.ProcessEngineImpl;
-import org.camunda.bpm.engine.impl.cfg.ProcessEngineConfigurationImpl;
 import org.camunda.bpm.engine.impl.jobexecutor.JobExecutor;
-import org.camunda.bpm.engine.test.ProcessEngineRule;
 import org.jglue.cdiunit.ActivatedAlternatives;
 import org.jglue.cdiunit.AdditionalClasspaths;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.runner.RunWith;
-
-import com.oneandone.ejbcdiunit.EjbUnitRunner;
+import org.junit.runners.JUnit4;
 
 /**
  * @author Daniel Meyer
  */
-@RunWith(EjbUnitRunner.class)
+@RunWith(JUnit4.class)
 @AdditionalClasspaths({BusinessProcess.class})
 @ActivatedAlternatives({CdiUnitContextAssociationManager.class})
 public abstract class CdiProcessEngineTestCase {
@@ -88,33 +80,21 @@ public abstract class CdiProcessEngineTestCase {
     protected CaseService caseService;
     @Inject
     protected DecisionService decisionService;
-
     @Inject
     protected BusinessProcess businessProcess;
-
-    protected ProcessEngineConfigurationImpl processEngineConfiguration;
     @Inject
     CdiUnitContextAssociationManager.ApplicationScopedAssociation applicationScopedAssociation;
-    private ProcessEngineRule processEngineRule = new ProcessEngineRule();
+    private EjbCamundaUnitRule ejbCamundaUnitRule;
 
     @Rule
-    public ProcessEngineRule getProcessEngineRule() {
-        return processEngineRule;
+    public EjbCamundaUnitRule getEjbCamundaUnitRule() {
+        if (this.ejbCamundaUnitRule != null)
+            return ejbCamundaUnitRule;
+        else {
+            this.ejbCamundaUnitRule = new EjbCamundaUnitRule(this);
+            return ejbCamundaUnitRule;
+        }
     }
-
-  @Before
-  public void setUpCdiProcessEngineTestCase() throws Exception {
-    if(BpmPlatform.getProcessEngineService().getDefaultProcessEngine() == null) {
-      RuntimeContainerDelegate.INSTANCE.get().registerProcessEngine(processEngineRule.getProcessEngine());
-    }
-
-    processEngineConfiguration = ((ProcessEngineImpl)BpmPlatform.getProcessEngineService().getDefaultProcessEngine()).getProcessEngineConfiguration();
-  }
-
-  @After
-  public void tearDownCdiProcessEngineTestCase() throws Exception {
-  }
-
 
   protected <T> T getBeanInstance(Class<T> clazz) {
     return ProgrammaticBeanLookup.lookup(clazz);
@@ -127,7 +107,7 @@ public abstract class CdiProcessEngineTestCase {
   //////////////////////// copied from AbstractActivitiTestcase
 
   public void waitForJobExecutorToProcessAllJobs(long maxMillisToWait, long intervalMillis) {
-    JobExecutor jobExecutor = processEngineConfiguration.getJobExecutor();
+        JobExecutor jobExecutor = ejbCamundaUnitRule.getProcessEngineConfiguration().getJobExecutor();
     jobExecutor.start();
 
     try {
@@ -154,7 +134,7 @@ public abstract class CdiProcessEngineTestCase {
   }
 
   public void waitForJobExecutorOnCondition(long maxMillisToWait, long intervalMillis, Callable<Boolean> condition) {
-    JobExecutor jobExecutor = processEngineConfiguration.getJobExecutor();
+        JobExecutor jobExecutor = ejbCamundaUnitRule.getProcessEngineConfiguration().getJobExecutor();
     jobExecutor.start();
 
     try {
