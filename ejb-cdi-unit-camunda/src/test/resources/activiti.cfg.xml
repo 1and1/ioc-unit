@@ -11,7 +11,7 @@
     <bean id="processEngineConfiguration"
           class="org.camunda.bpm.engine.cdi.CdiStandaloneProcessEngineConfiguration">
 
-        <property name="jdbcUrl" value="jdbc:h2:mem:test;MODE=MySQL;DB_CLOSE_DELAY=0;LOCK_MODE=0"/>
+        <property name="jdbcUrl" value="jdbc:h2:mem:camunda;MODE=MySQL;DB_CLOSE_DELAY=0;LOCK_MODE=0"/>
         <property name="jdbcDriver" value="org.h2.Driver"/>
         <property name="jdbcUsername" value="sa"/>
         <property name="jdbcPassword" value=""/>
