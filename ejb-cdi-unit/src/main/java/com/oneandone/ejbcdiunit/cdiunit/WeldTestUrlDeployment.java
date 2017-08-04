@@ -245,6 +245,22 @@ public class WeldTestUrlDeployment implements Deployment {
                     }
                 }
 
+                ExcludedClasses excludedClasses = c.getAnnotation(ExcludedClasses.class);
+                if (excludedClasses != null) {
+                    if (belongsTo(c, testClass)) {
+                        for (Class<?> excludedClass : excludedClasses.value()) {
+                            if (classesProcessed.contains(excludedClass)) {
+                                throw new RuntimeException("Trying to exclude already processed class: " + excludedClass);
+                            } else {
+                                classesToIgnore.add(excludedClass);
+                            }
+                        }
+                    } else {
+                        throw new RuntimeException("Trying to exclude in not toplevelclass: " + c);
+                    }
+
+                }
+
                 for (Annotation a : c.getAnnotations()) {
 
                     if (!a.annotationType().getPackage().getName().equals("org.jglue.cdiunit")) {
@@ -314,7 +330,16 @@ public class WeldTestUrlDeployment implements Deployment {
                 log.trace(clazz);
             }
         }
+    }
 
+    private boolean belongsTo(Class<?> c, Class<?> testClass) {
+        if (testClass.equals(Object.class))
+            return false;
+        if (c.equals(testClass))
+            return true;
+        else {
+            return belongsTo(c, testClass.getSuperclass());
+        }
     }
 
     private void addAlternative(Set<String> alternatives, Set<Class<?>> classesToProcess, Class<?> alternativeClass) {
