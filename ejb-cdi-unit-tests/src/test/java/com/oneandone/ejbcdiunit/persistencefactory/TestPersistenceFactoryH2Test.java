@@ -9,7 +9,6 @@ import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
 
 import org.jglue.cdiunit.AdditionalClasses;
-import org.junit.Ignore;
 import org.junit.runner.RunWith;
 
 import com.oneandone.ejbcdiunit.EjbUnitRunner;
@@ -23,15 +22,12 @@ import com.oneandone.ejbcdiunit.persistence.TestPersistenceFactory;
 @AdditionalClasses({ TestPersistenceFactory.class, TestEntity1.class })
 public class TestPersistenceFactoryH2Test extends PersistenceFactoryTestBase {
     @Override
-    @Ignore
     public void doesFlushBeforeNativeQuery() throws Exception {
-        super.doesFlushBeforeNativeQuery();
+
     }
 
     @Override
-    @Ignore
     public void checkUserTransactionAndDataSource()
             throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException, SQLException {
-        super.checkUserTransactionAndDataSource();
     }
 }
