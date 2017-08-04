@@ -37,6 +37,7 @@ public class EjbUnitRule implements TestRule {
     private static Logger logger = LoggerFactory.getLogger(EjbUnitRunner.class);
     private final Object instance;
     private final CdiTestConfig cdiTestConfig;
+    private Method method;
 
     public EjbUnitRule(final Object instance, CdiTestConfig cdiTestConfig) {
         this.instance = instance;
@@ -49,7 +50,6 @@ public class EjbUnitRule implements TestRule {
 
     @Override
     public Statement apply(final Statement base, Description description) {
-        Method method;
         try {
             method = description.getTestClass().getMethod(description.getMethodName());
         } catch (NoSuchMethodException e) {
@@ -64,7 +64,7 @@ public class EjbUnitRule implements TestRule {
         return result;
     }
 
-    public static class Deployment extends Statement {
+    public class Deployment extends Statement {
         private static final String ABSENT_CODE_PREFIX = "Absent Code attribute in method that is not native or abstract in class file ";
         private final Statement next;
         protected Weld weld;
@@ -136,7 +136,7 @@ public class EjbUnitRule implements TestRule {
             }
         }
 
-        private static ClassFormatError parseClassFormatError(ClassFormatError e) {
+        private ClassFormatError parseClassFormatError(ClassFormatError e) {
             if (e.getMessage().startsWith(ABSENT_CODE_PREFIX)) {
                 String offendingClass = e.getMessage().substring(ABSENT_CODE_PREFIX.length());
                 URL url = EjbUnitRule.class.getClassLoader().getResource(offendingClass + ".class");
@@ -154,6 +154,12 @@ public class EjbUnitRule implements TestRule {
          */
         @Override
         public void evaluate() throws Throwable {
+            if (startupException != null) {
+                if (method != null && method.getAnnotation(Test.class).expected() == startupException.getClass()) {
+                    return;
+                }
+                throw startupException;
+            }
             System.setProperty("java.naming.factory.initial", "org.jglue.cdiunit.internal.naming.CdiUnitContextFactory");
             InitialContext initialContext = new InitialContext();
             final BeanManager beanManager = container.getBeanManager();
