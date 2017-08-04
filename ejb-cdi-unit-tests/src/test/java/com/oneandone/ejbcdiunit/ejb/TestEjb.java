@@ -16,16 +16,17 @@ import javax.transaction.NotSupportedException;
 import javax.transaction.RollbackException;
 import javax.transaction.Status;
 import javax.transaction.SystemException;
-import javax.transaction.UserTransaction;
 
 import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
-import com.oneandone.ejbcdiunit.EjbUnitRunner;
+import com.oneandone.ejbcdiunit.EjbUnitRule;
 import com.oneandone.ejbcdiunit.SessionContextFactory;
 import com.oneandone.ejbcdiunit.ejbs.MdbEjbInfoSingleton;
 import com.oneandone.ejbcdiunit.ejbs.QMdbEjb;
@@ -42,7 +43,7 @@ import com.oneandone.ejbcdiunit.testbases.TestEntity1Saver;
 /**
  * @author aschoerk
  */
-@RunWith(EjbUnitRunner.class)
+@RunWith(JUnit4.class)
 @AdditionalClasses({ StatelessEJB.class, SingletonEJB.class,
         TestEjb.TestDbPersistenceFactory.class, SessionContextFactory.class,
         StatelessBeanManagedTrasEJB.class,
@@ -70,6 +71,11 @@ public class TestEjb extends EJBTransactionTestBase {
         }
         while (true);
         runtime.runFinalization();
+    }
+
+    @Rule
+    public EjbUnitRule getEjbUnitRule() {
+        return new EjbUnitRule(this);
     }
 
     @Before
@@ -293,9 +299,5 @@ public class TestEjb extends EJBTransactionTestBase {
             return produceEntityManager();
         }
 
-        @Produces
-        public UserTransaction userTransaction() {
-            return produceUserTransaction();
-        }
     }
 }
