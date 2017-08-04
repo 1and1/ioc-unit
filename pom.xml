@@ -290,8 +290,8 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin.version}</version>
                 <configuration>
-                    <!--reportFormat>plain</reportFormat-->
-                    <!--redirectTestOutputToFile>true</redirectTestOutputToFile-->
+                    <reportFormat>plain</reportFormat>
+                    <redirectTestOutputToFile>true</redirectTestOutputToFile>
                     <!-- Sets the VM argument line used when unit tests are run. -->
                     <!-- argLine>-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005</argLine-->
                 </configuration>
