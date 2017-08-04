@@ -278,7 +278,7 @@ public abstract class PersistenceFactoryTestBase {
             em.persist(entity1);
             entity1.setIntAttribute(20);
             List entities1 =
-                    em.createNativeQuery("select te.* from TestEntity1 te", TestEntity1.class).getResultList();
+                    em.createNativeQuery("select te.* from test_entity_1 te", TestEntity1.class).getResultList();
             assertThat(entities1.size(), is(1));
             assertThat(entities1.get(0), is(entity1));
             em.refresh(entity1);
@@ -310,7 +310,7 @@ public abstract class PersistenceFactoryTestBase {
 
         try (Connection conn = dataSource.getConnection()) {
 
-            try (PreparedStatement stmt = conn.prepareStatement("insert into TestEntity1 (stringAttribute, intAttribute) values ('sss', 114)")) {
+            try (PreparedStatement stmt = conn.prepareStatement("insert into test_entity_1 (stringAttribute, intAttribute) values ('sss', 114)")) {
                 Assert.assertThat(stmt.executeUpdate(), is(1));
             }
         }
