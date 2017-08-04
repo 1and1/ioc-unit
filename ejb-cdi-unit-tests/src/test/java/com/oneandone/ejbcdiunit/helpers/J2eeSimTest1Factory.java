@@ -3,7 +3,6 @@ package com.oneandone.ejbcdiunit.helpers;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.sql.DataSource;
-import javax.transaction.UserTransaction;
 
 import com.oneandone.ejbcdiunit.persistence.PersistenceFactory;
 
@@ -15,15 +14,6 @@ public class J2eeSimTest1Factory extends PersistenceFactory {
     @Override
     protected String getPersistenceUnitName() {
         return "j2eeSimDS1Test";
-    }
-
-    /**
-     * @return Usertransaction injectable
-     */
-    @Override
-    @Produces
-    public UserTransaction produceUserTransaction() {
-        return super.produceUserTransaction();
     }
 
     /**

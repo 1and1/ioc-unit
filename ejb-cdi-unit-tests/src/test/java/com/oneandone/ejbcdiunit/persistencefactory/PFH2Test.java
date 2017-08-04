@@ -4,7 +4,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.persistence.EntityManager;
 import javax.sql.DataSource;
-import javax.transaction.UserTransaction;
 
 import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.runner.RunWith;
@@ -27,16 +26,6 @@ public class PFH2Test extends PersistenceFactoryTestBase {
         public EntityManager newEm() {
             return produceEntityManager();
         }
-
-        /**
-         * @return Usertransaction injectable
-         */
-        @Produces
-        @Override
-        public UserTransaction produceUserTransaction() {
-            return super.produceUserTransaction();
-        }
-
 
         /**
          * create a jdbc-Datasource using the same driver url user and password as the entityManager
