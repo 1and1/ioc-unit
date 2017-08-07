@@ -1,6 +1,8 @@
 package com.oneandone.ejbcdiunit.resourcesimulators;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.UndeclaredThrowableException;
 import java.util.Set;
 
 import javax.ejb.EJBLocalObject;
@@ -173,7 +175,14 @@ public class SessionContextSimulation extends EjbContextSimulation implements Se
                 startInterceptionDecorationContext();
                 try {
                     return method.invoke(testBean1, objects);
-                } finally {
+                } catch (Throwable thw) {
+                    if (thw instanceof InvocationTargetException) {
+                        throw thw.getCause();
+                    } else {
+                        throw thw;
+                    }
+                }
+                finally {
                     InterceptionDecorationContext.endInterceptorContext();
                 }
             }
