@@ -1,5 +1,6 @@
 package com.oneandone.ejbcdiunit.resourcesimulators;
 
+import java.lang.reflect.Method;
 import java.util.Set;
 
 import javax.ejb.EJBLocalObject;
@@ -9,6 +10,11 @@ import javax.enterprise.inject.Vetoed;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.xml.rpc.handler.MessageContext;
+
+import org.jboss.weld.bean.proxy.InterceptionDecorationContext;
+
+import net.sf.cglib.proxy.Enhancer;
+import net.sf.cglib.proxy.InvocationHandler;
 
 /**
  * cdi-unit simulation of sessioncontext
@@ -110,6 +116,30 @@ public class SessionContextSimulation extends EjbContextSimulation implements Se
         throw new NotImplementedException("getMessageContext not implemented in SessionContextSimulation of ejb-cdi-unit");
     }
 
+    private boolean startInterceptionDecorationContext() {
+        Method[] methods = InterceptionDecorationContext.class.getMethods();
+        for (Method m : methods) {
+            if (m.getName().equals("startInterceptorContext")) {
+                callMethodThrowRTEIfNecessary(m);
+                return true;
+            }
+            if (m.getName().equals("startIfNotOnTop")) {
+                Object result = callMethodThrowRTEIfNecessary(m);
+                return result != null;
+            }
+        }
+        return false;
+    }
+
+    private Object callMethodThrowRTEIfNecessary(Method m) {
+        try {
+            return m.invoke(null);
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
     /**
      * Obtain an object that can be used to invoke the current bean through
      * a particular business interface view or its no-interface view.
@@ -131,10 +161,27 @@ public class SessionContextSimulation extends EjbContextSimulation implements Se
         if (beans.isEmpty() && businessInterface.getName().endsWith("_WeldSubclass")) {
             beans = beanManager.getBeans(businessInterface.getSuperclass());
         }
-        Bean<?> bean = (Bean<?>) beanManager.resolve(beans);
-        Object testBean1 =  beanManager.getReference(bean, bean.getBeanClass(), beanManager.createCreationalContext(bean));
+        Bean<T> bean = (Bean<T>) beanManager.resolve(beans);
 
-        return (T) testBean1;
+        final Object testBean1 = beanManager.getReference(bean, bean.getBeanClass(), beanManager.createCreationalContext(bean));
+
+        Enhancer enhancer = new Enhancer();
+        enhancer.setSuperclass(businessInterface);
+        enhancer.setCallback(new InvocationHandler() {
+            @Override
+            public Object invoke(Object o, Method method, Object[] objects) throws Throwable {
+                startInterceptionDecorationContext();
+                try {
+                    return method.invoke(testBean1, objects);
+                } finally {
+                    InterceptionDecorationContext.endInterceptorContext();
+                }
+            }
+        });
+
+        Object proxy = enhancer.create();
+
+        return (T) proxy;
     }
 
     /**

@@ -9,6 +9,7 @@ import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
@@ -18,6 +19,8 @@ import org.slf4j.Logger;
  */
 @Startup
 @Singleton
+@ApplicationScoped
+@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 public class SingletonEJB {
 
     @Inject
@@ -25,6 +28,9 @@ public class SingletonEJB {
 
     @Resource
     SessionContext sessionContext;
+
+    @Inject
+    SingletonEJB self;
 
     private int publicInteger = 100;
 
@@ -38,13 +44,25 @@ public class SingletonEJB {
         System.out.println("singleton bean");
     }
 
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public void callInNewTransactionWithParam(int param) {
+        System.out.println("singleton bean " + param);
+    }
+
     public void method1() {
         SingletonEJB res = sessionContext.getBusinessObject(SingletonEJB.class);
+        res.callInNewTransactionWithParam(10);
         res.callInNewTransaction();
         this.callInNewTransaction();
         logger.info("SingletonEJB: method1 called");
         logger.info("output public variable {}", publicInteger);
+    }
 
+    public void method2() {
+        self.callInNewTransaction();
+        this.callInNewTransaction();
+        logger.info("SingletonEJB: method1 called");
+        logger.info("output public variable {}", publicInteger);
     }
 
     public Principal getPrincipal() {

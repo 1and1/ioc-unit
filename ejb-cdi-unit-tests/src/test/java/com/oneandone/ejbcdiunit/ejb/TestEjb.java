@@ -91,9 +91,20 @@ public class TestEjb extends EJBTransactionTestBase {
         Assert.assertNotNull(cdiClass.getStatelessEJB());
         cdiClass.getStatelessEJB().method1();
         cdiClass.getSingletonEJB().method1();
+        cdiClass.getSingletonEJB().method2();
         cdiClass.doSomething();
         Assert.assertNotNull(statelessEJB);
         Assert.assertNotNull(singletonEJB);
+    }
+
+    @Test
+    public void testSelfInjection() {
+        cdiClass.getSingletonEJB().method2();
+    }
+
+    @Test
+    public void testSessionContextInjection() {
+        cdiClass.getSingletonEJB().method1();
     }
 
     @Override
