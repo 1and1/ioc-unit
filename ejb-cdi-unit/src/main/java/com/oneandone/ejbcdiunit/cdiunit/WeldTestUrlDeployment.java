@@ -96,6 +96,8 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Predicate;
 import com.oneandone.ejbcdiunit.CdiTestConfig;
+import com.oneandone.ejbcdiunit.internal.AsynchronousMethodInterceptor;
+import com.oneandone.ejbcdiunit.internal.TransactionalInterceptor;
 
 public class WeldTestUrlDeployment implements Deployment {
     private static Logger log = LoggerFactory.getLogger(WeldTestUrlDeployment.class);
@@ -145,6 +147,7 @@ public class WeldTestUrlDeployment implements Deployment {
 
         }
 
+
         try {
             Class.forName("javax.servlet.http.HttpServletRequest");
             classesToProcess.add(InRequestInterceptor.class);
@@ -167,6 +170,9 @@ public class WeldTestUrlDeployment implements Deployment {
         } catch (ClassNotFoundException e) {
         }
 
+        // Add Interceptors here, to make sure the sequence is handled right
+        classesToProcess.add(AsynchronousMethodInterceptor.class);
+        classesToProcess.add(TransactionalInterceptor.class);
 
         classesToProcess.addAll(weldTestConfig.getAdditionalClasses());
         for (Class<?> c : weldTestConfig.getAdditionalClassPathes()) {
