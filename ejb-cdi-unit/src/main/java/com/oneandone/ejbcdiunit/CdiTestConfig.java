@@ -71,6 +71,36 @@ public class CdiTestConfig {
         return this;
     }
 
+    public CdiTestConfig removeClass(Class<?> clazz) {
+        additionalClasses.remove(clazz);
+        return this;
+    }
+
+    public CdiTestConfig removeExcluded(Class<?> clazz) {
+        excludedClasses.remove(clazz);
+        return this;
+    }
+
+    public CdiTestConfig removePackage(Class<?> clazz) {
+        additionalClassPackages.remove(clazz);
+        return this;
+    }
+
+    public CdiTestConfig removeClassPath(Class<?> clazz) {
+        additionalClassPathes.remove(clazz);
+        return this;
+    }
+
+    public CdiTestConfig removeAlternative(Class<?> clazz) {
+        activatedAlternatives.remove(clazz);
+        return this;
+    }
+
+    public CdiTestConfig removeService(Class<?> clazz) {
+        serviceConfigs.remove(new ServiceConfig(clazz, null));
+        return this;
+    }
+
     public static class ServiceConfig<S extends Service> {
         Class<S> serviceClass;
         S service;
@@ -94,6 +124,23 @@ public class CdiTestConfig {
 
         public void setService(S serviceP) {
             this.service = serviceP;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o)
+                return true;
+            if (o == null || getClass() != o.getClass())
+                return false;
+
+            ServiceConfig<?> that = (ServiceConfig<?>) o;
+
+            return getServiceClass().equals(that.getServiceClass());
+        }
+
+        @Override
+        public int hashCode() {
+            return getServiceClass().hashCode();
         }
     }
 

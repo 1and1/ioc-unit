@@ -57,7 +57,7 @@
             <groupId>org.jboss.weld.se</groupId>
             <artifactId>weld-se-core</artifactId>
             <!-- but compatible with cd 1.1 -->
-            <version>2.4.2.SP1</version>
+            <version>${weld.compile.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

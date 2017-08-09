@@ -71,4 +71,40 @@ public class WeldTestConfig extends CdiTestConfig {
         super.addServiceConfig(serviceConfig);
         return this;
     }
+
+    @Override
+    public WeldTestConfig removeClass(Class<?> clazz) {
+        super.removeClass(clazz);
+        return this;
+    }
+
+    @Override
+    public WeldTestConfig removeExcluded(Class<?> clazz) {
+        super.removeExcluded(clazz);
+        return this;
+    }
+
+    @Override
+    public WeldTestConfig removePackage(Class<?> clazz) {
+        super.removePackage(clazz);
+        return this;
+    }
+
+    @Override
+    public WeldTestConfig removeClassPath(Class<?> clazz) {
+        super.removeClassPath(clazz);
+        return this;
+    }
+
+    @Override
+    public WeldTestConfig removeAlternative(Class<?> clazz) {
+        super.removeAlternative(clazz);
+        return this;
+    }
+
+    @Override
+    public WeldTestConfig removeService(Class<?> clazz) {
+        super.removeService(clazz);
+        return this;
+    }
 }
