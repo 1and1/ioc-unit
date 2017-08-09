@@ -16,18 +16,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.camunda.bpm.engine.cdi.cdiunittest.impl.el.beans.CdiTaskListenerBean;
+import org.camunda.bpm.engine.cdi.cdiunittest.impl.util.BaseTest;
 import org.camunda.bpm.engine.task.Task;
 import org.camunda.bpm.engine.test.Deployment;
 import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.Test;
 
-import com.oneandone.ejbcdiunit.camunda.CdiProcessEngineTestCase;
-
 /**
  * @author Sebastian Menski
  */
 @AdditionalClasses({ CdiTaskListenerBean.class })
-public class TaskListenerInvocationTest extends CdiProcessEngineTestCase {
+public class TaskListenerInvocationTest extends BaseTest {
 
     @Test
     @Deployment

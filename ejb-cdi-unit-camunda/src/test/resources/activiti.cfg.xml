@@ -8,6 +8,10 @@
           class="com.oneandone.ejbcdiunit.camunda.EjbCdiUnitTransactionContextFactory">
     </bean>
 
+    <bean id="ejbcdiunitJobExecutor"
+          class="com.oneandone.ejbcdiunit.camunda.EjbCdiUnitJobExecutor"></bean>
+
+
     <bean id="processEngineConfiguration"
           class="org.camunda.bpm.engine.cdi.CdiStandaloneProcessEngineConfiguration">
 
@@ -17,6 +21,7 @@
         <property name="jdbcPassword" value=""/>
         <property name="databaseSchemaUpdate" value="true"/>
         <property name="jobExecutorActivate" value="false"/>
+        <property name="jobExecutor" ref="ejbcdiunitJobExecutor"/>
         <property name="mailServerPort" value="5025"/>
         <property name="enableExpressionsInAdhocQueries" value="true"/>
         <property name="transactionContextFactory" ref="ejbcdiunitTransactionContextFactory"/>

@@ -37,8 +37,6 @@ import org.camunda.bpm.engine.TaskService;
 import org.camunda.bpm.engine.cdi.BusinessProcess;
 import org.camunda.bpm.engine.cdi.impl.util.ProgrammaticBeanLookup;
 import org.camunda.bpm.engine.impl.jobexecutor.JobExecutor;
-import org.jglue.cdiunit.ActivatedAlternatives;
-import org.jglue.cdiunit.AdditionalClasspaths;
 import org.junit.Rule;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -47,8 +45,6 @@ import org.junit.runners.JUnit4;
  * @author Daniel Meyer
  */
 @RunWith(JUnit4.class)
-@AdditionalClasspaths({BusinessProcess.class})
-@ActivatedAlternatives({CdiUnitContextAssociationManager.class})
 public abstract class CdiProcessEngineTestCase {
 
     protected Logger logger = Logger.getLogger(getClass().getName());

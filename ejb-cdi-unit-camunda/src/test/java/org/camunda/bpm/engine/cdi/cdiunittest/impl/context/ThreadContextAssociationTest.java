@@ -10,24 +10,23 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 import org.camunda.bpm.engine.cdi.cdiunittest.impl.beans.ProcessScopedMessageBean;
+import org.camunda.bpm.engine.cdi.cdiunittest.impl.util.BaseTest;
 import org.camunda.bpm.engine.test.Deployment;
 import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.Test;
-
-import com.oneandone.ejbcdiunit.camunda.CdiProcessEngineTestCase;
 
 /**
  * @author Daniel Meyer
  */
 @AdditionalClasses({ ProcessScopedMessageBean.class })
-public class ThreadContextAssociationTest extends CdiProcessEngineTestCase {
+public class ThreadContextAssociationTest extends BaseTest {
 
     @Test
     @Deployment
     public void testBusinessProcessScopedWithJobExecutor() throws InterruptedException {
         String pid = runtimeService.startProcessInstanceByKey("processkey").getId();
 
-        waitForJobExecutorToProcessAllJobs(5000l, 25l);
+        waitForJobExecutorToProcessAllJobs();
 
         assertNull(managementService.createJobQuery().singleResult());
 
@@ -38,5 +37,6 @@ public class ThreadContextAssociationTest extends CdiProcessEngineTestCase {
         runtimeService.signal(pid);
 
     }
+
 
 }

@@ -9,26 +9,29 @@ package org.camunda.bpm.engine.cdi.cdiunittest.impl.context;
 import java.util.Arrays;
 
 import org.camunda.bpm.engine.cdi.cdiunittest.impl.context.beans.LocalVariableBean;
+import org.camunda.bpm.engine.cdi.cdiunittest.impl.util.BaseTest;
 import org.camunda.bpm.engine.test.Deployment;
 import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.Test;
-
-import com.oneandone.ejbcdiunit.camunda.CdiProcessEngineTestCase;
 
 /**
  * @author Daniel Meyer
  */
 @AdditionalClasses({ LocalVariableBean.class })
-public class MultiInstanceTest extends CdiProcessEngineTestCase {
+public class MultiInstanceTest extends BaseTest {
+
 
     @Test
     @Deployment
     public void testParallelMultiInstanceServiceTasks() {
-
-
         businessProcess.setVariable("list", Arrays.asList(new String[] { "1", "2" }));
         businessProcess.startProcessByKey("miParallelScriptTask");
-
     }
 
+    @Test
+    @Deployment
+    public void testParallelMultiInstanceServiceTasks2() {
+        businessProcess.setVariable("list", Arrays.asList(new String[] { "1", "2" }));
+        businessProcess.startProcessByKey("miParallelScriptTask");
+    }
 }

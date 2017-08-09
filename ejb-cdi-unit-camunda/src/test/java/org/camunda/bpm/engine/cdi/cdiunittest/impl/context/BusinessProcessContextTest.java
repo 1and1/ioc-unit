@@ -13,18 +13,18 @@ import javax.inject.Inject;
 
 import org.camunda.bpm.engine.cdi.cdiunittest.impl.beans.CreditCard;
 import org.camunda.bpm.engine.cdi.cdiunittest.impl.beans.ProcessScopedMessageBean;
+import org.camunda.bpm.engine.cdi.cdiunittest.impl.util.BaseTest;
+import org.camunda.bpm.engine.cdi.impl.util.ProgrammaticBeanLookup;
 import org.camunda.bpm.engine.test.Deployment;
 import org.jglue.cdiunit.AdditionalPackages;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.oneandone.ejbcdiunit.camunda.CdiProcessEngineTestCase;
-
 /**
  * @author Daniel Meyer
  */
 @AdditionalPackages({ CreditCard.class })
-public class BusinessProcessContextTest extends CdiProcessEngineTestCase {
+public class BusinessProcessContextTest extends BaseTest {
 
 
     @Inject
@@ -45,7 +45,7 @@ public class BusinessProcessContextTest extends CdiProcessEngineTestCase {
     @Test
     // no @Deployment for this test
     public void testResolutionBeforeProcessStart() throws Exception {
-        // assert that @BusinessProcessScoped beans can be resolved in the absence of an underlying process instance:
+        // assert that @businessProcessScoped beans can be resolved in the absence of an underlying process instance:
         assertNotNull(creditCard);
     }
 
@@ -72,14 +72,14 @@ public class BusinessProcessContextTest extends CdiProcessEngineTestCase {
     @Deployment
     public void testChangeProcessScopedBeanProperty() throws Exception {
 
-        // resolve the creditcard bean (@BusinessProcessScoped) and set a value:
+        // resolve the creditcard bean (@businessProcessScoped) and set a value:
         creditCard.setCreditcardNumber("123");
         String pid = businessProcess.startProcessByKey("testConversationalBeanStoreFlush").getId();
 
         businessProcess.startTask(taskService.createTaskQuery().singleResult().getId());
 
         // assert that the value of creditCardNumber is '123'
-        assertEquals("123", getBeanInstance(CreditCard.class).getCreditcardNumber());
+        assertEquals("123", ProgrammaticBeanLookup.lookup(CreditCard.class).getCreditcardNumber());
         // set a different value:
         creditCard.setCreditcardNumber("321");
         // complete the task
@@ -88,7 +88,7 @@ public class BusinessProcessContextTest extends CdiProcessEngineTestCase {
         businessProcess.associateExecutionById(pid);
 
         // now assert that the value of creditcard is "321":
-        assertEquals("321", getBeanInstance(CreditCard.class).getCreditcardNumber());
+        assertEquals("321", ProgrammaticBeanLookup.lookup(CreditCard.class).getCreditcardNumber());
 
         // complete the task to allow the process instance to terminate
         taskService.complete(taskService.createTaskQuery().singleResult().getId());

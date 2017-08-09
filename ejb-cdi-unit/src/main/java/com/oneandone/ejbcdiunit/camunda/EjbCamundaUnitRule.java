@@ -5,6 +5,7 @@ import org.camunda.bpm.container.RuntimeContainerDelegate;
 import org.camunda.bpm.engine.cdi.BusinessProcess;
 import org.camunda.bpm.engine.impl.ProcessEngineImpl;
 import org.camunda.bpm.engine.impl.cfg.ProcessEngineConfigurationImpl;
+import org.camunda.bpm.engine.impl.jobexecutor.DefaultJobExecutor;
 import org.camunda.bpm.engine.test.ProcessEngineRule;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
@@ -21,7 +22,7 @@ public class EjbCamundaUnitRule implements TestRule {
     private final Object testInstance;
     EjbUnitRule ejbUnitRule;
     private ProcessEngineRule processEngineRule;
-    private ProcessEngineConfigurationImpl processEngineConfiguration;
+    protected ProcessEngineConfigurationImpl processEngineConfiguration;
 
     public EjbCamundaUnitRule(Object testInstance) {
         this(testInstance, null);
@@ -33,7 +34,8 @@ public class EjbCamundaUnitRule implements TestRule {
 
         ejbUnitRule = new EjbUnitRule(testInstance,
                 cdiTestConfig1
-                        .addClass(CdiUnitContextAssociationManager.class)
+                        .addAlternative(CdiUnitContextAssociationManager.class)
+                        .addClass(CdiUnitContextAssociationManager.ApplicationScopedAssociation.class)
                         .addClassPath(BusinessProcess.class));
         this.processEngineRule = new ProcessEngineRule(true);
     }
@@ -48,6 +50,23 @@ public class EjbCamundaUnitRule implements TestRule {
 
     public ProcessEngineConfigurationImpl getProcessEngineConfiguration() {
         return processEngineConfiguration;
+    }
+
+    public static EjbCamundaUnitRule createRuleWithAsynchronousManager(Object testObject, CdiTestConfig cdiTestConfig) {
+
+        return new EjbCamundaUnitRule(testObject,
+                cdiTestConfig) {
+            @Override
+            public Statement apply(Statement base, Description description) {
+                Statement stmt = super.apply(base, description);
+                if (this.processEngineConfiguration.getJobExecutor().getClass().equals(DefaultJobExecutor.class)) {
+                    throw new RuntimeException(
+                            "EjbCamundaUnitRule.createRuleWithAsynchronousManager expects EjbCdiUnitJobExecutor to be used in activiti.cfg");
+                }
+                EjbCdiUnitJobExecutor.initThreadLocal();
+                return stmt;
+            }
+        };
     }
 
     /**

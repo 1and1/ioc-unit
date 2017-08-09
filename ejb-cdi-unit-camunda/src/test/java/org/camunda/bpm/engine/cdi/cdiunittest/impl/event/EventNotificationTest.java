@@ -12,22 +12,20 @@ import static org.junit.Assert.assertThat;
 
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
 import org.camunda.bpm.engine.cdi.BusinessProcessEvent;
+import org.camunda.bpm.engine.cdi.cdiunittest.impl.util.BaseTest;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.task.Task;
 import org.camunda.bpm.engine.test.Deployment;
 import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.Test;
 
-import com.oneandone.ejbcdiunit.camunda.CdiProcessEngineTestCase;
-
 
 @AdditionalClasses({ TestEventListener.class })
-public class EventNotificationTest extends CdiProcessEngineTestCase {
+public class EventNotificationTest extends BaseTest {
 
     @Inject
     TestEventListener listenerBean;
@@ -126,7 +124,7 @@ public class EventNotificationTest extends CdiProcessEngineTestCase {
 
         assertThat(listenerBean.getEventsReceived().size(), is(0));
         runtimeService.startProcessInstanceByKey("process1");
-        waitForJobExecutorToProcessAllJobs(TimeUnit.SECONDS.toMillis(5L), 500L);
+        waitForJobExecutorToProcessAllJobs();
 
         Task task = taskService.createTaskQuery().singleResult();
         assertThat(task.getName(), is("User Task"));

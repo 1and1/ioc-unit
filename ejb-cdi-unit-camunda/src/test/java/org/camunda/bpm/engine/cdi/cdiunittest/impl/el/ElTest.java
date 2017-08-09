@@ -36,7 +36,7 @@ public class ElTest {
 
     @Rule
     public EjbCamundaUnitRule getEjbCamundaUnitRule() {
-        return new EjbCamundaUnitRule(this);
+        return EjbCamundaUnitRule.createRuleWithAsynchronousManager(this, null);
     }
 
     @Test
