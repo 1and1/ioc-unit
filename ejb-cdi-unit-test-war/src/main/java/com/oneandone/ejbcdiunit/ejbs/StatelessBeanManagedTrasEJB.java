@@ -34,7 +34,7 @@ public class StatelessBeanManagedTrasEJB {
     private int publicInteger = 200;
 
     public void method1() {
-        logger.info("StatelessEJB: method1 called");
+        logger.info("StatelessEJB: methodCallUsingSessionContext called");
     }
 
 

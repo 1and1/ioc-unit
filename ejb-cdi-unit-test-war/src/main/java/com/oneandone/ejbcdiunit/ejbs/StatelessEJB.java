@@ -31,7 +31,7 @@ public class StatelessEJB {
     private int publicInteger = 200;
 
     public void method1() {
-        logger.info("StatelessEJB: method1 called");
+        logger.info("StatelessEJB: methodCallUsingSessionContext called");
     }
 
     public TestEntity1 saveInCurrentTransactionDefaultTraAttribute(TestEntity1 testEntity1) {

@@ -252,7 +252,7 @@ public class EmbeddedTomeeTransactionTest extends EJBTransactionTestBase {
     public void test2() throws Exception {
         // Movies movies = (Movies) context.lookup("java:global/ejb-cdi-unit-tomee/Movies");
 
-        singletonEJB.method1();
+        singletonEJB.methodCallUsingSessionContext();
 
         statelessEJB.method1();
 

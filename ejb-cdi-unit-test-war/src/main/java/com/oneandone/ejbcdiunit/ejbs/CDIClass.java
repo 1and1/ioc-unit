@@ -27,6 +27,6 @@ public class CDIClass {
      */
     public void doSomething() {
         statelessEJB.method1();
-        singletonEJB.method1();
+        singletonEJB.methodCallUsingSessionContext();
     }
 }

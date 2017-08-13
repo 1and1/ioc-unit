@@ -4,6 +4,7 @@ import java.security.Principal;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import javax.ejb.EJB;
 import javax.ejb.SessionContext;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
@@ -32,6 +33,9 @@ public class SingletonEJB {
     @Inject
     SingletonEJB self;
 
+    @EJB
+    SingletonEJB selfejb;
+
     private int publicInteger = 100;
 
     @PostConstruct
@@ -49,19 +53,26 @@ public class SingletonEJB {
         System.out.println("singleton bean " + param);
     }
 
-    public void method1() {
+    public void methodCallUsingSessionContext() {
         SingletonEJB res = sessionContext.getBusinessObject(SingletonEJB.class);
         res.callInNewTransactionWithParam(10);
         res.callInNewTransaction();
         this.callInNewTransaction();
-        logger.info("SingletonEJB: method1 called");
+        logger.info("SingletonEJB: methodCallUsingSessionContext called");
         logger.info("output public variable {}", publicInteger);
     }
 
-    public void method2() {
+    public void methodCallUsingSelf() {
         self.callInNewTransaction();
         this.callInNewTransaction();
-        logger.info("SingletonEJB: method1 called");
+        logger.info("SingletonEJB: methodCallUsingSessionContext called");
+        logger.info("output public variable {}", publicInteger);
+    }
+
+    public void methodCallUsingSelfEjb() {
+        selfejb.callInNewTransaction();
+        this.callInNewTransaction();
+        logger.info("SingletonEJB: methodCallUsingSessionContext called");
         logger.info("output public variable {}", publicInteger);
     }
 

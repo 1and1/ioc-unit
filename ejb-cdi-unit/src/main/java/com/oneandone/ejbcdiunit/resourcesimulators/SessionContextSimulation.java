@@ -2,7 +2,6 @@ package com.oneandone.ejbcdiunit.resourcesimulators;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.UndeclaredThrowableException;
 import java.util.Set;
 
 import javax.ejb.EJBLocalObject;
@@ -118,7 +117,7 @@ public class SessionContextSimulation extends EjbContextSimulation implements Se
         throw new NotImplementedException("getMessageContext not implemented in SessionContextSimulation of ejb-cdi-unit");
     }
 
-    private boolean startInterceptionDecorationContext() {
+    public static boolean startInterceptionDecorationContext() {
         Method[] methods = InterceptionDecorationContext.class.getMethods();
         for (Method m : methods) {
             if (m.getName().equals("startInterceptorContext")) {
@@ -133,7 +132,7 @@ public class SessionContextSimulation extends EjbContextSimulation implements Se
         return false;
     }
 
-    private Object callMethodThrowRTEIfNecessary(Method m) {
+    public static Object callMethodThrowRTEIfNecessary(Method m) {
         try {
             return m.invoke(null);
         } catch (Throwable e) {

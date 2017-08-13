@@ -8,8 +8,12 @@ package com.oneandone.ejbcdiunit.internal;
 
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.ejb.Asynchronous;
@@ -26,6 +30,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.context.SessionScoped;
+import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.Default;
 import javax.enterprise.inject.Produces;
@@ -36,7 +41,9 @@ import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeforeBeanDiscovery;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.InjectionPoint;
+import javax.enterprise.inject.spi.InjectionTarget;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
+import javax.enterprise.inject.spi.ProcessInjectionTarget;
 import javax.enterprise.inject.spi.ProcessManagedBean;
 import javax.enterprise.util.AnnotationLiteral;
 import javax.inject.Inject;
@@ -45,6 +52,7 @@ import javax.persistence.PersistenceContext;
 
 import org.apache.deltaspike.core.util.metadata.AnnotationInstanceProvider;
 import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
+import org.jboss.weld.bean.proxy.InterceptionDecorationContext;
 import org.jboss.weld.literal.DefaultLiteral;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,6 +60,10 @@ import org.slf4j.LoggerFactory;
 import com.oneandone.ejbcdiunit.SupportEjbExtended;
 import com.oneandone.ejbcdiunit.cdiunit.EjbName;
 import com.oneandone.ejbcdiunit.persistence.SimulatedTransactionManager;
+import com.oneandone.ejbcdiunit.resourcesimulators.SessionContextSimulation;
+
+import net.sf.cglib.proxy.Enhancer;
+import net.sf.cglib.proxy.InvocationHandler;
 
 /**
  * CDI-Extension used to handle @Resource, @PersistenceContext...
@@ -202,6 +214,11 @@ public class EjbExtensionExtended implements Extension {
             if (ejb != null) {
                 modified = true;
                 addInject = true;
+                if (field.getJavaMember().getType().equals(annotatedType.getJavaClass())) {
+                    logger.error("Self injection of EJB Type {} in field {} of Class {} can't get simulated by ejb-cdi-unit",
+                            field.getJavaMember().getType().getName(), field.getJavaMember().getName(),
+                            field.getJavaMember().getDeclaringClass().getName());
+                }
 
                 builder.removeFromField(field, EJB.class);
                 if (!beanNameOrName(ejb).isEmpty()) {
@@ -253,6 +270,91 @@ public class EjbExtensionExtended implements Extension {
 
         }
     }
+
+    public <T> void initializeSelfInit(final @Observes ProcessInjectionTarget<T> pit) {
+
+        logger.info("ProcessInjectionTarget annotated type: {}", pit.getAnnotatedType().getJavaClass().getName());
+        logger.info("ProcessInjectionTarget injection target: {}", pit.getInjectionTarget());
+
+        boolean needToWrap = false;
+        for (AnnotatedField<? super T> f : pit.getAnnotatedType().getFields()) {
+            if (f.getJavaMember().getType().equals(pit.getAnnotatedType().getJavaClass())) {
+                needToWrap = true;
+                break;
+            }
+        }
+
+        if (needToWrap) {
+            final InjectionTarget<T> it = pit.getInjectionTarget();
+            InjectionTarget<T> wrapped = new InjectionTarget<T>() {
+
+                @Override
+                public void inject(final T instance, CreationalContext<T> ctx) {
+                    it.inject(instance, ctx);
+                    // After injection replace all fields of self-type by enhanced ones which make sure interception is handled.
+                    for (AnnotatedField<? super T> f : pit.getAnnotatedType().getFields()) {
+                        if (f.getJavaMember().getType().equals(pit.getAnnotatedType().getJavaClass())) {
+                            try {
+                                final Field javaMember = f.getJavaMember();
+                                javaMember.setAccessible(true);
+                                final Object currentInstance = javaMember.get(instance);
+                                Enhancer enhancer = new Enhancer();
+                                enhancer.setSuperclass(currentInstance.getClass());
+                                enhancer.setCallback(new InvocationHandler() {
+                                    @Override
+                                    public Object invoke(Object o, Method method, Object[] objects) throws Throwable {
+                                        SessionContextSimulation.startInterceptionDecorationContext();
+                                        try {
+                                            return method.invoke(currentInstance, objects);
+                                        } catch (Throwable thw) {
+                                            if (thw instanceof InvocationTargetException) {
+                                                throw thw.getCause();
+                                            } else {
+                                                throw thw;
+                                            }
+                                        } finally {
+                                            InterceptionDecorationContext.endInterceptorContext();
+                                        }
+                                    }
+                                });
+                                javaMember.setAccessible(true);
+                                javaMember.set(instance, enhancer.create());
+                            } catch (IllegalAccessException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void postConstruct(T instance) {
+                    it.postConstruct(instance);
+                }
+
+                @Override
+                public void preDestroy(T instance) {
+                    it.dispose(instance);
+                }
+
+                @Override
+                public void dispose(T instance) {
+                    it.dispose(instance);
+                }
+
+                @Override
+                public Set<InjectionPoint> getInjectionPoints() {
+                    return it.getInjectionPoints();
+                }
+
+                @Override
+                public T produce(CreationalContext<T> ctx) {
+                    return it.produce(ctx);
+                }
+            };
+            pit.setInjectionTarget(wrapped);
+        }
+    }
+
 
     private <X> boolean possiblyAsynchronous(final AnnotatedType<X> at) {
 
