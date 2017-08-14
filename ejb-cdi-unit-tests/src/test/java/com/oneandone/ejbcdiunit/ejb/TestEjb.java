@@ -232,6 +232,12 @@ public class TestEjb extends EJBTransactionTestBase {
 
     @Override
     @Test
+    public void indirectSaveRequiresNewLocalUsingSelfAndThrow() throws Exception {
+        super.indirectSaveRequiresNewLocalUsingSelfAndThrow();
+    }
+
+    @Override
+    @Test
     public void testBeanManagedTransactionsInTra() throws Exception {
         super.testBeanManagedTransactionsInTra();
     }

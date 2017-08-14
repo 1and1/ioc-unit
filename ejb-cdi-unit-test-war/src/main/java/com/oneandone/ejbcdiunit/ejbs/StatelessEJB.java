@@ -26,6 +26,7 @@ public class StatelessEJB {
 
     @Resource
     SessionContext sessionContext;
+
     @Inject
     EntityManager entityManager;
     private int publicInteger = 200;
@@ -80,6 +81,7 @@ public class StatelessEJB {
         res.saveInNewTransaction(new TestEntity1());
         return testEntity1;
     }
+
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void persistRequiredAndRTException(TestEntity1 testEntity1) {

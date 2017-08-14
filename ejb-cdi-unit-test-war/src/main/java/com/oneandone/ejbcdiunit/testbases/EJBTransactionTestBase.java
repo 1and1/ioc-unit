@@ -223,6 +223,19 @@ public abstract class EJBTransactionTestBase {
         Assert.assertThat(res.intValue(), is(1));
     }
 
+    /**
+     * check if indirect call via BusinessInterface returned from SessionContext works and subsequent RuntimeException therefore does not lead to
+     * rollback of inner insert.
+     *
+     * @throws Exception
+     *             don_t care
+     */
+    public void indirectSaveRequiresNewLocalUsingSelfAndThrow() throws Exception {
+        runTestInRolledBackTransaction(e -> outerClass.saveRequiresNewLocalUsingSelfAndThrow(e), 2, true);
+        Number res = entityManager.createQuery("select count(e) from TestEntity1 e", Number.class).getSingleResult();
+        Assert.assertThat(res.intValue(), is(1));
+    }
+
 
     /**
      * Check if Bean Managed Transaction Handling is done correctly.

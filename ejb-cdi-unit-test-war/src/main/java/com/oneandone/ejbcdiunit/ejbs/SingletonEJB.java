@@ -12,8 +12,11 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 
 import org.slf4j.Logger;
+
+import com.oneandone.ejbcdiunit.entities.TestEntity1;
 
 /**
  * @author aschoerk
@@ -35,6 +38,9 @@ public class SingletonEJB {
 
     @EJB
     SingletonEJB selfejb;
+
+    @Inject
+    EntityManager entityManager;
 
     private int publicInteger = 100;
 
@@ -79,5 +85,20 @@ public class SingletonEJB {
     public Principal getPrincipal() {
         return sessionContext.getCallerPrincipal();
     }
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public TestEntity1 saveInNewTransaction(TestEntity1 testEntity1) {
+        entityManager.persist(testEntity1);
+        return testEntity1;
+    }
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public TestEntity1 saveRequiresNewLocalUsingSelf(TestEntity1 testEntity1) {
+        entityManager.persist(testEntity1);
+        // no local call anymore so really saved in new Transaction!!
+        self.saveInNewTransaction(new TestEntity1());
+        return testEntity1;
+    }
+
 
 }

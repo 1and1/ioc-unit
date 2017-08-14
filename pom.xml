@@ -72,6 +72,7 @@
         <hibernate-em.version>4.2.0.CR1</hibernate-em.version>
         <junit.version>4.12</junit.version>
         <mockrunner.version>1.1.2</mockrunner.version>
+        <version.cglib>3.2.5</version.cglib>
 
         <deployment.port>10099</deployment.port>
         <deployment.targetdir>${basedir}/target/</deployment.targetdir>
@@ -177,6 +178,11 @@
                 <groupId>com.mockrunner</groupId>
                 <artifactId>mockrunner-jms</artifactId>
                 <version>${mockrunner.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cglib</groupId>
+                <artifactId>cglib</artifactId>
+                <version>${version.cglib}</version>
             </dependency>
             <dependency>
                 <groupId>org.hamcrest</groupId>

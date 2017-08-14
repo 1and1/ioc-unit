@@ -12,6 +12,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -273,9 +274,6 @@ public class EjbExtensionExtended implements Extension {
 
     public <T> void initializeSelfInit(final @Observes ProcessInjectionTarget<T> pit) {
 
-        logger.info("ProcessInjectionTarget annotated type: {}", pit.getAnnotatedType().getJavaClass().getName());
-        logger.info("ProcessInjectionTarget injection target: {}", pit.getInjectionTarget());
-
         boolean needToWrap = false;
         for (AnnotatedField<? super T> f : pit.getAnnotatedType().getFields()) {
             if (f.getJavaMember().getType().equals(pit.getAnnotatedType().getJavaClass())) {
@@ -290,41 +288,12 @@ public class EjbExtensionExtended implements Extension {
 
                 @Override
                 public void inject(final T instance, CreationalContext<T> ctx) {
+                    HashMap<AnnotatedField<? super T>, Object> orgValues = fetchOriginalValuesOfSelfFields(instance);
                     it.inject(instance, ctx);
                     // After injection replace all fields of self-type by enhanced ones which make sure interception is handled.
-                    for (AnnotatedField<? super T> f : pit.getAnnotatedType().getFields()) {
-                        if (f.getJavaMember().getType().equals(pit.getAnnotatedType().getJavaClass())) {
-                            try {
-                                final Field javaMember = f.getJavaMember();
-                                javaMember.setAccessible(true);
-                                final Object currentInstance = javaMember.get(instance);
-                                Enhancer enhancer = new Enhancer();
-                                enhancer.setSuperclass(currentInstance.getClass());
-                                enhancer.setCallback(new InvocationHandler() {
-                                    @Override
-                                    public Object invoke(Object o, Method method, Object[] objects) throws Throwable {
-                                        SessionContextSimulation.startInterceptionDecorationContext();
-                                        try {
-                                            return method.invoke(currentInstance, objects);
-                                        } catch (Throwable thw) {
-                                            if (thw instanceof InvocationTargetException) {
-                                                throw thw.getCause();
-                                            } else {
-                                                throw thw;
-                                            }
-                                        } finally {
-                                            InterceptionDecorationContext.endInterceptorContext();
-                                        }
-                                    }
-                                });
-                                javaMember.setAccessible(true);
-                                javaMember.set(instance, enhancer.create());
-                            } catch (IllegalAccessException e) {
-                                throw new RuntimeException(e);
-                            }
-                        }
-                    }
+                    wrapDifferingValuesOfSelfFields(instance, orgValues);
                 }
+
 
                 @Override
                 public void postConstruct(T instance) {
@@ -350,6 +319,60 @@ public class EjbExtensionExtended implements Extension {
                 public T produce(CreationalContext<T> ctx) {
                     return it.produce(ctx);
                 }
+
+                private void wrapDifferingValuesOfSelfFields(T instance, HashMap<AnnotatedField<? super T>, Object> orgValues) {
+                    for (AnnotatedField<? super T> f : pit.getAnnotatedType().getFields()) {
+                        if (f.getJavaMember().getType().equals(pit.getAnnotatedType().getJavaClass())) {
+                            try {
+                                final Field javaMember = f.getJavaMember();
+                                javaMember.setAccessible(true);
+                                final Object currentInstance = javaMember.get(instance);
+                                if (currentInstance != null && currentInstance != orgValues.get(f)) {
+                                    Enhancer enhancer = new Enhancer();
+                                    enhancer.setSuperclass(currentInstance.getClass());
+                                    enhancer.setCallback(new InvocationHandler() {
+                                        @Override
+                                        public Object invoke(Object o, Method method, Object[] objects) throws Throwable {
+                                            SessionContextSimulation.startInterceptionDecorationContext();
+                                            try {
+                                                return method.invoke(currentInstance, objects);
+                                            } catch (Throwable thw) {
+                                                if (thw instanceof InvocationTargetException) {
+                                                    throw thw.getCause();
+                                                } else {
+                                                    throw thw;
+                                                }
+                                            } finally {
+                                                InterceptionDecorationContext.endInterceptorContext();
+                                            }
+                                        }
+                                    });
+                                    javaMember.setAccessible(true);
+                                    javaMember.set(instance, enhancer.create());
+                                }
+                            } catch (IllegalAccessException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+                    }
+                }
+
+                private HashMap<AnnotatedField<? super T>, Object> fetchOriginalValuesOfSelfFields(T instance) {
+                    HashMap<AnnotatedField<? super T>, Object> orgValues = new HashMap<>();
+                    for (AnnotatedField<? super T> f : pit.getAnnotatedType().getFields()) {
+                        if (f.getJavaMember().getType().equals(pit.getAnnotatedType().getJavaClass())) {
+                            final Field javaMember = f.getJavaMember();
+                            javaMember.setAccessible(true);
+                            try {
+                                orgValues.put(f, javaMember.get(instance));
+                            } catch (IllegalAccessException e) {
+                                new RuntimeException(e);
+                            }
+                        }
+                    }
+                    return orgValues;
+                }
+
             };
             pit.setInjectionTarget(wrapped);
         }

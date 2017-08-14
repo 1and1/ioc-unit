@@ -16,6 +16,9 @@ public class OuterClass {
     @Inject
     StatelessEJB statelessEJB;
 
+    @Inject
+    SingletonEJB singletonEJB;
+
     public void saveNewInRequired(TestEntity1 testEntity1) {
         statelessEJB.saveInNewTransaction(testEntity1);
     }
@@ -79,6 +82,19 @@ public class OuterClass {
     public void saveRequiresNewLocalAsBusinessObjectAndThrow(TestEntity1 testEntity1) {
         // no transaction-interceptor because of local call so both saves will be rolledback
         statelessEJB.saveRequiresNewLocalAsBusinessObject(testEntity1);
+        throw new RuntimeException("exception to rollback transaction");
+    }
+
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public void saveRequiresNewLocalUsingSelf(TestEntity1 testEntity1) {
+        singletonEJB.saveRequiresNewLocalUsingSelf(testEntity1);
+    }
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public void saveRequiresNewLocalUsingSelfAndThrow(TestEntity1 testEntity1) {
+        // no transaction-interceptor because of local call so both saves will be rolledback
+        singletonEJB.saveRequiresNewLocalUsingSelf(testEntity1);
         throw new RuntimeException("exception to rollback transaction");
     }
 

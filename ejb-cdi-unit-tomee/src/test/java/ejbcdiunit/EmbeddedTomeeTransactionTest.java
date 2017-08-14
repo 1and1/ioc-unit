@@ -231,6 +231,12 @@ public class EmbeddedTomeeTransactionTest extends EJBTransactionTestBase {
         super.indirectSaveRequiresNewLocalAsBusinessObjectAndThrow();
     }
 
+    @Override
+    @Test
+    public void indirectSaveRequiresNewLocalUsingSelfAndThrow() throws Exception {
+        super.indirectSaveRequiresNewLocalUsingSelfAndThrow();
+    }
+
     @Test
     public void testBeanManagedTransactionsInTra() throws Exception {
         super.testBeanManagedTransactionsInTra();

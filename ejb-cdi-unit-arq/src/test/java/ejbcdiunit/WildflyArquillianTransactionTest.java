@@ -201,6 +201,11 @@ public class WildflyArquillianTransactionTest extends EJBTransactionTestBase {
     }
 
     @Test
+    public void indirectSaveRequiresNewLocalUsingSelfAndThrow() throws Exception {
+        super.indirectSaveRequiresNewLocalUsingSelfAndThrow();
+    }
+
+    @Test
     public void testBeanManagedTransactionsInTra() throws Exception {
         super.testBeanManagedTransactionsInTra();
     }
