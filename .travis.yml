@@ -18,7 +18,7 @@ env:
 # Current strategy is, for each supported minor version of Weld, to test one early point release plus
 # the most recent point release, plus some point releases which caused problems.
   matrix:
-    # - WELD_VERSION=3.0.0.Final
+    # - WELD_VERSION=3.0.0.Final not supported yet
     - WELD_VERSION=2.4.4.Final
     # BeansXmlImpl was changed in 2.4.2
     # - WELD_VERSION=2.4.2.Final
@@ -28,12 +28,5 @@ env:
     # - WELD_VERSION=2.2.13.Final
     - WELD_VERSION=1.1.14.Final
 
-script:
-- |
-  set -e
-  if [[ $WELD_VERSION == 1.* || $WELD_VERSION == 2.* ]]
-    then TEST_OPTS=-Dweld.test.1or2
-    else TEST_OPTS=
-  fi
-  mvn clean install -Dweld.version=${WELD_VERSION} ${TEST_OPTS}
+script: "mvn clean install -Dweld.version=${WELD_VERSION}"
 
