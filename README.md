@@ -1,6 +1,6 @@
 ejb-cdi-unit
 ============
-Simplify test driven development of ejb-3.x Services, supports jboss7, wildfly, weld 1.x and 2.x. ![Build Status](https://travis-ci.org/1and1/ejb-cdi-unit.svg?branch=master)
+Make test driven development of ejb-3.x services and processes easy. Supports jboss7, wildfly, weld 1.x and 2.x, camunda 7.x.
 
 # First Example
 
