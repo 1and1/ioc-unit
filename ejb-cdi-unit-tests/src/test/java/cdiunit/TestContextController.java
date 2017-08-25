@@ -40,14 +40,14 @@ public class TestContextController {
     @Test
     @InRequestScope
     public void testSynchronousExecution() {
-        Assert.assertEquals("Counter values should be equal.", testCounter1.getCounter(), testCounter2.getCounter());
+        Assert.assertEquals("Counter values should be equal.", testCounter1.getTestCounter(), testCounter2.getTestCounter());
     }
 
     @Test
     @InRequestScope
     public void testAsynchronousExecution() throws ExecutionException, InterruptedException {
 
-        Assert.assertEquals("Counter values should be equal.", testCounter1.getCounter(), testCounter2.getCounter());
+        Assert.assertEquals("Counter values should be equal.", testCounter1.getTestCounter(), testCounter2.getTestCounter());
 
         Future<Integer> testCallableResult = Executors.newSingleThreadExecutor().submit(new Callable<Integer>() {
 
@@ -62,7 +62,7 @@ public class TestContextController {
             }
         });
 
-        Assert.assertTrue("Counter values should not be equal.", (testCallableResult.get() != testCounter1.getCounter()));
+        Assert.assertTrue("Counter values should not be equal.", (testCallableResult.get() != testCounter1.getTestCounter()));
     }
 
     @Produces
@@ -78,25 +78,25 @@ public class TestContextController {
 
         @Override
         public Integer call() throws Exception {
-            return testCounter.getCounter();
+            return testCounter.getTestCounter();
         }
     }
 
     @Alternative
     public static class TestCounter {
 
-        private int counter;
+        private int testCounter;
 
         public TestCounter() {
             // To make it proxyable
         }
 
         public TestCounter(int counter) {
-            this.counter = counter;
+            this.testCounter = counter;
         }
 
-        public int getCounter() {
-            return counter;
+        public int getTestCounter() {
+            return testCounter;
         }
     }
 }

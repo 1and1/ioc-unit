@@ -10,7 +10,6 @@ import javax.transaction.HeuristicRollbackException;
 import javax.transaction.NotSupportedException;
 import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
-import javax.transaction.UserTransaction;
 
 import org.h2.jdbc.JdbcSQLException;
 import org.jglue.cdiunit.AdditionalClasses;
@@ -31,8 +30,7 @@ import com.oneandone.ejbcdiunit.persistence.TestPersistenceFactory;
 @RunWith(EjbUnitRunner.class)
 @AdditionalClasses({ TestPersistenceFactory.class, TestEntity1.class })
 public class TestProperty1 extends PersistenceFactoryTestBase {
-    @Inject
-    UserTransaction userTransaction;
+
     @Inject
     EntityManager entityManager;
 
