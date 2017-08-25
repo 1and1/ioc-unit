@@ -120,13 +120,15 @@ public class SessionContextSimulation extends EjbContextSimulation implements Se
     public static boolean startInterceptionDecorationContext() {
         Method[] methods = InterceptionDecorationContext.class.getMethods();
         for (Method m : methods) {
-            if (m.getName().equals("startInterceptorContext")) {
-                callMethodThrowRTEIfNecessary(m);
-                return true;
-            }
-            if (m.getName().equals("startIfNotOnTop")) {
-                Object result = callMethodThrowRTEIfNecessary(m);
-                return result != null;
+            if (m.getParameterCount() == 0) {
+                if (m.getName().equals("startInterceptorContext")) {
+                    callMethodThrowRTEIfNecessary(m);
+                    return true;
+                }
+                if (m.getName().equals("startIfNotEmpty") || m.getName().equals("startIfNotOnTop")) {
+                    Object result = callMethodThrowRTEIfNecessary(m);
+                    return result != null;
+                }
             }
         }
         return false;
@@ -180,8 +182,7 @@ public class SessionContextSimulation extends EjbContextSimulation implements Se
                     } else {
                         throw thw;
                     }
-                }
-                finally {
+                } finally {
                     InterceptionDecorationContext.endInterceptorContext();
                 }
             }

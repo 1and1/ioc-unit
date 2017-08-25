@@ -72,6 +72,7 @@ import net.sf.cglib.proxy.InvocationHandler;
  * This was originally checked in at cdi-unit and has been adapted.
  */
 @SupportEjbExtended
+@ApplicationScoped
 public class EjbExtensionExtended implements Extension {
 
     Logger logger = LoggerFactory.getLogger("CDI-Unit EJB-ExtensionExtended");
@@ -140,10 +141,11 @@ public class EjbExtensionExtended implements Extension {
     }
 
     String beanNameOrName(EJB ejb) {
-        if (!ejb.name().isEmpty())
+        if (!ejb.name().isEmpty()) {
             return ejb.name();
-        else
+        } else {
             return ejb.beanName();
+        }
     }
 
     /**
@@ -272,7 +274,7 @@ public class EjbExtensionExtended implements Extension {
         }
     }
 
-    public <T> void initializeSelfInit(final @Observes ProcessInjectionTarget<T> pit) {
+    public <T> void initializeSelfInit(@Observes ProcessInjectionTarget<T> pit) {
 
         boolean needToWrap = false;
         for (AnnotatedField<? super T> f : pit.getAnnotatedType().getFields()) {
@@ -284,6 +286,8 @@ public class EjbExtensionExtended implements Extension {
 
         if (needToWrap) {
             final InjectionTarget<T> it = pit.getInjectionTarget();
+            final Set<AnnotatedField<? super T>> annotatedTypeFields = pit.getAnnotatedType().getFields();
+            final Class<?> annotatedTypeJavaClass = pit.getAnnotatedType().getJavaClass();
             InjectionTarget<T> wrapped = new InjectionTarget<T>() {
 
                 @Override
@@ -321,8 +325,8 @@ public class EjbExtensionExtended implements Extension {
                 }
 
                 private void wrapDifferingValuesOfSelfFields(T instance, HashMap<AnnotatedField<? super T>, Object> orgValues) {
-                    for (AnnotatedField<? super T> f : pit.getAnnotatedType().getFields()) {
-                        if (f.getJavaMember().getType().equals(pit.getAnnotatedType().getJavaClass())) {
+                    for (AnnotatedField<? super T> f : annotatedTypeFields) {
+                        if (f.getJavaMember().getType().equals(annotatedTypeJavaClass)) {
                             try {
                                 final Field javaMember = f.getJavaMember();
                                 javaMember.setAccessible(true);
@@ -359,8 +363,8 @@ public class EjbExtensionExtended implements Extension {
 
                 private HashMap<AnnotatedField<? super T>, Object> fetchOriginalValuesOfSelfFields(T instance) {
                     HashMap<AnnotatedField<? super T>, Object> orgValues = new HashMap<>();
-                    for (AnnotatedField<? super T> f : pit.getAnnotatedType().getFields()) {
-                        if (f.getJavaMember().getType().equals(pit.getAnnotatedType().getJavaClass())) {
+                    for (AnnotatedField<? super T> f : annotatedTypeFields) {
+                        if (f.getJavaMember().getType().equals(annotatedTypeJavaClass)) {
                             final Field javaMember = f.getJavaMember();
                             javaMember.setAccessible(true);
                             try {
