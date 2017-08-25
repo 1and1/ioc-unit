@@ -1,9 +1,9 @@
 package com.oneandone.ejbcdiunit.ejbs;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
-import javax.inject.Inject;
 
 import com.oneandone.ejbcdiunit.entities.TestEntity1;
 
@@ -13,10 +13,10 @@ import com.oneandone.ejbcdiunit.entities.TestEntity1;
 @Stateless
 public class OuterClass {
 
-    @Inject
+    @EJB
     StatelessEJB statelessEJB;
 
-    @Inject
+    @EJB
     SingletonEJB singletonEJB;
 
     public void saveNewInRequired(TestEntity1 testEntity1) {
