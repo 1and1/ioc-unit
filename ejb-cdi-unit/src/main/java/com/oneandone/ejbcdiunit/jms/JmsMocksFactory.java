@@ -98,6 +98,7 @@ public class JmsMocksFactory {
      * connect Mdb with the mockrunner jms
      * @throws JMSException should not occur since mockrunner creates everything in main memory.
      */
+    @SuppressWarnings("resource")
     private synchronized void initMessageListeners() throws JMSException {
         if (!initedMessageListeners.get()) {
             logger.info("JmsMdbConnector.postConstruct initMessageListeners start");

@@ -69,21 +69,20 @@ public class CdiRunner extends BlockJUnit4ClassRunner {
         this.clazz = clazz;
     }
 
-    private static Class<?> checkClass(Class<?> clazz) {
+    private static Class<?> checkClass(Class<?> clazzP) {
         try {
-            for(Method m : clazz.getMethods()) {
+            for (Method m : clazzP.getMethods()) {
                 m.getReturnType();
                 m.getParameterTypes();
                 m.getParameterAnnotations();
             }
-            for(Field f : clazz.getFields()) {
+            for (Field f : clazzP.getFields()) {
                 f.getType();
             }
-        }
-        catch(ClassFormatError e) {
+        } catch (ClassFormatError e) {
             throw parseClassFormatError(e);
         }
-        return clazz;
+        return clazzP;
     }
 
     private static ClassFormatError parseClassFormatError(ClassFormatError e) {
@@ -102,7 +101,7 @@ public class CdiRunner extends BlockJUnit4ClassRunner {
     protected Object createTest() throws Exception {
         try {
             String version = Formats.version(WeldBootstrap.class.getPackage());
-            if("2.2.8 (Final)".equals(version) || "2.2.7 (Final)".equals(version)) {
+            if ("2.2.8 (Final)".equals(version) || "2.2.7 (Final)".equals(version)) {
                 startupException = new Exception("Weld 2.2.8 and 2.2.7 are not supported. Suggest upgrading to 2.2.9");
             }
 

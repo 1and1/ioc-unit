@@ -8,16 +8,16 @@ import com.oneandone.ejbcdiunit.CdiTestConfig;
  * @author aschoerk
  */
 public class WeldTestConfig extends CdiTestConfig {
-    Method method;
-    Class<?> clazz;
+    Method testMethod;
+    Class<?> testClass;
 
-    public WeldTestConfig(Class<?> clazz, Method method) {
-        this.clazz = clazz;
-        this.method = method;
+    public WeldTestConfig(Class<?> testClass, Method method) {
+        this.testClass = testClass;
+        this.testMethod = method;
     }
 
-    public WeldTestConfig(Class<?> clazz, Method method, CdiTestConfig cdiTestConfig) {
-        this(clazz, method);
+    public WeldTestConfig(Class<?> testClass, Method method, CdiTestConfig cdiTestConfig) {
+        this(testClass, method);
         if (cdiTestConfig != null) {
             this.additionalClasses.addAll(cdiTestConfig.getAdditionalClasses());
             this.additionalClassPackages.addAll(cdiTestConfig.getAdditionalClassPackages());
@@ -28,12 +28,12 @@ public class WeldTestConfig extends CdiTestConfig {
         }
     }
 
-    public Method getMethod() {
-        return method;
+    public Method getTestMethod() {
+        return testMethod;
     }
 
-    public Class<?> getClazz() {
-        return clazz;
+    public Class<?> getTestClass() {
+        return testClass;
     }
 
     @Override
