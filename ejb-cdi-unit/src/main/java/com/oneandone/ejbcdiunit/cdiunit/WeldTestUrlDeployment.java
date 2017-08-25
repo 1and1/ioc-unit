@@ -19,39 +19,21 @@ package com.oneandone.ejbcdiunit.cdiunit;
  * copied from cdi-unit 3.1.4
  */
 
-import java.io.File;
 import java.io.IOException;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import java.util.jar.Attributes;
-import java.util.jar.JarInputStream;
-import java.util.jar.Manifest;
 
-import javax.enterprise.inject.Alternative;
-import javax.enterprise.inject.Instance;
-import javax.enterprise.inject.Produces;
-import javax.enterprise.inject.Stereotype;
 import javax.enterprise.inject.spi.Extension;
-import javax.inject.Inject;
-import javax.inject.Provider;
-import javax.interceptor.Interceptor;
 
 import org.jboss.weld.bootstrap.api.Bootstrap;
 import org.jboss.weld.bootstrap.api.ServiceRegistry;
@@ -61,43 +43,15 @@ import org.jboss.weld.bootstrap.spi.BeansXml;
 import org.jboss.weld.bootstrap.spi.Deployment;
 import org.jboss.weld.bootstrap.spi.Metadata;
 import org.jboss.weld.bootstrap.spi.Scanning;
-import org.jboss.weld.environment.se.WeldSEBeanRegistrant;
 import org.jboss.weld.metadata.BeansXmlImpl;
 import org.jboss.weld.metadata.MetadataImpl;
 import org.jboss.weld.resources.spi.ResourceLoader;
-import org.jglue.cdiunit.ActivatedAlternatives;
-import org.jglue.cdiunit.AdditionalClasses;
-import org.jglue.cdiunit.AdditionalClasspaths;
-import org.jglue.cdiunit.AdditionalPackages;
-import org.jglue.cdiunit.CdiRunner;
-import org.jglue.cdiunit.ProducesAlternative;
 import org.jglue.cdiunit.internal.BeanDeploymentArchiveImpl;
-import org.jglue.cdiunit.internal.CdiUnitInitialListener;
-import org.jglue.cdiunit.internal.InConversationInterceptor;
-import org.jglue.cdiunit.internal.InRequestInterceptor;
-import org.jglue.cdiunit.internal.InSessionInterceptor;
-import org.jglue.cdiunit.internal.ProducerConfigExtension;
-import org.jglue.cdiunit.internal.TestScopeExtension;
-import org.jglue.cdiunit.internal.TypesScanner;
-import org.jglue.cdiunit.internal.easymock.EasyMockExtension;
-import org.jglue.cdiunit.internal.jsf.ViewScopeExtension;
-import org.jglue.cdiunit.internal.mockito.MockitoExtension;
-import org.jglue.cdiunit.internal.servlet.MockHttpServletRequestImpl;
-import org.jglue.cdiunit.internal.servlet.MockHttpServletResponseImpl;
-import org.jglue.cdiunit.internal.servlet.MockHttpSessionImpl;
-import org.jglue.cdiunit.internal.servlet.MockServletContextImpl;
-import org.jglue.cdiunit.internal.servlet.ServletObjectsProducer;
-import org.mockito.Mock;
-import org.reflections.ReflectionUtils;
-import org.reflections.Reflections;
-import org.reflections.util.ConfigurationBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Predicate;
 import com.oneandone.ejbcdiunit.CdiTestConfig;
-import com.oneandone.ejbcdiunit.internal.AsynchronousMethodInterceptor;
-import com.oneandone.ejbcdiunit.internal.TransactionalInterceptor;
+import com.oneandone.ejbcdiunit.cfganalyzer.CdiUnitAnalyzer;
 
 public class WeldTestUrlDeployment implements Deployment {
     private static Logger log = LoggerFactory.getLogger(WeldTestUrlDeployment.class);
@@ -107,405 +61,75 @@ public class WeldTestUrlDeployment implements Deployment {
 
     public WeldTestUrlDeployment(ResourceLoader resourceLoader, Bootstrap bootstrap, WeldTestConfig weldTestConfig) throws IOException {
 
-        Class<?> testClass = weldTestConfig.getClazz();
-        Method testMethod = weldTestConfig.getMethod();
-        populateCdiClasspathSet();
-        BeansXml beansXml;
-        try {
-            beansXml = new BeansXmlImpl(new ArrayList<Metadata<String>>(), new ArrayList<Metadata<String>>(),
-                    new ArrayList<Metadata<String>>(), new ArrayList<Metadata<String>>(), Scanning.EMPTY_SCANNING, new URL(
-                    "file:cdi-unit"), BeanDiscoveryMode.ANNOTATED, "cdi-unit", false);
-        } catch (NoClassDefFoundError e) {
-            try {
-                beansXml = (BeansXml) BeansXmlImpl.class.getConstructors()[0].newInstance(new ArrayList<Metadata<String>>(),
-                        new ArrayList<Metadata<String>>(), new ArrayList<Metadata<String>>(), new ArrayList<Metadata<String>>(),
-                        Scanning.EMPTY_SCANNING);
-            } catch (Exception e1) {
-                throw new RuntimeException(e1);
-            }
+        Class<?> testClass = weldTestConfig.getTestClass();
+        Method testMethod = weldTestConfig.getTestMethod();
+        CdiUnitAnalyzer cdiUnitAnalyzer = new CdiUnitAnalyzer();
+        cdiUnitAnalyzer.analyze(testClass, testMethod, weldTestConfig);
+        BeansXml beansXml = createBeansXml();
 
+        for (Metadata<String> eI : cdiUnitAnalyzer.getEnabledInterceptors()) {
+            beansXml.getEnabledInterceptors().add(eI);
         }
 
-        Set<String> discoveredClasses = new LinkedHashSet<String>();
-        Set<String> alternatives = new HashSet<String>();
-        discoveredClasses.add(testClass.getName());
-        Set<Class<?>> classesToProcess = new LinkedHashSet<Class<?>>();
-        Set<Class<?>> classesProcessed = new HashSet<Class<?>>();
-        Set<Class<?>> classesToIgnore = findMockedClassesOfTest(testClass);
-        classesToIgnore.addAll(weldTestConfig.getExcludedClasses());
-
-        classesToProcess.add(testClass);
-        extensions.add(new MetadataImpl<Extension>(new TestScopeExtension(testClass), TestScopeExtension.class.getName()));
-        if (testMethod != null) {
-            extensions.add(new MetadataImpl<Extension>(new ProducerConfigExtension(testMethod), ProducerConfigExtension.class.getName()));
+        for (Metadata<String> eD : cdiUnitAnalyzer.getEnabledDecorators()) {
+            beansXml.getEnabledDecorators().add(eD);
         }
 
-        try {
-            Class.forName("javax.faces.view.ViewScoped");
-            extensions.add(new MetadataImpl<Extension>(new ViewScopeExtension(), ViewScopeExtension.class.getName()));
-        } catch (ClassNotFoundException e) {
-
+        for (Metadata<String> eAS : cdiUnitAnalyzer.getEnabledAlternativeStereotypes()) {
+            beansXml.getEnabledAlternativeStereotypes().add(eAS);
         }
 
-
-        try {
-            Class.forName("javax.servlet.http.HttpServletRequest");
-            classesToProcess.add(InRequestInterceptor.class);
-            classesToProcess.add(InSessionInterceptor.class);
-            classesToProcess.add(InConversationInterceptor.class);
-            discoveredClasses.add(CdiUnitInitialListener.class.getName());
-            classesToProcess.add(MockServletContextImpl.class);
-            classesToProcess.add(MockHttpSessionImpl.class);
-            classesToProcess.add(MockHttpServletRequestImpl.class);
-            classesToProcess.add(MockHttpServletResponseImpl.class);
-
-
-            // If this is an old version of weld then add the producers
-            try {
-                Class.forName("org.jboss.weld.bean.AbstractSyntheticBean");
-            } catch (ClassNotFoundException e) {
-                classesToProcess.add(ServletObjectsProducer.class);
-            }
-
-        } catch (ClassNotFoundException e) {
-        }
-
-        // Add Interceptors here, to make sure the sequence is handled right
-        classesToProcess.add(AsynchronousMethodInterceptor.class);
-        classesToProcess.add(TransactionalInterceptor.class);
-
-        classesToProcess.addAll(weldTestConfig.getAdditionalClasses());
-        for (Class<?> c : weldTestConfig.getAdditionalClassPathes()) {
-            addClassPath(classesToProcess, c);
-        }
-        for (Class<?> c : weldTestConfig.getAdditionalClassPackages()) {
-            addPackage(classesToProcess, c);
-        }
-        for (Class<?> c : weldTestConfig.getActivatedAlternatives()) {
-            addAlternative(alternatives, classesToProcess, c);
-        }
-
-
-        while (!classesToProcess.isEmpty()) {
-
-            Class<?> c = classesToProcess.iterator().next();
-
-            if ((isCdiClass(c) || Extension.class.isAssignableFrom(c)) && !classesProcessed.contains(c) && !c.isPrimitive()
-                    && !classesToIgnore.contains(c)) {
-                classesProcessed.add(c);
-                if (!c.isAnnotation()) {
-                    discoveredClasses.add(c.getName());
-                }
-                if (Extension.class.isAssignableFrom(c) && !Modifier.isAbstract(c.getModifiers())) {
-                    try {
-                        extensions.add(new MetadataImpl<Extension>((Extension) c.newInstance(), c.getName()));
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-                if (c.isAnnotationPresent(Interceptor.class)) {
-                    beansXml.getEnabledInterceptors().add(new MetadataImpl<String>(c.getName(), c.getName()));
-                }
-
-                if (isAlternativeStereotype(c)) {
-                    beansXml.getEnabledAlternativeStereotypes().add(new MetadataImpl<String>(c.getName(), c.getName()));
-
-                }
-
-                AdditionalClasses additionalClasses = c.getAnnotation(AdditionalClasses.class);
-                if (additionalClasses != null) {
-                    for (Class<?> supportClass : additionalClasses.value()) {
-                        classesToProcess.add(supportClass);
-                    }
-                    for (String lateBound : additionalClasses.late()) {
-                        try {
-                            Class<?> clazz = Class.forName(lateBound);
-                            classesToProcess.add(clazz);
-                        } catch (ClassNotFoundException e) {
-                            throw new RuntimeException(e);
-                        }
-
-                    }
-                }
-
-                AdditionalClasspaths additionalClasspaths = c.getAnnotation(AdditionalClasspaths.class);
-                if (additionalClasspaths != null) {
-                    for (Class<?> additionalClasspath : additionalClasspaths.value()) {
-
-                        addClassPath(classesToProcess, additionalClasspath);
-                    }
-                }
-
-                AdditionalPackages additionalPackages = c.getAnnotation(AdditionalPackages.class);
-                if (additionalPackages != null) {
-                    for (Class<?> additionalPackage : additionalPackages.value()) {
-                        addPackage(classesToProcess, additionalPackage);
-
-                    }
-                }
-
-                ActivatedAlternatives alternativeClasses = c.getAnnotation(ActivatedAlternatives.class);
-                if (alternativeClasses != null) {
-                    for (Class<?> alternativeClass : alternativeClasses.value()) {
-                        addAlternative(alternatives, classesToProcess, alternativeClass);
-                    }
-                }
-
-                ExcludedClasses excludedClasses = c.getAnnotation(ExcludedClasses.class);
-                if (excludedClasses != null) {
-                    if (belongsTo(c, testClass)) {
-                        for (Class<?> excludedClass : excludedClasses.value()) {
-                            if (classesProcessed.contains(excludedClass)) {
-                                throw new RuntimeException("Trying to exclude already processed class: " + excludedClass);
-                            } else {
-                                classesToIgnore.add(excludedClass);
-                            }
-                        }
-                    } else {
-                        throw new RuntimeException("Trying to exclude in not toplevelclass: " + c);
-                    }
-
-                }
-
-                for (Annotation a : c.getAnnotations()) {
-
-                    if (!a.annotationType().getPackage().getName().equals("org.jglue.cdiunit")) {
-                        classesToProcess.add(a.annotationType());
-                    }
-                }
-
-                Type superClass = c.getGenericSuperclass();
-                if (superClass != null && superClass != Object.class) {
-                    addClassesToProcess(classesToProcess, superClass);
-                }
-
-                for (Field field : c.getDeclaredFields()) {
-                    if (field.isAnnotationPresent(Inject.class) || field.isAnnotationPresent(Produces.class)) {
-                        addClassesToProcess(classesToProcess, field.getGenericType());
-                    }
-                    if (field.getType().equals(Provider.class) || field.getType().equals(Instance.class)) {
-                        addClassesToProcess(classesToProcess, field.getGenericType());
-                    }
-                }
-                for (Method method : c.getDeclaredMethods()) {
-                    if (method.isAnnotationPresent(Inject.class) || method.isAnnotationPresent(Produces.class)) {
-                        for (Type param : method.getGenericParameterTypes()) {
-                            addClassesToProcess(classesToProcess, param);
-                        }
-                        addClassesToProcess(classesToProcess, method.getGenericReturnType());
-
-                    }
-                }
-            }
-
-            classesToProcess.remove(c);
-        }
-
-        beansXml.getEnabledAlternativeStereotypes().add(
-                new MetadataImpl<String>(ProducesAlternative.class.getName(), ProducesAlternative.class.getName()));
-
-        for (String alternative : alternatives) {
+        for (String alternative : cdiUnitAnalyzer.getAlternatives()) {
             beansXml.getEnabledAlternativeClasses().add(new MetadataImpl<String>(alternative, alternative));
         }
 
-        try {
-            Class.forName("org.mockito.Mock");
-            extensions.add(new MetadataImpl<Extension>(new MockitoExtension(), MockitoExtension.class.getName()));
-        } catch (ClassNotFoundException e) {
 
-        }
-
-        try {
-            Class.forName("org.easymock.EasyMockRunner");
-            extensions.add(new MetadataImpl<Extension>(new EasyMockExtension(), EasyMockExtension.class.getName()));
-        } catch (ClassNotFoundException e) {
-
-        }
-
-        extensions.add(new MetadataImpl<Extension>(new WeldSEBeanRegistrant(), WeldSEBeanRegistrant.class.getName()));
-
-        beanDeploymentArchive = new BeanDeploymentArchiveImpl("cdi-unit" + UUID.randomUUID(), discoveredClasses, beansXml);
+        beanDeploymentArchive = new BeanDeploymentArchiveImpl("cdi-unit" + UUID.randomUUID(), cdiUnitAnalyzer.getDiscoveredClasses(), beansXml);
         beanDeploymentArchive.getServices().add(ResourceLoader.class, resourceLoader);
         for (CdiTestConfig.ServiceConfig serviceConfig : weldTestConfig.getServiceConfigs()) {
             beanDeploymentArchive.getServices().add(serviceConfig.getServiceClass(), serviceConfig.getService());
         }
 
+        for (Metadata<? extends Extension> e : cdiUnitAnalyzer.getExtensions()) {
+            extensions.add((Metadata<Extension>) e);
+        }
+
         log.trace("CDI-Unit discovered:");
-        for (String clazz : discoveredClasses) {
+        for (String clazz : cdiUnitAnalyzer.getDiscoveredClasses()) {
             if (!clazz.startsWith("org.jglue.cdiunit.internal.")) {
                 log.trace(clazz);
             }
         }
     }
 
-    private boolean belongsTo(Class<?> c, Class<?> testClass) {
-        if (testClass.equals(Object.class))
-            return false;
-        if (c.equals(testClass))
-            return true;
-        else {
-            return belongsTo(c, testClass.getSuperclass());
-        }
-    }
-
-    private void addAlternative(Set<String> alternatives, Set<Class<?>> classesToProcess, Class<?> alternativeClass) {
-        classesToProcess.add(alternativeClass);
-
-        if (!isAlternativeStereotype(alternativeClass)) {
-            alternatives.add(alternativeClass.getName());
-        }
-    }
-
-    private void addPackage(Set<Class<?>> classesToProcess, Class<?> additionalPackage) throws MalformedURLException {
-        final String packageName = additionalPackage.getPackage().getName();
-        Reflections reflections = new Reflections(new ConfigurationBuilder()
-                .setScanners(new TypesScanner())
-                .setUrls(
-                        new File(additionalPackage.getProtectionDomain().getCodeSource().getLocation().getPath())
-                                .toURI().toURL())
-                .filterInputsBy(new Predicate<String>() {
-
-                    @Override
-                    public boolean apply(String input) {
-                        return input.startsWith(packageName)
-                                && !input.substring(packageName.length() + 1, input.length() - 6).contains(".");
-
-                    }
-                }));
-        classesToProcess.addAll(ReflectionUtils.forNames(
-                reflections.getStore().get(TypesScanner.class.getSimpleName()).keySet(),
-                new ClassLoader[] { getClass().getClassLoader() }));
-    }
-
-    private void addClassPath(Set<Class<?>> classesToProcess, Class<?> additionalClasspath) throws MalformedURLException {
-        Reflections reflections = new Reflections(new ConfigurationBuilder().setScanners(new TypesScanner())
-                .setUrls(
-                        new File(additionalClasspath.getProtectionDomain().getCodeSource().getLocation()
-                                .getPath()).toURI().toURL()));
-
-        classesToProcess.addAll(ReflectionUtils.forNames(
-                reflections.getStore().get(TypesScanner.class.getSimpleName()).keySet(),
-                new ClassLoader[] { getClass().getClassLoader() }));
-    }
-
-
-    private void addClassesToProcess(Collection<Class<?>> classesToProcess, Type type) {
-
-        if (type instanceof Class) {
-            classesToProcess.add((Class<?>)type);
-        }
-        if(type instanceof ParameterizedType) {
-            ParameterizedType ptype = (ParameterizedType)type;
-            classesToProcess.add((Class<?>)ptype.getRawType());
-            for(Type arg : ptype.getActualTypeArguments()) {
-                addClassesToProcess(classesToProcess, arg);
-            }
-        }
-    }
-
-    private Set<Class<?>> findMockedClassesOfTest(Class<?> testClass) {
-        Set<Class<?>> mockedClasses = new HashSet<Class<?>>();
-
+    private static Object annotatedDiscoveryMode() {
         try {
-
-            for (Field field : testClass.getDeclaredFields()) {
-                if (field.isAnnotationPresent(Mock.class)) {
-                    Class<?> type = field.getType();
-                    mockedClasses.add(type);
-                }
-            }
+            return BeanDiscoveryMode.ANNOTATED;
         } catch (NoClassDefFoundError e) {
-
+            // No such enum in Weld 1.x, but the constructor for BeansXmlImpl has fewer parameters so we don't need it
+            return null;
         }
+    }
 
+    private static BeansXml createBeansXml() {
         try {
-
-            for (Field field : testClass.getDeclaredFields()) {
-                if (field.isAnnotationPresent(org.easymock.Mock.class)) {
-                    Class<?> type = field.getType();
-                    mockedClasses.add(type);
-                }
-            }
-        } catch (NoClassDefFoundError e) {
-
+            // The constructor for BeansXmlImpl has added more parameters in newer Weld versions. The parameter list
+            // is truncated in older version of Weld where the number of parameters is shorter, thus omitting the
+            // newer parameters.
+            Object[] initArgs = new Object[] {
+                    new ArrayList<Metadata<String>>(), new ArrayList<Metadata<String>>(),
+                    new ArrayList<Metadata<String>>(), new ArrayList<Metadata<String>>(), Scanning.EMPTY_SCANNING,
+                    // These were added in Weld 2.0:
+                    new URL("file:cdi-unit"), annotatedDiscoveryMode(), "cdi-unit",
+                    // isTrimmed: added in Weld 2.4.2 [WELD-2314]:
+                    false
+            };
+            Constructor<?> beansXmlConstructor = BeansXmlImpl.class.getConstructors()[0];
+            return (BeansXml) beansXmlConstructor.newInstance(
+                    Arrays.copyOfRange(initArgs, 0, beansXmlConstructor.getParameterCount()));
+        } catch (MalformedURLException | ReflectiveOperationException e) {
+            throw new RuntimeException(e);
         }
-        return mockedClasses;
-    }
-
-    private void populateCdiClasspathSet() throws IOException {
-        ClassLoader classLoader = org.jglue.cdiunit.internal.WeldTestUrlDeployment.class.getClassLoader();
-        List<URL> entries = new ArrayList<URL>(Arrays.asList(((URLClassLoader) classLoader).getURLs()));
-
-        // If this is surefire we need to get the original claspath
-        try (JarInputStream firstEntry = new JarInputStream(entries.get(0).openStream())) {
-            Manifest manifest = firstEntry.getManifest();
-            if (manifest != null) {
-                String classpath = (String) manifest.getMainAttributes().get(Attributes.Name.CLASS_PATH);
-                if (classpath != null) {
-                    String[] manifestEntries = classpath.split(" ?file:");
-                    for (String entry : manifestEntries) {
-                        if (entry.length() > 0) {
-                            entries.add(new URL("file:" + entry));
-                        }
-                    }
-                }
-            }
-        }
-
-        for (URL url : entries) {
-            URLClassLoader cl = new URLClassLoader(new URL[] { url }, null);
-            try {
-
-                if (url.getFile().endsWith("/classes/")) {
-                    URL webInfBeans = new URL(url, "../../src/main/webapp/WEB-INF/beans.xml");
-                    try {
-                        webInfBeans.openConnection().connect();;
-                        cdiClasspathEntries.add(url);
-                    } catch (IOException e) {
-
-                    }
-                }
-                URL resource = cl.getResource("META-INF/beans.xml");
-                boolean cdiUnit = url.equals(CdiRunner.class.getProtectionDomain().getCodeSource().getLocation());
-                boolean mavenClasses = url.getFile().endsWith("/test-classes/");
-                boolean generatedClasses = url.getFile().contains("/generated-classes/");
-                boolean gradleClasses = url.getFile().matches(".*/classes/[\\w\\-]*/");
-                if (cdiUnit || resource != null || mavenClasses || gradleClasses || generatedClasses) {
-                    cdiClasspathEntries.add(url);
-                }
-
-            } finally {
-                try {
-                    Method method = cl.getClass().getMethod("close");
-                    method.invoke(cl);
-                } catch (NoSuchMethodException e) {
-                    //Ignore, we might be running on Java 6
-                } catch (IllegalAccessException e) {
-                    //Ignore, we might be running on Java 6
-                } catch (InvocationTargetException e) {
-                    //Ignore, we might be running on Java 6
-                }
-            }
-        }
-        log.trace("CDI classpath entries discovered:");
-        for (URL url : cdiClasspathEntries) {
-            log.trace("{}", url);
-        }
-
-    }
-
-    private boolean isCdiClass(Class<?> c) {
-        if (c.getProtectionDomain().getCodeSource() == null) {
-            return false;
-        }
-        URL location = c.getProtectionDomain().getCodeSource().getLocation();
-        boolean isCdi = cdiClasspathEntries.contains(location);
-        return isCdi;
-
-    }
-
-    private boolean isAlternativeStereotype(Class<?> c) {
-        return c.isAnnotationPresent(Stereotype.class) && c.isAnnotationPresent(Alternative.class);
     }
 
     @Override
