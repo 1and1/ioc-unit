@@ -287,13 +287,13 @@ public class TestCdiUnitRunner extends BaseTest {
     @Test
     public void testProducedViaField() {
         produced = new ProducedViaField(2);
-        ProducedViaField produced = getContextualInstance(beanManager, ProducedViaField.class);
-        Assert.assertEquals(produced, produced);
+        ProducedViaField tmpProduced = getContextualInstance(beanManager, ProducedViaField.class);
+        Assert.assertEquals(tmpProduced, tmpProduced);
     }
 
     @Test
     public void testProducedViaMethod() {
-        ProducedViaMethod produced = getContextualInstance(beanManager, ProducedViaMethod.class);
-        Assert.assertNotNull(produced);
+        ProducedViaMethod tmpProduced = getContextualInstance(beanManager, ProducedViaMethod.class);
+        Assert.assertNotNull(tmpProduced);
     }
 }
