@@ -91,7 +91,6 @@ public class EjbUnitRule implements TestRule {
                                 .addServiceConfig(new ServiceConfig(TransactionServices.class,
                                         new EjbUnitTransactionServices()));
 
-
                 weld = new Weld() {
 
                     protected org.jboss.weld.bootstrap.spi.Deployment createDeployment(ResourceLoader resourceLoader, CDI11Bootstrap bootstrap) {
@@ -110,9 +109,7 @@ public class EjbUnitRule implements TestRule {
                             startupException = e;
                             throw new RuntimeException(e);
                         }
-                    }
-
-                    ;
+                    };
 
                 };
 
@@ -173,8 +170,8 @@ public class EjbUnitRule implements TestRule {
                     initWeldFields(test, test.getClass());
 
                 } catch (ClassNotFoundException e) {
-                    logger.warn("Expected EJB to be present, when using EjbUnitRunner, therefore: " +
-                            "could not init Startups and Jms-Objects.");
+                    logger.warn("Expected EJB to be present, when using EjbUnitRunner, therefore: "
+                            + "could not init Startups and Jms-Objects.");
                 }
 
                 next.evaluate();
@@ -187,10 +184,11 @@ public class EjbUnitRule implements TestRule {
 
         }
 
-        private void initWeldFields(Object newTestInstance, Class<?> clazz) throws IllegalAccessException {
-            if (clazz.equals(Object.class))
+        private void initWeldFields(Object newTestInstance, Class<?> clazzP) throws IllegalAccessException {
+            if (clazzP.equals(Object.class)) {
                 return;
-            for (Field f : clazz.getDeclaredFields()) {
+            }
+            for (Field f : clazzP.getDeclaredFields()) {
                 f.setAccessible(true);
                 if (f.getAnnotation(Inject.class) != null) {
                     f.set(testInstance, f.get(newTestInstance));
@@ -201,7 +199,7 @@ public class EjbUnitRule implements TestRule {
                 }
 
             }
-            initWeldFields(newTestInstance, clazz.getSuperclass());
+            initWeldFields(newTestInstance, clazzP.getSuperclass());
         }
     }
 }
