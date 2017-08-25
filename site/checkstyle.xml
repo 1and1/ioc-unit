@@ -82,7 +82,6 @@
     <module name="SuppressionFilter">
         <property name="file" value="${checkstyle.suppressions.file}"/>
     </module>
-    <module name="SuppressionCommentFilter"/>
     <module name="NewlineAtEndOfFile">
         <property name="severity" value="ignore"/>
         <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>

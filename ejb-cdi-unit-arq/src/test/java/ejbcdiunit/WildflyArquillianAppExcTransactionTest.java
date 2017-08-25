@@ -4,9 +4,6 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.util.Arrays;
 
-import javax.inject.Inject;
-import javax.transaction.UserTransaction;
-
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
@@ -19,10 +16,6 @@ import com.oneandone.ejbcdiunit.ejbs.appexc.TestBaseClass;
 
 @RunWith(Arquillian.class)
 public class WildflyArquillianAppExcTransactionTest extends TestBaseClass {
-
-
-    @Inject
-    protected UserTransaction userTransaction;
 
     public static WebArchive getWarFromTargetFolder() {
         File folder = new File("../ejb-cdi-unit-test-war/target/");

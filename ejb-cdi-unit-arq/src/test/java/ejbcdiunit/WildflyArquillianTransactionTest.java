@@ -7,7 +7,6 @@ import java.io.FilenameFilter;
 import java.util.Arrays;
 
 import javax.ejb.EJBException;
-import javax.inject.Inject;
 import javax.persistence.TransactionRequiredException;
 import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
@@ -15,7 +14,6 @@ import javax.transaction.NotSupportedException;
 import javax.transaction.RollbackException;
 import javax.transaction.Status;
 import javax.transaction.SystemException;
-import javax.transaction.UserTransaction;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -33,10 +31,6 @@ import com.oneandone.ejbcdiunit.testbases.TestEntity1Saver;
 
 @RunWith(Arquillian.class)
 public class WildflyArquillianTransactionTest extends EJBTransactionTestBase {
-
-
-    @Inject
-    protected UserTransaction userTransaction;
 
     public static WebArchive getWarFromTargetFolder() {
         File folder = new File("../ejb-cdi-unit-test-war/target/");

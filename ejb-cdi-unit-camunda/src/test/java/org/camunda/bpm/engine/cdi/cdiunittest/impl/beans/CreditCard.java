@@ -19,6 +19,7 @@ import org.camunda.bpm.engine.cdi.annotation.BusinessProcessScoped;
 @BusinessProcessScoped
 public class CreditCard implements Serializable {
 
+    private static final long serialVersionUID = 660782545702632771L;
     private String creditcardNumber;
 
     public String getCreditcardNumber() {

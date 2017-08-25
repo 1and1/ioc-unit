@@ -78,6 +78,7 @@ public class EmbeddedTomeeMdbTest {
         container = EJBContainer.createEJBContainer(p);
         context = container.getContext();
         context.bind("inject", this);
+        @SuppressWarnings("resource")
         final Connection connection = connectionFactory.createConnection();
 
     }
