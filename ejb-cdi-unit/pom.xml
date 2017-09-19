@@ -19,6 +19,9 @@
             <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
         </license>
     </licenses>
+    <properties>
+        <weld.compile.version>2.4.4.Final</weld.compile.version>
+    </properties>
 
     <dependencies>
         <dependency>

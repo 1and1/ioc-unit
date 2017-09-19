@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.util.concurrent.ScheduledExecutorService;
 
 import org.jboss.weld.bootstrap.WeldBootstrap;
 import org.jboss.weld.bootstrap.api.Bootstrap;
@@ -27,6 +28,7 @@ import org.jboss.weld.bootstrap.spi.Deployment;
 import org.jboss.weld.environment.se.Weld;
 import org.jboss.weld.environment.se.WeldContainer;
 import org.jboss.weld.resources.spi.ResourceLoader;
+import org.jboss.weld.resources.spi.ScheduledExecutorServiceFactory;
 import org.jboss.weld.transaction.spi.TransactionServices;
 import org.jboss.weld.util.reflection.Formats;
 import org.junit.runners.BlockJUnit4ClassRunner;
@@ -108,8 +110,19 @@ public class CdiRunner extends BlockJUnit4ClassRunner {
             final WeldTestConfig weldTestConfig =
                     new WeldTestConfig(clazz, frameworkMethod.getMethod())
                             .addClass(SupportEjbExtended.class)
-                            .addServiceConfig(new CdiTestConfig.ServiceConfig(TransactionServices.class,
-                                    new EjbUnitTransactionServices()));
+                            .addServiceConfig(new CdiTestConfig.ServiceConfig(TransactionServices.class, new EjbUnitTransactionServices()))
+                            .addServiceConfig(
+                                    new CdiTestConfig.ServiceConfig(ScheduledExecutorServiceFactory.class, new ScheduledExecutorServiceFactory() {
+                                        @Override
+                                        public ScheduledExecutorService get() {
+                                            return null;
+                                        }
+
+                                        @Override
+                                        public void cleanup() {
+
+                                    }
+                                    }));
 
             weld = new Weld() {
 

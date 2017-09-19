@@ -53,6 +53,13 @@ public abstract class PersistenceFactoryTestBase {
     @Inject
     DataSource dataSource;
 
+    protected String getStringAttributeNativeName() {
+        return "stringAttribute";
+    }
+
+    protected String getIntAttributeNativeName() {
+        return "intAttribute";
+    }
 
     @Test
     public void canInsertInMandatoryTransaction() throws Exception {
@@ -310,7 +317,9 @@ public abstract class PersistenceFactoryTestBase {
 
         try (Connection conn = dataSource.getConnection()) {
 
-            try (PreparedStatement stmt = conn.prepareStatement("insert into test_entity_1 (stringAttribute, intAttribute) values ('sss', 114)")) {
+            try (PreparedStatement stmt = conn.prepareStatement("insert into test_entity_1 (id," +
+                    getStringAttributeNativeName() + ", " + getIntAttributeNativeName() +
+                    ") values (111,'sss', 114)")) {
                 Assert.assertThat(stmt.executeUpdate(), is(1));
             }
         }
@@ -318,5 +327,6 @@ public abstract class PersistenceFactoryTestBase {
         Assert.assertThat(res, is(2L));
 
     }
+
 
 }

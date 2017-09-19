@@ -233,7 +233,7 @@ public abstract class PersistenceFactory {
      *
      * @return a jdbc-Datasource using the same driver url user and password as the entityManager
      */
-    public DataSource produceDataSource() {
+    public DataSource createDataSource() {
         BasicDataSource newDataSource = new BasicDataSource();
         Map props = emf.getProperties();
         DataSource emfDatasource = (DataSource) props.get("hibernate.connection.datasource");
@@ -242,10 +242,12 @@ public abstract class PersistenceFactory {
         } else {
             newDataSource.setDriverClassName((String) props.get("javax.persistence.jdbc.driver"));
             newDataSource.setUrl((String) props.get("javax.persistence.jdbc.url"));
-            newDataSource.setUsername((String) props.get("javax.persistence.jdbc.user"));
-            newDataSource.setPassword((String) props.get("javax.persistence.jdbc.password"));
             return newDataSource;
         }
+    }
+
+    public DataSource produceDataSource() {
+        return new DataSourceDelegate(this);
     }
 
     protected EntityManagerFactory createEntityManagerFactory() {

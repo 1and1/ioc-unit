@@ -20,12 +20,12 @@ package com.oneandone.ejbcdiunit.cdiunit;
  */
 
 import java.io.IOException;
-import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -43,7 +43,6 @@ import org.jboss.weld.bootstrap.spi.BeansXml;
 import org.jboss.weld.bootstrap.spi.Deployment;
 import org.jboss.weld.bootstrap.spi.Metadata;
 import org.jboss.weld.bootstrap.spi.Scanning;
-import org.jboss.weld.metadata.BeansXmlImpl;
 import org.jboss.weld.metadata.MetadataImpl;
 import org.jboss.weld.resources.spi.ResourceLoader;
 import org.jglue.cdiunit.internal.BeanDeploymentArchiveImpl;
@@ -113,22 +112,72 @@ public class WeldTestUrlDeployment implements Deployment {
 
     private static BeansXml createBeansXml() {
         try {
-            // The constructor for BeansXmlImpl has added more parameters in newer Weld versions. The parameter list
-            // is truncated in older version of Weld where the number of parameters is shorter, thus omitting the
-            // newer parameters.
-            Object[] initArgs = new Object[] {
-                    new ArrayList<Metadata<String>>(), new ArrayList<Metadata<String>>(),
+            InvocationHandler beansXmlImpl = new LocalBeansXmlImpl(new ArrayList<Metadata<String>>(), new ArrayList<Metadata<String>>(),
                     new ArrayList<Metadata<String>>(), new ArrayList<Metadata<String>>(), Scanning.EMPTY_SCANNING,
                     // These were added in Weld 2.0:
                     new URL("file:cdi-unit"), annotatedDiscoveryMode(), "cdi-unit",
                     // isTrimmed: added in Weld 2.4.2 [WELD-2314]:
-                    false
-            };
-            Constructor<?> beansXmlConstructor = BeansXmlImpl.class.getConstructors()[0];
-            return (BeansXml) beansXmlConstructor.newInstance(
-                    Arrays.copyOfRange(initArgs, 0, beansXmlConstructor.getParameterCount()));
-        } catch (MalformedURLException | ReflectiveOperationException e) {
+                    false);
+            return (BeansXml) Proxy.newProxyInstance(BeansXml.class.getClassLoader(), new Class<?>[] { BeansXml.class }, beansXmlImpl);
+
+        } catch (MalformedURLException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    static class LocalBeansXmlImpl implements InvocationHandler {
+
+        private final List enabledAlternatives;
+        private final List enabledAlternativeStereotypes;
+        private final List enabledDecorators;
+        private final List enabledInterceptors;
+        private final Scanning scanning;
+        private final URL url;
+        private final Object discoveryMode;
+        private final String version;
+        private final boolean isTrimmed;
+
+        public LocalBeansXmlImpl(List<Metadata<String>> enabledAlternatives, List<Metadata<String>> enabledAlternativeStereotypes,
+                List<Metadata<String>> enabledDecorators, List<Metadata<String>> enabledInterceptors, Scanning scanning, URL url,
+                Object discoveryMode,
+                String version, boolean isTrimmed) {
+            this.enabledAlternatives = enabledAlternatives;
+            this.enabledAlternativeStereotypes = enabledAlternativeStereotypes;
+            this.enabledDecorators = enabledDecorators;
+            this.enabledInterceptors = enabledInterceptors;
+            this.scanning = scanning;
+            this.url = url;
+            this.discoveryMode = discoveryMode;
+            this.version = version;
+            this.isTrimmed = isTrimmed;
+        }
+
+
+        @Override
+        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+            String methodName = method.getName();
+            switch (methodName) {
+                case "getEnabledAlternativeClasses":
+                    return enabledAlternatives;
+                case "getEnabledAlternativeStereotypes":
+                    return enabledAlternativeStereotypes;
+                case "getEnabledDecorators":
+                    return enabledDecorators;
+                case "getEnabledInterceptors":
+                    return enabledInterceptors;
+                case "getScanning":
+                    return scanning;
+                case "getUrl":
+                    return url;
+                case "getBeanDiscoveryMode":
+                    return discoveryMode;
+                case "getVersion":
+                    return version;
+                case "isTrimmed":
+                    return isTrimmed;
+                default:
+                    throw new RuntimeException("unknown method " + methodName + " of BeansXmlImpl");
+            }
         }
     }
 

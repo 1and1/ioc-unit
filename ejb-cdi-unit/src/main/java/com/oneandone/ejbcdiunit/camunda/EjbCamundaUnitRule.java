@@ -81,7 +81,9 @@ public class EjbCamundaUnitRule implements TestRule {
     @Override
     public Statement apply(Statement base, Description description) {
         // TestHelper.closeProcessEngines();
-        Statement result = processEngineRule.apply(ejbUnitRule.apply(base, description), description);
+        final EjbUnitRule.Deployment innerRule = (EjbUnitRule.Deployment) ejbUnitRule.apply(base, description);
+        innerRule.initWeld();
+        Statement result = processEngineRule.apply(innerRule, description);
         if (BpmPlatform.getProcessEngineService().getDefaultProcessEngine() == null) {
             RuntimeContainerDelegate.INSTANCE.get().registerProcessEngine(processEngineRule.getProcessEngine());
         }

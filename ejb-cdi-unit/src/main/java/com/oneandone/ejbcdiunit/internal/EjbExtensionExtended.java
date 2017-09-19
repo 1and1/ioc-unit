@@ -155,6 +155,7 @@ public class EjbExtensionExtended implements Extension {
      * @param <T> The type
      */
     public <T> void processAnnotatedType(@Observes ProcessAnnotatedType<T> pat) {
+        logger.trace("processing annotated Type: " + pat.getAnnotatedType().getJavaClass().getName());
 
         boolean modified = false;
         AnnotatedType<T> annotatedType = pat.getAnnotatedType();

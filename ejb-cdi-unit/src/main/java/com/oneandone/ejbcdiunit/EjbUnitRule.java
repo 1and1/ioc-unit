@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.util.concurrent.ScheduledExecutorService;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.spi.BeanManager;
@@ -16,6 +17,7 @@ import org.jboss.weld.bootstrap.api.CDI11Bootstrap;
 import org.jboss.weld.environment.se.Weld;
 import org.jboss.weld.environment.se.WeldContainer;
 import org.jboss.weld.resources.spi.ResourceLoader;
+import org.jboss.weld.resources.spi.ScheduledExecutorServiceFactory;
 import org.jboss.weld.transaction.spi.TransactionServices;
 import org.jboss.weld.util.reflection.Formats;
 import org.junit.Test;
@@ -89,7 +91,19 @@ public class EjbUnitRule implements TestRule {
                         new WeldTestConfig(clazz, method, cdiTestConfig)
                                 .addClass(SupportEjbExtended.class)
                                 .addServiceConfig(new ServiceConfig(TransactionServices.class,
-                                        new EjbUnitTransactionServices()));
+                                        new EjbUnitTransactionServices()))
+                                .addServiceConfig(
+                                        new CdiTestConfig.ServiceConfig(ScheduledExecutorServiceFactory.class, new ScheduledExecutorServiceFactory() {
+                                            @Override
+                                            public ScheduledExecutorService get() {
+                                                return null;
+                                            }
+
+                                            @Override
+                                            public void cleanup() {
+
+                                        }
+                                        }));
 
                 weld = new Weld() {
 
@@ -113,17 +127,6 @@ public class EjbUnitRule implements TestRule {
 
                 };
 
-                try {
-
-                    container = weld.initialize();
-                } catch (Throwable e) {
-                    if (startupException == null) {
-                        startupException = e;
-                    }
-                    if (e instanceof ClassFormatError) {
-                        throw e;
-                    }
-                }
 
             } catch (ClassFormatError e) {
 
@@ -151,6 +154,8 @@ public class EjbUnitRule implements TestRule {
          */
         @Override
         public void evaluate() throws Throwable {
+            if (container == null)
+                initWeld();
             if (startupException != null) {
                 if (method != null && method.getAnnotation(Test.class).expected() == startupException.getClass()) {
                     return;
@@ -178,10 +183,25 @@ public class EjbUnitRule implements TestRule {
             } finally {
                 initialContext.close();
                 weld.shutdown();
-
+                container = null;
             }
 
 
+        }
+
+        public void initWeld() {
+            if (startupException == null) {
+                try {
+                    container = weld.initialize();
+                } catch (Throwable e) {
+                    if (startupException == null) {
+                        startupException = e;
+                    }
+                    if (e instanceof ClassFormatError) {
+                        throw e;
+                    }
+                }
+            }
         }
 
         private void initWeldFields(Object newTestInstance, Class<?> clazzP) throws IllegalAccessException {

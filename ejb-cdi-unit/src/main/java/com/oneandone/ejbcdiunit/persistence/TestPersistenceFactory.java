@@ -6,9 +6,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Default;
@@ -31,7 +33,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.oneandone.ejbcdiunit.SessionContextFactory;
-import com.oneandone.ejbcdiunit.SupportEjbExtended;
 import com.oneandone.ejbcdiunit.internal.EjbExtensionExtended;
 
 /**
@@ -42,11 +43,10 @@ import com.oneandone.ejbcdiunit.internal.EjbExtensionExtended;
  * @author aschoerk
  */
 @ApplicationScoped
-@SupportEjbExtended
 @AdditionalClasses({SessionContextFactory.class})
 public class TestPersistenceFactory extends PersistenceFactory {
 
-    public static boolean TRY_PERSISTENCE_XML = true;
+    public static Set<String> notFoundPersistenceUnits = new HashSet<>();
     static Logger logger = LoggerFactory.getLogger("TestPersistenceFactory");
     @Inject
     EjbExtensionExtended ejbExtensionExtended;
@@ -84,7 +84,7 @@ public class TestPersistenceFactory extends PersistenceFactory {
         return ejbExtensionExtended;
     }
 
-    private PersistenceUnitInfo testPersistenceUnitInfo() {
+    protected PersistenceUnitInfo testPersistenceUnitInfo() {
         return new PersistenceUnitInfo() {
             @Override
             public String getPersistenceUnitName() {
@@ -205,12 +205,12 @@ public class TestPersistenceFactory extends PersistenceFactory {
      */
     protected EntityManagerFactory createEntityManagerFactory() {
         Throwable possiblyToThrow = null;
-        if (TRY_PERSISTENCE_XML) {
+        if (!notFoundPersistenceUnits.contains(getPersistenceUnitName())) {
             try {
-                return Persistence.createEntityManagerFactory("test");
+                return Persistence.createEntityManagerFactory(getPersistenceUnitName());
             } catch (Throwable e) {
                 possiblyToThrow = e;
-                TRY_PERSISTENCE_XML = false;
+                notFoundPersistenceUnits.add(getPersistenceUnitName());
             }
         }
 
