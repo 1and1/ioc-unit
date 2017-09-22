@@ -312,6 +312,7 @@ public abstract class PersistenceFactoryTestBase {
         Long res = em.createQuery("select count(e) from TestEntity1 e", Long.class).getSingleResult();
         Assert.assertThat(res, is(2L));
         userTransaction.rollback();
+        userTransaction.begin();
         res = em.createQuery("select count(e) from TestEntity1 e", Long.class).getSingleResult();
         Assert.assertThat(res, is(1L));
 
