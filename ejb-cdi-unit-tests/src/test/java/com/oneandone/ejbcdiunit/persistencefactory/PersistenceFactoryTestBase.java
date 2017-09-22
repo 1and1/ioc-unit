@@ -296,11 +296,6 @@ public abstract class PersistenceFactoryTestBase {
     @Test
     public void checkUserTransactionAndDataSource() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException, SQLException {
         try (Connection dummyconn = dataSource.getConnection()) {
-            try (PreparedStatement stmt = dummyconn.prepareStatement("insert into test_entity_1 (id," +
-                    getStringAttributeNativeName() + ", " + getIntAttributeNativeName() +
-                    ") values (111,'sss', 114)")) {
-                Assert.assertThat(stmt.executeUpdate(), is(0));
-            }
             userTransaction.begin();
             userTransaction.rollback();
             userTransaction.begin();

@@ -14,6 +14,15 @@ import com.oneandone.ejbcdiunit.persistence.TestPersistenceFactory;
 @RunWith(EjbUnitRunner.class)
 @AdditionalClasses({ TestPersistenceFactory.class, TestEntity1.class })
 public class TestPersistenceFactoryH2Test extends PersistenceFactoryTestBase {
+
+    protected String getStringAttributeNativeName() {
+        return "string_attribute";
+    }
+
+    protected String getIntAttributeNativeName() {
+        return "int_attribute";
+    }
+
     @Before
     public void beforeTestPersistenceFactoryH2Test() {
         System.setProperty("hibernate.ejb.naming_strategy", "org.hibernate.cfg.ImprovedNamingStrategy");
