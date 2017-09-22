@@ -295,37 +295,39 @@ public abstract class PersistenceFactoryTestBase {
 
     @Test
     public void checkUserTransactionAndDataSource() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException, SQLException {
-        userTransaction.begin();
-        userTransaction.rollback();
-        userTransaction.begin();
-        TestEntity1 testEntity1 = new TestEntity1();
-        testEntity1.setIntAttribute(111);
-        testEntity1.setStringAttribute("string");
-        em.persist(testEntity1);
-        userTransaction.commit();
-        userTransaction.begin();
-        testEntity1 = new TestEntity1();
-        testEntity1.setIntAttribute(112);
-        testEntity1.setStringAttribute("string");
-        em.persist(testEntity1);
-        em.flush();
-        Long res = em.createQuery("select count(e) from TestEntity1 e", Long.class).getSingleResult();
-        Assert.assertThat(res, is(2L));
-        // userTransaction.rollback();
-        // userTransaction.begin();
-        res = em.createQuery("select count(e) from TestEntity1 e", Long.class).getSingleResult();
-        Assert.assertThat(res, is(2L));
+        try (Connection dummyconn = dataSource.getConnection()) {
+            userTransaction.begin();
+            userTransaction.rollback();
+            userTransaction.begin();
+            TestEntity1 testEntity1 = new TestEntity1();
+            testEntity1.setIntAttribute(111);
+            testEntity1.setStringAttribute("string");
+            em.persist(testEntity1);
+            userTransaction.commit();
+            userTransaction.begin();
+            testEntity1 = new TestEntity1();
+            testEntity1.setIntAttribute(112);
+            testEntity1.setStringAttribute("string");
+            em.persist(testEntity1);
+            em.flush();
+            Long res = em.createQuery("select count(e) from TestEntity1 e", Long.class).getSingleResult();
+            Assert.assertThat(res, is(2L));
+            // userTransaction.rollback();
+            // userTransaction.begin();
+            res = em.createQuery("select count(e) from TestEntity1 e", Long.class).getSingleResult();
+            Assert.assertThat(res, is(2L));
 
-        try (Connection conn = dataSource.getConnection()) {
+            try (Connection conn = dataSource.getConnection()) {
 
-            try (PreparedStatement stmt = conn.prepareStatement("insert into test_entity_1 (id," +
-                    getStringAttributeNativeName() + ", " + getIntAttributeNativeName() +
-                    ") values (111,'sss', 114)")) {
-                Assert.assertThat(stmt.executeUpdate(), is(1));
+                try (PreparedStatement stmt = conn.prepareStatement("insert into test_entity_1 (id," +
+                        getStringAttributeNativeName() + ", " + getIntAttributeNativeName() +
+                        ") values (111,'sss', 114)")) {
+                    Assert.assertThat(stmt.executeUpdate(), is(1));
+                }
             }
+            res = em.createQuery("select count(e) from TestEntity1 e", Long.class).getSingleResult();
+            Assert.assertThat(res, is(3L));
         }
-        res = em.createQuery("select count(e) from TestEntity1 e", Long.class).getSingleResult();
-        Assert.assertThat(res, is(3L));
 
     }
 
