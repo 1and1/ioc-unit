@@ -110,7 +110,8 @@ public class TestPersistenceFactory extends PersistenceFactory {
             public DataSource getNonJtaDataSource() {
                 BasicDataSource bds = new BasicDataSource();
                 bds.setDriverClassName(System.getProperty("hibernate.connection.driverclass", "org.h2.Driver"));
-                bds.setUrl(System.getProperty("hibernate.connection.url", "jdbc:h2:mem:test;MODE=MySQL;DB_CLOSE_DELAY=0;LOCK_MODE=0"));
+                bds.setUrl(System.getProperty("hibernate.connection.url",
+                        "jdbc:h2:mem:test;MODE=MySQL;DB_CLOSE_ON_EXIT=TRUE;DB_CLOSE_DELAY=0;LOCK_MODE=0;LOCK_TIMEOUT=10000"));
                 bds.setUsername(System.getProperty("hibernate.connection.username", "sa"));
                 bds.setPassword(System.getProperty("hibernate.connection.password", ""));
                 return bds;

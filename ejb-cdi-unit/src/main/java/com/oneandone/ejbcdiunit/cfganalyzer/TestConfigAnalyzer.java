@@ -369,9 +369,17 @@ public abstract class TestConfigAnalyzer {
         }
     }
 
-
     private Set<Class<?>> findMockedClassesOfTest(Class<?> testClass) {
         Set<Class<?>> mockedClasses = new HashSet<Class<?>>();
+        Class<?> actClass = testClass;
+        while (!actClass.equals(Object.class)) {
+            findMockedClassesOfTest(actClass, mockedClasses);
+            actClass = actClass.getSuperclass();
+        }
+        return mockedClasses;
+    }
+
+    private Set<Class<?>> findMockedClassesOfTest(Class<?> testClass, Set<Class<?>> mockedClasses) {
 
         try {
 

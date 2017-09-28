@@ -301,9 +301,10 @@
                 <version>${maven-surefire-plugin.version}</version>
                 <configuration>
                     <reportFormat>plain</reportFormat>
-                    <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                    <!--redirectTestOutputToFile>true</redirectTestOutputToFile-->
                     <!-- Sets the VM argument line used when unit tests are run. -->
                     <argLine>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005</argLine>
+                    <reuseForks>false</reuseForks>
                 </configuration>
             </plugin>
             <plugin>
