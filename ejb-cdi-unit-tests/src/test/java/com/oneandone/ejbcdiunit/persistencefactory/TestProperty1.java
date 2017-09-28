@@ -14,6 +14,7 @@ import javax.transaction.SystemException;
 import org.h2.jdbc.JdbcSQLException;
 import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,6 +40,12 @@ public class TestProperty1 extends PersistenceFactoryTestBase {
         System.setProperty("hibernate.default_schema", "schema");
         System.setProperty("hibernate.connection.url",
                 "jdbc:h2:mem:test;MODE=MySQL;DB_CLOSE_DELAY=0;INIT=create schema if not exists schema;LOCK_MODE=0");
+    }
+
+    @AfterClass
+    public static void clearSchema() {
+        System.clearProperty("hibernate.default_schema");
+        System.clearProperty("hibernate.connection.url");
     }
 
     @After
