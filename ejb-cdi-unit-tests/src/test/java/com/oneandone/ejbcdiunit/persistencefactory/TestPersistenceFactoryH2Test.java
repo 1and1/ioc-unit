@@ -1,7 +1,7 @@
 package com.oneandone.ejbcdiunit.persistencefactory;
 
 import org.jglue.cdiunit.AdditionalClasses;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 
 import com.oneandone.ejbcdiunit.EjbUnitRunner;
@@ -23,9 +23,18 @@ public class TestPersistenceFactoryH2Test extends PersistenceFactoryTestBase {
         return "int_attribute";
     }
 
-    @Before
-    public void beforeTestPersistenceFactoryH2Test() {
+
+    @BeforeClass
+    public static void beforeTestPersistenceFactoryH2Test() {
+        System.setProperty("hibernate.connection.url",
+                "jdbc:h2:mem:test;MODE=MySQL;DB_CLOSE_ON_EXIT=TRUE;" +
+                        "INIT=create schema if not exists testschema;DB_CLOSE_DELAY=0;LOCK_MODE=0;LOCK_TIMEOUT=10000");
+        System.setProperty("hibernate.default_schema", "testschema");
         System.setProperty("hibernate.ejb.naming_strategy", "org.hibernate.cfg.ImprovedNamingStrategy");
+    }
+
+    protected String getSchema() {
+        return "testschema.";
     }
 
     @Override

@@ -61,6 +61,10 @@ public abstract class PersistenceFactoryTestBase {
         return "intAttribute";
     }
 
+    protected String getSchema() {
+        return "";
+    }
+
     @Test
     public void canInsertInMandatoryTransaction() throws Exception {
         try (TestTransaction resource1 = persistenceFactory.transaction(REQUIRED)) {
@@ -319,7 +323,8 @@ public abstract class PersistenceFactoryTestBase {
 
             try (Connection conn = dataSource.getConnection()) {
 
-                try (PreparedStatement stmt = conn.prepareStatement("insert into test_entity_1 (id," +
+                try (PreparedStatement stmt = conn.prepareStatement("insert into " + getSchema() +
+                        "test_entity_1 (id," +
                         getStringAttributeNativeName() + ", " + getIntAttributeNativeName() +
                         ") values (111,'sss', 114)")) {
                     Assert.assertThat(stmt.executeUpdate(), is(1));
@@ -330,6 +335,7 @@ public abstract class PersistenceFactoryTestBase {
         }
 
     }
+
 
 
 }
