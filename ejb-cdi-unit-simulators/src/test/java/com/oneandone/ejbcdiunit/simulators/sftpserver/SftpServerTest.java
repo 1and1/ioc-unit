@@ -106,6 +106,7 @@ public class SftpServerTest {
 
                 for (Exception e : exceptions) {
                     if (!isCausedBySignatureException(e) && !isCausedByFileNotFoundException(e)) {
+                        logger.info("failing exception", e);
                         fail();
                     }
                 }
