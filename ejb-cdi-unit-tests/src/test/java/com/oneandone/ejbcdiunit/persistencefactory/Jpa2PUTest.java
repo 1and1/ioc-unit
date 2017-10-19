@@ -1,23 +1,27 @@
 package com.oneandone.ejbcdiunit.persistencefactory;
 
+import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.fail;
 
 import javax.ejb.TransactionAttributeType;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
+import javax.persistence.PersistenceException;
 import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
 import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 
+import org.hibernate.exception.GenericJDBCException;
 import org.jglue.cdiunit.ActivatedAlternatives;
 import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -98,14 +102,14 @@ public class Jpa2PUTest {
 
         try {
             factory2.produceEntityManager().refresh(testEntity1a);
-            Assert.fail("expected Illegal Argument Exception");
+            fail("expected Illegal Argument Exception");
         } catch (IllegalArgumentException e) {
 
         }
 
         try {
             factory1.produceEntityManager().refresh(testEntity1b);
-            Assert.fail("expected Illegal Argument Exception");
+            fail("expected Illegal Argument Exception");
         } catch (IllegalArgumentException e) {
 
         }
@@ -126,7 +130,7 @@ public class Jpa2PUTest {
         assertThat(testEntity1a.getIntAttribute(), is(10));
         try {
             factory2.produceEntityManager().refresh(testEntity1a); // provoke error
-            Assert.fail("expected Illegal Argument Exception");
+            fail("expected Illegal Argument Exception");
         } catch (IllegalArgumentException e) { }
         assertThat(testEntity1a.getIntAttribute(), is(10));
         factory1.produceEntityManager().refresh(testEntity1a); // should be ok
@@ -138,13 +142,44 @@ public class Jpa2PUTest {
         assertThat(testEntity1a.getIntAttribute(), is(20));
         try {
             factory1.produceEntityManager().refresh(testEntity1a); // provoke error
-            Assert.fail("expected Illegal Argument Exception");
+            fail("expected Illegal Argument Exception");
         } catch (IllegalArgumentException e) { }
         assertThat(testEntity1a.getIntAttribute(), is(20));
         factory2.produceEntityManager().refresh(testEntity1a); // should be ok
 
         assertThat(testEntity1a.getIntAttribute(), is(20));
 
+    }
+
+    @Test
+    public void checkForUpdate() throws Exception {
+
+        EntityManager em1 = factory1.produceEntityManager();
+        EntityManager em2 = factory2.produceEntityManager();
+        TestEntity1 entity1;
+        try (TestTransaction resource = factory2.transaction(REQUIRES_NEW)) {
+            entity1 = new TestEntity1();
+            entity1.setIntAttribute(10);
+            em2.persist(entity1);
+        }
+
+        try (TestTransaction resource1 = factory1.transaction(REQUIRES_NEW);
+                TestTransaction resource2 = factory2.transaction(REQUIRES_NEW)) {
+            TestEntity1 res1 =
+                    em1.createQuery("select e from TestEntity1 e where e.id = :id", TestEntity1.class)
+                            .setParameter("id", entity1.getId())
+                            .setLockMode(LockModeType.PESSIMISTIC_WRITE).getSingleResult();
+            try {
+                TestEntity1 res2 =
+                        em2.createQuery("select e from TestEntity1 e where e.id = :id", TestEntity1.class)
+                                .setParameter("id", entity1.getId())
+                                .setLockMode(LockModeType.PESSIMISTIC_WRITE).getSingleResult();
+                fail("expected PersistenceException because of two updates");
+            } catch (PersistenceException e) {
+
+                assert (e.getCause().getClass().equals(GenericJDBCException.class));
+            }
+        }
     }
 
 

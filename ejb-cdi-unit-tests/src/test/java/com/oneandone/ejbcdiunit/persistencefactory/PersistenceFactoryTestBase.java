@@ -4,15 +4,25 @@ import static javax.ejb.TransactionAttributeType.MANDATORY;
 import static javax.ejb.TransactionAttributeType.REQUIRED;
 import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertFalse;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
 import javax.persistence.PersistenceException;
 import javax.persistence.TransactionRequiredException;
 import javax.sql.DataSource;
@@ -296,6 +306,92 @@ public abstract class PersistenceFactoryTestBase {
             assertThat(entity1.getIntAttribute(), is(20)); // new value, because of flush before query
         }
     }
+
+    @Test
+    public void checkForUpdate() throws Exception {
+
+        EntityManager em1 = persistenceFactory.produceEntityManager();
+        EntityManager em2 = persistenceFactory.produceEntityManager();
+        TestEntity1 entity1;
+        try (TestTransaction resource = persistenceFactory.transaction(REQUIRED)) {
+            entity1 = new TestEntity1();
+            entity1.setIntAttribute(10);
+            em.persist(entity1);
+        }
+
+        try (TestTransaction resource = persistenceFactory.transaction(REQUIRED)) {
+            TestEntity1 res1 =
+                    em1.createQuery("select e from TestEntity1 e where e.id = :id", TestEntity1.class)
+                            .setParameter("id", entity1.getId())
+                            .setLockMode(LockModeType.PESSIMISTIC_WRITE).getSingleResult();
+            TestEntity1 res2 =
+                    em2.createQuery("select e from TestEntity1 e where e.id = :id", TestEntity1.class)
+                            .setParameter("id", entity1.getId())
+                            .setLockMode(LockModeType.PESSIMISTIC_WRITE).getSingleResult();
+            assertThat(res1.getId(), is(res2.getId()));
+        }
+    }
+
+    @Test
+    public void checkForUpdateMultiThreaded() throws Exception {
+
+        TestEntity1 entity1;
+        try (TestTransaction resource = persistenceFactory.transaction(REQUIRED)) {
+            entity1 = new TestEntity1();
+            entity1.setIntAttribute(10);
+            em.persist(entity1);
+        }
+
+        ExecutorService threadPool = Executors.newFixedThreadPool(10);
+
+        List<Callable<Object>> tasks = new ArrayList<>();
+        List<Future<Object>> futures = new ArrayList<>();
+
+        Set<Integer> intAttributes = new HashSet<>();
+
+        for (int i = 0; i < 3; i++) {
+            Callable<Object> callable = new Callable<Object>() {
+                @Override
+                public Object call() throws Exception {
+                    TestEntity1 resOrg =
+                            em.createQuery("select e from TestEntity1 e where e.id = :id", TestEntity1.class)
+                                    .setParameter("id", entity1.getId()).getSingleResult();
+                    logger.info("Got testentity1 before Transaction not for update id: {} int: {}", resOrg.getId(), resOrg.getIntAttribute());
+                    try (TestTransaction resource = persistenceFactory.transaction(REQUIRED)) {
+                        TestEntity1 res1 =
+                                em.createQuery("select e from TestEntity1 e where e.id = :id", TestEntity1.class)
+                                        .setParameter("id", entity1.getId())
+                                        .setLockMode(LockModeType.PESSIMISTIC_WRITE).getSingleResult();
+                        res1.setIntAttribute(res1.getIntAttribute() + 1);
+                        assertFalse(intAttributes.contains(res1.getIntAttribute()));
+                        intAttributes.add(res1.getIntAttribute());
+                        logger.info("Got and changed testentity1 for update id: {} int: {}", res1.getId(), res1.getIntAttribute());
+
+                        return res1;
+                    } catch (Throwable e) {
+                        logger.info("Exception", e);
+                        return null;
+                    }
+                }
+            };
+
+            futures.add(threadPool.submit(callable));
+        }
+
+        for (Future<Object> future : futures) {
+            while (!future.isDone()) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    throw new IllegalStateException("task interrupted", e);
+                }
+            }
+        }
+        assertThat(intAttributes, contains(entity1.getIntAttribute() + 1, entity1.getIntAttribute() + 2, entity1.getIntAttribute() + 3));
+        logger.info("Shutdown threadpool");
+        threadPool.shutdown();
+    }
+
 
     @Test
     public void checkUserTransactionAndDataSource() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException, SQLException {

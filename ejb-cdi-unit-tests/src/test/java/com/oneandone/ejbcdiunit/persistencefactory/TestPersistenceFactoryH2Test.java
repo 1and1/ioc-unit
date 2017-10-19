@@ -16,22 +16,30 @@ import com.oneandone.ejbcdiunit.persistence.TestPersistenceFactory;
 @AdditionalClasses({ TestPersistenceFactory.class, TestEntity1.class })
 public class TestPersistenceFactoryH2Test extends PersistenceFactoryTestBase {
 
-    protected String getStringAttributeNativeName() {
-        return "string_attribute";
-    }
-
-    protected String getIntAttributeNativeName() {
-        return "int_attribute";
-    }
-
-
     @BeforeClass
     public static void beforeTestPersistenceFactoryH2Test() {
         System.setProperty("hibernate.connection.url",
-                "jdbc:h2:mem:test;MODE=MySQL;DB_CLOSE_ON_EXIT=TRUE;" +
+                "jdbc:h2:mem:test;MODE=MySQL;DB_CLOSE_ON_EXIT=TRUE;MVCC=TRUE;" +
                         "INIT=create schema if not exists testschema;DB_CLOSE_DELAY=0;LOCK_MODE=0;LOCK_TIMEOUT=10000");
         System.setProperty("hibernate.default_schema", "testschema");
         System.setProperty("hibernate.ejb.naming_strategy", "org.hibernate.cfg.ImprovedNamingStrategy");
+    }
+
+    boolean isHibernate5() {
+        try {
+            Class.forName("org.hibernate.boot.model.naming.PhysicalNamingStrategy");
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
+    }
+
+    protected String getStringAttributeNativeName() {
+        return isHibernate5() ? "stringAttribute" : "string_attribute";
+    }
+
+    protected String getIntAttributeNativeName() {
+        return isHibernate5() ? "intAttribute" : "int_attribute";
     }
 
     @AfterClass

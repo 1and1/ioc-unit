@@ -1,0 +1,13 @@
+// for the transport, PASSWORD enter 12345
+openssl genrsa -aes256 -out ftp_transport_private_key_with_password.pem 2048
+openssl rsa -in ftp_transport_private_key_with_password.pem -out ftp_transport_private_key_no_password.pem
+
+// for the publicKey authentification, PASSWORD enter 12345
+openssl genrsa -aes256 -out ftp_authentication_private_key_with_password.pem 2048
+openssl rsa -in ftp_authentication_private_key_with_password.pem -out ftp_authentication_private_key_no_password.pem
+openssl rsa -in ftp_authentication_private_key_no_password.pem -pubout > ftp_authentication_public_key.pem
+
+// for key generated with, PASSWORD enter <<nothing>>
+ssh-keygen -t rsa -b 2048 -C "Test Key" -f ftp_authentification_keygen
+-> generates two files with ftp_authentification_keygen.pub
+

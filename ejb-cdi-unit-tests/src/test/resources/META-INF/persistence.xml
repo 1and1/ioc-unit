@@ -5,11 +5,11 @@
     <persistence-unit name="j2eeSimDS1Test" transaction-type="RESOURCE_LOCAL">
         <class>com.oneandone.ejbcdiunit.entities.TestEntity1</class>
         <properties>
-            <property name="hibernate.show_sql" value="false"/>
+            <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
             <property name="hibernate.use_sql_comments" value="true"/>
             <property name="hibernate.format_sql" value="true"/>
-            <!--property name="hibernate.id.new_generator_mappings" value="false" /-->
+            <property name="hibernate.id.new_generator_mappings" value="false"/>
             <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
             <property name="javax.persistence.jdbc.url" value="jdbc:h2:mem:test;MODE=MySQL;DB_CLOSE_DELAY=0"/>
             <property name="javax.persistence.jdbc.user" value="sa"/>
@@ -20,14 +20,14 @@
     <persistence-unit name="j2eeSimDS2Test" transaction-type="RESOURCE_LOCAL">
         <class>com.oneandone.ejbcdiunit.entities.TestEntity1</class>
         <properties>
-            <property name="hibernate.show_sql" value="false"/>
+            <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
             <property name="hibernate.id.new_generator_mappings" value="false"/>
             <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
             <property name="javax.persistence.jdbc.url" value="jdbc:h2:mem:test;MODE=MySQL;DB_CLOSE_DELAY=0"/>
             <property name="javax.persistence.jdbc.user" value="sa"/>
             <property name="javax.persistence.jdbc.password" value=""/>
-            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect"/>
         </properties>
     </persistence-unit>
     <persistence-unit name="testdb" transaction-type="RESOURCE_LOCAL">

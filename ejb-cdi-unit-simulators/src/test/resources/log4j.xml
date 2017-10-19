@@ -18,6 +18,12 @@
     <category name="org.hibernate.ejb.packaging">
         <priority value="ERROR"/>
     </category>
+    <category name="com.oneandone">
+        <priority value="INFO"/>
+    </category>
+    <category name="SftpLogger">
+        <priority value="TRACE"/>
+    </category>
     <category name="org.hibernate.orm.url">
         <priority value="ERROR"/>
     </category>
