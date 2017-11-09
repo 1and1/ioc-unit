@@ -18,6 +18,7 @@ import javax.transaction.RollbackException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import com.oneandone.ejbcdiunit.persistence.SimulatedTransactionManager;
 
@@ -28,10 +29,29 @@ import com.oneandone.ejbcdiunit.persistence.SimulatedTransactionManager;
 @EjbTransactional
 public class TransactionalInterceptor {
 
-
     private final Logger logger =
             LoggerFactory.getLogger(TransactionalInterceptor.class);
     private SimulatedTransactionManager transactionManager = new SimulatedTransactionManager();
+
+    static ThreadLocal<TransactionAttributeType> lastTransactionAttributeType = new ThreadLocal<>();
+    static ThreadLocal<Integer> level = new ThreadLocal<>();
+
+    int getLevel() {
+        Integer actLevel = level.get();
+        if (actLevel == null) {
+            level.set(0);
+            actLevel = 0;
+        }
+        return actLevel;
+    }
+
+    void incLevel() {
+        level.set(getLevel() + 1);
+    }
+
+    void decLevel() {
+        level.set(getLevel() - 1);
+    }
 
     private ApplicationException findApplicationException(Throwable ex) {
         // search for applicationexception
@@ -61,7 +81,6 @@ public class TransactionalInterceptor {
     public Object manageTransaction(InvocationContext ctx)
             throws Exception {
         if (transactionManager.hasActiveTransactionInterceptor()) {
-
             final Class<?> declaringClass = ctx.getMethod().getDeclaringClass();
             Class<?> targetClass = getTargetClass(ctx);
             boolean beanManaged = isBeanManaged(declaringClass) || isBeanManaged(targetClass);
@@ -70,26 +89,40 @@ public class TransactionalInterceptor {
                     ) {
                 return ctx.proceed();
             } else {
+                incLevel();
+                TransactionAttributeType savedLastTransactionAttributeType = lastTransactionAttributeType.get();
+                TransactionAttributeType toPush;
                 if (beanManaged) {
-                    transactionManager.push(TransactionAttributeType.NOT_SUPPORTED);
+                    toPush = TransactionAttributeType.NOT_SUPPORTED;
                 } else {
                     TransactionAttribute transaction =
                             declaringClass.getAnnotation(
                                     TransactionAttribute.class);
                     TransactionAttribute transactionMethod = ctx.getMethod().getAnnotation(TransactionAttribute.class);
+
                     if (transactionMethod != null) {
-                        transactionManager.push(transactionMethod.value());
+                        toPush = transactionMethod.value();
                     } else if (transaction != null) {
-                        transactionManager.push(transaction.value());
+                        toPush = transaction.value();
                     } else {
-                        transactionManager.push(TransactionAttributeType.REQUIRED);
+                        toPush = TransactionAttributeType.REQUIRED;
                     }
                 }
+                transactionManager.push(toPush);
+                lastTransactionAttributeType.set(toPush);
 
                 boolean passThroughRollbackException = true;
                 try {
+                    logger.info("Thread {} L{} changing  from {} to {} xid: {} in {}.{}",
+                            Thread.currentThread().getId(), getLevel(),
+                            savedLastTransactionAttributeType == null ? "undefined" : savedLastTransactionAttributeType,
+                            toPush, MDC.get("XID"), declaringClass.getSimpleName(), ctx.getMethod().getName());
                     return ctx.proceed();
                 } catch (Throwable ex) {
+                    logger.info("Thread {} L{} Exception {} in {} xid: {} in {}.{}",
+                            Thread.currentThread().getId(), getLevel(),
+                            ex.getClass().getSimpleName(), toPush, MDC.get("XID"), declaringClass.getSimpleName(),
+                            ctx.getMethod().getName());
                     if (beanManaged) {
                         if (ex instanceof RuntimeException) {
                             throw new EJBException((RuntimeException) ex);
@@ -113,13 +146,23 @@ public class TransactionalInterceptor {
                         throw ex;
                     }
                 } finally {
+                    logger.info("Thread {} L{} finally   in {} xid: {} in {}.{}",
+                            Thread.currentThread().getId(), getLevel(), toPush, MDC.get("XID"), declaringClass.getSimpleName(),
+                            ctx.getMethod().getName());
                     try {
                         transactionManager.pop();
                     } catch (RollbackException rbe) {
                         if (passThroughRollbackException) {
                             throw rbe;
                         }
+                    } finally {
+                        logger.info("Thread {} L{} done      {} back to {} xid: {} in {}.{}",
+                                Thread.currentThread().getId(), getLevel(), toPush,
+                                savedLastTransactionAttributeType == null ? "undefined" : savedLastTransactionAttributeType,
+                                MDC.get("XID"), declaringClass.getSimpleName(), ctx.getMethod().getName());
                     }
+                    lastTransactionAttributeType.set(savedLastTransactionAttributeType);
+                    decLevel();
                 }
             }
         } else {

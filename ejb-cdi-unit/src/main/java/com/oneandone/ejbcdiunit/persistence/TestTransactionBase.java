@@ -2,9 +2,13 @@ package com.oneandone.ejbcdiunit.persistence;
 
 import static javax.ejb.TransactionAttributeType.NOT_SUPPORTED;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityTransaction;
 import javax.persistence.TransactionRequiredException;
+
+import org.slf4j.MDC;
 
 /**
  * TestTransaction keeps the information about simulated EJB-Transactions for one EntityManager.
@@ -16,6 +20,10 @@ public class TestTransactionBase {
     private boolean dropEntityManager = false;
     private boolean closeIt = false;
     private boolean isClosed = false;
+
+    static AtomicInteger tracounter = new AtomicInteger(0);
+
+    private Integer lastXid = null;
 
     private TestTransactionBase embedding;
 
@@ -71,17 +79,34 @@ public class TestTransactionBase {
                     dropEntityManager = true;
                     closeIt = true;
                     tra.begin();
+                    newXid();
                 }
                 break;
             case REQUIRES_NEW:
                 persistenceFactory.createAndRegister();
                 persistenceFactory.getEntityManager().getTransaction().begin();
+                newXid();
                 closeIt = true;
                 dropEntityManager = true;
                 break;
             default:
                 throw new RuntimeException("Invalid TransactionAttribute " + transactionAttribute);
         }
+    }
+
+    private void newXid() {
+        assert lastXid == null;
+        if (MDC.get("XID") != null)
+            lastXid = Integer.parseInt(MDC.get("XID"));
+        MDC.put("XID", Integer.toString(tracounter.incrementAndGet()));
+    }
+
+    private void resetXid() {
+        if (lastXid != null)
+            MDC.put("XID", Integer.toString(lastXid));
+        else
+            MDC.remove("XID");
+        lastXid = null;
     }
 
     /**
@@ -114,6 +139,7 @@ public class TestTransactionBase {
                             tra.commit();
                         }
                     }
+                    resetXid();
                 }
             } finally {
                 if (dropEntityManager) {
@@ -134,6 +160,7 @@ public class TestTransactionBase {
         try {
             if (tra.isActive()) {
                 tra.rollback();
+                resetXid();
             }
         } finally {
             if (!dropEntityManager && embedding != null) {

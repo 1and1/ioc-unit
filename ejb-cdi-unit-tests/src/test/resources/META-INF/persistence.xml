@@ -33,7 +33,7 @@
     <persistence-unit name="testdb" transaction-type="RESOURCE_LOCAL">
         <class>com.oneandone.ejbcdiunit.entities.TestEntity1</class>
         <properties>
-            <property name="hibernate.show_sql" value="false"/>
+            <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
             <property name="hibernate.id.new_generator_mappings" value="false"/>
             <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
