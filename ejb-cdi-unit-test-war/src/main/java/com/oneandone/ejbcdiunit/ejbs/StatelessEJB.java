@@ -86,60 +86,60 @@ public class StatelessEJB {
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void persistRequiredAndRTException(TestEntity1 testEntity1) {
         entityManager.persist(testEntity1);
-        throw new RuntimeException("rt exception after persist in required");
+        throw new RuntimeException("rt exception after persist in required 1");
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void persistRequiredAndIOException(TestEntity1 testEntity1) throws IOException {
         entityManager.persist(testEntity1);
-        throw new IOException("io exception after persist in required");
+        throw new IOException("io exception after persist in required 1");
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void persistRequiresNewAndRTException(TestEntity1 testEntity1) {
         entityManager.persist(testEntity1);
-        throw new RuntimeException("rt exception after persist in required");
+        throw new RuntimeException("rt exception after persist in required 2");
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void persistRequiresNewAndIOException(TestEntity1 testEntity1) throws IOException {
         entityManager.persist(testEntity1);
-        throw new IOException("io exception after persist in required");
+        throw new IOException("io exception after persist in required 2");
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void persistRequiredIndirectAndRTException(TestEntity1 testEntity1) {
         StatelessEJB res = sessionContext.getBusinessObject(StatelessEJB.class);
         res.saveInCurrentTransaction(testEntity1);
-        throw new RuntimeException("rt exception after persist in required");
+        throw new RuntimeException("rt exception after persist in required 3");
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void persistRequiredIndirectAndRTExceptionIndirect(TestEntity1 testEntity1) {
         StatelessEJB res = sessionContext.getBusinessObject(StatelessEJB.class);
         res.persistRequiredAndRTException(testEntity1);
-        throw new RuntimeException("rt exception after persist in required");
+        throw new RuntimeException("rt exception after persist in required 4");
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void persistRequiredIndirectAndIOExceptionIndirect(TestEntity1 testEntity1) throws IOException {
         StatelessEJB res = sessionContext.getBusinessObject(StatelessEJB.class);
         res.persistRequiredAndIOException(testEntity1);
-        throw new RuntimeException("rt exception after persist in required");
+        throw new RuntimeException("rt exception after persist in required 5");
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void persistRequiresNewIndirectAndRTExceptionIndirect(TestEntity1 testEntity1) {
         StatelessEJB res = sessionContext.getBusinessObject(StatelessEJB.class);
         res.persistRequiresNewAndRTException(testEntity1);
-        throw new RuntimeException("rt exception after persist in required");
+        throw new RuntimeException("rt exception after persist in required 6");
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void persistRequiresNewIndirectAndIOExceptionIndirect(TestEntity1 testEntity1) throws IOException {
         StatelessEJB res = sessionContext.getBusinessObject(StatelessEJB.class);
         res.persistRequiresNewAndIOException(testEntity1);
-        throw new RuntimeException("rt exception after persist in required");
+        throw new RuntimeException("rt exception after persist in required 7");
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)

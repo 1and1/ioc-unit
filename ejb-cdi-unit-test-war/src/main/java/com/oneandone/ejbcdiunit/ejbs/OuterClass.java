@@ -98,4 +98,17 @@ public class OuterClass {
         throw new RuntimeException("exception to rollback transaction");
     }
 
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public void saveToSetRollbackOnlyAndTryAdditionalSave(TestEntity1 testEntity1) {
+        // no transaction-interceptor because of local call so both saves will be rolledback
+        try {
+            statelessEJB.persistRequiredAndRTException(testEntity1);
+        } catch (RuntimeException ex) {
+            ;
+        }
+        statelessEJB.saveInCurrentTransaction(new TestEntity1());
+        statelessEJB.saveInCurrentTransaction(new TestEntity1());
+    }
+
+
 }

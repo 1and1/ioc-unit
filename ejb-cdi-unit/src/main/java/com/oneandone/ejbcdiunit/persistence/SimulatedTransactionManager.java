@@ -247,6 +247,7 @@ public class SimulatedTransactionManager {
         ArrayList<ThreadLocalTransactionInformation> stack = transactionStack.get();
         handleUserTransactionOrNot(expectUserTransaction, stack);
         if (stack.get(stack.size() - 1).isRolledBack()) {
+            rollback(true);
             throw new RollbackException("Can't commit because rolled back");
         }
         ThreadLocalTransactionInformation element = stack.get(stack.size() - 1);
@@ -333,16 +334,18 @@ public class SimulatedTransactionManager {
      */
     public void pop() throws Exception {
         ArrayList<ThreadLocalTransactionInformation> stack = transactionStack.get();
-        ThreadLocalTransactionInformation element = stack.remove(stack.size() - 1);
-        ArrayList<Exception> exceptions = new ArrayList<>();
-        for (TestTransactionBase testTransactionBase : element.persistenceFactories) {
-            try {
-                testTransactionBase.close(element.getRollbackOnly() || element.isRolledBack());
-            } catch (Exception e) {
-                exceptions.add(e);
+        if (stack.size() > 0) {
+            ThreadLocalTransactionInformation element = stack.remove(stack.size() - 1);
+            ArrayList<Exception> exceptions = new ArrayList<>();
+            for (TestTransactionBase testTransactionBase : element.persistenceFactories) {
+                try {
+                    testTransactionBase.close(element.getRollbackOnly() || element.isRolledBack());
+                } catch (Exception e) {
+                    exceptions.add(e);
+                }
             }
+            handleExceptions(exceptions);
         }
-        handleExceptions(exceptions);
     }
 
     /**
@@ -405,6 +408,11 @@ public class SimulatedTransactionManager {
 
         void setRollbackOnly() {
             rollbackOnly = true;
+            if (transactionAttributeType == REQUIRED && previous != null) {
+                if (previous.transactionAttributeType == REQUIRED || previous.transactionAttributeType == REQUIRES_NEW) {
+                    previous.setRollbackOnly();
+                }
+            }
         }
 
         boolean getRollbackOnly() {

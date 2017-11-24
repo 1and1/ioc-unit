@@ -297,6 +297,12 @@ public class TestEjb extends EJBTransactionTestBase {
         super.testBeanManagedWOTraInTestCodeTryInNotSupported();
     }
 
+    @Override
+    @Test
+    public void saveToSetRollbackOnlyAndTryAdditionalSave() throws Exception {
+        super.saveToSetRollbackOnlyAndTryAdditionalSave();
+    }
+
     @Test
     public void testCacheWOTransaction() throws Exception {
         TestEntity1 entity1 = new TestEntity1();

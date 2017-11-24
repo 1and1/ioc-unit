@@ -250,4 +250,10 @@ public class WildflyArquillianTransactionTest extends EJBTransactionTestBase {
             throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
         super.testBeanManagedWOTraInTestCodeTryInNotSupported();
     }
+
+    @Override
+    @Test
+    public void saveToSetRollbackOnlyAndTryAdditionalSave() throws Exception {
+        super.saveToSetRollbackOnlyAndTryAdditionalSave();
+    }
 }

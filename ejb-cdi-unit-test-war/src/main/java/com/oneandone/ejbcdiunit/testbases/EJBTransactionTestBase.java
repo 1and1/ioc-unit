@@ -298,4 +298,10 @@ public abstract class EJBTransactionTestBase {
         statelessEJB.trySaveInNotSupportedTransaction(new TestEntity1());
         userTransaction.commit();
     }
+
+    public void saveToSetRollbackOnlyAndTryAdditionalSave() throws Exception {
+        runTestInRolledBackTransaction(e -> outerClass.saveToSetRollbackOnlyAndTryAdditionalSave(e), 1, true);
+        Number res = entityManager.createQuery("select count(e) from TestEntity1 e", Number.class).getSingleResult();
+        Assert.assertThat(res.intValue(), is(0));
+    }
 }

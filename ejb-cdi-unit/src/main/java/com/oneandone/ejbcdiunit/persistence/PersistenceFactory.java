@@ -127,7 +127,11 @@ public abstract class PersistenceFactory {
             throw new RuntimeException(e);
         }
         transactionManager.takePart(this);
-        return get();
+        EntityManager result = get();
+        if (expectTransaction && !result.getTransaction().isActive()) {
+            throw new TransactionRequiredException("Ejb-Simulation");
+        }
+        return result;
     }
 
     /**

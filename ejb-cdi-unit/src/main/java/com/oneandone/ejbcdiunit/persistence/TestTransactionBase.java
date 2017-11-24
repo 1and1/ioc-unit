@@ -73,7 +73,7 @@ public class TestTransactionBase {
                 }
                 break;
             case REQUIRED:
-                if (embedding == null || !tra.isActive()) {
+                if (embedding == null || !embedding.traActive()) {
                     persistenceFactory.createAndRegister();
                     tra = persistenceFactory.getEntityManager().getTransaction();
                     dropEntityManager = true;
@@ -91,6 +91,24 @@ public class TestTransactionBase {
                 break;
             default:
                 throw new RuntimeException("Invalid TransactionAttribute " + transactionAttribute);
+        }
+    }
+
+    private boolean traActive() {
+        switch (transactionAttribute) {
+            case NOT_SUPPORTED: return false;
+            case REQUIRED:
+            case REQUIRES_NEW: return true;
+            case SUPPORTS: {
+                if (embedding == null)
+                    return false;
+                else
+                    return embedding.traActive();
+            }
+            case NEVER: return false;
+            case MANDATORY: return true;
+            default:
+                throw new RuntimeException("unexpected transaction attribute: " + transactionAttribute);
         }
     }
 
