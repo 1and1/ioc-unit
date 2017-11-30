@@ -96,10 +96,10 @@ public class EmbeddedTomeeMdbTest {
 
 
         singletonMdbClient.sendMessageToQueue();
-        waitForMdbCalls(5);
+        waitForMdbCalls(5, false);
         Assert.assertThat(mdbEjbInfoSingleton.getNumberOfQCalls(), Matchers.is(5));
         cdiMdbClient.sendMessageToQueue();
-        waitForMdbCalls(10);
+        waitForMdbCalls(10, false);
         Assert.assertThat(mdbEjbInfoSingleton.getNumberOfQCalls(), Matchers.is(10));
     }
 
@@ -110,16 +110,17 @@ public class EmbeddedTomeeMdbTest {
         Assert.assertThat(mdbEjbInfoSingleton, Matchers.notNullValue());
 
         singletonMdbClient.sendMessageToTopic();
-        waitForMdbCalls(10);
+        waitForMdbCalls(10,true);
         Assert.assertThat(mdbEjbInfoSingleton.getNumberOfTCalls(), Matchers.is(10));
         cdiMdbClient.sendMessageToTopic();
-        waitForMdbCalls(20);
+        waitForMdbCalls(20, true);
         Assert.assertThat(mdbEjbInfoSingleton.getNumberOfTCalls(), Matchers.is(20));
     }
 
-    public void waitForMdbCalls(int calls) {
+    public void waitForMdbCalls(int calls, boolean isTopic) {
         long currentTime = System.currentTimeMillis();
-        while ((mdbEjbInfoSingleton.getNumberOfTCalls() < calls && mdbEjbInfoSingleton.getNumberOfQCalls() < calls)
+        while (((mdbEjbInfoSingleton.getNumberOfTCalls() < calls && isTopic)
+                || (mdbEjbInfoSingleton.getNumberOfQCalls() < calls && !isTopic))
                 && System.currentTimeMillis() < currentTime + 60000) {
             try {
                 Thread.sleep(100);
