@@ -119,8 +119,8 @@ public class EmbeddedTomeeMdbTest {
 
     public void waitForMdbCalls(int calls, boolean isTopic) {
         long currentTime = System.currentTimeMillis();
-        while (((mdbEjbInfoSingleton.getNumberOfTCalls() < calls && isTopic)
-                || (mdbEjbInfoSingleton.getNumberOfQCalls() < calls && !isTopic))
+        while (((mdbEjbInfoSingleton.getNumberOfTCalls() <= calls && isTopic)
+                || (mdbEjbInfoSingleton.getNumberOfQCalls() <= calls && !isTopic))
                 && System.currentTimeMillis() < currentTime + 60000) {
             try {
                 Thread.sleep(100);
