@@ -305,7 +305,7 @@
                     <!--redirectTestOutputToFile>true</redirectTestOutputToFile-->
                     <!-- Sets the VM argument line used when unit tests are run. -->
                     <argLine>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005</argLine>
-                    <!--reuseForks>false</reuseForks-->
+                    <reuseForks>false</reuseForks>
                 </configuration>
             </plugin>
             <plugin>
