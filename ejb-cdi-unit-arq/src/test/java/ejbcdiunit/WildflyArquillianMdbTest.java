@@ -38,8 +38,10 @@ public class WildflyArquillianMdbTest {
         Assert.assertThat(mdbEjbInfoSingleton, Matchers.notNullValue());
 
         singletonMdbClient.sendMessageToQueue();
+        waitForMdbCalls(5);
         Assert.assertThat(mdbEjbInfoSingleton.getNumberOfQCalls(), Matchers.is(5));
         cdiMdbClient.sendMessageToQueue();
+        waitForMdbCalls(10);
         Assert.assertThat(mdbEjbInfoSingleton.getNumberOfQCalls(), Matchers.is(10));
     }
 
@@ -50,10 +52,23 @@ public class WildflyArquillianMdbTest {
         Assert.assertThat(mdbEjbInfoSingleton, Matchers.notNullValue());
 
         singletonMdbClient.sendMessageToTopic();
+        waitForMdbCalls(10);
         Assert.assertThat(mdbEjbInfoSingleton.getNumberOfTCalls(), Matchers.is(10));
+        waitForMdbCalls(20);
         cdiMdbClient.sendMessageToTopic();
         Assert.assertThat(mdbEjbInfoSingleton.getNumberOfTCalls(), Matchers.is(20));
     }
 
+    public void waitForMdbCalls(int calls) {
+        long currentTime = System.currentTimeMillis();
+        while ((mdbEjbInfoSingleton.getNumberOfTCalls() < calls && mdbEjbInfoSingleton.getNumberOfQCalls() < calls)
+                && System.currentTimeMillis() < currentTime + 60000) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
 
+    }
 }
