@@ -9,6 +9,7 @@ import javax.inject.Inject;
 
 import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -105,6 +106,7 @@ public class SftpConnectorKeyfileCdiTest {
         }
     }
 
+    @Ignore  // don't want to expect cloners to have JCE installed
     @Test
     // test needs "Java Cryptography Extension (JCE) Unlimited Strength" to work correctly
     public void testKeyfileOnlyWithPassword() throws Exception {

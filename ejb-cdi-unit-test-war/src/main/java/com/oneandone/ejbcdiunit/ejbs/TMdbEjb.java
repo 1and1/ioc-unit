@@ -1,5 +1,6 @@
 package com.oneandone.ejbcdiunit.ejbs;
 
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.annotation.Resource;
@@ -36,6 +37,11 @@ public class TMdbEjb implements MessageListener  {
 
     @Override
     public void onMessage(Message message) {
+        try {
+            Thread.sleep(100 * new Random().nextInt(50));
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         logger.info("Message in TMdbEjb: {} this is the {}. received message", message, called.addAndGet(1));
         mdbEjbInfoSingleton.incrementNumberOfTCalls();
     }

@@ -12,11 +12,11 @@ import javax.ejb.Singleton;
 @Singleton
 @ConcurrencyManagement(ConcurrencyManagementType.BEAN)
 public class MdbEjbInfoSingleton {
-    private AtomicInteger numberOfQCalls = new AtomicInteger();
+    private static AtomicInteger numberOfQCalls = new AtomicInteger();
 
-    private AtomicInteger numberOfQCalls2 = new AtomicInteger();
+    private static AtomicInteger numberOfQCalls2 = new AtomicInteger();
 
-    private AtomicInteger numberOfTCalls = new AtomicInteger();
+    private static AtomicInteger numberOfTCalls = new AtomicInteger();
 
     public int getNumberOfTCalls() {
         return numberOfTCalls.get();

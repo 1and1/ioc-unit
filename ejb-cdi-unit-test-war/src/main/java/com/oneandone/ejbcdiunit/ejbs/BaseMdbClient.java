@@ -83,12 +83,5 @@ public class BaseMdbClient {
             logger.error(e.toString());
             throw new RuntimeException(e);
         }
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            logger.error(e.toString());
-            throw new RuntimeException(e);
-        }
-
     }
 }
