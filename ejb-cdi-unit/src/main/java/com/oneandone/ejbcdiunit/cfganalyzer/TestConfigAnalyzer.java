@@ -2,6 +2,7 @@ package com.oneandone.ejbcdiunit.cfganalyzer;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -14,6 +15,7 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -345,15 +347,45 @@ public abstract class TestConfigAnalyzer {
 
     private void addClassPath(Class<?> additionalClasspath) throws MalformedURLException {
         Reflections reflections = new Reflections(new ConfigurationBuilder().setScanners(new TypesScanner())
-                .setUrls(
-                        new File(additionalClasspath.getProtectionDomain().getCodeSource().getLocation()
-                                .getPath()).toURI().toURL()));
+                .setUrls(getCodeSourceLocation(additionalClasspath).toURI().toURL()));
 
         classesToProcess.addAll(ReflectionUtils.forNames(
                 reflections.getStore().get(TypesScanner.class.getSimpleName()).keySet(),
                 new ClassLoader[] { getClass().getClassLoader() }));
     }
+   
+    
+    private static File getCodeSourceLocation(Class<?> clazz) {
 
+    	final String path = clazz.getProtectionDomain().getCodeSource().getLocation().getPath();
+        final File file = new File(path);
+               
+        if(!file.exists()) {
+        	/*
+        	 * When running tests in maven the command clazz.getProtectionDomain().getCodeSource().getLocation() contains url-encoded parts.
+        	 * e.g. if the CodeSource is in "/opt/abc@xyz/abc.jar" then it will return "/opt/abc%40xyz/abc.jar",
+        	 * which is a file that cannot be found.
+        	 * If the file does not exist, we try to url-decode the path.
+        	 */
+        	
+        	String decodedPath;
+        	try {
+        		decodedPath = URLDecoder.decode(path, "UTF-8");
+        	} catch (UnsupportedEncodingException e) {
+        		throw new IllegalStateException(e);
+        	}
+        	
+        	File fileDecodedPath = new File(decodedPath);
+    		
+    		if(fileDecodedPath.exists()) {
+    			return fileDecodedPath;
+    		}
+        }
+        
+        return file;
+    }
+
+    
 
     private void addClassesToProcess(Type type) {
 
