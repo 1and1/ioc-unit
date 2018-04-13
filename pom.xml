@@ -7,7 +7,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>ejb-cdi-unit</module>
-        <module>ejb-cdi-unit-simulators</module>
+        <!--module>ejb-cdi-unit-simulators</module-->
         <module>ejb-cdi-unit-test-war</module>
         <module>ejb-cdi-unit-tests</module>
         <module>ejb-cdi-unit-camunda</module>
