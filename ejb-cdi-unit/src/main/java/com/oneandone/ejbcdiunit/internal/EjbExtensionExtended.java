@@ -148,6 +148,24 @@ public class EjbExtensionExtended implements Extension {
         }
     }
 
+    <T extends Annotation> T findAnnotation(Class<?> annotatedType,  Class<T> annotation) {
+        if (annotatedType.equals(Object.class)) {
+            return null;
+        }
+        return annotatedType.getAnnotation(annotation);
+    }
+
+    <T extends Annotation> boolean isAnnotationPresent(Class<?> annotatedType,  Class<T> annotation) {
+        if (annotatedType.equals(Object.class)) {
+            return false;
+        }
+        return annotatedType.isAnnotationPresent(annotation);
+    }
+
+    <T extends Annotation, X> boolean isAnnotationPresent(ProcessAnnotatedType<X> pat,  Class<T> annotation) {
+        return isAnnotationPresent(pat.getAnnotatedType().getJavaClass(), annotation);
+    }
+
     /**
      * Handle Bean classes, if EJB-Annotations are recognized change, add, remove as fitting.
      *
@@ -172,21 +190,23 @@ public class EjbExtensionExtended implements Extension {
             entityClasses.add(annotatedType.getJavaClass());
         }
 
-        Stateless stateless = annotatedType.getAnnotation(Stateless.class);
+        Stateless stateless = findAnnotation(annotatedType.getJavaClass(), Stateless.class);
+
+        // Stateless stateless = annotatedType.getJavaClass().getAnnotation(Stateless.class);
 
         if (stateless != null) {
             processClass(builder, stateless.name(), false, scopeIsPresent);
             modified = true;
         }
 
-        Stateful stateful = annotatedType.getAnnotation(Stateful.class);
+        Stateful stateful = findAnnotation(annotatedType.getJavaClass(),Stateful.class);
 
         if (stateful != null) {
             processClass(builder, stateful.name(), false, scopeIsPresent);
             modified = true;
         }
         try {
-            Singleton singleton = annotatedType.getAnnotation(Singleton.class);
+            Singleton singleton = findAnnotation(annotatedType.getJavaClass(),Singleton.class);
             if (singleton != null) {
                 processClass(builder, singleton.name(), true, scopeIsPresent);
                 modified = true;
@@ -263,9 +283,9 @@ public class EjbExtensionExtended implements Extension {
      */
     public <X> void processInjectionTarget(
             @Observes ProcessAnnotatedType<X> pat) {
-        if (pat.getAnnotatedType().isAnnotationPresent(Stateless.class) || pat.getAnnotatedType().isAnnotationPresent(Stateful.class)
-                || pat.getAnnotatedType().isAnnotationPresent(Singleton.class)
-                || pat.getAnnotatedType().isAnnotationPresent(MessageDriven.class)) {
+        if (isAnnotationPresent(pat, Stateless.class) || isAnnotationPresent(pat, Stateful.class)
+                || isAnnotationPresent(pat, Singleton.class)
+                || isAnnotationPresent(pat, MessageDriven.class)) {
             createEJBWrapper(pat, pat.getAnnotatedType());
         } else {
             if (possiblyAsynchronous(pat.getAnnotatedType())) {

@@ -20,6 +20,7 @@ import com.oneandone.ejbcdiunit.ejbs.CDIClass;
 import com.oneandone.ejbcdiunit.ejbs.OuterClass;
 import com.oneandone.ejbcdiunit.ejbs.SingletonEJB;
 import com.oneandone.ejbcdiunit.ejbs.StatelessBeanManagedTrasEJB;
+import com.oneandone.ejbcdiunit.ejbs.StatelessChildEJB;
 import com.oneandone.ejbcdiunit.ejbs.StatelessEJB;
 import com.oneandone.ejbcdiunit.entities.TestEntity1;
 
@@ -40,6 +41,9 @@ public abstract class EJBTransactionTestBase {
 
     @EJB
     protected SingletonEJB singletonEJB;
+
+    @EJB
+    protected StatelessChildEJB statelessChildEJB;
 
     @EJB
     protected StatelessBeanManagedTrasEJB statelessBeanManagedTrasEJB;
@@ -304,4 +308,30 @@ public abstract class EJBTransactionTestBase {
         Number res = entityManager.createQuery("select count(e) from TestEntity1 e", Number.class).getSingleResult();
         Assert.assertThat(res.intValue(), is(0));
     }
+
+
+
+    public void canInterpretTransactionAttributeInParentClass() throws Exception {
+        TestEntity1 entity1 = new TestEntity1();
+        entity1.setIntAttribute(1);
+        statelessChildEJB.saveInCurrentTransactionDefaultTraAttribute(entity1);
+    }
+
+    public void canInterpretTransactionAttributeInParentMethodRequired() throws Exception {
+        userTransaction.begin();
+        TestEntity1 entity1 = new TestEntity1();
+        entity1.setIntAttribute(1);
+        statelessChildEJB.saveInCurrentTransactionRequiredTraAttribute(entity1);
+        userTransaction.commit();
+    }
+
+    public void canInterpretTransactionAttributeInParentMethodNever() throws Exception {
+        userTransaction.begin();
+        TestEntity1 entity1 = new TestEntity1();
+        entity1.setIntAttribute(1);
+        statelessChildEJB.saveInCurrentTransactionNeverTraAttribute(entity1);
+        userTransaction.commit();
+    }
+
+
 }

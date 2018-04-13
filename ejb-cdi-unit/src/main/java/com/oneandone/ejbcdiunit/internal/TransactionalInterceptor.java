@@ -1,5 +1,7 @@
 package com.oneandone.ejbcdiunit.internal;
 
+import java.lang.annotation.Annotation;
+
 import javax.ejb.ApplicationException;
 import javax.ejb.EJB;
 import javax.ejb.EJBException;
@@ -95,9 +97,7 @@ public class TransactionalInterceptor {
                 if (beanManaged) {
                     toPush = TransactionAttributeType.NOT_SUPPORTED;
                 } else {
-                    TransactionAttribute transaction =
-                            declaringClass.getAnnotation(
-                                    TransactionAttribute.class);
+                    TransactionAttribute transaction = findAnnotation(declaringClass, TransactionAttribute.class);
                     TransactionAttribute transactionMethod = ctx.getMethod().getAnnotation(TransactionAttribute.class);
 
                     if (transactionMethod != null) {
@@ -183,19 +183,40 @@ public class TransactionalInterceptor {
 
     }
 
+    <T extends Annotation> T findAnnotation(Class<?> declaringClass, Class<T> annotationType) {
+        if (declaringClass == null || declaringClass.equals(Object.class))
+            return null;
+        T annotation = declaringClass.getAnnotation(annotationType);
+        if (annotation == null) {
+            return findAnnotation(declaringClass.getSuperclass(), annotationType);
+        } else {
+            return annotation;
+        }
+    }
+
     private boolean isBeanManaged(Class<?> declaringClass) {
-        return declaringClass != null
-                && declaringClass.getAnnotation(TransactionManagement.class) != null
-                && declaringClass.getAnnotation(TransactionManagement.class).value() == TransactionManagementType.BEAN;
+        TransactionManagement annotation = findAnnotation(declaringClass, TransactionManagement.class);
+        if (annotation == null)
+            return false;
+        else
+            return annotation.value() == TransactionManagementType.BEAN;
     }
 
     private boolean isNotEjbClass(Class<?> declaringClass) {
-        return declaringClass != null
-                && declaringClass.getAnnotation(TransactionManagement.class) == null // allow transactionmanagement to
-                                                                                     // be defined for non ejb-classes
-                && declaringClass.getAnnotation(MessageDriven.class) == null
-                && declaringClass.getAnnotation(Stateless.class) == null
-                && declaringClass.getAnnotation(Stateful.class) == null
-                && declaringClass.getAnnotation(Singleton.class) == null;
+        if (declaringClass.equals(Object.class))
+            return true;
+        TransactionAttribute tmAnnotation = findAnnotation(declaringClass, TransactionAttribute.class);
+        if (tmAnnotation != null)
+            return false;
+        else {
+            boolean result = declaringClass != null
+                             && declaringClass.getAnnotation(TransactionManagement.class) == null // allow transactionmanagement to
+                             // be defined for non ejb-classes
+                             && declaringClass.getAnnotation(MessageDriven.class) == null
+                             && declaringClass.getAnnotation(Stateless.class) == null
+                             && declaringClass.getAnnotation(Stateful.class) == null
+                             && declaringClass.getAnnotation(Singleton.class) == null;
+            return result;
+        }
     }
 }
