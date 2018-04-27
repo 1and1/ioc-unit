@@ -5,6 +5,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.sshd.common.util.buffer.Buffer;
+import org.apache.sshd.server.subsystem.sftp.SftpErrorStatusDataHandler;
+import org.apache.sshd.server.subsystem.sftp.SftpFileSystemAccessor;
 import org.apache.sshd.server.subsystem.sftp.SftpSubsystem;
 import org.apache.sshd.server.subsystem.sftp.UnsupportedAttributePolicy;
 
@@ -16,7 +18,14 @@ public class DelayedSftpSubsystem extends SftpSubsystem {
     private static final AtomicInteger DELAY_MILLIS = new AtomicInteger();
 
     public DelayedSftpSubsystem(ExecutorService executorService, boolean shutdownOnExit, UnsupportedAttributePolicy policy) {
-        super(executorService, shutdownOnExit, policy);
+        super(executorService,
+                shutdownOnExit,
+                policy,
+                new SftpFileSystemAccessor() {
+
+                },
+                new SftpErrorStatusDataHandler(){});
+
     }
 
     public static void setDelay(int delayMillis) {
