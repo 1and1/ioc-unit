@@ -3,7 +3,7 @@
 
     <groupId>net.oneandone</groupId>
     <artifactId>ejb-cdi-unit-examples-parent</artifactId>
-    <version>1.1.5-SNAPSHOT</version>
+    <version>1.1.8-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
         <module>ex1-1entity</module>
@@ -84,7 +84,7 @@
         <version.javaee_api>7.0</version.javaee_api>
         <org-reflections.version>0.9.10</org-reflections.version>
         <jaxrpc.version>1.1</jaxrpc.version>
-        <ejb-cdi-unit.version>1.1.5-SNAPSHOT</ejb-cdi-unit.version>
+        <ejb-cdi-unit.version>1.1.8-SNAPSHOT</ejb-cdi-unit.version>
 
     </properties>
 

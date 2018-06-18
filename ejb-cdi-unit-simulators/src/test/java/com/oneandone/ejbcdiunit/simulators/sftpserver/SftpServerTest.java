@@ -132,7 +132,7 @@ public class SftpServerTest {
      * These are the exceptions, that the workaround, we want to test, is for.
      */
     private boolean isCausedByFileNotFoundException(Throwable e) {
-        return e.toString().contains("2: Internal FileNotFoundException");
+        return e.toString().contains("2: ");
     }
 
     private JSch createJsch() {

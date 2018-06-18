@@ -344,10 +344,10 @@ public abstract class TestConfigAnalyzer {
     }
 
     private void addClassPath(Class<?> additionalClasspath) throws MalformedURLException {
+        final URL path = additionalClasspath.getProtectionDomain().getCodeSource().getLocation();
+
         Reflections reflections = new Reflections(new ConfigurationBuilder().setScanners(new TypesScanner())
-                .setUrls(
-                        new File(additionalClasspath.getProtectionDomain().getCodeSource().getLocation()
-                                .getPath()).toURI().toURL()));
+                .setUrls(path));
 
         classesToProcess.addAll(ReflectionUtils.forNames(
                 reflections.getStore().get(TypesScanner.class.getSimpleName()).keySet(),

@@ -184,7 +184,7 @@ public class SftpConnectorCdiTest {
 
     @After
     public void afterTest() {
-        cleanUpServer();
+        // cleanUpServer();
     }
 
     /**
@@ -194,6 +194,15 @@ public class SftpConnectorCdiTest {
      */
     @Test
     public void testUploadFile() throws UnsupportedEncodingException {
+        /*
+        for (int i = 0; i < 1000; i++) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        */
         uploadFile(sftpConnectorTempDir);
         uploadFile(sftpConnectorTmpFile);
         uploadFile(sftpConnectorNoRename);

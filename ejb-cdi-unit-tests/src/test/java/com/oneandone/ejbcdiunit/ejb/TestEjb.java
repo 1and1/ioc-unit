@@ -32,6 +32,7 @@ import com.oneandone.ejbcdiunit.ejbs.MdbEjbInfoSingleton;
 import com.oneandone.ejbcdiunit.ejbs.QMdbEjb;
 import com.oneandone.ejbcdiunit.ejbs.SingletonEJB;
 import com.oneandone.ejbcdiunit.ejbs.StatelessBeanManagedTrasEJB;
+import com.oneandone.ejbcdiunit.ejbs.StatelessChildEJB;
 import com.oneandone.ejbcdiunit.ejbs.StatelessEJB;
 import com.oneandone.ejbcdiunit.entities.TestEntity1;
 import com.oneandone.ejbcdiunit.helpers.LoggerGenerator;
@@ -46,7 +47,7 @@ import com.oneandone.ejbcdiunit.testbases.TestEntity1Saver;
 @RunWith(JUnit4.class)
 @AdditionalClasses({ StatelessEJB.class, SingletonEJB.class,
         TestEjb.TestDbPersistenceFactory.class, SessionContextFactory.class,
-        StatelessBeanManagedTrasEJB.class,
+        StatelessBeanManagedTrasEJB.class, StatelessChildEJB.class,
         QMdbEjb.class, MdbEjbInfoSingleton.class, LoggerGenerator.class })
 public class TestEjb extends EJBTransactionTestBase {
 
@@ -303,6 +304,24 @@ public class TestEjb extends EJBTransactionTestBase {
         super.saveToSetRollbackOnlyAndTryAdditionalSave();
     }
 
+    @Override
+    @Test
+    public void canInterpretTransactionAttributeInParentClass() throws Exception {
+        super.canInterpretTransactionAttributeInParentClass();
+    }
+
+    @Override
+    @Test
+    public void canInterpretTransactionAttributeInParentMethodRequired() throws Exception {
+        super.canInterpretTransactionAttributeInParentMethodRequired();
+    }
+
+    @Override
+    @Test(expected = EJBException.class)
+    public void canInterpretTransactionAttributeInParentMethodNever() throws Exception {
+        super.canInterpretTransactionAttributeInParentMethodNever();
+    }
+
     @Test
     public void testCacheWOTransaction() throws Exception {
         TestEntity1 entity1 = new TestEntity1();
@@ -318,6 +337,7 @@ public class TestEjb extends EJBTransactionTestBase {
         TestEntity1 entity12 = entityManager.find(TestEntity1.class, entity1.getId());
         assertThat(entity12.getIntAttribute(), is(2));
     }
+
 
     @ApplicationScoped
     public static class TestDbPersistenceFactory extends SinglePersistenceFactory {

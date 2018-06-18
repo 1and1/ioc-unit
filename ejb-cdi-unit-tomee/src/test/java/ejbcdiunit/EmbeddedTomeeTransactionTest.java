@@ -38,6 +38,7 @@ import com.oneandone.ejbcdiunit.ejbs.CDIClass;
 import com.oneandone.ejbcdiunit.ejbs.OuterClass;
 import com.oneandone.ejbcdiunit.ejbs.SingletonEJB;
 import com.oneandone.ejbcdiunit.ejbs.StatelessBeanManagedTrasEJB;
+import com.oneandone.ejbcdiunit.ejbs.StatelessChildEJB;
 import com.oneandone.ejbcdiunit.ejbs.StatelessEJB;
 import com.oneandone.ejbcdiunit.entities.TestEntity1;
 import com.oneandone.ejbcdiunit.jpa.TomeeResources;
@@ -54,6 +55,11 @@ public class EmbeddedTomeeTransactionTest extends EJBTransactionTestBase {
 
     @EJB(name = "shsgdhasghdasg") // tomee does not care about those names
     StatelessEJB statelessEJB;
+
+    @EJB
+    protected StatelessChildEJB statelessChildEJB;
+
+
     @Resource
     UserTransaction userTransaction;
     @Produces
@@ -93,6 +99,7 @@ public class EmbeddedTomeeTransactionTest extends EJBTransactionTestBase {
     @Module
     public EjbModule module() {
         EjbModule module = new EjbModule(new EjbJar("test-beans")
+                .enterpriseBean(new StatelessBean(StatelessChildEJB.class))
                 .enterpriseBean(new StatelessBean(StatelessEJB.class))
                 .enterpriseBean(new StatelessBean(OuterClass.class))
                 .enterpriseBean(new StatelessBean(StatelessBeanManagedTrasEJB.class))
@@ -302,6 +309,24 @@ public class EmbeddedTomeeTransactionTest extends EJBTransactionTestBase {
     public void testBeanManagedWOTraInTestCodeTryInNotSupported()
             throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
         super.testBeanManagedWOTraInTestCodeTryInNotSupported();
+    }
+
+    @Override
+    @Test
+    public void canInterpretTransactionAttributeInParentClass() throws Exception {
+        super.canInterpretTransactionAttributeInParentClass();
+    }
+
+    @Override
+    @Test
+    public void canInterpretTransactionAttributeInParentMethodRequired() throws Exception {
+        super.canInterpretTransactionAttributeInParentMethodRequired();
+    }
+
+    @Override
+    @Test(expected = EJBException.class)
+    public void canInterpretTransactionAttributeInParentMethodNever() throws Exception {
+        super.canInterpretTransactionAttributeInParentMethodNever();
     }
 
 }

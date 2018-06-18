@@ -256,4 +256,23 @@ public class WildflyArquillianTransactionTest extends EJBTransactionTestBase {
     public void saveToSetRollbackOnlyAndTryAdditionalSave() throws Exception {
         super.saveToSetRollbackOnlyAndTryAdditionalSave();
     }
+
+    @Override
+    @Test
+    public void canInterpretTransactionAttributeInParentClass() throws Exception {
+        super.canInterpretTransactionAttributeInParentClass();
+    }
+
+    @Override
+    @Test
+    public void canInterpretTransactionAttributeInParentMethodRequired() throws Exception {
+        super.canInterpretTransactionAttributeInParentMethodRequired();
+    }
+
+    @Override
+    @Test(expected = EJBException.class)
+    public void canInterpretTransactionAttributeInParentMethodNever() throws Exception {
+        super.canInterpretTransactionAttributeInParentMethodNever();
+    }
+
 }

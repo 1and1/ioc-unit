@@ -3,7 +3,7 @@
 
     <groupId>net.oneandone</groupId>
     <artifactId>ejb-cdi-unit-parent</artifactId>
-    <version>1.1.5-SNAPSHOT</version>
+    <version>1.1.8-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
         <module>ejb-cdi-unit</module>
@@ -82,7 +82,7 @@
         <javassist.version>3.20.0-GA</javassist.version>
 
         <version.javaee_api>7.0</version.javaee_api>
-        <org-reflections.version>0.9.10</org-reflections.version>
+        <org-reflections.version>0.9.11</org-reflections.version>
         <jaxrpc.version>1.1</jaxrpc.version>
 
         <camunda-engine.version>7.5.0</camunda-engine.version>
