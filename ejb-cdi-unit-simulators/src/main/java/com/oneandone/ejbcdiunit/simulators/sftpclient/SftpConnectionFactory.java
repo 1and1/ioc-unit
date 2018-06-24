@@ -1,4 +1,4 @@
-package com.oneandone.ejbcdiunit.simulators.sftpserver.helpers;
+package com.oneandone.ejbcdiunit.simulators.sftpclient;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

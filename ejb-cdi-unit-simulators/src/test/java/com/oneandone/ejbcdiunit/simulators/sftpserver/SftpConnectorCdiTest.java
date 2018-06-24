@@ -34,9 +34,9 @@ import org.mockito.Mockito;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.SftpException;
 import com.oneandone.ejbcdiunit.EjbUnitRunner;
-import com.oneandone.ejbcdiunit.simulators.sftpserver.helpers.SftpConnector;
-import com.oneandone.ejbcdiunit.simulators.sftpserver.helpers.TestSftpConfiguration;
-import com.oneandone.ejbcdiunit.simulators.sftpserver.upload.UploadFileStrategy;
+import com.oneandone.ejbcdiunit.simulators.sftpclient.SftpConnector;
+import com.oneandone.ejbcdiunit.simulators.sftpclient.TestSftpConfiguration;
+import com.oneandone.ejbcdiunit.simulators.sftpclient.upload.UploadFileStrategy;
 
 
 @RunWith(EjbUnitRunner.class)
@@ -45,8 +45,8 @@ public class SftpConnectorCdiTest {
 
     private static final String HOST = "localhost";
     private static final Integer PORT = 12322;
-    private static final String USER_NAME = "mssuser";
-    private static final String PASSWORD = "msspassword";
+    private static final String USER_NAME = "ejbcdiunituser";
+    private static final String PASSWORD = "ejbcdiunitpassword";
 
     private static final String PATH_IN = "in";
     private static final String PATH_IN_TEMP = "in/temp";

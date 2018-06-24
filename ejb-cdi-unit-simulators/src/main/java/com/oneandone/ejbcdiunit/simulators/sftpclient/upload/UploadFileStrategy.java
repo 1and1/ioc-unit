@@ -1,4 +1,4 @@
-package com.oneandone.ejbcdiunit.simulators.sftpserver.upload;
+package com.oneandone.ejbcdiunit.simulators.sftpclient.upload;
 
 /**
  * enum containing file upload strategy, consists of configValue and Class to handle file upload.

@@ -14,10 +14,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.oneandone.ejbcdiunit.EjbUnitRunner;
-import com.oneandone.ejbcdiunit.simulators.sftpserver.helpers.SftpConfiguration;
-import com.oneandone.ejbcdiunit.simulators.sftpserver.helpers.SftpConnector;
-import com.oneandone.ejbcdiunit.simulators.sftpserver.helpers.TestSftpConfiguration;
-import com.oneandone.ejbcdiunit.simulators.sftpserver.upload.UploadFileStrategy;
+import com.oneandone.ejbcdiunit.simulators.sftpclient.SftpConfiguration;
+import com.oneandone.ejbcdiunit.simulators.sftpclient.SftpConnector;
+import com.oneandone.ejbcdiunit.simulators.sftpclient.TestSftpConfiguration;
+import com.oneandone.ejbcdiunit.simulators.sftpclient.upload.UploadFileStrategy;
 
 @RunWith(EjbUnitRunner.class)
 @AdditionalClasses({})
@@ -31,7 +31,7 @@ public class SftpConnectorKeyfileCdiTest {
     private static final String PUBLIC_KEY_SSHGEN = "src/test/resources/keys/ftp_authentication_keygen.pub";
     private static final String HOST = "localhost";
     private static final Integer PORT = 12322;
-    private static final String USER_NAME = "mssuser";
+    private static final String USER_NAME = "ejbcdiunituser";
     private static final String PASSWORD = "12345";
     private static final String PATH = "mypath";
     private static final Integer CONNECTION_RETRY_SLEEP = 3000;

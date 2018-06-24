@@ -1,9 +1,9 @@
-package com.oneandone.ejbcdiunit.simulators.sftpserver.helpers;
+package com.oneandone.ejbcdiunit.simulators.sftpclient;
 
 import java.time.LocalTime;
 import java.util.regex.Pattern;
 
-import com.oneandone.ejbcdiunit.simulators.sftpserver.upload.UploadFileStrategy;
+import com.oneandone.ejbcdiunit.simulators.sftpclient.upload.UploadFileStrategy;
 
 /**
  * @author aschoerk

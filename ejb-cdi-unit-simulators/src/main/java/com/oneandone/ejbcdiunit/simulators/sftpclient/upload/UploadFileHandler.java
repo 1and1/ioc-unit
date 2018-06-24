@@ -1,4 +1,4 @@
-package com.oneandone.ejbcdiunit.simulators.sftpserver.upload;
+package com.oneandone.ejbcdiunit.simulators.sftpclient.upload;
 
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.SftpException;

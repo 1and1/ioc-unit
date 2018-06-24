@@ -1,4 +1,4 @@
-package com.oneandone.ejbcdiunit.simulators.sftpserver.helpers;
+package com.oneandone.ejbcdiunit.simulators.sftpclient;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -28,8 +28,8 @@ import org.slf4j.LoggerFactory;
 
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.SftpException;
-import com.oneandone.ejbcdiunit.simulators.sftpserver.upload.UploadFileHandler;
-import com.oneandone.ejbcdiunit.simulators.sftpserver.upload.UploadFileHandlerFactory;
+import com.oneandone.ejbcdiunit.simulators.sftpclient.upload.UploadFileHandler;
+import com.oneandone.ejbcdiunit.simulators.sftpclient.upload.UploadFileHandlerFactory;
 
 /**
  * SftpConnector connects to an sftp-server.<br>

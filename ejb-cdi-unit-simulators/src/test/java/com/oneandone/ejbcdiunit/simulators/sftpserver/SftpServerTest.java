@@ -41,8 +41,8 @@ public class SftpServerTest {
 
     private static final String HOST = "localhost";
     private static final Integer PORT = 12322;
-    private static final String USER = "mssuser";
-    private static final String PASSWORD = "msspassword";
+    private static final String USER = "ejbcdiunituser";
+    private static final String PASSWORD = "ejbcdiunitpassword";
     private static final String FILE_NAME = "myFile";
 
     private static final SftpServer SFTP_SERVER = new SftpServer(PORT, USER, PASSWORD, null);

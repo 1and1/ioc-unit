@@ -70,7 +70,7 @@ public class SftpServer {
         this.pathFilePublicKeyInPemFormat = pathFilePublicKeyInPemFormat;
 
         try {
-            tmpBaseDir = Files.createTempDirectory("mss_sftp");
+            tmpBaseDir = Files.createTempDirectory("ejbcdiunit_sftp");
             log.info("Temporary directoy created: " + tmpBaseDir);
             tmpBaseDir.toFile().deleteOnExit();
         } catch (final IOException e) {

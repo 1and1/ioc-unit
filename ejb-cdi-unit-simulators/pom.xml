@@ -61,15 +61,16 @@
             <version>${mockito.version}</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-entitymanager</artifactId>
-        </dependency>
         <!-- SFTP-Server -->
         <dependency>
             <groupId>org.apache.sshd</groupId>
             <artifactId>sshd-core</artifactId>
             <version>1.7.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+            <version>0.1.54</version>
         </dependency>
         <!--dependency>
             <groupId>org.apache.sshd</groupId>
@@ -91,12 +92,6 @@
             <artifactId>ejb-cdi-unit</artifactId>
             <scope>test</scope>
             <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.jcraft</groupId>
-            <artifactId>jsch</artifactId>
-            <version>0.1.54</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>

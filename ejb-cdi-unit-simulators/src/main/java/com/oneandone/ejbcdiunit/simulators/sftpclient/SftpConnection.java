@@ -1,4 +1,4 @@
-package com.oneandone.ejbcdiunit.simulators.sftpserver.helpers;
+package com.oneandone.ejbcdiunit.simulators.sftpclient;
 
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.Session;
