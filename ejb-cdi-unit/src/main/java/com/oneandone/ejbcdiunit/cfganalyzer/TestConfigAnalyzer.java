@@ -352,6 +352,8 @@ public abstract class TestConfigAnalyzer {
         classesToProcess.addAll(ReflectionUtils.forNames(
                 reflections.getStore().get(TypesScanner.class.getSimpleName()).keySet(),
                 new ClassLoader[] { getClass().getClassLoader() }));
+
+        cdiClasspathEntries.add(path);
     }
 
 
