@@ -142,9 +142,9 @@
                <plugin>
                   <artifactId>maven-dependency-plugin</artifactId>
                   <version>2.8</version>
-                  <configuration>
+                  <!--configuration>
                      <skip>${maven.test.skip}</skip>
-                  </configuration>
+                  </configuration-->
                   <executions>
                      <execution>
                         <id>unpack</id>
@@ -188,7 +188,7 @@
                            <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                           <skip>${skipITs}</skip>
+                           <!--skip>${skipITs}</skip-->
                            <outputDirectory>${project.build.directory}/wildfly-${version.wildfly}/standalone/configuration</outputDirectory>
                            <resources>
                               <resource>
