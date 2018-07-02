@@ -31,7 +31,7 @@
       <version.junit>4.11</version.junit>
       <version.javaee_api>7.0</version.javaee_api>
 
-      <version.tomee>7.0.3</version.tomee>
+      <version.tomee>7.0.4</version.tomee>
    </properties>
 
    <prerequisites>
