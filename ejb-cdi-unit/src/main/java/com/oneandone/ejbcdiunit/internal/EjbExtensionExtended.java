@@ -58,6 +58,7 @@ import org.jboss.weld.literal.DefaultLiteral;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.oneandone.ejbcdiunit.ResourceQualifier;
 import com.oneandone.ejbcdiunit.SupportEjbExtended;
 import com.oneandone.ejbcdiunit.cdiunit.EjbName;
 import com.oneandone.ejbcdiunit.persistence.SimulatedTransactionManager;
@@ -267,6 +268,14 @@ public class EjbExtensionExtended implements Extension {
                 });
                 if (produces != null) {
                     builder.removeFromField(field, Produces.class);
+                }
+                if (field.getBaseType().equals(String.class)) {
+
+                    builder.addToField(field, new ResourceQualifier.ResourceQualifierLiteral(resource.name(), resource.lookup(), resource.mappedName()) {
+                        private static final long serialVersionUID = 1L;
+
+                    });
+
                 }
             }
         }
