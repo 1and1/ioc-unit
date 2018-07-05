@@ -22,7 +22,7 @@ public interface UploadFileHandler {
      *            Path
      * @param fileName
      *            target FileName
-     * @return temporary or not temporary uploadFileName used in {@link SftpConnector}
+     * @return temporary or not temporary uploadFileName used in SftpConnector
      */
     String getUploadFileName(String path, String fileName);
 
