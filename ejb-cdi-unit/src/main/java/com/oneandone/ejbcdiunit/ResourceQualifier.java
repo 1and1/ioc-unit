@@ -6,7 +6,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import javax.enterprise.util.AnnotationLiteral;
-import javax.enterprise.util.Nonbinding;
 import javax.inject.Qualifier;
 
 /**
@@ -18,11 +17,11 @@ import javax.inject.Qualifier;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER})
 public @interface ResourceQualifier {
-    @Nonbinding
+
     String name() default "";
-    @Nonbinding
+
     String lookup() default "";
-    @Nonbinding
+
     String mappedName() default "";
 
     public class ResourceQualifierLiteral extends AnnotationLiteral<ResourceQualifier> implements ResourceQualifier {

@@ -20,6 +20,13 @@ public class ResourceTestEjb {
     @Resource(name = "ResourceTestEjbModuleName", lookup = "java:module/ModuleName", mappedName = "RTEModuleName")
     private String moduleName;
 
+    @Resource(lookup = "java:app/AppName")
+    private String appName2;
+
+    @Resource(lookup = "java:module/ModuleName")
+    private String moduleName2;
+
+
     public String ejbAppName() {
         log.info("Appname: appName" + appName);
         return appName;
@@ -28,5 +35,14 @@ public class ResourceTestEjb {
     public String ejbModuleName() {
         log.info("Modulename: moduleName" + moduleName);
         return moduleName;
+    }
+    public String ejbAppName2() {
+        log.info("Appname: appName2" + appName2);
+        return appName2;
+    }
+
+    public String ejbModuleName2() {
+        log.info("Modulename: moduleName2" + moduleName2);
+        return moduleName2;
     }
 }
