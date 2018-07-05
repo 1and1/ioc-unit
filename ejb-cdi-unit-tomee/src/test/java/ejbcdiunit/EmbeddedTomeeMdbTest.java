@@ -121,9 +121,9 @@ public class EmbeddedTomeeMdbTest {
         long currentTime = System.currentTimeMillis();
         while (((mdbEjbInfoSingleton.getNumberOfTCalls() < calls && isTopic)
                 || (mdbEjbInfoSingleton.getNumberOfQCalls() < calls && !isTopic))
-                && System.currentTimeMillis() < currentTime + 10000 * calls) {
+                && System.currentTimeMillis() < currentTime + 30000 * calls) {
             try {
-                Thread.sleep(100);
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
