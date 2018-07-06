@@ -113,13 +113,13 @@ public class TransactionalInterceptor {
 
                 boolean passThroughRollbackException = true;
                 try {
-                    logger.info("Thread {} L{} changing  from {} to {} xid: {} in {}.{}",
+                    logger.debug("Thread {} L{} changing  from {} to {} xid: {} in {}.{}",
                             Thread.currentThread().getId(), getLevel(),
                             savedLastTransactionAttributeType == null ? "undefined" : savedLastTransactionAttributeType,
                             toPush, MDC.get("XID"), declaringClass.getSimpleName(), ctx.getMethod().getName());
                     return ctx.proceed();
                 } catch (Throwable ex) {
-                    logger.info("Thread {} L{} Exception {} in {} xid: {} in {}.{}",
+                    logger.debug("Thread {} L{} Exception {} in {} xid: {} in {}.{}",
                             Thread.currentThread().getId(), getLevel(),
                             ex.getClass().getSimpleName(), toPush, MDC.get("XID"), declaringClass.getSimpleName(),
                             ctx.getMethod().getName());
@@ -146,7 +146,7 @@ public class TransactionalInterceptor {
                         throw ex;
                     }
                 } finally {
-                    logger.info("Thread {} L{} finally   in {} xid: {} in {}.{}",
+                    logger.debug("Thread {} L{} finally   in {} xid: {} in {}.{}",
                             Thread.currentThread().getId(), getLevel(), toPush, MDC.get("XID"), declaringClass.getSimpleName(),
                             ctx.getMethod().getName());
                     try {
@@ -156,7 +156,7 @@ public class TransactionalInterceptor {
                             throw rbe;
                         }
                     } finally {
-                        logger.info("Thread {} L{} done      {} back to {} xid: {} in {}.{}",
+                        logger.debug("Thread {} L{} done      {} back to {} xid: {} in {}.{}",
                                 Thread.currentThread().getId(), getLevel(), toPush,
                                 savedLastTransactionAttributeType == null ? "undefined" : savedLastTransactionAttributeType,
                                 MDC.get("XID"), declaringClass.getSimpleName(), ctx.getMethod().getName());
