@@ -5,7 +5,7 @@ import com.jcraft.jsch.SftpException;
 
 
 /**
- * Handler to handle uploading Files in  SftpConnector. There are different implementations like uploading in temporary directory or uploading
+ * Handler to handle uploading Files in {@link SftpConnector}. There are different implementations like uploading in temporary directory or uploading
  * in temporary files first.
  */
 public interface UploadFileHandler {
@@ -22,7 +22,7 @@ public interface UploadFileHandler {
      *            Path
      * @param fileName
      *            target FileName
-     * @return temporary or not temporary uploadFileName used in SftpConnector
+     * @return temporary or not temporary uploadFileName used in {@link SftpConnector}
      */
     String getUploadFileName(String path, String fileName);
 
