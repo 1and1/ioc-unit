@@ -35,6 +35,24 @@ import com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.DerivedAppRTExcExampleInh
 import com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.DerivedAppRTExcExampleInheritedRollback;
 import com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.DerivedAppRTExcExampleNotInheritedNoRollback;
 import com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.DerivedAppRTExcExampleNotInheritedRollback;
+import com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.declared.notrtex.DeclaredAppExcExampleInheritedNoRollback;
+import com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.declared.notrtex.DeclaredAppExcExampleInheritedRollback;
+import com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.declared.notrtex.DeclaredAppExcExampleInheritedRollbackDefault;
+import com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.declared.notrtex.DeclaredAppExcExampleNotInheritedNoRollback;
+import com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.declared.notrtex.DeclaredAppExcExampleNotInheritedRollback;
+import com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.declared.notrtex.DeclaredAppExcExampleNotInheritedRollbackDefault;
+import com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.declared.rtex.DeclaredAppRtExcExampleInheritedNoRollback;
+import com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.declared.rtex.DeclaredAppRtExcExampleInheritedRollback;
+import com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.declared.rtex.DeclaredAppRtExcExampleInheritedRollbackDefault;
+import com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.declared.rtex.DeclaredAppRtExcExampleNotInheritedNoRollback;
+import com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.declared.rtex.DeclaredAppRtExcExampleNotInheritedRollback;
+import com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.declared.rtex.DeclaredAppRtExcExampleNotInheritedRollbackDefault;
+import com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.declared.rtex.DerivedFromDeclaredAppRtExcExampleInheritedNoRollback;
+import com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.declared.rtex.DerivedFromDeclaredAppRtExcExampleInheritedRollback;
+import com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.declared.rtex.DerivedFromDeclaredAppRtExcExampleInheritedRollbackDefault;
+import com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.declared.rtex.DerivedFromDeclaredAppRtExcExampleNotInheritedNoRollback;
+import com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.declared.rtex.DerivedFromDeclaredAppRtExcExampleNotInheritedRollback;
+import com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.declared.rtex.DerivedFromDeclaredAppRtExcExampleNotInheritedRollbackDefault;
 
 /**
  * @author aschoerk
@@ -112,6 +130,34 @@ public class TestBaseClass {
         callAndCheckInCurrentTra(new DerivedAppExcExampleNotInheritedRollback("test"), 3L);
         callAndCheckInCurrentTra(new DerivedAppExcExampleInheritedNoRollback("test"), 4L);
         callAndCheckInCurrentTra(new DerivedAppExcExampleNotInheritedNoRollback("test"), 5L);
+    }
+
+    @Test
+    public void testDeclaredAppExcInCurrentTra() throws Throwable {
+        clearEntity();
+        callAndCheckInCurrentTra(new DeclaredAppExcExampleInheritedRollback("test"), 0L);
+        callAndCheckInCurrentTra(new DeclaredAppExcExampleNotInheritedRollback("test"), 0L);
+        callAndCheckInCurrentTra(new DeclaredAppExcExampleInheritedNoRollback("test"), 1L);
+        callAndCheckInCurrentTra(new DeclaredAppExcExampleNotInheritedNoRollback("test"), 2L);
+        callAndCheckInCurrentTra(new DeclaredAppExcExampleInheritedRollbackDefault("test"), 3L);
+        callAndCheckInCurrentTra(new DeclaredAppExcExampleNotInheritedRollbackDefault("test"), 4L);
+    }
+
+    @Test
+    public void testDeclaredAppRtExcInCurrentTra() throws Throwable {
+        clearEntity();
+        callAndCheckInCurrentTra(new DeclaredAppRtExcExampleInheritedRollback("test"), 0L);
+        callAndCheckInCurrentTra(new DeclaredAppRtExcExampleNotInheritedRollback("test"), 0L);
+        callAndCheckInCurrentTra(new DeclaredAppRtExcExampleInheritedNoRollback("test"), 1L);
+        callAndCheckInCurrentTra(new DeclaredAppRtExcExampleNotInheritedNoRollback("test"), 2L);
+        callAndCheckInCurrentTra(new DeclaredAppRtExcExampleInheritedRollbackDefault("test"), 3L);
+        callAndCheckInCurrentTra(new DeclaredAppRtExcExampleNotInheritedRollbackDefault("test"), 4L);
+        callAndCheckInCurrentTra(new DerivedFromDeclaredAppRtExcExampleInheritedRollback("test"), 4L);
+        callAndCheckInCurrentTra(new DerivedFromDeclaredAppRtExcExampleNotInheritedRollback("test"), 4L, true);
+        callAndCheckInCurrentTra(new DerivedFromDeclaredAppRtExcExampleInheritedNoRollback("test"), 5L);
+        callAndCheckInCurrentTra(new DerivedFromDeclaredAppRtExcExampleNotInheritedNoRollback("test"), 5L, true);
+        callAndCheckInCurrentTra(new DerivedFromDeclaredAppRtExcExampleInheritedRollbackDefault("test"), 6L);
+        callAndCheckInCurrentTra(new DerivedFromDeclaredAppRtExcExampleNotInheritedRollbackDefault("test"), 6L, true);
     }
 
     @Test

@@ -39,6 +39,17 @@ public class WildflyArquillianAppExcTransactionTest extends TestBaseClass {
         return getWarFromTargetFolder();
     }
 
+    @Test
+    @Override
+    public void testDeclaredAppExcInCurrentTra() throws Throwable {
+        super.testDeclaredAppExcInCurrentTra();
+    }
+
+    @Test
+    @Override
+    public void testDeclaredAppRtExcInCurrentTra() throws Throwable {
+        super.testDeclaredAppRtExcInCurrentTra();
+    }
 
     @Test
     @Override

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.enterprise.context.spi.Context;
+import javax.enterprise.context.spi.Contextual;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
@@ -19,11 +20,11 @@ import org.slf4j.LoggerFactory;
  *
  * @author aschoerk
  */
-class CreationalContexts implements AutoCloseable {
+public class CreationalContexts<T> implements AutoCloseable {
 
 
     private final BeanManager bm;
-    private List<CreationalContext<?>> creationalContexts = new ArrayList<>();
+    private List<CreationalContext<T>> creationalContexts = new ArrayList<>();
     private Logger logger = null;
 
     /**
@@ -37,7 +38,8 @@ class CreationalContexts implements AutoCloseable {
             initialContext = new InitialContext();
             this.bm = (BeanManager) initialContext.lookup("java:comp/BeanManager");
         } finally {
-            initialContext.close();
+            if (initialContext != null)
+                initialContext.close();
         }
     }
 
@@ -45,7 +47,7 @@ class CreationalContexts implements AutoCloseable {
      * Create it
      * @param bm the Weld-Beanmanager
      */
-    CreationalContexts(BeanManager bm) {
+    public CreationalContexts(BeanManager bm) {
         this.bm = bm;
     }
 
@@ -63,10 +65,10 @@ class CreationalContexts implements AutoCloseable {
      * @param scope either ApplicationScoped or Dependent
      * @return the created bean
      */
-    public Object create(Class<?> clazz, Class<? extends Annotation> scope) {
+    public Object create(Class<T> clazz, Class<? extends Annotation> scope) {
         Bean<?> bean = bm.resolve(bm.getBeans(clazz));
         if (bean != null) {
-            Object result = create(bean, scope);
+            Object result = create((Contextual<T>) bean, scope);
             if (result == null) {
                 throw new RuntimeException("Could not create Bean to be initialized of Class: " + clazz);
             }
@@ -82,12 +84,12 @@ class CreationalContexts implements AutoCloseable {
      * @param scope either ApplicationScoped or Dependent
      * @return the created bean
      */
-    public Object create(Bean<?> b, Class<? extends Annotation> scope) {
+    public Object create(Contextual<T> b, Class<? extends Annotation> scope) {
         try {
-            CreationalContext<?> cb = bm.createCreationalContext(b);
+            final CreationalContext<T> cb = bm.createCreationalContext(b);
             // assumes the bean will exist only once
             Context context = bm.getContext(scope);
-            final Object o = context.get(b, (CreationalContext) cb);
+            final Object o = context.get(b, cb);
             creationalContexts.add(cb);
             return o;
         } catch (Throwable thw) {

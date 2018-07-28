@@ -21,6 +21,10 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.concurrent.ScheduledExecutorService;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.spi.BeanManager;
+import javax.naming.InitialContext;
+
 import org.jboss.weld.bootstrap.WeldBootstrap;
 import org.jboss.weld.bootstrap.api.Bootstrap;
 import org.jboss.weld.bootstrap.api.CDI11Bootstrap;
@@ -36,8 +40,10 @@ import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 
 import com.oneandone.ejbcdiunit.CdiTestConfig;
+import com.oneandone.ejbcdiunit.CreationalContexts;
 import com.oneandone.ejbcdiunit.EjbUnitTransactionServices;
 import com.oneandone.ejbcdiunit.SupportEjbExtended;
+import com.oneandone.ejbcdiunit.internal.EjbInformationBean;
 
 /**
  * <code>&#064;CdiRunner</code> is a JUnit runner that uses a CDI container to
@@ -147,8 +153,18 @@ public class CdiRunner extends BlockJUnit4ClassRunner {
             };
 
             try {
-
+                System.setProperty("java.naming.factory.initial", "org.jglue.cdiunit.internal.naming.CdiUnitContextFactory");
                 container = weld.initialize();
+                InitialContext initialContext = new InitialContext();
+                final BeanManager beanManager = container.getBeanManager();
+                initialContext.bind("java:comp/BeanManager", beanManager);
+                try (CreationalContexts creationalContexts = new CreationalContexts(beanManager)) {
+                    EjbInformationBean ejbInformationBean =
+                            (EjbInformationBean) creationalContexts.create(EjbInformationBean.class, ApplicationScoped.class);
+                    ejbInformationBean.setApplicationExceptionDescriptions(weldTestConfig.getApplicationExceptionDescriptions());
+                } finally {
+                    initialContext.close();
+                }
             } catch (Throwable e) {
                 if (startupException == null) {
                     startupException = e;
@@ -174,7 +190,4 @@ public class CdiRunner extends BlockJUnit4ClassRunner {
 
         return t;
     }
-
-
-
 }

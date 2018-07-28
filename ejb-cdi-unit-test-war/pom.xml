@@ -110,6 +110,8 @@
                     <attachClasses>true</attachClasses>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                     <packagingExcludes>**/META-INF/beans.xml</packagingExcludes>
+                    <webResources></webResources>
+                    <!--packagingIncludes>**/META-INF/ejb-jar.xml</packagingIncludes-->
                 </configuration>
             </plugin>
             <plugin>

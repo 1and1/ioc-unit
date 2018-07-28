@@ -86,6 +86,7 @@
         <jaxrpc.version>1.1</jaxrpc.version>
 
         <camunda-engine.version>7.5.0</camunda-engine.version>
+        <delta-spike.version>1.0.1</delta-spike.version>
 
     </properties>
 

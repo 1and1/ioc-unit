@@ -25,6 +25,7 @@ public class WeldTestConfig extends CdiTestConfig {
             this.activatedAlternatives.addAll(cdiTestConfig.getActivatedAlternatives());
             this.excludedClasses.addAll(cdiTestConfig.getExcludedClasses());
             this.serviceConfigs.addAll(cdiTestConfig.getServiceConfigs());
+            this.setApplicationExceptionDescriptions(cdiTestConfig.getApplicationExceptionDescriptions());
         }
     }
 

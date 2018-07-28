@@ -1,21 +1,26 @@
 package com.oneandone.ejbcdiunit;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.jboss.weld.bootstrap.api.Service;
+
+import com.oneandone.ejbcdiunit.internal.ApplicationExceptionDescription;
 
 /**
  * @author aschoerk
  */
 public class CdiTestConfig {
-
+    ;
     protected Set<Class<?>> additionalClasses = new HashSet<>();
     protected Set<Class<?>> additionalClassPathes = new HashSet<>();
     protected Set<Class<?>> additionalClassPackages = new HashSet<>();
     protected Set<Class<?>> excludedClasses = new HashSet<>();
     protected Set<Class<?>> activatedAlternatives = new HashSet<>();
     protected Set<ServiceConfig> serviceConfigs = new HashSet<>();
+    private List<ApplicationExceptionDescription> applicationExceptionDescriptions = new ArrayList<>();
 
     public Set<Class<?>> getExcludedClasses() {
         return excludedClasses;
@@ -101,6 +106,14 @@ public class CdiTestConfig {
         return this;
     }
 
+    public List<ApplicationExceptionDescription> getApplicationExceptionDescriptions() {
+        return applicationExceptionDescriptions;
+    }
+
+    public void setApplicationExceptionDescriptions(List<ApplicationExceptionDescription> applicationExceptionDescriptions) {
+        this.applicationExceptionDescriptions = applicationExceptionDescriptions;
+    }
+
     public static class ServiceConfig<S extends Service> {
         Class<S> serviceClass;
         S service;
@@ -128,10 +141,12 @@ public class CdiTestConfig {
 
         @Override
         public boolean equals(Object o) {
-            if (this == o)
+            if (this == o) {
                 return true;
-            if (o == null || getClass() != o.getClass())
+            }
+            if ((o == null) || (!getClass().equals(o.getClass()))) {
                 return false;
+            }
 
             ServiceConfig<?> that = (ServiceConfig<?>) o;
 
