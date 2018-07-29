@@ -14,6 +14,7 @@ import java.util.jar.Attributes;
 import java.util.jar.JarInputStream;
 import java.util.jar.Manifest;
 
+import org.jglue.cdiunit.CdiRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,7 +61,8 @@ class ClasspathSetPopulator {
                 }
                 URL resource = cl.getResource("META-INF/beans.xml");
                 boolean ejbCdiUnit = url.equals(EjbUnitRunner.class.getProtectionDomain().getCodeSource().getLocation());
-                if (ejbCdiUnit || resource != null || isDirectoryOnClasspath(url)) {
+                boolean cdiUnit = url.equals(CdiRunner.class.getProtectionDomain().getCodeSource().getLocation());
+                if (ejbCdiUnit || cdiUnit || resource != null || isDirectoryOnClasspath(url)) {
                     cdiClasspathEntries.add(url);
                 }
             } finally {

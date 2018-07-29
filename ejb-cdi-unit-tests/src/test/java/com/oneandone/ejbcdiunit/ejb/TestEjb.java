@@ -17,6 +17,8 @@ import javax.transaction.RollbackException;
 import javax.transaction.Status;
 import javax.transaction.SystemException;
 
+import com.oneandone.ejbcdiunit.cdiunit.EjbJarClasspath;
+import com.oneandone.ejbcdiunit.ejbs.appexc.TestBaseClass;
 import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -49,6 +51,7 @@ import com.oneandone.ejbcdiunit.testbases.TestEntity1Saver;
         TestEjb.TestDbPersistenceFactory.class, SessionContextFactory.class,
         StatelessBeanManagedTrasEJB.class, StatelessChildEJB.class,
         QMdbEjb.class, MdbEjbInfoSingleton.class, LoggerGenerator.class })
+@EjbJarClasspath(TestBaseClass.class)
 public class TestEjb extends EJBTransactionTestBase {
 
     @Inject

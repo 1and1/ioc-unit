@@ -11,6 +11,7 @@ import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 import javax.naming.InitialContext;
 
+import com.oneandone.ejbcdiunit.internal.EjbInformationBean;
 import org.jboss.weld.bootstrap.WeldBootstrap;
 import org.jboss.weld.bootstrap.api.Bootstrap;
 import org.jboss.weld.bootstrap.api.CDI11Bootstrap;
@@ -38,7 +39,7 @@ import com.oneandone.ejbcdiunit.cdiunit.WeldTestUrlDeployment;
 public class EjbUnitRule implements TestRule {
     private static Logger logger = LoggerFactory.getLogger(EjbUnitRunner.class);
     private final Object instance;
-    private final CdiTestConfig cdiTestConfig;
+    private CdiTestConfig cdiTestConfig;
     private Method method;
 
     public EjbUnitRule(final Object instance, CdiTestConfig cdiTestConfig) {
@@ -104,6 +105,7 @@ public class EjbUnitRule implements TestRule {
 
                                         }
                                         }));
+                EjbUnitRule.this.cdiTestConfig = weldTestConfig;
 
                 weld = new Weld() {
 
@@ -170,6 +172,9 @@ public class EjbUnitRule implements TestRule {
                 try {
                     Class.forName("javax.ejb.EJBContext");
                     creationalContexts.create(EjbUnitBeanInitializerClass.class, ApplicationScoped.class);
+                    EjbInformationBean ejbInformationBean =
+                            (EjbInformationBean) creationalContexts.create(EjbInformationBean.class, ApplicationScoped.class);
+                    ejbInformationBean.setApplicationExceptionDescriptions(cdiTestConfig.getApplicationExceptionDescriptions());
                     Object test = creationalContexts.create(clazz, ApplicationScoped.class);
 
                     initWeldFields(test, test.getClass());
