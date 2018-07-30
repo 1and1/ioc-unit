@@ -3,7 +3,7 @@
          version="3.1"
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/ejb-jar_3_1.xsd">
 
-    <!-- if changing: also maintain duplicate of this in resources/META-INF -->
+    <!--duplicated from WEB-INF, so that it is put into the classes-file as well! -->
     <assembly-descriptor>
         <application-exception>
             <exception-class>
