@@ -8,6 +8,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceContextType;
 
 import org.apache.openejb.config.EjbModule;
+import org.apache.openejb.jee.AssemblyDescriptor;
 import org.apache.openejb.jee.Beans;
 import org.apache.openejb.jee.EjbJar;
 import org.apache.openejb.jee.StatelessBean;
@@ -16,7 +17,9 @@ import org.apache.openejb.junit.ApplicationComposerRule;
 import org.apache.openejb.testing.Configuration;
 import org.apache.openejb.testing.Module;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
+import org.junit.Test;
 
 import com.oneandone.ejbcdiunit.ejbs.CDIClass;
 import com.oneandone.ejbcdiunit.ejbs.appexc.SaveAndThrowCaller;
@@ -28,6 +31,14 @@ import com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.AppExcExampleNotInherited
 import com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.AppExcExampleNotInheritedRollback;
 import com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.DerivedAppExcExampleInheritedNoRollback;
 import com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.DerivedAppExcExampleInheritedRollback;
+import com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.declared.notrtex.DeclaredAppExcExampleInheritedNoRollback;
+import com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.declared.notrtex.DeclaredAppExcExampleInheritedRollback;
+import com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.declared.notrtex.DeclaredAppExcExampleNotInheritedNoRollback;
+import com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.declared.notrtex.DeclaredAppExcExampleNotInheritedRollback;
+import com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.declared.rtex.DeclaredAppRtExcExampleInheritedNoRollback;
+import com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.declared.rtex.DeclaredAppRtExcExampleInheritedRollback;
+import com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.declared.rtex.DeclaredAppRtExcExampleNotInheritedNoRollback;
+import com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.declared.rtex.DeclaredAppRtExcExampleNotInheritedRollback;
 import com.oneandone.ejbcdiunit.entities.TestEntity1;
 import com.oneandone.ejbcdiunit.jpa.TomeeResources;
 
@@ -67,9 +78,20 @@ public class EmbeddedTomeeAppExcTransactionTest extends TestBaseClass {
 
     @Module
     public EjbModule module() {
-        EjbModule module = new EjbModule(new EjbJar("test-appexc-beans")
+        AssemblyDescriptor assemblyDescriptor = new AssemblyDescriptor();
+        assemblyDescriptor.addApplicationException(DeclaredAppExcExampleInheritedNoRollback.class, false, true);
+        assemblyDescriptor.addApplicationException(DeclaredAppExcExampleNotInheritedNoRollback.class, false, false);
+        assemblyDescriptor.addApplicationException(DeclaredAppExcExampleInheritedRollback.class, false, true);
+        assemblyDescriptor.addApplicationException(DeclaredAppExcExampleNotInheritedRollback.class, false, false);
+        assemblyDescriptor.addApplicationException(DeclaredAppRtExcExampleInheritedNoRollback.class, false, true);
+        assemblyDescriptor.addApplicationException(DeclaredAppRtExcExampleNotInheritedNoRollback.class, false, false);
+        assemblyDescriptor.addApplicationException(DeclaredAppRtExcExampleInheritedRollback.class, false, true);
+        assemblyDescriptor.addApplicationException(DeclaredAppRtExcExampleNotInheritedRollback.class, false, false);
+        final EjbJar ejbJar = new EjbJar("test-appexc-beans")
                 .enterpriseBean(new StatelessBean(SaveAndThrower.class))
-                .enterpriseBean(new StatelessBean(SaveAndThrowCaller.class)));
+                .enterpriseBean(new StatelessBean(SaveAndThrowCaller.class));
+        ejbJar.setAssemblyDescriptor(assemblyDescriptor);
+        EjbModule module = new EjbModule(ejbJar);
         Beans beans = new Beans();
         beans
                 .managedClass(TomeeResources.class.getName())
@@ -159,4 +181,17 @@ public class EmbeddedTomeeAppExcTransactionTest extends TestBaseClass {
         saveAndThrowCaller.callInNotSupported(new DerivedAppExcExampleInheritedNoRollback("test"), 3L);
         // saveAndThrowCaller.callInNotSupported(new DerivedAppExcExampleNotInheritedNoRollback("test"), 5L);
     }
+
+
+    // ApplicationException Handling buggy in tomee
+    @Ignore
+    @Override
+    @Test
+    public void testDeclaredAppExcInCurrentTra() throws Throwable {}
+
+    // ApplicationException Handling buggy in tomee
+    @Ignore
+    @Override
+    @Test
+    public void testDeclaredAppRtExcInCurrentTra() throws Throwable {}
 }
