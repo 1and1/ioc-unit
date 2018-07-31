@@ -318,9 +318,6 @@
                     <argLine>
                         -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
                     </argLine>
-                    <!--argLine>
-                    -Djavax.xml.parsers.DocumentBuilderFactory=com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl
-                    </argLine-->
                     <reuseForks>false</reuseForks>
                 </configuration>
             </plugin>
