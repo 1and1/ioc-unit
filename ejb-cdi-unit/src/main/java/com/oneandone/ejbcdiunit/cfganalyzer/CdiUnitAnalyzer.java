@@ -11,7 +11,6 @@ import org.jglue.cdiunit.internal.InSessionInterceptor;
 import org.jglue.cdiunit.internal.ProducerConfigExtension;
 import org.jglue.cdiunit.internal.TestScopeExtension;
 import org.jglue.cdiunit.internal.easymock.EasyMockExtension;
-import org.jglue.cdiunit.internal.jsf.ViewScopeExtension;
 import org.jglue.cdiunit.internal.mockito.MockitoExtension;
 import org.jglue.cdiunit.internal.servlet.MockHttpServletRequestImpl;
 import org.jglue.cdiunit.internal.servlet.MockHttpServletResponseImpl;
@@ -22,6 +21,7 @@ import org.jglue.cdiunit.internal.servlet.ServletObjectsProducer;
 import com.oneandone.ejbcdiunit.CdiTestConfig;
 import com.oneandone.ejbcdiunit.internal.AsynchronousMethodInterceptor;
 import com.oneandone.ejbcdiunit.internal.TransactionalInterceptor;
+import com.oneandone.ejbcdiunit.internal.jsf.EjbUnitViewScopeExtension;
 
 /**
  * @author aschoerk
@@ -44,7 +44,7 @@ public class CdiUnitAnalyzer extends TestConfigAnalyzer {
 
         try {
             Class.forName("javax.faces.view.ViewScoped");
-            extensions.add(createMetadata(new ViewScopeExtension(), ViewScopeExtension.class.getName()));
+            extensions.add(createMetadata(new EjbUnitViewScopeExtension(), EjbUnitViewScopeExtension.class.getName()));
         } catch (ClassNotFoundException e) {
 
         }
