@@ -156,7 +156,7 @@ public abstract class TestConfigAnalyzer {
         checkSetAnalyzeStarted();
         init(testClass, config);
         populateCdiClasspathSet();
-        initContainerSpecific(testClass, null);
+        initContainerSpecific(testClass, testMethod);
         transferConfig(config);
 
         while (!classesToProcess.isEmpty()) {

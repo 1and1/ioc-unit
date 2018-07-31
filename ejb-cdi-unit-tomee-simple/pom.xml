@@ -25,17 +25,12 @@
 
    <properties>
       <java.min.version>1.8</java.min.version>
-      <maven.min.version>3.0.0</maven.min.version>
 
       <version.junit>4.11</version.junit>
       <version.javaee_api>7.0</version.javaee_api>
 
       <version.tomee>7.0.3</version.tomee>
    </properties>
-
-   <prerequisites>
-      <maven>${maven.min.version}</maven>
-   </prerequisites>
 
    <dependencyManagement>
       <dependencies>

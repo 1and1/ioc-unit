@@ -26,7 +26,6 @@
 
    <properties>
       <java.min.version>1.8</java.min.version>
-      <maven.min.version>3.0.0</maven.min.version>
 
       <version.junit>4.11</version.junit>
       <version.javaee_api>7.0</version.javaee_api>
@@ -36,10 +35,6 @@
       <version.wildfly>10.1.0.Final</version.wildfly>
       <version.wildfly.arquillian>2.0.2.Final</version.wildfly.arquillian>
    </properties>
-
-   <prerequisites>
-      <maven>${maven.min.version}</maven>
-   </prerequisites>
 
    <dependencyManagement>
       <dependencies>
