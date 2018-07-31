@@ -48,7 +48,7 @@
         </maven-checkstyle-plugin.suppressionsLocation>
         <maven-dependency-plugin.version>2.8</maven-dependency-plugin.version>
         <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
-        <maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
+        <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <maven-javadoc-plugin.version>2.10.3</maven-javadoc-plugin.version>
 
@@ -58,11 +58,12 @@
         <maven-resources-plugin.version>2.6</maven-resources-plugin.version>
         <maven-site-plugin.version>3.3</maven-site-plugin.version>
         <maven-source-plugin.version>2.2.1</maven-source-plugin.version>
-        <maven-surefire-plugin.version>2.19.1</maven-surefire-plugin.version>
+        <maven-surefire-plugin.version>2.22.0</maven-surefire-plugin.version>
         <maven-war-plugin.version>3.0.0</maven-war-plugin.version>
 
         <!-- external -->
-        <slf4j.version>1.7.21</slf4j.version>
+        <slf4j.version>1.7.25</slf4j.version>
+        <logback.version>1.0.9</logback.version>
         <persistence-api.version>1.0</persistence-api.version>
 
         <!-- test -->
@@ -149,15 +150,9 @@
                 <version>${slf4j.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-log4j12</artifactId>
-                <version>${slf4j.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-simple</artifactId>
-                <version>${slf4j.version}</version>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${logback.version}</version>
                 <scope>test</scope>
             </dependency>
 
@@ -267,10 +262,13 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven-compiler-plugin.version}</version>
+                <version>3.7.0</version>
                 <configuration>
                     <source>1.7</source>
                     <target>1.7</target>
+                    <jdkToolchain>
+                        <version>10</version>
+                    </jdkToolchain>
                 </configuration>
             </plugin>
             <plugin>
@@ -302,10 +300,22 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin.version}</version>
                 <configuration>
+                    <systemPropertyVariables>
+                        <javax.xml.parsers.DocumentBuilderFactory>
+                            com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl
+                        </javax.xml.parsers.DocumentBuilderFactory>
+                    </systemPropertyVariables>
+
                     <reportFormat>plain</reportFormat>
                     <redirectTestOutputToFile>true</redirectTestOutputToFile>
                     <!-- Sets the VM argument line used when unit tests are run. -->
-                    <argLine>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005</argLine>
+                    <!--argLine> - -add-modules java.xml,java.sql -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005</argLine-->
+                    <argLine>
+                        -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+                    </argLine>
+                    <!--argLine>
+                    -Djavax.xml.parsers.DocumentBuilderFactory=com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl
+                    </argLine-->
                     <reuseForks>false</reuseForks>
                 </configuration>
             </plugin>
@@ -367,21 +377,6 @@
         <url>https://github.com/1and1/ejb-cdi-unit/issues/</url>
     </issueManagement>
     <inceptionYear>2017</inceptionYear>
-
-    <!--distributionManagement>
-        <repository>
-            <uniqueVersion>false</uniqueVersion>
-            <id>artifactory-releases</id>
-            <name>access-release</name>
-            <url>https://artifactory.1and1.org/artifactory/access-release</url>
-        </repository>
-        <snapshotRepository>
-            <uniqueVersion>true</uniqueVersion>
-            <id>artifactory-snapshots</id>
-            <name>access-snapshot</name>
-            <url>https://artifactory.1and1.org/artifactory/access-snapshot</url>
-        </snapshotRepository>
-    </distributionManagement-->
 
     <distributionManagement>
         <snapshotRepository>
@@ -453,7 +448,6 @@
                 <version.org.hibernate.api>1.0.0.Final</version.org.hibernate.api>
                 <version.org.hibernate>5.0.10.Final</version.org.hibernate>
                 <version.org.hibernate.validator>5.2.4.Final</version.org.hibernate.validator>
-
             </properties>
         </profile>
         <profile>

@@ -49,7 +49,8 @@ class EjbJarParser {
             }
 
             try (InputStream inputStream = resource.openStream()) {
-                Document ejbjar = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(inputStream);
+                final DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+                Document ejbjar = documentBuilderFactory.newDocumentBuilder().parse(inputStream);
                 final Element documentElement = ejbjar.getDocumentElement();
                 if ("ejb-jar".equals(documentElement.getNodeName())) {
                     documentElement.normalize();
@@ -94,4 +95,5 @@ class EjbJarParser {
             }
         }
     }
+
 }

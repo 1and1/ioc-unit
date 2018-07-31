@@ -194,7 +194,7 @@ public class TestPersistenceFactory extends PersistenceFactory {
 
             @Override
             public ClassLoader getNewTempClassLoader() {
-                return null;
+                return this.getClassLoader();
             }
         };
     }

@@ -120,7 +120,7 @@ public class SessionContextSimulation extends EjbContextSimulation implements Se
     public static boolean startInterceptionDecorationContext() {
         Method[] methods = InterceptionDecorationContext.class.getMethods();
         for (Method m : methods) {
-            if (m.getParameterCount() == 0) {
+            if (m.getParameterTypes().length == 0) {
                 if (m.getName().equals("startInterceptorContext")) {
                     callMethodThrowRTEIfNecessary(m);
                     return true;

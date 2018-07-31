@@ -93,11 +93,11 @@
             <artifactId>deltaspike-core-api</artifactId>
             <version>${delta-spike.version}</version>
         </dependency>
-        <!--dependency>
+        <dependency>
             <groupId>io.github.lukehutch</groupId>
             <artifactId>fast-classpath-scanner</artifactId>
             <version>3.1.0</version>
-        </dependency-->
+        </dependency>
         <dependency>
             <groupId>org.jboss.spec.javax.transaction</groupId>
             <artifactId>jboss-transaction-api_1.1_spec</artifactId>

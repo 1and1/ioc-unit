@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.decorator.Decorator;
@@ -66,7 +65,7 @@ public abstract class TestConfigAnalyzer {
     protected Collection<Metadata<String>> enabledDecorators = new ArrayList<Metadata<String>>();
     protected Collection<Metadata<String>> enabledAlternativeStereotypes = new ArrayList<Metadata<String>>();
     protected Set<Class<?>> classesToIgnore;
-    List<URL> classpathEntries;
+    Set<URL> classpathEntries;
     private boolean analyzeStarted = false;
 
     private static Constructor metaDataConstructor;
@@ -90,7 +89,7 @@ public abstract class TestConfigAnalyzer {
         }
     }
 
-    public List<URL> getClasspathEntries() {
+    public Set<URL> getClasspathEntries() {
         return classpathEntries;
     }
 
@@ -433,7 +432,7 @@ public abstract class TestConfigAnalyzer {
     }
 
 
-    public void setClasspathEntries(final ArrayList<URL> classpathEntries) {
+    public void setClasspathEntries(final Set<URL> classpathEntries) {
         this.classpathEntries = classpathEntries;
     }
 }
