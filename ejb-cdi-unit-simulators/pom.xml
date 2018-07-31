@@ -77,11 +77,6 @@
             <version>2.5</version>
         </dependency>
         <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>17.0</version>
-        </dependency>
-        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>ejb-cdi-unit</artifactId>
             <scope>test</scope>

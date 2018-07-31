@@ -12,9 +12,8 @@ import java.security.interfaces.DSAPublicKey;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.DSAPublicKeySpec;
 import java.security.spec.RSAPublicKeySpec;
+import java.util.Base64;
 import java.util.Scanner;
-
-import com.google.common.io.BaseEncoding;
 
 // Reads and writes a public key in ssh-keygen format
 public class AuthorizedKeyDecoder {
@@ -44,7 +43,8 @@ public class AuthorizedKeyDecoder {
             dos.write(rsaPublicKey.getPublicExponent().toByteArray());
             dos.writeInt(rsaPublicKey.getModulus().toByteArray().length);
             dos.write(rsaPublicKey.getModulus().toByteArray());
-            publicKeyEncoded = new String(BaseEncoding.base64().encode(byteOs.toByteArray()));
+            Base64.getEncoder().encode(byteOs.toByteArray());
+            publicKeyEncoded = new String(Base64.getEncoder().encode(byteOs.toByteArray()));
             return "ssh-rsa " + publicKeyEncoded + " " + user;
         } else if (publicKey.getAlgorithm().equals("DSA")) {
             DSAPublicKey dsaPublicKey = (DSAPublicKey) publicKey;
@@ -62,7 +62,7 @@ public class AuthorizedKeyDecoder {
             dos.write(dsaParams.getG().toByteArray());
             dos.writeInt(dsaPublicKey.getY().toByteArray().length);
             dos.write(dsaPublicKey.getY().toByteArray());
-            publicKeyEncoded = new String(BaseEncoding.base64().encode(byteOs.toByteArray()));
+            publicKeyEncoded = new String(Base64.getEncoder().encode(byteOs.toByteArray()));
             return "ssh-dss " + publicKeyEncoded + " " + user;
         } else {
             throw new IllegalArgumentException("Unknown public key encoding: " + publicKey.getAlgorithm());
@@ -90,7 +90,7 @@ public class AuthorizedKeyDecoder {
         // both ssh-rsa and ssh-dss begin with "AAAA" due to the length bytes
         for (String part : keyLine.split(" ")) {
             if (part.startsWith("AAAA")) {
-                bytes = BaseEncoding.base64().decode(part);
+                bytes = Base64.getDecoder().decode(part);
                 break;
             }
         }

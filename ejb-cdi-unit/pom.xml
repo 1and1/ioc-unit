@@ -54,7 +54,6 @@
                     <artifactId>nekohtml</artifactId>
                 </exclusion>
             </exclusions>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>cglib</groupId>

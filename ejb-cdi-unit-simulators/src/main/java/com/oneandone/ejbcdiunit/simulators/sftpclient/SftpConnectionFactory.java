@@ -3,7 +3,6 @@ package com.oneandone.ejbcdiunit.simulators.sftpclient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Strings;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
@@ -43,7 +42,8 @@ public class SftpConnectionFactory {
                 if (session != null) {
                     session.disconnect();
                 }
-                if (!Strings.isNullOrEmpty(sftpConfiguration.getPrivateKeyPath())) {
+                final String privateKeyPath = sftpConfiguration.getPrivateKeyPath();
+                if (privateKeyPath != null && privateKeyPath.length() > 0) {
                     log.warn("unable to connect with keyfile: {} and passphrase {} to {}:{} - retry: {}",
                             sftpConfiguration.getPrivateKeyPath(), getPasswordWithAsterisks(sftpConfiguration), sftpConfiguration.getHost(),
                             sftpConfiguration.getPort(), retryNr, e);
@@ -93,13 +93,15 @@ public class SftpConnectionFactory {
     private Session getSession(SftpConfiguration sftpConfiguration) throws JSchException {
         Session pSession = null;
         JSch jsch = new JSch();
-        if (!Strings.isNullOrEmpty(sftpConfiguration.getPrivateKeyPath())) {
+        final String privateKeyPath = sftpConfiguration.getPrivateKeyPath();
+        final String password = sftpConfiguration.getPassword();
+        if (privateKeyPath != null && !privateKeyPath.isEmpty()) {
             try {
-                if (Strings.isNullOrEmpty(sftpConfiguration.getPassword())) {
+                if (password == null || password.isEmpty()) {
                     jsch.addIdentity(sftpConfiguration.getPrivateKeyPath());
                     log.debug("using " + sftpConfiguration.getPrivateKeyPath() + " without passphrase");
                 } else {
-                    jsch.addIdentity(sftpConfiguration.getPrivateKeyPath(), sftpConfiguration.getPassword());
+                    jsch.addIdentity(sftpConfiguration.getPrivateKeyPath(), password);
                     log.debug("using " + sftpConfiguration.getPrivateKeyPath() + " with passphrase " + getPasswordWithAsterisks(sftpConfiguration));
                 }
             } catch (JSchException e) {
@@ -109,8 +111,8 @@ public class SftpConnectionFactory {
 
         pSession = jsch.getSession(sftpConfiguration.getUsername(), sftpConfiguration.getHost(), sftpConfiguration.getPort());
         // use PK-file auth if available
-        if (Strings.isNullOrEmpty(sftpConfiguration.getPrivateKeyPath())) {
-            pSession.setPassword(sftpConfiguration.getPassword());
+        if (privateKeyPath == null || privateKeyPath.isEmpty()) {
+            pSession.setPassword(password);
         }
         // TODO check why yes doesn't work
         // => maybe not in known hosts? http://stackoverflow.com/a/2003460 ff
