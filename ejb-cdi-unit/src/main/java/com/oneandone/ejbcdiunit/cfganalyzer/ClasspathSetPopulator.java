@@ -9,7 +9,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.security.CodeSource;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -84,6 +83,8 @@ class ClasspathSetPopulator {
     }
 
     public Set<URL> invoke(Set<URL> cdiClasspathEntries) throws IOException {
+        if (System.getProperty("java.version").startsWith("1.8"))
+            return invokeOld(cdiClasspathEntries);
         List<URL> entryList = new FastClasspathScanner().scan()
                 .getUniqueClasspathElementURLs();
         // cdiClasspathEntries doesn't preserve order, so HashSet is fine
@@ -122,13 +123,13 @@ class ClasspathSetPopulator {
     }
 
 
-    public ArrayList<URL> invokeOld(Set<URL> cdiClasspathEntries) throws IOException {
+    public Set<URL> invokeOld(Set<URL> cdiClasspathEntries) throws IOException {
 
         ClassLoader classLoader = ClasspathSetPopulator.class.getClassLoader();
-        ArrayList<URL> classpathEntries = new ArrayList<URL>(Arrays.asList(((URLClassLoader) classLoader).getURLs()));
+        Set<URL> classpathEntries = new HashSet<URL>(Arrays.asList(((URLClassLoader) classLoader).getURLs()));
 
         // If this is surefire we need to get the original claspath
-        try (JarInputStream firstEntry = new JarInputStream(classpathEntries.get(0).openStream())) {
+        try (JarInputStream firstEntry = new JarInputStream(classpathEntries.iterator().next().openStream())) {
             Manifest manifest = firstEntry.getManifest();
             if (manifest != null) {
                 String classpath = (String) manifest.getMainAttributes().get(Attributes.Name.CLASS_PATH);

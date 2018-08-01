@@ -4,21 +4,18 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URL;
-import java.util.concurrent.ScheduledExecutorService;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 import javax.naming.InitialContext;
 
-import com.oneandone.ejbcdiunit.internal.EjbInformationBean;
 import org.jboss.weld.bootstrap.WeldBootstrap;
 import org.jboss.weld.bootstrap.api.Bootstrap;
 import org.jboss.weld.bootstrap.api.CDI11Bootstrap;
 import org.jboss.weld.environment.se.Weld;
 import org.jboss.weld.environment.se.WeldContainer;
 import org.jboss.weld.resources.spi.ResourceLoader;
-import org.jboss.weld.resources.spi.ScheduledExecutorServiceFactory;
 import org.jboss.weld.transaction.spi.TransactionServices;
 import org.jboss.weld.util.reflection.Formats;
 import org.junit.Test;
@@ -32,6 +29,7 @@ import com.oneandone.ejbcdiunit.CdiTestConfig.ServiceConfig;
 import com.oneandone.ejbcdiunit.cdiunit.Weld11TestUrlDeployment;
 import com.oneandone.ejbcdiunit.cdiunit.WeldTestConfig;
 import com.oneandone.ejbcdiunit.cdiunit.WeldTestUrlDeployment;
+import com.oneandone.ejbcdiunit.internal.EjbInformationBean;
 
 /**
  * @author aschoerk
@@ -93,18 +91,7 @@ public class EjbUnitRule implements TestRule {
                                 .addClass(SupportEjbExtended.class)
                                 .addServiceConfig(new ServiceConfig(TransactionServices.class,
                                         new EjbUnitTransactionServices()))
-                                .addServiceConfig(
-                                        new CdiTestConfig.ServiceConfig(ScheduledExecutorServiceFactory.class, new ScheduledExecutorServiceFactory() {
-                                            @Override
-                                            public ScheduledExecutorService get() {
-                                                return null;
-                                            }
-
-                                            @Override
-                                            public void cleanup() {
-
-                                        }
-                                        }));
+                ;
                 EjbUnitRule.this.cdiTestConfig = weldTestConfig;
 
                 weld = new Weld() {
