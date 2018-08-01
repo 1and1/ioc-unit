@@ -2,6 +2,7 @@
 
 |Version|Changes|
 |-------|-------|
+|1.1.12|support Java10|
 |1.1.11|@EjbJarClasspath: Support ApplicationExceptions defined by ejb-jar.xml either in META-INF or in WEB-INF|
 |1.1.10|<ul><li>Support String-Resource-Injection, <li>change debug level for chatty TransactionalInterceptor|
 |1.1.7|<ul><li>fixed sftp-simulator tests by increasing mina-version, |
