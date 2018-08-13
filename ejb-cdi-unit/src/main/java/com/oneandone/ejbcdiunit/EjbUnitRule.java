@@ -94,6 +94,7 @@ public class EjbUnitRule implements TestRule {
                 ;
                 EjbUnitRule.this.cdiTestConfig = weldTestConfig;
 
+
                 weld = new Weld() {
 
                     protected org.jboss.weld.bootstrap.spi.Deployment createDeployment(ResourceLoader resourceLoader, CDI11Bootstrap bootstrap) {

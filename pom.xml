@@ -68,7 +68,7 @@
 
         <!-- test -->
         <mockito.version>2.19.0</mockito.version>
-        <cdi-unit.version>3.1.4</cdi-unit.version>
+        <cdi-unit.version>4.0.2</cdi-unit.version>
         <!-- weld.version>1.1.14.Final</weld.version-->
         <junit.version>4.12</junit.version>
         <mockrunner.version>1.1.2</mockrunner.version>
@@ -106,11 +106,21 @@
                 <groupId>${project.groupId}</groupId>
                 <artifactId>ejb-cdi-unit</artifactId>
                 <version>${project.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.javassist</groupId>
+                        <artifactId>javassist</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.reflections</groupId>
+                        <artifactId>reflections</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>javax.enterprise</groupId>
                 <artifactId>cdi-api</artifactId>
-                <version>1.2</version>
+                <version>${version.cdi-api}</version>
             </dependency>
 
             <dependency>
@@ -429,6 +439,7 @@
                 <version.org.hibernate.api>1.0.1.Final</version.org.hibernate.api>
                 <version.org.hibernate>4.2.2.Final</version.org.hibernate>
                 <version.org.hibernate.validator>4.3.1.Final</version.org.hibernate.validator>
+                <version.cdi-api>1.1</version.cdi-api>
             </properties>
         </profile>
         <profile>
@@ -440,7 +451,7 @@
                 <version.org.hibernate.api>1.0.0.Final</version.org.hibernate.api>
                 <version.org.hibernate>5.0.10.Final</version.org.hibernate>
                 <version.org.hibernate.validator>5.2.4.Final</version.org.hibernate.validator>
-
+                <version.cdi-api>1.2</version.cdi-api>
             </properties>
         </profile>
         <profile>
@@ -450,6 +461,7 @@
                 <version.org.hibernate.api>1.0.0.Final</version.org.hibernate.api>
                 <version.org.hibernate>5.0.10.Final</version.org.hibernate>
                 <version.org.hibernate.validator>5.2.4.Final</version.org.hibernate.validator>
+                <version.cdi-api>1.2</version.cdi-api>
             </properties>
         </profile>
         <profile>
@@ -459,8 +471,16 @@
                 <version.org.hibernate.api>1.0.0.Final</version.org.hibernate.api>
                 <version.org.hibernate>5.0.10.Final</version.org.hibernate>
                 <version.org.hibernate.validator>5.2.4.Final</version.org.hibernate.validator>
-
+                <version.cdi-api>2.0</version.cdi-api>
             </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>org.jboss.weld.module</groupId>
+                    <artifactId>weld-web</artifactId>
+                    <version>3.0.0.Final</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
         </profile>
     </profiles>
 

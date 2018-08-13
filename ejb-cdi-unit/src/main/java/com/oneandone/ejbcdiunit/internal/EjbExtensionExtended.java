@@ -54,7 +54,6 @@ import javax.persistence.PersistenceContext;
 import org.apache.deltaspike.core.util.metadata.AnnotationInstanceProvider;
 import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
 import org.jboss.weld.bean.proxy.InterceptionDecorationContext;
-import org.jboss.weld.literal.DefaultLiteral;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

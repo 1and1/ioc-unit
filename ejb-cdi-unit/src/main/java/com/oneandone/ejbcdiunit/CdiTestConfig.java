@@ -114,6 +114,9 @@ public class CdiTestConfig {
         this.applicationExceptionDescriptions = applicationExceptionDescriptions;
     }
 
+    public void addExcludedByString(String s) {
+    }
+
     public static class ServiceConfig<S extends Service> {
         Class<S> serviceClass;
         S service;

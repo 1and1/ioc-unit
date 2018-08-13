@@ -56,7 +56,7 @@ public abstract class TestConfigAnalyzer {
     private static Logger log = LoggerFactory.getLogger(TestConfigAnalyzer.class);
     protected Set<URL> cdiClasspathEntries = new HashSet<URL>();
     protected Set<String> discoveredClasses = new LinkedHashSet<String>();
-    protected Set<String> alternatives = new HashSet<String>();
+    protected Collection<Metadata<String>> alternatives = new ArrayList<Metadata<String>>();
     protected Set<Class<?>> classesToProcess = new LinkedHashSet<Class<?>>();
     protected Set<Class<?>> classesProcessed = new HashSet<Class<?>>();
     protected Class<?> ejbJarClasspathExample = null;
@@ -76,16 +76,18 @@ public abstract class TestConfigAnalyzer {
 
     protected <T> Metadata<T> createMetadata(T value, String location) {
         try {
-            if (metaDataConstructor == null) {
+            return new org.jboss.weld.bootstrap.spi.helpers.MetadataImpl<>(value, location);
+        } catch (NoClassDefFoundError e) {
+            // MetadataImpl moved to a new package in Weld 2.4, old copy removed in 3.0
+            try {
                 // If Weld < 2.4, the new package isn't there, so we try the old package.
-                // noinspection unchecked
+                //noinspection unchecked
                 Class<Metadata<T>> oldClass = (Class<Metadata<T>>) Class.forName("org.jboss.weld.metadata.MetadataImpl");
                 Constructor<Metadata<T>> ctor = oldClass.getConstructor(Object.class, String.class);
-                metaDataConstructor = ctor;
+                return ctor.newInstance(value, location);
+            } catch (ReflectiveOperationException e1) {
+                throw new RuntimeException(e1);
             }
-            return ((Constructor<Metadata<T>>) metaDataConstructor).newInstance(value, location);
-        } catch (ReflectiveOperationException e1) {
-            throw new RuntimeException(e1);
         }
     }
 
@@ -105,7 +107,7 @@ public abstract class TestConfigAnalyzer {
         return discoveredClasses;
     }
 
-    public Set<String> getAlternatives() {
+    public Collection<Metadata<String>> getAlternatives() {
         return alternatives;
     }
 
@@ -322,7 +324,7 @@ public abstract class TestConfigAnalyzer {
         classesToProcess.add(alternativeClass);
 
         if (!isAlternativeStereotype(alternativeClass)) {
-            alternatives.add(alternativeClass.getName());
+            alternatives.add(createMetadata(alternativeClass.getName(),alternativeClass.getName()));
         }
     }
 

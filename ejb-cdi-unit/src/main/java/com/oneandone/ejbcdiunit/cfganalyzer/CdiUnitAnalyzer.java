@@ -2,25 +2,23 @@ package com.oneandone.ejbcdiunit.cfganalyzer;
 
 import java.lang.reflect.Method;
 
+import com.oneandone.ejbcdiunit.internal.*;
+import com.oneandone.ejbcdiunit.internal.jaxrs.JaxRsProducersEjbCdiUnit;
+import com.oneandone.ejbcdiunit.internal.servlet.ServletObjectsProducerEjbCdiUnit;
 import org.jboss.weld.environment.se.WeldSEBeanRegistrant;
+import org.jglue.cdiunit.ContextController;
 import org.jglue.cdiunit.ProducesAlternative;
-import org.jglue.cdiunit.internal.CdiUnitInitialListener;
 import org.jglue.cdiunit.internal.InConversationInterceptor;
 import org.jglue.cdiunit.internal.InRequestInterceptor;
 import org.jglue.cdiunit.internal.InSessionInterceptor;
 import org.jglue.cdiunit.internal.ProducerConfigExtension;
 import org.jglue.cdiunit.internal.TestScopeExtension;
 import org.jglue.cdiunit.internal.easymock.EasyMockExtension;
+import org.jglue.cdiunit.internal.jaxrs.JaxRsProducers;
 import org.jglue.cdiunit.internal.mockito.MockitoExtension;
-import org.jglue.cdiunit.internal.servlet.MockHttpServletRequestImpl;
-import org.jglue.cdiunit.internal.servlet.MockHttpServletResponseImpl;
-import org.jglue.cdiunit.internal.servlet.MockHttpSessionImpl;
-import org.jglue.cdiunit.internal.servlet.MockServletContextImpl;
-import org.jglue.cdiunit.internal.servlet.ServletObjectsProducer;
+import org.jglue.cdiunit.internal.servlet.*;
 
 import com.oneandone.ejbcdiunit.CdiTestConfig;
-import com.oneandone.ejbcdiunit.internal.AsynchronousMethodInterceptor;
-import com.oneandone.ejbcdiunit.internal.TransactionalInterceptor;
 import com.oneandone.ejbcdiunit.internal.jsf.EjbUnitViewScopeExtension;
 
 /**
@@ -30,7 +28,11 @@ public class CdiUnitAnalyzer extends TestConfigAnalyzer {
 
     @Override
     protected void init(Class<?> testClass, CdiTestConfig config) {
-        config.addExcluded(CdiUnitInitialListener.class);
+        config.addExcluded(ContextController.class);
+        config.addExcluded(ServletObjectsProducer.class);
+        config.addExcluded(InRequestInterceptor.class);
+        config.addExcluded(InSessionInterceptor.class);
+        config.addExcluded(JaxRsProducers.class);
         super.init(testClass, config);
     }
 
@@ -51,10 +53,10 @@ public class CdiUnitAnalyzer extends TestConfigAnalyzer {
 
         try {
             Class.forName("javax.servlet.http.HttpServletRequest");
-            classesToProcess.add(InRequestInterceptor.class);
-            classesToProcess.add(InSessionInterceptor.class);
+            classesToProcess.add(EjbCdiUnitInitialListenerProducer.class);
+            classesToProcess.add(InRequestInterceptorEjbCdiUnit.class);
+            classesToProcess.add(InSessionInterceptorEjbCdiUnit.class);
             classesToProcess.add(InConversationInterceptor.class);
-            discoveredClasses.add(CdiUnitInitialListener.class.getName());
             classesToProcess.add(MockServletContextImpl.class);
             classesToProcess.add(MockHttpSessionImpl.class);
             classesToProcess.add(MockHttpServletRequestImpl.class);
@@ -65,7 +67,7 @@ public class CdiUnitAnalyzer extends TestConfigAnalyzer {
             try {
                 Class.forName("org.jboss.weld.bean.AbstractSyntheticBean");
             } catch (ClassNotFoundException e) {
-                classesToProcess.add(ServletObjectsProducer.class);
+                classesToProcess.add(ServletObjectsProducerEjbCdiUnit.class);
             }
 
         } catch (ClassNotFoundException e) {}

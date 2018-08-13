@@ -19,6 +19,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.servlet.http.HttpServletRequest;
 
+import com.oneandone.ejbcdiunit.ContextControllerEjbCdiUnit;
 import org.apache.deltaspike.core.impl.exclude.extension.ExcludeExtension;
 import org.jglue.cdiunit.*;
 import org.junit.Test;
@@ -63,7 +64,7 @@ public class TestCdiUnitRunner extends BaseTest {
     private FApplicationScoped f2;
 
     @Inject
-    private ContextController contextController;
+    private ContextControllerEjbCdiUnit contextControllerEjbCdiUnit;
 
     @Inject
     private BRequestScoped request;
@@ -192,44 +193,44 @@ public class TestCdiUnitRunner extends BaseTest {
 
     @Test
     public void testContextController() {
-        contextController.openRequest();
+        contextControllerEjbCdiUnit.openRequest();
 
         Scoped b1 = scoped.get();
         Scoped b2 = scoped.get();
         Assert.assertEquals(b1, b2);
         b1.setDisposedListener(disposeListener);
-        contextController.closeRequest();
+        contextControllerEjbCdiUnit.closeRequest();
         Mockito.verify(disposeListener).run();
     }
 
     @Test
     public void testContextControllerRequestScoped() {
-        contextController.openRequest();
+        contextControllerEjbCdiUnit.openRequest();
 
         BRequestScoped b1 = requestScoped.get();
         b1.setFoo("Bar");
         BRequestScoped b2 = requestScoped.get();
         Assert.assertSame(b1.getFoo(), b2.getFoo());
-        contextController.closeRequest();
-        contextController.openRequest();
+        contextControllerEjbCdiUnit.closeRequest();
+        contextControllerEjbCdiUnit.openRequest();
         BRequestScoped b3 = requestScoped.get();
         Assert.assertEquals(null, b3.getFoo());
     }
 
     @Test
     public void testContextControllerSessionScoped() {
-        contextController.openRequest();
+        contextControllerEjbCdiUnit.openRequest();
 
 
         CSessionScoped b1 = sessionScoped.get();
         b1.setFoo("Bar");
         CSessionScoped b2 = sessionScoped.get();
         Assert.assertEquals(b1.getFoo(), b2.getFoo());
-        contextController.closeRequest();
-        contextController.closeSession();
+        contextControllerEjbCdiUnit.closeRequest();
+        contextControllerEjbCdiUnit.closeSession();
 
 
-        contextController.openRequest();
+        contextControllerEjbCdiUnit.openRequest();
         CSessionScoped b3 = sessionScoped.get();
         Assert.assertEquals(null, b3.getFoo());
 
@@ -237,7 +238,7 @@ public class TestCdiUnitRunner extends BaseTest {
 
     @Test
     public void testContextControllerSessionScopedWithRequest() {
-        contextController.openRequest();
+        contextControllerEjbCdiUnit.openRequest();
 
 
         CSessionScoped b1 = sessionScoped.get();
@@ -247,8 +248,8 @@ public class TestCdiUnitRunner extends BaseTest {
         b1.setFoo("Bar");
         BRequestScoped r2 = requestScoped.get();
         Assert.assertSame(r1.getFoo(), r2.getFoo());
-        contextController.closeRequest();
-        contextController.openRequest();
+        contextControllerEjbCdiUnit.closeRequest();
+        contextControllerEjbCdiUnit.openRequest();
         BRequestScoped r3 = requestScoped.get();
         Assert.assertEquals(null, r3.getFoo());
 
@@ -261,7 +262,7 @@ public class TestCdiUnitRunner extends BaseTest {
 
     @Test
     public void testContextControllerConversationScoped() {
-        HttpServletRequest request = contextController.openRequest();
+        HttpServletRequest request = contextControllerEjbCdiUnit.openRequest();
         request.getSession(true);
 
         conversation.begin();
@@ -271,8 +272,8 @@ public class TestCdiUnitRunner extends BaseTest {
         DConversationScoped b2 = conversationScoped.get();
         Assert.assertEquals(b1.getFoo(), b2.getFoo());
         conversation.end();
-        contextController.closeRequest();
-        contextController.openRequest();
+        contextControllerEjbCdiUnit.closeRequest();
+        contextControllerEjbCdiUnit.openRequest();
 
         conversation.begin();
         DConversationScoped b3 = conversationScoped.get();

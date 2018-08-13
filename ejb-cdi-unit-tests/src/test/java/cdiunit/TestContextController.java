@@ -11,7 +11,7 @@ import javax.enterprise.inject.Alternative;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 
-import org.jglue.cdiunit.ContextController;
+import com.oneandone.ejbcdiunit.ContextControllerEjbCdiUnit;
 import org.jglue.cdiunit.InRequestScope;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,7 +26,7 @@ public class TestContextController {
     private static final AtomicInteger counter = new AtomicInteger(1);
 
     @Inject
-    private ContextController contextController;
+    private ContextControllerEjbCdiUnit contextController;
 
     @Inject
     private TestCounter testCounter1;

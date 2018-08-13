@@ -43,7 +43,6 @@ import org.jboss.weld.bootstrap.spi.BeansXml;
 import org.jboss.weld.bootstrap.spi.Deployment;
 import org.jboss.weld.bootstrap.spi.Metadata;
 import org.jboss.weld.bootstrap.spi.Scanning;
-import org.jboss.weld.metadata.MetadataImpl;
 import org.jboss.weld.resources.spi.ResourceLoader;
 import org.jglue.cdiunit.internal.BeanDeploymentArchiveImpl;
 import org.slf4j.Logger;
@@ -78,8 +77,9 @@ public class WeldTestUrlDeployment implements Deployment {
             beansXml.getEnabledAlternativeStereotypes().add(eAS);
         }
 
-        for (String alternative : cdiUnitAnalyzer.getAlternatives()) {
-            beansXml.getEnabledAlternativeClasses().add(new MetadataImpl<String>(alternative, alternative));
+        for (Metadata<String> alternative : cdiUnitAnalyzer.getAlternatives()) {
+
+            beansXml.getEnabledAlternativeClasses().add(alternative);
         }
 
 
