@@ -2,24 +2,31 @@ package com.oneandone.ejbcdiunit.cfganalyzer;
 
 import java.lang.reflect.Method;
 
-import com.oneandone.ejbcdiunit.internal.*;
-import com.oneandone.ejbcdiunit.internal.jaxrs.JaxRsProducersEjbCdiUnit;
-import com.oneandone.ejbcdiunit.internal.servlet.ServletObjectsProducerEjbCdiUnit;
 import org.jboss.weld.environment.se.WeldSEBeanRegistrant;
 import org.jglue.cdiunit.ContextController;
 import org.jglue.cdiunit.ProducesAlternative;
 import org.jglue.cdiunit.internal.InConversationInterceptor;
 import org.jglue.cdiunit.internal.InRequestInterceptor;
 import org.jglue.cdiunit.internal.InSessionInterceptor;
-import org.jglue.cdiunit.internal.ProducerConfigExtension;
 import org.jglue.cdiunit.internal.TestScopeExtension;
 import org.jglue.cdiunit.internal.easymock.EasyMockExtension;
 import org.jglue.cdiunit.internal.jaxrs.JaxRsProducers;
 import org.jglue.cdiunit.internal.mockito.MockitoExtension;
-import org.jglue.cdiunit.internal.servlet.*;
+import org.jglue.cdiunit.internal.servlet.MockHttpServletRequestImpl;
+import org.jglue.cdiunit.internal.servlet.MockHttpServletResponseImpl;
+import org.jglue.cdiunit.internal.servlet.MockHttpSessionImpl;
+import org.jglue.cdiunit.internal.servlet.MockServletContextImpl;
+import org.jglue.cdiunit.internal.servlet.ServletObjectsProducer;
 
 import com.oneandone.ejbcdiunit.CdiTestConfig;
+import com.oneandone.ejbcdiunit.internal.AsynchronousMethodInterceptor;
+import com.oneandone.ejbcdiunit.internal.EjbCdiUnitInitialListenerProducer;
+import com.oneandone.ejbcdiunit.internal.InRequestInterceptorEjbCdiUnit;
+import com.oneandone.ejbcdiunit.internal.InSessionInterceptorEjbCdiUnit;
+import com.oneandone.ejbcdiunit.internal.ProducerConfigExtension;
+import com.oneandone.ejbcdiunit.internal.TransactionalInterceptor;
 import com.oneandone.ejbcdiunit.internal.jsf.EjbUnitViewScopeExtension;
+import com.oneandone.ejbcdiunit.internal.servlet.ServletObjectsProducerEjbCdiUnit;
 
 /**
  * @author aschoerk

@@ -83,7 +83,7 @@
         <javassist.version>3.20.0-GA</javassist.version>
 
         <version.javaee_api>7.0</version.javaee_api>
-        <org-reflections.version>0.9.11</org-reflections.version>
+        <reflections8.version>0.10.5</reflections8.version>
         <jaxrpc.version>1.1</jaxrpc.version>
 
         <camunda-engine.version>7.5.0</camunda-engine.version>
@@ -248,9 +248,9 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>org.reflections</groupId>
-                <artifactId>reflections</artifactId>
-                <version>${org-reflections.version}</version>
+                <groupId>net.oneandone.reflections8</groupId>
+                <artifactId>reflections8</artifactId>
+                <version>${reflections8.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.jboss.weld.se</groupId>
@@ -279,8 +279,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.7.0</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                     <jdkToolchain>
                         <version>10</version>
                     </jdkToolchain>

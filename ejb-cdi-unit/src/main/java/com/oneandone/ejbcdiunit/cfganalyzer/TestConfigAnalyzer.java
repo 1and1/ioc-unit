@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import javax.decorator.Decorator;
 import javax.enterprise.inject.Alternative;
@@ -31,7 +32,6 @@ import org.jglue.cdiunit.ActivatedAlternatives;
 import org.jglue.cdiunit.AdditionalClasses;
 import org.jglue.cdiunit.AdditionalClasspaths;
 import org.jglue.cdiunit.AdditionalPackages;
-import org.jglue.cdiunit.internal.TypesScanner;
 import org.mockito.Mock;
 import org.reflections.ReflectionUtils;
 import org.reflections.Reflections;
@@ -39,10 +39,10 @@ import org.reflections.util.ConfigurationBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Predicate;
 import com.oneandone.ejbcdiunit.CdiTestConfig;
 import com.oneandone.ejbcdiunit.cdiunit.EjbJarClasspath;
 import com.oneandone.ejbcdiunit.cdiunit.ExcludedClasses;
+import com.oneandone.ejbcdiunit.internal.TypesScanner;
 
 /**
  * Analyzes the current Testconfiguration of a cdi-unit testclass together with the classpath and an optional TestConfiguration. This is the
@@ -335,7 +335,7 @@ public abstract class TestConfigAnalyzer {
                 .setUrls(additionalPackage.getProtectionDomain().getCodeSource().getLocation()).filterInputsBy(new Predicate<String>() {
 
                     @Override
-                    public boolean apply(String input) {
+                    public boolean test(String input) {
                         return input.startsWith(packageName)
                                 && !input.substring(packageName.length() + 1, input.length() - 6).contains(".");
 
