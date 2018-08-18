@@ -1,5 +1,10 @@
 package com.oneandone.ejbcdiunit.cfganalyzer;
 
+import com.oneandone.ejbcdiunit.EjbUnitRunner;
+import org.jglue.cdiunit.CdiRunner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,21 +14,11 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.security.CodeSource;
-import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.jar.Attributes;
 import java.util.jar.JarInputStream;
 import java.util.jar.Manifest;
-
-import org.jglue.cdiunit.CdiRunner;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.oneandone.ejbcdiunit.EjbUnitRunner;
-
-import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
 
 /**
  * @author aschoerk
@@ -83,50 +78,17 @@ class ClasspathSetPopulator {
     }
 
     public Set<URL> invoke(Set<URL> cdiClasspathEntries) throws IOException {
-        if (System.getProperty("java.version").startsWith("1.8"))
-            return invokeOld(cdiClasspathEntries);
-        List<URL> entryList = new FastClasspathScanner().scan()
-                .getUniqueClasspathElementURLs();
-        // cdiClasspathEntries doesn't preserve order, so HashSet is fine
-        Set<URL> entrySet = new HashSet<>(entryList);
 
-        for (URL url : entryList) {
-            entrySet.addAll(getEntriesFromManifestClasspath(url));
+        String systemClasspath = System.getProperty("java.class.path");
+        String pathseparator = System.getProperty("path.separator");
+        String[] classpathes = systemClasspath.split(pathseparator);
+        Set<URL> classpathEntries = new HashSet<>();
+        for (String path: classpathes) {
+            classpathEntries.add(new File(path).toURL());
         }
 
-        for (URL url : entrySet) {
-            try (URLClassLoader classLoader = new URLClassLoader(new URL[] { url },
-                    null)) {
-                // TODO this seems pretty Maven-specific, and fragile
-                if (url.getFile().endsWith("/classes/")) {
-                    URL webInfBeans = new URL(url,
-                            "../../src/main/webapp/WEB-INF/beans.xml");
-                    try (InputStream ignore = webInfBeans.openStream()) {
-                        cdiClasspathEntries.add(url);
-                    } catch (IOException ignore) {
-                        // no such file
-                    }
-                }
-                // TODO beans.xml is no longer required by CDI (1.1+)
-                URL beansXml = classLoader.getResource("META-INF/beans.xml");
-                boolean isCdiUnit = url.equals(getClasspathURL(CdiRunner.class));
-                if (isCdiUnit || beansXml != null || isDirectory(url)) {
-                    cdiClasspathEntries.add(url);
-                }
-            }
-        }
-        log.debug("CDI classpath entries discovered:");
-        for (URL url : cdiClasspathEntries) {
-            log.debug("{}", url);
-        }
-        return entrySet;
-    }
-
-
-    public Set<URL> invokeOld(Set<URL> cdiClasspathEntries) throws IOException {
-
-        ClassLoader classLoader = ClasspathSetPopulator.class.getClassLoader();
-        Set<URL> classpathEntries = new HashSet<URL>(Arrays.asList(((URLClassLoader) classLoader).getURLs()));
+        // ClassLoader classLoader = ClasspathSetPopulator.class.getClassLoader();
+        // Set<URL> classpathEntries = new HashSet<URL>(Arrays.asList(((URLClassLoader) classLoader).getURLs()));
 
         // If this is surefire we need to get the original claspath
         try (JarInputStream firstEntry = new JarInputStream(classpathEntries.iterator().next().openStream())) {
@@ -157,6 +119,7 @@ class ClasspathSetPopulator {
 
                     }
                 }
+                // TODO beans.xml is no longer required by CDI (1.1+)
                 URL resource = cl.getResource("META-INF/beans.xml");
                 boolean ejbCdiUnit = url.equals(EjbUnitRunner.class.getProtectionDomain().getCodeSource().getLocation());
                 boolean cdiUnit = url.equals(CdiRunner.class.getProtectionDomain().getCodeSource().getLocation());
