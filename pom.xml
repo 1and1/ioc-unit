@@ -7,6 +7,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>ejb-cdi-unit</module>
+        <module>ejb-cdi-unit5</module>
         <module>ejb-cdi-unit-test-war</module>
         <module>ejb-cdi-unit-tests</module>
         <module>ejb-cdi-unit-simulators</module>
@@ -71,6 +72,7 @@
         <cdi-unit.version>4.0.2</cdi-unit.version>
         <!-- weld.version>1.1.14.Final</weld.version-->
         <junit.version>4.12</junit.version>
+        <junit5.version>5.2.0</junit5.version>
         <mockrunner.version>1.1.2</mockrunner.version>
         <version.cglib>3.2.5</version.cglib>
 
@@ -234,6 +236,13 @@
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>${junit.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>${junit5.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
             <dependency>
                 <groupId>mysql</groupId>

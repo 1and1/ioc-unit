@@ -1,6 +1,16 @@
 ejb-cdi-unit
 ============
-Make test driven development of ejb-3.x services and processes easy. Supports jboss7, wildfly, weld 1.x and 2.x, camunda 7.x.
+Make test driven development of ejb-3.x services and processes easy.
+Supports:
+
+* JBoss7 and Wildfly 10
+* Java 7 (until 1.1.12) Java8 and Java 10
+* JUnit 4, JUnitRules
+* JUnit 5 in active Development
+* Weld 1, 2, 3
+* Processengine: Camunda 7.x
+
+
 ![Build Status](https://travis-ci.org/1and1/ejb-cdi-unit.svg?branch=master)
 
 

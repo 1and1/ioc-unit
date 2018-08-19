@@ -1,6 +1,8 @@
 package com.oneandone.ejbcdiunit;
 
-import java.util.List;
+import com.oneandone.ejbcdiunit.internal.EjbExtensionExtended;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -9,17 +11,13 @@ import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 import javax.naming.NamingException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.oneandone.ejbcdiunit.internal.EjbExtensionExtended;
+import java.util.List;
 
 /**
  * @author aschoerk
  */
 @Dependent
-class EjbUnitBeanInitializerClass {
+public class EjbUnitBeanInitializerClass {
     @Inject
     EjbExtensionExtended ejbExtensionExtended;
 
