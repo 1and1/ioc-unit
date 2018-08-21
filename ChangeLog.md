@@ -2,6 +2,7 @@
 
 |Version|Changes|
 |-------|-------|
+|1.1.14|fixes for weld 3.0, reflections8-code-base in package org.reflections8|
 |1.1.13|weld 3.0, reflections8 (no guava), no fastclasspathscanner, support java 10 only classpath (ejb) no modules recognized|
 |1.1.12|support Java10|s rec
 |1.1.11|@EjbJarClasspath: Support ApplicationExceptions defined by ejb-jar.xml either in META-INF or in WEB-INF|
