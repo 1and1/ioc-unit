@@ -85,7 +85,7 @@
         <javassist.version>3.20.0-GA</javassist.version>
 
         <version.javaee_api>7.0</version.javaee_api>
-        <reflections8.version>0.10.5</reflections8.version>
+        <reflections8.version>0.11.1</reflections8.version>
         <jaxrpc.version>1.1</jaxrpc.version>
 
         <camunda-engine.version>7.5.0</camunda-engine.version>

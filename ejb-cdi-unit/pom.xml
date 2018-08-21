@@ -38,6 +38,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+            <scope>provided</scope>
         </dependency>
         <!-- J2EE 6 -->
         <dependency>
@@ -111,20 +112,18 @@
         <dependency>
             <groupId>net.oneandone.reflections8</groupId>
             <artifactId>reflections8</artifactId>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.deltaspike.core</groupId>
             <artifactId>deltaspike-core-api</artifactId>
             <version>${delta-spike.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.github.lukehutch</groupId>
-            <artifactId>fast-classpath-scanner</artifactId>
-            <version>3.1.0</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-dbcp2</artifactId>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.jboss.spec.javax.transaction</groupId>

@@ -7,7 +7,7 @@ package com.oneandone.ejbcdiunit.internal;
  * implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
-import org.reflections.scanners.AbstractScanner;
+import org.reflections8.scanners.AbstractScanner;
 
 public class TypesScanner extends AbstractScanner {
 

@@ -33,9 +33,9 @@ import org.jglue.cdiunit.AdditionalClasses;
 import org.jglue.cdiunit.AdditionalClasspaths;
 import org.jglue.cdiunit.AdditionalPackages;
 import org.mockito.Mock;
-import org.reflections.ReflectionUtils;
-import org.reflections.Reflections;
-import org.reflections.util.ConfigurationBuilder;
+import org.reflections8.ReflectionUtils;
+import org.reflections8.Reflections;
+import org.reflections8.util.ConfigurationBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
