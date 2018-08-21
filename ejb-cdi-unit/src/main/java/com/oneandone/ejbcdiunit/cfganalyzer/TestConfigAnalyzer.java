@@ -52,7 +52,6 @@ import com.oneandone.ejbcdiunit.internal.TypesScanner;
  */
 public abstract class TestConfigAnalyzer {
 
-    static boolean weldBefore24 = false;
     private static Logger log = LoggerFactory.getLogger(TestConfigAnalyzer.class);
     protected Set<URL> cdiClasspathEntries = new HashSet<URL>();
     protected Set<String> discoveredClasses = new LinkedHashSet<String>();
@@ -69,6 +68,7 @@ public abstract class TestConfigAnalyzer {
     private boolean analyzeStarted = false;
 
     private static Constructor metaDataConstructor;
+    protected String weldVersion;
 
     public TestConfigAnalyzer() {
 
@@ -308,6 +308,8 @@ public abstract class TestConfigAnalyzer {
         classesToIgnore = findMockedClassesOfTest(testClass);
         classesToIgnore.addAll(config.getExcludedClasses());
         classesToProcess.add(testClass);
+        weldVersion = config.weldVersion;
+
     }
 
     private boolean belongsTo(Class<?> c, Class<?> testClass) {

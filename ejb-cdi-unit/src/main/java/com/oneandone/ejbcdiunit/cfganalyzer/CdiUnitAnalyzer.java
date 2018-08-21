@@ -27,6 +27,7 @@ import com.oneandone.ejbcdiunit.internal.ProducerConfigExtension;
 import com.oneandone.ejbcdiunit.internal.TransactionalInterceptor;
 import com.oneandone.ejbcdiunit.internal.jsf.EjbUnitViewScopeExtension;
 import com.oneandone.ejbcdiunit.internal.servlet.ServletObjectsProducerEjbCdiUnit;
+import com.oneandone.ejbcdiunit.resourcesimulators.SimulatedUserTransaction;
 
 /**
  * @author aschoerk
@@ -81,6 +82,9 @@ public class CdiUnitAnalyzer extends TestConfigAnalyzer {
 
         // Add Interceptors here, to make sure the sequence is handled right
         classesToProcess.add(AsynchronousMethodInterceptor.class);
+        if (weldVersion.charAt(0) - '2' >= 1) {
+            classesToProcess.add(SimulatedUserTransaction.class);
+        }
         classesToProcess.add(TransactionalInterceptor.class);
         enabledAlternativeStereotypes.add(
                 createMetadata(ProducesAlternative.class.getName(), ProducesAlternative.class.getName()));

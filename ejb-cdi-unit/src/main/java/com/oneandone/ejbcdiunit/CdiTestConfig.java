@@ -5,7 +5,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.jboss.weld.bootstrap.WeldBootstrap;
 import org.jboss.weld.bootstrap.api.Service;
+import org.jboss.weld.util.reflection.Formats;
 
 import com.oneandone.ejbcdiunit.internal.ApplicationExceptionDescription;
 
@@ -13,7 +15,8 @@ import com.oneandone.ejbcdiunit.internal.ApplicationExceptionDescription;
  * @author aschoerk
  */
 public class CdiTestConfig {
-    ;
+
+    public String weldVersion = Formats.version(WeldBootstrap.class.getPackage());
     protected Set<Class<?>> additionalClasses = new HashSet<>();
     protected Set<Class<?>> additionalClassPathes = new HashSet<>();
     protected Set<Class<?>> additionalClassPackages = new HashSet<>();
