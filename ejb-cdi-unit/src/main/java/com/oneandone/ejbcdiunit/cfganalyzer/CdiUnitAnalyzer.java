@@ -74,7 +74,7 @@ public class CdiUnitAnalyzer extends TestConfigAnalyzer {
             // If this is an old version of weld then add the producers
             try {
                 Class.forName("org.jboss.weld.bean.AbstractSyntheticBean");
-            } catch (ClassNotFoundException e) {
+            } catch (ClassNotFoundException | NoClassDefFoundError e) {
                 classesToProcess.add(ServletObjectsProducerEjbCdiUnit.class);
             }
 
