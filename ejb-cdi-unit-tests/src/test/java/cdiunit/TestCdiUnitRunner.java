@@ -19,21 +19,23 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.servlet.http.HttpServletRequest;
 
-import com.oneandone.ejbcdiunit.ContextControllerEjbCdiUnit;
-import org.apache.deltaspike.core.impl.exclude.extension.ExcludeExtension;
-import org.jglue.cdiunit.*;
+import org.jglue.cdiunit.AdditionalClasses;
+import org.jglue.cdiunit.InConversationScope;
+import org.jglue.cdiunit.InRequestScope;
+import org.jglue.cdiunit.InSessionScope;
+import org.jglue.cdiunit.ProducesAlternative;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
+import com.oneandone.ejbcdiunit.ContextControllerEjbCdiUnit;
 import com.oneandone.ejbcdiunit.EjbUnitRunner;
 
 import junit.framework.Assert;
 
 @RunWith(EjbUnitRunner.class)
-@AdditionalClasses({ ESupportClass.class, ScopedFactory.class,
-        ExcludeExtension.class })
+@AdditionalClasses({ ESupportClass.class, ScopedFactory.class })
 public class TestCdiUnitRunner extends BaseTest {
 
 

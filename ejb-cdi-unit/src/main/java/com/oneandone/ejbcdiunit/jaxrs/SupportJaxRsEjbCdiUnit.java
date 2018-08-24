@@ -15,13 +15,13 @@
  */
 package com.oneandone.ejbcdiunit.jaxrs;
 
-import com.oneandone.ejbcdiunit.internal.jaxrs.JaxRsProducersEjbCdiUnit;
-import org.jglue.cdiunit.AdditionalClasses;
-import org.jglue.cdiunit.internal.jaxrs.JaxRsExtension;
-import org.jglue.cdiunit.internal.jaxrs.JaxRsProducers;
-
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+
+import org.jglue.cdiunit.AdditionalClasses;
+
+import com.oneandone.cdiunit.internal.jaxrs.JaxRsExtension;
+import com.oneandone.ejbcdiunit.internal.jaxrs.JaxRsProducersEjbCdiUnit;
 
 /**
  * Enable support for JaxRs mocking.

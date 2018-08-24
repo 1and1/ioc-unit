@@ -46,7 +46,7 @@ public class EjbUnitRunner extends CdiRunner {
                     }
                     throw startupException;
                 }
-                System.setProperty("java.naming.factory.initial", "org.jglue.cdiunit.internal.naming.CdiUnitContextFactory");
+                System.setProperty("java.naming.factory.initial", "com.oneandone.cdiunit.internal.naming.CdiUnitContextFactory");
                 InitialContext initialContext = new InitialContext();
                 final BeanManager beanManager = container.getBeanManager();
                 initialContext.bind("java:comp/BeanManager", beanManager);

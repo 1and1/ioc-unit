@@ -35,11 +35,6 @@
             <artifactId>cdi-api</artifactId>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>org.jglue.cdi-unit</groupId>
-            <artifactId>cdi-unit</artifactId>
-        </dependency>
-
         <!-- general apis -->
         <dependency>
             <groupId>commons-lang</groupId>

@@ -15,13 +15,6 @@
  */
 package com.oneandone.ejbcdiunit;
 
-import com.oneandone.ejbcdiunit.internal.EjbCdiUnitInitialListener;
-import com.oneandone.ejbcdiunit.internal.servlet.LifecycleAwareRequestEjbCdiUnit;
-import org.jboss.weld.context.ConversationContext;
-import org.jboss.weld.context.http.Http;
-import org.jglue.cdiunit.internal.servlet.CdiUnitServlet;
-import org.jglue.cdiunit.internal.servlet.MockHttpServletRequestImpl;
-
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
@@ -34,6 +27,14 @@ import javax.servlet.ServletRequestEvent;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
+
+import org.jboss.weld.context.ConversationContext;
+import org.jboss.weld.context.http.Http;
+
+import com.oneandone.cdiunit.internal.servlet.CdiUnitServlet;
+import com.oneandone.cdiunit.internal.servlet.MockHttpServletRequestImpl;
+import com.oneandone.ejbcdiunit.internal.EjbCdiUnitInitialListener;
+import com.oneandone.ejbcdiunit.internal.servlet.LifecycleAwareRequestEjbCdiUnit;
 
 /**
  * Use to explicitly open and close Request, Session and Conversation scopes.

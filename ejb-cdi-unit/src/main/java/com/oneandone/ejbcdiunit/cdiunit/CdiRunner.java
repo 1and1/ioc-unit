@@ -140,7 +140,7 @@ public class CdiRunner extends BlockJUnit4ClassRunner {
             };
 
             try {
-                System.setProperty("java.naming.factory.initial", "org.jglue.cdiunit.internal.naming.CdiUnitContextFactory");
+                System.setProperty("java.naming.factory.initial", "com.oneandone.cdiunit.internal.naming.CdiUnitContextFactory");
                 container = weld.initialize();
                 InitialContext initialContext = new InitialContext();
                 final BeanManager beanManager = container.getBeanManager();

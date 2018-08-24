@@ -92,24 +92,6 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>org.jglue.cdi-unit</groupId>
-            <artifactId>cdi-unit</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.deltaspike.core</groupId>
-                    <artifactId>deltaspike-core-impl</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.reflections</groupId>
-                    <artifactId>reflections</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>io.github.lukehutch</groupId>
-                    <artifactId>fast-classpath-scanner</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
             <groupId>net.oneandone.reflections8</groupId>
             <artifactId>reflections8</artifactId>
             <scope>compile</scope>
@@ -150,6 +132,17 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>javax.ws.rs-api</artifactId>
+            <version>2.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-jaxrs</artifactId>
+            <version>3.0.14.Final</version>
         </dependency>
     </dependencies>
 

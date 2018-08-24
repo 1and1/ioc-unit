@@ -7,6 +7,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>ex1-1entity</module>
+        <module>ex1-1entity5</module>
         <module>ex2-syncconsumed</module>
         <module>ex3-asyncconsumedpoll</module>
         <module>ex4-asyncconsumedpush</module>
@@ -84,6 +85,7 @@
         <version.javaee_api>7.0</version.javaee_api>
         <org-reflections.version>0.9.10</org-reflections.version>
         <jaxrpc.version>1.1</jaxrpc.version>
+        <junit5.version>5.2.0</junit5.version>
         <ejb-cdi-unit.version>1.1.15-SNAPSHOT</ejb-cdi-unit.version>
 
     </properties>
@@ -114,6 +116,12 @@
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>ejb-cdi-unit</artifactId>
+                <version>${ejb-cdi-unit.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>ejb-cdi-unit5</artifactId>
                 <version>${ejb-cdi-unit.version}</version>
                 <scope>test</scope>
             </dependency>
@@ -189,17 +197,6 @@
                 <version>1.4.193</version>
             </dependency>
             <dependency>
-                <groupId>org.jglue.cdi-unit</groupId>
-                <artifactId>cdi-unit</artifactId>
-                <version>${cdi-unit.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.jboss.weld.se</groupId>
-                        <artifactId>weld-se-core</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
                 <groupId>org.jboss.spec.javax.transaction</groupId>
                 <artifactId>jboss-transaction-api_1.1_spec</artifactId>
                 <version>1.0.1.Final</version>
@@ -225,11 +222,6 @@
                 <artifactId>javassist</artifactId>
                 <version>${javassist.version}</version>
                 <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.reflections</groupId>
-                <artifactId>reflections</artifactId>
-                <version>${org-reflections.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.jboss.weld.se</groupId>

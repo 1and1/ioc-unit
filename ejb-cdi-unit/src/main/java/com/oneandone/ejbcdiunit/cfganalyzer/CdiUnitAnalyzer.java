@@ -3,22 +3,17 @@ package com.oneandone.ejbcdiunit.cfganalyzer;
 import java.lang.reflect.Method;
 
 import org.jboss.weld.environment.se.WeldSEBeanRegistrant;
-import org.jglue.cdiunit.ContextController;
 import org.jglue.cdiunit.ProducesAlternative;
-import org.jglue.cdiunit.internal.InConversationInterceptor;
-import org.jglue.cdiunit.internal.InRequestInterceptor;
-import org.jglue.cdiunit.internal.InSessionInterceptor;
-import org.jglue.cdiunit.internal.TestScopeExtension;
-import org.jglue.cdiunit.internal.easymock.EasyMockExtension;
-import org.jglue.cdiunit.internal.jaxrs.JaxRsProducers;
-import org.jglue.cdiunit.internal.mockito.MockitoExtension;
-import org.jglue.cdiunit.internal.servlet.MockHttpServletRequestImpl;
-import org.jglue.cdiunit.internal.servlet.MockHttpServletResponseImpl;
-import org.jglue.cdiunit.internal.servlet.MockHttpSessionImpl;
-import org.jglue.cdiunit.internal.servlet.MockServletContextImpl;
-import org.jglue.cdiunit.internal.servlet.ServletObjectsProducer;
 
+import com.oneandone.cdiunit.internal.easymock.EasyMockExtension;
+import com.oneandone.cdiunit.internal.mockito.MockitoExtension;
+import com.oneandone.cdiunit.internal.servlet.MockHttpServletRequestImpl;
+import com.oneandone.cdiunit.internal.servlet.MockHttpServletResponseImpl;
+import com.oneandone.cdiunit.internal.servlet.MockHttpSessionImpl;
+import com.oneandone.cdiunit.internal.servlet.MockServletContextImpl;
 import com.oneandone.ejbcdiunit.CdiTestConfig;
+import com.oneandone.ejbcdiunit.cdiunit.internal.InConversationInterceptor;
+import com.oneandone.ejbcdiunit.cdiunit.internal.TestScopeExtension;
 import com.oneandone.ejbcdiunit.internal.AsynchronousMethodInterceptor;
 import com.oneandone.ejbcdiunit.internal.EjbCdiUnitInitialListenerProducer;
 import com.oneandone.ejbcdiunit.internal.InRequestInterceptorEjbCdiUnit;
@@ -36,11 +31,6 @@ public class CdiUnitAnalyzer extends TestConfigAnalyzer {
 
     @Override
     protected void init(Class<?> testClass, CdiTestConfig config) {
-        config.addExcluded(ContextController.class);
-        config.addExcluded(ServletObjectsProducer.class);
-        config.addExcluded(InRequestInterceptor.class);
-        config.addExcluded(InSessionInterceptor.class);
-        config.addExcluded(JaxRsProducers.class);
         super.init(testClass, config);
     }
 

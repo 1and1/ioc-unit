@@ -207,17 +207,6 @@
                 <version>1.4.193</version>
             </dependency>
             <dependency>
-                <groupId>org.jglue.cdi-unit</groupId>
-                <artifactId>cdi-unit</artifactId>
-                <version>${cdi-unit.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.jboss.weld.se</groupId>
-                        <artifactId>weld-se-core</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-entitymanager</artifactId>
                 <version>${version.org.hibernate}</version>

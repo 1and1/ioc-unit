@@ -1,9 +1,9 @@
 package cdiunit;
 
-import org.apache.deltaspike.core.api.exclude.Exclude;
+import javax.enterprise.inject.Vetoed;
 
 
-@Exclude
+@Vetoed
 public class Scoped {
 
     private Runnable disposeListener;

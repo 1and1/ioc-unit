@@ -1,0 +1,693 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+        xmlns:dc="http://purl.org/dc/elements/1.1/"
+        xmlns:cc="http://creativecommons.org/ns#"
+        xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+        xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+        contentScriptType="application/ecmascript"
+        contentStyleType="text/css"
+        height="678px"
+        preserveAspectRatio="none"
+        style="width:458px;height:678px;"
+        version="1.1"
+        viewBox="0 0 458 678"
+        width="458px"
+        zoomAndPan="magnify"
+        id="svg2"
+        inkscape:version="0.91 r13725"
+        sodipodi:docname="CantReadTestDataUsingServiceInRequiredNew.svg">
+    <metadata
+            id="metadata165">
+        <rdf:RDF>
+            <cc:Work
+                    rdf:about="">
+                <dc:format>image/svg+xml</dc:format>
+                <dc:type
+                        rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+                <dc:title></dc:title>
+            </cc:Work>
+        </rdf:RDF>
+    </metadata>
+    <sodipodi:namedview
+            pagecolor="#ffffff"
+            bordercolor="#666666"
+            borderopacity="1"
+            objecttolerance="10"
+            gridtolerance="10"
+            guidetolerance="10"
+            inkscape:pageopacity="0"
+            inkscape:pageshadow="2"
+            inkscape:window-width="640"
+            inkscape:window-height="480"
+            id="namedview163"
+            showgrid="false"
+            inkscape:zoom="0.3480826"
+            inkscape:cx="229"
+            inkscape:cy="339"
+            inkscape:window-x="24"
+            inkscape:window-y="24"
+            inkscape:window-maximized="0"
+            inkscape:current-layer="svg2"/>
+    <defs
+            id="defs4">
+        <filter
+                height="300%"
+                id="f1a4vjijloivho"
+                width="300%"
+                x="-1"
+                y="-1">
+            <feGaussianBlur
+                    result="blurOut"
+                    stdDeviation="2.0"
+                    id="feGaussianBlur7"/>
+            <feColorMatrix
+                    in="blurOut"
+                    result="blurOut2"
+                    type="matrix"
+                    values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"
+                    id="feColorMatrix9"/>
+            <feOffset
+                    dx="4.0"
+                    dy="4.0"
+                    in="blurOut2"
+                    result="blurOut3"
+                    id="feOffset11"/>
+            <feBlend
+                    in="SourceGraphic"
+                    in2="blurOut3"
+                    mode="normal"
+                    id="feBlend13"/>
+        </filter>
+    </defs>
+    <g
+            id="g15">
+        <text
+                fill="#000000"
+                font-family="sans-serif"
+                font-size="14"
+                font-weight="bold"
+                lengthAdjust="spacingAndGlyphs"
+                textLength="388"
+                x="36.5"
+                y="22.9951"
+                id="text17">Can't Read Testdata using Service RequiresNew?
+        </text>
+        <line
+                style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;"
+                x1="26"
+                x2="26"
+                y1="116.5938"
+                y2="593.7188"
+                id="line19"/>
+        <line
+                style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;"
+                x1="135"
+                x2="135"
+                y1="116.5938"
+                y2="593.7188"
+                id="line21"/>
+        <line
+                style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;"
+                x1="256"
+                x2="256"
+                y1="116.5938"
+                y2="593.7188"
+                id="line23"/>
+        <line
+                style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;"
+                x1="332"
+                x2="332"
+                y1="116.5938"
+                y2="593.7188"
+                id="line25"/>
+        <text
+                fill="#000000"
+                font-family="sans-serif"
+                font-size="14"
+                lengthAdjust="spacingAndGlyphs"
+                textLength="31"
+                x="8"
+                y="113.292"
+                id="text27">Test
+        </text>
+        <ellipse
+                cx="26.5"
+                cy="43.2969"
+                fill="#FEFECE"
+                filter="url(#f1a4vjijloivho)"
+                rx="8"
+                ry="8"
+                style="stroke: #A80036; stroke-width: 2.0;"
+                id="ellipse29"/>
+        <path
+                d="M26.5,51.2969 L26.5,78.2969 M13.5,59.2969 L39.5,59.2969 M26.5,78.2969 L13.5,93.2969 M26.5,78.2969 L39.5,93.2969 "
+                fill="#FEFECE"
+                filter="url(#f1a4vjijloivho)"
+                style="stroke: #A80036; stroke-width: 2.0;"
+                id="path31"/>
+        <text
+                fill="#000000"
+                font-family="sans-serif"
+                font-size="14"
+                lengthAdjust="spacingAndGlyphs"
+                textLength="31"
+                x="8"
+                y="605.7139"
+                id="text33">Test
+        </text>
+        <ellipse
+                cx="26.5"
+                cy="619.0156"
+                fill="#FEFECE"
+                filter="url(#f1a4vjijloivho)"
+                rx="8"
+                ry="8"
+                style="stroke: #A80036; stroke-width: 2.0;"
+                id="ellipse35"/>
+        <path
+                d="M26.5,627.0156 L26.5,654.0156 M13.5,635.0156 L39.5,635.0156 M26.5,654.0156 L13.5,669.0156 M26.5,654.0156 L39.5,669.0156 "
+                fill="#FEFECE"
+                filter="url(#f1a4vjijloivho)"
+                style="stroke: #A80036; stroke-width: 2.0;"
+                id="path37"/>
+        <rect
+                fill="#FEFECE"
+                filter="url(#f1a4vjijloivho)"
+                height="30.2969"
+                style="stroke: #A80036; stroke-width: 1.5;"
+                width="63"
+                x="102"
+                y="81.2969"
+                id="rect39"/>
+        <text
+                fill="#000000"
+                font-family="sans-serif"
+                font-size="14"
+                lengthAdjust="spacingAndGlyphs"
+                textLength="49"
+                x="109"
+                y="101.292"
+                id="text41">service
+        </text>
+        <rect
+                fill="#FEFECE"
+                filter="url(#f1a4vjijloivho)"
+                height="30.2969"
+                style="stroke: #A80036; stroke-width: 1.5;"
+                width="63"
+                x="102"
+                y="592.7188"
+                id="rect43"/>
+        <text
+                fill="#000000"
+                font-family="sans-serif"
+                font-size="14"
+                lengthAdjust="spacingAndGlyphs"
+                textLength="49"
+                x="109"
+                y="612.7139"
+                id="text45">service
+        </text>
+        <rect
+                fill="#FEFECE"
+                filter="url(#f1a4vjijloivho)"
+                height="46.5938"
+                style="stroke: #A80036; stroke-width: 1.5;"
+                width="91"
+                x="209"
+                y="65"
+                id="rect47"/>
+        <text
+                fill="#000000"
+                font-family="sans-serif"
+                font-size="14"
+                lengthAdjust="spacingAndGlyphs"
+                textLength="77"
+                x="216"
+                y="84.9951"
+                id="text49">transaction
+        </text>
+        <text
+                fill="#000000"
+                font-family="sans-serif"
+                font-size="14"
+                lengthAdjust="spacingAndGlyphs"
+                textLength="61"
+                x="224"
+                y="101.292"
+                id="text51">manager
+        </text>
+        <rect
+                fill="#FEFECE"
+                filter="url(#f1a4vjijloivho)"
+                height="46.5938"
+                style="stroke: #A80036; stroke-width: 1.5;"
+                width="91"
+                x="209"
+                y="592.7188"
+                id="rect53"/>
+        <text
+                fill="#000000"
+                font-family="sans-serif"
+                font-size="14"
+                lengthAdjust="spacingAndGlyphs"
+                textLength="77"
+                x="216"
+                y="612.7139"
+                id="text55">transaction
+        </text>
+        <text
+                fill="#000000"
+                font-family="sans-serif"
+                font-size="14"
+                lengthAdjust="spacingAndGlyphs"
+                textLength="61"
+                x="224"
+                y="629.0107"
+                id="text57">manager
+        </text>
+        <text
+                fill="#000000"
+                font-family="sans-serif"
+                font-size="14"
+                lengthAdjust="spacingAndGlyphs"
+                textLength="18"
+                x="320"
+                y="113.292"
+                id="text59">db
+        </text>
+        <path
+                d="M314,64.2969 C314,54.2969 332,54.2969 332,54.2969 C332,54.2969 350,54.2969 350,64.2969 L350,90.2969 C350,100.2969 332,100.2969 332,100.2969 C332,100.2969 314,100.2969 314,90.2969 L314,64.2969 "
+                fill="#FEFECE"
+                filter="url(#f1a4vjijloivho)"
+                style="stroke: #000000; stroke-width: 1.5;"
+                id="path61"/>
+        <path
+                d="M314,64.2969 C314,74.2969 332,74.2969 332,74.2969 C332,74.2969 350,74.2969 350,64.2969 "
+                fill="none"
+                style="stroke: #000000; stroke-width: 1.5;"
+                id="path63"/>
+        <text
+                fill="#000000"
+                font-family="sans-serif"
+                font-size="14"
+                lengthAdjust="spacingAndGlyphs"
+                textLength="18"
+                x="320"
+                y="605.7139"
+                id="text65">db
+        </text>
+        <path
+                d="M314,619.0156 C314,609.0156 332,609.0156 332,609.0156 C332,609.0156 350,609.0156 350,619.0156 L350,645.0156 C350,655.0156 332,655.0156 332,655.0156 C332,655.0156 314,655.0156 314,645.0156 L314,619.0156 "
+                fill="#FEFECE"
+                filter="url(#f1a4vjijloivho)"
+                style="stroke: #000000; stroke-width: 1.5;"
+                id="path67"/>
+        <path
+                d="M314,619.0156 C314,629.0156 332,629.0156 332,629.0156 C332,629.0156 350,629.0156 350,619.0156 "
+                fill="none"
+                style="stroke: #000000; stroke-width: 1.5;"
+                id="path69"/>
+        <polygon
+                fill="#A80036"
+                points="244.5,143.5938,254.5,147.5938,244.5,151.5938,248.5,147.5938"
+                style="stroke: #A80036; stroke-width: 1.0;"
+                id="polygon71"/>
+        <line
+                style="stroke: #A80036; stroke-width: 1.0;"
+                x1="26.5"
+                x2="250.5"
+                y1="147.5938"
+                y2="147.5938"
+                id="line73"/>
+        <text
+                fill="#000000"
+                font-family="sans-serif"
+                font-size="13"
+                lengthAdjust="spacingAndGlyphs"
+                textLength="125"
+                x="33.5"
+                y="142.6606"
+                id="text75">begin Transaction 1
+        </text>
+        <polygon
+                fill="#A80036"
+                points="320,172.7266,330,176.7266,320,180.7266,324,176.7266"
+                style="stroke: #A80036; stroke-width: 1.0;"
+                id="polygon77"/>
+        <line
+                style="stroke: #A80036; stroke-width: 1.0;"
+                x1="26.5"
+                x2="326"
+                y1="176.7266"
+                y2="176.7266"
+                id="line79"/>
+        <text
+                fill="#000000"
+                font-family="sans-serif"
+                font-size="13"
+                lengthAdjust="spacingAndGlyphs"
+                textLength="94"
+                x="33.5"
+                y="171.7935"
+                id="text81">insert testdata
+        </text>
+        <polygon
+                fill="#A80036"
+                points="37.5,201.8594,27.5,205.8594,37.5,209.8594,33.5,205.8594"
+                style="stroke: #A80036; stroke-width: 1.0;"
+                id="polygon83"/>
+        <line
+                style="stroke: #A80036; stroke-width: 1.0;"
+                x1="31.5"
+                x2="331"
+                y1="205.8594"
+                y2="205.8594"
+                id="line85"/>
+        <text
+                fill="#000000"
+                font-family="sans-serif"
+                font-size="13"
+                lengthAdjust="spacingAndGlyphs"
+                textLength="131"
+                x="43.5"
+                y="200.9263"
+                id="text87">return generated ids
+        </text>
+        <polygon
+                fill="#A80036"
+                points="244.5,230.9922,254.5,234.9922,244.5,238.9922,248.5,234.9922"
+                style="stroke: #A80036; stroke-width: 1.0;"
+                id="polygon89"/>
+        <line
+                style="stroke: #A80036; stroke-width: 1.0;"
+                x1="26.5"
+                x2="250.5"
+                y1="234.9922"
+                y2="234.9922"
+                id="line91"/>
+        <text
+                fill="#000000"
+                font-family="sans-serif"
+                font-size="13"
+                lengthAdjust="spacingAndGlyphs"
+                textLength="206"
+                x="33.5"
+                y="230.0591"
+                id="text93">start RequiresNew Transaction 2
+        </text>
+        <polygon
+                fill="#A80036"
+                points="123.5,260.125,133.5,264.125,123.5,268.125,127.5,264.125"
+                style="stroke: #A80036; stroke-width: 1.0;"
+                id="polygon95"/>
+        <line
+                style="stroke: #A80036; stroke-width: 1.0;"
+                x1="26.5"
+                x2="129.5"
+                y1="264.125"
+                y2="264.125"
+                id="line97"/>
+        <text
+                fill="#000000"
+                font-family="sans-serif"
+                font-size="13"
+                lengthAdjust="spacingAndGlyphs"
+                textLength="85"
+                x="33.5"
+                y="259.1919"
+                id="text99">read Data(id)
+        </text>
+        <polygon
+                fill="#FBFB77"
+                filter="url(#f1a4vjijloivho)"
+                points="140,277.2578,140,332.2578,242,332.2578,242,287.2578,232,277.2578,140,277.2578"
+                style="stroke: #A80036; stroke-width: 1.0;"
+                id="polygon101"/>
+        <line
+                style="stroke: #A80036; stroke-width: 1.0;"
+                x1="232"
+                x2="232"
+                y1="277.2578"
+                y2="287.2578"
+                id="line103"/>
+        <line
+                style="stroke: #A80036; stroke-width: 1.0;"
+                x1="242"
+                x2="232"
+                y1="287.2578"
+                y2="287.2578"
+                id="line105"/>
+        <text
+                fill="#000000"
+                font-family="sans-serif"
+                font-size="13"
+                lengthAdjust="spacingAndGlyphs"
+                textLength="81"
+                x="146"
+                y="294.3247"
+                id="text107">s will use the
+        </text>
+        <text
+                fill="#000000"
+                font-family="sans-serif"
+                font-size="13"
+                lengthAdjust="spacingAndGlyphs"
+                textLength="48"
+                x="146"
+                y="309.4575"
+                id="text109">running
+        </text>
+        <text
+                fill="#000000"
+                font-family="sans-serif"
+                font-size="13"
+                lengthAdjust="spacingAndGlyphs"
+                textLength="72"
+                x="146"
+                y="324.5903"
+                id="text111">transaction
+        </text>
+        <polygon
+                fill="#A80036"
+                points="320,358.6563,330,362.6563,320,366.6563,324,362.6563"
+                style="stroke: #A80036; stroke-width: 1.0;"
+                id="polygon113"/>
+        <line
+                style="stroke: #A80036; stroke-width: 1.0;"
+                x1="135.5"
+                x2="326"
+                y1="362.6563"
+                y2="362.6563"
+                id="line115"/>
+        <text
+                fill="#000000"
+                font-family="sans-serif"
+                font-size="13"
+                lengthAdjust="spacingAndGlyphs"
+                textLength="63"
+                x="142.5"
+                y="357.7231"
+                id="text117">read by id
+        </text>
+        <polygon
+                fill="#FBFB77"
+                filter="url(#f1a4vjijloivho)"
+                points="337,375.7891,337,415.7891,449,415.7891,449,385.7891,439,375.7891,337,375.7891"
+                style="stroke: #A80036; stroke-width: 1.0;"
+                id="polygon119"/>
+        <line
+                style="stroke: #A80036; stroke-width: 1.0;"
+                x1="439"
+                x2="439"
+                y1="375.7891"
+                y2="385.7891"
+                id="line121"/>
+        <line
+                style="stroke: #A80036; stroke-width: 1.0;"
+                x1="449"
+                x2="439"
+                y1="385.7891"
+                y2="385.7891"
+                id="line123"/>
+        <text
+                fill="#000000"
+                font-family="sans-serif"
+                font-size="13"
+                lengthAdjust="spacingAndGlyphs"
+                textLength="61"
+                x="343"
+                y="392.856"
+                id="text125">dirty read
+        </text>
+        <text
+                fill="#000000"
+                font-family="sans-serif"
+                font-size="13"
+                lengthAdjust="spacingAndGlyphs"
+                textLength="91"
+                x="343"
+                y="407.9888"
+                id="text127">is not possible
+        </text>
+        <polygon
+                fill="#A80036"
+                points="146.5,442.0547,136.5,446.0547,146.5,450.0547,142.5,446.0547"
+                style="stroke: #A80036; stroke-width: 1.0;"
+                id="polygon129"/>
+        <line
+                style="stroke: #A80036; stroke-width: 1.0;"
+                x1="140.5"
+                x2="331"
+                y1="446.0547"
+                y2="446.0547"
+                id="line131"/>
+        <text
+                fill="#000000"
+                font-family="sans-serif"
+                font-size="13"
+                lengthAdjust="spacingAndGlyphs"
+                textLength="117"
+                x="152.5"
+                y="441.1216"
+                id="text133">don't know id (yet)
+        </text>
+        <polygon
+                fill="#A80036"
+                points="37.5,471.1875,27.5,475.1875,37.5,479.1875,33.5,475.1875"
+                style="stroke: #A80036; stroke-width: 1.0;"
+                id="polygon135"/>
+        <line
+                style="stroke: #A80036; stroke-width: 1.0;"
+                x1="31.5"
+                x2="134.5"
+                y1="475.1875"
+                y2="475.1875"
+                id="line137"/>
+        <text
+                fill="#000000"
+                font-family="sans-serif"
+                font-size="13"
+                lengthAdjust="spacingAndGlyphs"
+                textLength="65"
+                x="43.5"
+                y="470.2544"
+                id="text139">return null
+        </text>
+        <polygon
+                fill="#A80036"
+                points="244.5,500.3203,254.5,504.3203,244.5,508.3203,248.5,504.3203"
+                style="stroke: #A80036; stroke-width: 1.0;"
+                id="polygon141"/>
+        <line
+                style="stroke: #A80036; stroke-width: 1.0;"
+                x1="26.5"
+                x2="250.5"
+                y1="504.3203"
+                y2="504.3203"
+                id="line143"/>
+        <text
+                fill="#000000"
+                font-family="sans-serif"
+                font-size="13"
+                lengthAdjust="spacingAndGlyphs"
+                textLength="137"
+                x="33.5"
+                y="499.3872"
+                id="text145">commit transaction 2
+        </text>
+        <line
+                style="stroke: #A80036; stroke-width: 1.0;"
+                x1="26.5"
+                x2="68.5"
+                y1="533.5859"
+                y2="533.5859"
+                id="line147"/>
+        <line
+                style="stroke: #A80036; stroke-width: 1.0;"
+                x1="68.5"
+                x2="68.5"
+                y1="533.5859"
+                y2="546.5859"
+                id="line149"/>
+        <line
+                style="stroke: #A80036; stroke-width: 1.0;"
+                x1="27.5"
+                x2="68.5"
+                y1="546.5859"
+                y2="546.5859"
+                id="line151"/>
+        <polygon
+                fill="#A80036"
+                points="37.5,542.5859,27.5,546.5859,37.5,550.5859,33.5,546.5859"
+                style="stroke: #A80036; stroke-width: 1.0;"
+                id="polygon153"/>
+        <text
+                fill="#000000"
+                font-family="sans-serif"
+                font-size="13"
+                lengthAdjust="spacingAndGlyphs"
+                textLength="37"
+                x="33.5"
+                y="528.52"
+                id="text155">check
+        </text>
+        <polygon
+                fill="#A80036"
+                points="244.5,571.5859,254.5,575.5859,244.5,579.5859,248.5,575.5859"
+                style="stroke: #A80036; stroke-width: 1.0;"
+                id="polygon157"/>
+        <line
+                style="stroke: #A80036; stroke-width: 1.0;"
+                x1="26.5"
+                x2="250.5"
+                y1="575.5859"
+                y2="575.5859"
+                id="line159"/>
+        <text
+                fill="#000000"
+                font-family="sans-serif"
+                font-size="13"
+                lengthAdjust="spacingAndGlyphs"
+                textLength="137"
+                x="33.5"
+                y="570.6528"
+                id="text161">commit transaction 1
+        </text>
+        <!--
+    @startuml
+    title: Can't Read Testdata using Service RequiresNew?
+    actor Test as t
+    participant service as s
+    participant "transaction\nmanager" as tm
+    database db
+    t -> tm: begin Transaction 1
+    t -> db: insert testdata
+    db -> t: return generated ids
+    t -> tm: start RequiresNew Transaction 2
+    t -> s: read Data(id)
+    note right of s:  s will use the\nrunning\ntransaction
+    s -> db: read by id
+    note right of db: dirty read\nis not possible
+    db -> s: don't know id (yet)
+    s -> t: return null
+    t -> tm: commit transaction 2
+    t -> t: check
+    t -> tm: commit transaction 1
+    @enduml
+
+    PlantUML version 1.2017.12(Wed Apr 26 18:06:36 CEST 2017)
+    (GPL source distribution)
+    Java Runtime: OpenJDK Runtime Environment
+    JVM: OpenJDK 64-Bit Server VM
+    Java Version: 1.8.0_112-release-736-b21
+    Operating System: Linux
+    OS Version: 4.8.0-49-generic
+    Default Encoding: UTF-8
+    Language: en
+    Country: US
+    -->
+    </g>
+</svg>

@@ -1,0 +1,28 @@
+@startuml
+title: Can Read committed Testdata using Service RequiresNew?
+actor Test as t
+participant service as s
+participant "transaction\nmanager" as tm
+participant TestTransaction as tt
+database db
+t -> tm: begin Transaction 1
+t -> db: insert testdata
+db -> t: return generated ids
+t -> tm: commit Transaction 1
+t -> tm: start RequiresNew Transaction 2
+create tt
+tm -> tt: new(\nREQUIRES_NEW)
+tm -> t: tt
+t -> s: read Data(id)
+s -> tm: REQUIRED
+note right of s:  service will use\nthe running\ntransaction
+s -> db: read by id
+note right of db: can read since\ntransaction 1\nis committed
+db -> s: data
+s -> tm: close REQUIRED
+s -> t: return data
+t -> tt: close
+tt -> tm: commit transaction 2
+destroy tt
+t -> t: check
+@enduml

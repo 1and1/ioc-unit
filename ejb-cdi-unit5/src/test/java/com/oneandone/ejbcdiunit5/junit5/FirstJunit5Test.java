@@ -1,14 +1,14 @@
-package net.oneandone.ejbcdiunit5.junit5;
+package com.oneandone.ejbcdiunit5.junit5;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import net.oneandone.ejbcdiunit5.JUnit5Extension;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.RepetitionInfo;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import com.oneandone.ejbcdiunit5.JUnit5Extension;
 
 @ExtendWith(JUnit5Extension.class)
 public class FirstJunit5Test {

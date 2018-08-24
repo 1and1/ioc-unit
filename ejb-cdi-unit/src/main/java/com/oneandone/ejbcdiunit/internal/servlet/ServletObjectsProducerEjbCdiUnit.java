@@ -15,10 +15,6 @@
  */
 package com.oneandone.ejbcdiunit.internal.servlet;
 
-import com.oneandone.ejbcdiunit.ContextControllerEjbCdiUnit;
-import org.jglue.cdiunit.internal.servlet.CdiUnitServlet;
-import org.jglue.cdiunit.internal.servlet.MockServletContextImpl;
-
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Produces;
@@ -26,6 +22,10 @@ import javax.inject.Inject;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
+import com.oneandone.cdiunit.internal.servlet.CdiUnitServlet;
+import com.oneandone.cdiunit.internal.servlet.MockServletContextImpl;
+import com.oneandone.ejbcdiunit.ContextControllerEjbCdiUnit;
 
 
 public class ServletObjectsProducerEjbCdiUnit {
