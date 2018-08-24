@@ -55,7 +55,6 @@ public class JUnit5Extension implements TestInstancePostProcessor, AfterTestExec
 
     private static Logger logger = LoggerFactory.getLogger(JUnit5Extension.class);
     // global system property
-    public static final String GLOBAL_EXPLICIT_PARAM_INJECTION = "org.jboss.weld.junit5.explicitParamInjection";
     private static final String ABSENT_CODE_PREFIX = "Absent Code attribute in method that is not native or abstract in class file ";
     protected Weld weld;
     protected WeldContainer container;
@@ -70,17 +69,17 @@ public class JUnit5Extension implements TestInstancePostProcessor, AfterTestExec
 
     @Override
     public void beforeTestExecution(final ExtensionContext extensionContext) throws Exception {
-        logger.info("---->before test execution {} {}\n", extensionContext.getDisplayName(), this);
+        logger.trace("---->before test execution {} {}\n", extensionContext.getDisplayName(), this);
     }
 
     @Override
     public void beforeAll(final ExtensionContext extensionContext) throws Exception {
-        logger.info("---->before All execution {} {}\n", extensionContext.getDisplayName(), this);
+        logger.trace("---->before All execution {} {}\n", extensionContext.getDisplayName(), this);
     }
 
     @Override
     public void afterAll(final ExtensionContext extensionContext) throws Exception {
-        logger.info("---->after All execution {} {}\n", extensionContext.getDisplayName(), this);
+        logger.trace("---->after All execution {} {}\n", extensionContext.getDisplayName(), this);
         if (determineTestLifecycle(extensionContext).equals(PER_CLASS)) {
             shutdownWeldIfRunning();
         }
@@ -88,7 +87,7 @@ public class JUnit5Extension implements TestInstancePostProcessor, AfterTestExec
 
     private void shutdownWeldIfRunning() throws NamingException {
         if (weld != null) {
-            logger.info("----> shutting down Weld");
+            logger.trace("----> shutting down Weld");
             initialContext.close();
             weld.shutdown();
             initialContext = null;
@@ -99,12 +98,12 @@ public class JUnit5Extension implements TestInstancePostProcessor, AfterTestExec
 
     @Override
     public void beforeEach(final ExtensionContext extensionContext) throws Exception {
-        logger.info("---->before Each execution {} {} {}\n", extensionContext.getDisplayName(), this, extensionContext.getTestInstanceLifecycle());
+        logger.trace("---->before Each execution {} {} {}\n", extensionContext.getDisplayName(), this, extensionContext.getTestInstanceLifecycle());
         Optional<TestInstance.Lifecycle> lifecycle = extensionContext.getTestInstanceLifecycle();
         if (lifecycle.isPresent() && lifecycle.get().equals(PER_METHOD) || !lifecycle.isPresent())
             shutdownWeldIfRunning();
         if (weld == null) {
-            logger.info("----> starting up Weld.");
+            logger.trace("----> starting up Weld.");
             try {
                 String version = Formats.version(WeldBootstrap.class.getPackage());
                 if ("2.2.8 (Final)".equals(version) || "2.2.7 (Final)".equals(version)) {
@@ -179,7 +178,7 @@ public class JUnit5Extension implements TestInstancePostProcessor, AfterTestExec
                     enclosingClazz = enclosingClazz.getEnclosingClass();
                 Object test = creationalContexts.create(enclosingClazz, ApplicationScoped.class);
 
-                logger.info("---->Found testinstance {}\n", test);
+                logger.trace("---->Found testinstance {}\n", test);
                 // initialize the instance used for testing by fields initialized by cdi-container
                 initWeldFieldsOfTestInstance(test, enclosingClazz);
 
@@ -192,7 +191,7 @@ public class JUnit5Extension implements TestInstancePostProcessor, AfterTestExec
 
     @Override
     public void afterEach(final ExtensionContext extensionContext) throws Exception {
-        logger.info("---->after Each execution {} {}\n", extensionContext.getDisplayName(), this);
+        logger.trace("---->after Each execution {} {}\n", extensionContext.getDisplayName(), this);
         if (determineTestLifecycle(extensionContext).equals(PER_METHOD)) {
             shutdownWeldIfRunning();
         }
@@ -200,49 +199,22 @@ public class JUnit5Extension implements TestInstancePostProcessor, AfterTestExec
 
     @Override
     public void afterTestExecution(ExtensionContext extensionContext) throws Exception {
-        logger.info("---->after test execution {} {}\n", extensionContext.getDisplayName(), this);
-    }
-
-    void checkLifeCycleOfNested(Class<?> clazz, TestInstance.Lifecycle proposedLifeCycle) throws JUnit5ExtensionException {
-        Class<?>[] declaredClasses = clazz.getDeclaredClasses();
-        for (Class<?> c : declaredClasses) {
-            Annotation[] annotations = c.getAnnotations();
-            for (Annotation a : annotations) {
-                if (a.annotationType().getName().contains("Nested")) {
-                    TestInstance testInstanceAnnotation = c.getAnnotation(TestInstance.class);
-                    TestInstance.Lifecycle lifeCycle =
-                            testInstanceAnnotation != null ? testInstanceAnnotation.value() : TestInstance.Lifecycle.PER_METHOD;
-                    if (!testInstanceAnnotation.value().equals(proposedLifeCycle)) {
-                        throw new JUnit5ExtensionException("Expected Lifecycle for " + c.getName() + " to be " + proposedLifeCycle);
-                    }
-                    checkLifeCycleOfNested(c, proposedLifeCycle);
-                }
-            }
-        }
-
+        logger.trace("---->after test execution {} {}\n", extensionContext.getDisplayName(), this);
     }
 
     @Override
     public void postProcessTestInstance(Object testInstance, ExtensionContext extensionContext) throws Exception {
         Class<?> currentClazz = testInstance.getClass();
         TestInstance.Lifecycle lifeCycle = getLifecycle(currentClazz);
-        logger.info("---->postProcessTestInstance {} Lifecycle: {} {} {}\n", extensionContext.getDisplayName(),
+        logger.trace("---->postProcessTestInstance {} Lifecycle: {} {} {}\n", extensionContext.getDisplayName(),
                 lifeCycle,
                 this, testInstance);
         if (this.clazz == null || this.clazz.equals(testInstance.getClass())) {
             this.clazz = currentClazz;
             this.testInstance = testInstance;
-
-
-            // checkLifeCycleOfNested(clazz, lifeCycle);
-
-
-            this.testInstance = testInstance;
         } else {
-            logger.info("---->not overwritten\n");
+            logger.trace("---->not overwritten\n");
         }
-
-
     }
 
     private TestInstance.Lifecycle getLifecycle(final Class<?> currentClazz) {
