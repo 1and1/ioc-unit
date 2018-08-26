@@ -25,10 +25,6 @@
     </licenses>
 
     <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-        </dependency>
         <!-- J2EE 6 -->
         <dependency>
             <groupId>javax.enterprise</groupId>

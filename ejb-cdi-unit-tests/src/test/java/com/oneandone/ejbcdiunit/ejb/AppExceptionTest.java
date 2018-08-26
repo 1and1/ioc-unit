@@ -1,15 +1,14 @@
 package com.oneandone.ejbcdiunit.ejb;
 
-import org.jglue.cdiunit.AdditionalClasses;
-import org.jglue.cdiunit.AdditionalPackages;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
 import com.oneandone.ejbcdiunit.EjbUnitRunner;
 import com.oneandone.ejbcdiunit.cdiunit.EjbJarClasspath;
 import com.oneandone.ejbcdiunit.ejbs.appexc.TestBaseClass;
 import com.oneandone.ejbcdiunit.entities.TestEntity1;
 import com.oneandone.ejbcdiunit.persistence.TestPersistenceFactory;
+import org.jglue.cdiunit.AdditionalClasses;
+import org.jglue.cdiunit.AdditionalPackages;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 /**
  * @author aschoerk
@@ -91,4 +90,6 @@ public class AppExceptionTest extends TestBaseClass {
     public void testAppRTExcInNotSupported() throws Throwable {
         super.testAppRTExcInNotSupported();
     }
+
+
 }

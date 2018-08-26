@@ -66,7 +66,6 @@
 
         <!-- test -->
         <mockito.version>1.10.19</mockito.version>
-        <cdi-unit.version>4.0.2</cdi-unit.version>
         <weld.version>1.1.14.Final</weld.version>
         <!--hibernate-em.version>4.2.0.CR1</hibernate-em.version-->
         <hibernate-em.version>4.3.9.Final</hibernate-em.version>

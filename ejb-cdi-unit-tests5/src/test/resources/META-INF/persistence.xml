@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0"
+             xmlns="http://java.sun.com/xml/ns/persistence"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+    <persistence-unit name="j2eeSimDS1Test" transaction-type="RESOURCE_LOCAL">
+        <class>com.oneandone.ejbcdiunit.entities.TestEntity1</class>
+        <properties>
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
+            <property name="hibernate.use_sql_comments" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.id.new_generator_mappings" value="false"/>
+            <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:h2:mem:test;MODE=MySQL;DB_CLOSE_DELAY=0"/>
+            <property name="javax.persistence.jdbc.user" value="sa"/>
+            <property name="javax.persistence.jdbc.password" value=""/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect"/>
+        </properties>
+    </persistence-unit>
+    <persistence-unit name="j2eeSimDS2Test" transaction-type="RESOURCE_LOCAL">
+        <class>com.oneandone.ejbcdiunit.entities.TestEntity1</class>
+        <properties>
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
+            <property name="hibernate.id.new_generator_mappings" value="false"/>
+            <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:h2:mem:test;MODE=MySQL;DB_CLOSE_DELAY=0"/>
+            <property name="javax.persistence.jdbc.user" value="sa"/>
+            <property name="javax.persistence.jdbc.password" value=""/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect"/>
+        </properties>
+    </persistence-unit>
+    <persistence-unit name="testdb" transaction-type="RESOURCE_LOCAL">
+        <class>com.oneandone.ejbcdiunit.entities.TestEntity1</class>
+        <properties>
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
+            <property name="hibernate.id.new_generator_mappings" value="false"/>
+            <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:h2:mem:test;MODE=MySQL;DB_CLOSE_DELAY=0"/>
+            <property name="javax.persistence.jdbc.user" value="sa"/>
+            <property name="javax.persistence.jdbc.password" value=""/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>
+        </properties>
+    </persistence-unit>
+    <persistence-unit name="mysqldb" transaction-type="RESOURCE_LOCAL">
+        <class>com.oneandone.ejbcdiunit.entities.TestEntity1</class>
+        <properties>
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
+            <property name="hibernate.id.new_generator_mappings" value="false"/>
+            <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
+            <property name="javax.persistence.jdbc.url"
+                      value="jdbc:mysql://localhost:3406/test?autoReconnect=true&amp;useSSL=false"/>
+            <property name="javax.persistence.jdbc.user" value="root"/>
+            <property name="javax.persistence.jdbc.password" value=""/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>
+        </properties>
+    </persistence-unit>
+    <persistence-unit name="testalternative" transaction-type="RESOURCE_LOCAL">
+
+        <!-- List all entities used in this module -->
+        <!-- Because this persistence unit for Surefire tests is used without a Java EE container -->
+        <!-- ${jpa.entity.classes} -->
+        <class>com.oneandone.ejbcdiunit.entities.TestEntity1</class>
+        <properties>
+            <property name="hibernate.show_sql" value="true"/>
+            <!-- <property name="hibernate.use_sql_comments" value="true" /> -->
+            <!-- <property name="hibernate.format_sql" value="true" /> -->
+
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL82Dialect"/>
+            <property name="hibernate.generate_statistics" value="false"/>
+            <property name="hibernate.ejb.naming_strategy" value="org.hibernate.cfg.ImprovedNamingStrategy"/>
+
+            <property name="org.hibernate.envers.auditTableSuffix" value="_versions"/>
+            <property name="org.hibernate.envers.revisionFieldName" value="_revision"/>
+            <property name="org.hibernate.envers.revisionTypeFieldName" value="_rev_type"/>
+            <property name="org.hibernate.envers.store_data_at_delete" value="true"/>
+            <property name="hibernate.listeners.envers.autoRegister" value="false"/>
+
+            <!-- H2 setup -->
+            <!-- -->
+            <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
+            <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
+            <property name="javax.persistence.jdbc.url"
+                      value="jdbc:h2:mem:mss-simple;MODE=PostgreSQL;DB_CLOSE_ON_EXIT=TRUE;DB_CLOSE_DELAY=0;MVCC=TRUE;LOCK_TIMEOUT=10000"/>
+            <property name="javax.persistence.jdbc.user" value="sa"/>
+            <property name="javax.persistence.jdbc.password" value="sa"/>
+            <!-- -->
+
+        </properties>
+    </persistence-unit>
+
+</persistence>

@@ -1,31 +1,5 @@
 package com.oneandone.ejbcdiunit.persistencefactory;
 
-import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.fail;
-
-import javax.ejb.TransactionAttributeType;
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.LockModeType;
-import javax.persistence.PersistenceException;
-import javax.transaction.HeuristicMixedException;
-import javax.transaction.HeuristicRollbackException;
-import javax.transaction.RollbackException;
-import javax.transaction.SystemException;
-import javax.transaction.UserTransaction;
-
-import org.hibernate.exception.GenericJDBCException;
-import org.jglue.cdiunit.ActivatedAlternatives;
-import org.jglue.cdiunit.AdditionalClasses;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
 import com.oneandone.ejbcdiunit.ClassWithTwoDifferentEntityManagers;
 import com.oneandone.ejbcdiunit.EjbUnitRunner;
 import com.oneandone.ejbcdiunit.cdiunit.Pu1Em;
@@ -35,6 +9,29 @@ import com.oneandone.ejbcdiunit.helpers.J2eeSimTest1Factory;
 import com.oneandone.ejbcdiunit.helpers.J2eeSimTest2Factory;
 import com.oneandone.ejbcdiunit.helpers.TestResources;
 import com.oneandone.ejbcdiunit.persistence.TestTransaction;
+import org.hibernate.exception.GenericJDBCException;
+import org.jglue.cdiunit.ActivatedAlternatives;
+import org.jglue.cdiunit.AdditionalClasses;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.ejb.TransactionAttributeType;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
+import javax.persistence.PersistenceException;
+import javax.transaction.*;
+
+import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.fail;
 
 /**
  * @author aschoerk
@@ -71,6 +68,8 @@ public class Jpa2PUTest {
         return factory2.produceEntityManager();
     }
 
+    Logger log = LoggerFactory.getLogger("Jpa2PUTest");
+
     @Before
     public void initEntities() throws Exception {
         userTransaction.begin();
@@ -104,14 +103,14 @@ public class Jpa2PUTest {
             factory2.produceEntityManager().refresh(testEntity1a);
             fail("expected Illegal Argument Exception");
         } catch (IllegalArgumentException e) {
-
+            log.info("expected IllegalArgumentException catched {}",e);
         }
 
         try {
             factory1.produceEntityManager().refresh(testEntity1b);
             fail("expected Illegal Argument Exception");
         } catch (IllegalArgumentException e) {
-
+            log.info("expected IllegalArgumentException catched {}",e);
         }
 
 

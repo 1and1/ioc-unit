@@ -1,23 +1,10 @@
 package com.oneandone.ejbcdiunit5;
 
-import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
-import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_METHOD;
-
-import java.io.IOException;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.inject.Inject;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-
+import com.oneandone.ejbcdiunit.*;
+import com.oneandone.ejbcdiunit.cdiunit.Weld11TestUrlDeployment;
+import com.oneandone.ejbcdiunit.cdiunit.WeldTestConfig;
+import com.oneandone.ejbcdiunit.cdiunit.WeldTestUrlDeployment;
+import com.oneandone.ejbcdiunit.internal.EjbInformationBean;
 import org.jboss.weld.bootstrap.WeldBootstrap;
 import org.jboss.weld.bootstrap.api.Bootstrap;
 import org.jboss.weld.bootstrap.api.CDI11Bootstrap;
@@ -27,28 +14,26 @@ import org.jboss.weld.resources.spi.ResourceLoader;
 import org.jboss.weld.transaction.spi.TransactionServices;
 import org.jboss.weld.util.reflection.Formats;
 import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.extension.AfterAllCallback;
-import org.junit.jupiter.api.extension.AfterEachCallback;
-import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
-import org.junit.jupiter.api.extension.BeforeAllCallback;
-import org.junit.jupiter.api.extension.BeforeEachCallback;
-import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
-import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.ParameterContext;
-import org.junit.jupiter.api.extension.TestInstancePostProcessor;
+import org.junit.jupiter.api.extension.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.oneandone.ejbcdiunit.CdiTestConfig;
-import com.oneandone.ejbcdiunit.CreationalContexts;
-import com.oneandone.ejbcdiunit.EjbUnitBeanInitializerClass;
-import com.oneandone.ejbcdiunit.EjbUnitRule;
-import com.oneandone.ejbcdiunit.EjbUnitTransactionServices;
-import com.oneandone.ejbcdiunit.SupportEjbExtended;
-import com.oneandone.ejbcdiunit.cdiunit.Weld11TestUrlDeployment;
-import com.oneandone.ejbcdiunit.cdiunit.WeldTestConfig;
-import com.oneandone.ejbcdiunit.cdiunit.WeldTestUrlDeployment;
-import com.oneandone.ejbcdiunit.internal.EjbInformationBean;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.spi.BeanManager;
+import javax.inject.Inject;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
+import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_METHOD;
 
 public class JUnit5Extension implements TestInstancePostProcessor, AfterTestExecutionCallback, BeforeTestExecutionCallback,
         BeforeEachCallback, AfterEachCallback, BeforeAllCallback, AfterAllCallback {
@@ -245,7 +230,7 @@ public class JUnit5Extension implements TestInstancePostProcessor, AfterTestExec
         Object currentTestInstance = this.testInstance;
         Class<?> testInstanceClass;
 
-        while (!currentTestInstance.getClass().isAssignableFrom(clazzP)) {
+        while (!clazzP.isAssignableFrom(currentTestInstance.getClass())) {
             testInstanceClass = currentTestInstance.getClass();
             if (testInstanceClass.getEnclosingClass() != null) {
                 for (Field f : testInstanceClass.getDeclaredFields()) {

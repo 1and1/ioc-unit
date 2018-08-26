@@ -1,9 +1,9 @@
 package com.oneandone.ejbcdiunit.persistence;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Stack;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import com.oneandone.ejbcdiunit.SupportEjbExtended;
+import org.apache.commons.dbcp2.BasicDataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -16,12 +16,10 @@ import javax.persistence.TransactionRequiredException;
 import javax.sql.DataSource;
 import javax.transaction.Status;
 import javax.transaction.SystemException;
-
-import org.apache.commons.dbcp2.BasicDataSource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.oneandone.ejbcdiunit.SupportEjbExtended;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Stack;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 
 /**
@@ -122,7 +120,7 @@ public abstract class PersistenceFactory {
     EntityManager getTransactional(boolean expectTransaction) {
         try {
             if (expectTransaction && transactionManager.getStatus() == Status.STATUS_NO_TRANSACTION)
-                throw new TransactionRequiredException("Ejb-Simulation");
+                throw new TransactionRequiredException("Expected, but no transaction during Ejb-Simulation");
         } catch (SystemException e) {
             throw new RuntimeException(e);
         }

@@ -55,6 +55,10 @@
                     <groupId>nekohtml</groupId>
                     <artifactId>nekohtml</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>junit</groupId>
+                    <artifactId>junit</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>

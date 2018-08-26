@@ -10,6 +10,7 @@
         <module>ejb-cdi-unit5</module>
         <module>ejb-cdi-unit-test-war</module>
         <module>ejb-cdi-unit-tests</module>
+        <module>ejb-cdi-unit-tests5</module>
         <module>ejb-cdi-unit-simulators</module>
         <module>ejb-cdi-unit-camunda</module>
         <module>ejb-cdi-unit-arq</module>
@@ -69,7 +70,6 @@
 
         <!-- test -->
         <mockito.version>2.19.0</mockito.version>
-        <cdi-unit.version>4.0.2</cdi-unit.version>
         <!-- weld.version>1.1.14.Final</weld.version-->
         <junit.version>4.12</junit.version>
         <junit5.version>5.2.0</junit5.version>

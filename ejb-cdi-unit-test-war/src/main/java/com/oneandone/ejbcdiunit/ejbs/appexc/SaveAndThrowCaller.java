@@ -1,19 +1,14 @@
 package com.oneandone.ejbcdiunit.ejbs.appexc;
 
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-
-import javax.ejb.EJB;
-import javax.ejb.EJBException;
-import javax.ejb.Singleton;
-import javax.ejb.Startup;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
+import javax.ejb.*;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
-import org.junit.Assert;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
+
+
 
 /**
  * @author aschoerk
@@ -45,11 +40,11 @@ public class SaveAndThrowCaller {
                 assertThat(thw, instanceOf(EJBException.class));
                 assertThat(thw.getCause(), is(exc));
             } else {
-                Assert.assertThat(thw, is(exc));
+                assertThat(thw, is(exc));
             }
         }
         if (expected != orgCount) {
-            Assert.assertThat(countEntities(), is(expected));
+            assertThat(countEntities(), is(expected));
         }
     }
 

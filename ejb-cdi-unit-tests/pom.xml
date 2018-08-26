@@ -24,7 +24,7 @@
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>ejb-cdi-unit</artifactId>
+            <artifactId>ejb-cdi-unit5</artifactId>
             <scope>test</scope>
             <version>${project.version}</version>
         </dependency>
