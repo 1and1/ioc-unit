@@ -6,7 +6,15 @@
  */
 package cdiunit;
 
-import java.lang.annotation.Annotation;
+import com.oneandone.ejbcdiunit.ContextControllerEjbCdiUnit;
+import com.oneandone.ejbcdiunit.EjbUnitRunner;
+import com.oneandone.ejbcdiunit.cdiunit.ExcludedClasses;
+import junit.framework.Assert;
+import org.jglue.cdiunit.*;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ContextNotActiveException;
@@ -18,24 +26,11 @@ import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.servlet.http.HttpServletRequest;
-
-import org.jglue.cdiunit.AdditionalClasses;
-import org.jglue.cdiunit.InConversationScope;
-import org.jglue.cdiunit.InRequestScope;
-import org.jglue.cdiunit.InSessionScope;
-import org.jglue.cdiunit.ProducesAlternative;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-
-import com.oneandone.ejbcdiunit.ContextControllerEjbCdiUnit;
-import com.oneandone.ejbcdiunit.EjbUnitRunner;
-
-import junit.framework.Assert;
+import java.lang.annotation.Annotation;
 
 @RunWith(EjbUnitRunner.class)
 @AdditionalClasses({ ESupportClass.class, ScopedFactory.class })
+@ExcludedClasses({Scoped.class})  // cdi1.0 does not recognize @Vetoed
 public class TestCdiUnitRunner extends BaseTest {
 
 
