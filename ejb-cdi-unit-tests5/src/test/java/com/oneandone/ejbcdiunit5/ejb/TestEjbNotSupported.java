@@ -9,7 +9,6 @@ import com.oneandone.ejbcdiunit.persistence.SinglePersistenceFactory;
 import com.oneandone.ejbcdiunit5.JUnit5Extension;
 import com.oneandone.ejbcdiunit5.helpers.LoggerGenerator;
 import org.jglue.cdiunit.AdditionalClasses;
-import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,8 +19,8 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import java.io.IOException;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
 
 /**
  * @author aschoerk
@@ -82,7 +81,7 @@ public class TestEjbNotSupported {
     public void persistRequiresNewSetRollbackOnlyBySessionContext() throws IOException {
         statelessNotSupportedEJB.persistRequiresNewSetRollbackOnlyBySessionContext(new TestEntity1());
         Number res = em.createQuery("select count(e) from TestEntity1 e", Number.class).getSingleResult();
-        Assert.assertThat(res.intValue(), is(0));
+        assertThat(res.intValue(), is(0));
     }
 
     @Test

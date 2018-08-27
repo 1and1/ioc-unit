@@ -4,7 +4,6 @@ import com.oneandone.ejbcdiunit.entities.TestEntity1;
 import com.oneandone.ejbcdiunit.persistence.PersistenceFactory;
 import com.oneandone.ejbcdiunit.persistence.TestClosure;
 import com.oneandone.ejbcdiunit.persistence.TestTransaction;
-import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -33,7 +32,7 @@ import static javax.ejb.TransactionAttributeType.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 
 /**
@@ -409,11 +408,11 @@ public abstract class PersistenceFactoryTestBase {
             em.persist(testEntity1);
             em.flush();
             Long res = em.createQuery("select count(e) from TestEntity1 e", Long.class).getSingleResult();
-            Assert.assertThat(res, is(2L));
+            assertThat(res, is(2L));
             // userTransaction.rollback();
             // userTransaction.begin();
             res = em.createQuery("select count(e) from TestEntity1 e", Long.class).getSingleResult();
-            Assert.assertThat(res, is(2L));
+            assertThat(res, is(2L));
 
             try (Connection conn = dataSource.getConnection()) {
 
@@ -421,11 +420,11 @@ public abstract class PersistenceFactoryTestBase {
                         "test_entity_1 (id," +
                         getStringAttributeNativeName() + ", " + getIntAttributeNativeName() +
                         ") values (111,'sss', 114)")) {
-                    Assert.assertThat(stmt.executeUpdate(), is(1));
+                    assertThat(stmt.executeUpdate(), is(1));
                 }
             }
             res = em.createQuery("select count(e) from TestEntity1 e", Long.class).getSingleResult();
-            Assert.assertThat(res, is(3L));
+            assertThat(res, is(3L));
         }
 
     }

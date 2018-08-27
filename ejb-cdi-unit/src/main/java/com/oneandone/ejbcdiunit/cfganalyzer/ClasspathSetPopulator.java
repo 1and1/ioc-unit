@@ -1,5 +1,8 @@
 package com.oneandone.ejbcdiunit.cfganalyzer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,11 +17,6 @@ import java.util.Set;
 import java.util.jar.Attributes;
 import java.util.jar.JarInputStream;
 import java.util.jar.Manifest;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.oneandone.ejbcdiunit.EjbUnitRunner;
 
 /**
  * @author aschoerk
@@ -121,7 +119,7 @@ class ClasspathSetPopulator {
                 }
                 // TODO beans.xml is no longer required by CDI (1.1+)
                 URL resource = cl.getResource("META-INF/beans.xml");
-                boolean ejbCdiUnit = url.equals(EjbUnitRunner.class.getProtectionDomain().getCodeSource().getLocation());
+                boolean ejbCdiUnit = url.equals(ClasspathSetPopulator.class.getProtectionDomain().getCodeSource().getLocation());
                 if (ejbCdiUnit || resource != null || isDirectory(url)) {
                     cdiClasspathEntries.add(url);
                 }

@@ -4,7 +4,7 @@ import com.oneandone.ejbcdiunit.ResourceQualifier;
 import com.oneandone.ejbcdiunit.ejbs.ResourceTestEjb;
 import com.oneandone.ejbcdiunit5.JUnit5Extension;
 import org.jglue.cdiunit.AdditionalClasses;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -40,16 +40,16 @@ public class TestStringResourceInjection {
     @Test
     public void canInjectFullSpecified() {
 
-        Assert.assertEquals("TestStringResourceInjectionAppName", resourceTestEjb.ejbAppName());
-        Assert.assertEquals("TestStringResourceInjectionModuleName", resourceTestEjb.ejbModuleName());
+        Assertions.assertEquals("TestStringResourceInjectionAppName", resourceTestEjb.ejbAppName());
+        Assertions.assertEquals("TestStringResourceInjectionModuleName", resourceTestEjb.ejbModuleName());
 
     }
 
     @Test
     public void canInjectPartlySpecified() {
 
-        Assert.assertEquals("TestStringResourceInjectionAppName2", resourceTestEjb.ejbAppName2());
-        Assert.assertEquals("TestStringResourceInjectionModuleName2", resourceTestEjb.ejbModuleName2());
+        Assertions.assertEquals("TestStringResourceInjectionAppName2", resourceTestEjb.ejbAppName2());
+        Assertions.assertEquals("TestStringResourceInjectionModuleName2", resourceTestEjb.ejbModuleName2());
 
     }
 

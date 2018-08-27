@@ -5,7 +5,7 @@ import com.oneandone.ejbcdiunit.persistence.TestPersistenceFactory;
 import com.oneandone.ejbcdiunit5.JUnit5Extension;
 import com.oneandone.ejbcdiunit5.helpers.LoggerGenerator;
 import org.jglue.cdiunit.AdditionalClasses;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -37,7 +37,7 @@ public class TestEjbInjection {
                 assertThat(ann.name(), is("StatelessEJB"));
             }
         }
-        Assert.assertTrue(fieldFound);
+        Assertions.assertTrue(fieldFound);
     }
 
 

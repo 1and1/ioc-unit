@@ -13,7 +13,8 @@ import javax.inject.Inject;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+
 
 /**
  * @author aschoerk
