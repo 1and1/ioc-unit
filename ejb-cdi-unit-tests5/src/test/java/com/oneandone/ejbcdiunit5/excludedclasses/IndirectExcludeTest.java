@@ -1,5 +1,6 @@
 package com.oneandone.ejbcdiunit5.excludedclasses;
 
+import com.oneandone.ejbcdiunit5.ExpectedStartupException;
 import com.oneandone.ejbcdiunit5.JUnit5Extension;
 import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.jupiter.api.Assertions;
@@ -14,7 +15,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 public class IndirectExcludeTest {
 
     @Test
+    @ExpectedStartupException(RuntimeException.class)
     public void test() {
-        Assertions.assertThrows(RuntimeException.class,() -> { throw new RuntimeException("test should not start"); } );
+        Assertions.assertThrows(RuntimeException.class,() -> {
+            throw new RuntimeException("test should not start");
+        } );
     }
 }

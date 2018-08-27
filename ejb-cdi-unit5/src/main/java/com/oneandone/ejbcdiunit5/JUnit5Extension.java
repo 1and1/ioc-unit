@@ -35,8 +35,10 @@ import java.util.Optional;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_METHOD;
 
-public class JUnit5Extension implements TestInstancePostProcessor, AfterTestExecutionCallback, BeforeTestExecutionCallback,
-        BeforeEachCallback, AfterEachCallback, BeforeAllCallback, AfterAllCallback {
+public class JUnit5Extension implements TestInstancePostProcessor,
+        AfterTestExecutionCallback, BeforeTestExecutionCallback,
+        BeforeEachCallback, AfterEachCallback, BeforeAllCallback, AfterAllCallback,
+        TestExecutionExceptionHandler {
 
     private static Logger logger = LoggerFactory.getLogger(JUnit5Extension.class);
     // global system property
@@ -66,15 +68,24 @@ public class JUnit5Extension implements TestInstancePostProcessor, AfterTestExec
     public void afterAll(final ExtensionContext extensionContext) throws Exception {
         logger.trace("---->after All execution {} {}\n", extensionContext.getDisplayName(), this);
         if (determineTestLifecycle(extensionContext).equals(PER_CLASS)) {
-            shutdownWeldIfRunning();
+            shutdownWeldIfRunning(false);
         }
     }
 
-    private void shutdownWeldIfRunning() throws NamingException {
+    private void shutdownWeldIfRunning(boolean ignoreException) throws NamingException {
         if (weld != null) {
             logger.trace("----> shutting down Weld");
-            initialContext.close();
-            weld.shutdown();
+            if (initialContext != null)
+                initialContext.close();
+            if (ignoreException) {
+                try {
+                    weld.shutdown();
+                } catch (Throwable thw) {
+                    logger.debug("Ignored {}", thw);
+                }
+            } else {
+                weld.shutdown();
+            }
             initialContext = null;
             weld = null;
             container = null;
@@ -86,7 +97,7 @@ public class JUnit5Extension implements TestInstancePostProcessor, AfterTestExec
         logger.trace("---->before Each execution {} {} {}\n", extensionContext.getDisplayName(), this, extensionContext.getTestInstanceLifecycle());
         Optional<TestInstance.Lifecycle> lifecycle = extensionContext.getTestInstanceLifecycle();
         if (lifecycle.isPresent() && lifecycle.get().equals(PER_METHOD) || !lifecycle.isPresent())
-            shutdownWeldIfRunning();
+            shutdownWeldIfRunning(false);
         if (weld == null) {
             logger.trace("----> starting up Weld.");
             try {
@@ -177,8 +188,9 @@ public class JUnit5Extension implements TestInstancePostProcessor, AfterTestExec
     @Override
     public void afterEach(final ExtensionContext extensionContext) throws Exception {
         logger.trace("---->after Each execution {} {}\n", extensionContext.getDisplayName(), this);
+
         if (determineTestLifecycle(extensionContext).equals(PER_METHOD)) {
-            shutdownWeldIfRunning();
+            shutdownWeldIfRunning(startupException != null);
         }
     }
 
@@ -297,4 +309,19 @@ public class JUnit5Extension implements TestInstancePostProcessor, AfterTestExec
     }
 
 
+    @Override
+    public void handleTestExecutionException(ExtensionContext extensionContext, Throwable throwable) throws Throwable {
+        if (startupException != null) {
+            if (extensionContext.getTestMethod().isPresent()
+                    && extensionContext.getTestMethod().get().isAnnotationPresent(ExpectedStartupException.class)) {
+                ExpectedStartupException ann = extensionContext.getTestMethod().get().getAnnotation(ExpectedStartupException.class);
+                if (ann.value().isAssignableFrom(startupException.getClass())) {
+                    startupException = null;
+                    shutdownWeldIfRunning(true);
+                    return;
+                }
+            }
+        }
+        throw throwable;
+    }
 }
