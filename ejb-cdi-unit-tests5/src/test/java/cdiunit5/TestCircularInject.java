@@ -1,13 +1,14 @@
 package cdiunit5;
 
-import com.oneandone.ejbcdiunit5.JUnit5Extension;
+import javax.inject.Inject;
+import javax.inject.Provider;
+
 import org.jboss.weld.exceptions.DeploymentException;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
+import com.oneandone.ejbcdiunit5.ExpectedStartupException;
+import com.oneandone.ejbcdiunit5.JUnit5Extension;
 
 @ExtendWith(JUnit5Extension.class)
 public class TestCircularInject {
@@ -15,7 +16,8 @@ public class TestCircularInject {
     private Provider<CircularA> circularA;
 
     @Test
+    @ExpectedStartupException(DeploymentException.class)
     public void testCircularDependency() {
-        Assertions.assertThrows(DeploymentException.class, () -> circularA.get());
+        circularA.get();
     }
 }

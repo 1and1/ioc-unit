@@ -46,7 +46,11 @@ public class ProducerConfigExtension implements Extension {
     void afterBeanDiscovery(@Observes AfterBeanDiscovery abd, BeanManager bm) throws Exception {
         Map<Class<? extends Annotation>, Annotation> values = new HashMap<>();
         // get class annotations first:
-        addConfigValues(values, testMethod.getDeclaringClass().getAnnotations());
+        Class<?> declaringClass = testMethod.getDeclaringClass();
+        while (declaringClass != null && !declaringClass.equals(Object.class)) {
+            addConfigValues(values, declaringClass.getAnnotations());
+            declaringClass = declaringClass.getEnclosingClass();
+        }
         // method annotations will override class annotations:
         addConfigValues(values, testMethod.getAnnotations());
         for (final Annotation annotation : values.values()) {

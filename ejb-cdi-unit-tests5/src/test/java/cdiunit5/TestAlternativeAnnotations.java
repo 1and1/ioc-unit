@@ -6,13 +6,14 @@
  */
 package cdiunit5;
 
-import com.oneandone.ejbcdiunit5.JUnit5Extension;
-import junit.framework.Assert;
+import javax.inject.Inject;
+
 import org.jglue.cdiunit.ActivatedAlternatives;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import javax.inject.Inject;
+import com.oneandone.ejbcdiunit5.JUnit5Extension;
 
 
 @ExtendWith(JUnit5Extension.class)
@@ -31,7 +32,7 @@ public class TestAlternativeAnnotations {
     @Test
     public void testAlternativeSelected() {
 
-        Assert.assertTrue("Should have been impl2", impl instanceof AImplementation2);
+        Assertions.assertTrue(impl instanceof AImplementation2, "Should have been impl2");
     }
 
 }

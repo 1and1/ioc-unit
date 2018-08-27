@@ -1,18 +1,25 @@
 package com.oneandone.ejbcdiunit5.mvcc;
 
-import ch.vorburger.exec.ManagedProcessException;
-import ch.vorburger.mariadb4j.DB;
-import ch.vorburger.mariadb4j.DBConfigurationBuilder;
-import com.oneandone.ejbcdiunit5.JUnit5Extension;
+import static com.oneandone.ejbcdiunit5.mvcc.MvccTest.Mode.H2;
+import static com.oneandone.ejbcdiunit5.mvcc.MvccTest.Mode.MYSQL;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import javax.sql.DataSource;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import javax.sql.DataSource;
-import java.sql.*;
+import com.oneandone.ejbcdiunit5.JUnit5Extension;
 
-import static com.oneandone.ejbcdiunit5.mvcc.MvccTest.Mode.H2;
-import static com.oneandone.ejbcdiunit5.mvcc.MvccTest.Mode.MYSQL;
+import ch.vorburger.exec.ManagedProcessException;
+import ch.vorburger.mariadb4j.DB;
+import ch.vorburger.mariadb4j.DBConfigurationBuilder;
 
 /**
  * @author aschoerk
@@ -45,7 +52,7 @@ public class MvccTest {
         switch (mode) {
             case H2: {
                 Class.forName("org.h2.Driver");
-                Connection conn = DriverManager.getConnection("jdbc:h2:mem:test;MODE=MySQL;MVCC=TRUE;MV_STORE=TRUE;DB_CLOSE_DELAY=1",
+                Connection conn = DriverManager.getConnection("jdbc:h2:mem:testIntercepted;MODE=MySQL;MVCC=TRUE;MV_STORE=TRUE;DB_CLOSE_DELAY=1",
                         "sa", "");
                 return conn;
             }
@@ -68,6 +75,7 @@ public class MvccTest {
     }
 
     public void initDb() throws SQLException, ClassNotFoundException, IllegalAccessException, ManagedProcessException, InstantiationException {
+
         try (Connection conn = createConnection()) {
             try (Statement stmt = conn.createStatement()) {
                 stmt.execute("create table a (a varchar(200))");
@@ -124,6 +132,7 @@ public class MvccTest {
 
     @Test
     public void testMariaDb() throws SQLException, ClassNotFoundException, IllegalAccessException, ManagedProcessException, InstantiationException {
+        mode = MYSQL;
         initDb();
         try (Connection conn1 = createConnection();
                 Connection conn2 = createConnection();

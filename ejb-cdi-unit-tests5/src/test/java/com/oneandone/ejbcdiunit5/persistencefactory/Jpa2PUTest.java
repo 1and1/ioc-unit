@@ -1,5 +1,33 @@
 package com.oneandone.ejbcdiunit5.persistencefactory;
 
+import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.fail;
+
+import javax.ejb.TransactionAttributeType;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
+import javax.persistence.PersistenceException;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.RollbackException;
+import javax.transaction.SystemException;
+import javax.transaction.UserTransaction;
+
+import org.hibernate.exception.GenericJDBCException;
+import org.jglue.cdiunit.ActivatedAlternatives;
+import org.jglue.cdiunit.AdditionalClasses;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.oneandone.ejbcdiunit.ClassWithTwoDifferentEntityManagers;
 import com.oneandone.ejbcdiunit.cdiunit.Pu1Em;
 import com.oneandone.ejbcdiunit.cdiunit.Pu2Em;
@@ -9,29 +37,6 @@ import com.oneandone.ejbcdiunit5.JUnit5Extension;
 import com.oneandone.ejbcdiunit5.helpers.J2eeSimTest1Factory;
 import com.oneandone.ejbcdiunit5.helpers.J2eeSimTest2Factory;
 import com.oneandone.ejbcdiunit5.helpers.TestResources;
-import org.hibernate.exception.GenericJDBCException;
-import org.jglue.cdiunit.ActivatedAlternatives;
-import org.jglue.cdiunit.AdditionalClasses;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.ejb.TransactionAttributeType;
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.LockModeType;
-import javax.persistence.PersistenceException;
-import javax.transaction.*;
-
-import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.fail;
 
 /**
  * @author aschoerk
@@ -91,7 +96,7 @@ public class Jpa2PUTest {
 
     }
 
-    @AfterAll
+    @AfterEach
     public void afterJpa2PUTest() throws HeuristicRollbackException, RollbackException, HeuristicMixedException, SystemException {
         userTransaction.commit();
     }

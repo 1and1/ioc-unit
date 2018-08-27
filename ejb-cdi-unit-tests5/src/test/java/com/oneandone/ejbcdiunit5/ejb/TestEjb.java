@@ -1,23 +1,7 @@
 package com.oneandone.ejbcdiunit5.ejb;
 
-import com.oneandone.ejbcdiunit.SessionContextFactory;
-import com.oneandone.ejbcdiunit.cdiunit.EjbJarClasspath;
-import com.oneandone.ejbcdiunit.ejbs.*;
-import com.oneandone.ejbcdiunit.ejbs.appexc.TestBaseClass;
-import com.oneandone.ejbcdiunit.entities.TestEntity1;
-import com.oneandone.ejbcdiunit.persistence.SinglePersistenceFactory;
-import com.oneandone.ejbcdiunit.persistence.TestTransaction;
-import com.oneandone.ejbcdiunit.testbases.EJBTransactionTestBase;
-import com.oneandone.ejbcdiunit.testbases.TestEntity1Saver;
-import com.oneandone.ejbcdiunit5.JUnit5Extension;
-import com.oneandone.ejbcdiunit5.helpers.LoggerGenerator;
-import org.jglue.cdiunit.AdditionalClasses;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
 import javax.ejb.EJBException;
 import javax.ejb.TransactionAttributeType;
@@ -26,10 +10,37 @@ import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.TransactionRequiredException;
-import javax.transaction.*;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.NotSupportedException;
+import javax.transaction.RollbackException;
+import javax.transaction.Status;
+import javax.transaction.SystemException;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import org.jglue.cdiunit.AdditionalClasses;
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import com.oneandone.ejbcdiunit.SessionContextFactory;
+import com.oneandone.ejbcdiunit.cdiunit.EjbJarClasspath;
+import com.oneandone.ejbcdiunit.ejbs.MdbEjbInfoSingleton;
+import com.oneandone.ejbcdiunit.ejbs.QMdbEjb;
+import com.oneandone.ejbcdiunit.ejbs.SingletonEJB;
+import com.oneandone.ejbcdiunit.ejbs.StatelessBeanManagedTrasEJB;
+import com.oneandone.ejbcdiunit.ejbs.StatelessChildEJB;
+import com.oneandone.ejbcdiunit.ejbs.StatelessEJB;
+import com.oneandone.ejbcdiunit.ejbs.appexc.TestBaseClass;
+import com.oneandone.ejbcdiunit.entities.TestEntity1;
+import com.oneandone.ejbcdiunit.persistence.SinglePersistenceFactory;
+import com.oneandone.ejbcdiunit.persistence.TestTransaction;
+import com.oneandone.ejbcdiunit.testbases.EJBTransactionTestBase;
+import com.oneandone.ejbcdiunit.testbases.TestEntity1Saver;
+import com.oneandone.ejbcdiunit5.JUnit5Extension;
+import com.oneandone.ejbcdiunit5.helpers.LoggerGenerator;
 
 /**
  * @author aschoerk
@@ -304,7 +315,7 @@ public class TestEjb extends EJBTransactionTestBase {
     @Override
     @Test
     public void canInterpretTransactionAttributeInParentMethodNever() throws Exception {
-        super.canInterpretTransactionAttributeInParentMethodNever();
+        Assertions.assertThrows(EJBException.class, () -> super.canInterpretTransactionAttributeInParentMethodNever());
     }
 
     @Test

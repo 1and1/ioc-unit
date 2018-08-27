@@ -1,13 +1,13 @@
 package cdiunit5.decoratortest;
 
-import com.oneandone.ejbcdiunit5.JUnit5Extension;
+import javax.inject.Inject;
+
 import org.jglue.cdiunit.AdditionalClasses;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import javax.inject.Inject;
-
-import static org.junit.Assert.assertEquals;
+import com.oneandone.ejbcdiunit5.JUnit5Extension;
 
 /**
  * Created by pcasaes on 30/03/17.
@@ -24,6 +24,6 @@ public class AddOneDecoratorTest {
 
     @Test
     public void testAddOne() {
-        assertEquals(1, decorated.calculate());
+        Assertions.assertEquals(1, decorated.calculate());
     }
 }

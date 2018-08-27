@@ -1,17 +1,22 @@
 package cdiunit5;
 
-import com.oneandone.ejbcdiunit.jaxrs.SupportJaxRsEjbCdiUnit;
-import com.oneandone.ejbcdiunit5.JUnit5Extension;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.Request;
+import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.ext.Providers;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import com.oneandone.ejbcdiunit.jaxrs.SupportJaxRsEjbCdiUnit;
+import com.oneandone.ejbcdiunit5.JUnit5Extension;
 
 @ExtendWith(JUnit5Extension.class)
 @SupportJaxRsEjbCdiUnit

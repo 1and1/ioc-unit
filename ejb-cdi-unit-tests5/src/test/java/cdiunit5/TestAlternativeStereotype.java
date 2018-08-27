@@ -1,12 +1,13 @@
 package cdiunit5;
 
-import com.oneandone.ejbcdiunit5.JUnit5Extension;
-import junit.framework.Assert;
+import javax.inject.Inject;
+
 import org.jglue.cdiunit.AdditionalClasses;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import javax.inject.Inject;
+import com.oneandone.ejbcdiunit5.JUnit5Extension;
 
 @ExtendWith(JUnit5Extension.class)
 @AdditionalClasses(AImplementation3.StereotypeAlternative.class)
@@ -23,7 +24,7 @@ public class TestAlternativeStereotype {
     @Test
     public void testAlternativeSelected() {
 
-        Assert.assertTrue("Should have been impl3", impl instanceof AImplementation3);
+        Assertions.assertTrue(impl instanceof AImplementation3, "Should have been impl3");
     }
 
 

@@ -1,7 +1,8 @@
 package cdiunit5;
 
-import javax.enterprise.context.ConversationScoped;
 import java.io.Serializable;
+
+import javax.enterprise.context.ConversationScoped;
 
 @ConversationScoped
 public class DConversationScoped implements Serializable {

@@ -157,7 +157,6 @@
                         <artifactId>junit-jupiter-engine</artifactId>
                         <version>${junit5.version}</version>
                     </dependency>
-
                 </dependencies>
             </plugin>
         </plugins>

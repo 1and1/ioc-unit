@@ -1,7 +1,8 @@
 package cdiunit5;
 
-import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
+
+import javax.enterprise.context.SessionScoped;
 
 @SessionScoped
 public class CSessionScoped implements Serializable {
