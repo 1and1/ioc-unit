@@ -175,7 +175,53 @@ by copying them from another Instance of the test-class which is created during 
 
 ## Usage
 
-* add net.oneandone:ejb-cdi-unit5 to your pom (as soon as it is released, at the moment you need to build a snapshot)
+
+**pom properties**
+```XML
+<properties>
+	<ejb-cdi-unit.version>1.1.15</ejb-cdi-unit.version>
+        <weld-se.version>2.3.5.Final</weld-se.version>
+        <junit5.version>5.2.0</junit5.version>
+        <surefire.version>2.22.0</surefire.version>
+        <junit-platform-surefire.version>1.2.0</junit-platform-surefire.version>
+</properties>
+```
+**dependencies**
+```XML
+ <dependency>
+	<groupId>net.oneandone</groupId>
+	<artifactId>ejb-cdi-unit5</artifactId>
+	<version>${ejb-cdi-unit.version}</version>
+	<scope>test</scope>
+</dependency>
+<dependency>
+	<groupId>org.jboss.weld.se</groupId>
+	<artifactId>weld-se-core</artifactId>
+	<version>${weld-se.version}</version>
+	<scope>test</scope>
+</dependency>
+```
+**New surefire plugin**
+```XML
+<plugin>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-surefire-plugin</artifactId>
+	<version>${surefire.version}</version>
+	<dependencies>
+		<dependency>
+			<groupId>org.junit.platform</groupId>
+			<artifactId>junit-platform-surefire-provider</artifactId>
+			<version>${junit-platform-surefire.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>${junit5.version}</version>
+		</dependency>
+	</dependencies>
+</plugin>
+```
+
 * Annotate the JUnit5-Testclass with @ExtendWith(JUnit5Extension)
 Examples: see: [tests](https://github.com/1and1/ejb-cdi-unit/tree/master/ejb-cdi-unit-tests5) and [ex1-1entity5](https://github.com/1and1/ejb-cdi-unit/tree/master/examples/ex1-1entity5)
 
