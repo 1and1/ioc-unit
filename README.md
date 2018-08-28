@@ -14,6 +14,33 @@ Supports:
 ![Build Status](https://travis-ci.org/1and1/ejb-cdi-unit.svg?branch=master)
 
 
+
+# Contents
+<!-- TOC depthFrom:1 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
+
+- [Contents](#contents)
+- [First Example](#first-example)
+- [Motivation](#motivation)
+- [History](#history)
+- [Requirements](#requirements)
+- [Solution](#solution)
+- [Usage](#usage)
+- [Modules](#modules)
+- [JUnit5](#junit5)
+- [Examples](#examples)
+	- [One Service and One Entity](#one-service-and-one-entity)
+	- [One Service and One Synchronously Consumed Service](#one-service-and-one-synchronously-consumed-service)
+	- [One Service and One Asynchronously Consumed Service](#one-service-and-one-asynchronously-consumed-service)
+	- [One Service and One Asynchronously Consumed Service Plus Asynchronous Callback](#one-service-and-one-asynchronously-consumed-service-plus-asynchronous-callback)
+	- [One Service and One Asynchronously Consumed Service internally using Messaging](#one-service-and-one-asynchronously-consumed-service-internally-using-messaging)
+	- [Test of a Rest-Service](#test-of-a-rest-service)
+	- [Test of a camunda BPM processing](#test-of-a-camunda-bpm-processing)
+- [Restrictions](#restrictions)
+- [Acknowledgments](#acknowledgments)
+- [License](#license)
+
+<!-- /TOC -->
+
 # First Example
 
 [sourcecode](https://github.com/1and1/ejb-cdi-unit/blob/master/examples/ex2-syncconsumed)
@@ -31,32 +58,6 @@ Supports:
 
 ![Test for Service](images/SampleEjbUnitTest.png)
 
-
-
-# Contents
-<!-- TOC depthFrom:1 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
-
-- [First Example](#first-example)
-- [Contents](#contents)
-- [Motivation](#motivation)
-- [History](#history)
-- [Requirements](#requirements)
-- [Solution](#solution)
-- [Usage](#usage)
-- [Modules](#modules)
-- [Examples](#examples)
-	- [One Service and One Entity](#one-service-and-one-entity)
-	- [One Service and One Synchronously Consumed Service](#one-service-and-one-synchronously-consumed-service)
-	- [One Service and One Asynchronously Consumed Service](#one-service-and-one-asynchronously-consumed-service)
-	- [One Service and One Asynchronously Consumed Service Plus Asynchronous Callback](#one-service-and-one-asynchronously-consumed-service-plus-asynchronous-callback)
-	- [One Service and One Asynchronously Consumed Service internally using Messaging](#one-service-and-one-asynchronously-consumed-service-internally-using-messaging)
-	- [Test of a Rest-Service](#test-of-a-rest-service)
-	- [Test of a camunda BPM processing](#test-of-a-camunda-bpm-processing)
-- [Restrictions](#restrictions)
-- [Acknowledgments](#acknowledgments)
-- [License](#license)
-
-<!-- /TOC -->
 
 
 # Motivation
@@ -140,6 +141,30 @@ The usage does not differ very much from cdi-unit:
 * ejb-cdi-unit-tomee-simple contains some code doing simple tests only with tomee. ejb-cdi-unit is not used here.
 * ejb-cdi-unit-camunda contains the camunda-bpm-platform/engine-cdi - tests ported from arquillian to ejb-cdi-unit.
 * examples contains showcases including some diagrams which should show the usage together with the internal working of ejb-cdi-unit. Some proposed solutions for easy simulation of remote Services and callbacks are also shown there.
+
+
+# JUnit5
+
+As realized in the JUnit4 implementation, the Testclass "lives" inside the CDI-Container as applicationscoped bean. 
+This works, because the Runner can create the actual instance of the testclass. This does not work anymore in the case you want to support
+JUnitRules or JUnit5. Then the actual testclass is created by the framework, that does not use the CDI-Container to handle the instances.
+
+The solution of ejb-cdi-unit is:
+
+*Restrict the testclasses to support only @Inject*. 
+Handling @Inject allows the full integration of the tests inside the CDI-Container. All beans to be tested can be injected and used
+inside the test-methods.
+ 
+The restrictions normally are not so imposing. 
+* Interceptors will not work. 
+* Decorators will not work
+* Producers may not use not injected Instance-variables
+but normally this is not important for the testclasses.
+
+Technically the TestInstances are fetched as they are created by JUnit5 and the injected instance-variables are initialized
+by copying them from another Instance of the test-class which is created during the initialization of the CDI-Container.
+
+
 
 
 # Examples
