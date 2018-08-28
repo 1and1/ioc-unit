@@ -26,7 +26,7 @@ Supports:
 - [Solution](#solution)
 - [Usage](#usage)
 - [Maven-Modules](#maven-modules)
-- [Java9+](#java9+)
+- [Java9+](#java9)
 - [JUnit5](#junit5)
 - [Examples](#examples)
 	- [One Service and One Entity](#one-service-and-one-entity)
@@ -146,6 +146,7 @@ The usage does not differ very much from cdi-unit:
 * examples contains showcases including some diagrams which should show the usage together with the internal working of ejb-cdi-unit. Some proposed solutions for easy simulation of remote Services and callbacks are also shown there.
 
 # Java9+
+<a name="java9"></a>
 
 At the moment, there is no ejb-application-server that supports modules. Therefore the scan for CDI-Classes only uses the classpath. To support Java9+ the reflections-dependency has been rewritten to use Java8-features and to get rid of guava (because of possible compatibility-issues with the code under test) The new artifact is named net.oneandone:reflections8. 
 
