@@ -164,6 +164,7 @@ Handling @Inject allows the full integration of the tests inside the CDI-Contain
 inside the test-methods.
  
 The restrictions normally are not so imposing. 
+* PostConstruct, PreDestroy will not work
 * Interceptors will not work. 
 * Decorators will not work
 * Producers may not use not injected Instance-variables
