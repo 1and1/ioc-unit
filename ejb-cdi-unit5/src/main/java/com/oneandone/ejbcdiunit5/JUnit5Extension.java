@@ -37,10 +37,7 @@ import org.jboss.weld.util.reflection.Formats;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.AfterEachCallback;
-import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
-import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
-import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
@@ -60,8 +57,7 @@ import com.oneandone.ejbcdiunit.cdiunit.WeldTestUrlDeployment;
 import com.oneandone.ejbcdiunit.internal.EjbInformationBean;
 
 public class JUnit5Extension implements TestInstancePostProcessor,
-        AfterTestExecutionCallback, BeforeTestExecutionCallback,
-        BeforeEachCallback, AfterEachCallback, BeforeAllCallback, AfterAllCallback,
+        BeforeEachCallback, AfterEachCallback, AfterAllCallback,
         TestExecutionExceptionHandler
 // , TestInstanceFactory TODO: 5.3
 {
@@ -79,16 +75,6 @@ public class JUnit5Extension implements TestInstancePostProcessor,
     CreationalContexts creationalContexts;
     InitialContext initialContext;
 
-
-    @Override
-    public void beforeTestExecution(final ExtensionContext extensionContext) throws Exception {
-        logger.trace("---->before test execution {} {}\n", extensionContext.getDisplayName(), this);
-    }
-
-    @Override
-    public void beforeAll(final ExtensionContext extensionContext) throws Exception {
-        logger.trace("---->before All execution {} {}\n", extensionContext.getDisplayName(), this);
-    }
 
     @Override
     public void afterAll(final ExtensionContext extensionContext) throws Exception {
@@ -229,12 +215,7 @@ public class JUnit5Extension implements TestInstancePostProcessor,
         }
     }
 
-    @Override
-    public void afterTestExecution(ExtensionContext extensionContext) throws Exception {
-        logger.trace("---->after test execution {} {}\n", extensionContext.getDisplayName(), this);
-    }
-
-    void checkInterceptor(Annotation[] annotations, Set<Annotation> handled) throws InterceptorBindingAtJUnit5TestInstanceException {
+    private void checkInterceptor(Annotation[] annotations, Set<Annotation> handled) throws InterceptorBindingAtJUnit5TestInstanceException {
         for (Annotation ann : annotations) {
             if (ann.annotationType().isAnnotationPresent(InterceptorBinding.class)) {
                 throw new InterceptorBindingAtJUnit5TestInstanceException();
@@ -249,7 +230,7 @@ public class JUnit5Extension implements TestInstancePostProcessor,
     }
 
 
-    void checkForTopLevelAndInnerClasses(Class<?> testInstanceClass, Set<Annotation> handled) throws Exception {
+    private void checkForTopLevelAndInnerClasses(Class<?> testInstanceClass, Set<Annotation> handled) throws Exception {
         if (testInstanceClass == null)
             return;
         Annotation[] annotations = testInstanceClass.getAnnotations();
@@ -283,7 +264,7 @@ public class JUnit5Extension implements TestInstancePostProcessor,
             this.clazz = currentClazz;
             this.testInstance = testInstance;
         } else {
-            logger.trace("---->not overwritten\n");
+            logger.trace("---->testinstance not overwritten\n");
         }
     }
 
