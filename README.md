@@ -25,7 +25,8 @@ Supports:
 - [Requirements](#requirements)
 - [Solution](#solution)
 - [Usage](#usage)
-- [Modules](#modules)
+- [Maven-Modules](#maven-modules)
+- [Java9+](#java9+)
 - [JUnit5](#junit5)
 - [Examples](#examples)
 	- [One Service and One Entity](#one-service-and-one-entity)
@@ -131,17 +132,22 @@ The usage does not differ very much from cdi-unit:
 * Services consumed by the Artifact might need Simulations. (same as cdi-unit)
 * Rest-Services: Good experiences have been made in using the RestEasy MockDispatcherFactory.  (same as cdi-unit)
 
-# Modules
+# Maven-Modules
 
 * ejb-cdi-unit is the module providing the test extensions, it is available from maven central
+* ejb-cdi-unit5 is the module providing the test extensions for JUnit5, it is available from maven central
 * ejb-cdi-unit-test-war is code used by
 	* ejb-cdi-unit-tests in regression tests
+	* ejb-cdi-unit-tests5 regression tests using JUnit5
 	* ejb-cdi-unit-tomee to show how the tests can be implemented using tomee embedded
 	* ejb-cdi-unit-arq to prove that the modules behaviour fits to wildfly
 * ejb-cdi-unit-tomee-simple contains some code doing simple tests only with tomee. ejb-cdi-unit is not used here.
 * ejb-cdi-unit-camunda contains the camunda-bpm-platform/engine-cdi - tests ported from arquillian to ejb-cdi-unit.
 * examples contains showcases including some diagrams which should show the usage together with the internal working of ejb-cdi-unit. Some proposed solutions for easy simulation of remote Services and callbacks are also shown there.
 
+# Java9+
+
+At the moment, there is no ejb-application-server that supports modules. Therefore the scan for CDI-Classes only uses the classpath. To support Java9+ the reflections-dependency has been rewritten to use Java8-features and to get rid of guava (because of possible compatibility-issues with the code under test) The new artifact is named net.oneandone:reflections8. 
 
 # JUnit5
 
