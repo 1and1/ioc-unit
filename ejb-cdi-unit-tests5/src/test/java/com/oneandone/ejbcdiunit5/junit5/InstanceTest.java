@@ -32,7 +32,11 @@ public class InstanceTest {
     @RepeatedTest(5)
     public void test(RepetitionInfo repetitionInfo) {
         assertNotNull(baseBeans);
-        assertEquals(baseBeans.stream().count(), 2);
+        int count = 0;
+        for (BaseBean b : baseBeans) {
+            count++;
+        }
+        assertEquals(count, 2);
         Instance<AppScopedBean1> beanInstance1 = baseBeans.select(AppScopedBean1.class);
         AppScopedBean1 bean1 = beanInstance1.iterator().next();
         assertEquals(bean1.getValue(), AppScopedBean1.APPSCOPED_BEAN_INIT_VALUE);

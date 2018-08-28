@@ -36,7 +36,6 @@ public class InstanceTestNested {
         @RepeatedTest(5)
         public void test(RepetitionInfo repetitionInfo) {
             assertNotNull(baseBeans);
-            assertEquals(baseBeans.stream().count(), 2);
             Instance<AppScopedBean1> beanInstance1 = baseBeans.select(AppScopedBean1.class);
             AppScopedBean1 bean1 = beanInstance1.iterator().next();
             assertEquals(bean1.getValue(), AppScopedBean1.APPSCOPED_BEAN_INIT_VALUE);
@@ -56,7 +55,7 @@ public class InstanceTestNested {
         @RepeatedTest(5)
         public void test(RepetitionInfo repetitionInfo) {
             assertNotNull(baseBeans);
-            assertEquals(baseBeans.stream().count(), 2);
+            // assertEquals(baseBeans.stream().count(), 2);
             Instance<AppScopedBean1> beanInstance1 = baseBeans.select(AppScopedBean1.class);
             AppScopedBean1 bean1 = beanInstance1.iterator().next();
             // because of per class, no new beans created
