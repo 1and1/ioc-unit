@@ -6,7 +6,7 @@ Supports:
 * JBoss7 and Wildfly 10
 * Java 7 (until 1.1.12) Java8 and Java 10
 * JUnit 4, JUnitRules
-* JUnit 5 in active Development
+* JUnit 5 including nested classes, TestInstances(Testclasses) may only Inject
 * Weld 1, 2, 3
 * Processengine: Camunda 7.x
 
