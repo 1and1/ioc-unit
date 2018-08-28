@@ -145,6 +145,7 @@ The usage does not differ very much from cdi-unit:
 
 # JUnit5
 
+## Concept
 As realized in the JUnit4 implementation, the Testclass "lives" inside the CDI-Container as applicationscoped bean. 
 This works, because the Runner can create the actual instance of the testclass. This does not work anymore in the case you want to support
 JUnitRules or JUnit5. Then the actual testclass is created by the framework, that does not use the CDI-Container to handle the instances.
@@ -164,8 +165,10 @@ but normally this is not important for the testclasses.
 Technically the TestInstances are fetched as they are created by JUnit5 and the injected instance-variables are initialized
 by copying them from another Instance of the test-class which is created during the initialization of the CDI-Container.
 
+## Usage
 
-
+* add net.oneandone:ejb-cdi-unit5 to your pom (as soon as it is released, at the moment you need to build a snapshot)
+* Annotate the JUnit5-Testclass with @ExtendWith(JUnit5Extension)
 
 # Examples
 
