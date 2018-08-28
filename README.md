@@ -169,6 +169,7 @@ by copying them from another Instance of the test-class which is created during 
 
 * add net.oneandone:ejb-cdi-unit5 to your pom (as soon as it is released, at the moment you need to build a snapshot)
 * Annotate the JUnit5-Testclass with @ExtendWith(JUnit5Extension)
+Examples: see: [tests](https://github.com/1and1/ejb-cdi-unit/tree/master/ejb-cdi-unit-tests5) and [ex1-1entity5](https://github.com/1and1/ejb-cdi-unit/tree/master/examples/ex1-1entity5)
 
 # Examples
 
