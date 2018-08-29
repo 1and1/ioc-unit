@@ -1,20 +1,22 @@
 package com.oneandone.ejbcdiunit5;
 
-import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
-import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_METHOD;
-
-import java.io.IOException;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import com.oneandone.ejbcdiunit.*;
+import com.oneandone.ejbcdiunit.cdiunit.Weld11TestUrlDeployment;
+import com.oneandone.ejbcdiunit.cdiunit.WeldTestConfig;
+import com.oneandone.ejbcdiunit.cdiunit.WeldTestUrlDeployment;
+import com.oneandone.ejbcdiunit.internal.EjbInformationBean;
+import org.jboss.weld.bootstrap.WeldBootstrap;
+import org.jboss.weld.bootstrap.api.Bootstrap;
+import org.jboss.weld.bootstrap.api.CDI11Bootstrap;
+import org.jboss.weld.environment.se.Weld;
+import org.jboss.weld.environment.se.WeldContainer;
+import org.jboss.weld.resources.spi.ResourceLoader;
+import org.jboss.weld.transaction.spi.TransactionServices;
+import org.jboss.weld.util.reflection.Formats;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.extension.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -25,41 +27,21 @@ import javax.inject.Inject;
 import javax.interceptor.InterceptorBinding;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.util.*;
 
-import org.jboss.weld.bootstrap.WeldBootstrap;
-import org.jboss.weld.bootstrap.api.Bootstrap;
-import org.jboss.weld.bootstrap.api.CDI11Bootstrap;
-import org.jboss.weld.environment.se.Weld;
-import org.jboss.weld.environment.se.WeldContainer;
-import org.jboss.weld.resources.spi.ResourceLoader;
-import org.jboss.weld.transaction.spi.TransactionServices;
-import org.jboss.weld.util.reflection.Formats;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.extension.AfterAllCallback;
-import org.junit.jupiter.api.extension.AfterEachCallback;
-import org.junit.jupiter.api.extension.BeforeEachCallback;
-import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.ParameterContext;
-import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
-import org.junit.jupiter.api.extension.TestInstancePostProcessor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.oneandone.ejbcdiunit.CdiTestConfig;
-import com.oneandone.ejbcdiunit.CreationalContexts;
-import com.oneandone.ejbcdiunit.EjbUnitBeanInitializerClass;
-import com.oneandone.ejbcdiunit.EjbUnitRule;
-import com.oneandone.ejbcdiunit.EjbUnitTransactionServices;
-import com.oneandone.ejbcdiunit.SupportEjbExtended;
-import com.oneandone.ejbcdiunit.cdiunit.Weld11TestUrlDeployment;
-import com.oneandone.ejbcdiunit.cdiunit.WeldTestConfig;
-import com.oneandone.ejbcdiunit.cdiunit.WeldTestUrlDeployment;
-import com.oneandone.ejbcdiunit.internal.EjbInformationBean;
+import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
+import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_METHOD;
 
 public class JUnit5Extension implements TestInstancePostProcessor,
         BeforeEachCallback, AfterEachCallback, AfterAllCallback,
         TestExecutionExceptionHandler
-// , TestInstanceFactory TODO: 5.3
+        , TestInstanceFactory // TODO: 5.3
 {
 
     private static Logger logger = LoggerFactory.getLogger(JUnit5Extension.class);
@@ -372,11 +354,17 @@ public class JUnit5Extension implements TestInstancePostProcessor,
         throw throwable;
     }
 
-    /*
-     * @Override public Object createTestInstance(final TestInstanceFactoryContext testInstanceFactoryContext, final ExtensionContext
-     * extensionContext) throws TestInstantiationException { try { logger.trace("---->createTestInstance {} {}",
-     * testInstanceFactoryContext.getTestClass(), testInstanceFactoryContext.getOuterInstance()); return
-     * testInstanceFactoryContext.getTestClass().newInstance(); } catch (InstantiationException e) { throw new RuntimeException(e); } catch
-     * (IllegalAccessException e) { throw new RuntimeException(e); } }
-     */
+     @Override public Object createTestInstance(final TestInstanceFactoryContext testInstanceFactoryContext, final ExtensionContext
+     extensionContext) throws TestInstantiationException
+     {
+         try {
+             logger.trace("---->createTestInstance {} {}", testInstanceFactoryContext.getTestClass(), testInstanceFactoryContext.getOuterInstance());
+             return testInstanceFactoryContext.getTestClass().newInstance();
+         } catch (InstantiationException e) {
+             throw new RuntimeException(e);
+         }
+             catch (IllegalAccessException e) {
+             throw new RuntimeException(e);
+         }
+     }
 }

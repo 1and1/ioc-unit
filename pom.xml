@@ -72,7 +72,7 @@
         <mockito.version>2.19.0</mockito.version>
         <!-- weld.version>1.1.14.Final</weld.version-->
         <junit.version>4.12</junit.version>
-        <junit5.version>5.2.0</junit5.version>
+        <junit5.version>5.3.0-RC1</junit5.version>
         <mockrunner.version>1.1.2</mockrunner.version>
         <version.cglib>3.2.5</version.cglib>
 
