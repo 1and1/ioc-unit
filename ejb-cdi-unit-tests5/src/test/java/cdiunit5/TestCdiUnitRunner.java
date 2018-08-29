@@ -23,6 +23,9 @@ import javax.inject.Provider;
 import javax.servlet.http.HttpServletRequest;
 
 import org.jglue.cdiunit.AdditionalClasses;
+import org.jglue.cdiunit.InConversationScope;
+import org.jglue.cdiunit.InRequestScope;
+import org.jglue.cdiunit.InSessionScope;
 import org.jglue.cdiunit.ProducesAlternative;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -44,13 +47,13 @@ public class TestCdiUnitRunner extends BaseTest {
     private AImplementation1 aImpl;
 
     @Inject
-    private RequestScopeTest requestScopedTest;
+    private Provider<BRequestScoped> requestScoped;
 
     @Inject
-    private SessionScopeTest sessionScopedTest;
+    private Provider<CSessionScoped> sessionScoped;
 
     @Inject
-    private ConversationScopeTest conversationScopeTest;
+    private Provider<DConversationScoped> conversationScoped;
 
     @Inject
     private PostConstructTest postConstructTest;
@@ -105,43 +108,53 @@ public class TestCdiUnitRunner extends BaseTest {
     }
 
     @Test
+    @InRequestScope
     public void testRequestScope() {
-        requestScopedTest.testIntercepted();
-
+        BRequestScoped b1 = requestScoped.get();
+        b1.setFoo("test"); // Force scoping
+        BRequestScoped b2 = requestScoped.get();
+        assertEquals(b1, b2);
     }
 
     @Test
     public void testRequestScopeFail() {
         assertThrows(ContextNotActiveException.class, () -> {
-            BRequestScoped b1 = requestScopedTest.requestScoped.get();
+            BRequestScoped b1 = requestScoped.get();
             b1.setFoo("test"); // Force scoping
         });
     }
 
-    @Test
+    @InRequestScope
+    @InSessionScope
     public void testSessionScope() {
-        sessionScopedTest.testSessionScope();
-
+        CSessionScoped c1 = sessionScoped.get();
+        c1.setFoo("test"); // Force scoping
+        CSessionScoped c2 = sessionScoped.get();
+        assertEquals(c1, c2);
     }
 
     @Test
     public void testSessionScopeFail() {
         assertThrows(ContextNotActiveException.class, () -> {
-            CSessionScoped c1 = sessionScopedTest.get();
+            CSessionScoped c1 = sessionScoped.get();
             c1.setFoo("test"); // Force scoping
         });
     }
 
-    @Test
-
+    @InRequestScope
+    @InConversationScope
     public void testConversationScope() {
-        conversationScopeTest.testConversationScope();
+        DConversationScoped d1 = conversationScoped.get();
+        d1.setFoo("test"); // Force scoping
+        DConversationScoped d2 = conversationScoped.get();
+        Assertions.assertEquals(d1, d2);
+
     }
 
     @Test
     public void testConversationScopeFail() {
         assertThrows(ContextNotActiveException.class, () -> {
-            DConversationScoped d1 = conversationScopeTest.get();
+            DConversationScoped d1 = conversationScoped.get();
             d1.setFoo("test"); // Force scoping
         });
     }
@@ -199,13 +212,13 @@ public class TestCdiUnitRunner extends BaseTest {
     public void testContextControllerRequestScoped() {
         contextControllerEjbCdiUnit.openRequest();
 
-        BRequestScoped b1 = requestScopedTest.get();
+        BRequestScoped b1 = requestScoped.get();
         b1.setFoo("Bar");
-        BRequestScoped b2 = requestScopedTest.get();
+        BRequestScoped b2 = requestScoped.get();
         Assertions.assertSame(b1.getFoo(), b2.getFoo());
         contextControllerEjbCdiUnit.closeRequest();
         contextControllerEjbCdiUnit.openRequest();
-        BRequestScoped b3 = requestScopedTest.get();
+        BRequestScoped b3 = requestScoped.get();
         assertEquals(null, b3.getFoo());
     }
 
@@ -214,16 +227,16 @@ public class TestCdiUnitRunner extends BaseTest {
         contextControllerEjbCdiUnit.openRequest();
 
 
-        CSessionScoped b1 = sessionScopedTest.get();
+        CSessionScoped b1 = sessionScoped.get();
         b1.setFoo("Bar");
-        CSessionScoped b2 = sessionScopedTest.get();
+        CSessionScoped b2 = sessionScoped.get();
         assertEquals(b1.getFoo(), b2.getFoo());
         contextControllerEjbCdiUnit.closeRequest();
         contextControllerEjbCdiUnit.closeSession();
 
 
         contextControllerEjbCdiUnit.openRequest();
-        CSessionScoped b3 = sessionScopedTest.get();
+        CSessionScoped b3 = sessionScoped.get();
         assertEquals(null, b3.getFoo());
 
     }
@@ -233,20 +246,20 @@ public class TestCdiUnitRunner extends BaseTest {
         contextControllerEjbCdiUnit.openRequest();
 
 
-        CSessionScoped b1 = sessionScopedTest.get();
+        CSessionScoped b1 = sessionScoped.get();
         b1.setFoo("Bar");
 
-        BRequestScoped r1 = requestScopedTest.get();
+        BRequestScoped r1 = requestScoped.get();
         b1.setFoo("Bar");
-        BRequestScoped r2 = requestScopedTest.get();
+        BRequestScoped r2 = requestScoped.get();
         Assertions.assertSame(r1.getFoo(), r2.getFoo());
         contextControllerEjbCdiUnit.closeRequest();
         contextControllerEjbCdiUnit.openRequest();
-        BRequestScoped r3 = requestScopedTest.get();
+        BRequestScoped r3 = requestScoped.get();
         assertEquals(null, r3.getFoo());
 
 
-        CSessionScoped b2 = sessionScopedTest.get();
+        CSessionScoped b2 = sessionScoped.get();
         assertEquals(b1.getFoo(), b2.getFoo());
         assertNotNull(b2.getFoo());
 
@@ -259,16 +272,16 @@ public class TestCdiUnitRunner extends BaseTest {
 
         conversation.begin();
 
-        DConversationScoped b1 = conversationScopeTest.get();
+        DConversationScoped b1 = conversationScoped.get();
         b1.setFoo("Bar");
-        DConversationScoped b2 = conversationScopeTest.get();
+        DConversationScoped b2 = conversationScoped.get();
         assertEquals(b1.getFoo(), b2.getFoo());
         conversation.end();
         contextControllerEjbCdiUnit.closeRequest();
         contextControllerEjbCdiUnit.openRequest();
 
         conversation.begin();
-        DConversationScoped b3 = conversationScopeTest.get();
+        DConversationScoped b3 = conversationScoped.get();
         assertEquals(null, b3.getFoo());
     }
 

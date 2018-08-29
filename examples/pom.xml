@@ -66,7 +66,6 @@
 
         <!-- test -->
         <mockito.version>1.10.19</mockito.version>
-        <weld.version>1.1.14.Final</weld.version>
         <!--hibernate-em.version>4.2.0.CR1</hibernate-em.version-->
         <hibernate-em.version>4.3.9.Final</hibernate-em.version>
         <hibernate-validator.version>4.3.2.Final</hibernate-validator.version>
@@ -84,9 +83,11 @@
         <version.javaee_api>7.0</version.javaee_api>
         <org-reflections.version>0.9.10</org-reflections.version>
         <jaxrpc.version>1.1</jaxrpc.version>
-        <junit5.version>5.2.0</junit5.version>
         <ejb-cdi-unit.version>1.1.16-SNAPSHOT</ejb-cdi-unit.version>
-
+        <weld-se.version>2.3.5.Final</weld-se.version>
+        <junit5.version>5.3.0-RC1</junit5.version>
+        <surefire.version>2.22.0</surefire.version>
+        <junit-platform-surefire.version>1.2.0</junit-platform-surefire.version>
     </properties>
 
     <dependencies>
@@ -225,7 +226,7 @@
             <dependency>
                 <groupId>org.jboss.weld.se</groupId>
                 <artifactId>weld-se-core</artifactId>
-                <version>${weld.version}</version>
+                <version>${weld-se.version}</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>
@@ -237,9 +238,26 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven-compiler-plugin.version}</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${surefire.version}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.junit.platform</groupId>
+                        <artifactId>junit-platform-surefire-provider</artifactId>
+                        <version>${junit-platform-surefire.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.junit.jupiter</groupId>
+                        <artifactId>junit-jupiter-engine</artifactId>
+                        <version>${junit5.version}</version>
+                    </dependency>
+                </dependencies>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

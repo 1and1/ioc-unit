@@ -15,10 +15,12 @@ import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
 import javax.transaction.NotSupportedException;
 import javax.transaction.RollbackException;
+import javax.transaction.Status;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 
 import org.jglue.cdiunit.AdditionalClasses;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -55,6 +57,15 @@ public class ServiceTest5 {
             entityManager.persist(entity1);
         }
         userTransaction.rollback();
+    }
+
+    @AfterEach
+    void afterEach() throws SystemException {
+        final int status = userTransaction.getStatus();
+        if (status != Status.STATUS_NO_TRANSACTION && status != Status.STATUS_ROLLEDBACK
+                && status != Status.STATUS_COMMITTED) {
+            userTransaction.rollback();
+        }
     }
 
     @Test

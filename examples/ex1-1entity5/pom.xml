@@ -21,10 +21,6 @@
     <description>example of testing a ejb-service handling one entity using JUnit5-nested classes</description>
     <url>https://github.com/1and1/ejb-cdi-unit</url>
     <dependencies>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>ejb-cdi-unit5</artifactId>
-        </dependency>
 
         <!-- logging -->
         <dependency>
@@ -34,6 +30,11 @@
 
 
         <!-- testing -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>ejb-cdi-unit5</artifactId>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-all</artifactId>
@@ -78,21 +79,12 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>${maven-war-plugin.version}</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
             </plugin>
-
         </plugins>
     </build>
 
