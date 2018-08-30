@@ -4,25 +4,11 @@ import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_METHOD;
 
 import java.io.IOException;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.BeanManager;
-import javax.inject.Inject;
-import javax.interceptor.InterceptorBinding;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
@@ -36,14 +22,11 @@ import org.jboss.weld.transaction.spi.TransactionServices;
 import org.jboss.weld.util.reflection.Formats;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.AfterAllCallback;
-import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.junit.jupiter.api.extension.TestInstanceFactory;
 import org.junit.jupiter.api.extension.TestInstanceFactoryContext;
-import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.junit.jupiter.api.extension.TestInstantiationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,10 +42,8 @@ import com.oneandone.ejbcdiunit.cdiunit.WeldTestConfig;
 import com.oneandone.ejbcdiunit.cdiunit.WeldTestUrlDeployment;
 import com.oneandone.ejbcdiunit.internal.EjbInformationBean;
 
-public class JUnit5Extension implements TestInstancePostProcessor,
-        BeforeEachCallback, AfterEachCallback, AfterAllCallback,
-        TestExecutionExceptionHandler
-        , TestInstanceFactory // TODO: 5.3
+public class JUnit5Extension implements BeforeEachCallback,
+        AfterAllCallback, TestExecutionExceptionHandler, TestInstanceFactory
 {
 
     private static Logger logger = LoggerFactory.getLogger(JUnit5Extension.class);
@@ -72,8 +53,6 @@ public class JUnit5Extension implements TestInstancePostProcessor,
     protected WeldContainer container;
     protected Throwable startupException;
     // The TestCase instance
-    private Class<?> clazz;
-    private Object testInstance;
     private WeldTestConfig cdiTestConfig;
     CreationalContexts creationalContexts;
     InitialContext initialContext;
@@ -90,7 +69,6 @@ public class JUnit5Extension implements TestInstancePostProcessor,
     private void shutdownWeldIfRunning(boolean ignoreException) throws NamingException {
         if (weld != null) {
             logger.trace("----> shutting down Weld");
-            logger.info("----> shutting down Weld");
             if (initialContext != null)
                 initialContext.close();
             if (ignoreException) {
@@ -108,16 +86,9 @@ public class JUnit5Extension implements TestInstancePostProcessor,
         }
     }
 
-    @Override
-    public void beforeEach(final ExtensionContext extensionContext) throws Exception {
-        logger.trace("---->before Each execution {} {} {}\n", extensionContext.getDisplayName(), this, extensionContext.getTestInstanceLifecycle());
-    }
-
-    private Object createTestInstance(final ExtensionContext extensionContext) throws Exception {
+    private Object createTestInstance(Class<?> clazz) throws Exception {
         startupException = null;
-        Optional<TestInstance.Lifecycle> lifecycle = extensionContext.getTestInstanceLifecycle();
-        if (lifecycle.isPresent() && lifecycle.get().equals(PER_METHOD) || !lifecycle.isPresent())
-            shutdownWeldIfRunning(false);
+        shutdownWeldIfRunning(false);
         if (weld == null) {
             logger.trace("----> starting up Weld.");
             try {
@@ -127,7 +98,7 @@ public class JUnit5Extension implements TestInstancePostProcessor,
                 }
 
                 final WeldTestConfig weldTestConfig =
-                        new WeldTestConfig(clazz, extensionContext.getTestMethod().orElse(null), null)
+                        new WeldTestConfig(clazz, null, null)
                                 .addClass(SupportEjbExtended.class)
                                 .addServiceConfig(new CdiTestConfig.ServiceConfig(TransactionServices.class,
                                         new EjbUnitTransactionServices()));
@@ -170,18 +141,7 @@ public class JUnit5Extension implements TestInstancePostProcessor,
             if (container == null)
                 initWeld();
             if (startupException != null) {
-                if (extensionContext.getTestMethod().isPresent()
-                        && extensionContext.getTestMethod().get().isAnnotationPresent(ExpectedStartupException.class)) {
-                    ExpectedStartupException ann = extensionContext.getTestMethod().get().getAnnotation(ExpectedStartupException.class);
-                    if (ann.value().isAssignableFrom(startupException.getClass())) {
-                        shutdownWeldIfRunning(true);
-                        return null;
-                    }
-                }
-                if (startupException instanceof Exception)
-                    throw (Exception) startupException;
-                else
-                    throw new RuntimeException(startupException);
+                return clazz.newInstance(); // prepare default, to allow beforeEach to handle exception.
             }
             System.setProperty("java.naming.factory.initial", "com.oneandone.cdiunit.internal.naming.CdiUnitContextFactory");
             initialContext = new InitialContext();
@@ -196,8 +156,7 @@ public class JUnit5Extension implements TestInstancePostProcessor,
                         (EjbInformationBean) creationalContexts.create(EjbInformationBean.class, ApplicationScoped.class);
                 ejbInformationBean.setApplicationExceptionDescriptions(cdiTestConfig.getApplicationExceptionDescriptions());
 
-                Class<?> enclosingClazz = findEnclosingClass();
-                Object test = creationalContexts.create(enclosingClazz, ApplicationScoped.class);
+                Object test = creationalContexts.create(clazz, ApplicationScoped.class);
 
                 logger.trace("---->Found testinstance {}\n", test);
                 // initialize the instance used for testing by fields initialized by cdi-container
@@ -211,82 +170,11 @@ public class JUnit5Extension implements TestInstancePostProcessor,
         return null;
     }
 
-    private Class<?> findEnclosingClass() {
+    private Class<?> findEnclosingClass(Class<?> clazz) {
         Class<?> enclosingClazz = clazz;
         while (enclosingClazz.getEnclosingClass() != null)
             enclosingClazz = enclosingClazz.getEnclosingClass();
         return enclosingClazz;
-    }
-
-    @Override
-    public void afterEach(final ExtensionContext extensionContext) throws Exception {
-        logger.trace("---->after Each execution {} {}\n", extensionContext.getDisplayName(), this);
-
-        if (determineTestLifecycle(extensionContext).equals(PER_METHOD)) {
-            shutdownWeldIfRunning(startupException != null);
-        }
-    }
-
-    private void checkInterceptor(Annotation[] annotations, Set<Annotation> handled) throws InterceptorBindingAtJUnit5TestInstanceException {
-        for (Annotation ann : annotations) {
-            if (ann.annotationType().isAnnotationPresent(InterceptorBinding.class)) {
-                throw new InterceptorBindingAtJUnit5TestInstanceException();
-            } else {
-                if (handled.contains(ann))
-                    continue;
-                handled.add(ann);
-                Annotation[] annotationsOfAnn = ann.annotationType().getAnnotations();
-                checkInterceptor(annotationsOfAnn, handled);
-            }
-        }
-    }
-
-
-    private void checkForTopLevelAndInnerClasses(Class<?> testInstanceClass, Set<Annotation> handled) throws Exception {
-        if (testInstanceClass == null)
-            return;
-        Annotation[] annotations = testInstanceClass.getAnnotations();
-        if (handled == null)
-            handled = new HashSet<>();
-        checkInterceptor(annotations, handled);
-        for (Method m : testInstanceClass.getDeclaredMethods()) {
-            checkInterceptor(m.getAnnotations(), handled);
-            if (m.isAnnotationPresent(Produces.class))
-                logger.warn("Producer Method in testInstance of class {}", testInstanceClass);
-            if (m.isAnnotationPresent(PostConstruct.class) || m.isAnnotationPresent(PreDestroy.class))
-                throw new CdiLifecycleMgmtAtJUnit5TestInstanceException();
-        }
-        for (Constructor c : testInstanceClass.getDeclaredConstructors()) {
-            checkInterceptor(c.getAnnotations(), handled);
-            if (c.isAnnotationPresent(Produces.class))
-                logger.warn("Producer Constructor in testInstance of class {}", testInstanceClass);
-        }
-        checkForTopLevelAndInnerClasses(testInstanceClass.getSuperclass(), handled);
-    }
-
-    @Override
-    public void postProcessTestInstance(Object testInstance, ExtensionContext extensionContext) throws Exception {
-        Class<?> currentClazz = testInstance.getClass();
-        TestInstance.Lifecycle lifeCycle = getLifecycle(currentClazz);
-        logger.trace("---->postProcessTestInstance {} Lifecycle: {} {} {}\n", extensionContext.getDisplayName(),
-                lifeCycle,
-                this, testInstance);
-        initClazz(testInstance, currentClazz);
-    }
-
-    private void initClazz(final Object testInstance, final Class<?> currentClazz) {
-        if (this.clazz == null || testInstance != null && this.clazz.equals(testInstance.getClass())) {
-            this.clazz = currentClazz;
-            this.testInstance = testInstance;
-        } else {
-            logger.trace("---->testinstance not overwritten\n");
-        }
-    }
-
-    private TestInstance.Lifecycle getLifecycle(final Class<?> currentClazz) {
-        TestInstance currentLifeCycle = currentClazz.getAnnotation(TestInstance.class);
-        TestInstance.Lifecycle lifeCycle = currentLifeCycle != null ? currentLifeCycle.value() : TestInstance.Lifecycle.PER_METHOD;;
-        return lifeCycle;
     }
 
     public void initWeld() {
@@ -304,41 +192,6 @@ public class JUnit5Extension implements TestInstancePostProcessor,
         }
     }
 
-    private void initWeldFieldsOfTestInstance(Object newTestInstance, Class<?> clazzP) throws IllegalAccessException {
-        if (clazzP.equals(Object.class)) {
-            return;
-        }
-        Object currentTestInstance = this.testInstance;
-        Class<?> testInstanceClass;
-
-        while (!clazzP.isAssignableFrom(currentTestInstance.getClass())) {
-            testInstanceClass = currentTestInstance.getClass();
-            if (testInstanceClass.getEnclosingClass() != null) {
-                for (Field f : testInstanceClass.getDeclaredFields()) {
-                    if (f.getType().equals(testInstanceClass.getDeclaringClass())) {
-                        f.setAccessible(true);
-                        currentTestInstance = f.get(currentTestInstance);
-                        break;
-                    }
-                }
-            } else {
-                throw new RuntimeException("no fitting enclosing class found");
-            }
-        }
-        for (Field f : clazzP.getDeclaredFields()) {
-            f.setAccessible(true);
-            if (f.getAnnotation(Inject.class) != null) {
-                f.set(currentTestInstance, f.get(newTestInstance));
-            } else {
-                if (f.get(newTestInstance) != null && f.get(this.testInstance) == null) {
-                    f.set(currentTestInstance, f.get(newTestInstance));
-                }
-            }
-
-        }
-        initWeldFieldsOfTestInstance(newTestInstance, clazzP.getSuperclass());
-    }
-
     private ClassFormatError parseClassFormatError(ClassFormatError e) {
         if (e.getMessage().startsWith(ABSENT_CODE_PREFIX)) {
             String offendingClass = e.getMessage().substring(ABSENT_CODE_PREFIX.length());
@@ -352,20 +205,6 @@ public class JUnit5Extension implements TestInstancePostProcessor,
         }
     }
 
-    private List<Annotation> resolveQualifiers(ParameterContext pc, BeanManager bm) {
-        List<Annotation> qualifiers = new ArrayList<>();
-        if (pc.getParameter().getAnnotations().length == 0) {
-            return Collections.emptyList();
-        } else {
-            for (Annotation annotation : pc.getParameter().getAnnotations()) {
-                // use BeanManager.isQualifier to be able to detect custom qualifiers which don't need to have @Qualifier
-                if (bm.isQualifier(annotation.annotationType())) {
-                    qualifiers.add(annotation);
-                }
-            }
-        }
-        return qualifiers;
-    }
 
     private TestInstance.Lifecycle determineTestLifecycle(ExtensionContext ec) {
         // check the test for import org.junit.jupiter.api.TestInstance annotation
@@ -391,12 +230,41 @@ public class JUnit5Extension implements TestInstancePostProcessor,
      extensionContext) throws TestInstantiationException
      {
          try {
-            initClazz(null, testInstanceFactoryContext.getTestClass());
              logger.trace("---->createTestInstance {} {}", testInstanceFactoryContext.getTestClass(), testInstanceFactoryContext.getOuterInstance());
-            Object test = this.createTestInstance(extensionContext);
-            return test; // testInstanceFactoryContext.getTestClass().newInstance();
+            if (!testInstanceFactoryContext.getOuterInstance().isPresent()) {
+                Object test = this.createTestInstance(testInstanceFactoryContext.getTestClass());
+                return test;
+            } else {
+                final Object outerInstance = testInstanceFactoryContext.getOuterInstance().get();
+                Constructor<?> c = testInstanceFactoryContext.getTestClass().getDeclaredConstructor(outerInstance.getClass());
+                return c.newInstance(outerInstance);
+            }
         } catch (Exception e) {
              throw new RuntimeException(e);
          }
      }
+
+    /**
+     * Callback that is invoked <em>before</em> each test is invoked.
+     *
+     * @param context
+     *            the current extension context; never {@code null}
+     */
+    @Override
+    public void beforeEach(final ExtensionContext extensionContext) throws Exception {
+        if (startupException != null) {
+            if (extensionContext.getTestMethod().isPresent()
+                    && extensionContext.getTestMethod().get().isAnnotationPresent(ExpectedStartupException.class)) {
+                ExpectedStartupException ann = extensionContext.getTestMethod().get().getAnnotation(ExpectedStartupException.class);
+                if (ann.value().isAssignableFrom(startupException.getClass())) {
+                    shutdownWeldIfRunning(true);
+                    return;
+                }
+            }
+            if (startupException instanceof Exception)
+                throw (Exception) startupException;
+            else
+                throw new RuntimeException(startupException);
+        }
+    }
 }

@@ -22,7 +22,6 @@ import javax.transaction.UserTransaction;
 import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -39,7 +38,7 @@ import com.oneandone.ejbcdiunit5.JUnit5Extension;
  * @author aschoerk
  */
 @ExtendWith(JUnit5Extension.class)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestInstance(TestInstance.Lifecycle.PER_METHOD)
 @AdditionalClasses({ Service.class, TestPersistenceFactory.class })
 public class ServiceTest5 {
     @Inject
@@ -75,7 +74,6 @@ public class ServiceTest5 {
     }
 
     @Nested
-    @Disabled
     class whenTryToInitEachNew {
         @Test
         public void canServiceInsertEntity1() {
@@ -107,7 +105,6 @@ public class ServiceTest5 {
     PersistenceFactory persistenceFactory;
 
     @Nested
-    @Disabled
     @TestInstance(TestInstance.Lifecycle.PER_METHOD)
     public class WhenSomeEntitiesInDbExist {
         List<com.oneandone.ejbcdiunit.example1_5.Entity1> entities;
