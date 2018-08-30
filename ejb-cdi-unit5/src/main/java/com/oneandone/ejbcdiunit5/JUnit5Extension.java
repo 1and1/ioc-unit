@@ -271,6 +271,7 @@ public class JUnit5Extension implements TestInstancePostProcessor,
         if (this.clazz == null || this.clazz.equals(testInstance.getClass())) {
             this.clazz = currentClazz;
             this.testInstance = testInstance;
+            shutdownWeldIfRunning(false);
         } else {
             logger.trace("---->testinstance not overwritten\n");
         }
