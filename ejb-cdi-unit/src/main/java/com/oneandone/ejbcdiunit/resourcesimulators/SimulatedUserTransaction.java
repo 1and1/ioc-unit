@@ -17,11 +17,15 @@ import com.oneandone.ejbcdiunit.persistence.SimulatedTransactionManager;
  */
 public class SimulatedUserTransaction implements UserTransaction {
 
+    public static boolean transactionIsRunning(UserTransaction userTransaction) throws SystemException {
+        return (userTransaction.getStatus() != Status.STATUS_NO_TRANSACTION && userTransaction.getStatus() != Status.STATUS_ROLLEDBACK
+                && userTransaction.getStatus() != Status.STATUS_COMMITTED);
+    }
+
 
     @Override
     public void begin() throws NotSupportedException, SystemException {
-        if (getStatus() != Status.STATUS_NO_TRANSACTION && getStatus() != Status.STATUS_ROLLEDBACK
-                && getStatus() != Status.STATUS_COMMITTED) {
+        if (transactionIsRunning(this)) {
             throw new NotSupportedException("UserTransaction already started");
         }
         new SimulatedTransactionManager().push();
