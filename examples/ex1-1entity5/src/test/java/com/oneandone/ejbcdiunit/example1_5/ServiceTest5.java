@@ -29,6 +29,7 @@ import com.oneandone.ejbcdiunit.persistence.PersistenceFactory;
 import com.oneandone.ejbcdiunit.persistence.TestClosure;
 import com.oneandone.ejbcdiunit.persistence.TestPersistenceFactory;
 import com.oneandone.ejbcdiunit.persistence.TestTransactionException;
+import com.oneandone.ejbcdiunit.resourcesimulators.SimulatedUserTransaction;
 import com.oneandone.ejbcdiunit5.JUnit5Extension;
 
 
@@ -47,6 +48,8 @@ public class ServiceTest5 {
 
     @BeforeEach
     void beforeEach() throws SystemException, NotSupportedException {
+        if (SimulatedUserTransaction.transactionIsRunning(userTransaction))
+            userTransaction.rollback();
         userTransaction.begin();
         ArrayList<Object> entities = new ArrayList<>();
         for (int i = 0; i < 10; i++) {

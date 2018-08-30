@@ -9,10 +9,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -39,7 +36,6 @@ import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.slf4j.Logger;
@@ -79,9 +75,7 @@ public class JUnit5Extension implements TestInstancePostProcessor,
     @Override
     public void afterAll(final ExtensionContext extensionContext) throws Exception {
         logger.trace("---->after All execution {} {}\n", extensionContext.getDisplayName(), this);
-        if (determineTestLifecycle(extensionContext).equals(PER_CLASS)) {
-            shutdownWeldIfRunning(false);
-        }
+        shutdownWeldIfRunning(false);
     }
 
     private void shutdownWeldIfRunning(boolean ignoreException) throws NamingException {
@@ -104,13 +98,32 @@ public class JUnit5Extension implements TestInstancePostProcessor,
         }
     }
 
+    /**
+     * @param extensionContext
+     * @return true - new Weld Container is necessary false - reuse Weld-Container if existing, otherwise create it.
+     */
+    void doWeldExitForThisMethodIfNecessary(final ExtensionContext extensionContext) throws NamingException {
+        Optional<TestInstance.Lifecycle> lifecycle = extensionContext.getTestInstanceLifecycle();
+        if (lifecycle.isPresent() && lifecycle.get().equals(PER_METHOD) || !lifecycle.isPresent()) {
+            Optional<ExtensionContext> parent = extensionContext.getParent();
+            while (parent.isPresent()) {
+                lifecycle = parent.get().getTestInstanceLifecycle();
+                if (lifecycle.isPresent() && lifecycle.get().equals(PER_CLASS)) {
+                    return;
+                }
+                parent = parent.get().getParent();
+            }
+            shutdownWeldIfRunning(false);
+        }
+    }
+
     @Override
     public void beforeEach(final ExtensionContext extensionContext) throws Exception {
         startupException = null;
         logger.trace("---->before Each execution {} {} {}\n", extensionContext.getDisplayName(), this, extensionContext.getTestInstanceLifecycle());
         Optional<TestInstance.Lifecycle> lifecycle = extensionContext.getTestInstanceLifecycle();
-        if (lifecycle.isPresent() && lifecycle.get().equals(PER_METHOD) || !lifecycle.isPresent())
-            shutdownWeldIfRunning(false);
+        doWeldExitForThisMethodIfNecessary(extensionContext);
+
         if (weld == null) {
             logger.trace("----> starting up Weld.");
             try {
@@ -209,10 +222,6 @@ public class JUnit5Extension implements TestInstancePostProcessor,
     @Override
     public void afterEach(final ExtensionContext extensionContext) throws Exception {
         logger.trace("---->after Each execution {} {}\n", extensionContext.getDisplayName(), this);
-
-        if (determineTestLifecycle(extensionContext).equals(PER_METHOD)) {
-            shutdownWeldIfRunning(startupException != null);
-        }
     }
 
     private void checkInterceptor(Annotation[] annotations, Set<Annotation> handled) throws InterceptorBindingAtJUnit5TestInstanceException {
@@ -256,9 +265,8 @@ public class JUnit5Extension implements TestInstancePostProcessor,
     public void postProcessTestInstance(Object testInstance, ExtensionContext extensionContext) throws Exception {
         Class<?> currentClazz = testInstance.getClass();
         checkForTopLevelAndInnerClasses(currentClazz, null);
-        TestInstance.Lifecycle lifeCycle = getLifecycle(currentClazz);
         logger.trace("---->postProcessTestInstance {} Lifecycle: {} {} {}\n", extensionContext.getDisplayName(),
-                lifeCycle,
+                extensionContext.getTestInstanceLifecycle().orElse(TestInstance.Lifecycle.PER_METHOD),
                 this, testInstance);
         if (this.clazz == null || this.clazz.equals(testInstance.getClass())) {
             this.clazz = currentClazz;
@@ -266,12 +274,6 @@ public class JUnit5Extension implements TestInstancePostProcessor,
         } else {
             logger.trace("---->testinstance not overwritten\n");
         }
-    }
-
-    private TestInstance.Lifecycle getLifecycle(final Class<?> currentClazz) {
-        TestInstance currentLifeCycle = currentClazz.getAnnotation(TestInstance.class);
-        TestInstance.Lifecycle lifeCycle = currentLifeCycle != null ? currentLifeCycle.value() : TestInstance.Lifecycle.PER_METHOD;;
-        return lifeCycle;
     }
 
     public void initWeld() {
@@ -337,32 +339,6 @@ public class JUnit5Extension implements TestInstancePostProcessor,
         }
     }
 
-    private List<Annotation> resolveQualifiers(ParameterContext pc, BeanManager bm) {
-        List<Annotation> qualifiers = new ArrayList<>();
-        if (pc.getParameter().getAnnotations().length == 0) {
-            return Collections.emptyList();
-        } else {
-            for (Annotation annotation : pc.getParameter().getAnnotations()) {
-                // use BeanManager.isQualifier to be able to detect custom qualifiers which don't need to have @Qualifier
-                if (bm.isQualifier(annotation.annotationType())) {
-                    qualifiers.add(annotation);
-                }
-            }
-        }
-        return qualifiers;
-    }
-
-    private TestInstance.Lifecycle determineTestLifecycle(ExtensionContext ec) {
-        // check the test for import org.junit.jupiter.api.TestInstance annotation
-        TestInstance annotation = ec.getRequiredTestClass().getAnnotation(TestInstance.class);
-        if (annotation != null) {
-            return annotation.value();
-        } else {
-            return PER_METHOD;
-        }
-    }
-
-
     @Override
     public void handleTestExecutionException(ExtensionContext extensionContext, Throwable throwable) throws Throwable {
         if (startupException != null) {
@@ -372,11 +348,4 @@ public class JUnit5Extension implements TestInstancePostProcessor,
         throw throwable;
     }
 
-    /*
-     * @Override public Object createTestInstance(final TestInstanceFactoryContext testInstanceFactoryContext, final ExtensionContext
-     * extensionContext) throws TestInstantiationException { try { logger.trace("---->createTestInstance {} {}",
-     * testInstanceFactoryContext.getTestClass(), testInstanceFactoryContext.getOuterInstance()); return
-     * testInstanceFactoryContext.getTestClass().newInstance(); } catch (InstantiationException e) { throw new RuntimeException(e); } catch
-     * (IllegalAccessException e) { throw new RuntimeException(e); } }
-     */
 }
