@@ -31,8 +31,6 @@ public class MockitoExample {
 
     @Test
     public void test() {
-        when(testClass.booleanMethod(eq(true))).thenReturn(1);
-        when(testClass.booleanMethod(eq(false))).thenReturn(2);
         assertEquals(1, testClass.booleanMethod(true));
         assertEquals(2, testClass.booleanMethod(false));
     }
