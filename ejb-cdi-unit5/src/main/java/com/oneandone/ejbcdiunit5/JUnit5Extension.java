@@ -1,6 +1,5 @@
 package com.oneandone.ejbcdiunit5;
 
-import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_METHOD;
 
 import java.io.IOException;
@@ -61,9 +60,7 @@ public class JUnit5Extension implements BeforeEachCallback,
     @Override
     public void afterAll(final ExtensionContext extensionContext) throws Exception {
         logger.trace("---->after All execution {} {}\n", extensionContext.getDisplayName(), this);
-        if (determineTestLifecycle(extensionContext).equals(PER_CLASS)) {
-            shutdownWeldIfRunning(false);
-        }
+        shutdownWeldIfRunning(false);
     }
 
     private void shutdownWeldIfRunning(boolean ignoreException) throws NamingException {
@@ -237,6 +234,7 @@ public class JUnit5Extension implements BeforeEachCallback,
             } else {
                 final Object outerInstance = testInstanceFactoryContext.getOuterInstance().get();
                 Constructor<?> c = testInstanceFactoryContext.getTestClass().getDeclaredConstructor(outerInstance.getClass());
+                c.setAccessible(true);
                 return c.newInstance(outerInstance);
             }
         } catch (Exception e) {
@@ -244,12 +242,6 @@ public class JUnit5Extension implements BeforeEachCallback,
          }
      }
 
-    /**
-     * Callback that is invoked <em>before</em> each test is invoked.
-     *
-     * @param context
-     *            the current extension context; never {@code null}
-     */
     @Override
     public void beforeEach(final ExtensionContext extensionContext) throws Exception {
         if (startupException != null) {
@@ -267,4 +259,5 @@ public class JUnit5Extension implements BeforeEachCallback,
                 throw new RuntimeException(startupException);
         }
     }
+
 }
