@@ -2,8 +2,8 @@ package org.oneandone.ejbcdiunit.mockito_example;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,8 +26,8 @@ public class MockitoExample {
 
     @BeforeEach
     public void beforeEach() {
-        when(testClass.booleanMethod(eq(true))).thenReturn(1);
-        when(testClass.booleanMethod(eq(false))).thenReturn(2);
+        lenient().when(testClass.booleanMethod(eq(true))).thenReturn(1);
+        lenient().when(testClass.booleanMethod(eq(false))).thenReturn(2);
     }
 
     @Test
@@ -44,8 +44,8 @@ public class MockitoExample {
     void test1() {
         Poops a = mock(Poops.class);
 
-        when(a.get(eq(true))).thenReturn("1");
-        when(a.get(eq(false))).thenReturn("2");
+        lenient().when(a.get(eq(true))).thenReturn("1");
+        lenient().when(a.get(eq(false))).thenReturn("2");
 
         assertEquals("1", a.get(true));
         assertEquals("2", a.get(false));
