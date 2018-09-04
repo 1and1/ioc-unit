@@ -3,7 +3,7 @@
 
     <groupId>net.oneandone</groupId>
     <artifactId>ejb-cdi-unit-examples-parent</artifactId>
-    <version>1.1.16</version>
+    <version>1.1.16-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
         <module>ex1-1entity</module>
@@ -84,7 +84,7 @@
         <version.javaee_api>7.0</version.javaee_api>
         <org-reflections.version>0.9.10</org-reflections.version>
         <jaxrpc.version>1.1</jaxrpc.version>
-        <ejb-cdi-unit.version>1.1.16</ejb-cdi-unit.version>
+        <ejb-cdi-unit.version>1.1.16-SNAPSHOT</ejb-cdi-unit.version>
         <weld-se.version>2.3.5.Final</weld-se.version>
         <junit5.version>5.3.0</junit5.version>
         <surefire.version>2.22.0</surefire.version>
@@ -314,7 +314,7 @@
         <url>https://github.com/1and1/ejb-cdi-unit</url>
         <connection>scm:git:ssh://git@github.com/1and1/ejb-cdi-unit.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/1and1/ejb-cdi-unit.git</developerConnection>
-        <tag>v1.1.16</tag>
+        <tag>HEAD</tag>
     </scm>
     <issueManagement>
         <system>GitHub</system>
