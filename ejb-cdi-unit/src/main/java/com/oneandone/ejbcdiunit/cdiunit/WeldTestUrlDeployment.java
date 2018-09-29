@@ -50,6 +50,7 @@ import org.slf4j.LoggerFactory;
 import com.oneandone.cdiunit.BeanDeploymentArchiveImpl;
 import com.oneandone.ejbcdiunit.CdiTestConfig;
 import com.oneandone.ejbcdiunit.cfganalyzer.CdiUnitAnalyzer;
+import com.oneandone.ejbcdiunit.cfganalyzer.TestConfig;
 
 public class WeldTestUrlDeployment implements Deployment {
     private static Logger log = LoggerFactory.getLogger(WeldTestUrlDeployment.class);
@@ -63,38 +64,40 @@ public class WeldTestUrlDeployment implements Deployment {
         Method testMethod = weldTestConfig.getTestMethod();
         CdiUnitAnalyzer cdiUnitAnalyzer = new CdiUnitAnalyzer();
         cdiUnitAnalyzer.analyze(testClass, testMethod, weldTestConfig);
+
+        TestConfig testConfig = cdiUnitAnalyzer.getTestConfig();
         BeansXml beansXml = createBeansXml();
 
-        for (Metadata<String> eI : cdiUnitAnalyzer.getEnabledInterceptors()) {
+        for (Metadata<String> eI : testConfig.getEnabledInterceptors()) {
             beansXml.getEnabledInterceptors().add(eI);
         }
 
-        for (Metadata<String> eD : cdiUnitAnalyzer.getEnabledDecorators()) {
+        for (Metadata<String> eD : testConfig.getEnabledDecorators()) {
             beansXml.getEnabledDecorators().add(eD);
         }
 
-        for (Metadata<String> eAS : cdiUnitAnalyzer.getEnabledAlternativeStereotypes()) {
+        for (Metadata<String> eAS : testConfig.getEnabledAlternativeStereotypes()) {
             beansXml.getEnabledAlternativeStereotypes().add(eAS);
         }
 
-        for (Metadata<String> alternative : cdiUnitAnalyzer.getAlternatives()) {
+        for (Metadata<String> alternative : testConfig.getAlternatives()) {
 
             beansXml.getEnabledAlternativeClasses().add(alternative);
         }
 
 
-        beanDeploymentArchive = new BeanDeploymentArchiveImpl("cdi-unit" + UUID.randomUUID(), cdiUnitAnalyzer.getDiscoveredClasses(), beansXml);
+        beanDeploymentArchive = new BeanDeploymentArchiveImpl("cdi-unit" + UUID.randomUUID(), testConfig.getDiscoveredClasses(), beansXml);
         beanDeploymentArchive.getServices().add(ResourceLoader.class, resourceLoader);
         for (CdiTestConfig.ServiceConfig serviceConfig : weldTestConfig.getServiceConfigs()) {
             beanDeploymentArchive.getServices().add(serviceConfig.getServiceClass(), serviceConfig.getService());
         }
 
-        for (Metadata<? extends Extension> e : cdiUnitAnalyzer.getExtensions()) {
+        for (Metadata<? extends Extension> e : testConfig.getExtensions()) {
             extensions.add((Metadata<Extension>) e);
         }
 
         log.trace("CDI-Unit discovered:");
-        for (String clazz : cdiUnitAnalyzer.getDiscoveredClasses()) {
+        for (String clazz : testConfig.getDiscoveredClasses()) {
             if (!clazz.startsWith("org.jglue.cdiunit.internal.")) {
                 log.trace(clazz);
             }

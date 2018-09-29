@@ -10,8 +10,6 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -53,18 +51,10 @@ import com.oneandone.ejbcdiunit.internal.TypesScanner;
 public abstract class TestConfigAnalyzer {
 
     private static Logger log = LoggerFactory.getLogger(TestConfigAnalyzer.class);
-    protected Set<URL> cdiClasspathEntries = new HashSet<URL>();
-    protected Set<String> discoveredClasses = new LinkedHashSet<String>();
-    protected Collection<Metadata<String>> alternatives = new ArrayList<Metadata<String>>();
-    protected Set<Class<?>> classesToProcess = new LinkedHashSet<Class<?>>();
-    protected Set<Class<?>> classesProcessed = new HashSet<Class<?>>();
-    protected Class<?> ejbJarClasspathExample = null;
-    protected Collection<Metadata<? extends Extension>> extensions = new ArrayList<Metadata<? extends Extension>>();
-    protected Collection<Metadata<String>> enabledInterceptors = new ArrayList<Metadata<String>>();
-    protected Collection<Metadata<String>> enabledDecorators = new ArrayList<Metadata<String>>();
-    protected Collection<Metadata<String>> enabledAlternativeStereotypes = new ArrayList<Metadata<String>>();
+    protected final TestConfig testConfig = new TestConfig();
     protected Set<Class<?>> classesToIgnore;
-    Set<URL> classpathEntries;
+    private Set<Class<?>> classesToProcess = new LinkedHashSet<>();
+    private Set<Class<?>> classesProcessed = new HashSet<Class<?>>();
     private boolean analyzeStarted = false;
 
     private static Constructor metaDataConstructor;
@@ -74,6 +64,10 @@ public abstract class TestConfigAnalyzer {
 
     }
 
+    public TestConfig getTestConfig() {
+        return testConfig;
+    }
+
     protected <T> Metadata<T> createMetadata(T value, String location) {
         try {
             return new org.jboss.weld.bootstrap.spi.helpers.MetadataImpl<>(value, location);
@@ -81,7 +75,7 @@ public abstract class TestConfigAnalyzer {
             // MetadataImpl moved to a new package in Weld 2.4, old copy removed in 3.0
             try {
                 // If Weld < 2.4, the new package isn't there, so we try the old package.
-                //noinspection unchecked
+                // noinspection unchecked
                 Class<Metadata<T>> oldClass = (Class<Metadata<T>>) Class.forName("org.jboss.weld.metadata.MetadataImpl");
                 Constructor<Metadata<T>> ctor = oldClass.getConstructor(Object.class, String.class);
                 return ctor.newInstance(value, location);
@@ -91,48 +85,12 @@ public abstract class TestConfigAnalyzer {
         }
     }
 
-    public Set<URL> getClasspathEntries() {
-        return classpathEntries;
-    }
-
-    public boolean isAnalyzeStarted() {
-        return analyzeStarted;
-    }
-
-    public Set<URL> getCdiClasspathEntries() {
-        return cdiClasspathEntries;
-    }
-
     public Set<String> getDiscoveredClasses() {
-        return discoveredClasses;
-    }
-
-    public Collection<Metadata<String>> getAlternatives() {
-        return alternatives;
+        return testConfig.getDiscoveredClasses();
     }
 
     public Set<Class<?>> getClassesToProcess() {
         return classesToProcess;
-    }
-
-    public Set<Class<?>> getClassesProcessed() {
-        return classesProcessed;
-    }
-
-    public Collection<Metadata<? extends Extension>> getExtensions() {
-        return extensions;
-    }
-
-    public Collection<Metadata<String>> getEnabledInterceptors() {
-        return enabledInterceptors;
-    }
-
-    public Collection<Metadata<String>> getEnabledDecorators() {
-        return enabledDecorators;
-    }
-
-    public Collection<Metadata<String>> getEnabledAlternativeStereotypes() {
-        return enabledAlternativeStereotypes;
     }
 
     public Set<Class<?>> getClassesToIgnore() {
@@ -171,25 +129,26 @@ public abstract class TestConfigAnalyzer {
                     && !classesToIgnore.contains(c)) {
                 classesProcessed.add(c);
                 if (!c.isAnnotation()) {
-                    discoveredClasses.add(c.getName());
+                    testConfig.getDiscoveredClasses().add(c.getName());
                 }
                 if (Extension.class.isAssignableFrom(c) && !Modifier.isAbstract(c.getModifiers())) {
                     try {
-                        extensions.add(createMetadata((Extension) c.newInstance(), c.getName()));
+                        testConfig.getExtensions().add(createMetadata((Extension) c.newInstance(), c.getName()));
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
                 }
                 if (c.isAnnotationPresent(Interceptor.class)) {
-                    enabledInterceptors.add(createMetadata(c.getName(), c.getName()));
+                    testConfig.getEnabledInterceptors().add(createMetadata(c.getName(), c.getName()));
                 }
                 if (c.isAnnotationPresent(Decorator.class)) {
-                    enabledDecorators.add(createMetadata(c.getName(), c.getName()));
+                    testConfig.getEnabledDecorators().add(createMetadata(c.getName(), c.getName()));
                 }
 
                 if (isAlternativeStereotype(c)) {
-                    enabledAlternativeStereotypes.add(createMetadata(c.getName(), c.getName()));
+                    testConfig.getEnabledAlternativeStereotypes().add(createMetadata(c.getName(), c.getName()));
                 }
+
 
                 AdditionalClasses additionalClasses = c.getAnnotation(AdditionalClasses.class);
                 if (additionalClasses != null) {
@@ -215,10 +174,10 @@ public abstract class TestConfigAnalyzer {
                 }
 
                 EjbJarClasspath ejbJarClasspath = c.getAnnotation(EjbJarClasspath.class);
-                if (ejbJarClasspath != null && ejbJarClasspathExample == null) {
-                    ejbJarClasspathExample = ejbJarClasspath.value();
-                    if (ejbJarClasspathExample != null) {
-                        final URL path = ejbJarClasspathExample.getProtectionDomain().getCodeSource().getLocation();
+                if (ejbJarClasspath != null && testConfig.getEjbJarClasspathExample() == null) {
+                    testConfig.setEjbJarClasspathExample(ejbJarClasspath.value());
+                    if (testConfig.getEjbJarClasspathExample() != null) {
+                        final URL path = testConfig.getEjbJarClasspathExample().getProtectionDomain().getCodeSource().getLocation();
                         addDeploymentDescriptor(config, path);
                     }
                 }
@@ -260,33 +219,50 @@ public abstract class TestConfigAnalyzer {
                     }
                 }
 
-                Type superClass = c.getGenericSuperclass();
-                if (superClass != null && superClass != Object.class) {
-                    addClassesToProcess(superClass);
-                }
+                analyzeClass(c);
 
-                for (Field field : c.getDeclaredFields()) {
-                    if (field.isAnnotationPresent(Inject.class) || field.isAnnotationPresent(Produces.class)) {
-                        addClassesToProcess(field.getGenericType());
-                    }
-                    if (field.getType().equals(Provider.class) || field.getType().equals(Instance.class)) {
-                        addClassesToProcess(field.getGenericType());
-                    }
-                }
-                for (Method method : c.getDeclaredMethods()) {
-                    if (method.isAnnotationPresent(Inject.class) || method.isAnnotationPresent(Produces.class)) {
-                        for (Type param : method.getGenericParameterTypes()) {
-                            addClassesToProcess(param);
-                        }
-                        addClassesToProcess(method.getGenericReturnType());
-
-                    }
-                }
             }
 
             classesToProcess.remove(c);
         }
     }
+
+    private void analyzeClass(final Class<?> c) {
+        Type superClass = c.getGenericSuperclass();
+        if (superClass != null && superClass != Object.class) {
+            addClassesToProcess(superClass);
+        }
+
+        for (Field field : c.getDeclaredFields()) {
+            if (field.isAnnotationPresent(Inject.class) || field.isAnnotationPresent(Produces.class)) {
+                addClassesToProcess(field.getGenericType());
+            }
+            if (field.getType().equals(Provider.class) || field.getType().equals(Instance.class)) {
+                addClassesToProcess(field.getGenericType());
+            }
+        }
+
+        for (Constructor constructor : c.getDeclaredConstructors()) {
+            if (constructor.isAnnotationPresent(Produces.class)) {
+                log.warn("invalid produces at constructor {}", constructor.toGenericString());
+            }
+            if (constructor.isAnnotationPresent(Inject.class)) {
+                for (Type param : constructor.getGenericParameterTypes()) {
+                    addClassesToProcess(param);
+                }
+            }
+        }
+
+        for (Method method : c.getDeclaredMethods()) {
+            if (method.isAnnotationPresent(Inject.class) || method.isAnnotationPresent(Produces.class)) {
+                for (Type param : method.getGenericParameterTypes()) {
+                    addClassesToProcess(param);
+                }
+                addClassesToProcess(method.getGenericReturnType());
+            }
+        }
+    }
+
 
     private void transferConfig(CdiTestConfig config) throws MalformedURLException {
         classesToProcess.addAll(config.getAdditionalClasses());
@@ -304,7 +280,7 @@ public abstract class TestConfigAnalyzer {
     protected abstract void initContainerSpecific(Class<?> testClass, Method testMethod);
 
     protected void init(Class<?> testClass, CdiTestConfig config) {
-        discoveredClasses.add(testClass.getName());
+        testConfig.getDiscoveredClasses().add(testClass.getName());
         classesToIgnore = findMockedClassesOfTest(testClass);
         classesToIgnore.addAll(config.getExcludedClasses());
         classesToProcess.add(testClass);
@@ -326,7 +302,7 @@ public abstract class TestConfigAnalyzer {
         classesToProcess.add(alternativeClass);
 
         if (!isAlternativeStereotype(alternativeClass)) {
-            alternatives.add(createMetadata(alternativeClass.getName(),alternativeClass.getName()));
+            testConfig.getAlternatives().add(createMetadata(alternativeClass.getName(), alternativeClass.getName()));
         }
     }
 
@@ -358,7 +334,7 @@ public abstract class TestConfigAnalyzer {
                 reflections.getStore().get(TypesScanner.class.getSimpleName()).keySet(),
                 new ClassLoader[] { getClass().getClassLoader() }));
 
-        cdiClasspathEntries.add(path);
+        testConfig.getCdiClasspathEntries().add(path);
     }
 
 
@@ -418,7 +394,7 @@ public abstract class TestConfigAnalyzer {
     }
 
     private void populateCdiClasspathSet() throws IOException {
-        classpathEntries = new ClasspathSetPopulator().invoke(cdiClasspathEntries);
+        new ClasspathSetPopulator().invoke(testConfig.getCdiClasspathEntries());
     }
 
     private boolean isCdiClass(Class<?> c) {
@@ -426,7 +402,7 @@ public abstract class TestConfigAnalyzer {
             return false;
         }
         URL location = c.getProtectionDomain().getCodeSource().getLocation();
-        boolean isCdi = cdiClasspathEntries.contains(location);
+        boolean isCdi = testConfig.getCdiClasspathEntries().contains(location);
         return isCdi;
 
     }
@@ -436,7 +412,4 @@ public abstract class TestConfigAnalyzer {
     }
 
 
-    public void setClasspathEntries(final Set<URL> classpathEntries) {
-        this.classpathEntries = classpathEntries;
-    }
 }

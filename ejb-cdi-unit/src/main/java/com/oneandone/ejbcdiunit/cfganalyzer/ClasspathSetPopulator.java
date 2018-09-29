@@ -1,8 +1,5 @@
 package com.oneandone.ejbcdiunit.cfganalyzer;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,6 +14,9 @@ import java.util.Set;
 import java.util.jar.Attributes;
 import java.util.jar.JarInputStream;
 import java.util.jar.Manifest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author aschoerk
@@ -75,7 +75,7 @@ class ClasspathSetPopulator {
         return manifestURLs;
     }
 
-    public Set<URL> invoke(Set<URL> cdiClasspathEntries) throws IOException {
+    public void invoke(Set<URL> cdiClasspathEntries) throws IOException {
 
         String systemClasspath = System.getProperty("java.class.path");
         String pathseparator = System.getProperty("path.separator");
@@ -136,7 +136,6 @@ class ClasspathSetPopulator {
         for (URL url : cdiClasspathEntries) {
             log.trace("{}", url);
         }
-        return classpathEntries;
     }
 
 }
