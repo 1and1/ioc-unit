@@ -1,21 +1,13 @@
 package com.oneandone.ejbcdiunit5.persistencefactory;
 
-import com.oneandone.ejbcdiunit.entities.TestEntity1;
-import com.oneandone.ejbcdiunit.persistence.PersistenceFactory;
-import com.oneandone.ejbcdiunit.persistence.TestClosure;
-import com.oneandone.ejbcdiunit.persistence.TestTransaction;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static javax.ejb.TransactionAttributeType.MANDATORY;
+import static javax.ejb.TransactionAttributeType.REQUIRED;
+import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.LockModeType;
-import javax.persistence.PersistenceException;
-import javax.persistence.TransactionRequiredException;
-import javax.sql.DataSource;
-import javax.transaction.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -28,11 +20,28 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import static javax.ejb.TransactionAttributeType.*;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
+import javax.persistence.PersistenceException;
+import javax.persistence.TransactionRequiredException;
+import javax.sql.DataSource;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.NotSupportedException;
+import javax.transaction.RollbackException;
+import javax.transaction.SystemException;
+import javax.transaction.UserTransaction;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.oneandone.ejbcdiunit.entities.TestEntity1;
+import com.oneandone.ejbcdiunit.persistence.PersistenceFactory;
+import com.oneandone.ejbcdiunit.persistence.TestClosure;
+import com.oneandone.ejbcdiunit.persistence.TestTransaction;
 
 
 /**
@@ -55,11 +64,11 @@ public abstract class PersistenceFactoryTestBase {
     DataSource dataSource;
 
     protected String getStringAttributeNativeName() {
-        return "stringAttribute";
+        return "string_attribute";
     }
 
     protected String getIntAttributeNativeName() {
-        return "intAttribute";
+        return "int_attribute";
     }
 
     protected String getSchema() {

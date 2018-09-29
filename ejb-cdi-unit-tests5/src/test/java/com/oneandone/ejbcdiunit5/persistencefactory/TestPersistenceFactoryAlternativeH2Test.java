@@ -1,17 +1,23 @@
 package com.oneandone.ejbcdiunit5.persistencefactory;
 
-import com.oneandone.ejbcdiunit.SessionContextFactory;
-import com.oneandone.ejbcdiunit.cdiunit.ExcludedClasses;
-import com.oneandone.ejbcdiunit.persistence.TestPersistenceFactory;
-import com.oneandone.ejbcdiunit5.JUnit5Extension;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.NotSupportedException;
+import javax.transaction.RollbackException;
+import javax.transaction.SystemException;
+
 import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import javax.transaction.*;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
+import com.oneandone.ejbcdiunit.SessionContextFactory;
+import com.oneandone.ejbcdiunit.cdiunit.ExcludedClasses;
+import com.oneandone.ejbcdiunit.persistence.TestPersistenceFactory;
+import com.oneandone.ejbcdiunit5.JUnit5Extension;
 
 /**
  * @author aschoerk
@@ -46,8 +52,6 @@ public class TestPersistenceFactoryAlternativeH2Test extends PersistenceFactoryT
 
     @Test
     public void canExecuteStatementsUsingDataSource() {
-        if (isHibernate5())
-            return;
         try {
             try (Connection connection = dataSource.getConnection()) {
                 connection.setAutoCommit(true);
