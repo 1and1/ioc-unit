@@ -30,7 +30,7 @@ import javax.enterprise.inject.Stereotype;
  */
 @Stereotype
 @Alternative
-@Target({ ElementType.FIELD, ElementType.METHOD, ElementType.TYPE, ElementType.PARAMETER })
+@Target({ ElementType.FIELD, ElementType.METHOD, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ProducesAlternative {
 
