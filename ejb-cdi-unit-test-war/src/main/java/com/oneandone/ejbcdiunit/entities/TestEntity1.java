@@ -1,5 +1,6 @@
 package com.oneandone.ejbcdiunit.entities;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,8 +17,10 @@ public class TestEntity1 {
     @GeneratedValue(strategy = GenerationType.TABLE)
     private Long id;
 
+    @Column(name = "string_attribute")
     private String stringAttribute;
 
+    @Column(name = "int_attribute")
     private int intAttribute;
 
     public TestEntity1() {
