@@ -10,6 +10,7 @@
         <module>ejb-cdi-unit5</module>
         <module>ejb-cdi-unit-test-war</module>
         <module>ejb-cdi-unit-tests</module>
+        <module>purecdi-tests</module>
         <module>ejb-cdi-unit-tests5</module>
         <module>ejb-cdi-unit-simulators</module>
         <module>ejb-cdi-unit-camunda</module>
