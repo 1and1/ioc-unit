@@ -153,6 +153,12 @@ At the moment, there is no ejb-application-server that supports modules. Therefo
 # JUnit5
 
 ## Concept
+**1.1.16**
+The Root-Testclasses are created in ApplicationScoped together with the CDI-Container. So they behave like normal CDI-Beans. nested Innerclasses not since they are non static. The JUnit-Lifecycle can be used to control if a new Container is created every test or not.
+
+
+**Before 1.1.15 and 1.1.15.2:**
+
 As realized in the JUnit4 implementation, the Testclass "lives" inside the CDI-Container as applicationscoped bean. 
 This works, because the Runner can create the actual instance of the testclass. This does not work anymore in the case you want to support
 JUnitRules or JUnit5. Then the actual testclass is created by the framework, that does not use the CDI-Container to handle the instances.
@@ -183,7 +189,7 @@ by copying them from another Instance of the test-class which is created during 
         <weld-se.version>2.3.5.Final</weld-se.version>
         <junit5.version>5.3.0</junit5.version>
         <surefire.version>2.22.0</surefire.version>
-        <junit-platform.version>1.3.0</junit-platform-surefire.version>
+        <junit-platform.version>1.3.0</junit-platform.version>
 </properties>
 ```
 **dependencies**
