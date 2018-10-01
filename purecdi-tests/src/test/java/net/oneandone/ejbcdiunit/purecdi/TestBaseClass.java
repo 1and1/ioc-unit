@@ -15,6 +15,7 @@ import org.jboss.weld.bootstrap.api.helpers.SimpleServiceRegistry;
 import org.jboss.weld.bootstrap.spi.BeanDeploymentArchive;
 import org.jboss.weld.bootstrap.spi.BeanDiscoveryMode;
 import org.jboss.weld.bootstrap.spi.BeansXml;
+import org.jboss.weld.bootstrap.spi.CDI11Deployment;
 import org.jboss.weld.bootstrap.spi.Deployment;
 import org.jboss.weld.bootstrap.spi.Metadata;
 import org.jboss.weld.bootstrap.spi.Scanning;
@@ -48,8 +49,10 @@ public abstract class TestBaseClass {
 
     @Before
     public void setUp() {
+        System.setProperty("org.jboss.weld.bootstrap.concurrentDeployment", "false");
         this.deploymentException = null;
         Weld weld = new Weld() {
+
 
             @Override
             protected Deployment createDeployment(final ResourceLoader resourceLoader, final CDI11Bootstrap bootstrap) {
@@ -60,7 +63,12 @@ public abstract class TestBaseClass {
 
                 oneDeploymentArchive.getServices().add(ResourceLoader.class, resourceLoader);
 
-                Deployment res = new Deployment() {
+                Deployment res = new CDI11Deployment() {
+
+                    @Override
+                    public BeanDeploymentArchive getBeanDeploymentArchive(final Class<?> beanClass) {
+                        return oneDeploymentArchive;
+                    }
 
                     @Override
                     public Collection<BeanDeploymentArchive> getBeanDeploymentArchives() {
