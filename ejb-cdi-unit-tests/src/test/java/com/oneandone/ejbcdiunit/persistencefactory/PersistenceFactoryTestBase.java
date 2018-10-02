@@ -64,11 +64,11 @@ public abstract class PersistenceFactoryTestBase {
     DataSource dataSource;
 
     protected String getStringAttributeNativeName() {
-        return "string_Attribute";
+        return "string_attribute";
     }
 
     protected String getIntAttributeNativeName() {
-        return "int_Attribute";
+        return "int_attribute";
     }
 
     protected String getSchema() {
