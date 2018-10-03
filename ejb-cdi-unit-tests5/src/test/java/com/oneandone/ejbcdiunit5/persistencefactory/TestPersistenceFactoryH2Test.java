@@ -25,23 +25,6 @@ public class TestPersistenceFactoryH2Test extends PersistenceFactoryTestBase {
         System.setProperty("hibernate.ejb.naming_strategy", "org.hibernate.cfg.ImprovedNamingStrategy");
     }
 
-    boolean isHibernate5() {
-        try {
-            Class.forName("org.hibernate.boot.model.naming.PhysicalNamingStrategy");
-            return true;
-        } catch (ClassNotFoundException e) {
-            return false;
-        }
-    }
-
-    protected String getStringAttributeNativeName() {
-        return isHibernate5() ? "stringAttribute" : "string_attribute";
-    }
-
-    protected String getIntAttributeNativeName() {
-        return isHibernate5() ? "intAttribute" : "int_attribute";
-    }
-
     @AfterAll
     public static void afterTestPersistenceFactoryH2Test() {
         System.clearProperty("hibernate.connection.url");
