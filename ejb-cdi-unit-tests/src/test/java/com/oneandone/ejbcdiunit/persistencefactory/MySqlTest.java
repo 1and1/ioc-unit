@@ -83,7 +83,7 @@ public class MySqlTest {
         em.persist(entity1);
         try (Connection conn = dataSource.getConnection()) {
 
-            try (PreparedStatement stmt = conn.prepareStatement("insert into test_entity_1 (stringAttribute, intAttribute) values ('sss', 114)")) {
+            try (PreparedStatement stmt = conn.prepareStatement("insert into test_entity_1 (string_Attribute, int_Attribute) values ('sss', 114)")) {
                 Assert.assertThat(stmt.executeUpdate(), is(1));
             }
         }

@@ -1,11 +1,23 @@
 package com.oneandone.ejbcdiunit5.persistencefactory;
 
-import com.oneandone.ejbcdiunit.entities.TestEntity1;
-import com.oneandone.ejbcdiunit.persistence.PersistenceFactory;
-import com.oneandone.ejbcdiunit5.JUnit5Extension;
-import com.oneandone.ejbcdiunit5.helpers.J2eeSimMySqlFactory;
-import com.oneandone.ejbcdiunit5.helpers.MySqlStarter;
-import com.oneandone.ejbcdiunit5.helpers.TestResources;
+import static org.hamcrest.Matchers.is;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.sql.DataSource;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.NotSupportedException;
+import javax.transaction.RollbackException;
+import javax.transaction.SystemException;
+import javax.transaction.UserTransaction;
+
 import org.hamcrest.MatcherAssert;
 import org.jglue.cdiunit.ActivatedAlternatives;
 import org.jglue.cdiunit.AdditionalClasses;
@@ -14,13 +26,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.sql.DataSource;
-import javax.transaction.*;
-import java.sql.*;
-
-import static org.hamcrest.Matchers.is;
+import com.oneandone.ejbcdiunit.entities.TestEntity1;
+import com.oneandone.ejbcdiunit.persistence.PersistenceFactory;
+import com.oneandone.ejbcdiunit5.JUnit5Extension;
+import com.oneandone.ejbcdiunit5.helpers.J2eeSimMySqlFactory;
+import com.oneandone.ejbcdiunit5.helpers.MySqlStarter;
+import com.oneandone.ejbcdiunit5.helpers.TestResources;
 
 /**
  * @author aschoerk
@@ -72,7 +83,7 @@ public class MySqlTest {
         em.persist(entity1);
         try (Connection conn = dataSource.getConnection()) {
 
-            try (PreparedStatement stmt = conn.prepareStatement("insert into test_entity_1 (stringAttribute, intAttribute) values ('sss', 114)")) {
+            try (PreparedStatement stmt = conn.prepareStatement("insert into test_entity_1 (string_Attribute, int_Attribute) values ('sss', 114)")) {
                 MatcherAssert.assertThat(stmt.executeUpdate(), is(1));
             }
         }
