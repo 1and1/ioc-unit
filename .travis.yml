@@ -15,26 +15,22 @@ before_cache:
 
 env:
 - WELD_PROFILE=weld3.0
+  JUNIT_PROFILE=junit4
 - WELD_PROFILE=weld2.4
+  JUNIT_PROFILE=junit5
 - WELD_PROFILE=weld2.3
+  JUNIT_PROFILE=junit4
+- WELD_PROFILE=weld2.3
+  JUNIT_PROFILE=junit5
 - WELD_PROFILE=weld1.1
+  JUNIT_PROFILE=junit4
 
-gemfile:
-- JUNIT_PROFILE=junit4
-- JUNIT_PROFILE=junit5
 
 
 # We don't want to overtax travis (or get throttled), so we try to limit the number of combinations.
 # Current strategy is, for each supported minor version of Weld, to test one early point release plus
 # the most recent point release, plus some point releases which caused problems.
-matrix:
-  include:
-  - env: WELD_PROFILE=weld2.3
-    gemfile: JUNIT_PROFILE=junit5
-    jdk: oraclejdk8
-  - env: WELD_PROFILE=weld2.3
-    gemfile: JUNIT_PROFILE=junit4
-    jdk: oraclejdk8
+
 
 
 script: "mvn clean install -P${WELD_PROFILE},${JUNIT_PROFILE}"
