@@ -2,8 +2,8 @@ sudo: false
 language: java
 
 jdk:
-  - oraclejdk8
-  - oraclejdk11
+#  - oraclejdk8
+- openjdk11
 
 # cache local Maven repo: https://docs.travis-ci.com/user/caching/
 cache:
@@ -16,14 +16,14 @@ before_cache:
 env:
 - WELD_PROFILE=weld3.0
   JUNIT_PROFILE=junit4
-- WELD_PROFILE=weld2.4
-  JUNIT_PROFILE=junit5
-- WELD_PROFILE=weld2.3
-  JUNIT_PROFILE=junit4
-- WELD_PROFILE=weld2.3
-  JUNIT_PROFILE=junit5
-- WELD_PROFILE=weld1.1
-  JUNIT_PROFILE=junit4
+#- WELD_PROFILE=weld2.4
+#  JUNIT_PROFILE=junit5
+#- WELD_PROFILE=weld2.3
+#  JUNIT_PROFILE=junit4
+#- WELD_PROFILE=weld2.3
+#  JUNIT_PROFILE=junit5
+#- WELD_PROFILE=weld1.1
+#  JUNIT_PROFILE=junit4
 
 
 
