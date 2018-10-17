@@ -37,7 +37,6 @@ import com.oneandone.ejbcdiunit.EjbUnitRule;
 import com.oneandone.ejbcdiunit.EjbUnitTransactionServices;
 import com.oneandone.ejbcdiunit.SupportEjbExtended;
 import com.oneandone.ejbcdiunit.cdiunit.Weld11TestUrlDeployment;
-import com.oneandone.ejbcdiunit.cdiunit.WeldTestConfig;
 import com.oneandone.ejbcdiunit.cdiunit.WeldTestUrlDeployment;
 import com.oneandone.ejbcdiunit.internal.EjbInformationBean;
 
@@ -52,7 +51,7 @@ public class JUnit5Extension implements BeforeEachCallback,
     protected WeldContainer container;
     protected Throwable startupException;
     // The TestCase instance
-    private WeldTestConfig cdiTestConfig;
+    private CdiTestConfig cdiTestConfig;
     CreationalContexts creationalContexts;
     InitialContext initialContext;
 
@@ -94,8 +93,8 @@ public class JUnit5Extension implements BeforeEachCallback,
                     startupException = new Exception("Weld 2.2.8 and 2.2.7 are not supported. Suggest upgrading to 2.2.9");
                 }
 
-                final WeldTestConfig weldTestConfig =
-                        new WeldTestConfig(clazz, null, null)
+                final CdiTestConfig weldTestConfig =
+                        new CdiTestConfig(clazz, null, null)
                                 .addClass(SupportEjbExtended.class)
                                 .addServiceConfig(new CdiTestConfig.ServiceConfig(TransactionServices.class,
                                         new EjbUnitTransactionServices()));

@@ -1,12 +1,19 @@
 package com.oneandone.ejbcdiunit;
 
+import java.lang.reflect.Method;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.enterprise.inject.spi.Extension;
+
 import org.jboss.weld.bootstrap.WeldBootstrap;
 import org.jboss.weld.bootstrap.api.Service;
+import org.jboss.weld.bootstrap.spi.Metadata;
 import org.jboss.weld.util.reflection.Formats;
 
 import com.oneandone.ejbcdiunit.internal.ApplicationExceptionDescription;
@@ -16,6 +23,27 @@ import com.oneandone.ejbcdiunit.internal.ApplicationExceptionDescription;
  */
 public class CdiTestConfig {
 
+    public CdiTestConfig(Class<?> testClass, Method method) {
+        this.testClass = testClass;
+        this.testMethod = method;
+    }
+
+    public CdiTestConfig(Class<?> testClass, Method method, CdiTestConfig cdiTestConfig) {
+        this(testClass, method);
+        if (cdiTestConfig != null) {
+            this.additionalClasses.addAll(cdiTestConfig.getAdditionalClasses());
+            this.additionalClassPackages.addAll(cdiTestConfig.getAdditionalClassPackages());
+            this.additionalClassPathes.addAll(cdiTestConfig.getAdditionalClassPathes());
+            this.activatedAlternatives.addAll(cdiTestConfig.getActivatedAlternatives());
+            this.excludedClasses.addAll(cdiTestConfig.getExcludedClasses());
+            this.serviceConfigs.addAll(cdiTestConfig.getServiceConfigs());
+            this.setApplicationExceptionDescriptions(cdiTestConfig.getApplicationExceptionDescriptions());
+        }
+    }
+
+    Method testMethod;
+    Class<?> testClass;
+
     public String weldVersion = Formats.version(WeldBootstrap.class.getPackage());
     protected Set<Class<?>> additionalClasses = new HashSet<>();
     protected Set<Class<?>> additionalClassPathes = new HashSet<>();
@@ -24,6 +52,19 @@ public class CdiTestConfig {
     protected Set<Class<?>> activatedAlternatives = new HashSet<>();
     protected Set<ServiceConfig> serviceConfigs = new HashSet<>();
     private List<ApplicationExceptionDescription> applicationExceptionDescriptions = new ArrayList<>();
+
+    public CdiTestConfig() {
+
+    }
+
+
+    public Method getTestMethod() {
+        return testMethod;
+    }
+
+    public Class<?> getTestClass() {
+        return testClass;
+    }
 
     public Set<Class<?>> getExcludedClasses() {
         return excludedClasses;
@@ -79,36 +120,6 @@ public class CdiTestConfig {
         return this;
     }
 
-    public CdiTestConfig removeClass(Class<?> clazz) {
-        additionalClasses.remove(clazz);
-        return this;
-    }
-
-    public CdiTestConfig removeExcluded(Class<?> clazz) {
-        excludedClasses.remove(clazz);
-        return this;
-    }
-
-    public CdiTestConfig removePackage(Class<?> clazz) {
-        additionalClassPackages.remove(clazz);
-        return this;
-    }
-
-    public CdiTestConfig removeClassPath(Class<?> clazz) {
-        additionalClassPathes.remove(clazz);
-        return this;
-    }
-
-    public CdiTestConfig removeAlternative(Class<?> clazz) {
-        activatedAlternatives.remove(clazz);
-        return this;
-    }
-
-    public CdiTestConfig removeService(Class<?> clazz) {
-        serviceConfigs.remove(new ServiceConfig(clazz, null));
-        return this;
-    }
-
     public List<ApplicationExceptionDescription> getApplicationExceptionDescriptions() {
         return applicationExceptionDescriptions;
     }
@@ -118,6 +129,55 @@ public class CdiTestConfig {
     }
 
     public void addExcludedByString(String s) {
+    }
+
+    /*
+     * TestConfig Part
+     */
+
+    private Collection<Metadata<String>> alternatives = new ArrayList<Metadata<String>>();
+    private Class<?> ejbJarClasspathExample = null;
+    private Collection<Metadata<? extends Extension>> extensions = new ArrayList<Metadata<? extends Extension>>();
+    private Collection<Metadata<String>> enabledInterceptors = new ArrayList<Metadata<String>>();
+    private Collection<Metadata<String>> enabledDecorators = new ArrayList<Metadata<String>>();
+    private Collection<Metadata<String>> enabledAlternativeStereotypes = new ArrayList<Metadata<String>>();
+    private Set<URL> classpathEntries = new HashSet<>();
+    private Set<String> discoveredClasses = new LinkedHashSet<String>();
+
+    public Set<String> getDiscoveredClasses() {
+        return discoveredClasses;
+    }
+
+    public Collection<Metadata<String>> getAlternatives() {
+        return alternatives;
+    }
+
+    public Class<?> getEjbJarClasspathExample() {
+        return ejbJarClasspathExample;
+    }
+
+    public void setEjbJarClasspathExample(final Class<?> ejbJarClasspathExample) {
+        this.ejbJarClasspathExample = ejbJarClasspathExample;
+    }
+
+    public Collection<Metadata<? extends Extension>> getExtensions() {
+        return extensions;
+    }
+
+    public Collection<Metadata<String>> getEnabledInterceptors() {
+        return enabledInterceptors;
+    }
+
+    public Collection<Metadata<String>> getEnabledDecorators() {
+        return enabledDecorators;
+    }
+
+    public Collection<Metadata<String>> getEnabledAlternativeStereotypes() {
+        return enabledAlternativeStereotypes;
+    }
+
+    public Set<URL> getClasspathEntries() {
+        return classpathEntries;
     }
 
     public static class ServiceConfig<S extends Service> {

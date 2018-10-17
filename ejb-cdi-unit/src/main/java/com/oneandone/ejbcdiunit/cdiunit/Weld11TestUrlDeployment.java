@@ -24,10 +24,12 @@ import org.jboss.weld.bootstrap.api.Bootstrap;
 import org.jboss.weld.bootstrap.spi.CDI11Deployment;
 import org.jboss.weld.resources.spi.ResourceLoader;
 
+import com.oneandone.ejbcdiunit.CdiTestConfig;
+
 public class Weld11TestUrlDeployment extends WeldTestUrlDeployment implements CDI11Deployment {
 
     public Weld11TestUrlDeployment(ResourceLoader resourceLoader,
-            Bootstrap bootstrap, WeldTestConfig weldTestConfig) throws IOException {
+            Bootstrap bootstrap, CdiTestConfig weldTestConfig) throws IOException {
         super(resourceLoader, bootstrap, weldTestConfig);
     }
 

@@ -111,8 +111,8 @@ public class CdiRunner extends BlockJUnit4ClassRunner {
                 startupException = new Exception("Weld 2.2.8 and 2.2.7 are not supported. Suggest upgrading to 2.2.9");
             }
 
-            final WeldTestConfig weldTestConfig =
-                    new WeldTestConfig(clazz, frameworkMethod.getMethod())
+            final CdiTestConfig weldTestConfig =
+                    new CdiTestConfig(clazz, frameworkMethod.getMethod())
                             .addClass(SupportEjbExtended.class)
                             .addServiceConfig(new CdiTestConfig.ServiceConfig(TransactionServices.class, new EjbUnitTransactionServices()))
             ;

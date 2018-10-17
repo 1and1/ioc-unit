@@ -26,10 +26,6 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>ejb-cdi-unit</artifactId>
         </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-        </dependency>
         <!-- J2EE 6 -->
         <dependency>
             <groupId>javax.enterprise</groupId>

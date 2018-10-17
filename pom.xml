@@ -6,18 +6,6 @@
     <version>1.1.17-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
-        <module>ejb-cdi-unit</module>
-        <module>ejb-cdi-unit5</module>
-        <module>ejb-cdi-unit-test-war</module>
-        <module>ejb-cdi-unit-tests</module>
-        <module>purecdi-tests</module>
-        <module>ejb-cdi-unit-tests5</module>
-        <module>ejb-cdi-unit-simulators</module>
-        <module>ejb-cdi-unit-camunda</module>
-        <module>ejb-cdi-unit-arq</module>
-        <!-- module>ejb-cdi-unit-tomee</module>
-        <module>ejb-cdi-unit-tomee-simple</module-->
-        <module>examples</module>
     </modules>
 
     <name>net.oneandone:ejb-cdi-unit-parent</name>
@@ -61,7 +49,7 @@
         <maven-resources-plugin.version>2.6</maven-resources-plugin.version>
         <maven-site-plugin.version>3.3</maven-site-plugin.version>
         <maven-source-plugin.version>2.2.1</maven-source-plugin.version>
-        <maven-surefire-plugin.version>2.22.0</maven-surefire-plugin.version>
+        <maven-surefire-plugin.version>2.22.1</maven-surefire-plugin.version>
         <maven-war-plugin.version>3.0.0</maven-war-plugin.version>
 
         <!-- external -->
@@ -73,7 +61,7 @@
         <mockito.version>2.19.0</mockito.version>
         <!-- weld.version>1.1.14.Final</weld.version-->
         <junit4.version>4.12</junit4.version>
-        <junit5.version>5.3.0</junit5.version>
+        <junit5.version>5.3.1</junit5.version>
         <junit-platform.version>1.3.0</junit-platform.version>
         <mockrunner.version>1.1.2</mockrunner.version>
         <version.cglib>3.2.5</version.cglib>
@@ -94,6 +82,207 @@
         <delta-spike.version>1.0.1</delta-spike.version>
 
     </properties>
+
+    <profiles>
+        <profile>
+            <id>junit4</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <modules>
+                <module>purecdi-tests</module>
+                <module>ejb-cdi-unit</module>
+                <module>ejb-cdi-unit-test-war</module>
+                <module>ejb-cdi-unit-tests</module>
+                <module>ejb-cdi-unit-simulators</module>
+                <module>ejb-cdi-unit-camunda</module>
+                <module>ejb-cdi-unit-arq</module>
+                <!-- module>ejb-cdi-unit-tomee</module>
+                <module>ejb-cdi-unit-tomee-simple</module-->
+                <module>examples</module>
+            </modules>
+            <dependencies>
+                <dependency>
+                    <groupId>junit</groupId>
+                    <artifactId>junit</artifactId>
+                </dependency>
+            </dependencies>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>${maven-surefire-plugin.version}</version>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.apache.maven.surefire</groupId>
+                                <artifactId>surefire-junit47</artifactId>
+                                <version>${maven-surefire-plugin.version}</version>
+                            </dependency>
+                        </dependencies>
+                        <configuration>
+                            <systemPropertyVariables>
+                                <javax.xml.parsers.DocumentBuilderFactory>
+                                    com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl
+                                </javax.xml.parsers.DocumentBuilderFactory>
+                            </systemPropertyVariables>
+
+                            <reportFormat>plain</reportFormat>
+                            <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                            <!-- Sets the VM argument line used when unit tests are run. -->
+                            <!--argLine> - -add-modules java.xml,java.sql -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005</argLine-->
+                            <argLine>
+                                -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+                            </argLine>
+                            <forkCount>1</forkCount>
+                            <reuseForks>false</reuseForks>
+                            <classpathDependencyExcludes>
+                                <classpathDependencyExclude>net.oneandone:purecdi-tests</classpathDependencyExclude>
+                            </classpathDependencyExcludes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>junit5</id>
+            <modules>
+                <module>ejb-cdi-unit</module>
+                <module>ejb-cdi-unit5</module>
+                <module>ejb-cdi-unit-tests5</module>
+                <module>examples</module>
+            </modules>
+            <dependencies>
+                <dependency>
+                    <groupId>org.junit.jupiter</groupId>
+                    <artifactId>junit-jupiter-params</artifactId>
+                    <version>${junit5.version}</version>
+                </dependency>
+            </dependencies>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>${maven-surefire-plugin.version}</version>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.junit.platform</groupId>
+                                <artifactId>junit-platform-surefire-provider</artifactId>
+                                <version>${junit-platform.version}</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>org.junit.jupiter</groupId>
+                                <artifactId>junit-jupiter-engine</artifactId>
+                                <version>${junit5.version}</version>
+                            </dependency>
+                        </dependencies>
+                        <configuration>
+                            <systemPropertyVariables>
+                                <javax.xml.parsers.DocumentBuilderFactory>
+                                    com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl
+                                </javax.xml.parsers.DocumentBuilderFactory>
+                            </systemPropertyVariables>
+
+                            <reportFormat>plain</reportFormat>
+                            <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                            <!-- Sets the VM argument line used when unit tests are run. -->
+                            <!--argLine> - -add-modules java.xml,java.sql -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005</argLine-->
+                            <argLine>
+                                -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+                            </argLine>
+                            <forkCount>1</forkCount>
+                            <reuseForks>false</reuseForks>
+                            <classpathDependencyExcludes>
+                                <classpathDependencyExclude>net.oneandone:purecdi-tests</classpathDependencyExclude>
+                            </classpathDependencyExcludes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>release-sign-artifacts</id>
+            <activation>
+                <property>
+                    <name>performRelease</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>${maven-gpg-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>weld1.1</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <weld.version>1.1.14.Final</weld.version>
+                <version.org.hibernate.api>1.0.1.Final</version.org.hibernate.api>
+                <version.org.hibernate>4.2.2.Final</version.org.hibernate>
+                <version.org.hibernate.validator>4.3.1.Final</version.org.hibernate.validator>
+                <version.cdi-api>1.1</version.cdi-api>
+            </properties>
+        </profile>
+        <profile>
+            <id>weld2.3</id>
+            <properties>
+                <weld.version>2.3.5.Final</weld.version>
+                <weld-spi.version>2.3.Final</weld-spi.version>
+                <weld-api.version>2.3.Final</weld-api.version>
+                <version.org.hibernate.api>1.0.0.Final</version.org.hibernate.api>
+                <version.org.hibernate>5.0.10.Final</version.org.hibernate>
+                <version.org.hibernate.validator>5.2.4.Final</version.org.hibernate.validator>
+                <version.cdi-api>1.2</version.cdi-api>
+            </properties>
+        </profile>
+        <profile>
+            <id>weld2.4</id>
+            <properties>
+                <weld.version>2.4.2.Final</weld.version>
+                <version.org.hibernate.api>1.0.0.Final</version.org.hibernate.api>
+                <version.org.hibernate>5.0.10.Final</version.org.hibernate>
+                <version.org.hibernate.validator>5.2.4.Final</version.org.hibernate.validator>
+                <version.cdi-api>1.2</version.cdi-api>
+            </properties>
+        </profile>
+        <profile>
+            <id>weld3.0</id>
+            <properties>
+                <weld.version>3.0.0.Final</weld.version>
+                <version.org.hibernate.api>1.0.0.Final</version.org.hibernate.api>
+                <version.org.hibernate>5.0.10.Final</version.org.hibernate>
+                <version.org.hibernate.validator>5.2.4.Final</version.org.hibernate.validator>
+                <version.cdi-api>2.0</version.cdi-api>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>org.jboss.weld.module</groupId>
+                    <artifactId>weld-web</artifactId>
+                    <version>3.0.0.Final</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
+
 
     <dependencies>
         <dependency>
@@ -224,6 +413,12 @@
                 <version>${version.org.hibernate.api}</version>
             </dependency>
             <dependency>
+                <groupId>org.junit.vintage</groupId>
+                <artifactId>junit-vintage-engine</artifactId>
+                <version>${junit5.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>${junit4.version}</version>
@@ -312,27 +507,6 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven-surefire-plugin.version}</version>
-                <configuration>
-                    <systemPropertyVariables>
-                        <javax.xml.parsers.DocumentBuilderFactory>
-                            com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl
-                        </javax.xml.parsers.DocumentBuilderFactory>
-                    </systemPropertyVariables>
-
-                    <reportFormat>plain</reportFormat>
-                    <redirectTestOutputToFile>true</redirectTestOutputToFile>
-                    <!-- Sets the VM argument line used when unit tests are run. -->
-                    <!--argLine> - -add-modules java.xml,java.sql -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005</argLine-->
-                    <argLine>
-                        -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
-                    </argLine>
-                    <reuseForks>false</reuseForks>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <configuration>
                     <notimestamp>true</notimestamp>
@@ -401,88 +575,6 @@
         </repository>
     </distributionManagement>
 
-    <profiles>
-        <profile>
-            <id>release-sign-artifacts</id>
-            <activation>
-                <property>
-                    <name>performRelease</name>
-                    <value>true</value>
-                </property>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                        <version>${maven-gpg-plugin.version}</version>
-                        <executions>
-                            <execution>
-                                <id>sign-artifacts</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>weld1.1</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <weld.version>1.1.14.Final</weld.version>
-                <version.org.hibernate.api>1.0.1.Final</version.org.hibernate.api>
-                <version.org.hibernate>4.2.2.Final</version.org.hibernate>
-                <version.org.hibernate.validator>4.3.1.Final</version.org.hibernate.validator>
-                <version.cdi-api>1.1</version.cdi-api>
-            </properties>
-        </profile>
-        <profile>
-            <id>weld2.3</id>
-            <properties>
-                <weld.version>2.3.5.Final</weld.version>
-                <weld-spi.version>2.3.Final</weld-spi.version>
-                <weld-api.version>2.3.Final</weld-api.version>
-                <version.org.hibernate.api>1.0.0.Final</version.org.hibernate.api>
-                <version.org.hibernate>5.0.10.Final</version.org.hibernate>
-                <version.org.hibernate.validator>5.2.4.Final</version.org.hibernate.validator>
-                <version.cdi-api>1.2</version.cdi-api>
-            </properties>
-        </profile>
-        <profile>
-            <id>weld2.4</id>
-            <properties>
-                <weld.version>2.4.2.Final</weld.version>
-                <version.org.hibernate.api>1.0.0.Final</version.org.hibernate.api>
-                <version.org.hibernate>5.0.10.Final</version.org.hibernate>
-                <version.org.hibernate.validator>5.2.4.Final</version.org.hibernate.validator>
-                <version.cdi-api>1.2</version.cdi-api>
-            </properties>
-        </profile>
-        <profile>
-            <id>weld3.0</id>
-            <properties>
-                <weld.version>3.0.0.Final</weld.version>
-                <version.org.hibernate.api>1.0.0.Final</version.org.hibernate.api>
-                <version.org.hibernate>5.0.10.Final</version.org.hibernate>
-                <version.org.hibernate.validator>5.2.4.Final</version.org.hibernate.validator>
-                <version.cdi-api>2.0</version.cdi-api>
-            </properties>
-            <dependencies>
-                <dependency>
-                    <groupId>org.jboss.weld.module</groupId>
-                    <artifactId>weld-web</artifactId>
-                    <version>3.0.0.Final</version>
-                    <scope>test</scope>
-                </dependency>
-            </dependencies>
-        </profile>
-    </profiles>
 
 </project>
 

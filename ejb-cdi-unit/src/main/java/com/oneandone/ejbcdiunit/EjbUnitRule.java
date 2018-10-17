@@ -27,7 +27,6 @@ import org.slf4j.LoggerFactory;
 
 import com.oneandone.ejbcdiunit.CdiTestConfig.ServiceConfig;
 import com.oneandone.ejbcdiunit.cdiunit.Weld11TestUrlDeployment;
-import com.oneandone.ejbcdiunit.cdiunit.WeldTestConfig;
 import com.oneandone.ejbcdiunit.cdiunit.WeldTestUrlDeployment;
 import com.oneandone.ejbcdiunit.internal.EjbInformationBean;
 
@@ -86,8 +85,8 @@ public class EjbUnitRule implements TestRule {
                 }
 
 
-                final WeldTestConfig weldTestConfig =
-                        new WeldTestConfig(clazz, method, cdiTestConfig)
+                final CdiTestConfig weldTestConfig =
+                        new CdiTestConfig(clazz, method, cdiTestConfig)
                                 .addClass(SupportEjbExtended.class)
                                 .addServiceConfig(new ServiceConfig(TransactionServices.class,
                                         new EjbUnitTransactionServices()))

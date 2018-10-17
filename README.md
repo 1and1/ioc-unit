@@ -188,7 +188,7 @@ by copying them from another Instance of the test-class which is created during 
 	<ejb-cdi-unit.version>1.1.16</ejb-cdi-unit.version>
         <weld-se.version>2.3.5.Final</weld-se.version>
         <junit5.version>5.3.0</junit5.version>
-        <surefire.version>2.22.0</surefire.version>
+        <surefire.version>${maven-surefire-plugin.version}</surefire.version>
         <junit-platform.version>1.3.0</junit-platform.version>
 </properties>
 ```

@@ -50,7 +50,6 @@ import org.slf4j.LoggerFactory;
 import com.oneandone.cdiunit.BeanDeploymentArchiveImpl;
 import com.oneandone.ejbcdiunit.CdiTestConfig;
 import com.oneandone.ejbcdiunit.cfganalyzer.CdiUnitAnalyzer;
-import com.oneandone.ejbcdiunit.cfganalyzer.TestConfig;
 
 public class WeldTestUrlDeployment implements Deployment {
     private static Logger log = LoggerFactory.getLogger(WeldTestUrlDeployment.class);
@@ -58,14 +57,14 @@ public class WeldTestUrlDeployment implements Deployment {
     private Collection<Metadata<Extension>> extensions = new ArrayList<Metadata<Extension>>();
     private Set<URL> cdiClasspathEntries = new HashSet<URL>();
 
-    public WeldTestUrlDeployment(ResourceLoader resourceLoader, Bootstrap bootstrap, WeldTestConfig weldTestConfig) throws IOException {
+    public WeldTestUrlDeployment(ResourceLoader resourceLoader, Bootstrap bootstrap, CdiTestConfig weldTestConfig) throws IOException {
 
         Class<?> testClass = weldTestConfig.getTestClass();
         Method testMethod = weldTestConfig.getTestMethod();
         CdiUnitAnalyzer cdiUnitAnalyzer = new CdiUnitAnalyzer();
         cdiUnitAnalyzer.analyze(testClass, testMethod, weldTestConfig);
 
-        TestConfig testConfig = cdiUnitAnalyzer.getTestConfig();
+        CdiTestConfig testConfig = cdiUnitAnalyzer.getTestConfig();
         BeansXml beansXml = createBeansXml();
 
         for (Metadata<String> eI : testConfig.getEnabledInterceptors()) {

@@ -23,6 +23,10 @@ env:
     - WELD_PROFILE=weld2.4
     - WELD_PROFILE=weld2.3
     - WELD_PROFILE=weld1.1
-    
-script: "mvn clean install -P${WELD_PROFILE}"
+
+junit:
+- JUNIT_PROFILE=junit4
+- JUNIT_PROFILE=junit5
+
+script: "mvn clean install -P${WELD_PROFILE},${JUNIT_PROFILE}"
 

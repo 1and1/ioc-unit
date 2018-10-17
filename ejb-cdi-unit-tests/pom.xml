@@ -24,7 +24,7 @@
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>ejb-cdi-unit5</artifactId>
+            <artifactId>ejb-cdi-unit</artifactId>
             <scope>test</scope>
             <version>${project.version}</version>
         </dependency>
@@ -34,11 +34,6 @@
             <classifier>classes</classifier>
             <scope>test</scope>
             <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>ch.vorburger.mariaDB4j</groupId>

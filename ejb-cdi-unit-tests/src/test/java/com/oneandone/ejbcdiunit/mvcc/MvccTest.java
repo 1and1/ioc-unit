@@ -57,7 +57,7 @@ public class MvccTest {
             }
             case MYSQL: {
                 if (mariaDb == null) {
-                    DBConfigurationBuilder config = DBConfigurationBuilder.newBuilder().setPort(3406);
+                    DBConfigurationBuilder config = DBConfigurationBuilder.newBuilder().setPort(3407);
                     mariaDb = DB.newEmbeddedDB(config.build());
                     mariaDb.start();
                     mariaDbUrl = config.getURL("test");
