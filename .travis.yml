@@ -19,7 +19,7 @@ env:
 - WELD_PROFILE=weld2.3
 - WELD_PROFILE=weld1.1
 
-junit:
+gemfile:
 - JUNIT_PROFILE=junit4
 - JUNIT_PROFILE=junit5
 
@@ -30,9 +30,11 @@ junit:
 matrix:
   include:
   - env: WELD_PROFILE=weld2.3
-    junit: JUNIT_PROFILE=junit5
+    gemfile: JUNIT_PROFILE=junit5
+    jdk: oraclejdk8
   - env: WELD_PROFILE=weld2.3
-    junit: JUNIT_PROFILE=junit4
+    gemfile: JUNIT_PROFILE=junit4
+    jdk: oraclejdk8
 
 
 script: "mvn clean install -P${WELD_PROFILE},${JUNIT_PROFILE}"
