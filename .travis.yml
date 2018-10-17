@@ -14,18 +14,19 @@ before_cache:
   - rm -rf $HOME/.m2/repository/net/oneandone/ejb-cdi-unit/
 
 env:
-
 # We don't want to overtax travis (or get throttled), so we try to limit the number of combinations.
 # Current strategy is, for each supported minor version of Weld, to test one early point release plus
 # the most recent point release, plus some point releases which caused problems.
-- WELD_PROFILE=weld3.0
-- WELD_PROFILE=weld2.4
-- WELD_PROFILE=weld2.3
-- WELD_PROFILE=weld1.1
+  matrix:
+  - WELD_PROFILE=weld3.0
+  - WELD_PROFILE=weld2.4
+  - WELD_PROFILE=weld2.3
+  - WELD_PROFILE=weld1.1
 
 junit:
-- JUNIT_PROFILE=junit4
-- JUNIT_PROFILE=junit5
+  matrix:
+  - JUNIT_PROFILE=junit4
+  - JUNIT_PROFILE=junit5
 
 script: "mvn clean install -P${WELD_PROFILE},${JUNIT_PROFILE}"
 
