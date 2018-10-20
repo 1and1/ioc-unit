@@ -85,6 +85,13 @@
 
     <profiles>
         <profile>
+            <id>arquillian</id>
+            <modules>
+                <module>ejb-cdi-unit-test-war</module>
+                <module>ejb-cdi-unit-arq</module>
+            </modules>
+        </profile>
+        <profile>
             <id>junit4</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
@@ -96,9 +103,6 @@
                 <module>ejb-cdi-unit-tests</module>
                 <module>ejb-cdi-unit-simulators</module>
                 <module>ejb-cdi-unit-camunda</module>
-                <module>ejb-cdi-unit-arq</module>
-                <!-- module>ejb-cdi-unit-tomee</module>
-                <module>ejb-cdi-unit-tomee-simple</module-->
                 <module>examples</module>
             </modules>
             <dependencies>
