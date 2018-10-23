@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.enterprise.inject.Alternative;
+import javax.enterprise.inject.spi.DeploymentException;
 import javax.inject.Inject;
 
 import org.jboss.weld.bootstrap.spi.Metadata;
@@ -87,8 +88,10 @@ public class TwoBeanAltTest extends TestBaseClass {
         }
     }
 
-    @Test
+    @Test(expected = DeploymentException.class)
     public void test() {
+        if (deploymentException != null)
+            throw deploymentException;
         assertNotNull(this.deploymentException);
     }
 

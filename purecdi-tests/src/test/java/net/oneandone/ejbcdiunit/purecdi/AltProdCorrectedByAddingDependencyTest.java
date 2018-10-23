@@ -22,6 +22,8 @@ public class AltProdCorrectedByAddingDependencyTest extends AltProdTest {
     @Override
     @Test
     public void test() {
+        if (deploymentException != null)
+            throw deploymentException;
         super.test();
     }
 }

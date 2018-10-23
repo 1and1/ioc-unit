@@ -14,6 +14,7 @@ import java.util.List;
 import javax.enterprise.inject.Alternative;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.Stereotype;
+import javax.enterprise.inject.spi.DeploymentException;
 import javax.inject.Inject;
 
 import org.jboss.weld.bootstrap.spi.Metadata;
@@ -96,8 +97,10 @@ public class AltProdTest extends TestBaseClass {
         }
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = DeploymentException.class)
     public void test() {
+        if (deploymentException != null)
+            throw deploymentException;
         assertTrue(container.instance().select(CdiBean1.class).get().callThis());
         assertFalse(container.instance().select(CdiBean1.class).get().getCdiHelperBean().callHelper());
     }

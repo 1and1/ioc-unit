@@ -63,6 +63,8 @@ public class TwoBeanWithGenericsTest extends TestBaseClass {
 
     @Test
     public void test() {
+        if (deploymentException != null)
+            throw deploymentException;
         assertTrue(container.select(CdiBean1.class).get().callThis());
         assertTrue(container.select(CdiBean1.class).get().getCdiHelperBean().callHelper());
         assertNull(container.select(CdiBean1.class).get().getCdiHelperBean().field);
