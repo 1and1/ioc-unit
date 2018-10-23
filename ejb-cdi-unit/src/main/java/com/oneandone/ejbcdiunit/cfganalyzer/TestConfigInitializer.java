@@ -2,6 +2,7 @@ package com.oneandone.ejbcdiunit.cfganalyzer;
 
 import static com.oneandone.ejbcdiunit.cfganalyzer.CdiMetaDataCreator.createMetadata;
 
+import java.io.IOException;
 import java.util.Set;
 
 import org.jboss.weld.environment.se.WeldSEBeanRegistrant;
@@ -32,14 +33,25 @@ import com.oneandone.ejbcdiunit.resourcesimulators.SimulatedUserTransaction;
 public class TestConfigInitializer {
 
     private final CdiTestConfig testConfig;
+    private final Set<Class<?>> classesToIgnore;
     private Set<Class<?>> classesToProcess;
 
-    public TestConfigInitializer(CdiTestConfig testConfig, Set<Class<?>> classesToProcess) {
+    public TestConfigInitializer(CdiTestConfig testConfig,
+            Set<Class<?>> classesToProcess,
+            Set<Class<?>> classesToIgnore) {
         this.testConfig = testConfig;
         this.classesToProcess = classesToProcess;
+        this.classesToIgnore = classesToIgnore;
     }
 
-    protected void initContainerSpecific() {
+    protected void initForAnalyzer() throws IOException {
+        Class<?> testClass = testConfig.getTestClass();
+        testConfig.getDiscoveredClasses().add(testClass.getName());
+        classesToIgnore.addAll(new MockedClassesFinder().findMockedClassesOfTest(testClass));
+        classesToIgnore.addAll(testConfig.getExcludedClasses());
+        classesToProcess.add(testClass);
+        new ClasspathSetPopulator().invoke(testConfig.getClasspathEntries());
+
 
         testConfig.getExtensions().add(createMetadata(new TestScopeExtension(testConfig.getTestClass()), TestScopeExtension.class.getName()));
         if (testConfig.getTestMethod() != null) {

@@ -52,11 +52,10 @@ public class TestConfigAnalyzer {
 
     private static Logger log = LoggerFactory.getLogger(TestConfigAnalyzer.class);
     protected CdiTestConfig testConfig = null;
-    protected Set<Class<?>> classesToIgnore;
+    protected Set<Class<?>> classesToIgnore = new LinkedHashSet<>();
     private Set<Class<?>> classesToProcess = new LinkedHashSet<>();
     private Set<Class<?>> classesProcessed = new HashSet<Class<?>>();
     private boolean analyzeStarted = false;
-    protected String weldVersion;
 
     public TestConfigAnalyzer() {
 
@@ -80,9 +79,9 @@ public class TestConfigAnalyzer {
 
     public void analyze(CdiTestConfig config) throws IOException {
         checkSetAnalyzeStarted();
-        init(config);
-        populateCdiClasspathSet();
-        new TestConfigInitializer(config, classesToProcess).initContainerSpecific();
+        this.testConfig = config;
+        new TestConfigInitializer(config, classesToProcess, classesToIgnore)
+                .initForAnalyzer();
         transferInitialClassesToAddConfig(config);
 
         while (!classesToProcess.isEmpty()) {
@@ -253,17 +252,6 @@ public class TestConfigAnalyzer {
         }
     }
 
-    protected void init(CdiTestConfig config) {
-        this.testConfig = config;
-        Class<?> testClass = config.getTestClass();
-        testConfig.getDiscoveredClasses().add(testClass.getName());
-        classesToIgnore = new MockedClassesFinder().findMockedClassesOfTest(testClass);
-        classesToIgnore.addAll(config.getExcludedClasses());
-        classesToProcess.add(testClass);
-        weldVersion = config.weldVersion;
-
-    }
-
     private boolean belongsTo(Class<?> c, Class<?> testClass) {
         if (testClass.equals(Object.class))
             return false;
@@ -330,10 +318,6 @@ public class TestConfigAnalyzer {
 
     private void addDeploymentDescriptor(final CdiTestConfig config, final URL url) throws IOException {
         new EjbJarParser(config, url).invoke();
-    }
-
-    private void populateCdiClasspathSet() throws IOException {
-        new ClasspathSetPopulator().invoke(testConfig.getClasspathEntries());
     }
 
     private boolean isCdiClass(Class<?> c) {
