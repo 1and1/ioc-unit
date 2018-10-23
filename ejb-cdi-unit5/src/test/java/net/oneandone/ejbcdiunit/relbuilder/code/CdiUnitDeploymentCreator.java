@@ -17,7 +17,8 @@ public class CdiUnitDeploymentCreator extends AllRelVisitor {
     public CdiUnitDeploymentCreator(CdiTestConfig cdiTestConfig) {
         mockedClasses = new MockedClassesFinder().findMockedClassesOfTest(cdiTestConfig.getTestClass());
         Set<Class<?>> classesToProcess = new HashSet<>();
-        TestConfigInitializer initializer = new TestConfigInitializer(cdiTestConfig, classesToProcess);
+        Set<Class<?>> classesToIgnore = new HashSet<>();
+        TestConfigInitializer initializer = new TestConfigInitializer(cdiTestConfig, classesToProcess, classesToIgnore);
     }
 
     @Override
