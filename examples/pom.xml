@@ -149,7 +149,7 @@
         <version.javaee_api>7.0</version.javaee_api>
         <org-reflections.version>0.9.10</org-reflections.version>
         <jaxrpc.version>1.1</jaxrpc.version>
-        <ejb-cdi-unit.version>1.1.17-SNAPSHOT</ejb-cdi-unit.version>
+        <ejb-cdi-unit.version>${project.version}</ejb-cdi-unit.version>
         <weld-se.version>2.3.5.Final</weld-se.version>
         <junit5.version>5.3.0</junit5.version>
         <junit-platform.version>1.3.0</junit-platform.version>
