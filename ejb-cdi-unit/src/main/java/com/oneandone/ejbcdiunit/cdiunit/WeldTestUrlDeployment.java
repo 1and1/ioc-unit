@@ -49,7 +49,7 @@ import org.slf4j.LoggerFactory;
 
 import com.oneandone.cdiunit.BeanDeploymentArchiveImpl;
 import com.oneandone.ejbcdiunit.CdiTestConfig;
-import com.oneandone.ejbcdiunit.cfganalyzer.CdiUnitAnalyzer;
+import com.oneandone.ejbcdiunit.cfganalyzer.TestConfigAnalyzer;
 
 public class WeldTestUrlDeployment implements Deployment {
     private static Logger log = LoggerFactory.getLogger(WeldTestUrlDeployment.class);
@@ -59,10 +59,8 @@ public class WeldTestUrlDeployment implements Deployment {
 
     public WeldTestUrlDeployment(ResourceLoader resourceLoader, Bootstrap bootstrap, CdiTestConfig weldTestConfig) throws IOException {
 
-        Class<?> testClass = weldTestConfig.getTestClass();
-        Method testMethod = weldTestConfig.getTestMethod();
-        CdiUnitAnalyzer cdiUnitAnalyzer = new CdiUnitAnalyzer();
-        cdiUnitAnalyzer.analyze(testClass, testMethod, weldTestConfig);
+        TestConfigAnalyzer cdiUnitAnalyzer = new TestConfigAnalyzer();
+        cdiUnitAnalyzer.analyze(weldTestConfig);
 
         CdiTestConfig testConfig = cdiUnitAnalyzer.getTestConfig();
         BeansXml beansXml = createBeansXml();

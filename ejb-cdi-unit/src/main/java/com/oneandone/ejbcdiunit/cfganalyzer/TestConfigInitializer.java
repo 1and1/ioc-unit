@@ -1,6 +1,8 @@
 package com.oneandone.ejbcdiunit.cfganalyzer;
 
-import java.lang.reflect.Method;
+import static com.oneandone.ejbcdiunit.cfganalyzer.CdiMetaDataCreator.createMetadata;
+
+import java.util.Set;
 
 import org.jboss.weld.environment.se.WeldSEBeanRegistrant;
 import org.jglue.cdiunit.ProducesAlternative;
@@ -27,19 +29,22 @@ import com.oneandone.ejbcdiunit.resourcesimulators.SimulatedUserTransaction;
 /**
  * @author aschoerk
  */
-public class CdiUnitAnalyzer extends TestConfigAnalyzer {
+public class TestConfigInitializer {
 
-    @Override
-    protected void init(Class<?> testClass, CdiTestConfig config) {
-        super.init(testClass, config);
+    private final CdiTestConfig testConfig;
+    private Set<Class<?>> classesToProcess;
+
+    public TestConfigInitializer(CdiTestConfig testConfig, Set<Class<?>> classesToProcess) {
+        this.testConfig = testConfig;
+        this.classesToProcess = classesToProcess;
     }
 
-    @Override
-    protected void initContainerSpecific(Class<?> testClass, Method testMethod) {
+    protected void initContainerSpecific() {
 
-        testConfig.getExtensions().add(createMetadata(new TestScopeExtension(testClass), TestScopeExtension.class.getName()));
-        if (testMethod != null) {
-            testConfig.getExtensions().add(createMetadata(new ProducerConfigExtension(testMethod), ProducerConfigExtension.class.getName()));
+        testConfig.getExtensions().add(createMetadata(new TestScopeExtension(testConfig.getTestClass()), TestScopeExtension.class.getName()));
+        if (testConfig.getTestMethod() != null) {
+            testConfig.getExtensions()
+                    .add(createMetadata(new ProducerConfigExtension(testConfig.getTestMethod()), ProducerConfigExtension.class.getName()));
         }
 
         try {
@@ -51,31 +56,31 @@ public class CdiUnitAnalyzer extends TestConfigAnalyzer {
 
         try {
             Class.forName("javax.servlet.http.HttpServletRequest");
-            getClassesToProcess().add(EjbCdiUnitInitialListenerProducer.class);
-            getClassesToProcess().add(InRequestInterceptorEjbCdiUnit.class);
-            getClassesToProcess().add(InSessionInterceptorEjbCdiUnit.class);
-            getClassesToProcess().add(InConversationInterceptor.class);
-            getClassesToProcess().add(MockServletContextImpl.class);
-            getClassesToProcess().add(MockHttpSessionImpl.class);
-            getClassesToProcess().add(MockHttpServletRequestImpl.class);
-            getClassesToProcess().add(MockHttpServletResponseImpl.class);
+            classesToProcess.add(EjbCdiUnitInitialListenerProducer.class);
+            classesToProcess.add(InRequestInterceptorEjbCdiUnit.class);
+            classesToProcess.add(InSessionInterceptorEjbCdiUnit.class);
+            classesToProcess.add(InConversationInterceptor.class);
+            classesToProcess.add(MockServletContextImpl.class);
+            classesToProcess.add(MockHttpSessionImpl.class);
+            classesToProcess.add(MockHttpServletRequestImpl.class);
+            classesToProcess.add(MockHttpServletResponseImpl.class);
 
 
             // If this is an old version of weld then add the producers
             try {
                 Class.forName("org.jboss.weld.bean.AbstractSyntheticBean");
             } catch (ClassNotFoundException | NoClassDefFoundError e) {
-                getClassesToProcess().add(ServletObjectsProducerEjbCdiUnit.class);
+                classesToProcess.add(ServletObjectsProducerEjbCdiUnit.class);
             }
 
         } catch (ClassNotFoundException e) {}
 
         // Add Interceptors here, to make sure the sequence is handled right
-        getClassesToProcess().add(AsynchronousMethodInterceptor.class);
-        if (weldVersion.charAt(0) - '2' >= 1) {
-            getClassesToProcess().add(SimulatedUserTransaction.class);
+        classesToProcess.add(AsynchronousMethodInterceptor.class);
+        if (testConfig.weldVersion.charAt(0) - '2' >= 1) {
+            classesToProcess.add(SimulatedUserTransaction.class);
         }
-        getClassesToProcess().add(TransactionalInterceptor.class);
+        classesToProcess.add(TransactionalInterceptor.class);
         testConfig.getEnabledAlternativeStereotypes().add(
                 createMetadata(ProducesAlternative.class.getName(), ProducesAlternative.class.getName()));
         try {

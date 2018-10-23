@@ -1,5 +1,7 @@
 package com.oneandone.ejbcdiunit.cfganalyzer;
 
+import static com.oneandone.ejbcdiunit.cfganalyzer.CdiMetaDataCreator.createMetadata;
+
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
@@ -25,12 +27,10 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.interceptor.Interceptor;
 
-import org.jboss.weld.bootstrap.spi.Metadata;
 import org.jglue.cdiunit.ActivatedAlternatives;
 import org.jglue.cdiunit.AdditionalClasses;
 import org.jglue.cdiunit.AdditionalClasspaths;
 import org.jglue.cdiunit.AdditionalPackages;
-import org.mockito.Mock;
 import org.reflections8.ReflectionUtils;
 import org.reflections8.Reflections;
 import org.reflections8.util.ConfigurationBuilder;
@@ -48,16 +48,14 @@ import com.oneandone.ejbcdiunit.internal.TypesScanner;
  *
  * @author aschoerk
  */
-public abstract class TestConfigAnalyzer {
+public class TestConfigAnalyzer {
 
     private static Logger log = LoggerFactory.getLogger(TestConfigAnalyzer.class);
-    protected final CdiTestConfig testConfig = new CdiTestConfig();
+    protected CdiTestConfig testConfig = null;
     protected Set<Class<?>> classesToIgnore;
     private Set<Class<?>> classesToProcess = new LinkedHashSet<>();
     private Set<Class<?>> classesProcessed = new HashSet<Class<?>>();
     private boolean analyzeStarted = false;
-
-    private static Constructor metaDataConstructor;
     protected String weldVersion;
 
     public TestConfigAnalyzer() {
@@ -68,22 +66,6 @@ public abstract class TestConfigAnalyzer {
         return testConfig;
     }
 
-    public static <T> Metadata<T> createMetadata(T value, String location) {
-        try {
-            return new org.jboss.weld.bootstrap.spi.helpers.MetadataImpl<>(value, location);
-        } catch (NoClassDefFoundError e) {
-            // MetadataImpl moved to a new package in Weld 2.4, old copy removed in 3.0
-            try {
-                // If Weld < 2.4, the new package isn't there, so we try the old package.
-                // noinspection unchecked
-                Class<Metadata<T>> oldClass = (Class<Metadata<T>>) Class.forName("org.jboss.weld.metadata.MetadataImpl");
-                Constructor<Metadata<T>> ctor = oldClass.getConstructor(Object.class, String.class);
-                return ctor.newInstance(value, location);
-            } catch (ReflectiveOperationException e1) {
-                throw new RuntimeException(e1);
-            }
-        }
-    }
 
     public Set<Class<?>> getClassesToProcess() {
         return classesToProcess;
@@ -96,12 +78,12 @@ public abstract class TestConfigAnalyzer {
         analyzeStarted = true;
     }
 
-    public void analyze(Class<?> testClass, Method testMethod, CdiTestConfig config) throws IOException {
+    public void analyze(CdiTestConfig config) throws IOException {
         checkSetAnalyzeStarted();
-        init(testClass, config);
+        init(config);
         populateCdiClasspathSet();
-        initContainerSpecific(testClass, testMethod);
-        transferConfig(config);
+        new TestConfigInitializer(config, classesToProcess).initContainerSpecific();
+        transferInitialClassesToAddConfig(config);
 
         while (!classesToProcess.isEmpty()) {
 
@@ -164,7 +146,7 @@ public abstract class TestConfigAnalyzer {
 
                 ExcludedClasses excludedClasses = c.getAnnotation(ExcludedClasses.class);
                 if (excludedClasses != null) {
-                    if (belongsTo(c, testClass)) {
+                    if (belongsTo(c, config.getTestClass())) {
                         for (Class<?> excludedClass : excludedClasses.value()) {
                             if (classesProcessed.contains(excludedClass)) {
                                 throw new RuntimeException("Trying to exclude already processed class: " + excludedClass);
@@ -252,7 +234,13 @@ public abstract class TestConfigAnalyzer {
     }
 
 
-    private void transferConfig(CdiTestConfig config) throws MalformedURLException {
+    /**
+     * extends abstract description of set of classes to real classes
+     * 
+     * @param config
+     * @throws MalformedURLException
+     */
+    private void transferInitialClassesToAddConfig(CdiTestConfig config) throws MalformedURLException {
         classesToProcess.addAll(config.getAdditionalClasses());
         for (Class<?> c : config.getAdditionalClassPathes()) {
             addClassPath(c);
@@ -265,11 +253,11 @@ public abstract class TestConfigAnalyzer {
         }
     }
 
-    protected abstract void initContainerSpecific(Class<?> testClass, Method testMethod);
-
-    protected void init(Class<?> testClass, CdiTestConfig config) {
+    protected void init(CdiTestConfig config) {
+        this.testConfig = config;
+        Class<?> testClass = config.getTestClass();
         testConfig.getDiscoveredClasses().add(testClass.getName());
-        classesToIgnore = findMockedClassesOfTest(testClass);
+        classesToIgnore = new MockedClassesFinder().findMockedClassesOfTest(testClass);
         classesToIgnore.addAll(config.getExcludedClasses());
         classesToProcess.add(testClass);
         weldVersion = config.weldVersion;
@@ -338,43 +326,6 @@ public abstract class TestConfigAnalyzer {
                 addClassesToProcess(arg);
             }
         }
-    }
-
-    private Set<Class<?>> findMockedClassesOfTest(Class<?> testClass) {
-        Set<Class<?>> mockedClasses = new HashSet<Class<?>>();
-        Class<?> actClass = testClass;
-        while (!actClass.equals(Object.class)) {
-            findMockedClassesOfTest(actClass, mockedClasses);
-            actClass = actClass.getSuperclass();
-        }
-        return mockedClasses;
-    }
-
-    private Set<Class<?>> findMockedClassesOfTest(Class<?> testClass, Set<Class<?>> mockedClasses) {
-
-        try {
-            for (Field field : testClass.getDeclaredFields()) {
-                if (field.isAnnotationPresent(Mock.class)) {
-                    Class<?> type = field.getType();
-                    mockedClasses.add(type);
-                }
-            }
-        } catch (NoClassDefFoundError e) {
-
-        }
-
-        try {
-
-            for (Field field : testClass.getDeclaredFields()) {
-                if (field.isAnnotationPresent(org.easymock.Mock.class)) {
-                    Class<?> type = field.getType();
-                    mockedClasses.add(type);
-                }
-            }
-        } catch (NoClassDefFoundError e) {
-
-        }
-        return mockedClasses;
     }
 
     private void addDeploymentDescriptor(final CdiTestConfig config, final URL url) throws IOException {
