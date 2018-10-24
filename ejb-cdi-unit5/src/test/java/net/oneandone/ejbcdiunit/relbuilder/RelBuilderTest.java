@@ -34,6 +34,7 @@ import net.oneandone.ejbcdiunit.relbuilder.code.CdiRelBuilder;
 import net.oneandone.ejbcdiunit.relbuilder.code.CountingRelVisitor;
 import net.oneandone.ejbcdiunit.relbuilder.code.InjectsFinder;
 import net.oneandone.ejbcdiunit.relbuilder.code.LoggingCountingRelVisitor;
+import net.oneandone.ejbcdiunit.relbuilder.code.Rels;
 import net.oneandone.ejbcdiunit.tests.notavailable.InjectedBean;
 import net.oneandone.ejbcdiunit.tests.notavailable.NotAvailableInjectedBean;
 
@@ -45,8 +46,8 @@ public class RelBuilderTest {
     Logger logger = LoggerFactory.getLogger("RelBuilderTest");
 
     protected CdiRelBuilder cdiRelBuilder;
-    protected CdiRelBuilder.RootRel root;
-    protected Map<String, CdiRelBuilder.Intermediate> beanClasses;
+    protected Rels.RootRel root;
+    protected Map<String, Rels.Intermediate> beanClasses;
     protected CountingRelVisitor countingRelVisitor;
     protected InjectsFinder injectsFinder;
 

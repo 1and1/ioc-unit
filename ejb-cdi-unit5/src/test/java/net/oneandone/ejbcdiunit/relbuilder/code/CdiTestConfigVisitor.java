@@ -22,79 +22,79 @@ public class CdiTestConfigVisitor extends AllRelVisitor {
     }
 
     @Override
-    public Object visit(final CdiRelBuilder.ProducerFieldRel producerFieldRel, final Object p) {
+    public Object visit(final Rels.ProducerFieldRel producerFieldRel, final Object p) {
         return super.visit(producerFieldRel, p);
     }
 
     @Override
-    public Object visit(final CdiRelBuilder.ProducerMethodRel producerMethodRel, final Object p) {
+    public Object visit(final Rels.ProducerMethodRel producerMethodRel, final Object p) {
         return super.visit(producerMethodRel, p);
     }
 
     @Override
-    public Object visit(final CdiRelBuilder.InjectedFieldRel injectedFieldRel, final Object p) {
+    public Object visit(final Rels.InjectedFieldRel injectedFieldRel, final Object p) {
         cdiTestConfig.getAdditionalClasses().add(injectedFieldRel.affectedClass.getBaseclass());
         return super.visit(injectedFieldRel, p);
     }
 
     @Override
-    public Object visit(final CdiRelBuilder.BeanClassRel beanClassRel, final Object p) {
+    public Object visit(final Rels.BeanClassRel beanClassRel, final Object p) {
         cdiTestConfig.getAdditionalClasses().add(beanClassRel.affectedClass.getBaseclass());
         return super.visit(beanClassRel, p);
     }
 
     @Override
-    public Object visit(final CdiRelBuilder.SimpleClassRel simpleClassRel, final Object p) {
+    public Object visit(final Rels.SimpleClassRel simpleClassRel, final Object p) {
         return super.visit(simpleClassRel, p);
     }
 
     @Override
-    public Object visit(final CdiRelBuilder.ConstructorInjectRel constructorInjectRel, final Object p) {
+    public Object visit(final Rels.ConstructorInjectRel constructorInjectRel, final Object p) {
         return super.visit(constructorInjectRel, p);
     }
 
     @Override
-    public Object visit(final CdiRelBuilder.InjectedParameterRel injectedParameterRel, final Object p) {
+    public Object visit(final Rels.InjectedParameterRel injectedParameterRel, final Object p) {
         cdiTestConfig.getAdditionalClasses().add(injectedParameterRel.affectedClass.getBaseclass());
         return super.visit(injectedParameterRel, p);
     }
 
     @Override
-    public Object visit(final CdiRelBuilder.RootRel rootRel, final Object p) {
+    public Object visit(final Rels.RootRel rootRel, final Object p) {
         return super.visit(rootRel, p);
     }
 
     @Override
-    public Object visit(final CdiRelBuilder.AdditionalClasspathRel additionalClasspathRel, final Object p) {
+    public Object visit(final Rels.AdditionalClasspathRel additionalClasspathRel, final Object p) {
         cdiTestConfig.getAdditionalClassPathes().add(additionalClasspathRel.affectedClass.getBaseclass());
         return super.visit(additionalClasspathRel, p);
     }
 
     @Override
-    public Object visit(final CdiRelBuilder.AdditionalClassesRel additionalClassesRel, final Object p) {
+    public Object visit(final Rels.AdditionalClassesRel additionalClassesRel, final Object p) {
         cdiTestConfig.getAdditionalClasses().add(additionalClassesRel.affectedClass.getBaseclass());
         return super.visit(additionalClassesRel, p);
     }
 
     @Override
-    public Object visit(final CdiRelBuilder.AdditionalPackageRel additionalPackageRel, final Object p) {
+    public Object visit(final Rels.AdditionalPackageRel additionalPackageRel, final Object p) {
         cdiTestConfig.getAdditionalClassPackages().add(additionalPackageRel.affectedClass.getBaseclass());
         return super.visit(additionalPackageRel, p);
     }
 
     @Override
-    public Object visit(final CdiRelBuilder.ExcludedClassesRel excludedClassesRel, final Object p) {
+    public Object visit(final Rels.ExcludedClassesRel excludedClassesRel, final Object p) {
         cdiTestConfig.getExcludedClasses().add(excludedClassesRel.affectedClass.getBaseclass());
         return super.visit(excludedClassesRel, p);
     }
 
     @Override
-    public Object visit(final CdiRelBuilder.EjbClasspathRel ejbClasspathRel, final Object p) {
+    public Object visit(final Rels.EjbClasspathRel ejbClasspathRel, final Object p) {
         return super.visit(ejbClasspathRel, p);
     }
 
     @Override
-    public Object visit(final CdiRelBuilder.ActivatedAlternativesRel activatedAlternativesRel, final Object p) {
+    public Object visit(final Rels.ActivatedAlternativesRel activatedAlternativesRel, final Object p) {
         cdiTestConfig.getActivatedAlternatives().add(activatedAlternativesRel.affectedClass.getBaseclass());
         return super.visit(activatedAlternativesRel, p);
     }

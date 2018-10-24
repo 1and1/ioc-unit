@@ -10,7 +10,7 @@ public class LoggingCountingRelVisitor extends CountingRelVisitor {
     Logger logger = LoggerFactory.getLogger("CountingRelVisitor");
 
     @Override
-    protected Object visitRel(final CdiRelBuilder.Rel rel, final Object p) {
+    protected Object visitRel(final Rels.Rel rel, final Object p) {
         try {
             logger.info("visiting rel: {}, affected Class: {}, parent: {}, {}", rel.getClass().getSimpleName(),
                     rel.getAffectedClass() != null ? rel.getAffectedClass().getSimpleName() : "null",

@@ -22,9 +22,9 @@ import com.oneandone.ejbcdiunit.internal.TypesScanner;
 public class CdiUnitAnnotationHandler {
     Logger logger = LoggerFactory.getLogger(CdiUnitAnnotationHandler.class);
     private final RelationFactory relFactory;
-    private final CdiRelBuilder.BeanClassRel parent;
+    private final Rels.BeanClassRel parent;
 
-    public CdiUnitAnnotationHandler(RelationFactory relFactory, final CdiRelBuilder.BeanClassRel parent) {
+    public CdiUnitAnnotationHandler(RelationFactory relFactory, final Rels.BeanClassRel parent) {
         this.relFactory = relFactory;
         this.parent = parent;
     }
@@ -53,18 +53,18 @@ public class CdiUnitAnnotationHandler {
 
     private void addEjbJarClasspath(final ClassWrapper c) {
         EjbJarClasspath ann = c.getAnnotation(EjbJarClasspath.class);
-        CdiRelBuilder.EjbClasspathRel additionalPackageRel = new CdiRelBuilder.EjbClasspathRel(ann, parent);
+        Rels.EjbClasspathRel additionalPackageRel = new Rels.EjbClasspathRel(ann, parent);
     }
 
     private void addExcludedClasses(final ClassWrapper c) {
         ExcludedClasses ann = c.getAnnotation(ExcludedClasses.class);
-        CdiRelBuilder.ExcludedClassesRel additionalPackageRel = new CdiRelBuilder.ExcludedClassesRel(ann, parent);
+        Rels.ExcludedClassesRel additionalPackageRel = new Rels.ExcludedClassesRel(ann, parent);
     }
 
     private void addAdditionalPackages(final ClassWrapper c) throws CdiRelBuilder.AnalyzerException {
         AdditionalPackages ann = c.getAnnotation(AdditionalPackages.class);
         for (Class<?> additionalPackage : ann.value()) {
-            CdiRelBuilder.AdditionalPackageRel additionalPackageRel = new CdiRelBuilder.AdditionalPackageRel(ann, parent);
+            Rels.AdditionalPackageRel additionalPackageRel = new Rels.AdditionalPackageRel(ann, parent);
             final String packageName = additionalPackage.getPackage().getName();
             Reflections reflections = new Reflections(new ConfigurationBuilder()
                     .setScanners(new TypesScanner())
@@ -92,7 +92,7 @@ public class CdiUnitAnnotationHandler {
     private void addAdditionalClasspaths(final ClassWrapper c) throws CdiRelBuilder.AnalyzerException {
         AdditionalClasspaths ann = c.getAnnotation(AdditionalClasspaths.class);
         for (Class<?> additionalClasspathClass : ann.value()) {
-            CdiRelBuilder.AdditionalClasspathRel additionalClassPathRel = new CdiRelBuilder.AdditionalClasspathRel(ann, parent);
+            Rels.AdditionalClasspathRel additionalClassPathRel = new Rels.AdditionalClasspathRel(ann, parent);
             final URL path = additionalClasspathClass.getProtectionDomain().getCodeSource().getLocation();
 
             Reflections reflections = new Reflections(new ConfigurationBuilder().setScanners(new TypesScanner())
@@ -109,7 +109,7 @@ public class CdiUnitAnnotationHandler {
 
     private void addActivatedAlternatives(final ClassWrapper c) throws CdiRelBuilder.AnalyzerException {
         ActivatedAlternatives ann = c.getAnnotation(ActivatedAlternatives.class);
-        CdiRelBuilder.ActivatedAlternativesRel additionalClassesRel = new CdiRelBuilder.ActivatedAlternativesRel(ann, parent);
+        Rels.ActivatedAlternativesRel additionalClassesRel = new Rels.ActivatedAlternativesRel(ann, parent);
 
         for (Class clazz : ann.value()) {
             if (clazz.getAnnotation(Alternative.class) == null) {
@@ -122,7 +122,7 @@ public class CdiUnitAnnotationHandler {
 
     private void addAdditionalClasses(final ClassWrapper c) throws CdiRelBuilder.AnalyzerException {
         AdditionalClasses ann = c.getAnnotation(AdditionalClasses.class);
-        CdiRelBuilder.AdditionalClassesRel additionalClassesRel = new CdiRelBuilder.AdditionalClassesRel(ann, parent);
+        Rels.AdditionalClassesRel additionalClassesRel = new Rels.AdditionalClassesRel(ann, parent);
 
         for (Class additionalClass : ann.value()) {
             relFactory.createBeanFromClass(additionalClassesRel, additionalClass);

@@ -25,36 +25,36 @@ import org.slf4j.LoggerFactory;
 public class RelationFactory {
     Logger logger = LoggerFactory.getLogger(RelationFactory.class);
 
-    Map<String, CdiRelBuilder.SimpleClassRel> simpleClassRelMap = new HashMap<String, CdiRelBuilder.SimpleClassRel>();
-    Map<String, CdiRelBuilder.Intermediate> beanClasses = new HashMap<String, CdiRelBuilder.Intermediate>();
+    Map<String, Rels.SimpleClassRel> simpleClassRelMap = new HashMap<String, Rels.SimpleClassRel>();
+    Map<String, Rels.Intermediate> beanClasses = new HashMap<String, Rels.Intermediate>();
 
-    CdiRelBuilder.SimpleClassRel createSimple(CdiRelBuilder.Intermediate parent, ClassWrapper c) throws CdiRelBuilder.AnalyzerException {
+    Rels.SimpleClassRel createSimple(Rels.Intermediate parent, ClassWrapper c) throws CdiRelBuilder.AnalyzerException {
         if (simpleClassRelMap.containsKey(c.getName())) {
             return simpleClassRelMap.get(c.getName());
         }
-        CdiRelBuilder.SimpleClassRel r = new CdiRelBuilder.SimpleClassRel(parent, c);
+        Rels.SimpleClassRel r = new Rels.SimpleClassRel(parent, c);
         simpleClassRelMap.put(c.getName(), r);
         return r;
     }
 
-    CdiRelBuilder.Intermediate createBeanFromClass(CdiRelBuilder.Intermediate parent, Class<?> c) throws CdiRelBuilder.AnalyzerException {
+    Rels.Intermediate createBeanFromClass(Rels.Intermediate parent, Class<?> c) throws CdiRelBuilder.AnalyzerException {
         return createBeanFromClass(parent, new ClassWrapper(c));
 
     }
 
-    CdiRelBuilder.Intermediate createBeanFromClass(CdiRelBuilder.Intermediate parent, ClassWrapper c) throws CdiRelBuilder.AnalyzerException {
+    Rels.Intermediate createBeanFromClass(Rels.Intermediate parent, ClassWrapper c) throws CdiRelBuilder.AnalyzerException {
         if (beanClasses.containsKey(c.getName())) {
             return beanClasses.get(c.getName());
         }
         if (simpleClassRelMap.containsKey(c.getName())) {
             return simpleClassRelMap.get(c.getName());
         }
-        CdiRelBuilder.Intermediate res = null;
+        Rels.Intermediate res = null;
         try {
             if (c.isInterface()) {
-                res = new CdiRelBuilder.SimpleClassRel(parent, c);
+                res = new Rels.SimpleClassRel(parent, c);
             } else {
-                CdiRelBuilder.BeanClassRel br = new CdiRelBuilder.BeanClassRel(parent, c);
+                Rels.BeanClassRel br = new Rels.BeanClassRel(parent, c);
                 new CdiUnitAnnotationHandler(this, br).handleAdditionalClassAnnotations(c);
                 res = br;
                 ClassWrapper superClass = c.getGenericSuperclass();
@@ -93,31 +93,31 @@ public class RelationFactory {
         return res;
     }
 
-    private void createProducerMethod(final CdiRelBuilder.BeanClassRel r, final Method method) throws CdiRelBuilder.AnalyzerException {
-        CdiRelBuilder.ProducerMethodRel res = new CdiRelBuilder.ProducerMethodRel(r, method);
+    private void createProducerMethod(final Rels.BeanClassRel r, final Method method) throws CdiRelBuilder.AnalyzerException {
+        Rels.ProducerMethodRel res = new Rels.ProducerMethodRel(r, method);
         addInjectedParameters(r, method.getParameters(), res);
     }
 
-    private void addInjectedParameters(final CdiRelBuilder.BeanClassRel r, final Parameter[] params, final CdiRelBuilder.Intermediate res)
+    private void addInjectedParameters(final Rels.BeanClassRel r, final Parameter[] params, final Rels.Intermediate res)
             throws CdiRelBuilder.AnalyzerException {
         for (Parameter p : params) {
-            CdiRelBuilder.InjectedParameterRel pRel = createInjectParameter(res, p);
-            CdiRelBuilder.Intermediate bean = createTypeBean(r, new ClassWrapper(p));
+            Rels.InjectedParameterRel pRel = createInjectParameter(res, p);
+            Rels.Intermediate bean = createTypeBean(r, new ClassWrapper(p));
             pRel.setBean(bean);
         }
     }
 
 
-    private void createInjectConstructor(final CdiRelBuilder.BeanClassRel r, final Constructor constructor) throws CdiRelBuilder.AnalyzerException {
-        CdiRelBuilder.ConstructorInjectRel res = new CdiRelBuilder.ConstructorInjectRel(r, constructor);
+    private void createInjectConstructor(final Rels.BeanClassRel r, final Constructor constructor) throws CdiRelBuilder.AnalyzerException {
+        Rels.ConstructorInjectRel res = new Rels.ConstructorInjectRel(r, constructor);
         addInjectedParameters(r, constructor.getParameters(), res);
     }
 
-    private CdiRelBuilder.InjectedParameterRel createInjectParameter(final CdiRelBuilder.Intermediate parent, final Parameter p) {
-        return new CdiRelBuilder.InjectedParameterRel(parent, p);
+    private Rels.InjectedParameterRel createInjectParameter(final Rels.Intermediate parent, final Parameter p) {
+        return new Rels.InjectedParameterRel(parent, p);
     }
 
-    private CdiRelBuilder.InjectedFieldRel createInjectField(final CdiRelBuilder.BeanClassRel r, final Field field)
+    private Rels.InjectedFieldRel createInjectField(final Rels.BeanClassRel r, final Field field)
             throws CdiRelBuilder.AnalyzerException {
         if (field.getType().equals(Provider.class)) {
             throw new NotImplementedYetException();
@@ -125,35 +125,35 @@ public class RelationFactory {
         if (field.getType().equals(Instance.class)) {
             throw new NotImplementedYetException();
         }
-        CdiRelBuilder.InjectedFieldRel res = new CdiRelBuilder.InjectedFieldRel(r, field);
+        Rels.InjectedFieldRel res = new Rels.InjectedFieldRel(r, field);
         try {
-            CdiRelBuilder.Intermediate bean = createTypeBean(r, new ClassWrapper(field));
+            Rels.Intermediate bean = createTypeBean(r, new ClassWrapper(field));
             res.setBean(bean);
         } catch (NoClassDefFoundError ex) {
-            CdiRelBuilder.SimpleClassRel bean = createNotAvailableBean(r, new ClassWrapper(field));
+            Rels.SimpleClassRel bean = createNotAvailableBean(r, new ClassWrapper(field));
             res.setBean(bean);
         }
         return res;
 
     }
 
-    private CdiRelBuilder.SimpleClassRel createNotAvailableBean(final CdiRelBuilder.BeanClassRel parent, final ClassWrapper type) {
-        return new CdiRelBuilder.SimpleClassRel(parent, type);
+    private Rels.SimpleClassRel createNotAvailableBean(final Rels.BeanClassRel parent, final ClassWrapper type) {
+        return new Rels.SimpleClassRel(parent, type);
     }
 
-    private CdiRelBuilder.ProducerFieldRel createProducedField(final CdiRelBuilder.BeanClassRel parent, final Field field) {
-        return new CdiRelBuilder.ProducerFieldRel(parent, field);
+    private Rels.ProducerFieldRel createProducedField(final Rels.BeanClassRel parent, final Field field) {
+        return new Rels.ProducerFieldRel(parent, field);
     }
 
-    CdiRelBuilder.Intermediate createParameterized(CdiRelBuilder.Intermediate parent, ParameterizedType type) throws CdiRelBuilder.AnalyzerException {
-        CdiRelBuilder.Intermediate raw = createBeanFromClass(parent, new ClassWrapper(type));
+    Rels.Intermediate createParameterized(Rels.Intermediate parent, ParameterizedType type) throws CdiRelBuilder.AnalyzerException {
+        Rels.Intermediate raw = createBeanFromClass(parent, new ClassWrapper(type));
         for (Type arg : type.getActualTypeArguments()) {
             createTypeBean(parent, new ClassWrapper(arg));
         }
         return raw;
     }
 
-    CdiRelBuilder.Intermediate createTypeBean(CdiRelBuilder.Intermediate parent, ClassWrapper typeDelegate) throws CdiRelBuilder.AnalyzerException {
+    Rels.Intermediate createTypeBean(Rels.Intermediate parent, ClassWrapper typeDelegate) throws CdiRelBuilder.AnalyzerException {
         if (typeDelegate.getType() instanceof Class) {
             return createBeanFromClass(parent, typeDelegate);
 

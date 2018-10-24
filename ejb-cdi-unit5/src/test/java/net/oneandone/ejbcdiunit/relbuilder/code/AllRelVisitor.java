@@ -1,22 +1,21 @@
 package net.oneandone.ejbcdiunit.relbuilder.code;
 
-import static net.oneandone.ejbcdiunit.relbuilder.code.CdiRelBuilder.ActivatedAlternativesRel;
-import static net.oneandone.ejbcdiunit.relbuilder.code.CdiRelBuilder.AdditionalClassesRel;
-import static net.oneandone.ejbcdiunit.relbuilder.code.CdiRelBuilder.AdditionalClasspathRel;
-import static net.oneandone.ejbcdiunit.relbuilder.code.CdiRelBuilder.AdditionalPackageRel;
-import static net.oneandone.ejbcdiunit.relbuilder.code.CdiRelBuilder.BeanClassRel;
-import static net.oneandone.ejbcdiunit.relbuilder.code.CdiRelBuilder.ConstructorInjectRel;
-import static net.oneandone.ejbcdiunit.relbuilder.code.CdiRelBuilder.EjbClasspathRel;
-import static net.oneandone.ejbcdiunit.relbuilder.code.CdiRelBuilder.ExcludedClassesRel;
-import static net.oneandone.ejbcdiunit.relbuilder.code.CdiRelBuilder.InjectedFieldRel;
-import static net.oneandone.ejbcdiunit.relbuilder.code.CdiRelBuilder.InjectedParameterRel;
-import static net.oneandone.ejbcdiunit.relbuilder.code.CdiRelBuilder.Intermediate;
-import static net.oneandone.ejbcdiunit.relbuilder.code.CdiRelBuilder.ProducerFieldRel;
-import static net.oneandone.ejbcdiunit.relbuilder.code.CdiRelBuilder.ProducerMethodRel;
-import static net.oneandone.ejbcdiunit.relbuilder.code.CdiRelBuilder.Rel;
-import static net.oneandone.ejbcdiunit.relbuilder.code.CdiRelBuilder.RelVisitor;
-import static net.oneandone.ejbcdiunit.relbuilder.code.CdiRelBuilder.RootRel;
-import static net.oneandone.ejbcdiunit.relbuilder.code.CdiRelBuilder.SimpleClassRel;
+import static net.oneandone.ejbcdiunit.relbuilder.code.Rels.ActivatedAlternativesRel;
+import static net.oneandone.ejbcdiunit.relbuilder.code.Rels.AdditionalClassesRel;
+import static net.oneandone.ejbcdiunit.relbuilder.code.Rels.AdditionalClasspathRel;
+import static net.oneandone.ejbcdiunit.relbuilder.code.Rels.AdditionalPackageRel;
+import static net.oneandone.ejbcdiunit.relbuilder.code.Rels.BeanClassRel;
+import static net.oneandone.ejbcdiunit.relbuilder.code.Rels.ConstructorInjectRel;
+import static net.oneandone.ejbcdiunit.relbuilder.code.Rels.EjbClasspathRel;
+import static net.oneandone.ejbcdiunit.relbuilder.code.Rels.ExcludedClassesRel;
+import static net.oneandone.ejbcdiunit.relbuilder.code.Rels.InjectedFieldRel;
+import static net.oneandone.ejbcdiunit.relbuilder.code.Rels.InjectedParameterRel;
+import static net.oneandone.ejbcdiunit.relbuilder.code.Rels.Intermediate;
+import static net.oneandone.ejbcdiunit.relbuilder.code.Rels.ProducerFieldRel;
+import static net.oneandone.ejbcdiunit.relbuilder.code.Rels.ProducerMethodRel;
+import static net.oneandone.ejbcdiunit.relbuilder.code.Rels.Rel;
+import static net.oneandone.ejbcdiunit.relbuilder.code.Rels.RootRel;
+import static net.oneandone.ejbcdiunit.relbuilder.code.Rels.SimpleClassRel;
 
 import java.util.ArrayList;
 import java.util.Arrays;

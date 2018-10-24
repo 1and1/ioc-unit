@@ -44,7 +44,7 @@ public class TestConfigInitializer {
         this.classesToIgnore = classesToIgnore;
     }
 
-    protected void initForAnalyzer() throws IOException {
+    public void initForAnalyzer() throws IOException {
         Class<?> testClass = testConfig.getTestClass();
         testConfig.getDiscoveredClasses().add(testClass.getName());
         classesToIgnore.addAll(new MockedClassesFinder().findMockedClassesOfTest(testClass));
