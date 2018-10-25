@@ -15,7 +15,6 @@ import java.net.URL;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.function.Predicate;
 
 import javax.decorator.Decorator;
 import javax.enterprise.inject.Alternative;
@@ -31,16 +30,12 @@ import org.jglue.cdiunit.ActivatedAlternatives;
 import org.jglue.cdiunit.AdditionalClasses;
 import org.jglue.cdiunit.AdditionalClasspaths;
 import org.jglue.cdiunit.AdditionalPackages;
-import org.reflections8.ReflectionUtils;
-import org.reflections8.Reflections;
-import org.reflections8.util.ConfigurationBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.oneandone.ejbcdiunit.CdiTestConfig;
 import com.oneandone.ejbcdiunit.cdiunit.EjbJarClasspath;
 import com.oneandone.ejbcdiunit.cdiunit.ExcludedClasses;
-import com.oneandone.ejbcdiunit.internal.TypesScanner;
 
 /**
  * Analyzes the current Testconfiguration of a cdi-unit testclass together with the classpath and an optional TestConfiguration. This is the
@@ -115,7 +110,7 @@ public class TestConfigAnalyzer {
                 AdditionalClasspaths additionalClasspaths = c.getAnnotation(AdditionalClasspaths.class);
                 if (additionalClasspaths != null) {
                     for (Class<?> additionalClasspath : additionalClasspaths.value()) {
-                        addClassPath(additionalClasspath);
+                        ClasspathHandler.addClassPath(additionalClasspath, classesToProcess, testConfig.getClasspathEntries());
                     }
                 }
 
@@ -132,7 +127,7 @@ public class TestConfigAnalyzer {
                 AdditionalPackages additionalPackages = c.getAnnotation(AdditionalPackages.class);
                 if (additionalPackages != null) {
                     for (Class<?> additionalPackage : additionalPackages.value()) {
-                        addPackage(additionalPackage);
+                        ClasspathHandler.addPackage(additionalPackage, classesToProcess);
                     }
                 }
 
@@ -242,10 +237,10 @@ public class TestConfigAnalyzer {
     private void transferInitialClassesToAddConfig(CdiTestConfig config) throws MalformedURLException {
         classesToProcess.addAll(config.getAdditionalClasses());
         for (Class<?> c : config.getAdditionalClassPathes()) {
-            addClassPath(c);
+            ClasspathHandler.addClassPath(c, classesToProcess, config.getClasspathEntries());
         }
         for (Class<?> c : config.getAdditionalClassPackages()) {
-            addPackage(c);
+            ClasspathHandler.addPackage(c, classesToProcess);
         }
         for (Class<?> c : config.getActivatedAlternatives()) {
             addAlternative(c);
@@ -268,37 +263,6 @@ public class TestConfigAnalyzer {
         if (!isAlternativeStereotype(alternativeClass)) {
             testConfig.getAlternatives().add(createMetadata(alternativeClass.getName(), alternativeClass.getName()));
         }
-    }
-
-    private void addPackage(Class<?> additionalPackage) throws MalformedURLException {
-        final String packageName = additionalPackage.getPackage().getName();
-        Reflections reflections = new Reflections(new ConfigurationBuilder()
-                .setScanners(new TypesScanner())
-                .setUrls(additionalPackage.getProtectionDomain().getCodeSource().getLocation()).filterInputsBy(new Predicate<String>() {
-
-                    @Override
-                    public boolean test(String input) {
-                        return input.startsWith(packageName)
-                                && !input.substring(packageName.length() + 1, input.length() - 6).contains(".");
-
-                    }
-                }));
-        classesToProcess.addAll(ReflectionUtils.forNames(
-                reflections.getStore().get(TypesScanner.class.getSimpleName()).keySet(),
-                new ClassLoader[] { getClass().getClassLoader() }));
-    }
-
-    private void addClassPath(Class<?> additionalClasspath) throws MalformedURLException {
-        final URL path = additionalClasspath.getProtectionDomain().getCodeSource().getLocation();
-
-        Reflections reflections = new Reflections(new ConfigurationBuilder().setScanners(new TypesScanner())
-                .setUrls(path));
-
-        classesToProcess.addAll(ReflectionUtils.forNames(
-                reflections.getStore().get(TypesScanner.class.getSimpleName()).keySet(),
-                new ClassLoader[] { getClass().getClassLoader() }));
-
-        testConfig.getClasspathEntries().add(path);
     }
 
 

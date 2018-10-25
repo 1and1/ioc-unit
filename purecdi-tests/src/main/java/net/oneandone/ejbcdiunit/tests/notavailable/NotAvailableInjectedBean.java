@@ -12,7 +12,7 @@ public class NotAvailableInjectedBean {
     @Inject
     InjectedBean injectedBean;
 
-    public NotAvailableInjectedBean() throws ShouldNotBeCreatedException {
-        throw new ShouldNotBeCreatedException();
+    public NotAvailableInjectedBean() throws ShouldInMavenNotBeCreatedException {
+        throw new ShouldInMavenNotBeCreatedException();
     }
 }

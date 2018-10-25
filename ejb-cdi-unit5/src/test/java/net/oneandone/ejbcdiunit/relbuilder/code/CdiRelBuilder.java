@@ -1,5 +1,6 @@
 package net.oneandone.ejbcdiunit.relbuilder.code;
 
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -20,6 +21,12 @@ public class CdiRelBuilder {
 
     public static class AnalyzerException extends Exception {
         public static final long serialVersionUID = -4731804312861785688L;
+
+        public AnalyzerException() {}
+
+        public AnalyzerException(final MalformedURLException e) {
+            super(e);
+        }
     }
 
 

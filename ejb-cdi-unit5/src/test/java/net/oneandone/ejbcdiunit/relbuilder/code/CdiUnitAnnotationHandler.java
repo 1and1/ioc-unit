@@ -1,7 +1,8 @@
 package net.oneandone.ejbcdiunit.relbuilder.code;
 
-import java.net.URL;
-import java.util.function.Predicate;
+import java.net.MalformedURLException;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.enterprise.inject.Alternative;
 
@@ -9,15 +10,12 @@ import org.jglue.cdiunit.ActivatedAlternatives;
 import org.jglue.cdiunit.AdditionalClasses;
 import org.jglue.cdiunit.AdditionalClasspaths;
 import org.jglue.cdiunit.AdditionalPackages;
-import org.reflections8.ReflectionUtils;
-import org.reflections8.Reflections;
-import org.reflections8.util.ConfigurationBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.oneandone.ejbcdiunit.cdiunit.EjbJarClasspath;
 import com.oneandone.ejbcdiunit.cdiunit.ExcludedClasses;
-import com.oneandone.ejbcdiunit.internal.TypesScanner;
+import com.oneandone.ejbcdiunit.cfganalyzer.ClasspathHandler;
 
 public class CdiUnitAnnotationHandler {
     Logger logger = LoggerFactory.getLogger(CdiUnitAnnotationHandler.class);
@@ -65,20 +63,14 @@ public class CdiUnitAnnotationHandler {
         AdditionalPackages ann = c.getAnnotation(AdditionalPackages.class);
         for (Class<?> additionalPackage : ann.value()) {
             Rels.AdditionalPackageRel additionalPackageRel = new Rels.AdditionalPackageRel(ann, parent);
-            final String packageName = additionalPackage.getPackage().getName();
-            Reflections reflections = new Reflections(new ConfigurationBuilder()
-                    .setScanners(new TypesScanner())
-                    .setUrls(additionalPackage.getProtectionDomain().getCodeSource().getLocation()).filterInputsBy(new Predicate<String>() {
-                        @Override
-                        public boolean test(String input) {
-                            return input.startsWith(packageName)
-                                    && !input.substring(packageName.length() + 1, input.length() - 6).contains(".");
+            Set<Class<?>> classesToProcess = new HashSet<>();
+            try {
+                ClasspathHandler.addPackage(additionalPackage, classesToProcess);
+            } catch (MalformedURLException e) {
+                throw new CdiRelBuilder.AnalyzerException(e);
+            }
 
-                        }
-                    }));
-            for (Class classPathClass : ReflectionUtils.forNames(
-                    reflections.getStore().get(TypesScanner.class.getSimpleName()).keySet(),
-                    new ClassLoader[] { getClass().getClassLoader() })) {
+            for (Class classPathClass : classesToProcess) {
                 relFactory.createBeanFromClass(additionalPackageRel, classPathClass);
             }
             if (additionalPackageRel.size() == 0) {
@@ -93,14 +85,13 @@ public class CdiUnitAnnotationHandler {
         AdditionalClasspaths ann = c.getAnnotation(AdditionalClasspaths.class);
         for (Class<?> additionalClasspathClass : ann.value()) {
             Rels.AdditionalClasspathRel additionalClassPathRel = new Rels.AdditionalClasspathRel(ann, parent);
-            final URL path = additionalClasspathClass.getProtectionDomain().getCodeSource().getLocation();
-
-            Reflections reflections = new Reflections(new ConfigurationBuilder().setScanners(new TypesScanner())
-                    .setUrls(path));
-
-            for (Class classPathClass : ReflectionUtils.forNames(
-                    reflections.getStore().get(TypesScanner.class.getSimpleName()).keySet(),
-                    new ClassLoader[] { getClass().getClassLoader() })) {
+            Set<Class<?>> classesToProcess = new HashSet<>();
+            try {
+                ClasspathHandler.addClassPath(additionalClasspathClass, classesToProcess, null);
+            } catch (MalformedURLException e) {
+                throw new CdiRelBuilder.AnalyzerException(e);
+            }
+            for (Class classPathClass : classesToProcess) {
                 relFactory.createBeanFromClass(additionalClassPathRel, classPathClass);
             }
         }
@@ -114,7 +105,6 @@ public class CdiUnitAnnotationHandler {
         for (Class clazz : ann.value()) {
             if (clazz.getAnnotation(Alternative.class) == null) {
                 logger.warn("ActivatedAlternative without Annotation \"Alternative\" {}", clazz.getSimpleName());
-
             }
             relFactory.createBeanFromClass(additionalClassesRel, clazz);
         }
