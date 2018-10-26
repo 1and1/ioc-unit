@@ -32,6 +32,7 @@ import net.oneandone.ejbcdiunit.relbuilder.beans.additional_package.AdditionalPa
 import net.oneandone.ejbcdiunit.relbuilder.beans.additional_package.AdditionalPackageBeanToBeInjected2;
 import net.oneandone.ejbcdiunit.relbuilder.code.CdiRelBuilder;
 import net.oneandone.ejbcdiunit.relbuilder.code.CountingRelVisitor;
+import net.oneandone.ejbcdiunit.relbuilder.code.InjectProduceExtractor;
 import net.oneandone.ejbcdiunit.relbuilder.code.InjectsFinder;
 import net.oneandone.ejbcdiunit.relbuilder.code.LoggingCountingRelVisitor;
 import net.oneandone.ejbcdiunit.relbuilder.code.Rels;
@@ -50,6 +51,7 @@ public class RelBuilderTest {
     protected Map<String, Rels.Intermediate> beanClasses;
     protected CountingRelVisitor countingRelVisitor;
     protected InjectsFinder injectsFinder;
+    protected InjectProduceExtractor injectProduceExtractor;
 
     @BeforeEach
     public void beforeEach() {
@@ -67,6 +69,9 @@ public class RelBuilderTest {
         countingRelVisitor.visit(root, null);
         injectsFinder = new InjectsFinder();
         injectsFinder.visit(root, null);
+        injectProduceExtractor = new InjectProduceExtractor();
+        injectProduceExtractor.produceFitsToInject(root);
+
     }
 
     @Nested
