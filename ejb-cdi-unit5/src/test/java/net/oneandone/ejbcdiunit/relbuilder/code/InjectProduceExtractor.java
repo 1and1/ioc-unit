@@ -1,19 +1,14 @@
 package net.oneandone.ejbcdiunit.relbuilder.code;
 
-import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import net.oneandone.ejbcdiunit.relbuilder.code.Rels.ProducerFieldRel;
+import net.oneandone.ejbcdiunit.relbuilder.code.Rels.Rel;
 
 import javax.enterprise.inject.Any;
 import javax.enterprise.inject.Default;
 import javax.enterprise.inject.spi.Extension;
 import javax.inject.Qualifier;
-
-import net.oneandone.ejbcdiunit.relbuilder.code.Rels.ProducerFieldRel;
-import net.oneandone.ejbcdiunit.relbuilder.code.Rels.Rel;
+import java.lang.annotation.Annotation;
+import java.util.*;
 
 /**
  * @author aschoerk
@@ -26,6 +21,18 @@ public class InjectProduceExtractor extends AllRelVisitor {
     public List<QualifiedDesc> emptyInjects = new ArrayList<>();
     public HashMap<QualifiedDesc, List<QualifiedDesc>> ambiguusQualifiedDescs = new HashMap<>();
     public HashMap<QualifiedDesc, List<QualifiedDesc>> matchingQualifiedDescs = new HashMap<>();
+
+    public List<QualifiedDesc> getEmptyInjects() {
+        return emptyInjects;
+    }
+
+    public HashMap<QualifiedDesc, List<QualifiedDesc>> getAmbiguusQualifiedDescs() {
+        return ambiguusQualifiedDescs;
+    }
+
+    public HashMap<QualifiedDesc, List<QualifiedDesc>> getMatchingQualifiedDescs() {
+        return matchingQualifiedDescs;
+    }
 
     @Default
     static class ToGetDefault {

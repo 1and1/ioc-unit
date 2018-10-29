@@ -1,17 +1,11 @@
 package net.oneandone.ejbcdiunit.relbuilder;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.lang.annotation.Annotation;
-import java.util.Arrays;
-import java.util.Map;
-
-import javax.enterprise.inject.Any;
-import javax.inject.Inject;
-
+import net.oneandone.ejbcdiunit.relbuilder.beans.*;
+import net.oneandone.ejbcdiunit.relbuilder.beans.additional_package.AdditionalPackageBeanToBeInjected;
+import net.oneandone.ejbcdiunit.relbuilder.beans.additional_package.AdditionalPackageBeanToBeInjected2;
+import net.oneandone.ejbcdiunit.relbuilder.code.*;
+import net.oneandone.ejbcdiunit.tests.notavailable.InjectedBean;
+import net.oneandone.ejbcdiunit.tests.notavailable.NotAvailableInjectedBean;
 import org.jglue.cdiunit.AdditionalPackages;
 import org.jglue.cdiunit.ProducesAlternative;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,21 +17,13 @@ import org.mockito.Mock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.oneandone.ejbcdiunit.relbuilder.beans.BeanContainingNotAvailable;
-import net.oneandone.ejbcdiunit.relbuilder.beans.BeanToBeInjected;
-import net.oneandone.ejbcdiunit.relbuilder.beans.ConstructedTestBean;
-import net.oneandone.ejbcdiunit.relbuilder.beans.TestBeanWithInjectedField;
-import net.oneandone.ejbcdiunit.relbuilder.beans.TestBeanWithProducerInject;
-import net.oneandone.ejbcdiunit.relbuilder.beans.additional_package.AdditionalPackageBeanToBeInjected;
-import net.oneandone.ejbcdiunit.relbuilder.beans.additional_package.AdditionalPackageBeanToBeInjected2;
-import net.oneandone.ejbcdiunit.relbuilder.code.CdiRelBuilder;
-import net.oneandone.ejbcdiunit.relbuilder.code.CountingRelVisitor;
-import net.oneandone.ejbcdiunit.relbuilder.code.InjectProduceExtractor;
-import net.oneandone.ejbcdiunit.relbuilder.code.InjectsFinder;
-import net.oneandone.ejbcdiunit.relbuilder.code.LoggingCountingRelVisitor;
-import net.oneandone.ejbcdiunit.relbuilder.code.Rels;
-import net.oneandone.ejbcdiunit.tests.notavailable.InjectedBean;
-import net.oneandone.ejbcdiunit.tests.notavailable.NotAvailableInjectedBean;
+import javax.enterprise.inject.Any;
+import javax.inject.Inject;
+import java.lang.annotation.Annotation;
+import java.util.Arrays;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author aschoerk
@@ -78,12 +64,16 @@ public class RelBuilderTest {
     class SimpleTests {
         @Test
         public void canInjectOneField() throws CdiRelBuilder.AnalyzerException {
-            initTest(TestBeanWithInjectedField.class);
+            initTest(TestBeanWithInjectedField.class,BeanToBeInjected.class);
 
             assertNotNull(beanClasses.get(TestBeanWithInjectedField.class.getName()));
             assertNotNull(beanClasses.get(BeanToBeInjected.class.getName()));
             assertEquals(2, beanClasses.size());
             assertEquals(4, countingRelVisitor.getCount());
+            assertEquals(injectProduceExtractor.getEmptyInjects().size(),0);
+            assertEquals(injectProduceExtractor.getAmbiguusQualifiedDescs().size(),0);
+            assertEquals(injectProduceExtractor.getMatchingQualifiedDescs().size(),1);
+
             // CountingRelVisitor - visiting type: RootRel, com.oneandone.ejbcdiunit.cfganalyzer.CdiRelBuilder$RootRel@4803b726, parent: root
             // CountingRelVisitor - visiting type: BeanClassRel, com.oneandone.ejbcdiunit.cfganalyzer.CdiRelBuilder$BeanClassRel@6253c26, parent:
             // com.oneandone.ejbcdiunit.cfganalyzer.CdiRelBuilder$RootRel@4803b726
