@@ -1,14 +1,14 @@
 package net.oneandone.ejbcdiunit.purecdi;
 
+import org.junit.Test;
+
 import java.util.Arrays;
 import java.util.Collection;
-
-import org.junit.Test;
 
 /**
  * @author aschoerk
  */
-public class AltProdCorrectedByAddingDependencyTest extends AltProdTest {
+public class AltProdCorrectedByAddingDependencySettingUpTest extends AltProdSettingUpTest {
 
     // remove CdiHelperBean, then no creation is triggered
     @Override

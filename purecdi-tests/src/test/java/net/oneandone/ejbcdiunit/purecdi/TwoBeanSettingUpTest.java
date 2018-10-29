@@ -1,18 +1,17 @@
 package net.oneandone.ejbcdiunit.purecdi;
 
-import static org.junit.Assert.assertTrue;
+import org.junit.Test;
 
+import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.Collection;
 
-import javax.inject.Inject;
-
-import org.junit.Test;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author aschoerk
  */
-public class TwoBeanTest extends TestBaseClass {
+public class TwoBeanSettingUpTest extends SettingUpTestBaseClass {
 
     @Override
     public Collection<String> getBeanClasses() {
@@ -43,8 +42,8 @@ public class TwoBeanTest extends TestBaseClass {
     public void test() {
         if (deploymentException != null)
             throw deploymentException;
-        assertTrue(container.instance().select(CdiBean1.class).get().callThis());
-        assertTrue(container.instance().select(CdiBean1.class).get().getCdiHelperBean().callHelper());
+        assertTrue(getContainer().instance().select(CdiBean1.class).get().callThis());
+        assertTrue(getContainer().instance().select(CdiBean1.class).get().getCdiHelperBean().callHelper());
     }
 
 }

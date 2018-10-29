@@ -1,22 +1,21 @@
 package net.oneandone.ejbcdiunit.purecdi;
 
-import static org.junit.Assert.assertNotNull;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import org.jboss.weld.bootstrap.spi.Metadata;
+import org.junit.Test;
 
 import javax.enterprise.inject.Alternative;
 import javax.enterprise.inject.spi.DeploymentException;
 import javax.inject.Inject;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
-import org.jboss.weld.bootstrap.spi.Metadata;
-import org.junit.Test;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * @author aschoerk
  */
-public class TwoBeanAltTest extends TestBaseClass {
+public class TwoBeanAltSettingUpTest extends SettingUpTestBaseClass {
 
     @Override
     public Collection<String> getBeanClasses() {

@@ -1,8 +1,14 @@
 package net.oneandone.ejbcdiunit.purecdi;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import org.jboss.weld.bootstrap.spi.Metadata;
+import org.junit.Test;
+import org.mockito.Mockito;
 
+import javax.enterprise.inject.Alternative;
+import javax.enterprise.inject.Produces;
+import javax.enterprise.inject.Stereotype;
+import javax.enterprise.inject.spi.DeploymentException;
+import javax.inject.Inject;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -11,20 +17,13 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import javax.enterprise.inject.Alternative;
-import javax.enterprise.inject.Produces;
-import javax.enterprise.inject.Stereotype;
-import javax.enterprise.inject.spi.DeploymentException;
-import javax.inject.Inject;
-
-import org.jboss.weld.bootstrap.spi.Metadata;
-import org.junit.Test;
-import org.mockito.Mockito;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author aschoerk
  */
-public class AltProdTest extends TestBaseClass {
+public class AltProdSettingUpTest extends SettingUpTestBaseClass {
 
     @Override
     public Collection<String> getBeanClasses() {
@@ -39,7 +38,7 @@ public class AltProdTest extends TestBaseClass {
         return Arrays.asList(new Metadata<String>() {
             @Override
             public String getValue() {
-                return AltProdTest.StereoTypeAlt.class.getName();
+                return AltProdSettingUpTest.StereoTypeAlt.class.getName();
             }
 
             @Override
@@ -101,8 +100,8 @@ public class AltProdTest extends TestBaseClass {
     public void test() {
         if (deploymentException != null)
             throw deploymentException;
-        assertTrue(container.instance().select(CdiBean1.class).get().callThis());
-        assertFalse(container.instance().select(CdiBean1.class).get().getCdiHelperBean().callHelper());
+        assertTrue(getContainer().instance().select(CdiBean1.class).get().callThis());
+        assertFalse(getContainer().instance().select(CdiBean1.class).get().getCdiHelperBean().callHelper());
     }
 
 }

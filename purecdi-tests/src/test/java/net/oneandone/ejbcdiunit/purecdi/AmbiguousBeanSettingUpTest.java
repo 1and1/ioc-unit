@@ -1,20 +1,19 @@
 package net.oneandone.ejbcdiunit.purecdi;
 
-import static org.junit.Assert.assertTrue;
-
-import java.util.Arrays;
-import java.util.Collection;
+import org.junit.Test;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.spi.DeploymentException;
 import javax.inject.Inject;
+import java.util.Arrays;
+import java.util.Collection;
 
-import org.junit.Test;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author aschoerk
  */
-public class AmbiguousBeanTest extends TestBaseClass {
+public class AmbiguousBeanSettingUpTest extends SettingUpTestBaseClass {
 
     @Override
     public Collection<String> getBeanClasses() {
@@ -55,8 +54,8 @@ public class AmbiguousBeanTest extends TestBaseClass {
     public void test() {
         if (deploymentException != null)
             throw deploymentException;
-        assertTrue(container.instance().select(CdiBean1.class).get().callThis());
-        assertTrue(container.instance().select(CdiBean1.class).get().getCdiHelperBean().callHelper());
+        assertTrue(getContainer().instance().select(CdiBean1.class).get().callThis());
+        assertTrue(getContainer().instance().select(CdiBean1.class).get().getCdiHelperBean().callHelper());
     }
 
 }

@@ -1,20 +1,17 @@
 package net.oneandone.ejbcdiunit.purecdi;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import org.junit.Test;
 
+import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.Collection;
 
-import javax.inject.Inject;
-
-import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
  * @author aschoerk
  */
-public class TwoBeanWithGenericsTest extends TestBaseClass {
+public class TwoBeanWithGenericsSettingUpTest extends SettingUpTestBaseClass {
 
     @Override
     public Collection<String> getBeanClasses() {
@@ -65,10 +62,10 @@ public class TwoBeanWithGenericsTest extends TestBaseClass {
     public void test() {
         if (deploymentException != null)
             throw deploymentException;
-        assertTrue(container.select(CdiBean1.class).get().callThis());
-        assertTrue(container.select(CdiBean1.class).get().getCdiHelperBean().callHelper());
-        assertNull(container.select(CdiBean1.class).get().getCdiHelperBean().field);
-        assertNotNull(container.select(CdiBean1.class).get().getCdiHelperBeanCdiParamInjectHelperBean().field);
+        assertTrue(getContainer().select(CdiBean1.class).get().callThis());
+        assertTrue(getContainer().select(CdiBean1.class).get().getCdiHelperBean().callHelper());
+        assertNull(getContainer().select(CdiBean1.class).get().getCdiHelperBean().field);
+        assertNotNull(getContainer().select(CdiBean1.class).get().getCdiHelperBeanCdiParamInjectHelperBean().field);
     }
 
 }
