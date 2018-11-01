@@ -1,11 +1,17 @@
 package net.oneandone.ejbcdiunit.relbuilder;
 
-import net.oneandone.ejbcdiunit.relbuilder.beans.*;
-import net.oneandone.ejbcdiunit.relbuilder.beans.additional_package.AdditionalPackageBeanToBeInjected;
-import net.oneandone.ejbcdiunit.relbuilder.beans.additional_package.AdditionalPackageBeanToBeInjected2;
-import net.oneandone.ejbcdiunit.relbuilder.code.*;
-import net.oneandone.ejbcdiunit.tests.notavailable.InjectedBean;
-import net.oneandone.ejbcdiunit.tests.notavailable.NotAvailableInjectedBean;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.lang.annotation.Annotation;
+import java.util.Arrays;
+import java.util.Map;
+
+import javax.enterprise.inject.Any;
+import javax.inject.Inject;
+
 import org.jglue.cdiunit.AdditionalPackages;
 import org.jglue.cdiunit.ProducesAlternative;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,13 +23,21 @@ import org.mockito.Mock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.enterprise.inject.Any;
-import javax.inject.Inject;
-import java.lang.annotation.Annotation;
-import java.util.Arrays;
-import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.*;
+import net.oneandone.ejbcdiunit.relbuilder.beans.BeanContainingNotAvailable;
+import net.oneandone.ejbcdiunit.relbuilder.beans.BeanToBeInjected;
+import net.oneandone.ejbcdiunit.relbuilder.beans.ConstructedTestBean;
+import net.oneandone.ejbcdiunit.relbuilder.beans.TestBeanWithInjectedField;
+import net.oneandone.ejbcdiunit.relbuilder.beans.TestBeanWithProducerInject;
+import net.oneandone.ejbcdiunit.relbuilder.beans.additional_package.AdditionalPackageBeanToBeInjected;
+import net.oneandone.ejbcdiunit.relbuilder.beans.additional_package.AdditionalPackageBeanToBeInjected2;
+import net.oneandone.ejbcdiunit.relbuilder.code.CdiRelBuilder;
+import net.oneandone.ejbcdiunit.relbuilder.code.CountingRelVisitor;
+import net.oneandone.ejbcdiunit.relbuilder.code.InjectProduceExtractor;
+import net.oneandone.ejbcdiunit.relbuilder.code.InjectsFinder;
+import net.oneandone.ejbcdiunit.relbuilder.code.LoggingCountingRelVisitor;
+import net.oneandone.ejbcdiunit.relbuilder.code.Rels;
+import net.oneandone.ejbcdiunit.tests.notavailable.InjectedBean;
+import net.oneandone.ejbcdiunit.tests.notavailable.NotAvailableInjectedBean;
 
 /**
  * @author aschoerk
@@ -92,6 +106,10 @@ public class RelBuilderTest {
             assertNotNull(beanClasses.get(BeanToBeInjected.class.getName()));
             assertEquals(2, beanClasses.size());
             assertEquals(6, countingRelVisitor.getCount());
+            assertEquals(injectProduceExtractor.getEmptyInjects().size(), 0);
+            assertEquals(injectProduceExtractor.getAmbiguusQualifiedDescs().size(), 0);
+            assertEquals(injectProduceExtractor.getMatchingQualifiedDescs().size(), 1);
+
             // CountingRelVisitor - visiting type: RootRel, com.oneandone.ejbcdiunit.cfganalyzer.CdiRelBuilder$RootRel@7c711375, parent: root
             // CountingRelVisitor - visiting type: BeanClassRel, com.oneandone.ejbcdiunit.cfganalyzer.CdiRelBuilder$BeanClassRel@2c1b194a, parent:
             // com.oneandone.ejbcdiunit.cfganalyzer.CdiRelBuilder$RootRel@7c711375
@@ -212,9 +230,9 @@ public class RelBuilderTest {
             assertNotNull(beanClasses.get(DiffAdditionalPackage.class.getName()));
             assertNotNull(beanClasses.get(AdditionalPackageTestBeanWithMultipleSame2.class.getName()));
             checkOneAdditionalPackage(4, 8);
-            assertEquals(AdditionalPackageTestBeanWithMultipleSame2.class, getInjectedType(0));
+            assertEquals(AdditionalPackageTestBeanWithMultipleSame2.class, getInjectedClass(0));
             assertTrue(hasInjectedQualifier(0, "@javax.enterprise.inject.Default()"));
-            assertEquals(AdditionalPackageBeanToBeInjected.class, getInjectedType(1));
+            assertEquals(AdditionalPackageBeanToBeInjected.class, getInjectedClass(1));
             assertTrue(hasInjectedQualifier(1, "@javax.enterprise.inject.Any()"));
 
             assertEquals(2, injectsFinder.getInjectionPoints().size());
@@ -270,7 +288,7 @@ public class RelBuilderTest {
         return false;
     }
 
-    private Class getInjectedType(final int index) {
+    private Class getInjectedClass(final int index) {
         return injectsFinder.getInjectionPoints().get(index).getClassWrapper().getBaseclass();
     }
 

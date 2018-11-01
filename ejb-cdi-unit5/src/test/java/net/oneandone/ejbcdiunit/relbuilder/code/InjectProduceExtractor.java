@@ -1,14 +1,22 @@
 package net.oneandone.ejbcdiunit.relbuilder.code;
 
-import net.oneandone.ejbcdiunit.relbuilder.code.Rels.ProducerFieldRel;
-import net.oneandone.ejbcdiunit.relbuilder.code.Rels.Rel;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import javax.enterprise.inject.Any;
 import javax.enterprise.inject.Default;
 import javax.enterprise.inject.spi.Extension;
 import javax.inject.Qualifier;
-import java.lang.annotation.Annotation;
-import java.util.*;
+
+import org.apache.commons.lang3.reflect.TypeUtils;
+
+import net.oneandone.ejbcdiunit.relbuilder.code.Rels.ProducerFieldRel;
+import net.oneandone.ejbcdiunit.relbuilder.code.Rels.Rel;
 
 /**
  * @author aschoerk
@@ -40,14 +48,14 @@ public class InjectProduceExtractor extends AllRelVisitor {
     }
 
     static public class QualifiedDesc {
-        public QualifiedDesc(final Rel org, final Class producedClass, final Set<Annotation> qualifiers) {
+        public QualifiedDesc(final Rel org, final Type type, final Set<Annotation> qualifiers) {
             this.org = org;
-            this.producedClass = producedClass;
+            this.type = type;
             this.qualifiers = qualifiers;
         }
 
         Rel org;
-        Class producedClass;
+        Type type;
         Set<Annotation> qualifiers;
     }
 
@@ -57,21 +65,21 @@ public class InjectProduceExtractor extends AllRelVisitor {
     @Override
     public Object visit(final ProducerFieldRel producerFieldRel, final Object p) {
         Annotation[] annotations = producerFieldRel.f.getAnnotations();
-        addProducerInfo(producerFieldRel, producerFieldRel.f.getType(), annotations);
+        addProducerInfo(producerFieldRel, producerFieldRel.f.getGenericType(), annotations);
         return super.visit(producerFieldRel, p);
     }
 
     @Override
     public Object visit(final Rels.ProducerMethodRel producerMethodRel, final Object p) {
         Annotation[] annotations = producerMethodRel.getMethod().getAnnotations();
-        addProducerInfo(producerMethodRel, producerMethodRel.getMethod().getReturnType(), annotations);
+        addProducerInfo(producerMethodRel, producerMethodRel.getMethod().getGenericReturnType(), annotations);
         return super.visit(producerMethodRel, p);
     }
 
     @Override
     public Object visit(final Rels.InjectedFieldRel injectedFieldRel, final Object p) {
         Annotation[] annotations = injectedFieldRel.f.getAnnotations();
-        addInjectsInfo(injectedFieldRel, injectedFieldRel.f.getType(), annotations);
+        addInjectsInfo(injectedFieldRel, injectedFieldRel.f.getGenericType(), annotations);
         return super.visit(injectedFieldRel, p);
     }
 
@@ -81,26 +89,26 @@ public class InjectProduceExtractor extends AllRelVisitor {
         if (clazz.isAnnotation() || Extension.class.isAssignableFrom(clazz) || clazz.isPrimitive()) {
 
         } else {
-            addProducerInfo(beanClassRel, clazz, beanClassRel.affectedClass.getAnnotations());
+            addProducerInfo(beanClassRel, beanClassRel.affectedClass.getType(), beanClassRel.affectedClass.getAnnotations());
         }
         return super.visit(beanClassRel, p);
     }
 
     @Override
     public Object visit(final Rels.InjectedParameterRel injectedParameterRel, final Object p) {
-        Class<?> clazz = injectedParameterRel.getParameter().getType();
+        Type type = injectedParameterRel.getParameter().getParameterizedType();
         Annotation[] annotations = injectedParameterRel.getParameter().getAnnotations();
-        addInjectsInfo(injectedParameterRel, clazz, annotations);
+        addInjectsInfo(injectedParameterRel, type, annotations);
         return super.visit(injectedParameterRel, p);
     }
 
 
-    private void addProducerInfo(final Rel rel, Class<?> type, final Annotation[] annotations) {
+    private void addProducerInfo(final Rel rel, Type type, final Annotation[] annotations) {
         Set<Annotation> qualifiers = getQualifiers(annotations);
         producers.add(new QualifiedDesc(rel, type, qualifiers));
     }
 
-    private void addInjectsInfo(final Rel rel, Class<?> type, final Annotation[] annotations) {
+    private void addInjectsInfo(final Rel rel, Type type, final Annotation[] annotations) {
         Set<Annotation> qualifiers = getQualifiers(annotations);
         injects.add(new QualifiedDesc(rel, type, qualifiers));
     }
@@ -128,7 +136,7 @@ public class InjectProduceExtractor extends AllRelVisitor {
         for (QualifiedDesc qi : injects) {
             matchingQualifiedDescs.put(qi, new ArrayList<>());
             for (QualifiedDesc qp : producers) {
-                if (qi.producedClass.isAssignableFrom(qp.producedClass)) {
+                if (TypeUtils.isAssignable(qp.type, qi.type)) {
                     if (qualifiersMatch(qi, qp))
                         matchingQualifiedDescs.get(qi).add(qp);
                 }
@@ -159,26 +167,27 @@ public class InjectProduceExtractor extends AllRelVisitor {
                 if (!hasDefault(qp.qualifiers)) {
                     return false;
                 }
-            }
-            boolean found = false;
-            for (Annotation ap : qp.qualifiers) {
-                if (ap.equals(ai)) {
-                    found = true;
-                    break;
+            } else {
+                boolean found = false;
+                for (Annotation ap : qp.qualifiers) {
+                    if (ap.equals(ai)) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    return false;
                 }
             }
-            if (!found) {
-                return false;
-            }
         }
-        return null;
+        return true;
     }
 
     private boolean hasDefault(final Set<Annotation> qualifiers) {
         if (qualifiers.isEmpty())
             return true;
         for (Annotation a : qualifiers) {
-            if (a.annotationType().getName().equals(Qualifier.class.getName()))
+            if (a.annotationType().getName().equals(Default.class.getName()))
                 return true;
         }
         return false;
