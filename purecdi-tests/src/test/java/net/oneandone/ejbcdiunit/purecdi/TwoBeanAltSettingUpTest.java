@@ -1,44 +1,17 @@
 package net.oneandone.ejbcdiunit.purecdi;
 
-import org.jboss.weld.bootstrap.spi.Metadata;
-import org.junit.Test;
-
 import javax.enterprise.inject.Alternative;
 import javax.enterprise.inject.spi.DeploymentException;
 import javax.inject.Inject;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
 
-import static org.junit.Assert.assertNotNull;
+import org.junit.Test;
 
 /**
  * @author aschoerk
  */
-public class TwoBeanAltSettingUpTest extends SettingUpTestBaseClass {
+public class TwoBeanAltSettingUpTest extends WeldStarterTestBase {
 
-    @Override
-    public Collection<String> getBeanClasses() {
-        return Arrays.asList(CdiBean1.class.getName(),
-                // DummyClass.class.getName(),
-                CdiHelperBean.class.getName(),
-                CdiHelperBeanAlt.class.getName());
-    }
 
-    @Override
-    public List<Metadata<String>> getAlternativeClasses() {
-        return Arrays.asList(new Metadata<String>() {
-            @Override
-            public String getValue() {
-                return CdiHelperBeanAlt.class.getName();
-            }
-
-            @Override
-            public String getLocation() {
-                return "In Testcode";
-            }
-        });
-    }
 
     public interface CdiHelperBeanIntf {
         boolean callHelper();
@@ -89,9 +62,9 @@ public class TwoBeanAltSettingUpTest extends SettingUpTestBaseClass {
 
     @Test(expected = DeploymentException.class)
     public void test() {
-        if (deploymentException != null)
-            throw deploymentException;
-        assertNotNull(this.deploymentException);
+        setBeanClasses(CdiBean1.class, CdiHelperBean.class, CdiHelperBeanAlt.class);
+        setAlternativeClasses(CdiHelperBeanAlt.class);
+        start();
     }
 
 }
