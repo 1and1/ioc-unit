@@ -1,7 +1,6 @@
 package net.oneandone.ejbcdiunit.purecdi;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -22,14 +21,6 @@ public class WeldStarterTestBase {
         private List<Metadata<String>> alternativeClasses = Collections.EMPTY_LIST;
         private List<Metadata<String>> enabledAlternativeStereotypes = Collections.EMPTY_LIST;
 
-        public void setBeanClasses(final Collection<String> beanClassesP) {
-            this.beanClasses = beanClassesP;
-        }
-
-        public void setBeanClasses(String... classNames) {
-            this.beanClasses = Arrays.asList(classNames);
-        }
-
         public void setBeanClasses(Class... classes) {
             beanClasses = new ArrayList<>();
             for (Class clazz : classes) {
@@ -37,27 +28,6 @@ public class WeldStarterTestBase {
             }
         }
 
-
-        public void setAlternativeClasses(final List<Metadata<String>> alternativeClassesP) {
-            this.alternativeClasses = alternativeClassesP;
-        }
-
-        public void setAlternativeClasses(String... classNames) {
-            this.alternativeClasses = new ArrayList<>();
-            for (String className : classNames) {
-                alternativeClasses.add(new Metadata<String>() {
-                    @Override
-                    public String getValue() {
-                        return className;
-                    }
-
-                    @Override
-                    public String getLocation() {
-                        return "In Testcode";
-                    }
-                });
-            }
-        }
 
         public void setAlternativeClasses(Class... classes) {
             this.alternativeClasses = new ArrayList<>();
@@ -70,15 +40,30 @@ public class WeldStarterTestBase {
 
                     @Override
                     public String getLocation() {
-                        return "In Testcode";
+                        return "Alternative In Testcode";
                     }
                 });
             }
         }
 
-        public void setEnabledAlternativeStereotypes(final List<Metadata<String>> enabledAlternativeStereotypesP) {
-            this.enabledAlternativeStereotypes = enabledAlternativeStereotypesP;
+
+        public void setEnabledAlternativeStereotypes(Class... classes) {
+            this.enabledAlternativeStereotypes = new ArrayList<>();
+            for (Class clazz : classes) {
+                enabledAlternativeStereotypes.add(new Metadata<String>() {
+                    @Override
+                    public String getValue() {
+                        return clazz.getName();
+                    }
+
+                    @Override
+                    public String getLocation() {
+                        return "AlternativeStereotype In Testcode";
+                    }
+                });
+            }
         }
+
 
         @Override
         public Collection<String> getBeanClasses() {
@@ -107,6 +92,10 @@ public class WeldStarterTestBase {
 
     public void setAlternativeClasses(Class... classes) {
         weldSetup.setAlternativeClasses(classes);
+    }
+
+    public void setEnabledAlternativeStereotypes(Class... classes) {
+        weldSetup.setEnabledAlternativeStereotypes(classes);
     }
 
     public void start() {

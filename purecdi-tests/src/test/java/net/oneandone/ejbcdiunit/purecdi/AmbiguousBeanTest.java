@@ -1,24 +1,16 @@
 package net.oneandone.ejbcdiunit.purecdi;
 
-import org.junit.Test;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.spi.DeploymentException;
 import javax.inject.Inject;
-import java.util.Arrays;
-import java.util.Collection;
 
-import static org.junit.Assert.assertTrue;
+import org.junit.Test;
 
 /**
  * @author aschoerk
  */
-public class AmbiguousBeanSettingUpTest extends SettingUpTestBaseClass {
+public class AmbiguousBeanTest extends WeldStarterTestBase {
 
-    @Override
-    public Collection<String> getBeanClasses() {
-        return Arrays.asList(CdiBean1.class.getName(), CdiHelperBean.class.getName(), CdiHelperBean2.class.getName());
-    }
 
     @ApplicationScoped
     static class CdiHelperBean {
@@ -52,10 +44,10 @@ public class AmbiguousBeanSettingUpTest extends SettingUpTestBaseClass {
 
     @Test(expected = DeploymentException.class)
     public void test() {
-        if (deploymentException != null)
-            throw deploymentException;
-        assertTrue(getContainer().instance().select(CdiBean1.class).get().callThis());
-        assertTrue(getContainer().instance().select(CdiBean1.class).get().getCdiHelperBean().callHelper());
+        setBeanClasses(CdiBean1.class,
+                CdiHelperBean.class, CdiHelperBean2.class);
+
+        start();
     }
 
 }
