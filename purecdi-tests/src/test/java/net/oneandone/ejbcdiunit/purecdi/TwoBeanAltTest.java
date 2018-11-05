@@ -14,7 +14,7 @@ import org.mockito.Mockito;
 /**
  * @author aschoerk
  */
-public class TwoBeanAltSettingUpAltTest extends WeldStarterTestBase {
+public class TwoBeanAltTest extends WeldStarterTestBase {
 
     public interface CdiHelperBeanIntf {
         boolean callHelper();
@@ -76,11 +76,21 @@ public class TwoBeanAltSettingUpAltTest extends WeldStarterTestBase {
 
     @Test(expected = DeploymentException.class)
     public void testDeploymentException() {
-        weldSetup.setBeanClasses(CdiBean1.class,
+        setBeanClasses(CdiBean1.class,
                 CdiHelperBean.class,
                 CdiHelperBeanAlt.class);
-        weldStarter.start(weldSetup);
+        start();
     }
+
+    @Test(expected = DeploymentException.class)
+    public void testDeploymentExceptionWithAltSet() {
+        setBeanClasses(CdiBean1.class,
+                CdiHelperBean.class,
+                CdiHelperBeanAlt.class);
+        setAlternativeClasses(CdiHelperBeanAlt.class);
+        start();
+    }
+
 
     @Test
     public void testWithAlternative() {
@@ -107,7 +117,7 @@ public class TwoBeanAltSettingUpAltTest extends WeldStarterTestBase {
         assertFalse(selectGet(CdiBean1.class).cdiHelperBean.callHelper());
     }
 
-    @Test(expected = DeploymentException.class)
+    @Test(expected = DeploymentException.class) // Alternative must be in beanClasses
     public void testWithAlternativeWithoutAltClassAvailable() {
         weldSetup.setBeanClasses(
                 DummyClass.class,
@@ -115,7 +125,6 @@ public class TwoBeanAltSettingUpAltTest extends WeldStarterTestBase {
                 CdiBean1.class);
         weldSetup.setAlternativeClasses(CdiHelperBeanAlt.class);
         start();
-        assertFalse(selectGet(CdiBean1.class).cdiHelperBean.callHelper());
     }
 
     @Test

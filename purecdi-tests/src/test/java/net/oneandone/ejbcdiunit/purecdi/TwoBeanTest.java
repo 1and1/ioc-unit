@@ -9,7 +9,7 @@ import org.junit.Test;
 /**
  * @author aschoerk
  */
-public class TwoBeanSettingUpTest extends WeldStarterTestBase {
+public class TwoBeanTest extends WeldStarterTestBase {
 
 
     static class CdiHelperBean {
