@@ -34,6 +34,11 @@ public class ClasspathHandler {
                 new ClassLoader[] { ClasspathHandler.class.getClassLoader() }));
     }
 
+    public static void addClassPath(Class<?> additionalClasspath, Set<Class<?>> classesToProcess) throws MalformedURLException {
+        addClassPath(additionalClasspath, classesToProcess, null);
+    }
+
+
     public static void addClassPath(Class<?> additionalClasspath, Set<Class<?>> classesToProcess, Set<URL> classpathEntries)
             throws MalformedURLException {
         final URL path = additionalClasspath.getProtectionDomain().getCodeSource().getLocation();

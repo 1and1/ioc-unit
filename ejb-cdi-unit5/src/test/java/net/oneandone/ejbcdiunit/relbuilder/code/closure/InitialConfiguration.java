@@ -43,7 +43,7 @@ public class InitialConfiguration {
     public Set<Class<?>> enabledAlternatives;
 
     /**
-     * Classes which must be excluded if they would occure in the list of beanclasses used to start Weld-SE
+     * Classes which must be excludedClasses if they would occure in the list of beanclasses used to start Weld-SE
      */
     public Set<Class<?>> excludedClasses;
 
