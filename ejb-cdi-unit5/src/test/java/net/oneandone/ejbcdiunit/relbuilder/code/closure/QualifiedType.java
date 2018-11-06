@@ -7,7 +7,11 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
+
+import javax.inject.Qualifier;
 
 /**
  * @author aschoerk
@@ -17,6 +21,13 @@ class QualifiedType {
     private Method m;
     private Constructor c;
     private Parameter p;
+    private Class clazz;
+    private Set<Annotation> qualifiers;
+
+    public QualifiedType(final Class clazz) {
+        assert clazz != null;
+        this.clazz = clazz;
+    }
 
     public QualifiedType(final Parameter p, final Constructor c) {
         assert p != null;
@@ -51,6 +62,19 @@ class QualifiedType {
         }
     }
 
+    Set<Annotation> getQualifiers() {
+        if (this.qualifiers == null) {
+            Set<Annotation> tmpQualifiers = new HashSet<>();
+            for (Annotation annotation : getAnnotations()) {
+                if (annotation.annotationType().isAnnotationPresent(Qualifier.class)) {
+                    tmpQualifiers.add(annotation);
+                }
+            }
+            this.qualifiers = tmpQualifiers;
+        }
+        return this.qualifiers;
+    }
+
     Type getType() {
         if (p != null) {
             return p.getParameterizedType();
@@ -61,6 +85,8 @@ class QualifiedType {
         if (f != null) {
             return f.getGenericType();
         }
+        if (clazz != null)
+            return clazz;
         throw new AssertionError();
     }
 
@@ -74,6 +100,8 @@ class QualifiedType {
         if (f != null) {
             return f.getAnnotation(ann) != null;
         }
+        if (clazz != null)
+            return clazz.getAnnotation(ann) != null;
         throw new AssertionError();
     }
 
@@ -87,6 +115,8 @@ class QualifiedType {
         if (f != null) {
             return f.getAnnotations();
         }
+        if (clazz != null)
+            return clazz.getAnnotations();
         throw new AssertionError();
     }
 
@@ -100,6 +130,8 @@ class QualifiedType {
         if (f != null) {
             return f.getDeclaringClass();
         }
+        if (clazz != null)
+            return clazz;
         return null;
     }
 
@@ -113,11 +145,12 @@ class QualifiedType {
         return Objects.equals(f, that.f) &&
                 Objects.equals(m, that.m) &&
                 Objects.equals(c, that.c) &&
-                Objects.equals(p, that.p);
+                Objects.equals(p, that.p) &&
+                Objects.equals(clazz, that.clazz);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(f, m, c, p);
+        return Objects.hash(f, m, c, p, clazz);
     }
 }

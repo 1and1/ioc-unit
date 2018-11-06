@@ -46,6 +46,7 @@ class Builder {
         for (Class innerClass : c.getDeclaredClasses()) {
             if (Modifier.isStatic(innerClass.getModifiers()) && CdiConfigBuilder.mightBeBean(innerClass)) {
                 staticInnerClasses.add(innerClass);
+                addToClassMap(innerClass);
                 findInnerClasses(innerClass, staticInnerClasses);
             }
         }
@@ -78,11 +79,13 @@ class Builder {
 
     Builder tobeStarted(Class c) {
         beansToBeStarted.add(c);
+        addToClassMap(c);
         return this;
     }
 
     Builder setAvailable(Class c) {
         beansAvailable.add(c);
+        addToClassMap(c);
         return this;
     }
 
@@ -128,6 +131,7 @@ class Builder {
                 if (!testClasses.contains(testClass)) {
                     testClassesToBeEvaluated.add(testClass);
                     testClasses.add(testClass);
+                    addToClassMap(testClass);
                 }
             }
         }
@@ -141,6 +145,7 @@ class Builder {
                 if (!sutClasses.contains(sutClass)) {
                     sutClassesToBeEvaluated.add(sutClass);
                     sutClasses.add(sutClass);
+                    addToClassMap(sutClass);
                 }
             }
         }
@@ -151,7 +156,12 @@ class Builder {
         SutPackages sutPackages = c.getAnnotation(SutPackages.class);
         if (sutPackages != null) {
             for (Class<?> packageClass : sutPackages.value()) {
-                ClasspathHandler.addPackage(packageClass, sutClassesAvailable);
+                Set<Class<?>> tmpClasses = new HashSet<>();
+                ClasspathHandler.addPackage(packageClass, tmpClasses);
+                for (Class clazz : tmpClasses) {
+                    addToClassMap(clazz);
+                    sutClassesAvailable.add(clazz);
+                }
             }
         }
         return this;
@@ -161,7 +171,12 @@ class Builder {
         SutClasspaths sutClasspaths = c.getAnnotation(SutClasspaths.class);
         if (sutClasspaths != null) {
             for (Class<?> classpathClass : sutClasspaths.value()) {
-                ClasspathHandler.addClassPath(classpathClass, sutClassesAvailable);
+                Set<Class<?>> tmpClasses = new HashSet<>();
+                ClasspathHandler.addClassPath(classpathClass, tmpClasses);
+                for (Class clazz : tmpClasses) {
+                    addToClassMap(clazz);
+                    sutClassesAvailable.add(clazz);
+                }
             }
         }
         return this;
@@ -172,6 +187,8 @@ class Builder {
         if (enabledAlternatives != null) {
             for (Class<?> alternative : enabledAlternatives.value()) {
                 alternatives.add(alternative);
+                testClasses.add(alternative);
+                addToClassMap(alternative);
             }
         }
         return this;
@@ -256,6 +273,27 @@ class Builder {
             classMap.put(tmpC, entities);
         }
         entities.add(clazz);
+    }
+
+    public enum ClassKind {
+        TEST,
+        TEST_AVAILABLE,
+        SUT_TOSTART,
+        SUT_AVAILABLE
+    }
+
+    public ClassKind getClassKind(Class<?> c) {
+        if (testClasses.contains(c))
+            return ClassKind.TEST;
+        if (testClassesAvailable.contains(c)) {
+            return ClassKind.TEST_AVAILABLE;
+        }
+        if (sutClasses.contains(c)) {
+            return ClassKind.SUT_TOSTART;
+        }
+        if (sutClassesAvailable.contains(c)) {
+            return ClassKind.SUT_AVAILABLE;
+        }
     }
 
 }
