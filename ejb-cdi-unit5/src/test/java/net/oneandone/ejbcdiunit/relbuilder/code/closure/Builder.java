@@ -1,5 +1,9 @@
 package net.oneandone.ejbcdiunit.relbuilder.code.closure;
 
+import com.oneandone.ejbcdiunit.cfganalyzer.ClasspathHandler;
+import net.oneandone.ejbcdiunit.relbuilder.code.closure.annotations.*;
+
+import javax.enterprise.inject.Produces;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -8,17 +12,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import javax.enterprise.inject.Produces;
-
-import com.oneandone.ejbcdiunit.cfganalyzer.ClasspathHandler;
-
-import net.oneandone.ejbcdiunit.relbuilder.code.closure.annotations.EnabledAlternatives;
-import net.oneandone.ejbcdiunit.relbuilder.code.closure.annotations.ExcludedClasses;
-import net.oneandone.ejbcdiunit.relbuilder.code.closure.annotations.SutClasses;
-import net.oneandone.ejbcdiunit.relbuilder.code.closure.annotations.SutClasspaths;
-import net.oneandone.ejbcdiunit.relbuilder.code.closure.annotations.SutPackages;
-import net.oneandone.ejbcdiunit.relbuilder.code.closure.annotations.TestClasses;
 
 /**
  * @author aschoerk
@@ -140,7 +133,7 @@ class Builder {
 
     Builder sutClasses(Class<?> c) {
         SutClasses sutClassesx = c.getAnnotation(SutClasses.class);
-        if (sutClasses != null) {
+        if (sutClassesx != null) {
             for (Class<?> sutClass : sutClassesx.value()) {
                 if (!sutClasses.contains(sutClass)) {
                     sutClassesToBeEvaluated.add(sutClass);
@@ -294,6 +287,7 @@ class Builder {
         if (sutClassesAvailable.contains(c)) {
             return ClassKind.SUT_AVAILABLE;
         }
+        throw new RuntimeException("expected test, testavailable, sut or sutavailable");
     }
 
 }

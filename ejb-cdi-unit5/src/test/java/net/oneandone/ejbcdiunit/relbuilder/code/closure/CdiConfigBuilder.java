@@ -1,5 +1,13 @@
 package net.oneandone.ejbcdiunit.relbuilder.code.closure;
 
+import org.apache.commons.lang3.reflect.TypeUtils;
+
+import javax.decorator.Decorator;
+import javax.enterprise.inject.Any;
+import javax.enterprise.inject.Default;
+import javax.enterprise.inject.spi.Extension;
+import javax.inject.Inject;
+import javax.interceptor.Interceptor;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
@@ -8,15 +16,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import javax.decorator.Decorator;
-import javax.enterprise.inject.Any;
-import javax.enterprise.inject.Default;
-import javax.enterprise.inject.spi.Extension;
-import javax.inject.Inject;
-import javax.interceptor.Interceptor;
-
-import org.apache.commons.lang3.reflect.TypeUtils;
 
 public class CdiConfigBuilder {
 
@@ -84,14 +83,18 @@ public class CdiConfigBuilder {
         for (QualifiedType inject : builder.injections) {
             Set<QualifiedType> foundProducers = new HashSet<>();
             Set<QualifiedType> producers = builder.producerMap.get(inject.getRawtype());
-            for (QualifiedType q : producers) {
-                if (TypeUtils.isAssignable(q.getType(), inject.getType())) {
-                    foundProducers.add(q);
+            if (producers != null) {
+                for (QualifiedType q : producers) {
+                    if (TypeUtils.isAssignable(q.getType(), inject.getType())) {
+                        foundProducers.add(q);
+                    }
                 }
             }
             Set<Class<?>> foundClasses = builder.classMap.get(inject.getRawtype());
-            for (Class c : foundClasses) {
-                foundProducers.add(new QualifiedType(c));
+            if (foundClasses != null) {
+                for (Class c : foundClasses) {
+                    foundProducers.add(new QualifiedType(c));
+                }
             }
 
             // check types and qualifiers of results
@@ -188,7 +191,8 @@ public class CdiConfigBuilder {
     public void initialize(InitialConfiguration cfg) throws MalformedURLException {
 
         Set<Class<?>> tmp = new HashSet<>();
-        tmp.add(cfg.testClass);
+        if (cfg.testClass != null)
+            tmp.add(cfg.testClass);
         tmp.addAll(cfg.initialClasses);
         evaluateLevel(tmp);
 

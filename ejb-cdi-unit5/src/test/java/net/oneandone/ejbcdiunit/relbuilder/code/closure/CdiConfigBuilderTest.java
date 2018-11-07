@@ -1,11 +1,11 @@
 package net.oneandone.ejbcdiunit.relbuilder.code.closure;
 
-import java.util.Arrays;
-
-import javax.inject.Inject;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import javax.inject.Inject;
+import java.net.MalformedURLException;
+import java.util.Arrays;
 
 /**
  * @author aschoerk
@@ -38,8 +38,10 @@ public class CdiConfigBuilderTest {
     }
 
     @Test
-    public void test() {
+    public void test() throws MalformedURLException {
         initialClasses(DummyBean.class, Bean.class);
+        CdiConfigBuilder cdiConfigBuilder = new CdiConfigBuilder();
+        cdiConfigBuilder.initialize(cfg);
 
 
     }
