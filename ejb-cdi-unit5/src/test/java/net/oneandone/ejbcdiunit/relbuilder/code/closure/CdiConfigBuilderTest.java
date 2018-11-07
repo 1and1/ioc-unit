@@ -1,6 +1,7 @@
 package net.oneandone.ejbcdiunit.relbuilder.code.closure;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import javax.inject.Inject;
@@ -12,21 +13,22 @@ import java.util.Arrays;
  */
 public class CdiConfigBuilderTest {
 
-    InitialConfiguration cfg = new InitialConfiguration();
+    static class Base {
+        @BeforeEach
+        public void beforeEach() {
+            cfg = new InitialConfiguration();
+        }
+        InitialConfiguration cfg = new InitialConfiguration();
 
-    public void initialClasses(Class<?>... classes) {
-        cfg.initialClasses.addAll(Arrays.asList(classes));
+        public void initialClasses(Class<?>... classes) {
+            cfg.initialClasses.addAll(Arrays.asList(classes));
+        }
+
+        public void testClass(Class clazz) {
+            cfg.testClass = clazz;
+        }
+
     }
-
-    public void testClass(Class clazz) {
-        cfg.testClass = clazz;
-    }
-
-    @BeforeEach
-    public void beforeEach() {
-        cfg = new InitialConfiguration();
-    }
-
 
     static class DummyBean {
 
@@ -37,14 +39,25 @@ public class CdiConfigBuilderTest {
         DummyBean dummyBean;
     }
 
-    @Test
-    public void test() throws MalformedURLException {
-        initialClasses(DummyBean.class, Bean.class);
-        CdiConfigBuilder cdiConfigBuilder = new CdiConfigBuilder();
-        cdiConfigBuilder.initialize(cfg);
+    @Nested
+    class SimpleTests extends Base {
 
+        @Test
+        public void testSimple1() throws MalformedURLException {
+            initialClasses(DummyBean.class, Bean.class);
+            CdiConfigBuilder cdiConfigBuilder = new CdiConfigBuilder();
+            cdiConfigBuilder.initialize(cfg);
+        }
 
+        @Test
+        public void testSimplePart() throws MalformedURLException {
+            initialClasses(Bean.class);
+            CdiConfigBuilder cdiConfigBuilder = new CdiConfigBuilder();
+            cdiConfigBuilder.initialize(cfg);
+        }
     }
+
+
 
 
 }
