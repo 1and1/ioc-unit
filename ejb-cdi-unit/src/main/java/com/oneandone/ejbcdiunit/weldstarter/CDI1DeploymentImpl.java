@@ -2,7 +2,6 @@ package com.oneandone.ejbcdiunit.weldstarter;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 
 import javax.enterprise.inject.spi.Extension;
 
@@ -17,10 +16,13 @@ import org.jboss.weld.bootstrap.spi.Metadata;
 public class CDI1DeploymentImpl implements Deployment {
     private final BeanDeploymentArchive oneDeploymentArchive;
     private final ServiceRegistry services;
+    private final Iterable<Metadata<Extension>> extensions;
 
-    public CDI1DeploymentImpl(final ServiceRegistry services, final BeanDeploymentArchive oneDeploymentArchive) {
+    public CDI1DeploymentImpl(final ServiceRegistry services, final BeanDeploymentArchive oneDeploymentArchive,
+            Iterable<Metadata<Extension>> extensions) {
         this.services = services;
         this.oneDeploymentArchive = oneDeploymentArchive;
+        this.extensions = extensions;
     }
 
     @Override
@@ -40,6 +42,6 @@ public class CDI1DeploymentImpl implements Deployment {
 
     @Override
     public Iterable<Metadata<Extension>> getExtensions() {
-        return Collections.emptyList();
+        return extensions;
     }
 }

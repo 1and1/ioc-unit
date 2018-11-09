@@ -161,6 +161,19 @@
                     <groupId>org.junit.jupiter</groupId>
                     <artifactId>junit-jupiter-params</artifactId>
                     <version>${junit5.version}</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.junit.jupiter</groupId>
+                    <artifactId>junit-jupiter-api</artifactId>
+                    <version>${junit5.version}</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.junit.jupiter</groupId>
+                    <artifactId>junit-jupiter-engine</artifactId>
+                    <version>${junit5.version}</version>
+                    <scope>test</scope>
                 </dependency>
             </dependencies>
             <build>
@@ -187,6 +200,12 @@
                                     com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl
                                 </javax.xml.parsers.DocumentBuilderFactory>
                             </systemPropertyVariables>
+                            <excludes>
+                                <exclude>*XXX*</exclude>
+                            </excludes>
+                            <includes>
+                                <include>**/*$*</include>
+                            </includes>
 
                             <reportFormat>plain</reportFormat>
                             <redirectTestOutputToFile>true</redirectTestOutputToFile>

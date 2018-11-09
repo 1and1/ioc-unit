@@ -130,6 +130,7 @@ public class InjectsMatcher {
         for (QualifiedType inject : ambiguus.keySet()) {
             Set<Class<?>> testClasses = new HashSet<>();
             Set<Class<?>> sutClasses = new HashSet<>();
+            Set<Class<?>> availableTestClasses = new HashSet<>();
             Set<Class<?>> availableClasses = new HashSet<>();
             Set<QualifiedType> producingTypes = ambiguus.get(inject);
             for (QualifiedType q : producingTypes) {
@@ -138,38 +139,53 @@ public class InjectsMatcher {
                     testClasses.add(declaringClass);
                 } else if (builder.isSuTClass(declaringClass)) {
                     sutClasses.add(declaringClass);
+                }
+                if (builder.isTestClassAvailable(declaringClass)) {
+                    availableTestClasses.add(declaringClass);
                 } else {
                     availableClasses.add(declaringClass);
                 }
-                if (testClasses.size() != 0) {
-                    if (testClasses.size() > 1 || sutClasses.size() != 0) {
-                        problems.add(new CdiConfigBuilder.ProblemRecord("Handling Inject: {} Testclass(es) {} clashing with SutClass(es) {}",
-                                inject, testClasses, sutClasses));
-                    } else {
-                        final Class<?> testClass = testClasses.iterator().next();
-                        if (!builder.beansToBeStarted.contains(testClass)) {
-                            newToBeStarted.add(testClass);
-                        }
-                    }
-
-                } else if (sutClasses.size() > 0) {
-                    if (sutClasses.size() > 1)
-                        problems.add(new CdiConfigBuilder.ProblemRecord("Handling Inject: {} too many SutClass(es) {}",
-                                inject, sutClasses));
-                    final Class<?> sutClass = sutClasses.iterator().next();
-                    if (!builder.beansToBeStarted.contains(sutClass)) {
-                        newToBeStarted.add(sutClass);
-                    }
-                } else {
-                    assert (availableClasses.size() != 0);
-                    if (availableClasses.size() > 1) {
-                        problems.add(new CdiConfigBuilder.ProblemRecord("Handling Inject: {} too many AvailableClass(es) {}",
-                                inject, availableClasses));
-                    }
-                    newToBeStarted.add(availableClasses.iterator().next());
-                }
             }
-            builder.injectHandled(inject);
+            if (testClasses.size() != 0) {
+                if (testClasses.size() > 1 || sutClasses.size() != 0) {
+                    problems.add(new CdiConfigBuilder.ProblemRecord("Handling Inject: {} Testclass(es) {} clashing with SutClass(es) {}",
+                            inject, testClasses, sutClasses));
+                } else {
+                    final Class<?> testClass = testClasses.iterator().next();
+                    if (!builder.beansToBeStarted.contains(testClass)) {
+                        newToBeStarted.add(testClass);
+                    }
+                }
+                builder.injectHandled(inject);
+            } else if (sutClasses.size() > 0) {
+                if (sutClasses.size() > 1)
+                    problems.add(new CdiConfigBuilder.ProblemRecord("Handling Inject: {} too many SutClass(es) {}",
+                            inject, sutClasses));
+                final Class<?> sutClass = sutClasses.iterator().next();
+                if (!builder.beansToBeStarted.contains(sutClass)) {
+                    newToBeStarted.add(sutClass);
+                }
+                builder.injectHandled(inject);
+            } else if (availableTestClasses.size() > 0) {
+                if (availableTestClasses.size() > 1)
+                    problems.add(new CdiConfigBuilder.ProblemRecord("Handling Inject: {} more than one available TestClass(es) {}",
+                            inject, availableTestClasses));
+                final Class<?> testClass = availableTestClasses.iterator().next();
+                if (!builder.beansToBeStarted.contains(testClass)) {
+                    builder.testClass(testClass);
+                    newToBeStarted.add(testClass);
+                }
+            } else {
+                assert (availableClasses.size() != 0);
+                if (availableClasses.size() > 1) {
+                    problems.add(new CdiConfigBuilder.ProblemRecord("Handling Inject: {} more than one AvailableClass(es) {}",
+                            inject, availableClasses));
+                }
+                final Class<?> toBeStarted = availableClasses.iterator().next();
+                builder.sutClass(toBeStarted);
+                newToBeStarted.add(toBeStarted);
+            }
+
         }
         return newToBeStarted;
     }

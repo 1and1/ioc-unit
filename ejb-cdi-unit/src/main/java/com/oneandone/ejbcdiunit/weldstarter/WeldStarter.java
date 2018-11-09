@@ -51,7 +51,7 @@ public class WeldStarter {
 
                 oneDeploymentArchive.getServices().add(ResourceLoader.class, resourceLoader);
 
-                Deployment res = new Post1Deployment(services, oneDeploymentArchive);
+                Deployment res = new Post1Deployment(services, oneDeploymentArchive, weldSetup.getExtensions());
 
                 return res;
             }
@@ -64,7 +64,7 @@ public class WeldStarter {
 
                 oneDeploymentArchive.getServices().add(ResourceLoader.class, resourceLoader);
 
-                Deployment res = new CDI1DeploymentImpl(services, oneDeploymentArchive);
+                Deployment res = new CDI1DeploymentImpl(services, oneDeploymentArchive, weldSetup.getExtensions());
 
                 return res;
             }

@@ -14,10 +14,12 @@ import javax.enterprise.inject.spi.Extension;
 import javax.inject.Inject;
 import javax.interceptor.Interceptor;
 
+import com.oneandone.cdiunit.internal.easymock.EasyMockExtension;
+import com.oneandone.cdiunit.internal.mockito.MockitoExtension;
+
 public class CdiConfigBuilder {
 
     private Builder builder;
-
     public static boolean mightBeBean(Class<?> c) {
         if (c.isInterface() || c.isPrimitive() || c.isLocalClass()
                 || c.isAnonymousClass() || c.isLocalClass()
@@ -46,6 +48,10 @@ public class CdiConfigBuilder {
 
     public static boolean isExtension(final Class<?> c) {
         return (Extension.class.isAssignableFrom(c));
+    }
+
+    public Collection<Class<? extends Extension>> getExtensions() {
+        return builder.extensions;
     }
 
     public static class ProblemRecord {
@@ -135,6 +141,8 @@ public class CdiConfigBuilder {
         Set<Class<?>> tmp = new HashSet<>();
         if (cfg.testClass != null)
             tmp.add(cfg.testClass);
+        tmp.add(MockitoExtension.class);
+        tmp.add(EasyMockExtension.class);
         tmp.addAll(cfg.initialClasses);
         evaluateLevel(tmp);
 

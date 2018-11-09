@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.spi.DeploymentException;
+import javax.enterprise.inject.spi.Extension;
 
 import org.jboss.weld.bootstrap.spi.Metadata;
 import org.jboss.weld.environment.se.WeldContainer;
@@ -84,10 +85,44 @@ public class WeldStarterTestBase {
         public void setDeploymentException(DeploymentException deploymentException) {
 
         }
+
+        List<Metadata<Extension>> extensions = new ArrayList<>();
+
+        @Override
+        public Iterable<Metadata<Extension>> getExtensions() {
+            return extensions;
+        }
+
+
+        public void setExtensions(final Collection<Class<? extends Extension>> classes) {
+            for (Class<? extends Extension> clazz : classes) {
+                this.extensions.add(new Metadata<Extension>() {
+                    @Override
+                    public Extension getValue() {
+                        try {
+                            return (Extension) clazz.newInstance();
+                        } catch (InstantiationException e) {
+                            throw new RuntimeException(e);
+                        } catch (IllegalAccessException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+
+                    @Override
+                    public String getLocation() {
+                        return "Alternative In Testcode";
+                    }
+                });
+            }
+        }
     };
 
     public void setBeanClasses(Class... classes) {
         weldSetup.setBeanClasses(classes);
+    }
+
+    public void setExtensions(Collection<Class<? extends Extension>> classes) {
+        weldSetup.setExtensions(classes);
     }
 
     public void setBeanClasses(Collection<Class<?>> classes) {

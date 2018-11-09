@@ -2,7 +2,6 @@ package com.oneandone.ejbcdiunit.weldstarter;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 
 import javax.enterprise.inject.spi.Extension;
 
@@ -18,10 +17,13 @@ public class Post1Deployment implements CDI11Deployment {
 
     private final BeanDeploymentArchive oneDeploymentArchive;
     private final ServiceRegistry services;
+    private final Iterable<Metadata<Extension>> extensions;
 
-    public Post1Deployment(final ServiceRegistry services, final BeanDeploymentArchive oneDeploymentArchive) {
+    public Post1Deployment(final ServiceRegistry services, final BeanDeploymentArchive oneDeploymentArchive,
+            Iterable<Metadata<Extension>> extensions) {
         this.services = services;
         this.oneDeploymentArchive = oneDeploymentArchive;
+        this.extensions = extensions;
     }
 
     @Override
@@ -46,6 +48,6 @@ public class Post1Deployment implements CDI11Deployment {
 
     @Override
     public Iterable<Metadata<Extension>> getExtensions() {
-        return Collections.emptyList();
+        return extensions;
     }
 }

@@ -1,5 +1,6 @@
 package com.oneandone.ejbcdiunit.closure;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -9,7 +10,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import javax.enterprise.inject.Produces;
+import javax.enterprise.inject.spi.Extension;
 
 import com.oneandone.ejbcdiunit.cfganalyzer.ClasspathHandler;
 import com.oneandone.ejbcdiunit.closure.annotations.EnabledAlternatives;
@@ -38,7 +39,12 @@ class Builder {
     Set<Class<?>> sutClassesToBeEvaluated = new HashSet<>();
     Set<Class<?>> testClassesAvailable = new HashSet<>();
     Set<Class<?>> sutClassesAvailable = new HashSet<>();
-    Set<Class<?>> extensions = new HashSet<>();
+
+    public Set<Class<? extends Extension>> getExtensions() {
+        return extensions;
+    }
+
+    Set<Class<? extends Extension>> extensions = new HashSet<>();
     Set<Class<?>> elseClasses = new HashSet<>();
     Set<QualifiedType> handledInjections = new HashSet<>();
 
@@ -53,7 +59,14 @@ class Builder {
     }
 
     boolean isTestClass(Class<?> c) {
-        if (testClasses.contains(c) || testClassesAvailable.contains(c)) {
+        if (testClasses.contains(c)) {
+            return true;
+        } else
+            return false;
+    }
+
+    boolean isTestClassAvailable(Class<?> c) {
+        if (testClassesAvailable.contains(c)) {
             return true;
         } else if (c.getDeclaringClass() != null)
             return isTestClass(c.getDeclaringClass());
@@ -117,10 +130,22 @@ class Builder {
         return this;
     }
 
+    boolean containsProducingAnnotation(final Annotation[] annotations) {
+        for (Annotation ann : annotations) {
+            final String name = ann.annotationType().getName();
+            if (name.equals("org.easymock.Mock")
+                    || name.equals("org.mockito.Mock")
+                    || name.equals("javax.enterprise.inject.Produces")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     Builder producerFields(Class c) {
         for (Field f : c.getDeclaredFields()) {
-            if (f.getAnnotation(Produces.class) != null) {
+            if (containsProducingAnnotation(f.getAnnotations())) {
                 final QualifiedType q = new QualifiedType(f);
                 produces.add(q);
                 addToProducerMap(q);
@@ -131,7 +156,7 @@ class Builder {
 
     Builder producerMethods(Class c) {
         for (Method m : c.getDeclaredMethods()) {
-            if (m.getAnnotation(Produces.class) != null) {
+            if (containsProducingAnnotation(m.getAnnotations())) {
                 final QualifiedType q = new QualifiedType(m);
                 produces.add(q);
                 addToProducerMap(q);
@@ -142,12 +167,14 @@ class Builder {
 
     Builder testClass(Class<?> c) {
         testClasses.add(c);
+        testClassesAvailable.remove(c);
         addToClassMap(c);
         return this;
     }
 
     Builder sutClass(Class<?> c) {
         sutClasses.add(c);
+        sutClassesAvailable.remove(c);
         addToClassMap(c);
         return this;
     }
@@ -234,7 +261,7 @@ class Builder {
 
     Builder elseClass(Class<?> c) {
         if (CdiConfigBuilder.isExtension(c)) {
-            extensions.add(c);
+            extensions.add((Class<? extends Extension>) c);
         } else {
             elseClasses.add(c);
         }
