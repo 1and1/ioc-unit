@@ -1,21 +1,13 @@
 package com.oneandone.ejbcdiunit.closure;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Modifier;
-import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import javax.decorator.Decorator;
 import javax.enterprise.inject.spi.Extension;
 import javax.inject.Inject;
 import javax.interceptor.Interceptor;
-
-import com.oneandone.cdiunit.internal.easymock.EasyMockExtension;
-import com.oneandone.cdiunit.internal.mockito.MockitoExtension;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Modifier;
+import java.net.MalformedURLException;
+import java.util.*;
 
 public class CdiConfigBuilder {
 
@@ -141,8 +133,6 @@ public class CdiConfigBuilder {
         Set<Class<?>> tmp = new HashSet<>();
         if (cfg.testClass != null)
             tmp.add(cfg.testClass);
-        tmp.add(MockitoExtension.class);
-        tmp.add(EasyMockExtension.class);
         tmp.addAll(cfg.initialClasses);
         evaluateLevel(tmp);
 

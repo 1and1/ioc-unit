@@ -1,5 +1,11 @@
 package com.oneandone.ejbcdiunit.closure;
 
+import com.oneandone.cdiunit.internal.easymock.EasyMockExtension;
+import com.oneandone.cdiunit.internal.mockito.MockitoExtension;
+import com.oneandone.ejbcdiunit.cfganalyzer.ClasspathHandler;
+import com.oneandone.ejbcdiunit.closure.annotations.*;
+
+import javax.enterprise.inject.spi.Extension;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -9,16 +15,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import javax.enterprise.inject.spi.Extension;
-
-import com.oneandone.ejbcdiunit.cfganalyzer.ClasspathHandler;
-import com.oneandone.ejbcdiunit.closure.annotations.EnabledAlternatives;
-import com.oneandone.ejbcdiunit.closure.annotations.ExcludedClasses;
-import com.oneandone.ejbcdiunit.closure.annotations.SutClasses;
-import com.oneandone.ejbcdiunit.closure.annotations.SutClasspaths;
-import com.oneandone.ejbcdiunit.closure.annotations.SutPackages;
-import com.oneandone.ejbcdiunit.closure.annotations.TestClasses;
 
 /**
  * @author aschoerk
@@ -133,9 +129,13 @@ class Builder {
     boolean containsProducingAnnotation(final Annotation[] annotations) {
         for (Annotation ann : annotations) {
             final String name = ann.annotationType().getName();
-            if (name.equals("org.easymock.Mock")
-                    || name.equals("org.mockito.Mock")
-                    || name.equals("javax.enterprise.inject.Produces")) {
+            if (name.equals("org.easymock.Mock")) {
+                extensions.add(EasyMockExtension.class);
+                return true;
+            } else if (name.equals("org.mockito.Mock")) {
+                extensions.add(MockitoExtension.class);
+                return true;
+            } else if(name.equals("javax.enterprise.inject.Produces")) {
                 return true;
             }
         }

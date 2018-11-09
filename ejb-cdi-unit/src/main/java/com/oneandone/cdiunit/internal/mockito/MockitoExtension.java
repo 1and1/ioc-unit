@@ -6,16 +6,16 @@
  */
 package com.oneandone.cdiunit.internal.mockito;
 
-import java.util.Set;
+import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.event.Observes;
-import javax.enterprise.inject.spi.Extension;
-import javax.enterprise.inject.spi.InjectionPoint;
-import javax.enterprise.inject.spi.InjectionTarget;
-import javax.enterprise.inject.spi.ProcessInjectionTarget;
-
-import org.mockito.MockitoAnnotations;
+import javax.enterprise.inject.Produces;
+import javax.enterprise.inject.spi.*;
+import javax.enterprise.util.AnnotationLiteral;
+import java.util.Set;
 
 public class MockitoExtension implements Extension {
     public <T> void process(@Observes ProcessInjectionTarget<T> event) {
@@ -48,5 +48,39 @@ public class MockitoExtension implements Extension {
                 injectionTarget.preDestroy(instance);
             }
         });
+    }
+
+    public <T> void processAnnotatedType(@Observes ProcessAnnotatedType<T> pat) {
+        AnnotatedType<T> annotatedType = pat.getAnnotatedType();
+        AnnotatedTypeBuilder<T> builder = new AnnotatedTypeBuilder<T>().readFromType(annotatedType);
+
+        boolean modified = false;
+        for (AnnotatedMethod<? super T> method : annotatedType.getMethods()) {
+            Mock mock = method.getAnnotation(Mock.class);
+            if (mock != null) {
+                Produces produces = method.getAnnotation(Produces.class);
+                if (produces == null) {
+                    modified = true;
+                    builder.addToMethod(method, new AnnotationLiteral<Produces>() {
+                        private static final long serialVersionUID = 1L;
+                    });
+                }
+            }
+        }
+        for (AnnotatedField<? super T> field : annotatedType.getFields()) {
+            Mock mock = field.getAnnotation(Mock.class);
+            if (mock != null) {
+                Produces produces = field.getAnnotation(Produces.class);
+                if (produces == null) {
+                    modified = true;
+                    builder.addToField(field, new AnnotationLiteral<Produces>() {
+                        private static final long serialVersionUID = 2L;
+                    });
+                }
+            }
+        }
+        if (modified) {
+            pat.setAnnotatedType(builder.create());
+        }
     }
 }
