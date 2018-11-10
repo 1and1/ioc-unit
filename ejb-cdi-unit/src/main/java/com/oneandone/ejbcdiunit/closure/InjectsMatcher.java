@@ -1,16 +1,11 @@
 package com.oneandone.ejbcdiunit.closure;
 
-import java.lang.annotation.Annotation;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import org.apache.commons.lang3.reflect.TypeUtils;
 
 import javax.enterprise.inject.Any;
 import javax.enterprise.inject.Default;
-
-import org.apache.commons.lang3.reflect.TypeUtils;
+import java.lang.annotation.Annotation;
+import java.util.*;
 
 /**
  * @author aschoerk
@@ -27,37 +22,41 @@ public class InjectsMatcher {
 
     public void match() {
         for (QualifiedType inject : builder.injections) {
-            Set<QualifiedType> foundProducers = new HashSet<>();
-            Set<QualifiedType> producers = builder.producerMap.get(inject.getRawtype());
-            if (producers != null) {
-                for (QualifiedType q : producers) {
-                    if (TypeUtils.isAssignable(q.getType(), inject.getType())) {
-                        foundProducers.add(q);
-                    }
-                }
-            }
-            Set<Class<?>> foundClasses = builder.classMap.get(inject.getRawtype());
-            if (foundClasses != null) {
-                for (Class c : foundClasses) {
-                    foundProducers.add(new QualifiedType(c));
-                }
-            }
+            matchInject(inject);
+        }
+    }
 
-            // check types and qualifiers of results
-            matching.put(inject, new HashSet<>());
-            for (QualifiedType qp : foundProducers) {
-                if (TypeUtils.isAssignable(qp.getType(), inject.getType())) {
-                    if (qualifiersMatch(inject, qp))
-                        matching.get(inject).add(qp);
+    public void matchInject(QualifiedType inject) {
+        Set<QualifiedType> foundProducers = new HashSet<>();
+        Set<QualifiedType> producers = builder.producerMap.get(inject.getRawtype());
+        if (producers != null) {
+            for (QualifiedType q : producers) {
+                if (TypeUtils.isAssignable(q.getType(), inject.getType())) {
+                    foundProducers.add(q);
                 }
             }
-            if (matching.get(inject).size() == 0) {
-                empty.add(inject);
-                matching.remove(inject);
-            } else if (matching.get(inject).size() > 1) {
-                ambiguus.put(inject, matching.get(inject));
-                matching.remove(inject);
+        }
+        Set<Class<?>> foundClasses = builder.classMap.get(inject.getRawtype());
+        if (foundClasses != null) {
+            for (Class c : foundClasses) {
+                foundProducers.add(new QualifiedType(c));
             }
+        }
+
+        // check types and qualifiers of results
+        matching.put(inject, new HashSet<>());
+        for (QualifiedType qp : foundProducers) {
+            if (TypeUtils.isAssignable(qp.getType(), inject.getType())) {
+                if (qualifiersMatch(inject, qp))
+                    matching.get(inject).add(qp);
+            }
+        }
+        if (matching.get(inject).size() == 0) {
+            empty.add(inject);
+            matching.remove(inject);
+        } else if (matching.get(inject).size() > 1) {
+            ambiguus.put(inject, matching.get(inject));
+            matching.remove(inject);
         }
     }
 

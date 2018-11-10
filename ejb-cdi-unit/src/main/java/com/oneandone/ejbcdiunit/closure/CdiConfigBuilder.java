@@ -98,26 +98,33 @@ public class CdiConfigBuilder {
 
             Set<Class<?>> newToBeStarted = injectsMatcher.evaluateMatches(problems);
 
-            if (newToBeStarted.size() > 0) {
-                for (Class<?> c : newToBeStarted) {
-                    builder.tobeStarted(c)
-                            .setAvailable(c)
-                            .innerClasses(c)
-                            .injects(c)
-                            .producerFields(c)
-                            .producerMethods(c)
-                            .testClassAnnotation(c)
-                            .sutClassAnnotation(c)
-                            .sutClasspathsAnnotation(c)
-                            .sutPackagesAnnotation(c)
-                            .alternatives(c);
-                }
-            } else {
+            if (newToBeStarted.size() == 0) {
                 if (builder.injections.size() > 0) {
-                    // search for producers in available classes
-                    throw new RuntimeException("Not implemented yet");
+                    Builder producerBuilder = builder.producerCandidates();
+                    InjectsMatcher injectsToProducesMatcher = new InjectsMatcher(producerBuilder);
+                    for (QualifiedType inject: builder.injections) {
+                        injectsToProducesMatcher.matchInject(inject);
+                    }
+                    newToBeStarted = injectsToProducesMatcher.evaluateMatches(problems);
+                    if (newToBeStarted.size() == 0) {
+                        throw new RuntimeException("no producer found");
+                    }
                 } else
                     return;
+            }
+            assert (newToBeStarted.size() > 0);
+            for (Class<?> c : newToBeStarted) {
+                builder.tobeStarted(c)
+                        .setAvailable(c)
+                        .innerClasses(c)
+                        .injects(c)
+                        .producerFields(c)
+                        .producerMethods(c)
+                        .testClassAnnotation(c)
+                        .sutClassAnnotation(c)
+                        .sutClasspathsAnnotation(c)
+                        .sutPackagesAnnotation(c)
+                        .alternatives(c);
             }
         }
 

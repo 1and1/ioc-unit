@@ -289,7 +289,7 @@ class Builder {
     private void addToProducerMap(QualifiedType q) {
         Class c = q.getRawtype();
         Class tmpC = c;
-        while (!tmpC.equals(Object.class)) {
+        while (tmpC != null && !tmpC.equals(Object.class)) {
             addToProducerMap(tmpC, q);
             tmpC = tmpC.getSuperclass();
         }
@@ -328,6 +328,19 @@ class Builder {
             classMap.put(tmpC, entities);
         }
         entities.add(clazz);
+    }
+
+    public Builder producerCandidates() {
+        Set<Class<?>> tmp = new HashSet<>();
+        tmp.addAll(this.beansAvailable);
+        tmp.removeAll(this.beansToBeStarted);
+        Builder result = new Builder();
+        for (Class<?> c: tmp) {
+            result.setAvailable(c);  // necessary? already is available
+            result.producerFields(c);
+            result.producerMethods(c);
+        }
+        return result;
     }
 
     public enum ClassKind {
