@@ -1,17 +1,11 @@
-package com.oneandone.ejbcdiunit.closure;
+package com.oneandone.ejbcdiunit2.closure;
 
-import java.lang.annotation.Annotation;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import org.apache.commons.lang3.reflect.TypeUtils;
 
 import javax.enterprise.inject.Any;
 import javax.enterprise.inject.Default;
-
-import org.apache.commons.lang3.reflect.TypeUtils;
+import java.lang.annotation.Annotation;
+import java.util.*;
 
 /**
  * @author aschoerk

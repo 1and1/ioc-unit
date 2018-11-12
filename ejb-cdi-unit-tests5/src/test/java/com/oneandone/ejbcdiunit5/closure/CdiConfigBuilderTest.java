@@ -1,17 +1,11 @@
 package com.oneandone.ejbcdiunit5.closure;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.net.MalformedURLException;
-import java.util.Arrays;
-
-import javax.enterprise.inject.Alternative;
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
-
+import com.oneandone.ejbcdiunit.weldstarter.WeldStarterTestBase;
+import com.oneandone.ejbcdiunit2.closure.CdiConfigBuilder;
+import com.oneandone.ejbcdiunit2.closure.InitialConfiguration;
+import com.oneandone.ejbcdiunit2.closure.annotations.EnabledAlternatives;
+import com.oneandone.ejbcdiunit2.closure.annotations.SutClasses;
+import com.oneandone.ejbcdiunit2.closure.annotations.SutPackages;
 import org.jglue.cdiunit.ProducesAlternative;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -19,12 +13,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
-import com.oneandone.ejbcdiunit.closure.CdiConfigBuilder;
-import com.oneandone.ejbcdiunit.closure.InitialConfiguration;
-import com.oneandone.ejbcdiunit.closure.annotations.EnabledAlternatives;
-import com.oneandone.ejbcdiunit.closure.annotations.SutClasses;
-import com.oneandone.ejbcdiunit.closure.annotations.SutPackages;
-import com.oneandone.ejbcdiunit.weldstarter.WeldStarterTestBase;
+import javax.enterprise.inject.Alternative;
+import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
+import java.net.MalformedURLException;
+import java.util.Arrays;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author aschoerk

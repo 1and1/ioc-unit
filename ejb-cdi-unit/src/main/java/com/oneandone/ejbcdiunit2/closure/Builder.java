@@ -1,5 +1,12 @@
-package com.oneandone.ejbcdiunit.closure;
+package com.oneandone.ejbcdiunit2.closure;
 
+import com.oneandone.cdiunit.internal.easymock.EasyMockExtension;
+import com.oneandone.cdiunit.internal.mockito.MockitoExtension;
+import com.oneandone.ejbcdiunit2.closure.annotations.*;
+
+import javax.enterprise.inject.Alternative;
+import javax.enterprise.inject.Stereotype;
+import javax.enterprise.inject.spi.Extension;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -8,19 +15,6 @@ import java.net.MalformedURLException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.enterprise.inject.Alternative;
-import javax.enterprise.inject.Stereotype;
-import javax.enterprise.inject.spi.Extension;
-
-import com.oneandone.cdiunit.internal.easymock.EasyMockExtension;
-import com.oneandone.cdiunit.internal.mockito.MockitoExtension;
-import com.oneandone.ejbcdiunit.closure.annotations.EnabledAlternatives;
-import com.oneandone.ejbcdiunit.closure.annotations.ExcludedClasses;
-import com.oneandone.ejbcdiunit.closure.annotations.SutClasses;
-import com.oneandone.ejbcdiunit.closure.annotations.SutClasspaths;
-import com.oneandone.ejbcdiunit.closure.annotations.SutPackages;
-import com.oneandone.ejbcdiunit.closure.annotations.TestClasses;
 
 /**
  * @author aschoerk

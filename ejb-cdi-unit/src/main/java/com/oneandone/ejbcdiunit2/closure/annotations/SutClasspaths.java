@@ -1,4 +1,4 @@
-package com.oneandone.ejbcdiunit.closure.annotations;
+package com.oneandone.ejbcdiunit2.closure.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

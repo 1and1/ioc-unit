@@ -1,5 +1,17 @@
 package com.oneandone.ejbcdiunit.weldstarter;
 
+import org.jboss.weld.bootstrap.api.Bootstrap;
+import org.jboss.weld.bootstrap.api.CDI11Bootstrap;
+import org.jboss.weld.bootstrap.api.ServiceRegistry;
+import org.jboss.weld.bootstrap.api.helpers.SimpleServiceRegistry;
+import org.jboss.weld.bootstrap.spi.*;
+import org.jboss.weld.ejb.spi.EjbDescriptor;
+import org.jboss.weld.environment.se.Weld;
+import org.jboss.weld.environment.se.WeldContainer;
+import org.jboss.weld.resources.spi.ResourceLoader;
+
+import javax.enterprise.inject.Instance;
+import javax.enterprise.inject.spi.DeploymentException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 import java.net.MalformedURLException;
@@ -8,22 +20,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.enterprise.inject.spi.DeploymentException;
-
-import org.jboss.weld.bootstrap.api.Bootstrap;
-import org.jboss.weld.bootstrap.api.CDI11Bootstrap;
-import org.jboss.weld.bootstrap.api.ServiceRegistry;
-import org.jboss.weld.bootstrap.api.helpers.SimpleServiceRegistry;
-import org.jboss.weld.bootstrap.spi.BeanDeploymentArchive;
-import org.jboss.weld.bootstrap.spi.BeanDiscoveryMode;
-import org.jboss.weld.bootstrap.spi.BeansXml;
-import org.jboss.weld.bootstrap.spi.Deployment;
-import org.jboss.weld.bootstrap.spi.Scanning;
-import org.jboss.weld.ejb.spi.EjbDescriptor;
-import org.jboss.weld.environment.se.Weld;
-import org.jboss.weld.environment.se.WeldContainer;
-import org.jboss.weld.resources.spi.ResourceLoader;
 
 public class WeldStarter {
 
@@ -46,6 +42,7 @@ public class WeldStarter {
             protected Deployment createDeployment(final ResourceLoader resourceLoader, final CDI11Bootstrap bootstrap) {
 
                 final ServiceRegistry services = new SimpleServiceRegistry();
+                weldSetup.registerServices(services);
 
                 final BeanDeploymentArchive oneDeploymentArchive = createOneDeploymentArchive(weldSetup, services);
 
@@ -59,6 +56,7 @@ public class WeldStarter {
             protected Deployment createDeployment(final ResourceLoader resourceLoader, final Bootstrap bootstrap) {
 
                 final ServiceRegistry services = new SimpleServiceRegistry();
+                weldSetup.registerServices(services);
 
                 final BeanDeploymentArchive oneDeploymentArchive = createOneDeploymentArchive(weldSetup, services);
 
@@ -142,6 +140,20 @@ public class WeldStarter {
             throw new RuntimeException(e);
         }
     }
+
+    public WeldContainer getContainer() {
+        return container;
+    }
+
+    public Instance<Object> getContainerInstance() {
+        return getContainer().instance();
+    }
+
+
+    public <T> T selectGet(Class<T> clazz) {
+        return getContainerInstance().select(clazz).get();
+    }
+
 
     public void tearDown() {
         if (container != null)

@@ -1,4 +1,4 @@
-package com.oneandone.ejbcdiunit.closure;
+package com.oneandone.ejbcdiunit2.closure;
 
 import java.util.HashMap;
 import java.util.HashSet;

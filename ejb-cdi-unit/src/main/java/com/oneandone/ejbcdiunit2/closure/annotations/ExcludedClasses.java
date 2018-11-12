@@ -1,4 +1,4 @@
-package com.oneandone.ejbcdiunit.closure.annotations;
+package com.oneandone.ejbcdiunit2.closure.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface SutClasses {
+public @interface ExcludedClasses {
     /**
      * @return Array of classes to make discoverable during testing.
      */

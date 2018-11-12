@@ -1,17 +1,16 @@
-package com.oneandone.ejbcdiunit.closure;
+package com.oneandone.ejbcdiunit2.closure;
 
+import com.oneandone.ejbcdiunit.cfganalyzer.ClasspathHandler;
+import com.oneandone.ejbcdiunit2.closure.annotations.SutClasses;
+import com.oneandone.ejbcdiunit2.closure.annotations.TestClasses;
+
+import javax.enterprise.inject.Alternative;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.enterprise.inject.Alternative;
-
-import com.oneandone.ejbcdiunit.cfganalyzer.ClasspathHandler;
-import com.oneandone.ejbcdiunit.closure.annotations.SutClasses;
-import com.oneandone.ejbcdiunit.closure.annotations.TestClasses;
 
 public class BuilderData {
 

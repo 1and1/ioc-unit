@@ -1,18 +1,13 @@
-package com.oneandone.ejbcdiunit.closure;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Modifier;
-import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+package com.oneandone.ejbcdiunit2.closure;
 
 import javax.decorator.Decorator;
 import javax.enterprise.inject.spi.Extension;
 import javax.inject.Inject;
 import javax.interceptor.Interceptor;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Modifier;
+import java.net.MalformedURLException;
+import java.util.*;
 
 public class CdiConfigBuilder {
 
@@ -55,6 +50,10 @@ public class CdiConfigBuilder {
         return builder.data.enabledAlternatives;
     }
 
+    public Set<Class<?>> setEnabledAlternativeStereotypes() {
+        return builder.data.foundAlternativeStereotypes;
+    }
+
     public static class ProblemRecord {
         private final String msg;
         Collection<Class<?>>[] classes;
@@ -75,7 +74,11 @@ public class CdiConfigBuilder {
         this.builder = new Builder(cfg);
         // handle initial classes as testclasses
         for (Class<?> c : currentToBeEvaluated) {
-            builder.testClass(c);
+            if (mightBeBean(c)) {
+                builder.testClass(c);
+            }  else {
+                builder.elseClass(c);
+            }
         }
 
         while (currentToBeEvaluated.size() > 0) {

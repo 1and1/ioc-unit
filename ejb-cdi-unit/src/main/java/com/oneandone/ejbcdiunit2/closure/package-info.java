@@ -5,4 +5,4 @@
  * @author aschoerk
  * @version 1.0
  */
-package com.oneandone.ejbcdiunit.closure;
+package com.oneandone.ejbcdiunit2.closure;

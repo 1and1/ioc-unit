@@ -1,11 +1,17 @@
-package com.oneandone.ejbcdiunit.closure;
+package com.oneandone.ejbcdiunit2.closure;
 
+import org.jboss.weld.bootstrap.api.Service;
+
+import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class InitialConfiguration {
 
     public Class testClass;
+    public Method testMethod;
 
     /**
      * classes initially defined to be started by Weld-SE. Producers and Themselves have priority over others
@@ -48,4 +54,5 @@ public class InitialConfiguration {
      */
     public Set<Class<?>> excludedClasses = new HashSet<>();
 
+    public Map<Class<?>, Service> services = new HashMap<>();
 }

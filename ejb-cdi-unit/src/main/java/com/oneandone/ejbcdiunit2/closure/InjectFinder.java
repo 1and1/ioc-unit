@@ -1,37 +1,49 @@
-package com.oneandone.ejbcdiunit.closure;
+package com.oneandone.ejbcdiunit2.closure;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Stack;
+import org.apache.commons.lang3.reflect.TypeUtils;
 
 import javax.enterprise.inject.Disposes;
 import javax.enterprise.inject.Produces;
+import javax.enterprise.inject.spi.BeanManager;
+import javax.enterprise.inject.spi.Extension;
 import javax.inject.Inject;
+import java.lang.reflect.*;
+import java.util.*;
 
 /**
  * @author aschoerk
  */
 public class InjectFinder {
 
+    List<Class<?>> toIgnore = new ArrayList<Class<?>>()
+    {{
+        add(BeanManager.class);
+        add(Extension.class);
+    }};
+
     Set<QualifiedType> injectedTypes = new HashSet<>();
 
-    public Set<QualifiedType> getInjectedTypes() {
+    Set<QualifiedType> getInjectedTypes() {
         return injectedTypes;
     }
 
     Stack<Class> classes = new Stack<>();
     boolean used = false;
 
+    boolean notIgnoreAble(Type c) {
+        for (Class<?> clazz: toIgnore) {
+            if (TypeUtils.isAssignable(c,clazz))
+                return false;
+        }
+        return true;
+    }
+
     private void findInjects(final Class<?> c, boolean isSuperclass) {
-        if (c.equals(Object.class)) {
+        if (c == null || c.equals(Object.class)) {
             return;
         }
         for (Field f : c.getDeclaredFields()) {
-            if (f.getAnnotation(Inject.class) != null) {
+            if (f.getAnnotation(Inject.class) != null && notIgnoreAble(f.getGenericType())) {
                 injectedTypes.add(new QualifiedType(f));
             }
         }
@@ -43,7 +55,8 @@ public class InjectFinder {
                         throw new RuntimeException("Only one Constructor may be injected" + c.getName());
                     }
                     for (Parameter p : constructor.getParameters()) {
-                        injectedTypes.add(new QualifiedType(p, constructor));
+                        if (!notIgnoreAble(p.getParameterizedType()))
+                            injectedTypes.add(new QualifiedType(p, constructor));
                     }
                     injectedConstructorFound = true;
                 }
@@ -52,7 +65,8 @@ public class InjectFinder {
                 boolean done = false;
                 if (m.getAnnotation(Inject.class) != null) {
                     for (Parameter p : m.getParameters()) {
-                        injectedTypes.add(new QualifiedType(p, m));
+                        if (notIgnoreAble(p.getParameterizedType()))
+                            injectedTypes.add(new QualifiedType(p, m));
                     }
                     done = true;
                 }
@@ -65,7 +79,8 @@ public class InjectFinder {
                         if (p.getAnnotation(Disposes.class) != null) {
                             throw new RuntimeException(m.getName() + " producer method has Disposes parameter");
                         }
-                        injectedTypes.add(new QualifiedType(p, m));
+                        if (notIgnoreAble(p.getParameterizedType()))
+                            injectedTypes.add(new QualifiedType(p, m));
                     }
                 }
             }
@@ -93,7 +108,8 @@ public class InjectFinder {
                         break;
                     }
                     for (Parameter p : m.getParameters()) {
-                        injectedTypes.add(new QualifiedType(p, m));
+                        if (notIgnoreAble(p.getParameterizedType()))
+                            injectedTypes.add(new QualifiedType(p, m));
                     }
                     done = true;
                 }
@@ -105,6 +121,8 @@ public class InjectFinder {
 
 
     public void find(Class c) {
+
+
         if (used) {
             throw new RuntimeException("InjectFinder can only be used once");
         }
