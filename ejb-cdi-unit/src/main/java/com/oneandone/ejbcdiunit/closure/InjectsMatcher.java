@@ -21,14 +21,14 @@ public class InjectsMatcher {
     }
 
     public void match() {
-        for (QualifiedType inject : builder.injections) {
+        for (QualifiedType inject : builder.data.injections) {
             matchInject(inject);
         }
     }
 
     public void matchInject(QualifiedType inject) {
         Set<QualifiedType> foundProducers = new HashSet<>();
-        Set<QualifiedType> producers = builder.producerMap.get(inject.getRawtype());
+        Set<QualifiedType> producers = builder.data.producerMap.get(inject.getRawtype());
         if (producers != null) {
             for (QualifiedType q : producers) {
                 if (TypeUtils.isAssignable(q.getType(), inject.getType())) {
@@ -59,7 +59,7 @@ public class InjectsMatcher {
         if (optionalAlternative.isPresent()) {
             QualifiedType alternative = optionalAlternative.get();
             if (alternative.getAlternativeStereotype() == null) {
-                if (builder.enabledAlternatives.contains(alternative.getRawtype())) {
+                if (builder.data.enabledAlternatives.contains(alternative.getRawtype())) {
                     matching.clear();
                     matching.add(alternative);
                 }
@@ -129,7 +129,7 @@ public class InjectsMatcher {
 
         for (QualifiedType inject : matching.keySet()) {
             final QualifiedType producingType = matching.get(inject).iterator().next();
-            if (!builder.beansToBeStarted.contains(producingType.getDeclaringClass())) {
+            if (!builder.data.beansToBeStarted.contains(producingType.getDeclaringClass())) {
                 newToBeStarted.add(producingType.getDeclaringClass());
             }
             builder.injectHandled(inject);
@@ -160,7 +160,7 @@ public class InjectsMatcher {
                             inject, testClasses, sutClasses));
                 } else {
                     final Class<?> testClass = testClasses.iterator().next();
-                    if (!builder.beansToBeStarted.contains(testClass)) {
+                    if (!builder.data.beansToBeStarted.contains(testClass)) {
                         newToBeStarted.add(testClass);
                     }
                 }
@@ -170,7 +170,7 @@ public class InjectsMatcher {
                     problems.add(new CdiConfigBuilder.ProblemRecord("Handling Inject: {} too many SutClass(es) {}",
                             inject, sutClasses));
                 final Class<?> sutClass = sutClasses.iterator().next();
-                if (!builder.beansToBeStarted.contains(sutClass)) {
+                if (!builder.data.beansToBeStarted.contains(sutClass)) {
                     newToBeStarted.add(sutClass);
                 }
                 builder.injectHandled(inject);
@@ -179,7 +179,7 @@ public class InjectsMatcher {
                     problems.add(new CdiConfigBuilder.ProblemRecord("Handling Inject: {} more than one available TestClass(es) {}",
                             inject, availableTestClasses));
                 final Class<?> testClass = availableTestClasses.iterator().next();
-                if (!builder.beansToBeStarted.contains(testClass)) {
+                if (!builder.data.beansToBeStarted.contains(testClass)) {
                     builder.testClass(testClass);
                     newToBeStarted.add(testClass);
                 }

@@ -36,6 +36,10 @@ public class CdiConfigBuilderTest extends WeldStarterTestBase {
         cfg.initialClasses.addAll(Arrays.asList(classes));
     }
 
+    public void enabledAlternatives(Class<?>... classes) {
+        cfg.enabledAlternatives.addAll(Arrays.asList(classes));
+    }
+
     public void testClass(Class clazz) {
         cfg.testClass = clazz;
     }
@@ -295,6 +299,35 @@ public class CdiConfigBuilderTest extends WeldStarterTestBase {
         assertNotNull(selectGet(BeanUsingAlternative.InjectingAlternative.class).dummyBean);
         assertNotNull(selectGet(BeanUsingAlternative.InnerAlternative.class));
      }
+
+    static class BeanUsingAlternative2 {
+
+        @Alternative
+        static class InnerAlternative extends DummyBean {
+
+        }
+
+        static class InjectingAlternative {
+
+            @Inject
+            DummyBean dummyBean;
+        }
+
+        @Inject
+        InjectingAlternative injectingAlternative;
+
+    }
+
+    @Test
+    public void canInjectAlternativeClass2() throws MalformedURLException {
+        testClass(BeanUsingAlternative.class);
+        initialClasses(DummyBean.class);
+        enabledAlternatives(BeanUsingAlternative2.InnerAlternative.class);
+        configureAndStart();
+        assertNotNull(selectGet(BeanUsingAlternative2.class).injectingAlternative);
+        assertNotNull(selectGet(BeanUsingAlternative2.InjectingAlternative.class).dummyBean);
+        assertNotNull(selectGet(BeanUsingAlternative2.InnerAlternative.class));
+    }
 
 
 

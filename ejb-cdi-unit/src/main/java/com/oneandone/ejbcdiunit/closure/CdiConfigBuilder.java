@@ -47,7 +47,7 @@ public class CdiConfigBuilder {
     }
 
     public Set<Class<?>> getEnabledAlternatives() {
-        return builder.enabledAlternatives;
+        return builder.data.enabledAlternatives;
     }
 
     public static class ProblemRecord {
@@ -103,10 +103,10 @@ public class CdiConfigBuilder {
             Set<Class<?>> newToBeStarted = injectsMatcher.evaluateMatches(problems);
 
             if (newToBeStarted.size() == 0) {
-                if (builder.injections.size() > 0) {
+                if (builder.data.injections.size() > 0) {
                     Builder producerBuilder = builder.producerCandidates();
                     InjectsMatcher injectsToProducesMatcher = new InjectsMatcher(producerBuilder);
-                    for (QualifiedType inject: builder.injections) {
+                    for (QualifiedType inject: builder.data.injections) {
                         injectsToProducesMatcher.matchInject(inject);
                     }
                     newToBeStarted = injectsToProducesMatcher.evaluateMatches(problems);
@@ -135,7 +135,7 @@ public class CdiConfigBuilder {
     }
 
     public Set<Class<?>> toBeStarted() {
-        return this.builder.beansToBeStarted;
+        return this.builder.data.beansToBeStarted;
     }
 
 
@@ -145,7 +145,8 @@ public class CdiConfigBuilder {
         if (cfg.testClass != null)
             tmp.add(cfg.testClass);
         tmp.addAll(cfg.initialClasses);
-        evaluateLevel(tmp);
+        tmp.addAll(cfg.enabledAlternatives);
+        evaluateLevel(cfg);
 
     }
 }

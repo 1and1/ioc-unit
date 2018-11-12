@@ -2,7 +2,6 @@ package com.oneandone.ejbcdiunit.closure;
 
 import com.oneandone.cdiunit.internal.easymock.EasyMockExtension;
 import com.oneandone.cdiunit.internal.mockito.MockitoExtension;
-import com.oneandone.ejbcdiunit.cfganalyzer.ClasspathHandler;
 import com.oneandone.ejbcdiunit.closure.annotations.*;
 
 import javax.enterprise.inject.Alternative;
@@ -13,32 +12,16 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.MalformedURLException;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 /**
  * @author aschoerk
  */
 class Builder {
-    Set<Class<?>> beansToBeStarted = new HashSet<>(); // these beans must be given to CDI to be started
-    Set<Class<?>> beansAvailable = new HashSet<>(); // beans can be used for injects
-    Set<Class<?>> enabledAlternatives = new HashSet<>();
-    Set<Class<?>> excludedClasses = new HashSet<>();
 
-    Set<QualifiedType> injections = new HashSet<>();
-    Set<QualifiedType> produces = new HashSet<>();
-    // ClassMap<QualifiedType> producerMap = new ClassMap<>();
-    Map<Class<?>, Set<QualifiedType>> producerMap = new HashMap<>();
-    // Map<Class<?>, Set<Class<?>>> classMap = new HashMap<>();
-    Set<Class<?>> testClassesToBeEvaluated = new HashSet<>();
-    Set<Class<?>> testClasses = new HashSet<>();
-    Set<Class<?>> sutClasses = new HashSet<>();
-    Set<Class<?>> sutClassesToBeEvaluated = new HashSet<>();
-    Set<Class<?>> testClassesAvailable = new HashSet<>();
-    Set<Class<?>> sutClassesAvailable = new HashSet<>();
-    Set<Class<?>> foundAlternativeStereotypes;
+    BuilderData data = new BuilderData();
+
 
     public Set<Class<? extends Extension>> getExtensions() {
         return extensions;
@@ -52,21 +35,21 @@ class Builder {
         for (Class innerClass : c.getDeclaredClasses()) {
             if (Modifier.isStatic(innerClass.getModifiers()) && CdiConfigBuilder.mightBeBean(innerClass)) {
                 staticInnerClasses.add(innerClass);
-                addToClassMap(innerClass);
+                data.addToClassMap(innerClass);
                 findInnerClasses(innerClass, staticInnerClasses);
             }
         }
     }
 
     boolean isTestClass(Class<?> c) {
-        if (testClasses.contains(c)) {
+        if (data.testClasses.contains(c)) {
             return true;
         } else
             return false;
     }
 
     boolean isTestClassAvailable(Class<?> c) {
-        if (testClassesAvailable.contains(c)) {
+        if (data.testClassesAvailable.contains(c)) {
             return true;
         } else if (c.getDeclaringClass() != null)
             return isTestClass(c.getDeclaringClass());
@@ -75,7 +58,7 @@ class Builder {
     }
 
     boolean isSuTClass(Class<?> c) {
-        if (sutClasses.contains(c) || sutClassesAvailable.contains(c)) {
+        if (data.sutClasses.contains(c) || data.sutClassesAvailable.contains(c)) {
             return true;
         } else if (c.getDeclaringClass() != null)
             return isSuTClass(c.getDeclaringClass());
@@ -85,39 +68,39 @@ class Builder {
 
     void moveToBeEvaluatedTo(Set<Class<?>> newToBeEvaluated) {
         newToBeEvaluated.clear();
-        newToBeEvaluated.addAll(testClassesToBeEvaluated);
-        testClassesToBeEvaluated.clear();
-        newToBeEvaluated.addAll(sutClassesToBeEvaluated);
-        sutClassesToBeEvaluated.clear();
+        newToBeEvaluated.addAll(data.testClassesToBeEvaluated);
+        data.testClassesToBeEvaluated.clear();
+        newToBeEvaluated.addAll(data.sutClassesToBeEvaluated);
+        data.sutClassesToBeEvaluated.clear();
     }
 
 
     Builder tobeStarted(Class c) {
-        beansToBeStarted.add(c);
-        addToClassMap(c);
+        data.beansToBeStarted.add(c);
+        data.addToClassMap(c);
         return this;
     }
 
     Builder setAvailable(Class c) {
-        beansAvailable.add(c);
-        addToClassMap(c);
+        data.beansAvailable.add(c);
+        data.addToClassMap(c);
         return this;
     }
 
     Builder innerClasses(Class c) {
-        findInnerClasses(c, beansAvailable);
+        findInnerClasses(c, data.beansAvailable);
         return this;
     }
 
     Builder injects(Class c) {
         InjectFinder injectFinder = new InjectFinder();
         injectFinder.find(c);
-        injections.addAll(injectFinder.getInjectedTypes());
+        data.injections.addAll(injectFinder.getInjectedTypes());
         return this;
     }
 
     Builder injectHandled(QualifiedType inject) {
-        injections.remove(inject);
+        data.injections.remove(inject);
         handledInjections.add(inject);
         return this;
     }
@@ -143,8 +126,8 @@ class Builder {
         for (Field f : c.getDeclaredFields()) {
             if (containsProducingAnnotation(f.getAnnotations())) {
                 final QualifiedType q = new QualifiedType(f);
-                produces.add(q);
-                addToProducerMap(q);
+                data.produces.add(q);
+                data.addToProducerMap(q);
             }
         }
         return this;
@@ -154,116 +137,93 @@ class Builder {
         for (Method m : c.getDeclaredMethods()) {
             if (containsProducingAnnotation(m.getAnnotations())) {
                 final QualifiedType q = new QualifiedType(m);
-                produces.add(q);
-                addToProducerMap(q);
+                data.produces.add(q);
+                data.addToProducerMap(q);
             }
         }
         return this;
     }
 
     Builder testClass(Class<?> c) {
-        testClasses.add(c);
-        testClassesAvailable.remove(c);
-        addToClassMap(c);
+        data.testClasses.add(c);
+        data.testClassesAvailable.remove(c);
+        data.addToClassMap(c);
         return this;
     }
 
     Builder sutClass(Class<?> c) {
-        sutClasses.add(c);
-        sutClassesAvailable.remove(c);
-        addToClassMap(c);
+        data.sutClasses.add(c);
+        data.sutClassesAvailable.remove(c);
+        data.addToClassMap(c);
         return this;
     }
 
     Builder testClassAnnotation(Class<?> c) {
         TestClasses testClassesx = c.getAnnotation(TestClasses.class);
         if (testClassesx != null) {
-            for (Class<?> testClass : testClassesx.value()) {
-                if (!testClasses.contains(testClass)) {
-                    testClassesToBeEvaluated.add(testClass);
-                    testClasses.add(testClass);
-                    addToClassMap(testClass);
-                }
-            }
+            data.addTestClasses(testClassesx);
         }
         return this;
     }
+
+
+
 
     Builder sutClassAnnotation(Class<?> c) {
         SutClasses sutClassesx = c.getAnnotation(SutClasses.class);
         if (sutClassesx != null) {
-            for (Class<?> sutClass : sutClassesx.value()) {
-                if (!sutClasses.contains(sutClass)) {
-                    sutClassesToBeEvaluated.add(sutClass);
-                    sutClasses.add(sutClass);
-                    addToClassMap(sutClass);
-                }
-            }
+            data.addSutClasses(sutClassesx);
         }
         return this;
     }
+
 
     Builder sutPackagesAnnotation(Class<?> c) throws MalformedURLException {
         SutPackages sutPackages = c.getAnnotation(SutPackages.class);
         if (sutPackages != null) {
-            for (Class<?> packageClass : sutPackages.value()) {
-                Set<Class<?>> tmpClasses = new HashSet<>();
-                ClasspathHandler.addPackage(packageClass, tmpClasses);
-                for (Class clazz : tmpClasses) {
-                    addToClassMap(clazz);
-                    sutClassesAvailable.add(clazz);
-                }
-            }
+            data.addSutPackages(sutPackages);
         }
         return this;
     }
+
+
 
     Builder sutClasspathsAnnotation(Class<?> c) throws MalformedURLException {
         SutClasspaths sutClasspaths = c.getAnnotation(SutClasspaths.class);
         if (sutClasspaths != null) {
-            for (Class<?> classpathClass : sutClasspaths.value()) {
-                Set<Class<?>> tmpClasses = new HashSet<>();
-                ClasspathHandler.addClassPath(classpathClass, tmpClasses);
-                for (Class clazz : tmpClasses) {
-                    addToClassMap(clazz);
-                    sutClassesAvailable.add(clazz);
-                }
-            }
+            data.addSutClasspaths(sutClasspaths);
         }
         return this;
     }
+
 
     Builder enabledAlternatives(Class<?> c) throws MalformedURLException {
         EnabledAlternatives enabledAlternatives = c.getAnnotation(EnabledAlternatives.class);
         if (enabledAlternatives != null) {
-            for (Class<?> alternative : enabledAlternatives.value()) {
-                if (alternative.getAnnotation(Alternative.class) != null) {
-                    // TODO: warn, should be annotated @Alternative
-                    this.enabledAlternatives.add(alternative);
-                }
-                testClasses.add(alternative);
-                addToClassMap(alternative);
-            }
+            data.addEnabledAlternatives(enabledAlternatives);
         }
         return this;
     }
 
+
+
+
     Builder excludes(Class<?> c) throws MalformedURLException {
         ExcludedClasses excludedClassesL = c.getAnnotation(ExcludedClasses.class);
         if (excludedClassesL != null) {
-            for (Class<?> excl : excludedClassesL.value()) {
-                this.excludedClasses.add(excl);
-            }
+            data.addExcludedClasses(excludedClassesL);
         }
         return this;
     }
+
+
 
     Builder elseClass(Class<?> c) {
         if (CdiConfigBuilder.isExtension(c)) {
             extensions.add((Class<? extends Extension>) c);
         } else if (c.isAnnotation()) {
             if (c.isAnnotationPresent(Stereotype.class) && c.isAnnotationPresent(Alternative.class)) {
-                foundAlternativeStereotypes.add(c);
+                data.foundAlternativeStereotypes.add(c);
             } else {
                 elseClasses.add(c);
             }
@@ -274,46 +234,11 @@ class Builder {
         return this;
     }
 
-    private void addToProducerMap(Class c, QualifiedType q) {
-        Set<QualifiedType> existing = producerMap.get(c);
-        if (existing == null) {
-            existing = new HashSet<>();
-            producerMap.put(c, existing);
-        }
-        existing.add(q);
-    }
-
-    private void addInterfaceToProducerMap(Class iface, QualifiedType q) {
-        addToProducerMap(iface, q);
-        Class[] interfaces = iface.getInterfaces();
-        for (Class subiface : interfaces) {
-            addInterfaceToProducerMap(subiface, q);
-        }
-    }
-
-
-    private void addToProducerMap(QualifiedType q) {
-        Class c = q.getRawtype();
-        Class tmpC = c;
-        while (tmpC != null && !tmpC.equals(Object.class)) {
-            addToProducerMap(tmpC, q);
-            tmpC = tmpC.getSuperclass();
-        }
-        Class[] interfaces = c.getInterfaces();
-        for (Class iface : interfaces) {
-            addInterfaceToProducerMap(iface, q);
-        }
-    }
-
-
-    private void addToClassMap(Class<?> clazz) {
-        addToProducerMap(new QualifiedType(clazz));
-    }
 
     public Builder producerCandidates() {
         Set<Class<?>> tmp = new HashSet<>();
-        tmp.addAll(this.beansAvailable);
-        tmp.removeAll(this.beansToBeStarted);
+        tmp.addAll(data.beansAvailable);
+        tmp.removeAll(data.beansToBeStarted);
         Builder result = new Builder();
         for (Class<?> c: tmp) {
             result.setAvailable(c);  // necessary? already is available
@@ -331,15 +256,15 @@ class Builder {
     }
 
     public ClassKind getClassKind(Class<?> c) {
-        if (testClasses.contains(c))
+        if (data.testClasses.contains(c))
             return ClassKind.TEST;
-        if (testClassesAvailable.contains(c)) {
+        if (data.testClassesAvailable.contains(c)) {
             return ClassKind.TEST_AVAILABLE;
         }
-        if (sutClasses.contains(c)) {
+        if (data.sutClasses.contains(c)) {
             return ClassKind.SUT_TOSTART;
         }
-        if (sutClassesAvailable.contains(c)) {
+        if (data.sutClassesAvailable.contains(c)) {
             return ClassKind.SUT_AVAILABLE;
         }
         throw new RuntimeException("expected test, testavailable, sut or sutavailable");
