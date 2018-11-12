@@ -1,17 +1,13 @@
 package com.oneandone.ejbcdiunit.closure;
 
+import javax.enterprise.inject.Alternative;
+import javax.enterprise.inject.Stereotype;
+import javax.inject.Qualifier;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
+import java.lang.reflect.*;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-
-import javax.inject.Qualifier;
 
 /**
  * @author aschoerk
@@ -23,10 +19,14 @@ class QualifiedType {
     private Parameter p;
     private Class clazz;
     private Set<Annotation> qualifiers;
+    private Annotation alternativeStereotype;
+    private boolean alternative;
 
     public QualifiedType(final Class clazz) {
         assert clazz != null;
         this.clazz = clazz;
+        if (clazz.getAnnotation(Alternative.class) != null)
+            alternative = true;
     }
 
     public QualifiedType(final Parameter p, final Constructor c) {
@@ -43,14 +43,27 @@ class QualifiedType {
         this.m = m;
     }
 
+    void checkGetAlternativeStereoType(Annotation ann) {
+        if (ann != null) {
+            Class<? extends Annotation> aClass = ann.annotationType();
+            if (aClass.getAnnotation(Stereotype.class) != null && aClass.getAnnotation(Alternative.class) != null) {
+                alternative = true;
+                alternativeStereotype = ann;
+            }
+        }
+    }
+
     public QualifiedType(final Method m) {
         assert m != null;
         this.m = m;
+        checkGetAlternativeStereoType(m.getAnnotation(Stereotype.class));
+
     }
 
     public QualifiedType(final Field f) {
         assert f != null;
         this.f = f;
+        checkGetAlternativeStereoType(f.getAnnotation(Stereotype.class));
     }
 
     Class getRawtype() {
@@ -133,6 +146,14 @@ class QualifiedType {
         if (clazz != null)
             return clazz;
         return null;
+    }
+
+    public Annotation getAlternativeStereotype() {
+        return alternativeStereotype;
+    }
+
+    public boolean isAlternative() {
+        return alternative;
     }
 
     @Override

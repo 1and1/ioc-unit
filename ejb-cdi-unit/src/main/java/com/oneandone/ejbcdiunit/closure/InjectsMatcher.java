@@ -36,13 +36,6 @@ public class InjectsMatcher {
                 }
             }
         }
-        Set<Class<?>> foundClasses = builder.classMap.get(inject.getRawtype());
-        if (foundClasses != null) {
-            for (Class c : foundClasses) {
-                foundProducers.add(new QualifiedType(c));
-            }
-        }
-
         // check types and qualifiers of results
         matching.put(inject, new HashSet<>());
         for (QualifiedType qp : foundProducers) {
@@ -51,6 +44,7 @@ public class InjectsMatcher {
                     matching.get(inject).add(qp);
             }
         }
+        handleAlternatives(matching.get(inject));
         if (matching.get(inject).size() == 0) {
             empty.add(inject);
             matching.remove(inject);
@@ -58,6 +52,21 @@ public class InjectsMatcher {
             ambiguus.put(inject, matching.get(inject));
             matching.remove(inject);
         }
+    }
+
+    private void handleAlternatives(Set<QualifiedType> matching) {
+        Optional<QualifiedType> optionalAlternative = matching.stream().filter(q -> q.isAlternative()).findAny();
+        if (optionalAlternative.isPresent()) {
+            QualifiedType alternative = optionalAlternative.get();
+            if (alternative.getAlternativeStereotype() == null) {
+                if (builder.enabledAlternatives.contains(alternative.getRawtype())) {
+                    matching.clear();
+                    matching.add(alternative);
+                }
+
+            }
+        }
+
     }
 
     private Boolean qualifiersMatch(final QualifiedType qi, final QualifiedType qp) {

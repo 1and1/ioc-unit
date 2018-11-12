@@ -1,17 +1,16 @@
 package com.oneandone.ejbcdiunit.weldstarter;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import org.jboss.weld.bootstrap.spi.Metadata;
+import org.jboss.weld.environment.se.WeldContainer;
+import org.junit.After;
 
 import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.spi.DeploymentException;
 import javax.enterprise.inject.spi.Extension;
-
-import org.jboss.weld.bootstrap.spi.Metadata;
-import org.jboss.weld.environment.se.WeldContainer;
-import org.junit.After;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author aschoerk
@@ -127,6 +126,9 @@ public class WeldStarterTestBase {
 
     public void setBeanClasses(Collection<Class<?>> classes) {
         weldSetup.setBeanClasses(classes.toArray(new Class<?>[classes.size()]));
+    }
+    public void setAlternativeClasses(Collection<Class<?>> classes) {
+        weldSetup.setAlternativeClasses(classes.toArray(new Class<?>[classes.size()]));
     }
 
     public void setAlternativeClasses(Class... classes) {

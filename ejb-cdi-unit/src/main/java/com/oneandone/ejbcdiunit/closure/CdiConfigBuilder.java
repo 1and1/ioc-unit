@@ -14,7 +14,7 @@ public class CdiConfigBuilder {
     private Builder builder;
     public static boolean mightBeBean(Class<?> c) {
         if (c.isInterface() || c.isPrimitive() || c.isLocalClass()
-                || c.isAnonymousClass() || c.isLocalClass()
+                || c.isAnonymousClass() || c.isLocalClass() || c.isAnnotation()
                 || (c.getEnclosingClass() != null && !Modifier.isStatic(c.getModifiers())))
             return false;
         final Constructor<?>[] declaredConstructors = c.getDeclaredConstructors();
@@ -44,6 +44,10 @@ public class CdiConfigBuilder {
 
     public Collection<Class<? extends Extension>> getExtensions() {
         return builder.extensions;
+    }
+
+    public Set<Class<?>> getEnabledAlternatives() {
+        return builder.enabledAlternatives;
     }
 
     public static class ProblemRecord {
@@ -82,7 +86,7 @@ public class CdiConfigBuilder {
                             .sutClassAnnotation(c)
                             .sutClasspathsAnnotation(c)
                             .sutPackagesAnnotation(c)
-                            .alternatives(c);
+                            .enabledAlternatives(c);
 
                 } else {
                     builder.elseClass(c);
@@ -124,7 +128,7 @@ public class CdiConfigBuilder {
                         .sutClassAnnotation(c)
                         .sutClasspathsAnnotation(c)
                         .sutPackagesAnnotation(c)
-                        .alternatives(c);
+                        .enabledAlternatives(c);
             }
         }
 

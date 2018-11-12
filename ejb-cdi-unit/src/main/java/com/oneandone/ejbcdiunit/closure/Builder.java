@@ -5,6 +5,8 @@ import com.oneandone.cdiunit.internal.mockito.MockitoExtension;
 import com.oneandone.ejbcdiunit.cfganalyzer.ClasspathHandler;
 import com.oneandone.ejbcdiunit.closure.annotations.*;
 
+import javax.enterprise.inject.Alternative;
+import javax.enterprise.inject.Stereotype;
 import javax.enterprise.inject.spi.Extension;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -22,19 +24,21 @@ import java.util.Set;
 class Builder {
     Set<Class<?>> beansToBeStarted = new HashSet<>(); // these beans must be given to CDI to be started
     Set<Class<?>> beansAvailable = new HashSet<>(); // beans can be used for injects
-    Set<Class<?>> alternatives = new HashSet<>();
+    Set<Class<?>> enabledAlternatives = new HashSet<>();
     Set<Class<?>> excludedClasses = new HashSet<>();
 
     Set<QualifiedType> injections = new HashSet<>();
     Set<QualifiedType> produces = new HashSet<>();
+    // ClassMap<QualifiedType> producerMap = new ClassMap<>();
     Map<Class<?>, Set<QualifiedType>> producerMap = new HashMap<>();
-    Map<Class<?>, Set<Class<?>>> classMap = new HashMap<>();
+    // Map<Class<?>, Set<Class<?>>> classMap = new HashMap<>();
     Set<Class<?>> testClassesToBeEvaluated = new HashSet<>();
     Set<Class<?>> testClasses = new HashSet<>();
     Set<Class<?>> sutClasses = new HashSet<>();
     Set<Class<?>> sutClassesToBeEvaluated = new HashSet<>();
     Set<Class<?>> testClassesAvailable = new HashSet<>();
     Set<Class<?>> sutClassesAvailable = new HashSet<>();
+    Set<Class<?>> foundAlternativeStereotypes;
 
     public Set<Class<? extends Extension>> getExtensions() {
         return extensions;
@@ -77,14 +81,6 @@ class Builder {
             return isSuTClass(c.getDeclaringClass());
         else
             return false;
-    }
-
-    Set<Class<?>> findInClassMap(Class<?> c) {
-        return classMap.get(c);
-    }
-
-    Set<QualifiedType> findInProducerMap(Class<?> c) {
-        return producerMap.get(c);
     }
 
     void moveToBeEvaluatedTo(Set<Class<?>> newToBeEvaluated) {
@@ -237,11 +233,14 @@ class Builder {
         return this;
     }
 
-    Builder alternatives(Class<?> c) throws MalformedURLException {
+    Builder enabledAlternatives(Class<?> c) throws MalformedURLException {
         EnabledAlternatives enabledAlternatives = c.getAnnotation(EnabledAlternatives.class);
         if (enabledAlternatives != null) {
             for (Class<?> alternative : enabledAlternatives.value()) {
-                alternatives.add(alternative);
+                if (alternative.getAnnotation(Alternative.class) != null) {
+                    // TODO: warn, should be annotated @Alternative
+                    this.enabledAlternatives.add(alternative);
+                }
                 testClasses.add(alternative);
                 addToClassMap(alternative);
             }
@@ -262,9 +261,16 @@ class Builder {
     Builder elseClass(Class<?> c) {
         if (CdiConfigBuilder.isExtension(c)) {
             extensions.add((Class<? extends Extension>) c);
+        } else if (c.isAnnotation()) {
+            if (c.isAnnotationPresent(Stereotype.class) && c.isAnnotationPresent(Alternative.class)) {
+                foundAlternativeStereotypes.add(c);
+            } else {
+                elseClasses.add(c);
+            }
         } else {
-            elseClasses.add(c);
+                elseClasses.add(c);
         }
+
         return this;
     }
 
@@ -301,33 +307,7 @@ class Builder {
 
 
     private void addToClassMap(Class<?> clazz) {
-        Class tmpC = clazz;
-        while (!tmpC.equals(Object.class)) {
-            addToClassMap(tmpC, clazz);
-            tmpC = tmpC.getSuperclass();
-        }
-        Class[] interfaces = clazz.getInterfaces();
-        for (Class iface : interfaces) {
-            addInterfaceToClassMap(iface, clazz);
-        }
-
-    }
-
-    private void addInterfaceToClassMap(final Class iface, final Class<?> clazz) {
-        addToClassMap(iface, clazz);
-        Class[] interfaces = iface.getInterfaces();
-        for (Class subiface : interfaces) {
-            addInterfaceToClassMap(subiface, clazz);
-        }
-    }
-
-    private void addToClassMap(final Class<?> tmpC, final Class<?> clazz) {
-        Set<Class<?>> entities = classMap.get(tmpC);
-        if (entities == null) {
-            entities = new HashSet<>();
-            classMap.put(tmpC, entities);
-        }
-        entities.add(clazz);
+        addToProducerMap(new QualifiedType(clazz));
     }
 
     public Builder producerCandidates() {

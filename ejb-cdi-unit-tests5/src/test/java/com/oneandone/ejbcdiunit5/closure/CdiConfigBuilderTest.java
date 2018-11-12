@@ -2,6 +2,7 @@ package com.oneandone.ejbcdiunit5.closure;
 
 import com.oneandone.ejbcdiunit.closure.CdiConfigBuilder;
 import com.oneandone.ejbcdiunit.closure.InitialConfiguration;
+import com.oneandone.ejbcdiunit.closure.annotations.EnabledAlternatives;
 import com.oneandone.ejbcdiunit.closure.annotations.SutClasses;
 import com.oneandone.ejbcdiunit.closure.annotations.SutPackages;
 import com.oneandone.ejbcdiunit.weldstarter.WeldStarterTestBase;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
+import javax.enterprise.inject.Alternative;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import java.net.MalformedURLException;
@@ -88,14 +90,6 @@ public class CdiConfigBuilderTest extends WeldStarterTestBase {
     }
 
 
-    static class BeanWithInner {
-        static class InnerDummy extends DummyBean {
-
-        }
-
-        @Inject
-        DummyBean dummyBean;
-    }
 
 
     static class BeanWith2Inner {
@@ -133,6 +127,14 @@ public class CdiConfigBuilderTest extends WeldStarterTestBase {
             initialClasses(Bean.class);
             configureAndStart();
         });
+    }
+
+    static class BeanWithInner {
+        static class InnerDummy extends DummyBean {
+        }
+
+        @Inject
+        DummyBean dummyBean;
     }
 
     @Test
@@ -266,12 +268,41 @@ public class CdiConfigBuilderTest extends WeldStarterTestBase {
         assertTrue(BeanWithInnerProducerDependent.DummyInterface.class.isAssignableFrom(selectGet(BeanWithInnerProducerDependent.class).dummyInterfaceBean.getClass()));
     }
 
+    static class BeanUsingAlternative {
+
+        @Alternative
+        static class InnerAlternative extends DummyBean {
+
+        }
+
+        @EnabledAlternatives({InnerAlternative.class})
+        static class InjectingAlternative {
+
+            @Inject
+            DummyBean dummyBean;
+        }
+
+        @Inject
+        InjectingAlternative injectingAlternative;
+
+    }
+
+    @Test
+    public void canInjectAlternativeClass() throws MalformedURLException {
+        initialClasses(BeanUsingAlternative.class, DummyBean.class);
+        configureAndStart();
+        assertNotNull(selectGet(BeanUsingAlternative.class).injectingAlternative);
+        assertNotNull(selectGet(BeanUsingAlternative.InjectingAlternative.class).dummyBean);
+        assertNotNull(selectGet(BeanUsingAlternative.InnerAlternative.class));
+     }
+
 
 
     private void configureAndStart() throws MalformedURLException {
         CdiConfigBuilder cdiConfigBuilder = new CdiConfigBuilder();
         cdiConfigBuilder.initialize(cfg);
         setBeanClasses(cdiConfigBuilder.toBeStarted());
+        setAlternativeClasses(cdiConfigBuilder.getEnabledAlternatives());
         setExtensions(cdiConfigBuilder.getExtensions());
         start();
     }
