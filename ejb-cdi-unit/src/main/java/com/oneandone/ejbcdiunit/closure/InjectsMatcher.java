@@ -1,11 +1,17 @@
 package com.oneandone.ejbcdiunit.closure;
 
-import org.apache.commons.lang3.reflect.TypeUtils;
+import java.lang.annotation.Annotation;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 import javax.enterprise.inject.Any;
 import javax.enterprise.inject.Default;
-import java.lang.annotation.Annotation;
-import java.util.*;
+
+import org.apache.commons.lang3.reflect.TypeUtils;
 
 /**
  * @author aschoerk
@@ -21,14 +27,14 @@ public class InjectsMatcher {
     }
 
     public void match() {
-        for (QualifiedType inject : builder.data.injections) {
+        for (QualifiedType inject : builder.injections) {
             matchInject(inject);
         }
     }
 
     public void matchInject(QualifiedType inject) {
         Set<QualifiedType> foundProducers = new HashSet<>();
-        Set<QualifiedType> producers = builder.data.producerMap.get(inject.getRawtype());
+        Set<QualifiedType> producers = builder.producerMap.get(inject.getRawtype());
         if (producers != null) {
             for (QualifiedType q : producers) {
                 if (TypeUtils.isAssignable(q.getType(), inject.getType())) {

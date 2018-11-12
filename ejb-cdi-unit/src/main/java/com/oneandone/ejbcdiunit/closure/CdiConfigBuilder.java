@@ -1,13 +1,18 @@
 package com.oneandone.ejbcdiunit.closure;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Modifier;
+import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import javax.decorator.Decorator;
 import javax.enterprise.inject.spi.Extension;
 import javax.inject.Inject;
 import javax.interceptor.Interceptor;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Modifier;
-import java.net.MalformedURLException;
-import java.util.*;
 
 public class CdiConfigBuilder {
 
@@ -65,9 +70,9 @@ public class CdiConfigBuilder {
     List<ProblemRecord> problems = new ArrayList<>();
 
 
-    void evaluateLevel(Set<Class<?>> beansToBeEvaluated) throws MalformedURLException {
+    void evaluateLevel(Set<Class<?>> beansToBeEvaluated, InitialConfiguration cfg) throws MalformedURLException {
         Set<Class<?>> currentToBeEvaluated = new HashSet<>(beansToBeEvaluated);
-        this.builder = new Builder();
+        this.builder = new Builder(cfg);
         // handle initial classes as testclasses
         for (Class<?> c : currentToBeEvaluated) {
             builder.testClass(c);
@@ -103,10 +108,10 @@ public class CdiConfigBuilder {
             Set<Class<?>> newToBeStarted = injectsMatcher.evaluateMatches(problems);
 
             if (newToBeStarted.size() == 0) {
-                if (builder.data.injections.size() > 0) {
+                if (builder.injections.size() > 0) {
                     Builder producerBuilder = builder.producerCandidates();
                     InjectsMatcher injectsToProducesMatcher = new InjectsMatcher(producerBuilder);
-                    for (QualifiedType inject: builder.data.injections) {
+                    for (QualifiedType inject : builder.injections) {
                         injectsToProducesMatcher.matchInject(inject);
                     }
                     newToBeStarted = injectsToProducesMatcher.evaluateMatches(problems);
@@ -146,7 +151,7 @@ public class CdiConfigBuilder {
             tmp.add(cfg.testClass);
         tmp.addAll(cfg.initialClasses);
         tmp.addAll(cfg.enabledAlternatives);
-        evaluateLevel(cfg);
+        evaluateLevel(tmp, cfg);
 
     }
 }

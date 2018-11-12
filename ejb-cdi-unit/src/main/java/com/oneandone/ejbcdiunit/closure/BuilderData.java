@@ -1,14 +1,17 @@
 package com.oneandone.ejbcdiunit.closure;
 
-import com.oneandone.ejbcdiunit.cfganalyzer.ClasspathHandler;
-import com.oneandone.ejbcdiunit.closure.annotations.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.net.MalformedURLException;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.enterprise.inject.Alternative;
-import java.net.MalformedURLException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+
+import com.oneandone.ejbcdiunit.cfganalyzer.ClasspathHandler;
+import com.oneandone.ejbcdiunit.closure.annotations.SutClasses;
+import com.oneandone.ejbcdiunit.closure.annotations.TestClasses;
 
 public class BuilderData {
 
@@ -17,28 +20,48 @@ public class BuilderData {
     Set<Class<?>> enabledAlternatives = new HashSet<>();
     Set<Class<?>> excludedClasses = new HashSet<>();
 
-    Set<QualifiedType> injections = new HashSet<>();
-    Set<QualifiedType> produces = new HashSet<>();
-    // ClassMap<QualifiedType> producerMap = new ClassMap<>();
-    Map<Class<?>, Set<QualifiedType>> producerMap = new HashMap<>();
-    // Map<Class<?>, Set<Class<?>>> classMap = new HashMap<>();
+    ProducerMap producerMap;
     Set<Class<?>> testClassesToBeEvaluated = new HashSet<>();
     Set<Class<?>> testClasses = new HashSet<>();
     Set<Class<?>> sutClasses = new HashSet<>();
     Set<Class<?>> sutClassesToBeEvaluated = new HashSet<>();
     Set<Class<?>> testClassesAvailable = new HashSet<>();
     Set<Class<?>> sutClassesAvailable = new HashSet<>();
-    Set<Class<?>> foundAlternativeStereotypes;
+    Set<Class<?>> foundAlternativeStereotypes = new HashSet<>();
+    Set<Class<?>> foundAlternativeClasses = new HashSet<>();
 
-    void addTestClasses(TestClasses testClassesx) {
-        addClasses(testClassesx.value(), testClasses, testClassesToBeEvaluated);
+    public BuilderData(final ProducerMap producerMap) {
+        this.producerMap = producerMap;
     }
 
-    void addSutClasses(SutClasses sutClassesx) {
-        addClasses(sutClassesx.value(), sutClasses, sutClassesToBeEvaluated);
+    public void init(InitialConfiguration cfg) {
+        Set<Class<?>> tmp = new HashSet<>();
+        if (cfg.testClass != null)
+            tmp.add(cfg.testClass);
+        tmp.addAll(cfg.initialClasses);
+        tmp.addAll(cfg.enabledAlternatives);
+        addEnabledAlternatives(cfg.enabledAlternatives);
+        try {
+            if (cfg.suTClasspath != null)
+                addSutClasspaths(cfg.suTClasspath);
+            if (cfg.suTPackages != null)
+                addSutPackages(cfg.suTPackages);
+        } catch (MalformedURLException ex) {
+            throw new RuntimeException(ex);
+        }
+        if (cfg.excludedClasses != null)
+            addExcludedClasses(cfg.excludedClasses);
     }
 
-    void addClasses(Class<?>[] value, Set<Class<?>> classes, Set<Class<?>> classesToBeEvaluated) {
+    void addTestClasses(TestClasses testClassesP) {
+        addClasses(Arrays.asList(testClassesP.value()), this.testClasses, testClassesToBeEvaluated);
+    }
+
+    void addSutClasses(SutClasses sutClassesP) {
+        addClasses(Arrays.asList(sutClassesP.value()), this.sutClasses, sutClassesToBeEvaluated);
+    }
+
+    void addClasses(Iterable<Class<?>> value, Set<Class<?>> classes, Set<Class<?>> classesToBeEvaluated) {
         for (Class<?> testClass : value) {
             if (!classes.contains(testClass)) {
                 classesToBeEvaluated.add(testClass);
@@ -48,8 +71,8 @@ public class BuilderData {
         }
     }
 
-    void addSutPackages(SutPackages sutPackages) throws MalformedURLException {
-        for (Class<?> packageClass : sutPackages.value()) {
+    void addSutPackages(Iterable<Class<?>> sutPackages) throws MalformedURLException {
+        for (Class<?> packageClass : sutPackages) {
             Set<Class<?>> tmpClasses = new HashSet<>();
             ClasspathHandler.addPackage(packageClass, tmpClasses);
             for (Class clazz : tmpClasses) {
@@ -58,8 +81,9 @@ public class BuilderData {
             }
         }
     }
-    void addSutClasspaths(SutClasspaths sutClasspaths) throws MalformedURLException {
-        for (Class<?> classpathClass : sutClasspaths.value()) {
+
+    void addSutClasspaths(Iterable<Class<?>> sutClasspaths) throws MalformedURLException {
+        for (Class<?> classpathClass : sutClasspaths) {
             Set<Class<?>> tmpClasses = new HashSet<>();
             ClasspathHandler.addClassPath(classpathClass, tmpClasses);
             for (Class clazz : tmpClasses) {
@@ -69,57 +93,48 @@ public class BuilderData {
         }
     }
 
-    void addEnabledAlternatives(EnabledAlternatives enabledAlternatives) {
-        for (Class<?> alternative : enabledAlternatives.value()) {
-            if (alternative.getAnnotation(Alternative.class) != null) {
-                // TODO: warn, should be annotated @Alternative
-                this.enabledAlternatives.add(alternative);
+    void addEnabledAlternatives(Iterable<Class<?>> enabledAlternativesP) {
+        for (Class<?> alternative : enabledAlternativesP) {
+            this.enabledAlternatives.add(alternative);
+            if (alternative.getAnnotation(Alternative.class) == null) {
+                boolean found = false;
+                for (Method m : alternative.getDeclaredMethods()) {
+                    if (m.getAnnotation(Alternative.class) != null) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    for (Field f : alternative.getDeclaredFields()) {
+                        if (f.getAnnotation(Alternative.class) != null) {
+                            found = true;
+                            break;
+                        }
+                    }
+
+                }
+                if (!found) {
+                    foundAlternativeClasses.add(alternative);
+                } else {
+                    testClasses.add(alternative);
+                }
+            } else {
+                testClasses.add(alternative);
             }
-            testClasses.add(alternative);
             addToClassMap(alternative);
         }
     }
 
-    void addExcludedClasses(ExcludedClasses excludedClassesL) {
-        for (Class<?> excl : excludedClassesL.value()) {
+    void addExcludedClasses(Iterable<Class<?>> excludedClassesL) {
+        for (Class<?> excl : excludedClassesL) {
             this.excludedClasses.add(excl);
         }
     }
 
-    void addToProducerMap(Class c, QualifiedType q) {
-        Set<QualifiedType> existing = producerMap.get(c);
-        if (existing == null) {
-            existing = new HashSet<>();
-            producerMap.put(c, existing);
-        }
-        existing.add(q);
-    }
-
-    void addInterfaceToProducerMap(Class iface, QualifiedType q) {
-        addToProducerMap(iface, q);
-        Class[] interfaces = iface.getInterfaces();
-        for (Class subiface : interfaces) {
-            addInterfaceToProducerMap(subiface, q);
-        }
-    }
-
-
-    void addToProducerMap(QualifiedType q) {
-        Class c = q.getRawtype();
-        Class tmpC = c;
-        while (tmpC != null && !tmpC.equals(Object.class)) {
-            addToProducerMap(tmpC, q);
-            tmpC = tmpC.getSuperclass();
-        }
-        Class[] interfaces = c.getInterfaces();
-        for (Class iface : interfaces) {
-            addInterfaceToProducerMap(iface, q);
-        }
-    }
 
 
     void addToClassMap(Class<?> clazz) {
-        addToProducerMap(new QualifiedType(clazz));
+        producerMap.addToProducerMap(new QualifiedType(clazz));
     }
 
 }

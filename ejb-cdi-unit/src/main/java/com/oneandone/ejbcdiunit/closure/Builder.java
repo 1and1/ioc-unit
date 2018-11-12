@@ -1,26 +1,40 @@
 package com.oneandone.ejbcdiunit.closure;
 
-import com.oneandone.cdiunit.internal.easymock.EasyMockExtension;
-import com.oneandone.cdiunit.internal.mockito.MockitoExtension;
-import com.oneandone.ejbcdiunit.closure.annotations.*;
-
-import javax.enterprise.inject.Alternative;
-import javax.enterprise.inject.Stereotype;
-import javax.enterprise.inject.spi.Extension;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.MalformedURLException;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.enterprise.inject.Alternative;
+import javax.enterprise.inject.Stereotype;
+import javax.enterprise.inject.spi.Extension;
+
+import com.oneandone.cdiunit.internal.easymock.EasyMockExtension;
+import com.oneandone.cdiunit.internal.mockito.MockitoExtension;
+import com.oneandone.ejbcdiunit.closure.annotations.EnabledAlternatives;
+import com.oneandone.ejbcdiunit.closure.annotations.ExcludedClasses;
+import com.oneandone.ejbcdiunit.closure.annotations.SutClasses;
+import com.oneandone.ejbcdiunit.closure.annotations.SutClasspaths;
+import com.oneandone.ejbcdiunit.closure.annotations.SutPackages;
+import com.oneandone.ejbcdiunit.closure.annotations.TestClasses;
 
 /**
  * @author aschoerk
  */
 class Builder {
 
-    BuilderData data = new BuilderData();
+    Set<QualifiedType> injections = new HashSet<>();
+    Set<QualifiedType> produces = new HashSet<>();
+    ProducerMap producerMap = new ProducerMap();
+    BuilderData data = new BuilderData(producerMap);
+
+    public Builder(final InitialConfiguration cfg) {
+        init(cfg);
+    }
 
 
     public Set<Class<? extends Extension>> getExtensions() {
@@ -95,12 +109,12 @@ class Builder {
     Builder injects(Class c) {
         InjectFinder injectFinder = new InjectFinder();
         injectFinder.find(c);
-        data.injections.addAll(injectFinder.getInjectedTypes());
+        injections.addAll(injectFinder.getInjectedTypes());
         return this;
     }
 
     Builder injectHandled(QualifiedType inject) {
-        data.injections.remove(inject);
+        injections.remove(inject);
         handledInjections.add(inject);
         return this;
     }
@@ -126,8 +140,8 @@ class Builder {
         for (Field f : c.getDeclaredFields()) {
             if (containsProducingAnnotation(f.getAnnotations())) {
                 final QualifiedType q = new QualifiedType(f);
-                data.produces.add(q);
-                data.addToProducerMap(q);
+                produces.add(q);
+                producerMap.addToProducerMap(q);
             }
         }
         return this;
@@ -137,8 +151,8 @@ class Builder {
         for (Method m : c.getDeclaredMethods()) {
             if (containsProducingAnnotation(m.getAnnotations())) {
                 final QualifiedType q = new QualifiedType(m);
-                data.produces.add(q);
-                data.addToProducerMap(q);
+                produces.add(q);
+                producerMap.addToProducerMap(q);
             }
         }
         return this;
@@ -159,20 +173,18 @@ class Builder {
     }
 
     Builder testClassAnnotation(Class<?> c) {
-        TestClasses testClassesx = c.getAnnotation(TestClasses.class);
-        if (testClassesx != null) {
-            data.addTestClasses(testClassesx);
+        TestClasses testClasses = c.getAnnotation(TestClasses.class);
+        if (testClasses != null) {
+            data.addTestClasses(testClasses);
         }
         return this;
     }
 
 
-
-
     Builder sutClassAnnotation(Class<?> c) {
-        SutClasses sutClassesx = c.getAnnotation(SutClasses.class);
-        if (sutClassesx != null) {
-            data.addSutClasses(sutClassesx);
+        SutClasses sutClasses = c.getAnnotation(SutClasses.class);
+        if (sutClasses != null) {
+            data.addSutClasses(sutClasses);
         }
         return this;
     }
@@ -181,7 +193,7 @@ class Builder {
     Builder sutPackagesAnnotation(Class<?> c) throws MalformedURLException {
         SutPackages sutPackages = c.getAnnotation(SutPackages.class);
         if (sutPackages != null) {
-            data.addSutPackages(sutPackages);
+            data.addSutPackages(Arrays.asList(sutPackages.value()));
         }
         return this;
     }
@@ -191,7 +203,7 @@ class Builder {
     Builder sutClasspathsAnnotation(Class<?> c) throws MalformedURLException {
         SutClasspaths sutClasspaths = c.getAnnotation(SutClasspaths.class);
         if (sutClasspaths != null) {
-            data.addSutClasspaths(sutClasspaths);
+            data.addSutClasspaths(Arrays.asList(sutClasspaths.value()));
         }
         return this;
     }
@@ -200,7 +212,7 @@ class Builder {
     Builder enabledAlternatives(Class<?> c) throws MalformedURLException {
         EnabledAlternatives enabledAlternatives = c.getAnnotation(EnabledAlternatives.class);
         if (enabledAlternatives != null) {
-            data.addEnabledAlternatives(enabledAlternatives);
+            data.addEnabledAlternatives(Arrays.asList(enabledAlternatives.value()));
         }
         return this;
     }
@@ -211,7 +223,7 @@ class Builder {
     Builder excludes(Class<?> c) throws MalformedURLException {
         ExcludedClasses excludedClassesL = c.getAnnotation(ExcludedClasses.class);
         if (excludedClassesL != null) {
-            data.addExcludedClasses(excludedClassesL);
+            data.addExcludedClasses(Arrays.asList(excludedClassesL.value()));
         }
         return this;
     }
@@ -239,13 +251,19 @@ class Builder {
         Set<Class<?>> tmp = new HashSet<>();
         tmp.addAll(data.beansAvailable);
         tmp.removeAll(data.beansToBeStarted);
-        Builder result = new Builder();
+        Builder result = new Builder(new InitialConfiguration());
         for (Class<?> c: tmp) {
             result.setAvailable(c);  // necessary? already is available
             result.producerFields(c);
             result.producerMethods(c);
         }
         return result;
+    }
+
+    private void init(final InitialConfiguration cfg) {
+        this.producerMap = new ProducerMap();
+        data = new BuilderData(this.producerMap);
+        data.init(cfg);
     }
 
     public enum ClassKind {

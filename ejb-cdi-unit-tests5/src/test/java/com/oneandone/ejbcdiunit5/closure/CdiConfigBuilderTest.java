@@ -1,24 +1,30 @@
 package com.oneandone.ejbcdiunit5.closure;
 
-import com.oneandone.ejbcdiunit.closure.CdiConfigBuilder;
-import com.oneandone.ejbcdiunit.closure.InitialConfiguration;
-import com.oneandone.ejbcdiunit.closure.annotations.EnabledAlternatives;
-import com.oneandone.ejbcdiunit.closure.annotations.SutClasses;
-import com.oneandone.ejbcdiunit.closure.annotations.SutPackages;
-import com.oneandone.ejbcdiunit.weldstarter.WeldStarterTestBase;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.net.MalformedURLException;
+import java.util.Arrays;
+
+import javax.enterprise.inject.Alternative;
+import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
+
+import org.jglue.cdiunit.ProducesAlternative;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
-import javax.enterprise.inject.Alternative;
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
-import java.net.MalformedURLException;
-import java.util.Arrays;
-
-import static org.junit.jupiter.api.Assertions.*;
+import com.oneandone.ejbcdiunit.closure.CdiConfigBuilder;
+import com.oneandone.ejbcdiunit.closure.InitialConfiguration;
+import com.oneandone.ejbcdiunit.closure.annotations.EnabledAlternatives;
+import com.oneandone.ejbcdiunit.closure.annotations.SutClasses;
+import com.oneandone.ejbcdiunit.closure.annotations.SutPackages;
+import com.oneandone.ejbcdiunit.weldstarter.WeldStarterTestBase;
 
 /**
  * @author aschoerk
@@ -320,21 +326,135 @@ public class CdiConfigBuilderTest extends WeldStarterTestBase {
 
     @Test
     public void canInjectAlternativeClass2() throws MalformedURLException {
-        testClass(BeanUsingAlternative.class);
-        initialClasses(DummyBean.class);
+        testClass(BeanUsingAlternative2.class);
         enabledAlternatives(BeanUsingAlternative2.InnerAlternative.class);
         configureAndStart();
         assertNotNull(selectGet(BeanUsingAlternative2.class).injectingAlternative);
         assertNotNull(selectGet(BeanUsingAlternative2.InjectingAlternative.class).dummyBean);
         assertNotNull(selectGet(BeanUsingAlternative2.InnerAlternative.class));
+        assertEquals(selectGet(DummyBean.class).getClass(), BeanUsingAlternative2.InnerAlternative.class);
     }
 
+    @Test
+    public void canInjectAlternativeClass2NotEnabled() throws MalformedURLException {
+        testClass(BeanUsingAlternative2.class);
+        initialClasses(DummyBean.class);
+        configureAndStart();
+        assertNotNull(selectGet(BeanUsingAlternative2.class).injectingAlternative);
+        assertNotNull(selectGet(BeanUsingAlternative2.InjectingAlternative.class).dummyBean);
+        assertNotNull(selectGet(DummyBean.class));
+        assertEquals(selectGet(DummyBean.class).getClass(), DummyBean.class);
+    }
+
+    static class BeanUsingAlternativeStereotype {
+
+        static class ProducingAlternative {
+            @ProducesAlternative
+            @Mock
+            DummyBean dummyBeanMock;
+        }
+
+
+        static class InjectingAlternative {
+
+            @Inject
+            DummyBean dummyBean;
+        }
+
+        @Inject
+        InjectingAlternative injectingAlternative;
+
+    }
+
+    @Test
+    public void canInjectAlternativeStereotypedField() throws MalformedURLException {
+        testClass(BeanUsingAlternativeStereotype.class);
+        initialClasses(ProducesAlternative.class);
+        configureAndStart();
+        assertNotNull(selectGet(BeanUsingAlternativeStereotype.class).injectingAlternative);
+        assertNotNull(selectGet(BeanUsingAlternativeStereotype.InjectingAlternative.class).dummyBean);
+        assertNotNull(selectGet(BeanUsingAlternativeStereotype.ProducingAlternative.class));
+        assertNotNull(selectGet(DummyBean.class));
+    }
+
+    static class BeanUsingAlternativeAtField {
+
+        static class ProducingAlternative {
+            @Alternative
+            @Mock
+            DummyBean dummyBeanMock;
+        }
+
+
+        static class InjectingAlternative {
+
+            @Inject
+            DummyBean dummyBean;
+        }
+
+        @Inject
+        InjectingAlternative injectingAlternative;
+
+    }
+
+    @Test
+    public void canInjectAlternativeField() throws MalformedURLException {
+        testClass(BeanUsingAlternativeAtField.class);
+        enabledAlternatives(BeanUsingAlternativeAtField.ProducingAlternative.class);
+        configureAndStart();
+        assertNotNull(selectGet(BeanUsingAlternativeAtField.class).injectingAlternative);
+        assertNotNull(selectGet(BeanUsingAlternativeAtField.InjectingAlternative.class).dummyBean);
+        assertNotNull(selectGet(BeanUsingAlternativeAtField.ProducingAlternative.class));
+        assertNotNull(selectGet(DummyBean.class));
+    }
+
+    static class BeanUsingAlternativeAtMethod {
+
+        static class ProducingAlternative {
+
+            static class DummyBeanAlternative extends DummyBean {
+
+                void dummyMethod() {
+                    System.out.println("dummy output");
+                }
+            };
+
+            @Produces
+            @Alternative
+            DummyBeanAlternative dummyBeanMock() {
+                return new DummyBeanAlternative();
+            }
+        }
+
+
+        static class InjectingAlternative {
+            @Inject
+            DummyBean dummyBean;
+        }
+
+        @Inject
+        InjectingAlternative injectingAlternative;
+
+    }
+
+    @Test
+    public void canInjectAlternativeMethod() throws MalformedURLException {
+        testClass(BeanUsingAlternativeAtMethod.class);
+        enabledAlternatives(BeanUsingAlternativeAtMethod.ProducingAlternative.class);
+        configureAndStart();
+        assertNotNull(selectGet(BeanUsingAlternativeAtMethod.class).injectingAlternative);
+        assertNotNull(selectGet(BeanUsingAlternativeAtMethod.InjectingAlternative.class).dummyBean);
+        assertNotNull(selectGet(BeanUsingAlternativeAtMethod.ProducingAlternative.class));
+        assertNotNull(selectGet(DummyBean.class));
+        assertNotEquals(selectGet(DummyBean.class).getClass(), DummyBean.class);
+    }
 
 
     private void configureAndStart() throws MalformedURLException {
         CdiConfigBuilder cdiConfigBuilder = new CdiConfigBuilder();
         cdiConfigBuilder.initialize(cfg);
         setBeanClasses(cdiConfigBuilder.toBeStarted());
+        setEnabledAlternativeStereotypes(ProducesAlternative.class);
         setAlternativeClasses(cdiConfigBuilder.getEnabledAlternatives());
         setExtensions(cdiConfigBuilder.getExtensions());
         start();
