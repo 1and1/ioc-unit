@@ -1,4 +1,4 @@
-package com.oneandone.ejbcdiunit2.closure;
+package com.oneandone.cdi.testanalyzer;
 
 import javax.enterprise.inject.Alternative;
 import javax.enterprise.inject.Stereotype;
@@ -10,17 +10,22 @@ import java.util.Objects;
 import java.util.Set;
 
 /**
+ * Wraps elements found during the class-scan, that might be used as producers or injection-destinations.
+ * getType() and getQualifiers() can be used for exact matching.
+ *
  * @author aschoerk
  */
 class QualifiedType {
-    private Field f;
+
+    private Field f;         // if not null the m, c, p and clazz are null.
     private Method m;
     private Constructor c;
     private Parameter p;
     private Class clazz;
-    private Set<Annotation> qualifiers;
+
+    private Set<Annotation> qualifiers;   // the qualifiers extracted from the element
     private Annotation alternativeStereotype;
-    private boolean alternative;
+    private boolean alternative;  // true if by @Alternative or alternative-stereotype designated as CDI-Alternative
 
     public QualifiedType(final Class clazz) {
         assert clazz != null;
@@ -92,6 +97,11 @@ class QualifiedType {
         return this.qualifiers;
     }
 
+    /**
+     * The type that can be used for matching. Can be class or parameterized Type.
+     *
+     * @return the type that can be used for matching.
+     */
     Type getType() {
         if (p != null) {
             return p.getParameterizedType();

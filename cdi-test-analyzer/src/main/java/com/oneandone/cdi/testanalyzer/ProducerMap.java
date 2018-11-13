@@ -1,4 +1,4 @@
-package com.oneandone.ejbcdiunit2.closure;
+package com.oneandone.cdi.testanalyzer;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -6,6 +6,12 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * The map contained in this class should allow it to find "Injection-Candidates".
+ * The map is filled by QualifiedType-Objects which might work as producers during
+ * CDI-Resolution. The Basetype and all its superclasses are used as keys. To actally verify,
+ * that a result of a get to ProducerMap can be used, further checks of ParameterTypes, Qualifiers and Alternative
+ * Annotations are necessary.
+ *
  * @author aschoerk
  */
 public class ProducerMap {

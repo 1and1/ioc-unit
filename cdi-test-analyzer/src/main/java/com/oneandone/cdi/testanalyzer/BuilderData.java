@@ -1,8 +1,7 @@
-package com.oneandone.ejbcdiunit2.closure;
+package com.oneandone.cdi.testanalyzer;
 
-import com.oneandone.ejbcdiunit.cfganalyzer.ClasspathHandler;
-import com.oneandone.ejbcdiunit2.closure.annotations.SutClasses;
-import com.oneandone.ejbcdiunit2.closure.annotations.TestClasses;
+import com.oneandone.cdi.testanalyzer.annotations.SutClasses;
+import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
 
 import javax.enterprise.inject.Alternative;
 import java.lang.reflect.Field;

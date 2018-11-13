@@ -5,4 +5,4 @@
  * @author aschoerk
  * @version 1.0
  */
-package com.oneandone.ejbcdiunit2.closure;
+package com.oneandone.cdi.testanalyzer;

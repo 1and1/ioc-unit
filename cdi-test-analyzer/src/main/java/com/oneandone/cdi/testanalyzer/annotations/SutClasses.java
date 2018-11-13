@@ -1,10 +1,14 @@
-package com.oneandone.ejbcdiunit2.closure.annotations;
+package com.oneandone.cdi.testanalyzer.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Signifies classes from the "system under test" which must be instantiated when CDI gets started.
+ * May not clash with alternatives.
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface SutClasses {

@@ -1,4 +1,4 @@
-package com.oneandone.ejbcdiunit2.closure;
+package com.oneandone.cdi.testanalyzer;
 
 import javax.decorator.Decorator;
 import javax.enterprise.inject.spi.Extension;
@@ -9,9 +9,9 @@ import java.lang.reflect.Modifier;
 import java.net.MalformedURLException;
 import java.util.*;
 
-public class CdiConfigBuilder {
+public class CdiConfigCreator {
 
-    private Builder builder;
+    private LeveledBuilder builder;
     public static boolean mightBeBean(Class<?> c) {
         if (c.isInterface() || c.isPrimitive() || c.isLocalClass()
                 || c.isAnonymousClass() || c.isLocalClass() || c.isAnnotation()
@@ -69,9 +69,9 @@ public class CdiConfigBuilder {
     List<ProblemRecord> problems = new ArrayList<>();
 
 
-    void evaluateLevel(Set<Class<?>> beansToBeEvaluated, InitialConfiguration cfg) throws MalformedURLException {
+    void create(Set<Class<?>> beansToBeEvaluated, InitialConfiguration cfg) throws MalformedURLException {
         Set<Class<?>> currentToBeEvaluated = new HashSet<>(beansToBeEvaluated);
-        this.builder = new Builder(cfg);
+        this.builder = new LeveledBuilder(cfg);
         // handle initial classes as testclasses
         for (Class<?> c : currentToBeEvaluated) {
             if (mightBeBean(c)) {
@@ -81,6 +81,8 @@ public class CdiConfigBuilder {
             }
         }
 
+        // Initialize configuration data by looking at initial classes and their annotations.
+        // TestClasses and SuTClasses are to be created, if not replaced by alternatives.
         while (currentToBeEvaluated.size() > 0) {
             for (Class<?> c : currentToBeEvaluated) {
                 if (mightBeBean(c)) {
@@ -112,7 +114,7 @@ public class CdiConfigBuilder {
 
             if (newToBeStarted.size() == 0) {
                 if (builder.injections.size() > 0) {
-                    Builder producerBuilder = builder.producerCandidates();
+                    LeveledBuilder producerBuilder = builder.producerCandidates();
                     InjectsMatcher injectsToProducesMatcher = new InjectsMatcher(producerBuilder);
                     for (QualifiedType inject : builder.injections) {
                         injectsToProducesMatcher.matchInject(inject);
@@ -154,7 +156,7 @@ public class CdiConfigBuilder {
             tmp.add(cfg.testClass);
         tmp.addAll(cfg.initialClasses);
         tmp.addAll(cfg.enabledAlternatives);
-        evaluateLevel(tmp, cfg);
+        create(tmp, cfg);
 
     }
 }

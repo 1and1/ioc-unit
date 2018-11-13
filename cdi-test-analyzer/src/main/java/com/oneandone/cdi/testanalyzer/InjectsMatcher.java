@@ -1,4 +1,4 @@
-package com.oneandone.ejbcdiunit2.closure;
+package com.oneandone.cdi.testanalyzer;
 
 import org.apache.commons.lang3.reflect.TypeUtils;
 
@@ -14,9 +14,9 @@ public class InjectsMatcher {
     Map<QualifiedType, Set<QualifiedType>> matching = new HashMap<>();
     Map<QualifiedType, Set<QualifiedType>> ambiguus = new HashMap<>();
     Set<QualifiedType> empty = new HashSet<>();
-    Builder builder;
+    LeveledBuilder builder;
 
-    public InjectsMatcher(final Builder builder) {
+    public InjectsMatcher(final LeveledBuilder builder) {
         this.builder = builder;
     }
 
@@ -121,7 +121,7 @@ public class InjectsMatcher {
         return false;
     }
 
-    public Set<Class<?>> evaluateMatches(final List<CdiConfigBuilder.ProblemRecord> problems) {
+    public Set<Class<?>> evaluateMatches(final List<CdiConfigCreator.ProblemRecord> problems) {
         Set<Class<?>> newToBeStarted = new HashSet();
         for (QualifiedType inject : empty) {
             // search for producers and inner classes
@@ -156,7 +156,7 @@ public class InjectsMatcher {
             }
             if (testClasses.size() != 0) {
                 if (testClasses.size() > 1 || sutClasses.size() != 0) {
-                    problems.add(new CdiConfigBuilder.ProblemRecord("Handling Inject: {} Testclass(es) {} clashing with SutClass(es) {}",
+                    problems.add(new CdiConfigCreator.ProblemRecord("Handling Inject: {} Testclass(es) {} clashing with SutClass(es) {}",
                             inject, testClasses, sutClasses));
                 } else {
                     final Class<?> testClass = testClasses.iterator().next();
@@ -167,7 +167,7 @@ public class InjectsMatcher {
                 builder.injectHandled(inject);
             } else if (sutClasses.size() > 0) {
                 if (sutClasses.size() > 1)
-                    problems.add(new CdiConfigBuilder.ProblemRecord("Handling Inject: {} too many SutClass(es) {}",
+                    problems.add(new CdiConfigCreator.ProblemRecord("Handling Inject: {} too many SutClass(es) {}",
                             inject, sutClasses));
                 final Class<?> sutClass = sutClasses.iterator().next();
                 if (!builder.data.beansToBeStarted.contains(sutClass)) {
@@ -176,7 +176,7 @@ public class InjectsMatcher {
                 builder.injectHandled(inject);
             } else if (availableTestClasses.size() > 0) {
                 if (availableTestClasses.size() > 1)
-                    problems.add(new CdiConfigBuilder.ProblemRecord("Handling Inject: {} more than one available TestClass(es) {}",
+                    problems.add(new CdiConfigCreator.ProblemRecord("Handling Inject: {} more than one available TestClass(es) {}",
                             inject, availableTestClasses));
                 final Class<?> testClass = availableTestClasses.iterator().next();
                 if (!builder.data.beansToBeStarted.contains(testClass)) {
@@ -186,7 +186,7 @@ public class InjectsMatcher {
             } else {
                 assert (availableClasses.size() != 0);
                 if (availableClasses.size() > 1) {
-                    problems.add(new CdiConfigBuilder.ProblemRecord("Handling Inject: {} more than one AvailableClass(es) {}",
+                    problems.add(new CdiConfigCreator.ProblemRecord("Handling Inject: {} more than one AvailableClass(es) {}",
                             inject, availableClasses));
                 }
                 final Class<?> toBeStarted = availableClasses.iterator().next();

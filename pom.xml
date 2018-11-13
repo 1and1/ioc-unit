@@ -5,8 +5,6 @@
     <artifactId>ejb-cdi-unit-parent</artifactId>
     <version>2.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <modules>
-    </modules>
 
     <name>net.oneandone:ejb-cdi-unit-parent</name>
     <description>The parent-pom for ejb-cdi-unit a module developed to ease test driven ejb3.x service-development.
@@ -28,6 +26,12 @@
             <organizationUrl>http://www.1and1.com</organizationUrl>
         </developer>
     </developers>
+
+    <modules>
+        <module>cdi-test-mocks</module>
+        <module>cdi-test-analyzer</module>
+        <module>purecdi-tests</module>
+    </modules>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -97,6 +101,8 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <modules>
+                <module>cdi-test-analyzer</module>
+                <module>cdi-test-mocks</module>
                 <module>purecdi-tests</module>
                 <module>ejb-cdi-unit</module>
                 <module>ejb-cdi-unit-test-war</module>
@@ -151,6 +157,7 @@
         <profile>
             <id>junit5</id>
             <modules>
+                <module>cdi-test-analyzer</module>
                 <module>ejb-cdi-unit</module>
                 <module>ejb-cdi-unit5</module>
                 <module>ejb-cdi-unit-tests5</module>
@@ -299,7 +306,7 @@
                 <dependency>
                     <groupId>org.jboss.weld.module</groupId>
                     <artifactId>weld-web</artifactId>
-                    <version>3.0.0.Final</version>
+                    <version>3.0.4.Final</version>
                     <scope>test</scope>
                 </dependency>
             </dependencies>

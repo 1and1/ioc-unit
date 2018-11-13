@@ -1,10 +1,9 @@
-package com.oneandone.ejbcdiunit2.closure;
+package com.oneandone.cdi.testanalyzer;
 
-import com.oneandone.cdiunit.internal.easymock.EasyMockExtension;
-import com.oneandone.cdiunit.internal.mockito.MockitoExtension;
-import com.oneandone.ejbcdiunit2.closure.annotations.*;
+import com.oneandone.cdi.testanalyzer.annotations.*;
 
 import javax.enterprise.inject.Alternative;
+import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.Stereotype;
 import javax.enterprise.inject.spi.Extension;
 import java.lang.annotation.Annotation;
@@ -12,21 +11,20 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.MalformedURLException;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author aschoerk
  */
-class Builder {
+class LeveledBuilder {
 
     Set<QualifiedType> injections = new HashSet<>();
     Set<QualifiedType> produces = new HashSet<>();
     ProducerMap producerMap = new ProducerMap();
     BuilderData data = new BuilderData(producerMap);
+    Collection<ProducerPlugin> producerPlugins = Collections.EMPTY_LIST;
 
-    public Builder(final InitialConfiguration cfg) {
+    public LeveledBuilder(final InitialConfiguration cfg) {
         init(cfg);
     }
 
@@ -41,7 +39,7 @@ class Builder {
 
     private void findInnerClasses(final Class c, final Set<Class<?>> staticInnerClasses) {
         for (Class innerClass : c.getDeclaredClasses()) {
-            if (Modifier.isStatic(innerClass.getModifiers()) && CdiConfigBuilder.mightBeBean(innerClass)) {
+            if (Modifier.isStatic(innerClass.getModifiers()) && CdiConfigCreator.mightBeBean(innerClass)) {
                 staticInnerClasses.add(innerClass);
                 data.addToClassMap(innerClass);
                 findInnerClasses(innerClass, staticInnerClasses);
@@ -83,54 +81,52 @@ class Builder {
     }
 
 
-    Builder tobeStarted(Class c) {
+    LeveledBuilder tobeStarted(Class c) {
         data.beansToBeStarted.add(c);
         data.addToClassMap(c);
         return this;
     }
 
-    Builder setAvailable(Class c) {
+    LeveledBuilder setAvailable(Class c) {
         data.beansAvailable.add(c);
         data.addToClassMap(c);
         return this;
     }
 
-    Builder innerClasses(Class c) {
+    LeveledBuilder innerClasses(Class c) {
         findInnerClasses(c, data.beansAvailable);
         return this;
     }
 
-    Builder injects(Class c) {
+    LeveledBuilder injects(Class c) {
         InjectFinder injectFinder = new InjectFinder();
         injectFinder.find(c);
         injections.addAll(injectFinder.getInjectedTypes());
         return this;
     }
 
-    Builder injectHandled(QualifiedType inject) {
+    LeveledBuilder injectHandled(QualifiedType inject) {
         injections.remove(inject);
         handledInjections.add(inject);
         return this;
     }
 
     boolean containsProducingAnnotation(final Annotation[] annotations) {
-        for (Annotation ann : annotations) {
-            final String name = ann.annotationType().getName();
-            if (name.equals("org.easymock.Mock")) {
-                extensions.add(EasyMockExtension.class);
-                return true;
-            } else if (name.equals("org.mockito.Mock")) {
-                extensions.add(MockitoExtension.class);
-                return true;
-            } else if(name.equals("javax.enterprise.inject.Produces")) {
+        for (ProducerPlugin producerPlugin: producerPlugins) {
+            if (producerPlugin.isProducing(annotations)) {
+                extensions.add(producerPlugin.extensionToInstall());
                 return true;
             }
+        }
+        for (Annotation ann : annotations) {
+            if (ann.annotationType().equals(Produces.class))
+                return true;
         }
         return false;
     }
 
 
-    Builder producerFields(Class c) {
+    LeveledBuilder producerFields(Class c) {
         for (Field f : c.getDeclaredFields()) {
             if (containsProducingAnnotation(f.getAnnotations())) {
                 final QualifiedType q = new QualifiedType(f);
@@ -141,7 +137,7 @@ class Builder {
         return this;
     }
 
-    Builder producerMethods(Class c) {
+    LeveledBuilder producerMethods(Class c) {
         for (Method m : c.getDeclaredMethods()) {
             if (containsProducingAnnotation(m.getAnnotations())) {
                 final QualifiedType q = new QualifiedType(m);
@@ -152,21 +148,21 @@ class Builder {
         return this;
     }
 
-    Builder testClass(Class<?> c) {
+    LeveledBuilder testClass(Class<?> c) {
         data.testClasses.add(c);
         data.testClassesAvailable.remove(c);
         data.addToClassMap(c);
         return this;
     }
 
-    Builder sutClass(Class<?> c) {
+    LeveledBuilder sutClass(Class<?> c) {
         data.sutClasses.add(c);
         data.sutClassesAvailable.remove(c);
         data.addToClassMap(c);
         return this;
     }
 
-    Builder testClassAnnotation(Class<?> c) {
+    LeveledBuilder testClassAnnotation(Class<?> c) {
         TestClasses testClasses = c.getAnnotation(TestClasses.class);
         if (testClasses != null) {
             data.addTestClasses(testClasses);
@@ -175,7 +171,7 @@ class Builder {
     }
 
 
-    Builder sutClassAnnotation(Class<?> c) {
+    LeveledBuilder sutClassAnnotation(Class<?> c) {
         SutClasses sutClasses = c.getAnnotation(SutClasses.class);
         if (sutClasses != null) {
             data.addSutClasses(sutClasses);
@@ -184,7 +180,7 @@ class Builder {
     }
 
 
-    Builder sutPackagesAnnotation(Class<?> c) throws MalformedURLException {
+    LeveledBuilder sutPackagesAnnotation(Class<?> c) throws MalformedURLException {
         SutPackages sutPackages = c.getAnnotation(SutPackages.class);
         if (sutPackages != null) {
             data.addSutPackages(Arrays.asList(sutPackages.value()));
@@ -194,7 +190,7 @@ class Builder {
 
 
 
-    Builder sutClasspathsAnnotation(Class<?> c) throws MalformedURLException {
+    LeveledBuilder sutClasspathsAnnotation(Class<?> c) throws MalformedURLException {
         SutClasspaths sutClasspaths = c.getAnnotation(SutClasspaths.class);
         if (sutClasspaths != null) {
             data.addSutClasspaths(Arrays.asList(sutClasspaths.value()));
@@ -203,7 +199,7 @@ class Builder {
     }
 
 
-    Builder enabledAlternatives(Class<?> c) throws MalformedURLException {
+    LeveledBuilder enabledAlternatives(Class<?> c) throws MalformedURLException {
         EnabledAlternatives enabledAlternatives = c.getAnnotation(EnabledAlternatives.class);
         if (enabledAlternatives != null) {
             data.addEnabledAlternatives(Arrays.asList(enabledAlternatives.value()));
@@ -214,7 +210,7 @@ class Builder {
 
 
 
-    Builder excludes(Class<?> c) throws MalformedURLException {
+    LeveledBuilder excludes(Class<?> c) throws MalformedURLException {
         ExcludedClasses excludedClassesL = c.getAnnotation(ExcludedClasses.class);
         if (excludedClassesL != null) {
             data.addExcludedClasses(Arrays.asList(excludedClassesL.value()));
@@ -224,8 +220,8 @@ class Builder {
 
 
 
-    Builder elseClass(Class<?> c) {
-        if (CdiConfigBuilder.isExtension(c)) {
+    LeveledBuilder elseClass(Class<?> c) {
+        if (CdiConfigCreator.isExtension(c)) {
             extensions.add((Class<? extends Extension>) c);
         } else if (c.isAnnotation()) {
             if (c.isAnnotationPresent(Stereotype.class) && c.isAnnotationPresent(Alternative.class)) {
@@ -241,11 +237,11 @@ class Builder {
     }
 
 
-    public Builder producerCandidates() {
+    public LeveledBuilder producerCandidates() {
         Set<Class<?>> tmp = new HashSet<>();
         tmp.addAll(data.beansAvailable);
         tmp.removeAll(data.beansToBeStarted);
-        Builder result = new Builder(new InitialConfiguration());
+        LeveledBuilder result = new LeveledBuilder(new InitialConfiguration());
         for (Class<?> c: tmp) {
             result.setAvailable(c);  // necessary? already is available
             result.producerFields(c);

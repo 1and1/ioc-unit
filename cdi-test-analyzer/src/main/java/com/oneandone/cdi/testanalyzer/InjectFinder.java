@@ -1,4 +1,4 @@
-package com.oneandone.ejbcdiunit2.closure;
+package com.oneandone.cdi.testanalyzer;
 
 import org.apache.commons.lang3.reflect.TypeUtils;
 

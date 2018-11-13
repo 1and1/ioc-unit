@@ -1,15 +1,13 @@
-package com.oneandone.ejbcdiunit.cfganalyzer;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Set;
-import java.util.function.Predicate;
+package com.oneandone.cdi.testanalyzer;
 
 import org.reflections8.ReflectionUtils;
 import org.reflections8.Reflections;
 import org.reflections8.util.ConfigurationBuilder;
 
-import com.oneandone.ejbcdiunit.internal.TypesScanner;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Set;
+import java.util.function.Predicate;
 
 /**
  * @author aschoerk
