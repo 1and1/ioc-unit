@@ -1,22 +1,40 @@
-package com.oneandone.ejbcdiunit.weldstarter;
+package com.oneandone.cdi.weldstarter;
 
-import org.jboss.weld.bootstrap.api.Service;
-import org.jboss.weld.bootstrap.api.ServiceRegistry;
-import org.jboss.weld.bootstrap.spi.Metadata;
-
-import javax.enterprise.inject.spi.DeploymentException;
-import javax.enterprise.inject.spi.Extension;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import javax.enterprise.inject.spi.DeploymentException;
+import javax.enterprise.inject.spi.Extension;
+
+import org.jboss.weld.bootstrap.api.Service;
+import org.jboss.weld.bootstrap.api.ServiceRegistry;
+import org.jboss.weld.bootstrap.spi.Metadata;
+
 public class WeldSetupBase implements WeldSetup {
     protected Collection<String> beanClasses = Collections.EMPTY_LIST;
     protected List<Metadata<String>> alternativeClasses = Collections.EMPTY_LIST;
     protected List<Metadata<String>> enabledAlternativeStereotypes = Collections.EMPTY_LIST;
+    protected List<Metadata<String>> enabledInterceptors = Collections.EMPTY_LIST;
+    protected List<Metadata<String>> enabledDecorators = Collections.EMPTY_LIST;
     protected List<WeldSetup.ServiceConfig> services = new ArrayList<>();
     protected List<Metadata<Extension>> extensions = new ArrayList<>();
+
+    @Override
+    public List<ServiceConfig> getServices() {
+        return services;
+    }
+
+    @Override
+    public List<Metadata<String>> getEnabledInterceptors() {
+        return enabledInterceptors;
+    }
+
+    @Override
+    public List<Metadata<String>> getEnabledDecorators() {
+        return enabledDecorators;
+    }
 
     @Override
     public Collection<String> getBeanClasses() {

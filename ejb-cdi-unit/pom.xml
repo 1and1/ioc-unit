@@ -20,7 +20,6 @@
         </license>
     </licenses>
     <properties>
-        <weld.compile.version>3.0.4.Final</weld.compile.version>
         <javax.annotation.version>1.3.2</javax.annotation.version>
     </properties>
 
@@ -105,6 +104,24 @@
         <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-api</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.oneandone</groupId>
+            <artifactId>cdi-test-analyzer</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.oneandone</groupId>
+            <artifactId>cdi-test-mocks</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.oneandone</groupId>
+            <artifactId>cdi-weld-starter</artifactId>
+            <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

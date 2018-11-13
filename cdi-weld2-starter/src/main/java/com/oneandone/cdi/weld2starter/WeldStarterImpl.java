@@ -1,17 +1,5 @@
-package com.oneandone.ejbcdiunit.weldstarter;
+package com.oneandone.cdi.weld2starter;
 
-import org.jboss.weld.bootstrap.api.Bootstrap;
-import org.jboss.weld.bootstrap.api.CDI11Bootstrap;
-import org.jboss.weld.bootstrap.api.ServiceRegistry;
-import org.jboss.weld.bootstrap.api.helpers.SimpleServiceRegistry;
-import org.jboss.weld.bootstrap.spi.*;
-import org.jboss.weld.ejb.spi.EjbDescriptor;
-import org.jboss.weld.environment.se.Weld;
-import org.jboss.weld.environment.se.WeldContainer;
-import org.jboss.weld.resources.spi.ResourceLoader;
-
-import javax.enterprise.inject.Instance;
-import javax.enterprise.inject.spi.DeploymentException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 import java.net.MalformedURLException;
@@ -20,10 +8,36 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 
-public class WeldStarter {
+import javax.enterprise.inject.Instance;
+import javax.enterprise.inject.spi.DeploymentException;
 
-    WeldContainer container;
+import org.jboss.weld.bootstrap.WeldBootstrap;
+import org.jboss.weld.bootstrap.api.CDI11Bootstrap;
+import org.jboss.weld.bootstrap.api.ServiceRegistry;
+import org.jboss.weld.bootstrap.api.helpers.SimpleServiceRegistry;
+import org.jboss.weld.bootstrap.spi.BeanDeploymentArchive;
+import org.jboss.weld.bootstrap.spi.BeanDiscoveryMode;
+import org.jboss.weld.bootstrap.spi.BeansXml;
+import org.jboss.weld.bootstrap.spi.Deployment;
+import org.jboss.weld.bootstrap.spi.Scanning;
+import org.jboss.weld.ejb.spi.EjbDescriptor;
+import org.jboss.weld.environment.se.Weld;
+import org.jboss.weld.environment.se.WeldContainer;
+import org.jboss.weld.resources.spi.ResourceLoader;
+import org.jboss.weld.resources.spi.ScheduledExecutorServiceFactory;
+import org.jboss.weld.util.reflection.Formats;
+
+import com.oneandone.cdi.weldstarter.BeansXmlImpl;
+import com.oneandone.cdi.weldstarter.WeldSetup;
+import com.oneandone.cdi.weldstarter.WeldStarter;
+
+public class WeldStarterImpl implements WeldStarter {
+
+    public WeldContainer container;
+    private String version;
 
     public void setUp(WeldSetup weldSetup) {
 
@@ -35,6 +49,19 @@ public class WeldStarter {
     }
 
     public void start(WeldSetup weldSetup) {
+        weldSetup.getServices().add(new WeldSetup.ServiceConfig(org.jboss.weld.resources.spi.ScheduledExecutorServiceFactory.class,
+                new ScheduledExecutorServiceFactory() {
+                    @Override
+                    public ScheduledExecutorService get() {
+                        return new ScheduledThreadPoolExecutor(10);
+                    }
+
+                    @Override
+                    public void cleanup() {
+
+                }
+                }));
+        this.version = Formats.version(WeldBootstrap.class.getPackage());
         System.setProperty("org.jboss.weld.bootstrap.concurrentDeployment", "false");
 
         Weld weld = new Weld() {
@@ -53,22 +80,13 @@ public class WeldStarter {
                 return res;
             }
 
-            protected Deployment createDeployment(final ResourceLoader resourceLoader, final Bootstrap bootstrap) {
-
-                final ServiceRegistry services = new SimpleServiceRegistry();
-                weldSetup.registerServices(services);
-
-                final BeanDeploymentArchive oneDeploymentArchive = createOneDeploymentArchive(weldSetup, services);
-
-                oneDeploymentArchive.getServices().add(ResourceLoader.class, resourceLoader);
-
-                Deployment res = new CDI1DeploymentImpl(services, oneDeploymentArchive, weldSetup.getExtensions());
-
-                return res;
-            }
-
         };
-        container = weld.initialize();
+        container = weld.addBeanClass(this.getClass()).initialize();
+    }
+
+    @Override
+    public <T> T get(final Class<T> clazz) {
+        return container.instance().select(clazz).get();
     }
 
     private BeanDeploymentArchive createOneDeploymentArchive(WeldSetup weldSetup, final ServiceRegistry services) {
@@ -125,8 +143,8 @@ public class WeldStarter {
             InvocationHandler beansXmlImpl = new BeansXmlImpl(
                     weldSetup.getAlternativeClasses(),
                     weldSetup.getEnabledAlternativeStereotypes(),
-                    Collections.EMPTY_LIST, // decorators
-                    Collections.EMPTY_LIST, // interceptors
+                    weldSetup.getEnabledDecorators(), // decorators
+                    weldSetup.getEnabledInterceptors(), // interceptors
                     Scanning.EMPTY_SCANNING,
                     // These were added in Weld 2.0:
                     new URL("file:weld-starter"),

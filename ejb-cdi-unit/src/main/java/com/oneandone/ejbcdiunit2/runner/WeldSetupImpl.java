@@ -1,11 +1,11 @@
 package com.oneandone.ejbcdiunit2.runner;
 
-import com.oneandone.ejbcdiunit.weldstarter.WeldSetup;
-import com.oneandone.ejbcdiunit.weldstarter.WeldSetupBase;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
+
+import com.oneandone.cdi.weldstarter.WeldSetup;
+import com.oneandone.cdi.weldstarter.WeldSetupBase;
 
 public class WeldSetupImpl extends WeldSetupBase implements WeldSetup {
     public void setBeanClasses(Collection<Class<?>> classes) {

@@ -1,4 +1,4 @@
-package com.oneandone.ejbcdiunit.weldstarter;
+package com.oneandone.cdi.weld2starter;
 
 import java.util.Arrays;
 import java.util.Collection;

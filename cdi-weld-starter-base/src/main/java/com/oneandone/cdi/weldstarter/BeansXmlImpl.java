@@ -1,4 +1,4 @@
-package com.oneandone.ejbcdiunit.weldstarter;
+package com.oneandone.cdi.weldstarter;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -13,10 +13,10 @@ import org.jboss.weld.bootstrap.spi.Scanning;
  */
 public class BeansXmlImpl implements InvocationHandler {
 
-    private final List enabledAlternatives;
-    private final List enabledAlternativeStereotypes;
-    private final List enabledDecorators;
-    private final List enabledInterceptors;
+    private final List<Metadata<String>> enabledAlternatives;
+    private final List<Metadata<String>> enabledAlternativeStereotypes;
+    private final List<Metadata<String>> enabledDecorators;
+    private final List<Metadata<String>> enabledInterceptors;
     private final Scanning scanning;
     private final URL url;
     private final Object discoveryMode;

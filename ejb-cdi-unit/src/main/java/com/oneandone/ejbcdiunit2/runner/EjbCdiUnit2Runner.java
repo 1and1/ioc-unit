@@ -1,13 +1,9 @@
 package com.oneandone.ejbcdiunit2.runner;
 
-import com.oneandone.ejbcdiunit.*;
-import com.oneandone.ejbcdiunit.internal.EjbExtensionExtended;
-import com.oneandone.ejbcdiunit.internal.EjbInformationBean;
-import com.oneandone.ejbcdiunit.persistence.SimulatedTransactionManager;
-import com.oneandone.ejbcdiunit.weldstarter.WeldSetup;
-import com.oneandone.ejbcdiunit.weldstarter.WeldStarter;
-import com.oneandone.ejbcdiunit2.closure.CdiConfigBuilder;
-import com.oneandone.ejbcdiunit2.closure.InitialConfiguration;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.spi.BeanManager;
+import javax.naming.InitialContext;
+
 import org.jboss.weld.bootstrap.WeldBootstrap;
 import org.jboss.weld.transaction.spi.TransactionServices;
 import org.jboss.weld.util.reflection.Formats;
@@ -19,9 +15,18 @@ import org.junit.runners.model.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.naming.InitialContext;
+import com.oneandone.cdi.testanalyzer.CdiConfigCreator;
+import com.oneandone.cdi.testanalyzer.InitialConfiguration;
+import com.oneandone.cdi.weldstarter.WeldSetup;
+import com.oneandone.cdi.weldstarter.WeldStarter;
+import com.oneandone.ejbcdiunit.AsynchronousManager;
+import com.oneandone.ejbcdiunit.CreationalContexts;
+import com.oneandone.ejbcdiunit.EjbUnitBeanInitializerClass;
+import com.oneandone.ejbcdiunit.EjbUnitTransactionServices;
+import com.oneandone.ejbcdiunit.SupportEjbExtended;
+import com.oneandone.ejbcdiunit.internal.EjbExtensionExtended;
+import com.oneandone.ejbcdiunit.internal.EjbInformationBean;
+import com.oneandone.ejbcdiunit.persistence.SimulatedTransactionManager;
 
 public class EjbCdiUnit2Runner extends BlockJUnit4ClassRunner {
     private static Logger logger = LoggerFactory.getLogger(EjbCdiUnit2Runner.class);
@@ -101,7 +106,7 @@ public class EjbCdiUnit2Runner extends BlockJUnit4ClassRunner {
                     cfg.initialClasses.add(EjbExtensionExtended.class);
                     cfg.initialClasses.add(SimulatedTransactionManager.class);
                     cfg.initialClasses.add(BeanManager.class);
-                    CdiConfigBuilder cdiConfigBuilder = new CdiConfigBuilder();
+                    CdiConfigCreator cdiConfigBuilder = new CdiConfigCreator();
                     cdiConfigBuilder.initialize(cfg);
                     weldSetup = new WeldSetupImpl();
                     weldSetup.setBeanClasses(cdiConfigBuilder.toBeStarted());

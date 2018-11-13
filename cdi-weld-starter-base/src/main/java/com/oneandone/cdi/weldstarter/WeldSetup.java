@@ -1,13 +1,14 @@
-package com.oneandone.ejbcdiunit.weldstarter;
+package com.oneandone.cdi.weldstarter;
+
+import java.util.Collection;
+import java.util.List;
+
+import javax.enterprise.inject.spi.DeploymentException;
+import javax.enterprise.inject.spi.Extension;
 
 import org.jboss.weld.bootstrap.api.Service;
 import org.jboss.weld.bootstrap.api.ServiceRegistry;
 import org.jboss.weld.bootstrap.spi.Metadata;
-
-import javax.enterprise.inject.spi.DeploymentException;
-import javax.enterprise.inject.spi.Extension;
-import java.util.Collection;
-import java.util.List;
 
 public interface WeldSetup {
     public static class ServiceConfig<S extends Service> {
@@ -26,11 +27,16 @@ public interface WeldSetup {
 
     List<Metadata<String>> getEnabledAlternativeStereotypes();
 
-    void setDeploymentException(DeploymentException deploymentException);
+    List<Metadata<String>> getEnabledDecorators();
 
-    void setServices(List<ServiceConfig> services);
+    List<ServiceConfig> getServices();
+
+    List<Metadata<String>> getEnabledInterceptors();
+
+    void setDeploymentException(DeploymentException deploymentException);
 
     Iterable<Metadata<Extension>> getExtensions();
 
     void registerServices(ServiceRegistry serviceRegistry);
+
 }

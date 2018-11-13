@@ -1,4 +1,4 @@
-package com.oneandone.ejbcdiunit.weldstarter;
+package com.oneandone.cdi.weldstarter;
 
 import java.util.ArrayList;
 
@@ -11,8 +11,6 @@ public class WeldSetupClass extends WeldSetupBase implements WeldSetup {
         }
     }
 
-
-
     public void setAlternativeClasses(Class... classes) {
         this.alternativeClasses = new ArrayList<>();
         for (Class clazz : classes) {
@@ -20,18 +18,10 @@ public class WeldSetupClass extends WeldSetupBase implements WeldSetup {
         }
     }
 
-
-
-
     public void setEnabledAlternativeStereotypes(Class... classes) {
         this.enabledAlternativeStereotypes = new ArrayList<>();
         for (Class clazz : classes) {
             addEnabledAlternativeStereotype(clazz);
         }
     }
-
-
-
-
-
 }

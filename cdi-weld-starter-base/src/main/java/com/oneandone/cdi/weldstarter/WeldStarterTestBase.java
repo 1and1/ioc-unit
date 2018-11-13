@@ -1,16 +1,21 @@
-package com.oneandone.ejbcdiunit.weldstarter;
+package com.oneandone.cdi.weldstarter;
 
-import org.jboss.weld.environment.se.WeldContainer;
-import org.junit.After;
-
-import javax.enterprise.inject.Instance;
-import javax.enterprise.inject.spi.Extension;
 import java.util.Collection;
+
+import javax.enterprise.inject.spi.Extension;
+
+import org.junit.After;
 
 /**
  * @author aschoerk
  */
 public class WeldStarterTestBase {
+    WeldSetupClass weldSetup = new WeldSetupClass();
+    WeldStarter weldStarter = null;
+
+    public void setWeldStarter(WeldStarter weldStarterP) {
+        this.weldStarter = weldStarterP;
+    }
 
     public void setBeanClasses(Class... classes) {
         weldSetup.setBeanClasses(classes);
@@ -39,21 +44,9 @@ public class WeldStarterTestBase {
         weldStarter.start(weldSetup);
     }
 
-    WeldContainer getContainer() {
-        return weldStarter.container;
-    }
-
-    public Instance<Object> getContainerInstance() {
-        return getContainer().instance();
-    }
-
     public <T> T selectGet(Class<T> clazz) {
-        return getContainerInstance().select(clazz).get();
+        return weldStarter.get(clazz);
     }
-
-
-    WeldSetupClass weldSetup = new WeldSetupClass();
-    WeldStarter weldStarter = new WeldStarter();
 
     @After
     public void tearDown() {
