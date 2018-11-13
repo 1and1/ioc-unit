@@ -3,7 +3,7 @@ language: java
 
 jdk:
   - oraclejdk8
-  - oraclejdk10
+  - openjdk10
 
 # cache local Maven repo: https://docs.travis-ci.com/user/caching/
 cache:
