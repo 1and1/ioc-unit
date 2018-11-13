@@ -1,5 +1,6 @@
 package com.oneandone.ejbcdiunit.cfganalyzer;
 
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -12,7 +13,7 @@ import javax.enterprise.inject.spi.Extension;
 import org.jboss.weld.bootstrap.spi.Metadata;
 
 public class TestConfig {
-    private Set<URL> cdiClasspathEntries = new HashSet<URL>();
+    private Set<URI> cdiClasspathEntries = new HashSet<>();
     private Set<String> discoveredClasses = new LinkedHashSet<String>();
     private Collection<Metadata<String>> alternatives = new ArrayList<Metadata<String>>();
     private Class<?> ejbJarClasspathExample = null;
@@ -20,11 +21,11 @@ public class TestConfig {
     private Collection<Metadata<String>> enabledInterceptors = new ArrayList<Metadata<String>>();
     private Collection<Metadata<String>> enabledDecorators = new ArrayList<Metadata<String>>();
     private Collection<Metadata<String>> enabledAlternativeStereotypes = new ArrayList<Metadata<String>>();
-    private Set<URL> classpathEntries = new HashSet<>();
+    private Set<URI> classpathEntries = new HashSet<>();
 
     public TestConfig() {}
 
-    public Set<URL> getCdiClasspathEntries() {
+    public Set<URI> getCdiClasspathEntries() {
         return cdiClasspathEntries;
     }
 
@@ -60,7 +61,7 @@ public class TestConfig {
         return enabledAlternativeStereotypes;
     }
 
-    public Set<URL> getClasspathEntries() {
+    public Set<URI> getClasspathEntries() {
         return classpathEntries;
     }
 }

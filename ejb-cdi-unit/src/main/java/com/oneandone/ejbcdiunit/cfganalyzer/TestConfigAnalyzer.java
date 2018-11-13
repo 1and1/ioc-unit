@@ -9,6 +9,7 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -334,7 +335,11 @@ public abstract class TestConfigAnalyzer {
                 reflections.getStore().get(TypesScanner.class.getSimpleName()).keySet(),
                 new ClassLoader[] { getClass().getClassLoader() }));
 
-        testConfig.getCdiClasspathEntries().add(path);
+        try {
+            testConfig.getCdiClasspathEntries().add(path.toURI());
+        } catch (URISyntaxException e) {
+            new MalformedURLException(e.getMessage());
+        }
     }
 
 
@@ -402,7 +407,12 @@ public abstract class TestConfigAnalyzer {
             return false;
         }
         URL location = c.getProtectionDomain().getCodeSource().getLocation();
-        boolean isCdi = testConfig.getCdiClasspathEntries().contains(location);
+        boolean isCdi = false;
+        try {
+            isCdi = testConfig.getCdiClasspathEntries().contains(location.toURI());
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
         return isCdi;
 
     }
