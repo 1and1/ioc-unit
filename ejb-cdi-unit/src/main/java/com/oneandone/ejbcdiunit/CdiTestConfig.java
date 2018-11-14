@@ -135,11 +135,11 @@ public class CdiTestConfig {
      * TestConfig Part
      */
 
-    private Collection<Metadata<String>> alternatives = new ArrayList<Metadata<String>>();
+    private Collection<Class<?>> alternatives = new ArrayList<>();
     private Class<?> ejbJarClasspathExample = null;
     private Collection<Metadata<? extends Extension>> extensions = new ArrayList<Metadata<? extends Extension>>();
-    private Collection<Metadata<String>> enabledInterceptors = new ArrayList<Metadata<String>>();
-    private Collection<Metadata<String>> enabledDecorators = new ArrayList<Metadata<String>>();
+    private Collection<Class<?>> enabledInterceptors = new ArrayList<>();
+    private Collection<Class<?>> enabledDecorators = new ArrayList<>();
     private Collection<Metadata<String>> enabledAlternativeStereotypes = new ArrayList<Metadata<String>>();
     private Set<URL> classpathEntries = new HashSet<>();
     private Set<String> discoveredClasses = new LinkedHashSet<String>();
@@ -148,7 +148,7 @@ public class CdiTestConfig {
         return discoveredClasses;
     }
 
-    public Collection<Metadata<String>> getAlternatives() {
+    public Collection<Class<?>> getAlternatives() {
         return alternatives;
     }
 
@@ -156,19 +156,19 @@ public class CdiTestConfig {
         return ejbJarClasspathExample;
     }
 
-    public void setEjbJarClasspathExample(final Class<?> ejbJarClasspathExample) {
-        this.ejbJarClasspathExample = ejbJarClasspathExample;
+    public void setEjbJarClasspathExample(final Class<?> ejbJarClasspathExampleP) {
+        this.ejbJarClasspathExample = ejbJarClasspathExampleP;
     }
 
     public Collection<Metadata<? extends Extension>> getExtensions() {
         return extensions;
     }
 
-    public Collection<Metadata<String>> getEnabledInterceptors() {
+    public Collection<Class<?>> getEnabledInterceptors() {
         return enabledInterceptors;
     }
 
-    public Collection<Metadata<String>> getEnabledDecorators() {
+    public Collection<Class<?>> getEnabledDecorators() {
         return enabledDecorators;
     }
 

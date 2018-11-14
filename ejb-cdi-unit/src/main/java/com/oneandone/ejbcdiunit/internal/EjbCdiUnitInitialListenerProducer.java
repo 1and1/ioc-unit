@@ -1,14 +1,16 @@
 package com.oneandone.ejbcdiunit.internal;
 
-import org.jboss.weld.context.http.Http;
-import org.jboss.weld.module.web.servlet.WeldInitialListener;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Default;
 import javax.enterprise.inject.Produces;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
+
+import org.jboss.weld.context.http.Http;
+
+import com.oneandone.cdi.weldstarter.WeldSetupClass;
 
 /**
  * Decides which version of EjbCdiUnitInitialListener to use, based on the Weld version.
@@ -22,17 +24,11 @@ public class EjbCdiUnitInitialListenerProducer
 
     static {
         // workaround for WELD-1269/WELD-2305 changes
-        String tmp;
-        try {
-            Class c = WeldInitialListener.class;
-
-            tmp = "org.jboss.weld.module.web.servlet.WeldInitialListener";
-        } catch (NoClassDefFoundError e) {
-
-            tmp = "org.jboss.weld.servlet.WeldListener";
+        if (WeldSetupClass.isWeld3()) {
+            handlerClassName = "org.jboss.weld.module.web.servlet.WeldInitialListener";
+        } else {
+            handlerClassName = "org.jboss.weld.servlet.WeldListener";
         }
-        handlerClassName = tmp;
-        ;
     }
 
     @Produces

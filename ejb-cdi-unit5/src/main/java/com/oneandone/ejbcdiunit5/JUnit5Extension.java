@@ -2,7 +2,6 @@ package com.oneandone.ejbcdiunit5;
 
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_METHOD;
 
-import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.net.URL;
 
@@ -12,11 +11,6 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 import org.jboss.weld.bootstrap.WeldBootstrap;
-import org.jboss.weld.bootstrap.api.Bootstrap;
-import org.jboss.weld.bootstrap.api.CDI11Bootstrap;
-import org.jboss.weld.environment.se.Weld;
-import org.jboss.weld.environment.se.WeldContainer;
-import org.jboss.weld.resources.spi.ResourceLoader;
 import org.jboss.weld.transaction.spi.TransactionServices;
 import org.jboss.weld.util.reflection.Formats;
 import org.junit.jupiter.api.TestInstance;
@@ -30,14 +24,16 @@ import org.junit.jupiter.api.extension.TestInstantiationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.oneandone.cdi.weldstarter.WeldSetup;
+import com.oneandone.cdi.weldstarter.WeldSetupClass;
+import com.oneandone.cdi.weldstarter.spi.WeldStarter;
 import com.oneandone.ejbcdiunit.CdiTestConfig;
 import com.oneandone.ejbcdiunit.CreationalContexts;
 import com.oneandone.ejbcdiunit.EjbUnitBeanInitializerClass;
 import com.oneandone.ejbcdiunit.EjbUnitRule;
 import com.oneandone.ejbcdiunit.EjbUnitTransactionServices;
 import com.oneandone.ejbcdiunit.SupportEjbExtended;
-import com.oneandone.ejbcdiunit.cdiunit.Weld11TestUrlDeployment;
-import com.oneandone.ejbcdiunit.cdiunit.WeldTestUrlDeployment;
+import com.oneandone.ejbcdiunit.cfganalyzer.TestConfigAnalyzer;
 import com.oneandone.ejbcdiunit.internal.EjbInformationBean;
 
 public class JUnit5Extension implements BeforeEachCallback,
@@ -47,8 +43,8 @@ public class JUnit5Extension implements BeforeEachCallback,
     private static Logger logger = LoggerFactory.getLogger(JUnit5Extension.class);
     // global system property
     private static final String ABSENT_CODE_PREFIX = "Absent Code attribute in method that is not native or abstract in class file ";
-    protected Weld weld;
-    protected WeldContainer container;
+    protected WeldStarter weldStarter;
+    private WeldSetupClass weldSetup;
     protected Throwable startupException;
     // The TestCase instance
     private CdiTestConfig cdiTestConfig;
@@ -63,29 +59,28 @@ public class JUnit5Extension implements BeforeEachCallback,
     }
 
     private void shutdownWeldIfRunning(boolean ignoreException) throws NamingException {
-        if (weld != null) {
+        if (weldStarter != null) {
             logger.trace("----> shutting down Weld");
             if (initialContext != null)
                 initialContext.close();
             if (ignoreException) {
                 try {
-                    weld.shutdown();
+                    weldStarter.tearDown();
                 } catch (Throwable thw) {
                     logger.debug("Ignored {}", thw);
                 }
             } else {
-                weld.shutdown();
+                weldStarter.tearDown();
             }
             initialContext = null;
-            weld = null;
-            container = null;
+            weldStarter = null;
         }
     }
 
     private Object createTestInstance(Class<?> clazz) throws Exception {
         startupException = null;
         shutdownWeldIfRunning(false);
-        if (weld == null) {
+        if (weldStarter == null) {
             logger.trace("----> starting up Weld.");
             try {
                 String version = Formats.version(WeldBootstrap.class.getPackage());
@@ -100,30 +95,23 @@ public class JUnit5Extension implements BeforeEachCallback,
                                         new EjbUnitTransactionServices()));
 
                 this.cdiTestConfig = weldTestConfig;
+                weldStarter = WeldSetupClass.getWeldStarter();
 
-                weld = new Weld() {
+                if (weldSetup == null) {
+                    TestConfigAnalyzer cdiUnitAnalyzer = new TestConfigAnalyzer();
+                    cdiUnitAnalyzer.analyze(weldTestConfig);
+                    weldSetup = new WeldSetupClass();
+                    weldSetup.setBeanClassNames(weldTestConfig.getDiscoveredClasses());
 
-                    protected org.jboss.weld.bootstrap.spi.Deployment createDeployment(ResourceLoader resourceLoader, CDI11Bootstrap bootstrap) {
-                        try {
-                            return new Weld11TestUrlDeployment(resourceLoader, bootstrap, weldTestConfig);
-                        } catch (IOException e) {
-                            startupException = e;
-                            throw new RuntimeException(e);
-                        }
-                    }
+                    weldSetup.setAlternativeClasses(weldTestConfig.getAlternatives());
+                    weldSetup.setEnabledAlternativeStereotypeMetadatas(weldTestConfig.getEnabledAlternativeStereotypes());
+                    weldSetup.setEnabledDecorators(weldTestConfig.getEnabledDecorators());
+                    weldSetup.setEnabledInterceptors(weldTestConfig.getEnabledInterceptors());
 
-                    protected org.jboss.weld.bootstrap.spi.Deployment createDeployment(ResourceLoader resourceLoader, Bootstrap bootstrap) {
-                        try {
-                            return new WeldTestUrlDeployment(resourceLoader, bootstrap, weldTestConfig);
-                        } catch (IOException e) {
-                            startupException = e;
-                            throw new RuntimeException(e);
-                        }
-                    }
-
-                    ;
-
-                };
+                    weldSetup.setExtensionMetadata(weldTestConfig.getExtensions());
+                    weldSetup.addService(new WeldSetup.ServiceConfig(TransactionServices.class, new EjbUnitTransactionServices()));
+                }
+                weldStarter.start(weldSetup);
 
 
             } catch (ClassFormatError e) {
@@ -134,14 +122,14 @@ public class JUnit5Extension implements BeforeEachCallback,
             } // store info about explicit param injection, either from global settings or from annotation on the test class
 
 
-            if (container == null)
+            if (weldStarter == null)
                 initWeld();
             if (startupException != null) {
                 return clazz.newInstance(); // prepare default, to allow beforeEach to handle exception.
             }
             System.setProperty("java.naming.factory.initial", "com.oneandone.cdiunit.internal.naming.CdiUnitContextFactory");
             initialContext = new InitialContext();
-            final BeanManager beanManager = container.getBeanManager();
+            final BeanManager beanManager = weldStarter.get(BeanManager.class);
             initialContext.bind("java:comp/BeanManager", beanManager);
             creationalContexts = new CreationalContexts(beanManager);
             try {
@@ -176,7 +164,7 @@ public class JUnit5Extension implements BeforeEachCallback,
     public void initWeld() {
         if (startupException == null) {
             try {
-                container = weld.initialize();
+                weldStarter.start(weldSetup);
             } catch (Throwable e) {
                 if (startupException == null) {
                     startupException = e;

@@ -274,6 +274,13 @@
                 <version.org.hibernate.validator>4.3.1.Final</version.org.hibernate.validator>
                 <version.cdi-api>1.0</version.cdi-api>
             </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>net.oneandone</groupId>
+                    <artifactId>weld1-starter</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+            </dependencies>
         </profile>
         <profile>
             <id>weld2.3</id>
@@ -288,10 +295,9 @@
             </properties>
             <dependencies>
                 <dependency>
-                    <groupId>org.jboss.weld.se</groupId>
-                    <artifactId>weld-se</artifactId>
-                    <version>2.3.5.Final</version>
-                    <scope>test</scope>
+                    <groupId>net.oneandone</groupId>
+                    <artifactId>weld2-starter</artifactId>
+                    <version>${project.version}</version>
                 </dependency>
             </dependencies>
         </profile>
@@ -312,6 +318,17 @@
                     <version>2.4.2.Final</version>
                     <scope>test</scope>
                 </dependency>
+                <dependency>
+                    <groupId>net.oneandone</groupId>
+                    <artifactId>weld2-starter</artifactId>
+                    <version>${project.version}</version>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>org.jboss.weld.se</groupId>
+                            <artifactId>weld-se</artifactId>
+                        </exclusion>
+                    </exclusions>
+                </dependency>
             </dependencies>
         </profile>
         <profile>
@@ -326,16 +343,9 @@
             </properties>
             <dependencies>
                 <dependency>
-                    <groupId>org.jboss.weld.se</groupId>
-                    <artifactId>weld-se-core</artifactId>
-                    <version>3.0.4.Final</version>
-                    <scope>test</scope>
-                </dependency>
-                <dependency>
-                    <groupId>org.jboss.weld.module</groupId>
-                    <artifactId>weld-web</artifactId>
-                    <version>3.0.4.Final</version>
-                    <scope>test</scope>
+                    <groupId>net.oneandone</groupId>
+                    <artifactId>weld3-starter</artifactId>
+                    <version>${project.version}</version>
                 </dependency>
             </dependencies>
         </profile>
@@ -361,10 +371,6 @@
                     <exclusion>
                         <groupId>org.javassist</groupId>
                         <artifactId>javassist</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.reflections</groupId>
-                        <artifactId>reflections</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>

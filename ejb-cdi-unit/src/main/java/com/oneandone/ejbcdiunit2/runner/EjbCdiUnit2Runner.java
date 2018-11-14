@@ -4,7 +4,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.naming.InitialContext;
 
-import org.jboss.weld.bootstrap.WeldBootstrap;
+import org.jboss.weld.environment.se.Weld;
 import org.jboss.weld.transaction.spi.TransactionServices;
 import org.jboss.weld.util.reflection.Formats;
 import org.junit.Test;
@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import com.oneandone.cdi.testanalyzer.CdiConfigCreator;
 import com.oneandone.cdi.testanalyzer.InitialConfiguration;
 import com.oneandone.cdi.weldstarter.WeldSetup;
+import com.oneandone.cdi.weldstarter.WeldSetupClass;
 import com.oneandone.cdi.weldstarter.spi.WeldStarter;
 import com.oneandone.ejbcdiunit.AsynchronousManager;
 import com.oneandone.ejbcdiunit.CreationalContexts;
@@ -56,7 +57,7 @@ public class EjbCdiUnit2Runner extends BlockJUnit4ClassRunner {
                 }
                 System.setProperty("java.naming.factory.initial", "com.oneandone.cdiunit.internal.naming.CdiUnitContextFactory");
                 InitialContext initialContext = new InitialContext();
-                final BeanManager beanManager = weldStarter.getContainer().getBeanManager();
+                final BeanManager beanManager = weldStarter.get(BeanManager.class);
                 initialContext.bind("java:comp/BeanManager", beanManager);
                 try (CreationalContexts creationalContexts = new CreationalContexts(beanManager)) {
                     try {
@@ -79,21 +80,22 @@ public class EjbCdiUnit2Runner extends BlockJUnit4ClassRunner {
 
     }
 
-    WeldSetupImpl weldSetup = null;
+    WeldSetupClass weldSetup = null;
     WeldStarter weldStarter = null;
 
     @Override
     protected Object createTest() throws Exception {
 
         try {
-            String version = Formats.version(WeldBootstrap.class.getPackage());
+            String version = Formats.version(Weld.class.getPackage());
             if ("2.2.8 (Final)".equals(version) || "2.2.7 (Final)".equals(version)) {
                 startupException = new Exception("Weld 2.2.8 and 2.2.7 are not supported. Suggest upgrading to 2.2.9");
             }
 
 
             System.setProperty("java.naming.factory.initial", "com.oneandone.cdiunit.internal.naming.CdiUnitContextFactory");
-            weldStarter = new WeldStarter();
+
+            weldStarter = WeldSetupClass.getWeldStarter();
             try {
                 if (weldSetup == null) {
                     InitialConfiguration cfg = new InitialConfiguration();
@@ -108,7 +110,7 @@ public class EjbCdiUnit2Runner extends BlockJUnit4ClassRunner {
                     cfg.initialClasses.add(BeanManager.class);
                     CdiConfigCreator cdiConfigBuilder = new CdiConfigCreator();
                     cdiConfigBuilder.initialize(cfg);
-                    weldSetup = new WeldSetupImpl();
+                    weldSetup = new WeldSetupClass();
                     weldSetup.setBeanClasses(cdiConfigBuilder.toBeStarted());
                     weldSetup.setAlternativeClasses(cdiConfigBuilder.getEnabledAlternatives());
                     weldSetup.setEnabledAlternativeStereotypes(cdiConfigBuilder.setEnabledAlternativeStereotypes());
@@ -118,7 +120,7 @@ public class EjbCdiUnit2Runner extends BlockJUnit4ClassRunner {
 
                 weldStarter.start(weldSetup);
                 InitialContext initialContext = new InitialContext();
-                final BeanManager beanManager = weldStarter.getContainer().getBeanManager();
+                final BeanManager beanManager = weldStarter.get(BeanManager.class);
                 initialContext.bind("java:comp/BeanManager", beanManager);
                 try (CreationalContexts creationalContexts = new CreationalContexts(beanManager)) {
                     EjbInformationBean ejbInformationBean =
@@ -136,7 +138,7 @@ public class EjbCdiUnit2Runner extends BlockJUnit4ClassRunner {
             startupException = new Exception("Unable to start weld", e);
         }
 
-        return weldStarter.getContainerInstance().select(clazz).get();
+        return weldStarter.get(clazz);
     }
 
 }

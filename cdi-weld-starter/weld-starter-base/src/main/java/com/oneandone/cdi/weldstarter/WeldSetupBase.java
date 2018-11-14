@@ -79,6 +79,28 @@ public class WeldSetupBase implements WeldSetup {
         enabledAlternativeStereotypes.add(new StringMetadata(clazz, "Alternative Stereotype"));
     }
 
+    public void addEnabledInterceptor(Class<?> clazz) {
+        enabledInterceptors.add(new StringMetadata(clazz, "Interceptor"));
+    }
+
+    public void setEnabledInterceptors(Collection<Class<?>> classes) {
+        enabledInterceptors = new ArrayList<>();
+        for (Class clazz : classes) {
+            enabledInterceptors.add(new StringMetadata(clazz, "Interceptor"));
+        }
+    }
+
+    public void addEnabledDecorator(Class<?> clazz) {
+        enabledDecorators.add(new StringMetadata(clazz, "Decorator"));
+    }
+
+    public void setEnabledDecorators(Collection<Class<?>> classes) {
+        enabledDecorators = new ArrayList<>();
+        for (Class clazz : classes) {
+            enabledDecorators.add(new StringMetadata(clazz, "Decorator"));
+        }
+    }
+
     protected void addExtension(Class<? extends Extension> clazz) {
         try {
             this.extensions.add(new MetadataImpl<Extension>(clazz.newInstance(), "Alternative In Testcode"));
@@ -100,4 +122,23 @@ public class WeldSetupBase implements WeldSetup {
     }
 
 
+    public void setEnabledAlternativeStereotypeMetadatas(final Collection<Metadata<String>> enabledAlternativeStereotypesP) {
+        this.enabledAlternativeStereotypes = new ArrayList<>();
+        for (Metadata<String> s : enabledAlternativeStereotypesP) {
+            this.enabledAlternativeStereotypes.add(s);
+        }
+    }
+
+    public void setEnabledAlternativeStereotypes(Collection<Class<?>> classes) {
+        this.enabledAlternativeStereotypes = new ArrayList<>();
+        for (Class<?> clazz : classes) {
+            addEnabledAlternativeStereotype(clazz);
+        }
+    }
+
+    public void setExtensionMetadata(final Collection<Metadata<? extends Extension>> extensions) {
+        for (Metadata<? extends Extension> e : extensions) {
+            this.extensions.add((Metadata<Extension>) e);
+        }
+    }
 }

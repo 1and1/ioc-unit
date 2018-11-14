@@ -6,20 +6,7 @@
  */
 package ejbcdiunit2.cdiunit;
 
-import cdiunit.*;
-import com.oneandone.ejbcdiunit.ContextControllerEjbCdiUnit;
-import com.oneandone.ejbcdiunit.cdiunit.ExcludedClasses;
-import com.oneandone.ejbcdiunit2.closure.annotations.TestClasses;
-import com.oneandone.ejbcdiunit2.runner.EjbCdiUnit2Runner;
-import junit.framework.Assert;
-import org.jglue.cdiunit.InConversationScope;
-import org.jglue.cdiunit.InRequestScope;
-import org.jglue.cdiunit.InSessionScope;
-import org.jglue.cdiunit.ProducesAlternative;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import java.lang.annotation.Annotation;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ContextNotActiveException;
@@ -31,7 +18,34 @@ import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.servlet.http.HttpServletRequest;
-import java.lang.annotation.Annotation;
+
+import org.jglue.cdiunit.InConversationScope;
+import org.jglue.cdiunit.InRequestScope;
+import org.jglue.cdiunit.InSessionScope;
+import org.jglue.cdiunit.ProducesAlternative;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+
+import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
+import com.oneandone.ejbcdiunit.ContextControllerEjbCdiUnit;
+import com.oneandone.ejbcdiunit.cdiunit.ExcludedClasses;
+import com.oneandone.ejbcdiunit2.runner.EjbCdiUnit2Runner;
+
+import cdiunit.AImplementation1;
+import cdiunit.AInterface;
+import cdiunit.BRequestScoped;
+import cdiunit.BaseTest;
+import cdiunit.CSessionScoped;
+import cdiunit.DConversationScoped;
+import cdiunit.ESupportClass;
+import cdiunit.FApplicationScoped;
+import cdiunit.ProducedViaField;
+import cdiunit.ProducedViaMethod;
+import cdiunit.Scoped;
+import cdiunit.ScopedFactory;
+import junit.framework.Assert;
 
 @RunWith(EjbCdiUnit2Runner.class)
 @TestClasses({ ESupportClass.class, ScopedFactory.class })

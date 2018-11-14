@@ -1,6 +1,6 @@
 package com.oneandone.cdiunit.internal;
 
-import org.jboss.weld.module.web.servlet.WeldInitialListener;
+// import org.jboss.weld.module.web.servlet.WeldInitialListener;
 
 /**
  * Enables us to inject initial listener. This implementation is for Weld 3. See CdiUnitInitialListenerProducer for the implementation which is
@@ -8,4 +8,8 @@ import org.jboss.weld.module.web.servlet.WeldInitialListener;
  * 
  * @author Sean Flanigan
  */
-public class CdiUnitInitialListenerImpl extends WeldInitialListener implements CdiUnitInitialListener {}
+public class CdiUnitInitialListenerImpl {
+
+}
+
+// extends WeldInitialListener implements CdiUnitInitialListener {}

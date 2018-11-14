@@ -48,7 +48,7 @@ public class EjbUnitRunner extends CdiRunner {
                 }
                 System.setProperty("java.naming.factory.initial", "com.oneandone.cdiunit.internal.naming.CdiUnitContextFactory");
                 InitialContext initialContext = new InitialContext();
-                final BeanManager beanManager = container.getBeanManager();
+                final BeanManager beanManager = weldStarter.get(BeanManager.class);
                 initialContext.bind("java:comp/BeanManager", beanManager);
                 try (CreationalContexts creationalContexts = new CreationalContexts(beanManager)) {
                     try {
@@ -62,8 +62,7 @@ public class EjbUnitRunner extends CdiRunner {
                     defaultStatement.evaluate();
                 } finally {
                     initialContext.close();
-                    weld.shutdown();
-
+                    weldStarter.tearDown();
                 }
 
             }

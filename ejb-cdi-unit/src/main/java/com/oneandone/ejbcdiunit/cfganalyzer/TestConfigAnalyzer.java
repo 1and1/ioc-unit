@@ -1,6 +1,7 @@
 package com.oneandone.ejbcdiunit.cfganalyzer;
 
-import static com.oneandone.ejbcdiunit.cfganalyzer.CdiMetaDataCreator.createMetadata;
+import static com.oneandone.cdi.testanalyzer.ClasspathHandler.addClassPath;
+import static com.oneandone.cdi.testanalyzer.ClasspathHandler.addPackage;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -26,6 +27,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.interceptor.Interceptor;
 
+import org.jboss.weld.metadata.MetadataImpl;
 import org.jglue.cdiunit.ActivatedAlternatives;
 import org.jglue.cdiunit.AdditionalClasses;
 import org.jglue.cdiunit.AdditionalClasspaths;
@@ -110,7 +112,7 @@ public class TestConfigAnalyzer {
                 AdditionalClasspaths additionalClasspaths = c.getAnnotation(AdditionalClasspaths.class);
                 if (additionalClasspaths != null) {
                     for (Class<?> additionalClasspath : additionalClasspaths.value()) {
-                        ClasspathHandler.addClassPath(additionalClasspath, classesToProcess, testConfig.getClasspathEntries());
+                        addClassPath(additionalClasspath, classesToProcess, testConfig.getClasspathEntries());
                     }
                 }
 
@@ -127,7 +129,7 @@ public class TestConfigAnalyzer {
                 AdditionalPackages additionalPackages = c.getAnnotation(AdditionalPackages.class);
                 if (additionalPackages != null) {
                     for (Class<?> additionalPackage : additionalPackages.value()) {
-                        ClasspathHandler.addPackage(additionalPackage, classesToProcess);
+                        addPackage(additionalPackage, classesToProcess);
                     }
                 }
 
@@ -174,20 +176,20 @@ public class TestConfigAnalyzer {
         }
         if (Extension.class.isAssignableFrom(c) && !Modifier.isAbstract(c.getModifiers())) {
             try {
-                testConfig.getExtensions().add(createMetadata((Extension) c.newInstance(), c.getName()));
+                testConfig.getExtensions().add(new MetadataImpl<>((Extension) c.newInstance(), c.getName()));
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         }
         if (c.isAnnotationPresent(Interceptor.class)) {
-            testConfig.getEnabledInterceptors().add(createMetadata(c.getName(), c.getName()));
+            testConfig.getEnabledInterceptors().add(c);
         }
         if (c.isAnnotationPresent(Decorator.class)) {
-            testConfig.getEnabledDecorators().add(createMetadata(c.getName(), c.getName()));
+            testConfig.getEnabledDecorators().add(c);
         }
 
         if (isAlternativeStereotype(c)) {
-            testConfig.getEnabledAlternativeStereotypes().add(createMetadata(c.getName(), c.getName()));
+            testConfig.getEnabledAlternativeStereotypes().add(new MetadataImpl<>(c.getName(), c.getName()));
         }
     }
 
@@ -237,10 +239,10 @@ public class TestConfigAnalyzer {
     private void transferInitialClassesToAddConfig(CdiTestConfig config) throws MalformedURLException {
         classesToProcess.addAll(config.getAdditionalClasses());
         for (Class<?> c : config.getAdditionalClassPathes()) {
-            ClasspathHandler.addClassPath(c, classesToProcess, config.getClasspathEntries());
+            addClassPath(c, classesToProcess, config.getClasspathEntries());
         }
         for (Class<?> c : config.getAdditionalClassPackages()) {
-            ClasspathHandler.addPackage(c, classesToProcess);
+            addPackage(c, classesToProcess);
         }
         for (Class<?> c : config.getActivatedAlternatives()) {
             addAlternative(c);
@@ -261,7 +263,7 @@ public class TestConfigAnalyzer {
         classesToProcess.add(alternativeClass);
 
         if (!isAlternativeStereotype(alternativeClass)) {
-            testConfig.getAlternatives().add(createMetadata(alternativeClass.getName(), alternativeClass.getName()));
+            testConfig.getAlternatives().add(alternativeClass);
         }
     }
 

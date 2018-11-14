@@ -1,6 +1,5 @@
 package com.oneandone.ejbcdiunit;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -11,11 +10,6 @@ import javax.inject.Inject;
 import javax.naming.InitialContext;
 
 import org.jboss.weld.bootstrap.WeldBootstrap;
-import org.jboss.weld.bootstrap.api.Bootstrap;
-import org.jboss.weld.bootstrap.api.CDI11Bootstrap;
-import org.jboss.weld.environment.se.Weld;
-import org.jboss.weld.environment.se.WeldContainer;
-import org.jboss.weld.resources.spi.ResourceLoader;
 import org.jboss.weld.transaction.spi.TransactionServices;
 import org.jboss.weld.util.reflection.Formats;
 import org.junit.Test;
@@ -25,9 +19,11 @@ import org.junit.runners.model.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.oneandone.cdi.weldstarter.WeldSetup;
+import com.oneandone.cdi.weldstarter.WeldSetupClass;
+import com.oneandone.cdi.weldstarter.spi.WeldStarter;
 import com.oneandone.ejbcdiunit.CdiTestConfig.ServiceConfig;
-import com.oneandone.ejbcdiunit.cdiunit.Weld11TestUrlDeployment;
-import com.oneandone.ejbcdiunit.cdiunit.WeldTestUrlDeployment;
+import com.oneandone.ejbcdiunit.cfganalyzer.TestConfigAnalyzer;
 import com.oneandone.ejbcdiunit.internal.EjbInformationBean;
 
 /**
@@ -36,6 +32,8 @@ import com.oneandone.ejbcdiunit.internal.EjbInformationBean;
 public class EjbUnitRule implements TestRule {
     private static Logger logger = LoggerFactory.getLogger(EjbUnitRunner.class);
     private final Object instance;
+    private WeldSetupClass weldSetup;
+    private WeldStarter weldStarter;
     private CdiTestConfig cdiTestConfig;
     private Method method;
 
@@ -67,8 +65,6 @@ public class EjbUnitRule implements TestRule {
     public class Deployment extends Statement {
         private static final String ABSENT_CODE_PREFIX = "Absent Code attribute in method that is not native or abstract in class file ";
         private final Statement next;
-        protected Weld weld;
-        protected WeldContainer container;
         protected Throwable startupException;
         // The TestCase instance
         private Class<?> clazz;
@@ -93,28 +89,23 @@ public class EjbUnitRule implements TestRule {
                 ;
                 EjbUnitRule.this.cdiTestConfig = weldTestConfig;
 
+                weldStarter = WeldSetupClass.getWeldStarter();
 
-                weld = new Weld() {
 
-                    protected org.jboss.weld.bootstrap.spi.Deployment createDeployment(ResourceLoader resourceLoader, CDI11Bootstrap bootstrap) {
-                        try {
-                            return new Weld11TestUrlDeployment(resourceLoader, bootstrap, weldTestConfig);
-                        } catch (IOException e) {
-                            startupException = e;
-                            throw new RuntimeException(e);
-                        }
-                    }
+                if (weldSetup == null) {
+                    TestConfigAnalyzer cdiUnitAnalyzer = new TestConfigAnalyzer();
+                    cdiUnitAnalyzer.analyze(weldTestConfig);
+                    weldSetup = new WeldSetupClass();
+                    weldSetup.setBeanClassNames(weldTestConfig.getDiscoveredClasses());
 
-                    protected org.jboss.weld.bootstrap.spi.Deployment createDeployment(ResourceLoader resourceLoader, Bootstrap bootstrap) {
-                        try {
-                            return new WeldTestUrlDeployment(resourceLoader, bootstrap, weldTestConfig);
-                        } catch (IOException e) {
-                            startupException = e;
-                            throw new RuntimeException(e);
-                        }
-                    };
-
-                };
+                    weldSetup.setAlternativeClasses(weldTestConfig.getAlternatives());
+                    weldSetup.setEnabledDecorators(weldTestConfig.getEnabledDecorators());
+                    weldSetup.setEnabledInterceptors(weldTestConfig.getEnabledInterceptors());
+                    weldSetup.setEnabledAlternativeStereotypeMetadatas(weldTestConfig.getEnabledAlternativeStereotypes());
+                    weldSetup.setExtensionMetadata(weldTestConfig.getExtensions());
+                    weldSetup.addService(new WeldSetup.ServiceConfig(TransactionServices.class, new EjbUnitTransactionServices()));
+                }
+                weldStarter.start(weldSetup);
 
 
             } catch (ClassFormatError e) {
@@ -143,7 +134,7 @@ public class EjbUnitRule implements TestRule {
          */
         @Override
         public void evaluate() throws Throwable {
-            if (container == null)
+            if (weldSetup == null)
                 initWeld();
             if (startupException != null) {
                 if (method != null && method.getAnnotation(Test.class).expected() == startupException.getClass()) {
@@ -153,7 +144,7 @@ public class EjbUnitRule implements TestRule {
             }
             System.setProperty("java.naming.factory.initial", "com.oneandone.cdiunit.internal.naming.CdiUnitContextFactory");
             InitialContext initialContext = new InitialContext();
-            final BeanManager beanManager = container.getBeanManager();
+            final BeanManager beanManager = weldStarter.get(BeanManager.class);
             initialContext.bind("java:comp/BeanManager", beanManager);
             try (CreationalContexts creationalContexts = new CreationalContexts(beanManager)) {
                 try {
@@ -174,8 +165,8 @@ public class EjbUnitRule implements TestRule {
                 next.evaluate();
             } finally {
                 initialContext.close();
-                weld.shutdown();
-                container = null;
+                weldStarter.tearDown();
+                weldStarter = null;
             }
 
 
@@ -184,7 +175,7 @@ public class EjbUnitRule implements TestRule {
         public void initWeld() {
             if (startupException == null) {
                 try {
-                    container = weld.initialize();
+                    weldStarter = WeldSetupClass.getWeldStarter();
                 } catch (Throwable e) {
                     if (startupException == null) {
                         startupException = e;

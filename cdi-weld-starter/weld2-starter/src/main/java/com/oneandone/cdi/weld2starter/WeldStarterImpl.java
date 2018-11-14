@@ -154,7 +154,7 @@ public class WeldStarterImpl implements WeldStarter {
                     weldSetup.getEnabledInterceptors(), // interceptors
                     Scanning.EMPTY_SCANNING,
                     // These were added in Weld 2.0:
-                    new URL("file:weld-starter"),
+                    new URL("file:weld2-starter"),
                     annotatedDiscoveryMode(),
                     "1.0",
                     // isTrimmed: added in Weld 2.4.2 [WELD-2314]:

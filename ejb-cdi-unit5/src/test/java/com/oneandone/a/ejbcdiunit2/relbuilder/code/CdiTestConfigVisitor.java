@@ -1,12 +1,12 @@
 package com.oneandone.a.ejbcdiunit2.relbuilder.code;
 
-import static com.oneandone.ejbcdiunit.cfganalyzer.CdiMetaDataCreator.createMetadata;
-
 import java.lang.reflect.Modifier;
 
 import javax.decorator.Decorator;
 import javax.enterprise.inject.spi.Extension;
 import javax.interceptor.Interceptor;
+
+import org.jboss.weld.bootstrap.spi.helpers.MetadataImpl;
 
 import com.oneandone.ejbcdiunit.CdiTestConfig;
 import com.oneandone.ejbcdiunit.cfganalyzer.TestConfigAnalyzer;
@@ -105,20 +105,20 @@ public class CdiTestConfigVisitor extends AllRelVisitor {
         }
         if (Extension.class.isAssignableFrom(c) && !Modifier.isAbstract(c.getModifiers())) {
             try {
-                cdiTestConfig.getExtensions().add(createMetadata((Extension) c.newInstance(), c.getName()));
+                cdiTestConfig.getExtensions().add(new MetadataImpl<>((Extension) c.newInstance(), c.getName()));
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         }
         if (c.isAnnotationPresent(Interceptor.class)) {
-            cdiTestConfig.getEnabledInterceptors().add(createMetadata(c.getName(), c.getName()));
+            cdiTestConfig.getEnabledInterceptors().add(c);
         }
         if (c.isAnnotationPresent(Decorator.class)) {
-            cdiTestConfig.getEnabledDecorators().add(createMetadata(c.getName(), c.getName()));
+            cdiTestConfig.getEnabledDecorators().add(c);
         }
 
         if (TestConfigAnalyzer.isAlternativeStereotype(c)) {
-            cdiTestConfig.getEnabledAlternativeStereotypes().add(createMetadata(c.getName(), c.getName()));
+            cdiTestConfig.getEnabledAlternativeStereotypes().add(new MetadataImpl<>(c.getName(), c.getName()));
         }
     }
 }

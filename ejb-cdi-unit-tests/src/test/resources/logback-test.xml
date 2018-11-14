@@ -10,6 +10,9 @@
     <logger name="org.jglue.cdiunit" level="debug" additivity="false">
         <appender-ref ref="STDOUT"/>
     </logger>
+    <logger name="org.jboss.weld" level="info" additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
     <logger name="org.hibernate.ejb.packaging" level="error">
         <appender-ref ref="STDOUT"/>
     </logger>
