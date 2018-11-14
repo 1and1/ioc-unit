@@ -28,10 +28,7 @@
     </developers>
 
     <modules>
-        <module>cdi-weld-starter-base</module>
-        <module>cdi-weld3-starter</module>
-        <module>cdi-weld2-starter</module>
-        <module>cdi-weld1-starter</module>
+        <module>cdi-weld-starter</module>
         <module>cdi-test-mocks</module>
         <module>cdi-test-analyzer</module>
         <module>purecdi-tests</module>

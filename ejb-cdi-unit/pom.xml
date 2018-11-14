@@ -120,7 +120,7 @@
         </dependency>
         <dependency>
             <groupId>net.oneandone</groupId>
-            <artifactId>cdi-weld-starter</artifactId>
+            <artifactId>cdi-weld3-starter</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
