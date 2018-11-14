@@ -8,10 +8,11 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>cdi-weld-starter-base</module>
-        <module>cdi-weld1-starter</module>
-        <module>cdi-weld2-starter</module>
-        <module>cdi-weld3-starter</module>
+        <module>weld-starter-base</module>
+        <module>weld1-starter</module>
+        <module>weld2-starter</module>
+        <module>weld3-starter</module>
+        <module>weld-starter-test</module>
     </modules>
     <properties>
         <junit4.version>4.12</junit4.version>

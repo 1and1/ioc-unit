@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 import com.oneandone.cdi.testanalyzer.CdiConfigCreator;
 import com.oneandone.cdi.testanalyzer.InitialConfiguration;
 import com.oneandone.cdi.weldstarter.WeldSetup;
-import com.oneandone.cdi.weldstarter.WeldStarter;
+import com.oneandone.cdi.weldstarter.spi.WeldStarter;
 import com.oneandone.ejbcdiunit.AsynchronousManager;
 import com.oneandone.ejbcdiunit.CreationalContexts;
 import com.oneandone.ejbcdiunit.EjbUnitBeanInitializerClass;
