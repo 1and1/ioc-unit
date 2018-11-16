@@ -6,15 +6,7 @@
  */
 package cdiunit;
 
-import com.oneandone.ejbcdiunit.ContextControllerEjbCdiUnit;
-import com.oneandone.ejbcdiunit.EjbUnitRunner;
-import com.oneandone.ejbcdiunit.cdiunit.ExcludedClasses;
-import junit.framework.Assert;
-import org.jglue.cdiunit.*;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import java.lang.annotation.Annotation;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ContextNotActiveException;
@@ -26,7 +18,21 @@ import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.servlet.http.HttpServletRequest;
-import java.lang.annotation.Annotation;
+
+import org.jglue.cdiunit.AdditionalClasses;
+import org.jglue.cdiunit.InConversationScope;
+import org.jglue.cdiunit.InRequestScope;
+import org.jglue.cdiunit.InSessionScope;
+import org.jglue.cdiunit.ProducesAlternative;
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+
+import com.oneandone.ejbcdiunit.ContextControllerEjbCdiUnit;
+import com.oneandone.ejbcdiunit.EjbUnitRunner;
+import com.oneandone.ejbcdiunit.cdiunit.ExcludedClasses;
 
 @RunWith(EjbUnitRunner.class)
 @AdditionalClasses({ ESupportClass.class, ScopedFactory.class })

@@ -1,16 +1,25 @@
 package com.oneandone.cdi.testanalyzer;
 
-import org.apache.commons.lang3.reflect.TypeUtils;
+import java.lang.annotation.Annotation;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 import javax.enterprise.inject.Any;
 import javax.enterprise.inject.Default;
-import java.lang.annotation.Annotation;
-import java.util.*;
+
+import org.apache.commons.lang3.reflect.TypeUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author aschoerk
  */
 public class InjectsMatcher {
+    static Logger log = LoggerFactory.getLogger("InjectMatching");
     Map<QualifiedType, Set<QualifiedType>> matching = new HashMap<>();
     Map<QualifiedType, Set<QualifiedType>> ambiguus = new HashMap<>();
     Set<QualifiedType> empty = new HashSet<>();
@@ -21,9 +30,11 @@ public class InjectsMatcher {
     }
 
     public void match() {
+        log.info("Starting matching");
         for (QualifiedType inject : builder.injections) {
             matchInject(inject);
         }
+        log.info("Ready    matching");
     }
 
     public void matchInject(QualifiedType inject) {
@@ -32,6 +43,7 @@ public class InjectsMatcher {
         if (producers != null) {
             for (QualifiedType q : producers) {
                 if (TypeUtils.isAssignable(q.getType(), inject.getType())) {
+                    log.debug("Assignable Match \n --- {} \n --- to inject: {}", q, inject);
                     foundProducers.add(q);
                 }
             }
@@ -40,15 +52,22 @@ public class InjectsMatcher {
         matching.put(inject, new HashSet<>());
         for (QualifiedType qp : foundProducers) {
             if (TypeUtils.isAssignable(qp.getType(), inject.getType())) {
-                if (qualifiersMatch(inject, qp))
+                if (qualifiersMatch(inject, qp)) {
+                    log.debug("Qualified Match \n --- {} \n --- to inject: {}", qp, inject);
                     matching.get(inject).add(qp);
+                }
             }
         }
         handleAlternatives(matching.get(inject));
         if (matching.get(inject).size() == 0) {
+            log.error("No match found for {}", inject);
             empty.add(inject);
             matching.remove(inject);
         } else if (matching.get(inject).size() > 1) {
+            log.error("Ambiguus matches found for \n --- inject: {}", inject);
+            for (QualifiedType x : matching.get(inject)) {
+                log.info(" --- {}", x);
+            }
             ambiguus.put(inject, matching.get(inject));
             matching.remove(inject);
         }
@@ -140,21 +159,39 @@ public class InjectsMatcher {
             Set<Class<?>> sutClasses = new HashSet<>();
             Set<Class<?>> availableTestClasses = new HashSet<>();
             Set<Class<?>> availableClasses = new HashSet<>();
+            Set<QualifiedType> alternatives = new HashSet<>();
             Set<QualifiedType> producingTypes = ambiguus.get(inject);
             for (QualifiedType q : producingTypes) {
-                final Class declaringClass = q.getDeclaringClass();
-                if (builder.isTestClass(declaringClass)) {
+                Class declaringClass = q.getDeclaringClass();
+                assert declaringClass != null;
+                if (q.isAlternative()) {
+                    if (q.getAlternativeStereotype() != null) {
+                        if (builder.isActiveAlternativeStereoType(q.getAlternativeStereotype())) {
+                            alternatives.add(q);
+                        } else
+                            continue;
+                    } else if (builder.isAlternative(declaringClass)) {
+                        alternatives.add(q);
+                    } else {
+                        continue;
+                    }
+                } else if (builder.isTestClass(declaringClass)) {
                     testClasses.add(declaringClass);
                 } else if (builder.isSuTClass(declaringClass)) {
                     sutClasses.add(declaringClass);
-                }
-                if (builder.isTestClassAvailable(declaringClass)) {
+                } else if (builder.isTestClassAvailable(declaringClass)) {
                     availableTestClasses.add(declaringClass);
                 } else {
                     availableClasses.add(declaringClass);
                 }
             }
-            if (testClasses.size() != 0) {
+            if (alternatives.size() != 0) {
+                if (alternatives.size() > 1) {
+                    problems.add(new CdiConfigCreator.ProblemRecord("Handling Inject: {} more than one active Alternative {} ",
+                            inject, alternatives));
+                }
+                builder.injectHandled(inject);
+            } else if (testClasses.size() != 0) {
                 if (testClasses.size() > 1 || sutClasses.size() != 0) {
                     problems.add(new CdiConfigCreator.ProblemRecord("Handling Inject: {} Testclass(es) {} clashing with SutClass(es) {}",
                             inject, testClasses, sutClasses));

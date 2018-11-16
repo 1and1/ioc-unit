@@ -1,6 +1,7 @@
 package com.oneandone.cdi.weld2starter;
 
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -13,7 +14,9 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.spi.DeploymentException;
+import javax.enterprise.inject.spi.Extension;
 
+import org.jboss.weld.bean.proxy.InterceptionDecorationContext;
 import org.jboss.weld.bootstrap.WeldBootstrap;
 import org.jboss.weld.bootstrap.api.CDI11Bootstrap;
 import org.jboss.weld.bootstrap.api.ServiceRegistry;
@@ -180,9 +183,66 @@ public class WeldStarterImpl implements WeldStarter {
     }
 
 
+    @Override
     public void tearDown() {
         if (container != null)
             container.close();
         container = null;
     }
+
+    @Override
+    public String getVersion() {
+        return Formats.version(WeldBootstrap.class.getPackage());
+    }
+
+    private static boolean startInterceptionDecorationContextInner() {
+        Method[] methods = InterceptionDecorationContext.class.getMethods();
+        for (Method m : methods) {
+            if (m.getParameterTypes().length == 0) {
+                if (m.getName().equals("startInterceptorContext")) {
+                    callMethodThrowRTEIfNecessary(m);
+                    return true;
+                }
+                if (m.getName().equals("startIfNotEmpty") || m.getName().equals("startIfNotOnTop")) {
+                    Object result = callMethodThrowRTEIfNecessary(m);
+                    return result != null;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static Object callMethodThrowRTEIfNecessary(Method m) {
+        try {
+            return m.invoke(null);
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public boolean startInterceptionDecorationContext() {
+        return WeldStarterImpl.startInterceptionDecorationContextInner();
+    }
+
+
+    @Override
+    public void endInterceptorContext() {
+        InterceptionDecorationContext.endInterceptorContext();
+    }
+
+    @Override
+    public Extension createExtension(String className) {
+        try {
+            return (Extension) (Class.forName(className).newInstance());
+        } catch (InstantiationException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
 }

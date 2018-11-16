@@ -23,9 +23,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.naming.InitialContext;
 
-import org.jboss.weld.environment.se.Weld;
 import org.jboss.weld.transaction.spi.TransactionServices;
-import org.jboss.weld.util.reflection.Formats;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
@@ -103,18 +101,19 @@ public class CdiRunner extends BlockJUnit4ClassRunner {
 
     protected Object createTest() throws Exception {
         try {
-            String version = Formats.version(Weld.class.getPackage());
+            weldStarter = WeldSetupClass.getWeldStarter();
+            String version = weldStarter.getVersion();
             if ("2.2.8 (Final)".equals(version) || "2.2.7 (Final)".equals(version)) {
                 startupException = new Exception("Weld 2.2.8 and 2.2.7 are not supported. Suggest upgrading to 2.2.9");
             }
 
             final CdiTestConfig weldTestConfig =
-                    new CdiTestConfig(clazz, frameworkMethod.getMethod())
+                    new CdiTestConfig(clazz, frameworkMethod.getMethod(), weldStarter)
                             .addClass(SupportEjbExtended.class)
                             .addServiceConfig(new CdiTestConfig.ServiceConfig(TransactionServices.class, new EjbUnitTransactionServices()))
             ;
 
-            weldStarter = WeldSetupClass.getWeldStarter();
+
             try {
                 if (weldSetup == null) {
                     TestConfigAnalyzer cdiUnitAnalyzer = new TestConfigAnalyzer();
@@ -123,11 +122,11 @@ public class CdiRunner extends BlockJUnit4ClassRunner {
                     weldSetup.setBeanClassNames(weldTestConfig.getDiscoveredClasses());
 
                     weldSetup.setAlternativeClasses(weldTestConfig.getAlternatives());
-                    weldSetup.setEnabledAlternativeStereotypeMetadatas(weldTestConfig.getEnabledAlternativeStereotypes());
+                    weldSetup.setEnabledAlternativeStereotypeNames(weldTestConfig.getEnabledAlternativeStereotypes());
                     weldSetup.setEnabledDecorators(weldTestConfig.getEnabledDecorators());
                     weldSetup.setEnabledInterceptors(weldTestConfig.getEnabledInterceptors());
 
-                    weldSetup.setExtensionMetadata(weldTestConfig.getExtensions());
+                    weldSetup.setExtensionObjects(weldTestConfig.getExtensions());
                     weldSetup.addService(new WeldSetup.ServiceConfig(TransactionServices.class, new EjbUnitTransactionServices()));
                 }
                 weldStarter.start(weldSetup);

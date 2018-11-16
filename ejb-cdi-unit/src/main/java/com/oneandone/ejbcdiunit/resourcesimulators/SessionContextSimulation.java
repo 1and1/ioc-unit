@@ -12,7 +12,7 @@ import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.xml.rpc.handler.MessageContext;
 
-import org.jboss.weld.bean.proxy.InterceptionDecorationContext;
+import com.oneandone.cdi.weldstarter.WeldSetupClass;
 
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.InvocationHandler;
@@ -117,30 +117,6 @@ public class SessionContextSimulation extends EjbContextSimulation implements Se
         throw new NotImplementedException("getMessageContext not implemented in SessionContextSimulation of ejb-cdi-unit");
     }
 
-    public static boolean startInterceptionDecorationContext() {
-        Method[] methods = InterceptionDecorationContext.class.getMethods();
-        for (Method m : methods) {
-            if (m.getParameterTypes().length == 0) {
-                if (m.getName().equals("startInterceptorContext")) {
-                    callMethodThrowRTEIfNecessary(m);
-                    return true;
-                }
-                if (m.getName().equals("startIfNotEmpty") || m.getName().equals("startIfNotOnTop")) {
-                    Object result = callMethodThrowRTEIfNecessary(m);
-                    return result != null;
-                }
-            }
-        }
-        return false;
-    }
-
-    public static Object callMethodThrowRTEIfNecessary(Method m) {
-        try {
-            return m.invoke(null);
-        } catch (Throwable e) {
-            throw new RuntimeException(e);
-        }
-    }
 
 
     /**
@@ -173,7 +149,7 @@ public class SessionContextSimulation extends EjbContextSimulation implements Se
         enhancer.setCallback(new InvocationHandler() {
             @Override
             public Object invoke(Object o, Method method, Object[] objects) throws Throwable {
-                startInterceptionDecorationContext();
+                WeldSetupClass.getWeldStarter().startInterceptionDecorationContext();
                 try {
                     return method.invoke(testBean1, objects);
                 } catch (Throwable thw) {
@@ -183,7 +159,7 @@ public class SessionContextSimulation extends EjbContextSimulation implements Se
                         throw thw;
                     }
                 } finally {
-                    InterceptionDecorationContext.endInterceptorContext();
+                    WeldSetupClass.getWeldStarter().endInterceptorContext();
                 }
             }
         });

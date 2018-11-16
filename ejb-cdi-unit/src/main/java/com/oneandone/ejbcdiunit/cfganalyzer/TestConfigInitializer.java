@@ -3,10 +3,9 @@ package com.oneandone.ejbcdiunit.cfganalyzer;
 import java.io.IOException;
 import java.util.Set;
 
-import org.jboss.weld.environment.se.WeldSEBeanRegistrant;
-import org.jboss.weld.metadata.MetadataImpl;
 import org.jglue.cdiunit.ProducesAlternative;
 
+import com.oneandone.cdi.weldstarter.WeldSetupClass;
 import com.oneandone.cdiunit.internal.easymock.EasyMockExtension;
 import com.oneandone.cdiunit.internal.mockito.MockitoExtension;
 import com.oneandone.cdiunit.internal.servlet.MockHttpServletRequestImpl;
@@ -52,15 +51,16 @@ public class TestConfigInitializer {
         new ClasspathSetPopulator().invoke(testConfig.getClasspathEntries());
 
 
-        testConfig.getExtensions().add(new MetadataImpl<>(new TestScopeExtension(testConfig.getTestClass()), TestScopeExtension.class.getName()));
+        testConfig.getExtensions().add(
+                new TestScopeExtension(testConfig.getTestClass()));
         if (testConfig.getTestMethod() != null) {
             testConfig.getExtensions()
-                    .add(new MetadataImpl<>(new ProducerConfigExtension(testConfig.getTestMethod()), ProducerConfigExtension.class.getName()));
+                    .add(new ProducerConfigExtension(testConfig.getTestMethod()));
         }
 
         try {
             Class.forName("javax.faces.view.ViewScoped");
-            testConfig.getExtensions().add(new MetadataImpl<>(new EjbUnitViewScopeExtension(), EjbUnitViewScopeExtension.class.getName()));
+            testConfig.getExtensions().add(new EjbUnitViewScopeExtension());
         } catch (ClassNotFoundException e) {
 
         }
@@ -88,27 +88,28 @@ public class TestConfigInitializer {
 
         // Add Interceptors here, to make sure the sequence is handled right
         classesToProcess.add(AsynchronousMethodInterceptor.class);
-        if (testConfig.weldVersion.charAt(0) - '2' >= 1) {
+        if (testConfig.getWeldVersion().charAt(0) - '2' >= 1) {
             classesToProcess.add(SimulatedUserTransaction.class);
         }
         classesToProcess.add(TransactionalInterceptor.class);
         testConfig.getEnabledAlternativeStereotypes().add(
-                new MetadataImpl<>(ProducesAlternative.class.getName(), ProducesAlternative.class.getName()));
+                ProducesAlternative.class.getName());
+
         try {
             Class.forName("org.mockito.Mock");
-            testConfig.getExtensions().add(new MetadataImpl<>(new MockitoExtension(), MockitoExtension.class.getName()));
+            testConfig.getExtensions().add(new MockitoExtension());
         } catch (ClassNotFoundException e) {
 
         }
 
         try {
             Class.forName("org.easymock.EasyMockRunner");
-            testConfig.getExtensions().add(new MetadataImpl<>(new EasyMockExtension(), EasyMockExtension.class.getName()));
+            testConfig.getExtensions().add(new EasyMockExtension());
         } catch (ClassNotFoundException e) {
 
         }
 
-        testConfig.getExtensions().add(new MetadataImpl<>(new WeldSEBeanRegistrant(), WeldSEBeanRegistrant.class.getName()));
+        testConfig.getExtensions().add(WeldSetupClass.getWeldStarter().createExtension("org.jboss.weld.environment.se.WeldSEBeanRegistrant"));
 
     }
 }

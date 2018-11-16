@@ -9,12 +9,11 @@ package cdiunit;
 import javax.inject.Inject;
 
 import org.jglue.cdiunit.ActivatedAlternatives;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.oneandone.ejbcdiunit.EjbUnitRunner;
-
-import junit.framework.Assert;
 
 
 @RunWith(EjbUnitRunner.class)

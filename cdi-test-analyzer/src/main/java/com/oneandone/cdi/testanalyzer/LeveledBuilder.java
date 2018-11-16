@@ -1,17 +1,27 @@
 package com.oneandone.cdi.testanalyzer;
 
-import com.oneandone.cdi.testanalyzer.annotations.*;
-
-import javax.enterprise.inject.Alternative;
-import javax.enterprise.inject.Produces;
-import javax.enterprise.inject.Stereotype;
-import javax.enterprise.inject.spi.Extension;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.MalformedURLException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.enterprise.inject.Alternative;
+import javax.enterprise.inject.Produces;
+import javax.enterprise.inject.Stereotype;
+import javax.enterprise.inject.spi.Extension;
+
+import com.oneandone.cdi.testanalyzer.annotations.EnabledAlternatives;
+import com.oneandone.cdi.testanalyzer.annotations.ExcludedClasses;
+import com.oneandone.cdi.testanalyzer.annotations.SutClasses;
+import com.oneandone.cdi.testanalyzer.annotations.SutClasspaths;
+import com.oneandone.cdi.testanalyzer.annotations.SutPackages;
+import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
 
 /**
  * @author aschoerk
@@ -234,6 +244,18 @@ class LeveledBuilder {
         }
 
         return this;
+    }
+
+    boolean isActiveAlternativeStereoType(Class<?> c) {
+        return data.foundAlternativeStereotypes.contains(c);
+    }
+
+    boolean isActiveAlternativeStereoType(Annotation c) {
+        return data.foundAlternativeStereotypes.contains(c.annotationType());
+    }
+
+    boolean isAlternative(Class<?> c) {
+        return data.enabledAlternatives.contains(c);
     }
 
 

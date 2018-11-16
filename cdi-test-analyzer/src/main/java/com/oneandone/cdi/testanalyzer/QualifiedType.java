@@ -1,13 +1,21 @@
 package com.oneandone.cdi.testanalyzer;
 
-import javax.enterprise.inject.Alternative;
-import javax.enterprise.inject.Stereotype;
-import javax.inject.Qualifier;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+
+import javax.enterprise.inject.Alternative;
+import javax.enterprise.inject.Stereotype;
+import javax.inject.Inject;
+import javax.inject.Provider;
+import javax.inject.Qualifier;
 
 /**
  * Wraps elements found during the class-scan, that might be used as producers or injection-destinations.
@@ -48,10 +56,10 @@ class QualifiedType {
         this.m = m;
     }
 
-    void checkGetAlternativeStereoType(Annotation ann) {
-        if (ann != null) {
-            Class<? extends Annotation> aClass = ann.annotationType();
-            if (aClass.getAnnotation(Stereotype.class) != null && aClass.getAnnotation(Alternative.class) != null) {
+    void checkGetAlternativeStereoType(Annotation[] annotations) {
+        for (Annotation ann : annotations) {
+            Class<? extends Annotation> annotationType = ann.annotationType();
+            if (annotationType.getAnnotation(Stereotype.class) != null && annotationType.getAnnotation(Alternative.class) != null) {
                 alternative = true;
                 alternativeStereotype = ann;
             }
@@ -63,7 +71,7 @@ class QualifiedType {
         this.m = m;
         if (m.getAnnotation(Alternative.class) != null)
             alternative = true;
-        checkGetAlternativeStereoType(m.getAnnotation(Stereotype.class));
+        checkGetAlternativeStereoType(m.getAnnotations());
 
     }
 
@@ -72,15 +80,30 @@ class QualifiedType {
         this.f = f;
         if (f.getAnnotation(Alternative.class) != null)
             alternative = true;
-        checkGetAlternativeStereoType(f.getAnnotation(Stereotype.class));
+        checkGetAlternativeStereoType(f.getAnnotations());
     }
 
-    Class getRawtype() {
-        Type t = getType();
+    private Class getRawtypeInternal() {
+        Type t = getTypeInternal();
         if (t instanceof ParameterizedType) {
             return (Class<?>) ((ParameterizedType) t).getRawType();
         } else {
             return (Class<?>) t;
+        }
+    }
+
+    boolean isProviderOrInstance() {
+        Class res = getRawtypeInternal();
+        return (res.equals(Provider.class) || res.equals(Inject.class));
+    }
+
+    Class getRawtype() {
+        Class res = getRawtypeInternal();
+        if (isProviderOrInstance()) {
+            ParameterizedType pType = ((ParameterizedType) getTypeInternal());
+            return (Class) (pType.getActualTypeArguments()[0]);
+        } else {
+            return res;
         }
     }
 
@@ -102,7 +125,7 @@ class QualifiedType {
      *
      * @return the type that can be used for matching.
      */
-    Type getType() {
+    private Type getTypeInternal() {
         if (p != null) {
             return p.getParameterizedType();
         }
@@ -115,6 +138,17 @@ class QualifiedType {
         if (clazz != null)
             return clazz;
         throw new AssertionError();
+    }
+
+    Type getType() {
+        Class res = getRawtypeInternal();
+        if (isProviderOrInstance()) {
+            ParameterizedType pType = ((ParameterizedType) getTypeInternal());
+            return (Class) (pType.getActualTypeArguments()[0]);
+        } else {
+            return getTypeInternal();
+        }
+
     }
 
     boolean hasAnnotation(Class ann) {
@@ -157,10 +191,25 @@ class QualifiedType {
         if (f != null) {
             return f.getDeclaringClass();
         }
-        if (clazz != null)
+        if (clazz != null) {
             return clazz;
+        }
         return null;
     }
+
+    public String getMemberName() {
+        if (p != null) {
+            return p.getName();
+        }
+        if (m != null) {
+            return m.getName();
+        }
+        if (f != null) {
+            return f.getName();
+        }
+        return null;
+    }
+
 
     public Annotation getAlternativeStereotype() {
         return alternativeStereotype;
@@ -187,5 +236,20 @@ class QualifiedType {
     @Override
     public int hashCode() {
         return Objects.hash(f, m, c, p, clazz);
+    }
+
+    @Override
+    public String toString() {
+        Class declaringClass = getDeclaringClass();
+        String memberName = getMemberName();
+        return "QualifiedType{" +
+                (memberName != null ? " name=" + memberName : "") +
+                " type=" + getType().getTypeName() +
+                (declaringClass != null ? " declared by=" + declaringClass.getSimpleName() : "") +
+                ", qualifiers=" + qualifiers +
+                ", altStereotype=" + alternativeStereotype +
+                ", alt=" + alternative +
+                ", providerOrInstance=" + isProviderOrInstance() +
+                '}';
     }
 }

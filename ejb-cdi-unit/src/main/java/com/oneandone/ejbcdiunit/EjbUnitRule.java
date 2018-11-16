@@ -9,9 +9,7 @@ import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 import javax.naming.InitialContext;
 
-import org.jboss.weld.bootstrap.WeldBootstrap;
 import org.jboss.weld.transaction.spi.TransactionServices;
-import org.jboss.weld.util.reflection.Formats;
 import org.junit.Test;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
@@ -75,21 +73,22 @@ public class EjbUnitRule implements TestRule {
             this.testInstance = instance;
             this.next = next;
             try {
-                String version = Formats.version(WeldBootstrap.class.getPackage());
+                weldStarter = WeldSetupClass.getWeldStarter();
+                String version = weldStarter.getVersion();
                 if ("2.2.8 (Final)".equals(version) || "2.2.7 (Final)".equals(version)) {
                     startupException = new Exception("Weld 2.2.8 and 2.2.7 are not supported. Suggest upgrading to 2.2.9");
                 }
 
 
                 final CdiTestConfig weldTestConfig =
-                        new CdiTestConfig(clazz, method, cdiTestConfig)
+                        new CdiTestConfig(clazz, method, cdiTestConfig, weldStarter)
                                 .addClass(SupportEjbExtended.class)
                                 .addServiceConfig(new ServiceConfig(TransactionServices.class,
                                         new EjbUnitTransactionServices()))
                 ;
                 EjbUnitRule.this.cdiTestConfig = weldTestConfig;
 
-                weldStarter = WeldSetupClass.getWeldStarter();
+
 
 
                 if (weldSetup == null) {
@@ -101,8 +100,8 @@ public class EjbUnitRule implements TestRule {
                     weldSetup.setAlternativeClasses(weldTestConfig.getAlternatives());
                     weldSetup.setEnabledDecorators(weldTestConfig.getEnabledDecorators());
                     weldSetup.setEnabledInterceptors(weldTestConfig.getEnabledInterceptors());
-                    weldSetup.setEnabledAlternativeStereotypeMetadatas(weldTestConfig.getEnabledAlternativeStereotypes());
-                    weldSetup.setExtensionMetadata(weldTestConfig.getExtensions());
+                    weldSetup.setEnabledAlternativeStereotypeNames(weldTestConfig.getEnabledAlternativeStereotypes());
+                    weldSetup.setExtensionObjects(weldTestConfig.getExtensions());
                     weldSetup.addService(new WeldSetup.ServiceConfig(TransactionServices.class, new EjbUnitTransactionServices()));
                 }
                 weldStarter.start(weldSetup);

@@ -27,7 +27,6 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.interceptor.Interceptor;
 
-import org.jboss.weld.metadata.MetadataImpl;
 import org.jglue.cdiunit.ActivatedAlternatives;
 import org.jglue.cdiunit.AdditionalClasses;
 import org.jglue.cdiunit.AdditionalClasspaths;
@@ -176,7 +175,7 @@ public class TestConfigAnalyzer {
         }
         if (Extension.class.isAssignableFrom(c) && !Modifier.isAbstract(c.getModifiers())) {
             try {
-                testConfig.getExtensions().add(new MetadataImpl<>((Extension) c.newInstance(), c.getName()));
+                testConfig.getExtensions().add((Extension) (c.newInstance()));
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -189,7 +188,7 @@ public class TestConfigAnalyzer {
         }
 
         if (isAlternativeStereotype(c)) {
-            testConfig.getEnabledAlternativeStereotypes().add(new MetadataImpl<>(c.getName(), c.getName()));
+            testConfig.getEnabledAlternativeStereotypes().add(c.getName());
         }
     }
 

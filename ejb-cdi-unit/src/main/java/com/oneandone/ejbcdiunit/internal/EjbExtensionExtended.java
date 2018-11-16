@@ -53,15 +53,14 @@ import javax.persistence.PersistenceContext;
 
 import org.apache.deltaspike.core.util.metadata.AnnotationInstanceProvider;
 import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
-import org.jboss.weld.bean.proxy.InterceptionDecorationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.oneandone.cdi.weldstarter.WeldSetupClass;
 import com.oneandone.ejbcdiunit.ResourceQualifier;
 import com.oneandone.ejbcdiunit.SupportEjbExtended;
 import com.oneandone.ejbcdiunit.cdiunit.EjbName;
 import com.oneandone.ejbcdiunit.persistence.SimulatedTransactionManager;
-import com.oneandone.ejbcdiunit.resourcesimulators.SessionContextSimulation;
 
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.InvocationHandler;
@@ -233,7 +232,6 @@ public class EjbExtensionExtended implements Extension {
 
         for (AnnotatedField<? super T> field : annotatedType.getFields()) {
             boolean addInject = false;
-            Produces produces = field.getAnnotation(Produces.class);
             EJB ejb = field.getAnnotation(EJB.class);
             if (ejb != null) {
                 modified = true;
@@ -265,6 +263,7 @@ public class EjbExtensionExtended implements Extension {
                 builder.addToField(field, new AnnotationLiteral<Inject>() {
                     private static final long serialVersionUID = 1L;
                 });
+                Produces produces = field.getAnnotation(Produces.class);
                 if (produces != null) {
                     builder.removeFromField(field, Produces.class);
                 }
@@ -366,7 +365,7 @@ public class EjbExtensionExtended implements Extension {
                                     enhancer.setCallback(new InvocationHandler() {
                                         @Override
                                         public Object invoke(Object o, Method method, Object[] objects) throws Throwable {
-                                            SessionContextSimulation.startInterceptionDecorationContext();
+                                            WeldSetupClass.getWeldStarter().startInterceptionDecorationContext();
                                             try {
                                                 return method.invoke(currentInstance, objects);
                                             } catch (Throwable thw) {
@@ -376,7 +375,7 @@ public class EjbExtensionExtended implements Extension {
                                                     throw thw;
                                                 }
                                             } finally {
-                                                InterceptionDecorationContext.endInterceptorContext();
+                                                WeldSetupClass.getWeldStarter().endInterceptorContext();
                                             }
                                         }
                                     });

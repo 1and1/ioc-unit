@@ -4,9 +4,8 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.naming.InitialContext;
 
-import org.jboss.weld.environment.se.Weld;
 import org.jboss.weld.transaction.spi.TransactionServices;
-import org.jboss.weld.util.reflection.Formats;
+import org.jglue.cdiunit.ProducesAlternative;
 import org.junit.Test;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.FrameworkMethod;
@@ -87,7 +86,8 @@ public class EjbCdiUnit2Runner extends BlockJUnit4ClassRunner {
     protected Object createTest() throws Exception {
 
         try {
-            String version = Formats.version(Weld.class.getPackage());
+            weldStarter = WeldSetupClass.getWeldStarter();
+            String version = weldStarter.getVersion();
             if ("2.2.8 (Final)".equals(version) || "2.2.7 (Final)".equals(version)) {
                 startupException = new Exception("Weld 2.2.8 and 2.2.7 are not supported. Suggest upgrading to 2.2.9");
             }
@@ -95,13 +95,14 @@ public class EjbCdiUnit2Runner extends BlockJUnit4ClassRunner {
 
             System.setProperty("java.naming.factory.initial", "com.oneandone.cdiunit.internal.naming.CdiUnitContextFactory");
 
-            weldStarter = WeldSetupClass.getWeldStarter();
+
             try {
                 if (weldSetup == null) {
                     InitialConfiguration cfg = new InitialConfiguration();
                     cfg.testClass = clazz;
                     cfg.testMethod = frameworkMethod.getMethod();
                     cfg.initialClasses.add(SupportEjbExtended.class);
+                    cfg.initialClasses.add(ProducesAlternative.class);
                     cfg.initialClasses.add(EjbInformationBean.class);
                     cfg.initialClasses.add(EjbUnitBeanInitializerClass.class);
                     cfg.initialClasses.add(AsynchronousManager.class);
@@ -113,7 +114,7 @@ public class EjbCdiUnit2Runner extends BlockJUnit4ClassRunner {
                     weldSetup = new WeldSetupClass();
                     weldSetup.setBeanClasses(cdiConfigBuilder.toBeStarted());
                     weldSetup.setAlternativeClasses(cdiConfigBuilder.getEnabledAlternatives());
-                    weldSetup.setEnabledAlternativeStereotypes(cdiConfigBuilder.setEnabledAlternativeStereotypes());
+                    weldSetup.setEnabledAlternativeStereotypes(cdiConfigBuilder.getEnabledAlternativeStereotypes());
                     weldSetup.setExtensions(cdiConfigBuilder.getExtensions());
                     weldSetup.addService(new WeldSetup.ServiceConfig(TransactionServices.class, new EjbUnitTransactionServices()));
                 }

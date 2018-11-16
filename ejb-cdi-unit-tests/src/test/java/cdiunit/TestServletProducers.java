@@ -6,12 +6,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.oneandone.ejbcdiunit.EjbUnitRunner;
-
-import junit.framework.Assert;
 
 @RunWith(EjbUnitRunner.class)
 public class TestServletProducers {

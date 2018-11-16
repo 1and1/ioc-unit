@@ -1,13 +1,18 @@
 package com.oneandone.cdi.testanalyzer;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Modifier;
+import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import javax.decorator.Decorator;
 import javax.enterprise.inject.spi.Extension;
 import javax.inject.Inject;
 import javax.interceptor.Interceptor;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Modifier;
-import java.net.MalformedURLException;
-import java.util.*;
 
 public class CdiConfigCreator {
 
@@ -50,17 +55,24 @@ public class CdiConfigCreator {
         return builder.data.enabledAlternatives;
     }
 
-    public Set<Class<?>> setEnabledAlternativeStereotypes() {
+    public Set<Class<?>> getEnabledAlternativeStereotypes() {
         return builder.data.foundAlternativeStereotypes;
     }
 
     public static class ProblemRecord {
-        private final String msg;
+        private String msg;
+        private Collection<QualifiedType> qualifiedTypes;
         Collection<Class<?>>[] classes;
         QualifiedType inject;
 
         public ProblemRecord(String msg, QualifiedType inject, Collection<Class<?>>... classes) {
             this.classes = classes;
+            this.inject = inject;
+            this.msg = msg;
+        }
+
+        public ProblemRecord(String msg, QualifiedType inject, Collection<QualifiedType> qualifiedTypes) {
+            this.qualifiedTypes = qualifiedTypes;
             this.inject = inject;
             this.msg = msg;
         }

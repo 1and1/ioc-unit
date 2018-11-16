@@ -11,11 +11,8 @@ import java.util.Set;
 
 import javax.enterprise.inject.spi.Extension;
 
-import org.jboss.weld.bootstrap.WeldBootstrap;
-import org.jboss.weld.bootstrap.api.Service;
-import org.jboss.weld.bootstrap.spi.Metadata;
-import org.jboss.weld.util.reflection.Formats;
-
+import com.oneandone.cdi.weldstarter.WeldSetupClass;
+import com.oneandone.cdi.weldstarter.spi.WeldStarter;
 import com.oneandone.ejbcdiunit.internal.ApplicationExceptionDescription;
 
 /**
@@ -23,13 +20,16 @@ import com.oneandone.ejbcdiunit.internal.ApplicationExceptionDescription;
  */
 public class CdiTestConfig {
 
-    public CdiTestConfig(Class<?> testClass, Method method) {
+    private final WeldStarter weldStarter;
+
+    public CdiTestConfig(Class<?> testClass, Method method, WeldStarter weldStarter) {
+        this(weldStarter);
         this.testClass = testClass;
         this.testMethod = method;
     }
 
-    public CdiTestConfig(Class<?> testClass, Method method, CdiTestConfig cdiTestConfig) {
-        this(testClass, method);
+    public CdiTestConfig(Class<?> testClass, Method method, CdiTestConfig cdiTestConfig, WeldStarter weldStarter) {
+        this(testClass, method, weldStarter);
         if (cdiTestConfig != null) {
             this.additionalClasses.addAll(cdiTestConfig.getAdditionalClasses());
             this.additionalClassPackages.addAll(cdiTestConfig.getAdditionalClassPackages());
@@ -44,7 +44,6 @@ public class CdiTestConfig {
     Method testMethod;
     Class<?> testClass;
 
-    public String weldVersion = Formats.version(WeldBootstrap.class.getPackage());
     protected Set<Class<?>> additionalClasses = new HashSet<>();
     protected Set<Class<?>> additionalClassPathes = new HashSet<>();
     protected Set<Class<?>> additionalClassPackages = new HashSet<>();
@@ -54,6 +53,12 @@ public class CdiTestConfig {
     private List<ApplicationExceptionDescription> applicationExceptionDescriptions = new ArrayList<>();
 
     public CdiTestConfig() {
+        this.weldStarter = WeldSetupClass.getWeldStarter();
+    }
+
+
+    public CdiTestConfig(WeldStarter weldStarter) {
+        this.weldStarter = weldStarter;
 
     }
 
@@ -124,8 +129,8 @@ public class CdiTestConfig {
         return applicationExceptionDescriptions;
     }
 
-    public void setApplicationExceptionDescriptions(List<ApplicationExceptionDescription> applicationExceptionDescriptions) {
-        this.applicationExceptionDescriptions = applicationExceptionDescriptions;
+    public void setApplicationExceptionDescriptions(List<ApplicationExceptionDescription> applicationExceptionDescriptionsP) {
+        this.applicationExceptionDescriptions = applicationExceptionDescriptionsP;
     }
 
     public void addExcludedByString(String s) {
@@ -137,10 +142,10 @@ public class CdiTestConfig {
 
     private Collection<Class<?>> alternatives = new ArrayList<>();
     private Class<?> ejbJarClasspathExample = null;
-    private Collection<Metadata<? extends Extension>> extensions = new ArrayList<Metadata<? extends Extension>>();
+    private Collection<Extension> extensions = new ArrayList<Extension>();
     private Collection<Class<?>> enabledInterceptors = new ArrayList<>();
     private Collection<Class<?>> enabledDecorators = new ArrayList<>();
-    private Collection<Metadata<String>> enabledAlternativeStereotypes = new ArrayList<Metadata<String>>();
+    private Collection<String> enabledAlternativeStereotypes = new ArrayList<String>();
     private Set<URL> classpathEntries = new HashSet<>();
     private Set<String> discoveredClasses = new LinkedHashSet<String>();
 
@@ -160,7 +165,7 @@ public class CdiTestConfig {
         this.ejbJarClasspathExample = ejbJarClasspathExampleP;
     }
 
-    public Collection<Metadata<? extends Extension>> getExtensions() {
+    public Collection<Extension> getExtensions() {
         return extensions;
     }
 
@@ -172,7 +177,7 @@ public class CdiTestConfig {
         return enabledDecorators;
     }
 
-    public Collection<Metadata<String>> getEnabledAlternativeStereotypes() {
+    public Collection<String> getEnabledAlternativeStereotypes() {
         return enabledAlternativeStereotypes;
     }
 
@@ -180,7 +185,11 @@ public class CdiTestConfig {
         return classpathEntries;
     }
 
-    public static class ServiceConfig<S extends Service> {
+    public CharSequence getWeldVersion() {
+        return weldStarter.getVersion();
+    }
+
+    public static class ServiceConfig<S> {
         Class<S> serviceClass;
         S service;
 
@@ -189,7 +198,7 @@ public class CdiTestConfig {
             this.service = service;
         }
 
-        public Class<? extends Service> getServiceClass() {
+        public Class<?> getServiceClass() {
             return serviceClass;
         }
 

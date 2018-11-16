@@ -11,14 +11,13 @@ import javax.enterprise.inject.Alternative;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 
-import com.oneandone.ejbcdiunit.ContextControllerEjbCdiUnit;
 import org.jglue.cdiunit.InRequestScope;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.oneandone.ejbcdiunit.ContextControllerEjbCdiUnit;
 import com.oneandone.ejbcdiunit.EjbUnitRunner;
-
-import junit.framework.Assert;
 
 @RunWith(EjbUnitRunner.class)
 public class TestContextController {

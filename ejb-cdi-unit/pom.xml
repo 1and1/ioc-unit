@@ -44,6 +44,19 @@
             <artifactId>weld-starter-base</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.jboss.weld</groupId>
+            <artifactId>weld-spi</artifactId>
+            <version>3.0.Final</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.weld</groupId>
+            <artifactId>weld-api</artifactId>
+            <version>3.0.Final</version>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- J2EE 6 -->
         <dependency>
             <groupId>javax.enterprise</groupId>

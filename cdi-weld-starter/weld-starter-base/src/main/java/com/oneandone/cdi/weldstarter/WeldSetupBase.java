@@ -79,6 +79,10 @@ public class WeldSetupBase implements WeldSetup {
         enabledAlternativeStereotypes.add(new StringMetadata(clazz, "Alternative Stereotype"));
     }
 
+    public void addEnabledAlternativeStereotype(String className) {
+        enabledAlternativeStereotypes.add(new StringMetadata(className, "Alternative Stereotype"));
+    }
+
     public void addEnabledInterceptor(Class<?> clazz) {
         enabledInterceptors.add(new StringMetadata(clazz, "Interceptor"));
     }

@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ServiceLoader;
 
+import javax.enterprise.inject.spi.Extension;
+
 import com.oneandone.cdi.weldstarter.spi.WeldStarter;
 
 public class WeldSetupClass extends WeldSetupBase implements WeldSetup {
@@ -87,5 +89,16 @@ public class WeldSetupClass extends WeldSetupBase implements WeldSetup {
         }
     }
 
+    public void setEnabledAlternativeStereotypeNames(Collection<String> classNames) {
+        this.enabledAlternativeStereotypes = new ArrayList<>();
+        for (String className : classNames) {
+            addEnabledAlternativeStereotype(className);
+        }
+    }
 
+    public void setExtensionObjects(final Collection<Extension> extensionsP) {
+        for (Extension extension : extensionsP) {
+            this.extensions.add(new MetadataImpl<>(extension, ""));
+        }
+    }
 }

@@ -6,16 +6,24 @@
  */
 package com.oneandone.cdiunit.internal.mockito;
 
-import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import java.util.Set;
 
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.Produces;
-import javax.enterprise.inject.spi.*;
+import javax.enterprise.inject.spi.AnnotatedField;
+import javax.enterprise.inject.spi.AnnotatedMethod;
+import javax.enterprise.inject.spi.AnnotatedType;
+import javax.enterprise.inject.spi.Extension;
+import javax.enterprise.inject.spi.InjectionPoint;
+import javax.enterprise.inject.spi.InjectionTarget;
+import javax.enterprise.inject.spi.ProcessAnnotatedType;
+import javax.enterprise.inject.spi.ProcessInjectionTarget;
 import javax.enterprise.util.AnnotationLiteral;
-import java.util.Set;
+
+import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 public class MockitoExtension implements Extension {
     public <T> void process(@Observes ProcessInjectionTarget<T> event) {
@@ -49,6 +57,7 @@ public class MockitoExtension implements Extension {
             }
         });
     }
+
 
     public <T> void processAnnotatedType(@Observes ProcessAnnotatedType<T> pat) {
         AnnotatedType<T> annotatedType = pat.getAnnotatedType();

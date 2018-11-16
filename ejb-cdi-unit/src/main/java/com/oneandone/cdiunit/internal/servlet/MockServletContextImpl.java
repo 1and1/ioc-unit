@@ -39,8 +39,6 @@ import javax.servlet.SessionCookieConfig;
 import javax.servlet.SessionTrackingMode;
 import javax.servlet.descriptor.JspConfigDescriptor;
 
-import org.jboss.weld.exceptions.UnsupportedOperationException;
-
 /**
  * Shamlessly ripped from mockrunner. If mockrunner supports servlet 3.1 https://github.com/mockrunner/mockrunner/issues/4 then this class can extend
  * mockrunner instead.
