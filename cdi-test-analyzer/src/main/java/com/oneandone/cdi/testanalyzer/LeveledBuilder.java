@@ -5,17 +5,23 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import javax.decorator.Decorator;
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Alternative;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.Stereotype;
 import javax.enterprise.inject.spi.Extension;
+import javax.interceptor.Interceptor;
 
+import com.oneandone.cdi.extensions.TestScopeExtension;
 import com.oneandone.cdi.testanalyzer.annotations.EnabledAlternatives;
 import com.oneandone.cdi.testanalyzer.annotations.ExcludedClasses;
 import com.oneandone.cdi.testanalyzer.annotations.SutClasses;
@@ -39,11 +45,12 @@ class LeveledBuilder {
     }
 
 
-    public Set<Class<? extends Extension>> getExtensions() {
-        return extensions;
+    public Set<Class<? extends Extension>> getExtensionClasses() {
+        return extensionClasses;
     }
 
-    Set<Class<? extends Extension>> extensions = new HashSet<>();
+    Set<Class<? extends Extension>> extensionClasses = new HashSet<>();
+    List<Extension> extensionObjects = new ArrayList<>();
     Set<Class<?>> elseClasses = new HashSet<>();
     Set<QualifiedType> handledInjections = new HashSet<>();
 
@@ -124,7 +131,7 @@ class LeveledBuilder {
     boolean containsProducingAnnotation(final Annotation[] annotations) {
         for (ProducerPlugin producerPlugin: producerPlugins) {
             if (producerPlugin.isProducing(annotations)) {
-                extensions.add(producerPlugin.extensionToInstall());
+                extensionClasses.add(producerPlugin.extensionToInstall());
                 return true;
             }
         }
@@ -232,7 +239,11 @@ class LeveledBuilder {
 
     LeveledBuilder elseClass(Class<?> c) {
         if (CdiConfigCreator.isExtension(c)) {
-            extensions.add((Class<? extends Extension>) c);
+            extensionClasses.add((Class<? extends Extension>) c);
+        } else if (c.getAnnotation(Decorator.class) != null) {
+            data.addDecorator(c);
+        } else if (c.getAnnotation(Interceptor.class) != null) {
+            data.addInterceptor(c);
         } else if (c.isAnnotation()) {
             if (c.isAnnotationPresent(Stereotype.class) && c.isAnnotationPresent(Alternative.class)) {
                 data.foundAlternativeStereotypes.add(c);
@@ -275,6 +286,9 @@ class LeveledBuilder {
     private void init(final InitialConfiguration cfg) {
         this.producerMap = new ProducerMap();
         data = new BuilderData(this.producerMap);
+        if (cfg.testClass != null && cfg.testClass.getAnnotation(ApplicationScoped.class) == null) {
+            extensionObjects.add(new TestScopeExtension(cfg.testClass));
+        }
         data.init(cfg);
     }
 

@@ -42,6 +42,11 @@
             <version>${delta-spike.version}</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>net.oneandone</groupId>
+            <artifactId>cdi-test-analyzer</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
     </dependencies>
 </project>

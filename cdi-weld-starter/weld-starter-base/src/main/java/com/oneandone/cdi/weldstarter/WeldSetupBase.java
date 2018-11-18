@@ -107,12 +107,16 @@ public class WeldSetupBase implements WeldSetup {
 
     protected void addExtension(Class<? extends Extension> clazz) {
         try {
-            this.extensions.add(new MetadataImpl<Extension>(clazz.newInstance(), "Alternative In Testcode"));
+            addExtensionObject(clazz.newInstance());
         } catch (InstantiationException e) {
             throw new RuntimeException(e);
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void addExtensionObject(final Extension extension) {
+        this.extensions.add(new MetadataImpl<Extension>(extension, "Alternative In Testcode"));
     }
 
     public <S extends Service> void addService(ServiceConfig<S> serviceConfig) {

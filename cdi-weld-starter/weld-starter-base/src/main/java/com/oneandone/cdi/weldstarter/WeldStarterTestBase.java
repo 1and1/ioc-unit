@@ -1,6 +1,7 @@
 package com.oneandone.cdi.weldstarter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -44,6 +45,15 @@ public class WeldStarterTestBase {
     public void setBeanClasses(Class... classes) {
         weldSetup.setBeanClasses(classes);
     }
+
+    public void setDecoratorClasses(Class... classes) {
+        weldSetup.setEnabledDecorators(Arrays.asList(classes));
+    }
+
+    public void setInterceptorClasses(Class... classes) {
+        weldSetup.setEnabledInterceptors(Arrays.asList(classes));
+    }
+
 
     public void addBeanClasses(Class... classes) {
         weldSetup.addBeanClasses(classes);

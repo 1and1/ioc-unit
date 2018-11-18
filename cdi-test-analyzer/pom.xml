@@ -39,6 +39,12 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.deltaspike.core</groupId>
+            <artifactId>deltaspike-core-api</artifactId>
+            <version>${delta-spike.version}</version>
+            <scope>compile</scope>
+        </dependency>
 
         <!-- J2EE 6 -->
         <dependency>
@@ -86,13 +92,6 @@
             </exclusions>
         </dependency>
 
-
-        <dependency>
-            <groupId>net.oneandone</groupId>
-            <artifactId>cdi-test-mocks</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>

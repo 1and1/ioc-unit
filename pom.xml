@@ -111,7 +111,7 @@
                 <module>ejb-cdi-unit-test-war</module>
                 <module>ejb-cdi-unit-tests</module>
                 <module>ejb-cdi-unit-simulators</module>
-                <module>ejb-cdi-unit-camunda</module>
+                <!--module>ejb-cdi-unit-camunda</module-->
                 <module>examples</module>
             </modules>
             <dependencies>

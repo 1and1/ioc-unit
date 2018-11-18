@@ -14,9 +14,21 @@ import javax.enterprise.inject.spi.Extension;
 import javax.inject.Inject;
 import javax.interceptor.Interceptor;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class CdiConfigCreator {
+    Logger log = LoggerFactory.getLogger(this.getClass());
 
     private LeveledBuilder builder;
+
+    public static boolean isInterceptingBean(Class<?> c) {
+        if (c.getAnnotation(Interceptor.class) != null || c.getAnnotation(Decorator.class) != null) {
+            return true;
+        } else
+            return false;
+    }
+
     public static boolean mightBeBean(Class<?> c) {
         if (c.isInterface() || c.isPrimitive() || c.isLocalClass()
                 || c.isAnonymousClass() || c.isLocalClass() || c.isAnnotation()
@@ -36,8 +48,6 @@ public class CdiConfigCreator {
         }
         if (!constructorOk)
             return false;
-        if (c.getAnnotation(Interceptor.class) != null && c.getAnnotation(Decorator.class) != null)
-            return false;
         if (isExtension(c))
             return false;
         return true;
@@ -48,7 +58,11 @@ public class CdiConfigCreator {
     }
 
     public Collection<Class<? extends Extension>> getExtensions() {
-        return builder.extensions;
+        return builder.extensionClasses;
+    }
+
+    public Collection<Extension> getExtensionÓbjects() {
+        return builder.extensionObjects;
     }
 
     public Set<Class<?>> getEnabledAlternatives() {
@@ -86,7 +100,11 @@ public class CdiConfigCreator {
         this.builder = new LeveledBuilder(cfg);
         // handle initial classes as testclasses
         for (Class<?> c : currentToBeEvaluated) {
-            if (mightBeBean(c)) {
+            if (isInterceptingBean(c)) {
+                builder.tobeStarted(c)
+                        .injects(c)
+                        .elseClass(c);
+            } else if (mightBeBean(c)) {
                 builder.testClass(c);
             }  else {
                 builder.elseClass(c);
@@ -97,7 +115,12 @@ public class CdiConfigCreator {
         // TestClasses and SuTClasses are to be created, if not replaced by alternatives.
         while (currentToBeEvaluated.size() > 0) {
             for (Class<?> c : currentToBeEvaluated) {
-                if (mightBeBean(c)) {
+                if (isInterceptingBean(c)) {
+                    builder.tobeStarted(c)
+                            .innerClasses(c)
+                            .injects(c)
+                            .elseClass(c);
+                } else if (mightBeBean(c)) {
                     builder.tobeStarted(c)
                             .setAvailable(c)
                             .innerClasses(c)
@@ -133,27 +156,42 @@ public class CdiConfigCreator {
                     }
                     newToBeStarted = injectsToProducesMatcher.evaluateMatches(problems);
                     if (newToBeStarted.size() == 0) {
-                        throw new RuntimeException("no producer found");
+                        log.error("New to be started == 0 but");
+                        for (QualifiedType q : builder.injections) {
+                            log.error("Not resolved: {}", q);
+                        }
+                        return;
+                        // throw new RuntimeException("no producer found");
                     }
                 } else
                     return;
             }
             assert (newToBeStarted.size() > 0);
             for (Class<?> c : newToBeStarted) {
-                builder.tobeStarted(c)
-                        .setAvailable(c)
-                        .innerClasses(c)
-                        .injects(c)
-                        .producerFields(c)
-                        .producerMethods(c)
-                        .testClassAnnotation(c)
-                        .sutClassAnnotation(c)
-                        .sutClasspathsAnnotation(c)
-                        .sutPackagesAnnotation(c)
-                        .enabledAlternatives(c);
+                if (isInterceptingBean(c)) {
+                    builder.tobeStarted(c)
+                            .innerClasses(c)
+                            .injects(c)
+                            .elseClass(c)
+                            .testClassAnnotation(c)
+                            .sutClassAnnotation(c)
+                            .sutClasspathsAnnotation(c)
+                            .sutPackagesAnnotation(c);
+                } else {
+                    builder.tobeStarted(c)
+                            .setAvailable(c)
+                            .innerClasses(c)
+                            .injects(c)
+                            .producerFields(c)
+                            .producerMethods(c)
+                            .testClassAnnotation(c)
+                            .sutClassAnnotation(c)
+                            .sutClasspathsAnnotation(c)
+                            .sutPackagesAnnotation(c)
+                            .enabledAlternatives(c);
+                }
             }
         }
-
     }
 
     public Set<Class<?>> toBeStarted() {
@@ -171,4 +209,13 @@ public class CdiConfigCreator {
         create(tmp, cfg);
 
     }
+
+    public List<Class<?>> getDecorators() {
+        return builder.data.decorators;
+    }
+
+    public List<Class<?>> getInterceptors() {
+        return builder.data.interceptors;
+    }
+
 }

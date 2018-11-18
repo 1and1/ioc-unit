@@ -6,16 +6,16 @@
  */
 package com.oneandone.cdi.mocks;
 
-import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
-import org.easymock.EasyMockSupport;
-import org.easymock.Mock;
+import java.util.Set;
 
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.event.Observes;
-import javax.enterprise.inject.Produces;
-import javax.enterprise.inject.spi.*;
-import javax.enterprise.util.AnnotationLiteral;
-import java.util.Set;
+import javax.enterprise.inject.spi.Extension;
+import javax.enterprise.inject.spi.InjectionPoint;
+import javax.enterprise.inject.spi.InjectionTarget;
+import javax.enterprise.inject.spi.ProcessInjectionTarget;
+
+import org.easymock.EasyMockSupport;
 
 public class EasyMockExtension implements Extension {
     public <T> void process(@Observes ProcessInjectionTarget<T> event) {
@@ -49,31 +49,13 @@ public class EasyMockExtension implements Extension {
             }
         });
     }
-    public <T> void processAnnotatedType(@Observes ProcessAnnotatedType<T> pat) {
-        AnnotatedType<T> annotatedType = pat.getAnnotatedType();
-        AnnotatedTypeBuilder<T> builder = new AnnotatedTypeBuilder<T>().readFromType(annotatedType);
-
-        boolean modified = false;
-        for (AnnotatedMethod<? super T> method : annotatedType.getMethods()) {
-            Mock mock = method.getAnnotation(Mock.class);
-            if (mock != null) {
-                modified = true;
-                builder.addToMethod(method, new AnnotationLiteral<Produces>() {
-                    private static final long serialVersionUID = 1L;
-                });
-            }
-        }
-        for (AnnotatedField<? super T> field : annotatedType.getFields()) {
-            Mock mock = field.getAnnotation(Mock.class);
-            if (mock != null) {
-                modified = true;
-                builder.addToField(field, new AnnotationLiteral<Produces>() {
-                    private static final long serialVersionUID = 2L;
-                });
-            }
-        }
-        if (modified) {
-            pat.setAnnotatedType(builder.create());
-        }
-    }
+    /*
+     * public <T> void processAnnotatedType(@Observes ProcessAnnotatedType<T> pat) { AnnotatedType<T> annotatedType = pat.getAnnotatedType();
+     * AnnotatedTypeBuilder<T> builder = new AnnotatedTypeBuilder<T>().readFromType(annotatedType); boolean modified = false; for (AnnotatedMethod<?
+     * super T> method : annotatedType.getMethods()) { Mock mock = method.getAnnotation(Mock.class); if (mock != null) { modified = true;
+     * builder.addToMethod(method, new AnnotationLiteral<Produces>() { private static final long serialVersionUID = 1L; }); } } for (AnnotatedField<?
+     * super T> field : annotatedType.getFields()) { Mock mock = field.getAnnotation(Mock.class); if (mock != null) { modified = true;
+     * builder.addToField(field, new AnnotationLiteral<Produces>() { private static final long serialVersionUID = 2L; }); } } if (modified) {
+     * pat.setAnnotatedType(builder.create()); } }
+     */
 }

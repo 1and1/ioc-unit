@@ -1,7 +1,14 @@
 package com.oneandone.ejbcdiunit2.runner;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ServiceLoader;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.spi.BeanManager;
+import javax.enterprise.inject.spi.Extension;
 import javax.naming.InitialContext;
 
 import org.jboss.weld.transaction.spi.TransactionServices;
@@ -14,6 +21,7 @@ import org.junit.runners.model.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.oneandone.cdi.extensions.TestExtensionService;
 import com.oneandone.cdi.testanalyzer.CdiConfigCreator;
 import com.oneandone.cdi.testanalyzer.InitialConfiguration;
 import com.oneandone.cdi.weldstarter.WeldSetup;
@@ -79,6 +87,16 @@ public class EjbCdiUnit2Runner extends BlockJUnit4ClassRunner {
 
     }
 
+    Collection<Extension> getExtensions() {
+        List<Extension> result = new ArrayList<>();
+        ServiceLoader<TestExtensionService> loader = ServiceLoader.load(TestExtensionService.class);
+        final Iterator<TestExtensionService> testExtensionServiceIterator = loader.iterator();
+        while (testExtensionServiceIterator.hasNext()) {
+            result.addAll(testExtensionServiceIterator.next().getExtensions());
+        }
+        return result;
+    }
+
     WeldSetupClass weldSetup = null;
     WeldStarter weldStarter = null;
 
@@ -116,6 +134,13 @@ public class EjbCdiUnit2Runner extends BlockJUnit4ClassRunner {
                     weldSetup.setAlternativeClasses(cdiConfigBuilder.getEnabledAlternatives());
                     weldSetup.setEnabledAlternativeStereotypes(cdiConfigBuilder.getEnabledAlternativeStereotypes());
                     weldSetup.setExtensions(cdiConfigBuilder.getExtensions());
+                    weldSetup.setEnabledDecorators(cdiConfigBuilder.getDecorators());
+                    weldSetup.setEnabledInterceptors(cdiConfigBuilder.getInterceptors());
+                    for (Extension e : cdiConfigBuilder.getExtensionÓbjects())
+                        weldSetup.addExtensionObject(e);
+                    for (Extension e : getExtensions()) {
+                        weldSetup.addExtensionObject(e);
+                    }
                     weldSetup.addService(new WeldSetup.ServiceConfig(TransactionServices.class, new EjbUnitTransactionServices()));
                 }
 
@@ -141,5 +166,6 @@ public class EjbCdiUnit2Runner extends BlockJUnit4ClassRunner {
 
         return weldStarter.get(clazz);
     }
+
 
 }

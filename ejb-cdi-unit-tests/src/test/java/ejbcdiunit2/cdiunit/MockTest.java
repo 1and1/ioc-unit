@@ -1,46 +1,46 @@
-package ejbcdiunit2.cdiunit.bases;
+package ejbcdiunit2.cdiunit;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 
-import org.jglue.cdiunit.ProducesAlternative;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 
-import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
 import com.oneandone.ejbcdiunit2.runner.EjbCdiUnit2Runner;
-
-import cdiunit.AImplementation1;
-import cdiunit.AInterface;
 
 
 /**
  * @author aschoerk
  */
 @RunWith(EjbCdiUnit2Runner.class)
-@TestClasses({ AImplementation1.class })
+// @TestClasses({ MockitoExtension.class})
+@ApplicationScoped
 public class MockTest {
     @Mock
-    @ProducesAlternative
     @Produces
-    private AInterface mockA;
+    private Classes.I mockA;
 
     @Inject
-    private Instance<AInterface> a;
+    private Instance<Classes.I> a;
 
     /**
      * Test that we can use the test alternative annotation to specify that a mock is used
      */
     @Test
     public void testTestAlternative() {
-        AInterface a1 = a.get();
+        Classes.I a1 = a.get();
+        mockA.call();
         assertNotNull(mockA);
-        assertEquals(mockA, a1);
+        Mockito.verify(mockA, Mockito.times(1)).call();
+        assertEquals(mockA.toString(), a1.toString());
+        Mockito.verify(a1, Mockito.times(1)).call();
     }
 
 }

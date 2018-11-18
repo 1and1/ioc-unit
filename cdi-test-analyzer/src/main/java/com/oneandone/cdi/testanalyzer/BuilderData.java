@@ -1,15 +1,18 @@
 package com.oneandone.cdi.testanalyzer;
 
-import com.oneandone.cdi.testanalyzer.annotations.SutClasses;
-import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
-
-import javax.enterprise.inject.Alternative;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+
+import javax.enterprise.inject.Alternative;
+
+import com.oneandone.cdi.testanalyzer.annotations.SutClasses;
+import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
 
 public class BuilderData {
 
@@ -27,6 +30,8 @@ public class BuilderData {
     Set<Class<?>> sutClassesAvailable = new HashSet<>();
     Set<Class<?>> foundAlternativeStereotypes = new HashSet<>();
     Set<Class<?>> foundAlternativeClasses = new HashSet<>();
+    List<Class<?>> decorators = new ArrayList<>();
+    List<Class<?>> interceptors = new ArrayList<>();
 
     public BuilderData(final ProducerMap producerMap) {
         this.producerMap = producerMap;
@@ -135,4 +140,12 @@ public class BuilderData {
         producerMap.addToProducerMap(new QualifiedType(clazz));
     }
 
+    public void addDecorator(final Class<?> c) {
+        decorators.add(c);
+
+    }
+
+    public void addInterceptor(final Class<?> c) {
+        interceptors.add(c);
+    }
 }

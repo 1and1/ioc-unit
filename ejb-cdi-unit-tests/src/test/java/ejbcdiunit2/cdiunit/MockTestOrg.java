@@ -12,7 +12,6 @@ import com.oneandone.ejbcdiunit.cdiunit.ExcludedClasses;
 
 import cdiunit.AImplementation1;
 import cdiunit.AInterface;
-import ejbcdiunit2.cdiunit.bases.MockTest;
 
 
 /**

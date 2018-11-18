@@ -11,7 +11,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
 import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
-import com.oneandone.ejbcdiunit.EjbUnitRunner;
+import com.oneandone.cdiunit.internal.mockito.MockitoExtension;
+import com.oneandone.ejbcdiunit2.runner.EjbCdiUnit2Runner;
 
 import cdiunit.AImplementation1;
 import cdiunit.AInterface;
@@ -20,8 +21,8 @@ import cdiunit.AInterface;
 /**
  * @author aschoerk
  */
-@RunWith(EjbUnitRunner.class)
-@TestClasses({ AImplementation1.class })
+@RunWith(EjbCdiUnit2Runner.class)
+@TestClasses({ AImplementation1.class, MockitoExtension.class })
 public class MockIsNotProducingTest {
     @Mock
     private AInterface mockA;
