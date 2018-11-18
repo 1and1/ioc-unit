@@ -1,40 +1,27 @@
 package com.oneandone.ejbcdiunit5;
 
-import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_METHOD;
-
-import java.lang.reflect.Constructor;
-import java.net.URL;
+import com.oneandone.cdi.weldstarter.WeldSetup;
+import com.oneandone.cdi.weldstarter.WeldSetupClass;
+import com.oneandone.cdi.weldstarter.spi.WeldStarter;
+import com.oneandone.ejbcdiunit.*;
+import com.oneandone.ejbcdiunit.cfganalyzer.TestConfigAnalyzer;
+import com.oneandone.ejbcdiunit.internal.EjbInformationBean;
+import org.jboss.weld.bootstrap.WeldBootstrap;
+import org.jboss.weld.transaction.spi.TransactionServices;
+import org.jboss.weld.util.reflection.Formats;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.extension.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import java.lang.reflect.Constructor;
+import java.net.URL;
 
-import org.jboss.weld.bootstrap.WeldBootstrap;
-import org.jboss.weld.transaction.spi.TransactionServices;
-import org.jboss.weld.util.reflection.Formats;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.extension.AfterAllCallback;
-import org.junit.jupiter.api.extension.BeforeEachCallback;
-import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
-import org.junit.jupiter.api.extension.TestInstanceFactory;
-import org.junit.jupiter.api.extension.TestInstanceFactoryContext;
-import org.junit.jupiter.api.extension.TestInstantiationException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.oneandone.cdi.weldstarter.WeldSetup;
-import com.oneandone.cdi.weldstarter.WeldSetupClass;
-import com.oneandone.cdi.weldstarter.spi.WeldStarter;
-import com.oneandone.ejbcdiunit.CdiTestConfig;
-import com.oneandone.ejbcdiunit.CreationalContexts;
-import com.oneandone.ejbcdiunit.EjbUnitBeanInitializerClass;
-import com.oneandone.ejbcdiunit.EjbUnitRule;
-import com.oneandone.ejbcdiunit.EjbUnitTransactionServices;
-import com.oneandone.ejbcdiunit.SupportEjbExtended;
-import com.oneandone.ejbcdiunit.cfganalyzer.TestConfigAnalyzer;
-import com.oneandone.ejbcdiunit.internal.EjbInformationBean;
+import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_METHOD;
 
 public class JUnit5Extension implements BeforeEachCallback,
         AfterAllCallback, TestExecutionExceptionHandler, TestInstanceFactory
@@ -143,7 +130,7 @@ public class JUnit5Extension implements BeforeEachCallback,
                 Object test = creationalContexts.create(clazz, ApplicationScoped.class);
 
                 logger.trace("---->Found testinstance {}\n", test);
-                // initialize the instance used for testing by fields initialized by cdi-container
+                // create the instance used for testing by fields initialized by cdi-container
                 return test;
 
             } catch (ClassNotFoundException e) {

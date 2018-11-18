@@ -1,19 +1,14 @@
 package com.oneandone.ejbcdiunit.simulators.sftpserver;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.ServerSocket;
-import java.nio.file.DirectoryNotEmptyException;
-import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import org.slf4j.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
-
-import org.slf4j.Logger;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.ServerSocket;
+import java.nio.file.*;
 
 /**
  * @author aschoerk
@@ -36,7 +31,7 @@ public class SftpServerSimulator {
     private String sftpServerSimulatorKeyFileRefreshInterval = "10000";
 
     /**
-     * initialize SSH Key FTP authentication support by copying private & public key to temp folder. The path is referenced by property files.
+     * create SSH Key FTP authentication support by copying private & public key to temp folder. The path is referenced by property files.
      */
     private void initKeys() {
         try (InputStream publicKeyStream = SftpServerSimulator.class.getClassLoader().getResourceAsStream(INTERNAL_SFTP_SIMULATOR_PUBLIC_KEY_PATH);

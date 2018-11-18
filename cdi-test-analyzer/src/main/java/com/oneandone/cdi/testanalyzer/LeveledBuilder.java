@@ -1,35 +1,23 @@
 package com.oneandone.cdi.testanalyzer;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import com.oneandone.cdi.testanalyzer.annotations.*;
 
 import javax.decorator.Decorator;
-import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Alternative;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.Stereotype;
 import javax.enterprise.inject.spi.Extension;
 import javax.interceptor.Interceptor;
-
-import com.oneandone.cdi.extensions.TestScopeExtension;
-import com.oneandone.cdi.testanalyzer.annotations.EnabledAlternatives;
-import com.oneandone.cdi.testanalyzer.annotations.ExcludedClasses;
-import com.oneandone.cdi.testanalyzer.annotations.SutClasses;
-import com.oneandone.cdi.testanalyzer.annotations.SutClasspaths;
-import com.oneandone.cdi.testanalyzer.annotations.SutPackages;
-import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.net.MalformedURLException;
+import java.util.*;
 
 /**
+ * Helps in building up the testconfiguration.
+ *
  * @author aschoerk
  */
 class LeveledBuilder {
@@ -37,11 +25,146 @@ class LeveledBuilder {
     Set<QualifiedType> injections = new HashSet<>();
     Set<QualifiedType> produces = new HashSet<>();
     ProducerMap producerMap = new ProducerMap();
-    BuilderData data = new BuilderData(producerMap);
     Collection<ProducerPlugin> producerPlugins = Collections.EMPTY_LIST;
+    Set<Class<?>> beansToBeStarted = new HashSet<>(); // these beans must be given to CDI to be started
+    Set<Class<?>> beansAvailable = new HashSet<>(); // beans can be used for injects
+    Set<Class<?>> enabledAlternatives = new HashSet<>();
+    Set<Class<?>> excludedClasses = new HashSet<>();
 
-    public LeveledBuilder(final InitialConfiguration cfg) {
-        init(cfg);
+    Set<Class<?>> testClassesToBeEvaluated = new HashSet<>();
+    Set<Class<?>> testClasses = new HashSet<>();
+    Set<Class<?>> sutClasses = new HashSet<>();
+    Set<Class<?>> sutClassesToBeEvaluated = new HashSet<>();
+    Set<Class<?>> testClassesAvailable = new HashSet<>();
+    Set<Class<?>> sutClassesAvailable = new HashSet<>();
+    Set<Class<?>> foundAlternativeStereotypes = new HashSet<>();
+    Set<Class<?>> foundAlternativeClasses = new HashSet<>();
+    List<Class<?>> decorators = new ArrayList<>();
+    List<Class<?>> interceptors = new ArrayList<>();
+
+    Set<Class<? extends Extension>> extensionClasses = new HashSet<>();
+    List<Extension> extensionObjects = new ArrayList<>();
+    Set<Class<?>> elseClasses = new HashSet<>();
+    Set<QualifiedType> handledInjections = new HashSet<>();
+
+
+    public LeveledBuilder(InitialConfiguration cfg) {
+        if (cfg.testClass != null) {
+            testClassesToBeEvaluated.add(cfg.testClass);
+        }
+        if (cfg.initialClasses != null) {
+            testClassesToBeEvaluated.addAll(cfg.initialClasses);
+        }
+        if (cfg.testClasses != null) {
+            testClassesToBeEvaluated.addAll(cfg.testClasses);
+        }
+        if (cfg.suTClasses != null) {
+            sutClassesToBeEvaluated.addAll(cfg.suTClasses);
+        }
+        if (cfg.enabledAlternatives != null) {
+            addEnabledAlternatives(cfg.enabledAlternatives);
+        }
+        // prepare available classes
+        // they are not further investigated,
+        try {
+            if (cfg.suTClasspath != null)
+                addSutClasspaths(cfg.suTClasspath);
+            if (cfg.suTPackages != null)
+                addSutPackages(cfg.suTPackages);
+        } catch (MalformedURLException ex) {
+            throw new RuntimeException(ex);
+        }
+        if (cfg.excludedClasses != null)
+            addExcludedClasses(cfg.excludedClasses);
+    }
+
+    public LeveledBuilder available(Class c) {
+        beansAvailable.add(c);
+        addToClassMap(c);
+        return this;
+    }
+
+    private void addClasses(Iterable<Class<?>> value, Set<Class<?>> classes, Set<Class<?>> classesToBeEvaluated) {
+        for (Class<?> testClass : value) {
+            if (!classes.contains(testClass)) {
+                classesToBeEvaluated.add(testClass);
+                classes.add(testClass);
+                addToClassMap(testClass);
+            }
+        }
+    }
+
+    private void addSutPackages(Iterable<Class<?>> sutPackages) throws MalformedURLException {
+        for (Class<?> packageClass : sutPackages) {
+            Set<Class<?>> tmpClasses = new HashSet<>();
+            ClasspathHandler.addPackage(packageClass, tmpClasses);
+            for (Class clazz : tmpClasses) {
+                addToClassMap(clazz);
+                sutClassesAvailable.add(clazz);
+            }
+        }
+    }
+
+    private void addSutClasspaths(Iterable<Class<?>> sutClasspaths) throws MalformedURLException {
+        for (Class<?> classpathClass : sutClasspaths) {
+            Set<Class<?>> tmpClasses = new HashSet<>();
+            ClasspathHandler.addClassPath(classpathClass, tmpClasses);
+            for (Class clazz : tmpClasses) {
+                addToClassMap(clazz);
+                sutClassesAvailable.add(clazz);
+            }
+        }
+    }
+
+    private void addEnabledAlternatives(Iterable<Class<?>> enabledAlternativesP) {
+        for (Class<?> alternative : enabledAlternativesP) {
+            this.enabledAlternatives.add(alternative);
+            if (alternative.getAnnotation(Alternative.class) == null) {
+                boolean found = false;
+                for (Method m : alternative.getDeclaredMethods()) {
+                    if (m.getAnnotation(Alternative.class) != null) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    for (Field f : alternative.getDeclaredFields()) {
+                        if (f.getAnnotation(Alternative.class) != null) {
+                            found = true;
+                            break;
+                        }
+                    }
+
+                }
+                if (!found) {
+                    foundAlternativeClasses.add(alternative);
+                } else {
+                    testClasses.add(alternative);
+                }
+            } else {
+                testClasses.add(alternative);
+            }
+            addToClassMap(alternative);
+        }
+    }
+
+    private void addExcludedClasses(Iterable<Class<?>> excludedClassesL) {
+        for (Class<?> excl : excludedClassesL) {
+            this.excludedClasses.add(excl);
+        }
+    }
+
+    private void addToClassMap(Class<?> clazz) {
+        producerMap.addToProducerMap(new QualifiedType(clazz));
+    }
+
+    private void addDecorator(final Class<?> c) {
+        decorators.add(c);
+
+    }
+
+    private void addInterceptor(final Class<?> c) {
+        interceptors.add(c);
     }
 
 
@@ -49,30 +172,26 @@ class LeveledBuilder {
         return extensionClasses;
     }
 
-    Set<Class<? extends Extension>> extensionClasses = new HashSet<>();
-    List<Extension> extensionObjects = new ArrayList<>();
-    Set<Class<?>> elseClasses = new HashSet<>();
-    Set<QualifiedType> handledInjections = new HashSet<>();
 
     private void findInnerClasses(final Class c, final Set<Class<?>> staticInnerClasses) {
         for (Class innerClass : c.getDeclaredClasses()) {
             if (Modifier.isStatic(innerClass.getModifiers()) && CdiConfigCreator.mightBeBean(innerClass)) {
                 staticInnerClasses.add(innerClass);
-                data.addToClassMap(innerClass);
+                addToClassMap(innerClass);
                 findInnerClasses(innerClass, staticInnerClasses);
             }
         }
     }
 
     boolean isTestClass(Class<?> c) {
-        if (data.testClasses.contains(c)) {
+        if (testClasses.contains(c)) {
             return true;
         } else
             return false;
     }
 
     boolean isTestClassAvailable(Class<?> c) {
-        if (data.testClassesAvailable.contains(c)) {
+        if (testClassesAvailable.contains(c)) {
             return true;
         } else if (c.getDeclaringClass() != null)
             return isTestClass(c.getDeclaringClass());
@@ -81,7 +200,7 @@ class LeveledBuilder {
     }
 
     boolean isSuTClass(Class<?> c) {
-        if (data.sutClasses.contains(c) || data.sutClassesAvailable.contains(c)) {
+        if (sutClasses.contains(c) || sutClassesAvailable.contains(c)) {
             return true;
         } else if (c.getDeclaringClass() != null)
             return isSuTClass(c.getDeclaringClass());
@@ -89,29 +208,25 @@ class LeveledBuilder {
             return false;
     }
 
-    void moveToBeEvaluatedTo(Set<Class<?>> newToBeEvaluated) {
-        newToBeEvaluated.clear();
-        newToBeEvaluated.addAll(data.testClassesToBeEvaluated);
-        data.testClassesToBeEvaluated.clear();
-        newToBeEvaluated.addAll(data.sutClassesToBeEvaluated);
-        data.sutClassesToBeEvaluated.clear();
+    Set<Class<?>> extractToBeEvaluatedClasses() {
+        Set<Class<?>> newToBeEvaluated = new HashSet<>();
+        newToBeEvaluated.addAll(testClassesToBeEvaluated);
+        testClassesToBeEvaluated.clear();
+        newToBeEvaluated.addAll(sutClassesToBeEvaluated);
+        sutClassesToBeEvaluated.clear();
+        return newToBeEvaluated;
     }
 
 
     LeveledBuilder tobeStarted(Class c) {
-        data.beansToBeStarted.add(c);
-        data.addToClassMap(c);
+        beansToBeStarted.add(c);
+        addToClassMap(c);
         return this;
     }
 
-    LeveledBuilder setAvailable(Class c) {
-        data.beansAvailable.add(c);
-        data.addToClassMap(c);
-        return this;
-    }
 
     LeveledBuilder innerClasses(Class c) {
-        findInnerClasses(c, data.beansAvailable);
+        findInnerClasses(c, beansAvailable);
         return this;
     }
 
@@ -127,21 +242,6 @@ class LeveledBuilder {
         handledInjections.add(inject);
         return this;
     }
-
-    boolean containsProducingAnnotation(final Annotation[] annotations) {
-        for (ProducerPlugin producerPlugin: producerPlugins) {
-            if (producerPlugin.isProducing(annotations)) {
-                extensionClasses.add(producerPlugin.extensionToInstall());
-                return true;
-            }
-        }
-        for (Annotation ann : annotations) {
-            if (ann.annotationType().equals(Produces.class))
-                return true;
-        }
-        return false;
-    }
-
 
     LeveledBuilder producerFields(Class c) {
         for (Field f : c.getDeclaredFields()) {
@@ -165,24 +265,39 @@ class LeveledBuilder {
         return this;
     }
 
+    private boolean containsProducingAnnotation(final Annotation[] annotations) {
+        for (ProducerPlugin producerPlugin: producerPlugins) {
+            if (producerPlugin.isProducing(annotations)) {
+                extensionClasses.add(producerPlugin.extensionToInstall());
+                return true;
+            }
+        }
+        for (Annotation ann : annotations) {
+            if (ann.annotationType().equals(Produces.class))
+                return true;
+        }
+        return false;
+    }
+
+
     LeveledBuilder testClass(Class<?> c) {
-        data.testClasses.add(c);
-        data.testClassesAvailable.remove(c);
-        data.addToClassMap(c);
+        testClasses.add(c);
+        testClassesAvailable.remove(c);
+        addToClassMap(c);
         return this;
     }
 
     LeveledBuilder sutClass(Class<?> c) {
-        data.sutClasses.add(c);
-        data.sutClassesAvailable.remove(c);
-        data.addToClassMap(c);
+        sutClasses.add(c);
+        sutClassesAvailable.remove(c);
+        addToClassMap(c);
         return this;
     }
 
     LeveledBuilder testClassAnnotation(Class<?> c) {
         TestClasses testClasses = c.getAnnotation(TestClasses.class);
         if (testClasses != null) {
-            data.addTestClasses(testClasses);
+            addClasses(Arrays.asList(testClasses.value()), this.testClasses, testClassesToBeEvaluated);
         }
         return this;
     }
@@ -191,7 +306,7 @@ class LeveledBuilder {
     LeveledBuilder sutClassAnnotation(Class<?> c) {
         SutClasses sutClasses = c.getAnnotation(SutClasses.class);
         if (sutClasses != null) {
-            data.addSutClasses(sutClasses);
+            addClasses(Arrays.asList(sutClasses.value()), this.sutClasses, sutClassesToBeEvaluated);
         }
         return this;
     }
@@ -200,7 +315,7 @@ class LeveledBuilder {
     LeveledBuilder sutPackagesAnnotation(Class<?> c) throws MalformedURLException {
         SutPackages sutPackages = c.getAnnotation(SutPackages.class);
         if (sutPackages != null) {
-            data.addSutPackages(Arrays.asList(sutPackages.value()));
+            addSutPackages(Arrays.asList(sutPackages.value()));
         }
         return this;
     }
@@ -210,7 +325,7 @@ class LeveledBuilder {
     LeveledBuilder sutClasspathsAnnotation(Class<?> c) throws MalformedURLException {
         SutClasspaths sutClasspaths = c.getAnnotation(SutClasspaths.class);
         if (sutClasspaths != null) {
-            data.addSutClasspaths(Arrays.asList(sutClasspaths.value()));
+            addSutClasspaths(Arrays.asList(sutClasspaths.value()));
         }
         return this;
     }
@@ -219,7 +334,7 @@ class LeveledBuilder {
     LeveledBuilder enabledAlternatives(Class<?> c) throws MalformedURLException {
         EnabledAlternatives enabledAlternatives = c.getAnnotation(EnabledAlternatives.class);
         if (enabledAlternatives != null) {
-            data.addEnabledAlternatives(Arrays.asList(enabledAlternatives.value()));
+            addEnabledAlternatives(Arrays.asList(enabledAlternatives.value()));
         }
         return this;
     }
@@ -230,7 +345,7 @@ class LeveledBuilder {
     LeveledBuilder excludes(Class<?> c) throws MalformedURLException {
         ExcludedClasses excludedClassesL = c.getAnnotation(ExcludedClasses.class);
         if (excludedClassesL != null) {
-            data.addExcludedClasses(Arrays.asList(excludedClassesL.value()));
+            addExcludedClasses(Arrays.asList(excludedClassesL.value()));
         }
         return this;
     }
@@ -241,12 +356,12 @@ class LeveledBuilder {
         if (CdiConfigCreator.isExtension(c)) {
             extensionClasses.add((Class<? extends Extension>) c);
         } else if (c.getAnnotation(Decorator.class) != null) {
-            data.addDecorator(c);
+            addDecorator(c);
         } else if (c.getAnnotation(Interceptor.class) != null) {
-            data.addInterceptor(c);
+            addInterceptor(c);
         } else if (c.isAnnotation()) {
             if (c.isAnnotationPresent(Stereotype.class) && c.isAnnotationPresent(Alternative.class)) {
-                data.foundAlternativeStereotypes.add(c);
+                foundAlternativeStereotypes.add(c);
             } else {
                 elseClasses.add(c);
             }
@@ -257,61 +372,31 @@ class LeveledBuilder {
         return this;
     }
 
-    boolean isActiveAlternativeStereoType(Class<?> c) {
-        return data.foundAlternativeStereotypes.contains(c);
-    }
-
     boolean isActiveAlternativeStereoType(Annotation c) {
-        return data.foundAlternativeStereotypes.contains(c.annotationType());
+        return foundAlternativeStereotypes.contains(c.annotationType());
     }
 
     boolean isAlternative(Class<?> c) {
-        return data.enabledAlternatives.contains(c);
+        return enabledAlternatives.contains(c);
     }
 
 
+    /**
+     * create a LeveledBuilder which can be used to find producers for left over injects.
+     * An extra builder is used, to be able to select before deciding which classes to use.
+     * @return
+     */
     public LeveledBuilder producerCandidates() {
         Set<Class<?>> tmp = new HashSet<>();
-        tmp.addAll(data.beansAvailable);
-        tmp.removeAll(data.beansToBeStarted);
+        tmp.addAll(beansAvailable);
+        tmp.removeAll(beansToBeStarted);
         LeveledBuilder result = new LeveledBuilder(new InitialConfiguration());
         for (Class<?> c: tmp) {
-            result.setAvailable(c);  // necessary? already is available
+            result.available(c);  // necessary? already is available
             result.producerFields(c);
             result.producerMethods(c);
         }
         return result;
-    }
-
-    private void init(final InitialConfiguration cfg) {
-        this.producerMap = new ProducerMap();
-        data = new BuilderData(this.producerMap);
-        if (cfg.testClass != null && cfg.testClass.getAnnotation(ApplicationScoped.class) == null) {
-            extensionObjects.add(new TestScopeExtension(cfg.testClass));
-        }
-        data.init(cfg);
-    }
-
-    public enum ClassKind {
-        TEST,
-        TEST_AVAILABLE,
-        SUT_TOSTART,
-        SUT_AVAILABLE
-    }
-
-    public ClassKind getClassKind(Class<?> c) {
-        if (data.testClasses.contains(c))
-            return ClassKind.TEST;
-        if (data.testClassesAvailable.contains(c)) {
-            return ClassKind.TEST_AVAILABLE;
-        }
-        if (data.sutClasses.contains(c)) {
-            return ClassKind.SUT_TOSTART;
-        }
-        if (data.sutClassesAvailable.contains(c)) {
-            return ClassKind.SUT_AVAILABLE;
-        }
-        throw new RuntimeException("expected test, testavailable, sut or sutavailable");
     }
 
 }

@@ -1,7 +1,9 @@
 package com.oneandone.ejbcdiunit.jms;
 
-import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicBoolean;
+import com.oneandone.ejbcdiunit.AsynchronousManager;
+import com.oneandone.ejbcdiunit.internal.AsynchronousMessageListenerProxy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -13,21 +15,9 @@ import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
-import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
-import javax.jms.Destination;
-import javax.jms.JMSException;
-import javax.jms.MessageConsumer;
-import javax.jms.MessageListener;
-import javax.jms.Queue;
-import javax.jms.Session;
-import javax.jms.Topic;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.oneandone.ejbcdiunit.AsynchronousManager;
-import com.oneandone.ejbcdiunit.internal.AsynchronousMessageListenerProxy;
+import javax.jms.*;
+import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Used to do the CDI-Part of JMS-Simulation.
@@ -56,7 +46,7 @@ public class JmsMocksFactory {
     private static ThreadLocal<Boolean> postConstructing = new ThreadLocal<>();
 
     /**
-     * initialize mockrunner to produce singleton.
+     * create mockrunner to produce singleton.
      * strangely is called recursively by weld 1.1.14. Which is prevented using postConstructing.
      */
     @PostConstruct

@@ -1,19 +1,13 @@
 package com.oneandone.cdi.testanalyzer;
 
-import java.lang.annotation.Annotation;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-
-import javax.enterprise.inject.Any;
-import javax.enterprise.inject.Default;
-
 import org.apache.commons.lang3.reflect.TypeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.enterprise.inject.Any;
+import javax.enterprise.inject.Default;
+import java.lang.annotation.Annotation;
+import java.util.*;
 
 /**
  * @author aschoerk
@@ -78,7 +72,7 @@ public class InjectsMatcher {
         if (optionalAlternative.isPresent()) {
             QualifiedType alternative = optionalAlternative.get();
             if (alternative.getAlternativeStereotype() == null) {
-                if (builder.data.enabledAlternatives.contains(alternative.getRawtype())) {
+                if (builder.enabledAlternatives.contains(alternative.getRawtype())) {
                     matching.clear();
                     matching.add(alternative);
                 }
@@ -148,7 +142,7 @@ public class InjectsMatcher {
 
         for (QualifiedType inject : matching.keySet()) {
             final QualifiedType producingType = matching.get(inject).iterator().next();
-            if (!builder.data.beansToBeStarted.contains(producingType.getDeclaringClass())) {
+            if (!builder.beansToBeStarted.contains(producingType.getDeclaringClass())) {
                 newToBeStarted.add(producingType.getDeclaringClass());
             }
             builder.injectHandled(inject);
@@ -197,7 +191,7 @@ public class InjectsMatcher {
                             inject, testClasses, sutClasses));
                 } else {
                     final Class<?> testClass = testClasses.iterator().next();
-                    if (!builder.data.beansToBeStarted.contains(testClass)) {
+                    if (!builder.beansToBeStarted.contains(testClass)) {
                         newToBeStarted.add(testClass);
                     }
                 }
@@ -207,7 +201,7 @@ public class InjectsMatcher {
                     problems.add(new CdiConfigCreator.ProblemRecord("Handling Inject: {} too many SutClass(es) {}",
                             inject, sutClasses));
                 final Class<?> sutClass = sutClasses.iterator().next();
-                if (!builder.data.beansToBeStarted.contains(sutClass)) {
+                if (!builder.beansToBeStarted.contains(sutClass)) {
                     newToBeStarted.add(sutClass);
                 }
                 builder.injectHandled(inject);
@@ -216,7 +210,7 @@ public class InjectsMatcher {
                     problems.add(new CdiConfigCreator.ProblemRecord("Handling Inject: {} more than one available TestClass(es) {}",
                             inject, availableTestClasses));
                 final Class<?> testClass = availableTestClasses.iterator().next();
-                if (!builder.data.beansToBeStarted.contains(testClass)) {
+                if (!builder.beansToBeStarted.contains(testClass)) {
                     builder.testClass(testClass);
                     newToBeStarted.add(testClass);
                 }

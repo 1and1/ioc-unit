@@ -6,17 +6,20 @@
  */
 package ejbcdiunit2.cdiunit;
 
-import java.lang.annotation.Annotation;
-
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.ContextNotActiveException;
-import javax.enterprise.context.spi.CreationalContext;
-import javax.enterprise.inject.Produces;
-import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.inject.Inject;
-import javax.inject.Provider;
-
+import cdiunit.*;
+import com.oneandone.cdi.testanalyzer.annotations.SutPackages;
+import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
+import com.oneandone.cdiunit.internal.servlet.MockHttpServletRequestImpl;
+import com.oneandone.cdiunit.internal.servlet.MockHttpServletResponseImpl;
+import com.oneandone.cdiunit.internal.servlet.MockHttpSessionImpl;
+import com.oneandone.cdiunit.internal.servlet.MockServletContextImpl;
+import com.oneandone.ejbcdiunit.ContextControllerEjbCdiUnit;
+import com.oneandone.ejbcdiunit.cdiunit.ExcludedClasses;
+import com.oneandone.ejbcdiunit.cdiunit.internal.InConversationInterceptor;
+import com.oneandone.ejbcdiunit.internal.EjbCdiUnitInitialListenerProducer;
+import com.oneandone.ejbcdiunit.internal.InRequestInterceptorEjbCdiUnit;
+import com.oneandone.ejbcdiunit.internal.InSessionInterceptorEjbCdiUnit;
+import com.oneandone.ejbcdiunit2.runner.EjbCdiUnit2Runner;
 import org.jglue.cdiunit.InConversationScope;
 import org.jglue.cdiunit.InRequestScope;
 import org.jglue.cdiunit.InSessionScope;
@@ -25,28 +28,35 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 
-import com.oneandone.cdi.testanalyzer.annotations.SutPackages;
-import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
-import com.oneandone.ejbcdiunit.cdiunit.ExcludedClasses;
-import com.oneandone.ejbcdiunit2.runner.EjbCdiUnit2Runner;
-
-import cdiunit.AImplementation1;
-import cdiunit.AInterface;
-import cdiunit.BRequestScoped;
-import cdiunit.BaseTest;
-import cdiunit.CSessionScoped;
-import cdiunit.DConversationScoped;
-import cdiunit.ESupportClass;
-import cdiunit.FApplicationScoped;
-import cdiunit.ProducedViaField;
-import cdiunit.ProducedViaMethod;
-import cdiunit.Scoped;
-import cdiunit.ScopedFactory;
+import javax.annotation.PostConstruct;
+import javax.enterprise.context.ContextNotActiveException;
+import javax.enterprise.context.Conversation;
+import javax.enterprise.context.spi.CreationalContext;
+import javax.enterprise.inject.Produces;
+import javax.enterprise.inject.spi.Bean;
+import javax.enterprise.inject.spi.BeanManager;
+import javax.inject.Inject;
+import javax.inject.Provider;
+import javax.servlet.http.HttpServletRequest;
+import java.lang.annotation.Annotation;
 
 @RunWith(EjbCdiUnit2Runner.class)
-@TestClasses({ ESupportClass.class, ScopedFactory.class })
-@SutPackages({ AImplementation1.class })
+@TestClasses({ESupportClass.class, ScopedFactory.class,
+        // added in cdiunit
+        InConversationInterceptor.class,
+        ContextControllerEjbCdiUnit.class,
+        InRequestInterceptorEjbCdiUnit.class,
+        InSessionInterceptorEjbCdiUnit.class,
+        InConversationInterceptor.class,
+        MockServletContextImpl.class,
+        MockHttpSessionImpl.class,
+        MockHttpServletRequestImpl.class,
+        MockHttpServletResponseImpl.class,
+        EjbCdiUnitInitialListenerProducer.class
+})
+@SutPackages({AImplementation1.class})
 @ExcludedClasses({Scoped.class})  // cdi1.0 does not recognize @Vetoed
 public class TestCdiUnit2Runner extends BaseTest {
 
@@ -77,14 +87,14 @@ public class TestCdiUnit2Runner extends BaseTest {
     @Inject
     private FApplicationScoped f2;
 
-    // @Inject
-    // private ContextControllerEjbCdiUnit contextControllerEjbCdiUnit;
+    @Inject
+    private ContextControllerEjbCdiUnit contextControllerEjbCdiUnit;
 
     @Inject
     private BRequestScoped request;
 
-    // @Inject
-    // private Conversation conversation;
+    @Inject
+    private Conversation conversation;
 
     @Produces
     private ProducedViaField produced;
@@ -205,29 +215,83 @@ public class TestCdiUnit2Runner extends BaseTest {
         Assert.assertEquals(mockA, a1);
     }
 
-    /*
-     * @Test public void testContextController() { contextControllerEjbCdiUnit.openRequest(); Scoped b1 = scoped.get(); Scoped b2 = scoped.get();
-     * Assert.assertEquals(b1, b2); b1.setDisposedListener(disposeListener); contextControllerEjbCdiUnit.closeRequest();
-     * Mockito.verify(disposeListener).run(); }
-     * @Test public void testContextControllerRequestScoped() { contextControllerEjbCdiUnit.openRequest(); BRequestScoped b1 = requestScoped.get();
-     * b1.setFoo("Bar"); BRequestScoped b2 = requestScoped.get(); Assert.assertSame(b1.getFoo(), b2.getFoo());
-     * contextControllerEjbCdiUnit.closeRequest(); contextControllerEjbCdiUnit.openRequest(); BRequestScoped b3 = requestScoped.get();
-     * Assert.assertEquals(null, b3.getFoo()); }
-     * @Test public void testContextControllerSessionScoped() { contextControllerEjbCdiUnit.openRequest(); CSessionScoped b1 = sessionScoped.get();
-     * b1.setFoo("Bar"); CSessionScoped b2 = sessionScoped.get(); Assert.assertEquals(b1.getFoo(), b2.getFoo());
-     * contextControllerEjbCdiUnit.closeRequest(); contextControllerEjbCdiUnit.closeSession(); contextControllerEjbCdiUnit.openRequest();
-     * CSessionScoped b3 = sessionScoped.get(); Assert.assertEquals(null, b3.getFoo()); }
-     * @Test public void testContextControllerSessionScopedWithRequest() { contextControllerEjbCdiUnit.openRequest(); CSessionScoped b1 =
-     * sessionScoped.get(); b1.setFoo("Bar"); BRequestScoped r1 = requestScoped.get(); b1.setFoo("Bar"); BRequestScoped r2 = requestScoped.get();
-     * Assert.assertSame(r1.getFoo(), r2.getFoo()); contextControllerEjbCdiUnit.closeRequest(); contextControllerEjbCdiUnit.openRequest();
-     * BRequestScoped r3 = requestScoped.get(); Assert.assertEquals(null, r3.getFoo()); CSessionScoped b2 = sessionScoped.get();
-     * Assert.assertEquals(b1.getFoo(), b2.getFoo()); Assert.assertNotNull(b2.getFoo()); }
-     * @Test public void testContextControllerConversationScoped() { HttpServletRequest request = contextControllerEjbCdiUnit.openRequest();
-     * request.getSession(true); conversation.begin(); DConversationScoped b1 = conversationScoped.get(); b1.setFoo("Bar"); DConversationScoped b2 =
-     * conversationScoped.get(); Assert.assertEquals(b1.getFoo(), b2.getFoo()); conversation.end(); contextControllerEjbCdiUnit.closeRequest();
-     * contextControllerEjbCdiUnit.openRequest(); conversation.begin(); DConversationScoped b3 = conversationScoped.get(); Assert.assertEquals(null,
-     * b3.getFoo()); }
-     */
+
+    @Test
+    public void testContextController() {
+        contextControllerEjbCdiUnit.openRequest();
+        Scoped b1 = scoped.get();
+        Scoped b2 = scoped.get();
+        Assert.assertEquals(b1, b2);
+        b1.setDisposedListener(disposeListener);
+        contextControllerEjbCdiUnit.closeRequest();
+        Mockito.verify(disposeListener).run();
+    }
+
+    @Test
+    public void testContextControllerRequestScoped() {
+        contextControllerEjbCdiUnit.openRequest();
+        BRequestScoped b1 = requestScoped.get();
+        b1.setFoo("Bar");
+        BRequestScoped b2 = requestScoped.get();
+        Assert.assertSame(b1.getFoo(), b2.getFoo());
+        contextControllerEjbCdiUnit.closeRequest();
+        contextControllerEjbCdiUnit.openRequest();
+        BRequestScoped b3 = requestScoped.get();
+        Assert.assertEquals(null, b3.getFoo());
+    }
+
+    @Test
+    public void testContextControllerSessionScoped() {
+        contextControllerEjbCdiUnit.openRequest();
+        CSessionScoped b1 = sessionScoped.get();
+        b1.setFoo("Bar");
+        CSessionScoped b2 = sessionScoped.get();
+        Assert.assertEquals(b1.getFoo(), b2.getFoo());
+        contextControllerEjbCdiUnit.closeRequest();
+        contextControllerEjbCdiUnit.closeSession();
+        contextControllerEjbCdiUnit.openRequest();
+        CSessionScoped b3 = sessionScoped.get();
+        Assert.assertEquals(null, b3.getFoo());
+    }
+
+    @Test
+    public void testContextControllerSessionScopedWithRequest() {
+        contextControllerEjbCdiUnit.openRequest();
+        CSessionScoped b1 =
+                sessionScoped.get();
+        b1.setFoo("Bar");
+        BRequestScoped r1 = requestScoped.get();
+        b1.setFoo("Bar");
+        BRequestScoped r2 = requestScoped.get();
+        Assert.assertSame(r1.getFoo(), r2.getFoo());
+        contextControllerEjbCdiUnit.closeRequest();
+        contextControllerEjbCdiUnit.openRequest();
+        BRequestScoped r3 = requestScoped.get();
+        Assert.assertEquals(null, r3.getFoo());
+        CSessionScoped b2 = sessionScoped.get();
+        Assert.assertEquals(b1.getFoo(), b2.getFoo());
+        Assert.assertNotNull(b2.getFoo());
+    }
+
+    @Test
+    public void testContextControllerConversationScoped() {
+        HttpServletRequest request = contextControllerEjbCdiUnit.openRequest();
+        request.getSession(true);
+        conversation.begin();
+        DConversationScoped b1 = conversationScoped.get();
+        b1.setFoo("Bar");
+        DConversationScoped b2 =
+                conversationScoped.get();
+        Assert.assertEquals(b1.getFoo(), b2.getFoo());
+        conversation.end();
+        contextControllerEjbCdiUnit.closeRequest();
+        contextControllerEjbCdiUnit.openRequest();
+        conversation.begin();
+        DConversationScoped b3 = conversationScoped.get();
+        Assert.assertEquals(null,
+                b3.getFoo());
+    }
+
 
     @Test
     public void testProducedViaField() {

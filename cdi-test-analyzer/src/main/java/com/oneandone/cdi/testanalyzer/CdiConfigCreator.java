@@ -1,28 +1,32 @@
 package com.oneandone.cdi.testanalyzer;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Modifier;
-import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.decorator.Decorator;
-import javax.enterprise.inject.spi.Extension;
-import javax.inject.Inject;
-import javax.interceptor.Interceptor;
-
+import com.oneandone.cdi.extensions.TestExtensionService;
+import com.oneandone.cdi.extensions.TestScopeExtension;
+import com.oneandone.cdi.weldstarter.WeldSetupClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.decorator.Decorator;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.spi.Extension;
+import javax.inject.Inject;
+import javax.interceptor.Interceptor;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Modifier;
+import java.net.MalformedURLException;
+import java.util.*;
+
+/**
+ * Starting with InitialConfiguraton analyzes the Class-Structure together with Annotations, to create a minimal
+ * startable Weld-SE-Configration.
+ */
 public class CdiConfigCreator {
     Logger log = LoggerFactory.getLogger(this.getClass());
 
     private LeveledBuilder builder;
+    private List<ProblemRecord> problems = new ArrayList<>();
 
-    public static boolean isInterceptingBean(Class<?> c) {
+    private static boolean isInterceptingBean(Class<?> c) {
         if (c.getAnnotation(Interceptor.class) != null || c.getAnnotation(Decorator.class) != null) {
             return true;
         } else
@@ -66,11 +70,11 @@ public class CdiConfigCreator {
     }
 
     public Set<Class<?>> getEnabledAlternatives() {
-        return builder.data.enabledAlternatives;
+        return builder.enabledAlternatives;
     }
 
     public Set<Class<?>> getEnabledAlternativeStereotypes() {
-        return builder.data.foundAlternativeStereotypes;
+        return builder.foundAlternativeStereotypes;
     }
 
     public static class ProblemRecord {
@@ -92,26 +96,61 @@ public class CdiConfigCreator {
         }
     }
 
-    List<ProblemRecord> problems = new ArrayList<>();
-
-
-    void create(Set<Class<?>> beansToBeEvaluated, InitialConfiguration cfg) throws MalformedURLException {
-        Set<Class<?>> currentToBeEvaluated = new HashSet<>(beansToBeEvaluated);
+    public void create(InitialConfiguration cfg) throws MalformedURLException {
         this.builder = new LeveledBuilder(cfg);
-        // handle initial classes as testclasses
-        for (Class<?> c : currentToBeEvaluated) {
-            if (isInterceptingBean(c)) {
-                builder.tobeStarted(c)
-                        .injects(c)
-                        .elseClass(c);
-            } else if (mightBeBean(c)) {
-                builder.testClass(c);
-            }  else {
-                builder.elseClass(c);
-            }
+        if (cfg.testClass != null && cfg.testClass.getAnnotation(ApplicationScoped.class) == null) {
+            builder.extensionObjects.add(new TestScopeExtension(cfg.testClass));
         }
+        Set<Class<?>> currentToBeEvaluated = builder.extractToBeEvaluatedClasses();
 
-        // Initialize configuration data by looking at initial classes and their annotations.
+
+
+        while (true) {
+            // Evaluate classes concerning Annotations, injects, producers,...
+            evaluateFoundClasses(currentToBeEvaluated);
+
+            // Injects found should be matched to find out if a search in available classes
+            // is necessary
+
+            InjectsMatcher injectsMatcher = new InjectsMatcher(builder);
+            injectsMatcher.match();
+
+            currentToBeEvaluated = injectsMatcher.evaluateMatches(problems);
+
+            if (currentToBeEvaluated.size() == 0) {
+                if (builder.injections.size() > 0) {
+                    // there was no producer left to solve injects.
+                    // so search in available classes for producers
+                    LeveledBuilder producerBuilder = builder.producerCandidates();
+                    InjectsMatcher injectsToProducesMatcher = new InjectsMatcher(producerBuilder);
+                    for (QualifiedType inject : builder.injections) {
+                        injectsToProducesMatcher.matchInject(inject);
+                    }
+                    currentToBeEvaluated = injectsToProducesMatcher.evaluateMatches(problems);
+                    if (currentToBeEvaluated.size() == 0) {
+                        // In available classes nothing could be found to produce for the injects
+                        // have to stop algrithm.
+                        log.error("New to be started == 0 but");
+                        for (QualifiedType q : builder.injections) {
+                            log.error("Not resolved: {}", q);
+                        }
+                        return;
+                        // throw new RuntimeException("no producer found");
+                    }
+                    // new classes are necessary, so repeat cycle.
+                } else
+                    return;
+            } else {
+                // injects can be solved by new found available classes.
+                // did not need to look inside the classes to search for producers.
+            }
+
+            assert (currentToBeEvaluated.size() > 0);
+        }
+    }
+
+    protected void evaluateFoundClasses(Set<Class<?>> currentToBeEvaluated) throws MalformedURLException {
+        // Further initialize configuration data by looking at initial classes and their annotations.
         // TestClasses and SuTClasses are to be created, if not replaced by alternatives.
         while (currentToBeEvaluated.size() > 0) {
             for (Class<?> c : currentToBeEvaluated) {
@@ -119,10 +158,14 @@ public class CdiConfigCreator {
                     builder.tobeStarted(c)
                             .innerClasses(c)
                             .injects(c)
-                            .elseClass(c);
+                            .elseClass(c)
+                            .testClassAnnotation(c)
+                            .sutClassAnnotation(c)
+                            .sutClasspathsAnnotation(c)
+                            .sutPackagesAnnotation(c);
                 } else if (mightBeBean(c)) {
                     builder.tobeStarted(c)
-                            .setAvailable(c)
+                            .available(c)
                             .innerClasses(c)
                             .injects(c)
                             .producerFields(c)
@@ -137,85 +180,49 @@ public class CdiConfigCreator {
                     builder.elseClass(c);
                 }
             }
-            builder.moveToBeEvaluatedTo(currentToBeEvaluated);
-        }
-
-
-        while (true) {
-            InjectsMatcher injectsMatcher = new InjectsMatcher(builder);
-            injectsMatcher.match();
-
-            Set<Class<?>> newToBeStarted = injectsMatcher.evaluateMatches(problems);
-
-            if (newToBeStarted.size() == 0) {
-                if (builder.injections.size() > 0) {
-                    LeveledBuilder producerBuilder = builder.producerCandidates();
-                    InjectsMatcher injectsToProducesMatcher = new InjectsMatcher(producerBuilder);
-                    for (QualifiedType inject : builder.injections) {
-                        injectsToProducesMatcher.matchInject(inject);
-                    }
-                    newToBeStarted = injectsToProducesMatcher.evaluateMatches(problems);
-                    if (newToBeStarted.size() == 0) {
-                        log.error("New to be started == 0 but");
-                        for (QualifiedType q : builder.injections) {
-                            log.error("Not resolved: {}", q);
-                        }
-                        return;
-                        // throw new RuntimeException("no producer found");
-                    }
-                } else
-                    return;
-            }
-            assert (newToBeStarted.size() > 0);
-            for (Class<?> c : newToBeStarted) {
-                if (isInterceptingBean(c)) {
-                    builder.tobeStarted(c)
-                            .innerClasses(c)
-                            .injects(c)
-                            .elseClass(c)
-                            .testClassAnnotation(c)
-                            .sutClassAnnotation(c)
-                            .sutClasspathsAnnotation(c)
-                            .sutPackagesAnnotation(c);
-                } else {
-                    builder.tobeStarted(c)
-                            .setAvailable(c)
-                            .innerClasses(c)
-                            .injects(c)
-                            .producerFields(c)
-                            .producerMethods(c)
-                            .testClassAnnotation(c)
-                            .sutClassAnnotation(c)
-                            .sutClasspathsAnnotation(c)
-                            .sutPackagesAnnotation(c)
-                            .enabledAlternatives(c);
-                }
-            }
+            currentToBeEvaluated = builder.extractToBeEvaluatedClasses();
         }
     }
 
-    public Set<Class<?>> toBeStarted() {
-        return this.builder.data.beansToBeStarted;
+
+    private Collection<Extension> findExtensions() {
+        List<Extension> result = new ArrayList<>();
+        ServiceLoader<TestExtensionService> loader = ServiceLoader.load(TestExtensionService.class);
+        final Iterator<TestExtensionService> testExtensionServiceIterator = loader.iterator();
+        while (testExtensionServiceIterator.hasNext()) {
+            result.addAll(testExtensionServiceIterator.next().getExtensions());
+        }
+        return result;
+    }
+
+    public WeldSetupClass buildWeldSetup() {
+        WeldSetupClass weldSetup = new WeldSetupClass();
+        weldSetup.setBeanClasses(toBeStarted());
+        weldSetup.setAlternativeClasses(getEnabledAlternatives());
+        weldSetup.setEnabledAlternativeStereotypes(getEnabledAlternativeStereotypes());
+        weldSetup.setExtensions(getExtensions());
+        weldSetup.setEnabledDecorators(getDecorators());
+        weldSetup.setEnabledInterceptors(getInterceptors());
+        for (Extension e : getExtensionÓbjects())
+            weldSetup.addExtensionObject(e);
+        for (Extension e : findExtensions()) {
+            weldSetup.addExtensionObject(e);
+        }
+        return weldSetup;
     }
 
 
-    public void initialize(InitialConfiguration cfg) throws MalformedURLException {
-
-        Set<Class<?>> tmp = new HashSet<>();
-        if (cfg.testClass != null)
-            tmp.add(cfg.testClass);
-        tmp.addAll(cfg.initialClasses);
-        tmp.addAll(cfg.enabledAlternatives);
-        create(tmp, cfg);
-
+    private Set<Class<?>> toBeStarted() {
+        return this.builder.beansToBeStarted;
     }
 
-    public List<Class<?>> getDecorators() {
-        return builder.data.decorators;
+
+    private List<Class<?>> getDecorators() {
+        return builder.decorators;
     }
 
-    public List<Class<?>> getInterceptors() {
-        return builder.data.interceptors;
+    private List<Class<?>> getInterceptors() {
+        return builder.interceptors;
     }
 
 }
