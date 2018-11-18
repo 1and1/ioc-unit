@@ -15,21 +15,9 @@ package com.oneandone.ejbcdiunit.cdiunit;
  * limitations under the License.
  */
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.net.URL;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.naming.InitialContext;
-
-import org.jboss.weld.transaction.spi.TransactionServices;
-import org.junit.runners.BlockJUnit4ClassRunner;
-import org.junit.runners.model.FrameworkMethod;
-import org.junit.runners.model.InitializationError;
-
 import com.oneandone.cdi.weldstarter.WeldSetup;
 import com.oneandone.cdi.weldstarter.WeldSetupClass;
+import com.oneandone.cdi.weldstarter.WrappedDeploymentException;
 import com.oneandone.cdi.weldstarter.spi.WeldStarter;
 import com.oneandone.ejbcdiunit.CdiTestConfig;
 import com.oneandone.ejbcdiunit.CreationalContexts;
@@ -37,6 +25,17 @@ import com.oneandone.ejbcdiunit.EjbUnitTransactionServices;
 import com.oneandone.ejbcdiunit.SupportEjbExtended;
 import com.oneandone.ejbcdiunit.cfganalyzer.TestConfigAnalyzer;
 import com.oneandone.ejbcdiunit.internal.EjbInformationBean;
+import org.jboss.weld.transaction.spi.TransactionServices;
+import org.junit.runners.BlockJUnit4ClassRunner;
+import org.junit.runners.model.FrameworkMethod;
+import org.junit.runners.model.InitializationError;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.spi.BeanManager;
+import javax.naming.InitialContext;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.net.URL;
 
 /**
  * <code>&#064;CdiRunner</code> is a JUnit runner that uses a CDI container to
@@ -144,6 +143,8 @@ public class CdiRunner extends BlockJUnit4ClassRunner {
                     initialContext.close();
                 }
             } catch (Throwable e) {
+                if (e instanceof WrappedDeploymentException)
+                    e = e.getCause();
                 if (startupException == null) {
                     startupException = e;
                 }

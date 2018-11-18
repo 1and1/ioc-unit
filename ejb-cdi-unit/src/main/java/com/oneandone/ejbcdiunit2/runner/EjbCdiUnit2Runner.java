@@ -4,6 +4,7 @@ import com.oneandone.cdi.testanalyzer.CdiConfigCreator;
 import com.oneandone.cdi.testanalyzer.InitialConfiguration;
 import com.oneandone.cdi.weldstarter.WeldSetup;
 import com.oneandone.cdi.weldstarter.WeldSetupClass;
+import com.oneandone.cdi.weldstarter.WrappedDeploymentException;
 import com.oneandone.cdi.weldstarter.spi.WeldStarter;
 import com.oneandone.ejbcdiunit.*;
 import com.oneandone.ejbcdiunit.internal.EjbExtensionExtended;
@@ -118,6 +119,8 @@ public class EjbCdiUnit2Runner extends BlockJUnit4ClassRunner {
                     initialContext.close();
                 }
             } catch (Throwable e) {
+                if (e instanceof WrappedDeploymentException)
+                    e = e.getCause();
                 if (startupException == null) {
                     startupException = e;
                 }
