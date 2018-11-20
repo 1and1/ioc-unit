@@ -1,13 +1,20 @@
 package com.oneandone.cdi.testanalyzer;
 
-import org.apache.commons.lang3.reflect.TypeUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.lang.annotation.Annotation;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.enterprise.inject.Any;
 import javax.enterprise.inject.Default;
-import java.lang.annotation.Annotation;
-import java.util.*;
+
+import org.apache.commons.lang3.reflect.TypeUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author aschoerk
@@ -140,10 +147,13 @@ public class InjectsMatcher {
             // search for producers and inner classes
         }
 
+        Set<QualifiedType> chosenTypes = new HashSet<>();
+
         for (QualifiedType inject : matching.keySet()) {
             final QualifiedType producingType = matching.get(inject).iterator().next();
             if (!builder.beansToBeStarted.contains(producingType.getDeclaringClass())) {
                 newToBeStarted.add(producingType.getDeclaringClass());
+                chosenTypes.add(producingType);
             }
             builder.injectHandled(inject);
         }
@@ -155,6 +165,12 @@ public class InjectsMatcher {
             Set<Class<?>> availableClasses = new HashSet<>();
             Set<QualifiedType> alternatives = new HashSet<>();
             Set<QualifiedType> producingTypes = ambiguus.get(inject);
+            Set<QualifiedType> alreadyChosen = producingTypes.stream()
+                    .filter(p -> chosenTypes.contains(p))
+                    .collect(Collectors.toSet());
+            if (alreadyChosen.size() > 0)
+                producingTypes = alreadyChosen;
+            boolean alreadyProduced = false;
             for (QualifiedType q : producingTypes) {
                 Class declaringClass = q.getDeclaringClass();
                 assert declaringClass != null;
@@ -169,7 +185,9 @@ public class InjectsMatcher {
                     } else {
                         continue;
                     }
-                } else if (builder.isTestClass(declaringClass)) {
+                } else if (builder.beansToBeStarted.contains(declaringClass) || newToBeStarted.contains(declaringClass))
+                    alreadyProduced = true;
+                else if (builder.isTestClass(declaringClass)) {
                     testClasses.add(declaringClass);
                 } else if (builder.isSuTClass(declaringClass)) {
                     sutClasses.add(declaringClass);
@@ -184,6 +202,9 @@ public class InjectsMatcher {
                     problems.add(new CdiConfigCreator.ProblemRecord("Handling Inject: {} more than one active Alternative {} ",
                             inject, alternatives));
                 }
+                builder.injectHandled(inject);
+            } else if (alreadyProduced) {
+                ; // inject handled by producer in already used class.
                 builder.injectHandled(inject);
             } else if (testClasses.size() != 0) {
                 if (testClasses.size() > 1 || sutClasses.size() != 0) {

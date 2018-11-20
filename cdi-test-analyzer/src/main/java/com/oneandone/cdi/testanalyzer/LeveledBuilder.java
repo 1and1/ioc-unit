@@ -1,6 +1,17 @@
 package com.oneandone.cdi.testanalyzer;
 
-import com.oneandone.cdi.testanalyzer.annotations.*;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import javax.decorator.Decorator;
 import javax.enterprise.inject.Alternative;
@@ -8,12 +19,13 @@ import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.Stereotype;
 import javax.enterprise.inject.spi.Extension;
 import javax.interceptor.Interceptor;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.net.MalformedURLException;
-import java.util.*;
+
+import com.oneandone.cdi.testanalyzer.annotations.EnabledAlternatives;
+import com.oneandone.cdi.testanalyzer.annotations.ExcludedClasses;
+import com.oneandone.cdi.testanalyzer.annotations.SutClasses;
+import com.oneandone.cdi.testanalyzer.annotations.SutClasspaths;
+import com.oneandone.cdi.testanalyzer.annotations.SutPackages;
+import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
 
 /**
  * Helps in building up the testconfiguration.
@@ -99,8 +111,10 @@ class LeveledBuilder {
             Set<Class<?>> tmpClasses = new HashSet<>();
             ClasspathHandler.addPackage(packageClass, tmpClasses);
             for (Class clazz : tmpClasses) {
-                addToClassMap(clazz);
-                sutClassesAvailable.add(clazz);
+                if (CdiConfigCreator.mightBeBean(clazz)) {
+                    available(clazz);
+                    sutClassesAvailable.add(clazz);
+                }
             }
         }
     }
@@ -110,8 +124,11 @@ class LeveledBuilder {
             Set<Class<?>> tmpClasses = new HashSet<>();
             ClasspathHandler.addClassPath(classpathClass, tmpClasses);
             for (Class clazz : tmpClasses) {
-                addToClassMap(clazz);
-                sutClassesAvailable.add(clazz);
+                if (CdiConfigCreator.mightBeBean(clazz)) {
+                    available(clazz);
+                    sutClassesAvailable.add(clazz);
+                }
+
             }
         }
     }

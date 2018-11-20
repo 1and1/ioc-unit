@@ -31,6 +31,8 @@ class QualifiedType {
     private Parameter p;
     private Class clazz;
 
+    private Class declaringClass;
+
     private Set<Annotation> qualifiers;   // the qualifiers extracted from the element
     private Annotation alternativeStereotype;
     private boolean alternative;  // true if by @Alternative or alternative-stereotype designated as CDI-Alternative
@@ -38,9 +40,11 @@ class QualifiedType {
     public QualifiedType(final Class clazz) {
         assert clazz != null;
         this.clazz = clazz;
+        this.declaringClass = clazz;
         if (clazz.getAnnotation(Alternative.class) != null)
             alternative = true;
     }
+
 
     public QualifiedType(final Parameter p, final Constructor c) {
         assert p != null;
@@ -192,7 +196,7 @@ class QualifiedType {
             return f.getDeclaringClass();
         }
         if (clazz != null) {
-            return clazz;
+            return declaringClass;
         }
         return null;
     }

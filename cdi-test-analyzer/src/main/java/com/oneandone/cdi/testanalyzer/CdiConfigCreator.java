@@ -1,20 +1,28 @@
 package com.oneandone.cdi.testanalyzer;
 
-import com.oneandone.cdi.extensions.TestExtensionService;
-import com.oneandone.cdi.extensions.TestScopeExtension;
-import com.oneandone.cdi.weldstarter.WeldSetupClass;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Modifier;
+import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ServiceLoader;
+import java.util.Set;
 
 import javax.decorator.Decorator;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.spi.Extension;
 import javax.inject.Inject;
 import javax.interceptor.Interceptor;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Modifier;
-import java.net.MalformedURLException;
-import java.util.*;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.oneandone.cdi.extensions.TestExtensionService;
+import com.oneandone.cdi.extensions.TestScopeExtension;
+import com.oneandone.cdi.weldstarter.WeldSetupClass;
 
 /**
  * Starting with InitialConfiguraton analyzes the Class-Structure together with Annotations, to create a minimal
@@ -155,6 +163,7 @@ public class CdiConfigCreator {
         while (currentToBeEvaluated.size() > 0) {
             for (Class<?> c : currentToBeEvaluated) {
                 if (isInterceptingBean(c)) {
+                    // not available for injections and no producer fields!!
                     builder.tobeStarted(c)
                             .innerClasses(c)
                             .injects(c)
@@ -162,7 +171,8 @@ public class CdiConfigCreator {
                             .testClassAnnotation(c)
                             .sutClassAnnotation(c)
                             .sutClasspathsAnnotation(c)
-                            .sutPackagesAnnotation(c);
+                            .sutPackagesAnnotation(c)
+                            .excludes(c);
                 } else if (mightBeBean(c)) {
                     builder.tobeStarted(c)
                             .available(c)
@@ -174,8 +184,8 @@ public class CdiConfigCreator {
                             .sutClassAnnotation(c)
                             .sutClasspathsAnnotation(c)
                             .sutPackagesAnnotation(c)
-                            .enabledAlternatives(c);
-
+                            .enabledAlternatives(c)
+                            .excludes(c);
                 } else {
                     builder.elseClass(c);
                 }
@@ -213,7 +223,10 @@ public class CdiConfigCreator {
 
 
     private Set<Class<?>> toBeStarted() {
-        return this.builder.beansToBeStarted;
+        Set<Class<?>> result = new HashSet<>();
+        result.addAll(builder.beansToBeStarted);
+        result.removeAll(builder.excludedClasses);
+        return result;
     }
 
 

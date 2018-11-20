@@ -143,9 +143,9 @@
                             <reportFormat>plain</reportFormat>
                             <redirectTestOutputToFile>true</redirectTestOutputToFile>
                             <!-- Sets the VM argument line used when unit tests are run. -->
-                            <!--argLine> - -add-modules java.xml,java.sql -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005</argLine-->
+                            <!--argLine> - -add-modules java.xml,java.sql -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5006</argLine-->
                             <argLine>
-                                -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+                                -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5006
                             </argLine>
                             <forkCount>1</forkCount>
                             <reuseForks>false</reuseForks>
