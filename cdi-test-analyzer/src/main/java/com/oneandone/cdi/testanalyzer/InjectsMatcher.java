@@ -31,11 +31,11 @@ public class InjectsMatcher {
     }
 
     public void match() {
-        log.info("Starting matching");
+        log.debug("Starting matching");
         for (QualifiedType inject : builder.injections) {
             matchInject(inject);
         }
-        log.info("Ready    matching");
+        log.debug("Ready    matching");
     }
 
     public void matchInject(QualifiedType inject) {
@@ -61,13 +61,13 @@ public class InjectsMatcher {
         }
         handleAlternatives(matching.get(inject));
         if (matching.get(inject).size() == 0) {
-            log.error("No match found for {}", inject);
+            log.info("No match found for {}", inject);
             empty.add(inject);
             matching.remove(inject);
         } else if (matching.get(inject).size() > 1) {
-            log.error("Ambiguus matches found for \n --- inject: {}", inject);
+            log.info("Ambiguus matches found for \n --- inject: {}", inject);
             for (QualifiedType x : matching.get(inject)) {
-                log.info(" --- {}", x);
+                log.debug(" --- {}", x);
             }
             ambiguus.put(inject, matching.get(inject));
             matching.remove(inject);

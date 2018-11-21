@@ -97,11 +97,11 @@ class LeveledBuilder {
     }
 
     private void addClasses(Iterable<Class<?>> value, Set<Class<?>> classes, Set<Class<?>> classesToBeEvaluated) {
-        for (Class<?> testClass : value) {
-            if (!classes.contains(testClass)) {
-                classesToBeEvaluated.add(testClass);
-                classes.add(testClass);
-                addToClassMap(testClass);
+        for (Class<?> aClass : value) {
+            if (!classes.contains(aClass)) {
+                classesToBeEvaluated.add(aClass);
+                classes.add(aClass);
+                addToClassMap(aClass);
             }
         }
     }

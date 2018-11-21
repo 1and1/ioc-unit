@@ -111,8 +111,6 @@ public class CdiConfigCreator {
         }
         Set<Class<?>> currentToBeEvaluated = builder.extractToBeEvaluatedClasses();
 
-
-
         while (true) {
             // Evaluate classes concerning Annotations, injects, producers,...
             evaluateFoundClasses(currentToBeEvaluated);
