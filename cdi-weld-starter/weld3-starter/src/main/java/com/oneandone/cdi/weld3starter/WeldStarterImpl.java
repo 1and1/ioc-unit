@@ -72,6 +72,7 @@ public class WeldStarterImpl implements WeldStarter {
 
         };
         try {
+            weld.disableDiscovery();
             container = weld.initialize();
         } catch (DeploymentException ex) {
             throw new WrappedDeploymentException(ex);

@@ -87,11 +87,11 @@ public class WeldStarterImpl implements WeldStarter {
 
         };
         try {
+            weld.disableDiscovery();
             container = weld.addBeanClass(this.getClass()).initialize();
         } catch (DeploymentException ex) {
             throw new WrappedDeploymentException(ex);
         }
-
     }
 
     @Override
