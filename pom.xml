@@ -28,11 +28,9 @@
     </developers>
 
     <modules>
-        <module>cdi-weld-starter</module>
-        <module>cdi-test-mocks</module>
-        <module>cdi-test-analyzer</module>
-        <module>purecdi-tests</module>
+
     </modules>
+
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -92,6 +90,15 @@
 
     <profiles>
         <profile>
+            <id>base</id>
+            <modules>
+                <module>cdi-test-mocks</module>
+                <module>cdi-weld-starter</module>
+                <module>cdi-test-analyzer</module>
+                <!--module>purecdi-tests</module-->
+            </modules>
+        </profile>
+        <profile>
             <id>arquillian</id>
             <modules>
                 <module>ejb-cdi-unit-test-war</module>
@@ -100,9 +107,6 @@
         </profile>
         <profile>
             <id>junit4</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
             <modules>
                 <module>cdi-test-analyzer</module>
                 <module>cdi-test-mocks</module>
@@ -263,9 +267,6 @@
         </profile>
         <profile>
             <id>weld1.1</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
             <properties>
                 <weld.version>1.1.14.Final</weld.version>
                 <weld-spi.version>1.1.Final</weld-spi.version>
