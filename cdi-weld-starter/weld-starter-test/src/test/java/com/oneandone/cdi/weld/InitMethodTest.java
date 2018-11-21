@@ -1,18 +1,15 @@
 package com.oneandone.cdi.weld;
 
-import static org.junit.Assert.assertEquals;
-
 import javax.inject.Inject;
 
 import org.junit.Test;
 
-import com.oneandone.cdi.weldstarter.WeldStarterTestBase;
 import com.oneandone.cdi.weldstarter.WrappedDeploymentException;
 
 /**
  * @author aschoerk
  */
-public class InitMethodTest extends WeldStarterTestBase {
+public class InitMethodTest extends WeldStarterTestsBase {
 
     static class DummyI {
         int i = 1;

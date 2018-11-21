@@ -6,13 +6,16 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
-import com.oneandone.cdi.weldstarter.WeldStarterTestBase;
+
 
 /**
  * @author aschoerk
  */
-public class SessionBeanTest extends WeldStarterTestBase {
+@RunWith(JUnit4.class)
+public class SessionBeanTest extends WeldStarterTestsBase {
 
     @Stateless
     public static class StatelessBean {

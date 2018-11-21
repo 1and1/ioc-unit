@@ -8,12 +8,12 @@ import javax.inject.Inject;
 
 import org.junit.Test;
 
-import com.oneandone.cdi.weldstarter.WeldStarterTestBase;
+
 
 /**
  * @author aschoerk
  */
-public class TwoBeanWithGenericsTest extends WeldStarterTestBase {
+public class TwoBeanWithGenericsTest extends WeldStarterTestsBase {
 
     static class CdiHelperBean<T> {
         T field = null;

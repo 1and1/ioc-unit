@@ -6,13 +6,12 @@ import javax.inject.Inject;
 
 import org.junit.Test;
 
-import com.oneandone.cdi.weldstarter.WeldStarterTestBase;
 import com.oneandone.cdi.weldstarter.WrappedDeploymentException;
 
 /**
  * @author aschoerk
  */
-public class InnerClassTest extends WeldStarterTestBase {
+public class InnerClassTest extends WeldStarterTestsBase {
     public static class Dummy {
 
     }

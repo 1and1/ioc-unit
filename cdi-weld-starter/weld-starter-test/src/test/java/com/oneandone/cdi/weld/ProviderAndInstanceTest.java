@@ -12,12 +12,12 @@ import javax.inject.Provider;
 
 import org.junit.Test;
 
-import com.oneandone.cdi.weldstarter.WeldStarterTestBase;
+
 
 /**
  * @author aschoerk
  */
-public class ProviderAndInstanceTest extends WeldStarterTestBase {
+public class ProviderAndInstanceTest extends WeldStarterTestsBase {
     public interface I {
         boolean call();
     }

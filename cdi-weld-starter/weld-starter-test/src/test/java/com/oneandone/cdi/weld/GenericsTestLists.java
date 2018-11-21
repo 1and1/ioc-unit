@@ -15,12 +15,12 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.reflect.TypeUtils;
 import org.junit.Test;
 
-import com.oneandone.cdi.weldstarter.WeldStarterTestBase;
+
 
 /**
  * @author aschoerk
  */
-public class GenericsTestLists extends WeldStarterTestBase {
+public class GenericsTestLists extends WeldStarterTestsBase {
     static class GBase {
 
     }

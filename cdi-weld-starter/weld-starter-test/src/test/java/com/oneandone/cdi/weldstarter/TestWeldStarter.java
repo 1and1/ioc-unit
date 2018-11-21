@@ -4,10 +4,12 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 
+import com.oneandone.cdi.weld.WeldStarterTestsBase;
+
 /**
  * @author aschoerk
  */
-public class TestWeldStarter extends WeldStarterTestBase {
+public class TestWeldStarter extends WeldStarterTestsBase {
 
     static class TestBean {
 

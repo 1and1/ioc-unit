@@ -9,12 +9,12 @@ import org.jboss.weld.exceptions.DefinitionException;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.oneandone.cdi.weldstarter.WeldStarterTestBase;
+
 
 /**
  * @author aschoerk
  */
-public class DecoratorTest extends WeldStarterTestBase {
+public class DecoratorTest extends WeldStarterTestsBase {
 
     interface I {
         String call();

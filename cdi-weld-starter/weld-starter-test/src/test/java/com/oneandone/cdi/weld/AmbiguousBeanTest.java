@@ -5,13 +5,12 @@ import javax.inject.Inject;
 
 import org.junit.Test;
 
-import com.oneandone.cdi.weldstarter.WeldStarterTestBase;
 import com.oneandone.cdi.weldstarter.WrappedDeploymentException;
 
 /**
  * @author aschoerk
  */
-public class AmbiguousBeanTest extends WeldStarterTestBase {
+public class AmbiguousBeanTest extends WeldStarterTestsBase {
 
 
     @ApplicationScoped

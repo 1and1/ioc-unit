@@ -10,13 +10,12 @@ import javax.inject.Inject;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import com.oneandone.cdi.weldstarter.WeldStarterTestBase;
 import com.oneandone.cdi.weldstarter.WrappedDeploymentException;
 
 /**
  * @author aschoerk
  */
-public class TwoBeanAltTest extends WeldStarterTestBase {
+public class TwoBeanAltTest extends WeldStarterTestsBase {
 
     public interface CdiHelperBeanIntf {
         boolean callHelper();

@@ -1,7 +1,5 @@
 package com.oneandone.cdi.weld;
 
-import static junit.framework.TestCase.assertNull;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import javax.enterprise.inject.Produces;
@@ -9,12 +7,12 @@ import javax.inject.Inject;
 
 import org.junit.Test;
 
-import com.oneandone.cdi.weldstarter.WeldStarterTestBase;
+
 
 /**
  * @author aschoerk
  */
-public class SuperclassTest extends WeldStarterTestBase {
+public class SuperclassTest extends WeldStarterTestsBase {
 
     public static class ToInjectInSubClass {}
 

@@ -16,13 +16,12 @@ import javax.inject.Inject;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import com.oneandone.cdi.weldstarter.WeldStarterTestBase;
 import com.oneandone.cdi.weldstarter.WrappedDeploymentException;
 
 /**
  * @author aschoerk
  */
-public class StereotypeAlternativeProdTest extends WeldStarterTestBase {
+public class StereotypeAlternativeProdTest extends WeldStarterTestsBase {
 
 
     static class DummyClass {

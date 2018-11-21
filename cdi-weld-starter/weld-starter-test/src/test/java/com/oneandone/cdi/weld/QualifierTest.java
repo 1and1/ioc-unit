@@ -15,13 +15,12 @@ import javax.inject.Qualifier;
 
 import org.junit.Test;
 
-import com.oneandone.cdi.weldstarter.WeldStarterTestBase;
 import com.oneandone.cdi.weldstarter.WrappedDeploymentException;
 
 /**
  * @author aschoerk
  */
-public class QualifierTest extends WeldStarterTestBase {
+public class QualifierTest extends WeldStarterTestsBase {
 
     @Qualifier
     @Retention(RetentionPolicy.RUNTIME)
