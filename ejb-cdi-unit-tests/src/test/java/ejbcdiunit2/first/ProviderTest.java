@@ -1,4 +1,4 @@
-package ejbcdiunit2.cdiunit;
+package ejbcdiunit2.first;
 
 /**
  * @author aschoerk

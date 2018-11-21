@@ -4,9 +4,31 @@
  * writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
  * implied. See the License for the specific language governing permissions and limitations under the License.
  */
-package ejbcdiunit2.cdiunit;
+package ejbcdiunit2.first;
 
-import cdiunit.*;
+import java.lang.annotation.Annotation;
+
+import javax.annotation.PostConstruct;
+import javax.enterprise.context.ContextNotActiveException;
+import javax.enterprise.context.Conversation;
+import javax.enterprise.context.spi.CreationalContext;
+import javax.enterprise.inject.Produces;
+import javax.enterprise.inject.spi.Bean;
+import javax.enterprise.inject.spi.BeanManager;
+import javax.inject.Inject;
+import javax.inject.Provider;
+import javax.servlet.http.HttpServletRequest;
+
+import org.jglue.cdiunit.InConversationScope;
+import org.jglue.cdiunit.InRequestScope;
+import org.jglue.cdiunit.InSessionScope;
+import org.jglue.cdiunit.ProducesAlternative;
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+
 import com.oneandone.cdi.testanalyzer.annotations.SutPackages;
 import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
 import com.oneandone.cdiunit.internal.servlet.MockHttpServletRequestImpl;
@@ -20,27 +42,19 @@ import com.oneandone.ejbcdiunit.internal.EjbCdiUnitInitialListenerProducer;
 import com.oneandone.ejbcdiunit.internal.InRequestInterceptorEjbCdiUnit;
 import com.oneandone.ejbcdiunit.internal.InSessionInterceptorEjbCdiUnit;
 import com.oneandone.ejbcdiunit2.runner.EjbCdiUnit2Runner;
-import org.jglue.cdiunit.InConversationScope;
-import org.jglue.cdiunit.InRequestScope;
-import org.jglue.cdiunit.InSessionScope;
-import org.jglue.cdiunit.ProducesAlternative;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.ContextNotActiveException;
-import javax.enterprise.context.Conversation;
-import javax.enterprise.context.spi.CreationalContext;
-import javax.enterprise.inject.Produces;
-import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.inject.Inject;
-import javax.inject.Provider;
-import javax.servlet.http.HttpServletRequest;
-import java.lang.annotation.Annotation;
+import cdiunit.AImplementation1;
+import cdiunit.AInterface;
+import cdiunit.BRequestScoped;
+import cdiunit.BaseTest;
+import cdiunit.CSessionScoped;
+import cdiunit.DConversationScoped;
+import cdiunit.ESupportClass;
+import cdiunit.FApplicationScoped;
+import cdiunit.ProducedViaField;
+import cdiunit.ProducedViaMethod;
+import cdiunit.Scoped;
+import cdiunit.ScopedFactory;
 
 @RunWith(EjbCdiUnit2Runner.class)
 @TestClasses({ESupportClass.class, ScopedFactory.class,

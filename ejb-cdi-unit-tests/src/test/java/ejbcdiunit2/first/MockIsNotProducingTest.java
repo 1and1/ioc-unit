@@ -1,4 +1,4 @@
-package ejbcdiunit2.cdiunit;
+package ejbcdiunit2.first;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

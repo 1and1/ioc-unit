@@ -1,8 +1,8 @@
-package ejbcdiunit2.cdiunit.test1;
+package ejbcdiunit2.first.test1;
 
 import javax.inject.Inject;
 
-import ejbcdiunit2.cdiunit.test2.Test2Interface;
+import ejbcdiunit2.first.test2.Test2Interface;
 
 /**
  * @author aschoerk

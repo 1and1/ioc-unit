@@ -1,4 +1,4 @@
-package ejbcdiunit2.cdiunit.test2;
+package ejbcdiunit2.first.test2;
 
 /**
  * @author aschoerk
@@ -6,6 +6,6 @@ package ejbcdiunit2.cdiunit.test2;
 public class Test2A implements Test2Interface {
     @Override
     public String call() {
-        return "Test1A";
+        return "Test2A";
     }
 }

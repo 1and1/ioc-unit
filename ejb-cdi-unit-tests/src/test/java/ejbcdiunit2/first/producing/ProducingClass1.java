@@ -1,10 +1,10 @@
-package ejbcdiunit2.cdiunit.producing;
+package ejbcdiunit2.first.producing;
 
 import javax.enterprise.inject.Produces;
 
-import ejbcdiunit2.cdiunit.test1.Qualifier1A;
-import ejbcdiunit2.cdiunit.test1.Test1A;
-import ejbcdiunit2.cdiunit.test1.Test1B;
+import ejbcdiunit2.first.test1.Qualifier1A;
+import ejbcdiunit2.first.test1.Test1A;
+import ejbcdiunit2.first.test1.Test1B;
 
 /**
  * @author aschoerk
@@ -21,4 +21,5 @@ public class ProducingClass1 {
     Test1B test1BProducer() {
         return new Test1B();
     }
+
 }

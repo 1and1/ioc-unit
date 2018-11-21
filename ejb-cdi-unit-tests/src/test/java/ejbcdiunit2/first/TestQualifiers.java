@@ -1,4 +1,4 @@
-package ejbcdiunit2.cdiunit;
+package ejbcdiunit2.first;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -8,22 +8,19 @@ import javax.inject.Inject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.oneandone.cdi.testanalyzer.annotations.SutClasspaths;
-import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
+import com.oneandone.cdi.testanalyzer.annotations.SutClasses;
 import com.oneandone.ejbcdiunit2.runner.EjbCdiUnit2Runner;
 
-import ejbcdiunit2.cdiunit.producing.ProducingClass1;
-import ejbcdiunit2.cdiunit.test1.Qualifier1A;
-import ejbcdiunit2.cdiunit.test1.Test1B;
-import ejbcdiunit2.cdiunit.test1.Test1Interface;
+import ejbcdiunit2.first.producing.ProducingClass1;
+import ejbcdiunit2.first.test1.Qualifier1A;
+import ejbcdiunit2.first.test1.Test1Interface;
 
 /**
  * @author aschoerk
  */
 @RunWith(EjbCdiUnit2Runner.class)
-@TestClasses({ ProducingClass1.class })
-@SutClasspaths({ Test1B.class })
-public class TestQualifiersAndTestProducersWithCompetingClasspath {
+@SutClasses({ ProducingClass1.class })
+public class TestQualifiers {
     @Inject
     Test1Interface test1Interface;
 

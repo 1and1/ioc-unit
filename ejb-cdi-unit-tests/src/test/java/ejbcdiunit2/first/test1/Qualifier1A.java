@@ -1,4 +1,4 @@
-package ejbcdiunit2.cdiunit.test1;
+package ejbcdiunit2.first.test1;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

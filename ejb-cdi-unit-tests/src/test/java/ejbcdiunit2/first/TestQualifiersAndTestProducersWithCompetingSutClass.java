@@ -1,29 +1,31 @@
-package ejbcdiunit2.cdiunit;
+package ejbcdiunit2.first;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import javax.inject.Inject;
 
+import org.jboss.weld.exceptions.DeploymentException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.oneandone.cdi.testanalyzer.annotations.SutClasses;
-import com.oneandone.cdi.testanalyzer.annotations.SutClasspaths;
+import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
 import com.oneandone.ejbcdiunit2.runner.EjbCdiUnit2Runner;
 
-import ejbcdiunit2.cdiunit.producing.ProducingClass1;
-import ejbcdiunit2.cdiunit.test1.Qualifier1A;
-import ejbcdiunit2.cdiunit.test1.Test1B;
-import ejbcdiunit2.cdiunit.test1.Test1Interface;
+import ejbcdiunit2.first.producing.ProducingClass1;
+import ejbcdiunit2.first.test1.Qualifier1A;
+import ejbcdiunit2.first.test1.Test1A;
+import ejbcdiunit2.first.test1.Test1B;
+import ejbcdiunit2.first.test1.Test1Interface;
 
 /**
  * @author aschoerk
  */
 @RunWith(EjbCdiUnit2Runner.class)
-@SutClasses({ ProducingClass1.class })
-@SutClasspaths({ Test1B.class })
-public class TestQualifiersAndSutProducerWithCompetingClass {
+@TestClasses({ ProducingClass1.class })
+@SutClasses({ Test1A.class, Test1B.class })
+public class TestQualifiersAndTestProducersWithCompetingSutClass {
     @Inject
     Test1Interface test1Interface;
 
@@ -31,16 +33,11 @@ public class TestQualifiersAndSutProducerWithCompetingClass {
     @Qualifier1A
     Test1Interface test1InterfaceForTest1B;
 
-    @Test
+    @Test(expected = DeploymentException.class) // SutClasses must compete against Producer
     public void canOptimizeInjecting() {
         assertNotNull(test1Interface);
         assertEquals("Test1A", test1Interface.call());
     }
 
-    @Test
-    public void canEvaluateQualifiersOptimizeInjecting() {
-        assertNotNull(test1InterfaceForTest1B);
-        assertEquals("Test1B", test1InterfaceForTest1B.call());
-    }
 
 }

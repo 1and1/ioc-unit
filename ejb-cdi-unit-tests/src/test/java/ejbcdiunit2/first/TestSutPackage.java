@@ -1,4 +1,4 @@
-package ejbcdiunit2.cdiunit;
+package ejbcdiunit2.first;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -11,8 +11,8 @@ import org.junit.runner.RunWith;
 import com.oneandone.cdi.testanalyzer.annotations.SutPackages;
 import com.oneandone.ejbcdiunit2.runner.EjbCdiUnit2Runner;
 
-import ejbcdiunit2.cdiunit.test1.Test1A;
-import ejbcdiunit2.cdiunit.test1.Test1Interface;
+import ejbcdiunit2.first.test1.Test1A;
+import ejbcdiunit2.first.test1.Test1Interface;
 
 /**
  * @author aschoerk
