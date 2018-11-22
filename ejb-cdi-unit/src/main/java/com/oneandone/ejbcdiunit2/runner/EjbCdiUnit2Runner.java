@@ -1,15 +1,9 @@
 package com.oneandone.ejbcdiunit2.runner;
 
-import com.oneandone.cdi.testanalyzer.CdiConfigCreator;
-import com.oneandone.cdi.testanalyzer.InitialConfiguration;
-import com.oneandone.cdi.weldstarter.WeldSetup;
-import com.oneandone.cdi.weldstarter.WeldSetupClass;
-import com.oneandone.cdi.weldstarter.WrappedDeploymentException;
-import com.oneandone.cdi.weldstarter.spi.WeldStarter;
-import com.oneandone.ejbcdiunit.*;
-import com.oneandone.ejbcdiunit.internal.EjbExtensionExtended;
-import com.oneandone.ejbcdiunit.internal.EjbInformationBean;
-import com.oneandone.ejbcdiunit.persistence.SimulatedTransactionManager;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.spi.BeanManager;
+import javax.naming.InitialContext;
+
 import org.jboss.weld.transaction.spi.TransactionServices;
 import org.jglue.cdiunit.ProducesAlternative;
 import org.junit.Test;
@@ -20,9 +14,20 @@ import org.junit.runners.model.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.naming.InitialContext;
+import com.oneandone.cdi.testanalyzer.CdiConfigCreator;
+import com.oneandone.cdi.testanalyzer.InitialConfiguration;
+import com.oneandone.cdi.weldstarter.WeldSetup;
+import com.oneandone.cdi.weldstarter.WeldSetupClass;
+import com.oneandone.cdi.weldstarter.WrappedDeploymentException;
+import com.oneandone.cdi.weldstarter.spi.WeldStarter;
+import com.oneandone.ejbcdiunit.AsynchronousManager;
+import com.oneandone.ejbcdiunit.CreationalContexts;
+import com.oneandone.ejbcdiunit.EjbUnitBeanInitializerClass;
+import com.oneandone.ejbcdiunit.EjbUnitTransactionServices;
+import com.oneandone.ejbcdiunit.SupportEjbExtended;
+import com.oneandone.ejbcdiunit.internal.EjbExtensionExtended;
+import com.oneandone.ejbcdiunit.internal.EjbInformationBean;
+import com.oneandone.ejbcdiunit.persistence.SimulatedTransactionManager;
 
 public class EjbCdiUnit2Runner extends BlockJUnit4ClassRunner {
     private static Logger logger = LoggerFactory.getLogger(EjbCdiUnit2Runner.class);
@@ -76,6 +81,7 @@ public class EjbCdiUnit2Runner extends BlockJUnit4ClassRunner {
 
     WeldSetupClass weldSetup = null;
     WeldStarter weldStarter = null;
+    CdiConfigCreator cdiConfigCreator = null;
 
     @Override
     protected Object createTest() throws Exception {
@@ -89,7 +95,7 @@ public class EjbCdiUnit2Runner extends BlockJUnit4ClassRunner {
             System.setProperty("java.naming.factory.initial", "com.oneandone.cdiunit.internal.naming.CdiUnitContextFactory");
 
             try {
-                if (weldSetup == null) {
+                if (cdiConfigCreator == null) {
                     InitialConfiguration cfg = new InitialConfiguration();
                     cfg.testClass = clazz;
                     cfg.testMethod = frameworkMethod.getMethod();
@@ -101,12 +107,12 @@ public class EjbCdiUnit2Runner extends BlockJUnit4ClassRunner {
                     cfg.initialClasses.add(EjbExtensionExtended.class);
                     cfg.initialClasses.add(SimulatedTransactionManager.class);
                     cfg.initialClasses.add(BeanManager.class);
-                    CdiConfigCreator cdiConfigCreator = new CdiConfigCreator();
+                    cdiConfigCreator = new CdiConfigCreator();
                     cdiConfigCreator.create(cfg);
-                    weldSetup = cdiConfigCreator.buildWeldSetup();
-                    weldSetup.addService(new WeldSetup.ServiceConfig(TransactionServices.class, new EjbUnitTransactionServices()));
                 }
 
+                weldSetup = cdiConfigCreator.buildWeldSetup();
+                weldSetup.addService(new WeldSetup.ServiceConfig(TransactionServices.class, new EjbUnitTransactionServices()));
                 weldStarter.start(weldSetup);
                 InitialContext initialContext = new InitialContext();
                 final BeanManager beanManager = weldStarter.get(BeanManager.class);

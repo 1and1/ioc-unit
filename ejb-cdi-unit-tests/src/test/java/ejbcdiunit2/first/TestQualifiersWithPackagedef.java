@@ -8,14 +8,12 @@ import javax.inject.Inject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.oneandone.cdi.testanalyzer.annotations.ExcludedClasses;
 import com.oneandone.cdi.testanalyzer.annotations.SutPackages;
 import com.oneandone.ejbcdiunit2.runner.EjbCdiUnit2Runner;
 
 import ejbcdiunit2.first.producing.ProducingClass1;
 import ejbcdiunit2.first.test1.Qualifier1A;
 import ejbcdiunit2.first.test1.Test1A;
-import ejbcdiunit2.first.test1.Test1B;
 import ejbcdiunit2.first.test1.Test1Interface;
 
 /**
@@ -23,10 +21,15 @@ import ejbcdiunit2.first.test1.Test1Interface;
  */
 @RunWith(EjbCdiUnit2Runner.class)
 @SutPackages({ Test1A.class, ProducingClass1.class })
-@ExcludedClasses({ Test1B.class })
 public class TestQualifiersWithPackagedef {
     @Inject
     Test1Interface test1Interface;
+
+    @Inject
+    Test1Interface test1Interface2;
+
+    @Inject
+    Test1A test1A;
 
     @Inject
     @Qualifier1A

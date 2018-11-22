@@ -12,10 +12,16 @@ import java.util.Objects;
 import java.util.Set;
 
 import javax.enterprise.inject.Alternative;
+import javax.enterprise.inject.Any;
+import javax.enterprise.inject.Default;
 import javax.enterprise.inject.Stereotype;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Qualifier;
+
+import org.apache.commons.lang3.reflect.TypeUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Wraps elements found during the class-scan, that might be used as producers or injection-destinations.
@@ -24,6 +30,7 @@ import javax.inject.Qualifier;
  * @author aschoerk
  */
 class QualifiedType {
+    static Logger log = LoggerFactory.getLogger(QualifiedType.class);
 
     private Field f;         // if not null the m, c, p and clazz are null.
     private Method m;
@@ -63,9 +70,12 @@ class QualifiedType {
     void checkGetAlternativeStereoType(Annotation[] annotations) {
         for (Annotation ann : annotations) {
             Class<? extends Annotation> annotationType = ann.annotationType();
-            if (annotationType.getAnnotation(Stereotype.class) != null && annotationType.getAnnotation(Alternative.class) != null) {
+            if (annotationType.getAnnotation(Stereotype.class) != null
+                    && annotationType.getAnnotation(Alternative.class) != null) {
+
                 alternative = true;
                 alternativeStereotype = ann;
+                log.info("is alternative: {}", this);
             }
         }
     }
@@ -76,7 +86,6 @@ class QualifiedType {
         if (m.getAnnotation(Alternative.class) != null)
             alternative = true;
         checkGetAlternativeStereoType(m.getAnnotations());
-
     }
 
     public QualifiedType(final Field f) {
@@ -223,6 +232,66 @@ class QualifiedType {
         return alternative;
     }
 
+    public boolean matches(QualifiedType q) {
+        return TypeUtils.equals(getType(), q.getType()) && qualifiersMatch(this, q);
+    }
+
+    public boolean isAssignableTo(QualifiedType q) {
+        return TypeUtils.isAssignable(getType(), q.getType()) && qualifiersMatch(this, q);
+    }
+
+    public static Boolean qualifiersMatch(final QualifiedType qi, final QualifiedType qp) {
+        if (qi.getQualifiers().isEmpty()) {
+            if (hasDefault(qp.getQualifiers()) || hasAny(qp.getQualifiers())) {
+                return true;
+            } else
+                return false;
+        }
+        if (qp.getQualifiers().isEmpty()) {
+            if (qi.getQualifiers().size() <= 1 && hasDefault(qi.getQualifiers()))
+                return true;
+            else
+                return false;
+        }
+        for (Annotation ai : qi.getQualifiers()) {
+            if (ai.annotationType().getName().equals(Default.class.getName())) {
+                if (!hasDefault(qp.getQualifiers())) {
+                    return false;
+                }
+            } else {
+                boolean found = false;
+                for (Annotation ap : qp.getQualifiers()) {
+                    if (ap.equals(ai)) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private static boolean hasDefault(final Set<Annotation> qualifiersP) {
+        if (qualifiersP.isEmpty())
+            return true;
+        for (Annotation a : qualifiersP) {
+            if (a.annotationType().getName().equals(Default.class.getName()))
+                return true;
+        }
+        return false;
+    }
+
+    private static boolean hasAny(final Set<Annotation> qualifiersP) {
+        for (Annotation a : qualifiersP) {
+            if (a.annotationType().getName().equals(Any.class.getName()))
+                return true;
+        }
+        return false;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o)
@@ -255,5 +324,9 @@ class QualifiedType {
                 ", alt=" + alternative +
                 ", providerOrInstance=" + isProviderOrInstance() +
                 '}';
+    }
+
+    public void setAlternative() {
+        this.alternative = true;
     }
 }

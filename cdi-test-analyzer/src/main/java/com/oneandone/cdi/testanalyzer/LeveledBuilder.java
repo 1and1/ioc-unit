@@ -20,6 +20,9 @@ import javax.enterprise.inject.Stereotype;
 import javax.enterprise.inject.spi.Extension;
 import javax.interceptor.Interceptor;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.oneandone.cdi.testanalyzer.annotations.EnabledAlternatives;
 import com.oneandone.cdi.testanalyzer.annotations.ExcludedClasses;
 import com.oneandone.cdi.testanalyzer.annotations.SutClasses;
@@ -34,9 +37,13 @@ import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
  */
 class LeveledBuilder {
 
+    Logger log = LoggerFactory.getLogger(this.getClass());
+
     Set<QualifiedType> injections = new HashSet<>();
     Set<QualifiedType> produces = new HashSet<>();
     ProducerMap producerMap = new ProducerMap();
+    ProducerMap alternativeMap = new ProducerMap();
+    Set<QualifiedType> newAlternatives = new HashSet<>();
     Collection<ProducerPlugin> producerPlugins = Collections.EMPTY_LIST;
     Set<Class<?>> beansToBeStarted = new HashSet<>(); // these beans must be given to CDI to be started
     Set<Class<?>> beansAvailable = new HashSet<>(); // beans can be used for injects
@@ -62,16 +69,16 @@ class LeveledBuilder {
 
     public LeveledBuilder(InitialConfiguration cfg) {
         if (cfg.testClass != null) {
-            testClassesToBeEvaluated.add(cfg.testClass);
+            addClass(cfg.testClass, testClasses, testClassesToBeEvaluated);
         }
         if (cfg.initialClasses != null) {
-            testClassesToBeEvaluated.addAll(cfg.initialClasses);
+            addClasses(cfg.initialClasses, testClasses, testClassesToBeEvaluated);
         }
         if (cfg.testClasses != null) {
-            testClassesToBeEvaluated.addAll(cfg.testClasses);
+            addClasses(cfg.testClasses, testClasses, testClassesToBeEvaluated);
         }
         if (cfg.suTClasses != null) {
-            sutClassesToBeEvaluated.addAll(cfg.suTClasses);
+            addClasses(cfg.suTClasses, sutClasses, sutClassesToBeEvaluated);
         }
         if (cfg.enabledAlternatives != null) {
             addEnabledAlternatives(cfg.enabledAlternatives);
@@ -98,11 +105,15 @@ class LeveledBuilder {
 
     private void addClasses(Iterable<Class<?>> value, Set<Class<?>> classes, Set<Class<?>> classesToBeEvaluated) {
         for (Class<?> aClass : value) {
-            if (!classes.contains(aClass)) {
-                classesToBeEvaluated.add(aClass);
-                classes.add(aClass);
-                addToClassMap(aClass);
-            }
+            addClass(aClass, classes, classesToBeEvaluated);
+        }
+    }
+
+    private void addClass(final Class<?> aClass, final Set<Class<?>> classes, final Set<Class<?>> classesToBeEvaluated) {
+        if (!classes.contains(aClass)) {
+            classesToBeEvaluated.add(aClass);
+            classes.add(aClass);
+            addToClassMap(aClass);
         }
     }
 
@@ -172,8 +183,38 @@ class LeveledBuilder {
     }
 
     private void addToClassMap(Class<?> clazz) {
-        producerMap.addToProducerMap(new QualifiedType(clazz));
+        final QualifiedType q = new QualifiedType(clazz);
+        addToProducerMap(q);
     }
+
+    private void addToProducerMap(final QualifiedType q) {
+        if (q.isAlternative()) {
+            newAlternatives.add(q);
+        }
+        producerMap.addToProducerMap(q);
+    }
+
+    private void verifyAltProducers() {
+        for (QualifiedType q : newAlternatives) {
+            Class altStereoType = q.getAlternativeStereotype() != null ? q.getAlternativeStereotype().annotationType() : null;
+            boolean foundStereotype = false;
+            if (altStereoType != null) {
+                for (Class c : foundAlternativeStereotypes) {
+                    if (altStereoType.getName().equals(c.getName())) {
+                        foundStereotype = true;
+                        break;
+                    }
+                }
+            }
+
+            if (enabledAlternatives.contains(q.getDeclaringClass()) ||
+                    foundStereotype) {
+                alternativeMap.addToProducerMap(q);
+            }
+        }
+        newAlternatives.clear();
+    }
+
 
     private void addDecorator(final Class<?> c) {
         decorators.add(c);
@@ -226,6 +267,7 @@ class LeveledBuilder {
     }
 
     Set<Class<?>> extractToBeEvaluatedClasses() {
+        verifyAltProducers();
         Set<Class<?>> newToBeEvaluated = new HashSet<>();
         newToBeEvaluated.addAll(testClassesToBeEvaluated);
         testClassesToBeEvaluated.clear();
@@ -265,7 +307,7 @@ class LeveledBuilder {
             if (containsProducingAnnotation(f.getAnnotations())) {
                 final QualifiedType q = new QualifiedType(f);
                 produces.add(q);
-                producerMap.addToProducerMap(q);
+                addToProducerMap(q);
             }
         }
         return this;
@@ -276,7 +318,7 @@ class LeveledBuilder {
             if (containsProducingAnnotation(m.getAnnotations())) {
                 final QualifiedType q = new QualifiedType(m);
                 produces.add(q);
-                producerMap.addToProducerMap(q);
+                addToProducerMap(q);
             }
         }
         return this;
@@ -309,6 +351,10 @@ class LeveledBuilder {
         sutClassesAvailable.remove(c);
         addToClassMap(c);
         return this;
+    }
+
+    boolean isObligatoryClass(Class<?> c) {
+        return testClasses.contains(c) || sutClasses.contains(c);
     }
 
     LeveledBuilder testClassAnnotation(Class<?> c) {
@@ -378,6 +424,7 @@ class LeveledBuilder {
             addInterceptor(c);
         } else if (c.isAnnotation()) {
             if (c.isAnnotationPresent(Stereotype.class) && c.isAnnotationPresent(Alternative.class)) {
+                log.info("Found alternative Stereotype {}", c);
                 foundAlternativeStereotypes.add(c);
             } else {
                 elseClasses.add(c);
@@ -390,7 +437,15 @@ class LeveledBuilder {
     }
 
     boolean isActiveAlternativeStereoType(Annotation c) {
-        return foundAlternativeStereotypes.contains(c.annotationType());
+        log.info("Searching for alternative Stereotype {}", c);
+        for (Class stereoType : foundAlternativeStereotypes) {
+            if (stereoType.getName().equals(c.annotationType().getName())) {
+                log.info("Found alternative Stereotype {}", c);
+                return true;
+            }
+        }
+        return false;
+        // return foundAlternativeStereotypes.contains(c.annotationType());
     }
 
     boolean isAlternative(Class<?> c) {

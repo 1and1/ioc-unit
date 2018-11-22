@@ -1,18 +1,11 @@
 package com.oneandone.cdi.testanalyzer;
 
-import java.lang.annotation.Annotation;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.enterprise.inject.Any;
-import javax.enterprise.inject.Default;
-
-import org.apache.commons.lang3.reflect.TypeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,8 +14,8 @@ import org.slf4j.LoggerFactory;
  */
 public class InjectsMatcher {
     static Logger log = LoggerFactory.getLogger("InjectMatching");
-    Map<QualifiedType, Set<QualifiedType>> matching = new HashMap<>();
-    Map<QualifiedType, Set<QualifiedType>> ambiguus = new HashMap<>();
+    HashMultiMap<QualifiedType, QualifiedType> matching = new HashMultiMap<>();
+    HashMultiMap<QualifiedType, QualifiedType> ambiguus = new HashMultiMap<>();
     Set<QualifiedType> empty = new HashSet<>();
     LeveledBuilder builder;
 
@@ -39,32 +32,22 @@ public class InjectsMatcher {
     }
 
     public void matchInject(QualifiedType inject) {
-        Set<QualifiedType> foundProducers = new HashSet<>();
         Set<QualifiedType> producers = builder.producerMap.get(inject.getRawtype());
-        if (producers != null) {
-            for (QualifiedType q : producers) {
-                if (TypeUtils.isAssignable(q.getType(), inject.getType())) {
-                    log.debug("Assignable Match \n --- {} \n --- to inject: {}", q, inject);
-                    foundProducers.add(q);
-                }
-            }
-        }
+        if (producers == null)
+            return;
         // check types and qualifiers of results
-        matching.put(inject, new HashSet<>());
-        for (QualifiedType qp : foundProducers) {
-            if (TypeUtils.isAssignable(qp.getType(), inject.getType())) {
-                if (qualifiersMatch(inject, qp)) {
-                    log.debug("Qualified Match \n --- {} \n --- to inject: {}", qp, inject);
-                    matching.get(inject).add(qp);
-                }
+        for (QualifiedType qp : producers) {
+            if (qp.isAssignableTo(inject)) {
+                log.debug("Qualified Match \n --- {} \n --- to inject: {}", qp, inject);
+                matching.put(inject, qp);
             }
         }
-        handleAlternatives(matching.get(inject));
-        if (matching.get(inject).size() == 0) {
+        handleAlternatives(matching.getValues(inject));
+        if (matching.getValues(inject).size() == 0) {
             log.info("No match found for {}", inject);
             empty.add(inject);
             matching.remove(inject);
-        } else if (matching.get(inject).size() > 1) {
+        } else if (matching.getValues(inject).size() > 1) {
             log.info("Ambiguus matches found for \n --- inject: {}", inject);
             for (QualifiedType x : matching.get(inject)) {
                 log.debug(" --- {}", x);
@@ -72,6 +55,50 @@ public class InjectsMatcher {
             ambiguus.put(inject, matching.get(inject));
             matching.remove(inject);
         }
+    }
+
+
+    /**
+     * Class to be started can be removed, if it is optional and everything that it produces is also produced by other classes TODO: handle
+     * newAlternatives
+     * 
+     * @param classesToStart
+     */
+    public void matchHandledInject(Set<?> classesToStart) {
+        HashMultiMap<Class<?>, QualifiedType> declaringClass2Injects = new HashMultiMap<>();
+        for (QualifiedType inject : InjectsMinimizer.minimize(builder.handledInjections, builder)) {
+            Set<QualifiedType> producers = builder.producerMap.get(inject.getRawtype());
+            for (QualifiedType producer : producers) {
+                Class declaringClass = producer.getDeclaringClass();
+                if (builder.beansToBeStarted.contains(declaringClass)) {
+                    if (producer.isAssignableTo(inject)) {
+                        declaringClass2Injects.put(declaringClass, inject);
+                    }
+                }
+            }
+        }
+        List<Class<?>> optionalClasses = declaringClass2Injects.keySet()
+                .stream()
+                .filter(c -> !builder.isObligatoryClass(c))
+                .collect(Collectors.toList());
+
+        Set<Class> classesToBeRemoved = new HashSet<>();
+
+        for (Class c : optionalClasses) {
+            for (Class d : declaringClass2Injects.keySet()) {
+                if (!(c.equals(d) || classesToBeRemoved.contains(d))) {
+                    Set<QualifiedType> cValues = declaringClass2Injects.getValues(c);
+                    Set<QualifiedType> dValues = declaringClass2Injects.getValues(d);
+                    if (dValues.containsAll(cValues)) {
+                        classesToBeRemoved.add(c);
+                        log.info("Class {} to be removed from classes to be started.", c);
+                    }
+                }
+            }
+        }
+        // at the moment only classes without producers used for injects or classes with single producers used for injects
+        // classes only added in Availability not obligatory.
+        classesToStart.removeAll(classesToBeRemoved);
     }
 
     private void handleAlternatives(Set<QualifiedType> matching) {
@@ -83,63 +110,11 @@ public class InjectsMatcher {
                     matching.clear();
                     matching.add(alternative);
                 }
-
             }
         }
-
     }
 
-    private Boolean qualifiersMatch(final QualifiedType qi, final QualifiedType qp) {
-        if (qi.getQualifiers().isEmpty()) {
-            if (hasDefault(qp.getQualifiers()) || hasAny(qp.getQualifiers())) {
-                return true;
-            } else
-                return false;
-        }
-        if (qp.getQualifiers().isEmpty()) {
-            if (qi.getQualifiers().size() <= 1 && hasDefault(qi.getQualifiers()))
-                return true;
-            else
-                return false;
-        }
-        for (Annotation ai : qi.getQualifiers()) {
-            if (ai.annotationType().getName().equals(Default.class.getName())) {
-                if (!hasDefault(qp.getQualifiers())) {
-                    return false;
-                }
-            } else {
-                boolean found = false;
-                for (Annotation ap : qp.getQualifiers()) {
-                    if (ap.equals(ai)) {
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
 
-    private boolean hasDefault(final Set<Annotation> qualifiers) {
-        if (qualifiers.isEmpty())
-            return true;
-        for (Annotation a : qualifiers) {
-            if (a.annotationType().getName().equals(Default.class.getName()))
-                return true;
-        }
-        return false;
-    }
-
-    private boolean hasAny(final Set<Annotation> qualifiers) {
-        for (Annotation a : qualifiers) {
-            if (a.annotationType().getName().equals(Any.class.getName()))
-                return true;
-        }
-        return false;
-    }
 
     public Set<Class<?>> evaluateMatches(final List<CdiConfigCreator.ProblemRecord> problems) {
         Set<Class<?>> newToBeStarted = new HashSet();
@@ -150,7 +125,7 @@ public class InjectsMatcher {
         Set<QualifiedType> chosenTypes = new HashSet<>();
 
         for (QualifiedType inject : matching.keySet()) {
-            final QualifiedType producingType = matching.get(inject).iterator().next();
+            final QualifiedType producingType = matching.getValues(inject).iterator().next();
             if (!builder.beansToBeStarted.contains(producingType.getDeclaringClass())) {
                 newToBeStarted.add(producingType.getDeclaringClass());
                 chosenTypes.add(producingType);

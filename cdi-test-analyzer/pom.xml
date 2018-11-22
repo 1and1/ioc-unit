@@ -104,5 +104,11 @@
             <version>3.2</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>net.oneandone</groupId>
+            <artifactId>weld-starter-base</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 </project>

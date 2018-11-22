@@ -11,7 +11,7 @@ import org.jboss.weld.bootstrap.api.ServiceRegistry;
 import org.jboss.weld.bootstrap.spi.Metadata;
 
 public interface WeldSetup {
-    public static class ServiceConfig<S extends Service> {
+    class ServiceConfig<S extends Service> {
         public ServiceConfig(Class<S> serviceClass, S service) {
             this.serviceClass = serviceClass;
             this.service = service;

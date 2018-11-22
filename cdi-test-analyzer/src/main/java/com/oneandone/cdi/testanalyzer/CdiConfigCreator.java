@@ -140,12 +140,12 @@ public class CdiConfigCreator {
                         for (QualifiedType q : builder.injections) {
                             log.error("Not resolved: {}", q);
                         }
-                        return;
+                        break;
                         // throw new RuntimeException("no producer found");
                     }
                     // new classes are necessary, so repeat cycle.
                 } else
-                    return;
+                    break;
             } else {
                 // injects can be solved by new found available classes.
                 // did not need to look inside the classes to search for producers.
@@ -153,13 +153,21 @@ public class CdiConfigCreator {
 
             assert (currentToBeEvaluated.size() > 0);
         }
+
+        new InjectsMatcher(builder).matchHandledInject(builder.beansToBeStarted);
     }
 
     protected void evaluateFoundClasses(Set<Class<?>> currentToBeEvaluated) throws MalformedURLException {
         // Further initialize configuration data by looking at initial classes and their annotations.
-        // TestClasses and SuTClasses are to be created, if not replaced by alternatives.
+        // TestClasses and SuTClasses are to be created, if not replaced by newAlternatives.
+
+
         while (currentToBeEvaluated.size() > 0) {
-            for (Class<?> c : currentToBeEvaluated) {
+            List<Class<?>> l = new ArrayList<>();
+            l.addAll(currentToBeEvaluated);
+            l.sort((o1, o2) -> o1.getName().compareTo(o2.getName()));
+            for (Class<?> c : l) {
+                log.info("evaluating {}", c);
                 if (isInterceptingBean(c)) {
                     // not available for injections and no producer fields!!
                     builder.tobeStarted(c)

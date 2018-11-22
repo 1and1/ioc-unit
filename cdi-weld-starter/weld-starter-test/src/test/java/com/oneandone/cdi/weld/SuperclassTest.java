@@ -1,6 +1,8 @@
 package com.oneandone.cdi.weld;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
