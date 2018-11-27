@@ -15,21 +15,26 @@
  */
 package com.oneandone.ejbcdiunit.internal;
 
-import com.oneandone.ejbcdiunit.ContextControllerEjbCdiUnit;
-import org.jglue.cdiunit.InRequestScope;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
+
+import org.jglue.cdiunit.InRequestScope;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.oneandone.ejbcdiunit.ContextControllerEjbCdiUnit;
 
 @Interceptor
 @InRequestScope
 public class InRequestInterceptorEjbCdiUnit {
 	private static final Logger log = LoggerFactory
 			.getLogger(InRequestInterceptorEjbCdiUnit.class);
+
+    public InRequestInterceptorEjbCdiUnit() {
+        System.out.println();
+    }
 
 	@Inject
 	private ContextControllerEjbCdiUnit contextController;

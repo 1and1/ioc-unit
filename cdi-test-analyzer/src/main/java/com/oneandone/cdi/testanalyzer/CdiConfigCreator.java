@@ -1,6 +1,7 @@
 package com.oneandone.cdi.testanalyzer;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -25,8 +26,7 @@ import com.oneandone.cdi.extensions.TestScopeExtension;
 import com.oneandone.cdi.weldstarter.WeldSetupClass;
 
 /**
- * Starting with InitialConfiguraton analyzes the Class-Structure together with Annotations, to create a minimal
- * startable Weld-SE-Configration.
+ * Starting with InitialConfiguraton analyzes the Class-Structure together with Annotations, to create a minimal startable Weld-SE-Configration.
  */
 public class CdiConfigCreator {
     Logger log = LoggerFactory.getLogger(this.getClass());
@@ -109,7 +109,7 @@ public class CdiConfigCreator {
         if (cfg.testClass != null && cfg.testClass.getAnnotation(ApplicationScoped.class) == null) {
             builder.extensionObjects.add(new TestScopeExtension(cfg.testClass));
         }
-        Set<Class<?>> currentToBeEvaluated = builder.extractToBeEvaluatedClasses();
+        List<Class<?>> currentToBeEvaluated = builder.extractToBeEvaluatedClasses();
 
         while (true) {
             // Evaluate classes concerning Annotations, injects, producers,...
@@ -157,7 +157,7 @@ public class CdiConfigCreator {
         new InjectsMatcher(builder).matchHandledInject(builder.beansToBeStarted);
     }
 
-    protected void evaluateFoundClasses(Set<Class<?>> currentToBeEvaluated) throws MalformedURLException {
+    protected void evaluateFoundClasses(List<Class<?>> currentToBeEvaluated) throws MalformedURLException {
         // Further initialize configuration data by looking at initial classes and their annotations.
         // TestClasses and SuTClasses are to be created, if not replaced by newAlternatives.
 
@@ -165,7 +165,7 @@ public class CdiConfigCreator {
         while (currentToBeEvaluated.size() > 0) {
             List<Class<?>> l = new ArrayList<>();
             l.addAll(currentToBeEvaluated);
-            l.sort((o1, o2) -> o1.getName().compareTo(o2.getName()));
+            // l.sort((o1, o2) -> o1.getName().compareTo(o2.getName())); -- keep sequence
             for (Class<?> c : l) {
                 log.info("evaluating {}", c);
                 if (isInterceptingBean(c)) {
@@ -211,20 +211,44 @@ public class CdiConfigCreator {
         return result;
     }
 
-    public WeldSetupClass buildWeldSetup() {
+    public WeldSetupClass buildWeldSetup(Method method) {
         WeldSetupClass weldSetup = new WeldSetupClass();
         weldSetup.setBeanClasses(toBeStarted());
         weldSetup.setAlternativeClasses(getEnabledAlternatives());
         weldSetup.setEnabledAlternativeStereotypes(getEnabledAlternativeStereotypes());
-        weldSetup.setExtensions(getExtensions());
         weldSetup.setEnabledDecorators(getDecorators());
         weldSetup.setEnabledInterceptors(getInterceptors());
-        for (Extension e : getExtensionÓbjects())
-            weldSetup.addExtensionObject(e);
+        handleWeldExtensions(method, weldSetup);
         for (Extension e : findExtensions()) {
             weldSetup.addExtensionObject(e);
         }
         return weldSetup;
+    }
+
+    private void handleWeldExtensions(final Method method, final WeldSetupClass weldSetup) {
+        try {
+            for (Class<? extends Extension> extensionClass : getExtensions()) {
+                if (extensionClass.getName().contains(".ProducerConfigExtension")) {
+                    Constructor<? extends Extension> constructor =
+                            extensionClass.getConstructor(Method.class);
+                    Extension producerConfig = constructor.newInstance(method);
+                    weldSetup.addExtensionObject(producerConfig);
+                } else {
+                    weldSetup.addExtensionObject(extensionClass.newInstance());
+                }
+            }
+            for (Extension e : getExtensionÓbjects()) {
+                Class<? extends Extension> extensionClass = e.getClass();
+                final Constructor<?>[] declaredConstructors = extensionClass.getDeclaredConstructors();
+                if (declaredConstructors.length == 1 && declaredConstructors[0].getParameters().length == 0) {
+                    weldSetup.addExtensionObject(extensionClass.newInstance());
+                } else {
+                    weldSetup.addExtensionObject(e);
+                }
+            }
+        } catch (Exception e1) {
+            throw new RuntimeException(e1);
+        }
     }
 
 

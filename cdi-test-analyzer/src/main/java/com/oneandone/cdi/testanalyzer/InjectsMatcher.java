@@ -1,5 +1,6 @@
 package com.oneandone.cdi.testanalyzer;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -116,7 +117,7 @@ public class InjectsMatcher {
 
 
 
-    public Set<Class<?>> evaluateMatches(final List<CdiConfigCreator.ProblemRecord> problems) {
+    public List<Class<?>> evaluateMatches(final List<CdiConfigCreator.ProblemRecord> problems) {
         Set<Class<?>> newToBeStarted = new HashSet();
         for (QualifiedType inject : empty) {
             // search for producers and inner classes
@@ -222,6 +223,7 @@ public class InjectsMatcher {
             }
 
         }
-        return newToBeStarted;
+        List<Class<?>> result = new ArrayList<>(newToBeStarted);
+        return result;
     }
 }

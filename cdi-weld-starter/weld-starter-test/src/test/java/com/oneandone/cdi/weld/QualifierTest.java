@@ -8,9 +8,12 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import javax.enterprise.inject.Any;
+import javax.enterprise.inject.Default;
 import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.Produces;
+import javax.enterprise.inject.spi.DeploymentException;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Qualifier;
 
 import org.junit.Test;
@@ -169,7 +172,7 @@ public class QualifierTest extends WeldStarterTestsBase {
     }
 
 
-    static class Producing {
+    static class ProducingQ1_InjectQ2 {
         @Q1
         @Produces
         ToInjectIntf q1(@Q2 ToInjectIntf q) {
@@ -179,7 +182,7 @@ public class QualifierTest extends WeldStarterTestsBase {
 
     @Test
     public void testProducers() {
-        setBeanClasses(Bean5.class, Producing.class, ToInjectQ2.class, ToInject.class);
+        setBeanClasses(Bean5.class, ProducingQ1_InjectQ2.class, ToInjectQ2.class, ToInject.class);
         start();
         Bean5 bean5 = selectGet(Bean5.class);
         assertEquals(2, bean5.toInjectQ1.signifyClass());
@@ -187,7 +190,7 @@ public class QualifierTest extends WeldStarterTestsBase {
 
     @Test(expected = WrappedDeploymentException.class)
     public void testProducersAmbiguus() {
-        setBeanClasses(Bean5.class, Producing.class, ToInjectQ2.class, ToInjectQ1.class, ToInject.class);
+        setBeanClasses(Bean5.class, ProducingQ1_InjectQ2.class, ToInjectQ2.class, ToInjectQ1.class, ToInject.class);
         start();
         Bean5 bean5 = selectGet(Bean5.class);
         assertEquals(2, bean5.toInjectQ1.signifyClass());
@@ -204,5 +207,240 @@ public class QualifierTest extends WeldStarterTestsBase {
         assertEquals(2, bean.toInjectQ2.signifyClass());
     }
 
+    static class Bean6 {
+
+        @Q1
+        @Q2
+        @Inject
+        ToInjectIntf toInjectQ1Q2;
+    }
+
+
+    static class ProducingQ1Q2 {
+        @Q1
+        @Q2
+        @Produces
+        ToInjectIntf q1() {
+            return new ToInjectIntf() {
+                @Override
+                public int signifyClass() {
+                    return 20;
+                }
+            };
+        };
+    }
+
+    @Test
+    public void testQ1Q2() {
+        setBeanClasses(Bean6.class, ProducingQ1Q2.class);
+        start();
+        Bean6 bean = selectGet(Bean6.class);
+        assertEquals(20, bean.toInjectQ1Q2.signifyClass());
+    }
+
+    static class Producing_Q2 {
+        @Q2
+        @Produces
+        ToInjectIntf q1() {
+            return new ToInjectIntf() {
+                @Override
+                public int signifyClass() {
+                    return 20;
+                }
+            };
+        };
+    }
+
+    @Test(expected = WrappedDeploymentException.class)
+    public void testQ1Q2_OnlyQ2Produced() {
+        setBeanClasses(Bean6.class, Producing_Q2.class);
+        start();
+    }
+
+    static class Bean6_Q1 {
+
+        @Q1
+        @Inject
+        ToInjectIntf toInjectQ1Q2;
+    }
+
+    @Test
+    public void testQ1Q2_intoQ1() {
+        setBeanClasses(Bean6_Q1.class, ProducingQ1Q2.class);
+        start();
+        Bean6_Q1 bean = selectGet(Bean6_Q1.class);
+        assertEquals(20, bean.toInjectQ1Q2.signifyClass());
+    }
+
+    static class Bean6_Q2 {
+        @Q1
+        @Inject
+        ToInjectIntf toInjectQ1Q2;
+    }
+
+    @Test
+    public void testQ1Q2_intoQ2() {
+        setBeanClasses(Bean6_Q2.class, ProducingQ1Q2.class);
+        start();
+        Bean6_Q2 bean = selectGet(Bean6_Q2.class);
+        assertEquals(20, bean.toInjectQ1Q2.signifyClass());
+    }
+
+    static class Bean7_Named {
+
+        @Inject
+        ToInjectIntf toInjectNamed;
+    }
+
+    static class Producing6_Named {
+        @Named
+        @Produces
+        ToInjectIntf q1() {
+            return new ToInjectIntf() {
+                @Override
+                public int signifyClass() {
+                    return 21;
+                }
+            };
+        };
+    }
+
+    @Test
+    public void testNamed_intoDefault() {
+        setBeanClasses(Bean7_Named.class, Producing6_Named.class);
+        start();
+        Bean7_Named bean = selectGet(Bean7_Named.class);
+        assertEquals(21, bean.toInjectNamed.signifyClass());
+    }
+
+    static class Bean7_Namedq1 {
+        @Named
+        @Inject
+        ToInjectIntf q1;
+    }
+
+    @Test
+    public void testNamed_intoNamed() {
+        setBeanClasses(Bean7_Namedq1.class, Producing6_Named.class);
+        start();
+        Bean7_Namedq1 bean = selectGet(Bean7_Namedq1.class);
+        assertEquals(21, bean.q1.signifyClass());
+    }
+
+    static class Bean7_Namedq1_2 {
+
+        @Named("q1")
+        @Inject
+        ToInjectIntf toInjectNamed;
+    }
+
+
+    @Test
+    public void testNamed_intoNamedq1_2() {
+        setBeanClasses(Bean7_Namedq1_2.class, Producing6_Named.class);
+        start();
+        Bean7_Namedq1_2 bean = selectGet(Bean7_Namedq1_2.class);
+        assertEquals(21, bean.toInjectNamed.signifyClass());
+    }
+
+    static class Bean7_Namedq1_3 {
+
+        @Named("q1")
+        @Default
+        @Inject
+        ToInjectIntf toInjectNamed;
+    }
+
+    @Test
+    public void testNamed_intoNamedq1_3() {
+        setBeanClasses(Bean7_Namedq1_3.class, Producing6_Named.class);
+        start();
+        Bean7_Namedq1_3 bean = selectGet(Bean7_Namedq1_3.class);
+        assertEquals(21, bean.toInjectNamed.signifyClass());
+    }
+
+    static class Producing_Any {
+        @Any
+        @Produces
+        ToInjectIntf q1() {
+            return new ToInjectIntf() {
+                @Override
+                public int signifyClass() {
+                    return 22;
+                }
+            };
+        };
+    }
+
+    @Test(expected = WrappedDeploymentException.class)
+    public void testAny_intoQ1() {
+        setBeanClasses(Bean6_Q1.class, Producing_Any.class);
+        start();
+    }
+
+
+    static class BeanAny {
+        @Any
+        @Inject
+        ToInjectIntf toInjectAny;
+    }
+
+    static class BeanEmpty {
+        @Inject
+        ToInjectIntf toInjectAny;
+    }
+
+    static class BeanDefault {
+        @Default
+        @Inject
+        ToInjectIntf toInjectAny;
+    }
+
+    @Test
+    public void testAny_intoAny() {
+        setBeanClasses(BeanAny.class, Producing_Any.class);
+        start();
+        BeanAny bean = selectGet(BeanAny.class);
+        assertEquals(22, bean.toInjectAny.signifyClass());
+    }
+
+    static class BeanAnyQ2 {
+        @Any
+        @Q2
+        @Inject
+        ToInjectIntf toInjectAny;
+    }
+
+    @Test(expected = DeploymentException.class)
+    public void testAny_intoAnyQ1() {
+        setBeanClasses(BeanAnyQ2.class, Producing_Any.class);
+        start();
+        BeanAnyQ2 bean = selectGet(BeanAnyQ2.class);
+        assertEquals(22, bean.toInjectAny.signifyClass());
+    }
+
+    @Test
+    public void testQ2_intoAnyQ2() {
+        setBeanClasses(BeanAnyQ2.class, Producing_Q2.class);
+        start();
+        BeanAnyQ2 bean = selectGet(BeanAnyQ2.class);
+        assertEquals(20, bean.toInjectAny.signifyClass());
+    }
+
+    @Test
+    public void testAny_intoEmpty() {
+        setBeanClasses(BeanEmpty.class, Producing_Any.class);
+        start();
+        BeanEmpty bean = selectGet(BeanEmpty.class);
+        assertEquals(22, bean.toInjectAny.signifyClass());
+    }
+
+    @Test(expected = DeploymentException.class)
+    public void testAny_intoDefault() {
+        setBeanClasses(BeanDefault.class, Producing_Any.class);
+        start();
+        BeanDefault bean = selectGet(BeanDefault.class);
+        assertEquals(22, bean.toInjectAny.signifyClass());
+    }
 
 }

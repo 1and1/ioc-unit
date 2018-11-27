@@ -25,6 +25,7 @@ import com.oneandone.ejbcdiunit.CreationalContexts;
 import com.oneandone.ejbcdiunit.EjbUnitBeanInitializerClass;
 import com.oneandone.ejbcdiunit.EjbUnitTransactionServices;
 import com.oneandone.ejbcdiunit.SupportEjbExtended;
+import com.oneandone.ejbcdiunit.internal.EjbCdiUnitInitialListenerProducer;
 import com.oneandone.ejbcdiunit.internal.EjbExtensionExtended;
 import com.oneandone.ejbcdiunit.internal.EjbInformationBean;
 import com.oneandone.ejbcdiunit.persistence.SimulatedTransactionManager;
@@ -72,7 +73,6 @@ public class EjbCdiUnit2Runner extends BlockJUnit4ClassRunner {
                 } finally {
                     initialContext.close();
                     weldStarter.tearDown();
-
                 }
 
             }
@@ -99,6 +99,7 @@ public class EjbCdiUnit2Runner extends BlockJUnit4ClassRunner {
                     InitialConfiguration cfg = new InitialConfiguration();
                     cfg.testClass = clazz;
                     cfg.testMethod = frameworkMethod.getMethod();
+                    cfg.initialClasses.add(EjbCdiUnitInitialListenerProducer.class);
                     cfg.initialClasses.add(SupportEjbExtended.class);
                     cfg.initialClasses.add(ProducesAlternative.class);
                     cfg.initialClasses.add(EjbInformationBean.class);
@@ -111,7 +112,7 @@ public class EjbCdiUnit2Runner extends BlockJUnit4ClassRunner {
                     cdiConfigCreator.create(cfg);
                 }
 
-                weldSetup = cdiConfigCreator.buildWeldSetup();
+                weldSetup = cdiConfigCreator.buildWeldSetup(frameworkMethod.getMethod());
                 weldSetup.addService(new WeldSetup.ServiceConfig(TransactionServices.class, new EjbUnitTransactionServices()));
                 weldStarter.start(weldSetup);
                 InitialContext initialContext = new InitialContext();

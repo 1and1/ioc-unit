@@ -50,10 +50,10 @@ class LeveledBuilder {
     Set<Class<?>> enabledAlternatives = new HashSet<>();
     Set<Class<?>> excludedClasses = new HashSet<>();
 
-    Set<Class<?>> testClassesToBeEvaluated = new HashSet<>();
+    List<Class<?>> testClassesToBeEvaluated = new ArrayList<>();
     Set<Class<?>> testClasses = new HashSet<>();
     Set<Class<?>> sutClasses = new HashSet<>();
-    Set<Class<?>> sutClassesToBeEvaluated = new HashSet<>();
+    List<Class<?>> sutClassesToBeEvaluated = new ArrayList<>();
     Set<Class<?>> testClassesAvailable = new HashSet<>();
     Set<Class<?>> sutClassesAvailable = new HashSet<>();
     Set<Class<?>> foundAlternativeStereotypes = new HashSet<>();
@@ -71,6 +71,7 @@ class LeveledBuilder {
         if (cfg.testClass != null) {
             addClass(cfg.testClass, testClasses, testClassesToBeEvaluated);
         }
+        Method testMethod = cfg.testMethod;
         if (cfg.initialClasses != null) {
             addClasses(cfg.initialClasses, testClasses, testClassesToBeEvaluated);
         }
@@ -103,13 +104,13 @@ class LeveledBuilder {
         return this;
     }
 
-    private void addClasses(Iterable<Class<?>> value, Set<Class<?>> classes, Set<Class<?>> classesToBeEvaluated) {
+    private void addClasses(Iterable<Class<?>> value, Set<Class<?>> classes, Collection<Class<?>> classesToBeEvaluated) {
         for (Class<?> aClass : value) {
             addClass(aClass, classes, classesToBeEvaluated);
         }
     }
 
-    private void addClass(final Class<?> aClass, final Set<Class<?>> classes, final Set<Class<?>> classesToBeEvaluated) {
+    private void addClass(final Class<?> aClass, final Set<Class<?>> classes, final Collection<Class<?>> classesToBeEvaluated) {
         if (!classes.contains(aClass)) {
             classesToBeEvaluated.add(aClass);
             classes.add(aClass);
@@ -266,9 +267,9 @@ class LeveledBuilder {
             return false;
     }
 
-    Set<Class<?>> extractToBeEvaluatedClasses() {
+    List<Class<?>> extractToBeEvaluatedClasses() {
         verifyAltProducers();
-        Set<Class<?>> newToBeEvaluated = new HashSet<>();
+        List<Class<?>> newToBeEvaluated = new ArrayList<>();
         newToBeEvaluated.addAll(testClassesToBeEvaluated);
         testClassesToBeEvaluated.clear();
         newToBeEvaluated.addAll(sutClassesToBeEvaluated);
@@ -283,17 +284,24 @@ class LeveledBuilder {
         return this;
     }
 
-
     LeveledBuilder innerClasses(Class c) {
-        findInnerClasses(c, beansAvailable);
+        return doInClassAndSuperClasses(c, c1 -> findInnerClasses(c1, beansAvailable));
+    }
+
+    private LeveledBuilder doInClassAndSuperClasses(final Class<?> c, final ClassHandler classHandler) {
+        if (!c.equals(Object.class)) {
+            classHandler.handle(c);
+            doInClassAndSuperClasses(c.getSuperclass(), classHandler);
+        }
         return this;
     }
 
     LeveledBuilder injects(Class c) {
-        InjectFinder injectFinder = new InjectFinder();
-        injectFinder.find(c);
-        injections.addAll(injectFinder.getInjectedTypes());
-        return this;
+        return doInClassAndSuperClasses(c, c1 -> {
+            InjectFinder injectFinder = new InjectFinder();
+            injectFinder.find(c1);
+            injections.addAll(injectFinder.getInjectedTypes());
+        });
     }
 
     LeveledBuilder injectHandled(QualifiedType inject) {
@@ -325,7 +333,7 @@ class LeveledBuilder {
     }
 
     private boolean containsProducingAnnotation(final Annotation[] annotations) {
-        for (ProducerPlugin producerPlugin: producerPlugins) {
+        for (ProducerPlugin producerPlugin : producerPlugins) {
             if (producerPlugin.isProducing(annotations)) {
                 extensionClasses.add(producerPlugin.extensionToInstall());
                 return true;
@@ -337,7 +345,6 @@ class LeveledBuilder {
         }
         return false;
     }
-
 
     LeveledBuilder testClass(Class<?> c) {
         testClasses.add(c);
@@ -358,62 +365,69 @@ class LeveledBuilder {
     }
 
     LeveledBuilder testClassAnnotation(Class<?> c) {
-        TestClasses testClasses = c.getAnnotation(TestClasses.class);
-        if (testClasses != null) {
-            addClasses(Arrays.asList(testClasses.value()), this.testClasses, testClassesToBeEvaluated);
-        }
-        return this;
+        return doInClassAndSuperClasses(c, c1 -> {
+            TestClasses testClassesL = c1.getAnnotation(TestClasses.class);
+            if (testClassesL != null) {
+                addClasses(Arrays.asList(testClassesL.value()), this.testClasses, testClassesToBeEvaluated);
+            }
+        });
     }
-
 
     LeveledBuilder sutClassAnnotation(Class<?> c) {
-        SutClasses sutClasses = c.getAnnotation(SutClasses.class);
-        if (sutClasses != null) {
-            addClasses(Arrays.asList(sutClasses.value()), this.sutClasses, sutClassesToBeEvaluated);
-        }
-        return this;
+        return doInClassAndSuperClasses(c, c1 -> {
+            SutClasses sutClassesL = c1.getAnnotation(SutClasses.class);
+            if (sutClassesL != null) {
+                addClasses(Arrays.asList(sutClassesL.value()), this.sutClasses, sutClassesToBeEvaluated);
+            }
+        });
     }
 
-
-    LeveledBuilder sutPackagesAnnotation(Class<?> c) throws MalformedURLException {
-        SutPackages sutPackages = c.getAnnotation(SutPackages.class);
-        if (sutPackages != null) {
-            addSutPackages(Arrays.asList(sutPackages.value()));
-        }
-        return this;
+    LeveledBuilder sutPackagesAnnotation(Class<?> c) {
+        return doInClassAndSuperClasses(c, c1 -> {
+            SutPackages sutPackages = c1.getAnnotation(SutPackages.class);
+            if (sutPackages != null) {
+                try {
+                    addSutPackages(Arrays.asList(sutPackages.value()));
+                } catch (MalformedURLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
     }
-
-
 
     LeveledBuilder sutClasspathsAnnotation(Class<?> c) throws MalformedURLException {
-        SutClasspaths sutClasspaths = c.getAnnotation(SutClasspaths.class);
-        if (sutClasspaths != null) {
-            addSutClasspaths(Arrays.asList(sutClasspaths.value()));
-        }
-        return this;
+        return doInClassAndSuperClasses(c, c1 -> {
+            SutClasspaths sutClasspaths = c.getAnnotation(SutClasspaths.class);
+            if (sutClasspaths != null) {
+                try {
+                    addSutClasspaths(Arrays.asList(sutClasspaths.value()));
+                } catch (MalformedURLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
     }
-
 
     LeveledBuilder enabledAlternatives(Class<?> c) throws MalformedURLException {
-        EnabledAlternatives enabledAlternatives = c.getAnnotation(EnabledAlternatives.class);
-        if (enabledAlternatives != null) {
-            addEnabledAlternatives(Arrays.asList(enabledAlternatives.value()));
-        }
-        return this;
+        return doInClassAndSuperClasses(c, c1 -> {
+            EnabledAlternatives enabledAlternativesL = c1.getAnnotation(EnabledAlternatives.class);
+
+            if (enabledAlternativesL != null) {
+                addEnabledAlternatives(Arrays.asList(enabledAlternativesL.value()));
+            }
+        });
     }
-
-
-
 
     LeveledBuilder excludes(Class<?> c) throws MalformedURLException {
-        ExcludedClasses excludedClassesL = c.getAnnotation(ExcludedClasses.class);
-        if (excludedClassesL != null) {
-            addExcludedClasses(Arrays.asList(excludedClassesL.value()));
-        }
-        return this;
+        return doInClassAndSuperClasses(c, c1 -> {
+            ExcludedClasses excludedClassesL = c1.getAnnotation(ExcludedClasses.class);
+
+            if (excludedClassesL != null) {
+                addExcludedClasses(Arrays.asList(excludedClassesL.value()));
+            }
+        });
+
     }
-
-
 
     LeveledBuilder elseClass(Class<?> c) {
         if (CdiConfigCreator.isExtension(c)) {
@@ -430,7 +444,7 @@ class LeveledBuilder {
                 elseClasses.add(c);
             }
         } else {
-                elseClasses.add(c);
+            elseClasses.add(c);
         }
 
         return this;
@@ -452,10 +466,10 @@ class LeveledBuilder {
         return enabledAlternatives.contains(c);
     }
 
-
     /**
-     * create a LeveledBuilder which can be used to find producers for left over injects.
-     * An extra builder is used, to be able to select before deciding which classes to use.
+     * create a LeveledBuilder which can be used to find producers for left over injects. An extra builder is used, to be able to select before
+     * deciding which classes to use.
+     * 
      * @return
      */
     public LeveledBuilder producerCandidates() {
@@ -463,12 +477,17 @@ class LeveledBuilder {
         tmp.addAll(beansAvailable);
         tmp.removeAll(beansToBeStarted);
         LeveledBuilder result = new LeveledBuilder(new InitialConfiguration());
-        for (Class<?> c: tmp) {
-            result.available(c);  // necessary? already is available
+        for (Class<?> c : tmp) {
+            result.available(c); // necessary? already is available
             result.producerFields(c);
             result.producerMethods(c);
         }
         return result;
+    }
+
+
+    interface ClassHandler {
+        void handle(Class<?> c);
     }
 
 }

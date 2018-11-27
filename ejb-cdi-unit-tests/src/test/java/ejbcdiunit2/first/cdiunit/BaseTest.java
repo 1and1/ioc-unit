@@ -1,4 +1,4 @@
-package cdiunit;
+package ejbcdiunit2.first.cdiunit;
 
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;

@@ -4,7 +4,7 @@
  * writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
  * implied. See the License for the specific language governing permissions and limitations under the License.
  */
-package cdiunit;
+package ejbcdiunit2.first.cdiunit;
 
 import javax.inject.Inject;
 
@@ -13,10 +13,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.oneandone.cdi.testanalyzer.annotations.EnabledAlternatives;
-import com.oneandone.ejbcdiunit.EjbUnitRunner;
+import com.oneandone.cdi.testanalyzer.annotations.SutClasses;
+import com.oneandone.ejbcdiunit2.runner.EjbCdiUnit2Runner;
 
 
-@RunWith(EjbUnitRunner.class)
+@RunWith(EjbCdiUnit2Runner.class)
+@SutClasses(AImplementation1.class)
 @EnabledAlternatives(AImplementation2.class)
 public class TestAlternativeAnnotations {
 

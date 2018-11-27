@@ -10,6 +10,7 @@ import java.lang.reflect.Type;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.enterprise.inject.Alternative;
 import javax.enterprise.inject.Any;
@@ -240,38 +241,45 @@ class QualifiedType {
         return TypeUtils.isAssignable(getType(), q.getType()) && qualifiersMatch(this, q);
     }
 
+    static public boolean match(Set<Annotation> produced, Set<Annotation> to) {
+        if (to.isEmpty() && produced.isEmpty())
+            return true;
+        if (to.size() == 1 && to.iterator().next().annotationType().getName().equals("javax.enterprise.inject.Any"))
+            return true;
+        Set<Annotation> toFiltered =
+                to.stream().filter(a -> !a.annotationType().getName().equals("javax.enterprise.inject.Any")).collect(Collectors.toSet());
+        if (produced.containsAll(toFiltered) && !to.isEmpty())
+            return true;
+        if (produced.size() == 1 && produced.iterator().next().annotationType().getName().equals("javax.enterprise.inject.Default"))
+            if (toFiltered.isEmpty()) // to is Default already checked
+                return true;
+        Set<String> producednames = produced.stream().map(a -> a.annotationType().getName()).filter(n -> !n.equals("javax.enterprise.inject.Default"))
+                .collect(Collectors.toSet());
+        if (producednames.size() == 1 && producednames.contains("javax.inject.Named"))
+            if (toFiltered.isEmpty()
+                    || toFiltered.size() == 1 && toFiltered.iterator().next().annotationType().getName().equals("javax.enterprise.inject.Default")) // to
+                                                                                                                                                    // is
+                                                                                                                                                    // Default
+                                                                                                                                                    // already
+                                                                                                                                                    // checked
+                return true;
+        if (producednames.size() == 1 && producednames.contains("javax.enterprise.inject.Any"))
+            if (toFiltered.isEmpty()) // to is Default already checked
+                return true;
+        if (toFiltered.isEmpty()) // produced can not be empty, Default or Named anymore
+            return false;
+        if (produced.containsAll(toFiltered))
+            return true;
+        if (produced.size() > 0)
+            return false;
+        return false;
+    }
+
+
     public static Boolean qualifiersMatch(final QualifiedType qi, final QualifiedType qp) {
-        if (qi.getQualifiers().isEmpty()) {
-            if (hasDefault(qp.getQualifiers()) || hasAny(qp.getQualifiers())) {
-                return true;
-            } else
-                return false;
-        }
-        if (qp.getQualifiers().isEmpty()) {
-            if (qi.getQualifiers().size() <= 1 && hasDefault(qi.getQualifiers()))
-                return true;
-            else
-                return false;
-        }
-        for (Annotation ai : qi.getQualifiers()) {
-            if (ai.annotationType().getName().equals(Default.class.getName())) {
-                if (!hasDefault(qp.getQualifiers())) {
-                    return false;
-                }
-            } else {
-                boolean found = false;
-                for (Annotation ap : qp.getQualifiers()) {
-                    if (ap.equals(ai)) {
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found) {
-                    return false;
-                }
-            }
-        }
-        return true;
+        final Set<Annotation> qiqualifiers = qi.getQualifiers();
+        final Set<Annotation> qpqualifiers = qp.getQualifiers();
+        return match(qpqualifiers, qiqualifiers);
     }
 
     private static boolean hasDefault(final Set<Annotation> qualifiersP) {
