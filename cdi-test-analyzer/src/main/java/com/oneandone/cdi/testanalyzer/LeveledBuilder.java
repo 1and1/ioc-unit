@@ -29,6 +29,8 @@ import com.oneandone.cdi.testanalyzer.annotations.SutClasses;
 import com.oneandone.cdi.testanalyzer.annotations.SutClasspaths;
 import com.oneandone.cdi.testanalyzer.annotations.SutPackages;
 import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
+import com.oneandone.cdi.testanalyzer.annotations.TestClasspaths;
+import com.oneandone.cdi.testanalyzer.annotations.TestPackages;
 
 /**
  * Helps in building up the testconfiguration.
@@ -87,15 +89,24 @@ class LeveledBuilder {
         // prepare available classes
         // they are not further investigated,
         try {
-            if (cfg.suTClasspath != null)
-                addSutClasspaths(cfg.suTClasspath);
+            if (cfg.suTClasspath != null) {
+                addClasspaths(setToArray(cfg.suTClasspath), true);
+            }
+            if (cfg.testClasspath != null)
+                addClasspaths(setToArray(cfg.testClasspath), false);
             if (cfg.suTPackages != null)
-                addSutPackages(cfg.suTPackages);
+                addPackages(setToArray(cfg.suTPackages), true);
+            if (cfg.testPackages != null)
+                addPackages(setToArray(cfg.suTPackages), false);
         } catch (MalformedURLException ex) {
             throw new RuntimeException(ex);
         }
         if (cfg.excludedClasses != null)
             addExcludedClasses(cfg.excludedClasses);
+    }
+
+    private Class<?>[] setToArray(final Set<Class<?>> suTClasspath) {
+        return suTClasspath.toArray(new Class<?>[suTClasspath.size()]);
     }
 
     public LeveledBuilder available(Class c) {
@@ -118,29 +129,30 @@ class LeveledBuilder {
         }
     }
 
-    private void addSutPackages(Iterable<Class<?>> sutPackages) throws MalformedURLException {
-        for (Class<?> packageClass : sutPackages) {
+    private void addPackages(Class<?>[] packages, boolean isSut) throws MalformedURLException {
+        for (Class<?> packageClass : packages) {
             Set<Class<?>> tmpClasses = new HashSet<>();
             ClasspathHandler.addPackage(packageClass, tmpClasses);
-            for (Class clazz : tmpClasses) {
-                if (CdiConfigCreator.mightBeBean(clazz)) {
-                    available(clazz);
-                    sutClassesAvailable.add(clazz);
-                }
-            }
+            addAvailableClasses(isSut, tmpClasses);
         }
     }
 
-    private void addSutClasspaths(Iterable<Class<?>> sutClasspaths) throws MalformedURLException {
-        for (Class<?> classpathClass : sutClasspaths) {
+    private void addClasspaths(Class<?>[] classpaths, boolean isSut) throws MalformedURLException {
+        for (Class<?> classpathClass : classpaths) {
             Set<Class<?>> tmpClasses = new HashSet<>();
             ClasspathHandler.addClassPath(classpathClass, tmpClasses);
-            for (Class clazz : tmpClasses) {
-                if (CdiConfigCreator.mightBeBean(clazz)) {
-                    available(clazz);
-                    sutClassesAvailable.add(clazz);
-                }
+            addAvailableClasses(isSut, tmpClasses);
+        }
+    }
 
+    private void addAvailableClasses(final boolean isSut, final Set<Class<?>> tmpClasses) {
+        for (Class clazz : tmpClasses) {
+            if (CdiConfigCreator.mightBeBean(clazz)) {
+                available(clazz);
+                if (isSut)
+                    sutClassesAvailable.add(clazz);
+                else
+                    testClassesAvailable.add(clazz);
             }
         }
     }
@@ -289,11 +301,13 @@ class LeveledBuilder {
     }
 
     private LeveledBuilder doInClassAndSuperClasses(final Class<?> c, final ClassHandler classHandler) {
-        if (!c.equals(Object.class)) {
+        if (c == null || c.equals(Object.class)) {
+            return this;
+        } else {
             classHandler.handle(c);
             doInClassAndSuperClasses(c.getSuperclass(), classHandler);
+            return this;
         }
-        return this;
     }
 
     LeveledBuilder injects(Class c) {
@@ -382,33 +396,41 @@ class LeveledBuilder {
         });
     }
 
-    LeveledBuilder sutPackagesAnnotation(Class<?> c) {
+    LeveledBuilder packagesAnnotations(Class<?> c) {
         return doInClassAndSuperClasses(c, c1 -> {
-            SutPackages sutPackages = c1.getAnnotation(SutPackages.class);
-            if (sutPackages != null) {
-                try {
-                    addSutPackages(Arrays.asList(sutPackages.value()));
-                } catch (MalformedURLException e) {
-                    throw new RuntimeException(e);
+            try {
+                SutPackages sutPackages = c1.getAnnotation(SutPackages.class);
+                if (sutPackages != null) {
+                    addPackages(sutPackages.value(), true);
                 }
+                TestPackages testPackages = c1.getAnnotation(TestPackages.class);
+                if (testPackages != null) {
+                    addPackages(testPackages.value(), false);
+                }
+            } catch (MalformedURLException e) {
+                throw new RuntimeException(e);
             }
         });
     }
 
-    LeveledBuilder sutClasspathsAnnotation(Class<?> c) throws MalformedURLException {
+    LeveledBuilder classpathsAnnotations(Class<?> c) {
         return doInClassAndSuperClasses(c, c1 -> {
-            SutClasspaths sutClasspaths = c.getAnnotation(SutClasspaths.class);
-            if (sutClasspaths != null) {
-                try {
-                    addSutClasspaths(Arrays.asList(sutClasspaths.value()));
-                } catch (MalformedURLException e) {
-                    throw new RuntimeException(e);
+            try {
+                SutClasspaths sutClasspaths = c1.getAnnotation(SutClasspaths.class);
+                if (sutClasspaths != null) {
+                    addClasspaths(sutClasspaths.value(), true);
                 }
+                TestClasspaths testClasspaths = c1.getAnnotation(TestClasspaths.class);
+                if (testClasspaths != null) {
+                    addClasspaths(testClasspaths.value(), false);
+                }
+            } catch (MalformedURLException e) {
+                throw new RuntimeException(e);
             }
         });
     }
 
-    LeveledBuilder enabledAlternatives(Class<?> c) throws MalformedURLException {
+    LeveledBuilder enabledAlternatives(Class<?> c) {
         return doInClassAndSuperClasses(c, c1 -> {
             EnabledAlternatives enabledAlternativesL = c1.getAnnotation(EnabledAlternatives.class);
 
@@ -418,15 +440,34 @@ class LeveledBuilder {
         });
     }
 
-    LeveledBuilder excludes(Class<?> c) throws MalformedURLException {
+    LeveledBuilder excludes(Class<?> c) {
         return doInClassAndSuperClasses(c, c1 -> {
             ExcludedClasses excludedClassesL = c1.getAnnotation(ExcludedClasses.class);
-
             if (excludedClassesL != null) {
                 addExcludedClasses(Arrays.asList(excludedClassesL.value()));
             }
         });
+    }
 
+    LeveledBuilder customAnnotations(Class<?> c) {
+        return doInClassAndSuperClasses(c, c1 -> {
+            Annotation[] annotations = c1.getAnnotations();
+            for (Annotation ann : annotations) {
+                final Class<? extends Annotation> annotationType = ann.annotationType();
+                for (Annotation annann : annotationType.getAnnotations()) {
+                    if (annann.annotationType().getPackage().equals(TestClasses.class.getPackage())) {
+                        if (!beansAvailable.contains(annotationType)) {
+                            testClassAnnotation(annotationType)
+                                    .classpathsAnnotations(annotationType)
+                                    .sutClassAnnotation(annotationType)
+                                    .packagesAnnotations(annotationType)
+                                    .enabledAlternatives(annotationType)
+                                    .customAnnotations(annotationType);
+                        }
+                    }
+                }
+            }
+        });
     }
 
     LeveledBuilder elseClass(Class<?> c) {

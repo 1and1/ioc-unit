@@ -20,6 +20,7 @@ import java.lang.annotation.RetentionPolicy;
 
 import org.jglue.cdiunit.AdditionalClasses;
 
+import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
 import com.oneandone.ejbcdiunit.internal.AsynchronousMethodInterceptor;
 import com.oneandone.ejbcdiunit.internal.EjbExtensionExtended;
 import com.oneandone.ejbcdiunit.internal.TransactionalInterceptor;
@@ -36,6 +37,10 @@ import com.oneandone.ejbcdiunit.resourcesimulators.WebServiceContextSimulation;
  *
  */
 @AdditionalClasses({EjbExtensionExtended.class, TransactionalInterceptor.class,
+        AsynchronousMethodInterceptor.class, JmsMocksFactory.class, SessionContextFactory.class,
+        MessageContextSimulation.class, WebServiceContextSimulation.class,
+        TimerServiceSimulator.class, EjbUnitBeanInitializerClass.class })
+@TestClasses({ EjbExtensionExtended.class, TransactionalInterceptor.class,
         AsynchronousMethodInterceptor.class, JmsMocksFactory.class, SessionContextFactory.class,
         MessageContextSimulation.class, WebServiceContextSimulation.class,
         TimerServiceSimulator.class, EjbUnitBeanInitializerClass.class})

@@ -67,13 +67,17 @@ public class InjectsMatcher {
      */
     public void matchHandledInject(Set<?> classesToStart) {
         HashMultiMap<Class<?>, QualifiedType> declaringClass2Injects = new HashMultiMap<>();
-        for (QualifiedType inject : InjectsMinimizer.minimize(builder.handledInjections, builder)) {
+        HashMultiMap<Class<?>, QualifiedType> declaringClass2Producers = new HashMultiMap<>();
+
+        final HashMultiMap<QualifiedType, QualifiedType> minimizeMap = InjectsMinimizer.minimize(builder.handledInjections, builder);
+        for (QualifiedType inject : minimizeMap.keySet()) {
             Set<QualifiedType> producers = builder.producerMap.get(inject.getRawtype());
             for (QualifiedType producer : producers) {
                 Class declaringClass = producer.getDeclaringClass();
                 if (builder.beansToBeStarted.contains(declaringClass)) {
                     if (producer.isAssignableTo(inject)) {
                         declaringClass2Injects.put(declaringClass, inject);
+                        declaringClass2Producers.put(declaringClass, producer);
                     }
                 }
             }
@@ -91,8 +95,35 @@ public class InjectsMatcher {
                     Set<QualifiedType> cValues = declaringClass2Injects.getValues(c);
                     Set<QualifiedType> dValues = declaringClass2Injects.getValues(d);
                     if (dValues.containsAll(cValues)) {
-                        classesToBeRemoved.add(c);
-                        log.info("Class {} to be removed from classes to be started.", c);
+                        if (!cValues.containsAll(dValues)) {
+                            classesToBeRemoved.add(c);
+                            log.info("Class {} to be removed from classes to be started.", c);
+                        } else {
+                            for (QualifiedType t : cValues) {
+                                Set<QualifiedType> injects = minimizeMap.get(t);
+                                int cProduces = 0;
+                                int dProduces = 0;
+                                for (QualifiedType inject : injects) {
+                                    for (QualifiedType producerC : declaringClass2Producers.get(c)) {
+                                        if (producerC.isAssignableTo(inject))
+                                            cProduces++;
+                                    }
+                                    for (QualifiedType producerD : declaringClass2Producers.get(d)) {
+                                        if (producerD.isAssignableTo(inject))
+                                            dProduces++;
+                                    }
+                                }
+                                if (dProduces > cProduces) {
+                                    classesToBeRemoved.add(c);
+                                    log.info("Class {} to be removed from classes to be started.", c);
+                                } else if (dProduces < cProduces) {
+                                    classesToBeRemoved.add(d);
+                                    log.info("Class {} to be removed from classes to be started.", d);
+                                } else {
+                                    log.error("Could not decide which class to remove: {},  {}", c, d);
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -144,8 +175,9 @@ public class InjectsMatcher {
             Set<QualifiedType> alreadyChosen = producingTypes.stream()
                     .filter(p -> chosenTypes.contains(p))
                     .collect(Collectors.toSet());
-            if (alreadyChosen.size() > 0)
-                producingTypes = alreadyChosen;
+            if (alreadyChosen.size() > 0) {
+                continue;
+            }
             boolean alreadyProduced = false;
             for (QualifiedType q : producingTypes) {
                 Class declaringClass = q.getDeclaringClass();
@@ -221,7 +253,6 @@ public class InjectsMatcher {
                 builder.sutClass(toBeStarted);
                 newToBeStarted.add(toBeStarted);
             }
-
         }
         List<Class<?>> result = new ArrayList<>(newToBeStarted);
         return result;

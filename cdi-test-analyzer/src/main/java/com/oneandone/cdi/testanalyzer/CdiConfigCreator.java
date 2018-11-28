@@ -173,25 +173,31 @@ public class CdiConfigCreator {
                     builder.tobeStarted(c)
                             .innerClasses(c)
                             .injects(c)
-                            .elseClass(c)
-                            .testClassAnnotation(c)
-                            .sutClassAnnotation(c)
-                            .sutClasspathsAnnotation(c)
-                            .sutPackagesAnnotation(c)
-                            .excludes(c);
+                            .elseClass(c);
+                    if (builder.isTestClass(c)) {
+                        builder.testClassAnnotation(c)
+                                .sutClassAnnotation(c)
+                                .classpathsAnnotations(c)
+                                .packagesAnnotations(c)
+                                .customAnnotations(c)
+                                .excludes(c);
+                    }
                 } else if (mightBeBean(c)) {
                     builder.tobeStarted(c)
                             .available(c)
                             .innerClasses(c)
                             .injects(c)
                             .producerFields(c)
-                            .producerMethods(c)
-                            .testClassAnnotation(c)
-                            .sutClassAnnotation(c)
-                            .sutClasspathsAnnotation(c)
-                            .sutPackagesAnnotation(c)
-                            .enabledAlternatives(c)
-                            .excludes(c);
+                            .producerMethods(c);
+                    if (builder.isTestClass(c)) {
+                        builder.testClassAnnotation(c)
+                                .sutClassAnnotation(c)
+                                .classpathsAnnotations(c)
+                                .packagesAnnotations(c)
+                                .enabledAlternatives(c)
+                                .customAnnotations(c)
+                                .excludes(c);
+                    }
                 } else {
                     builder.elseClass(c);
                 }

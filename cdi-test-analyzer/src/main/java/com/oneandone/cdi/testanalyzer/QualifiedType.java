@@ -233,15 +233,15 @@ class QualifiedType {
         return alternative;
     }
 
-    public boolean matches(QualifiedType q) {
-        return TypeUtils.equals(getType(), q.getType()) && qualifiersMatch(this, q);
+    public boolean injectableIn(QualifiedType q) {
+        return TypeUtils.equals(getType(), q.getType()) && qualifiersMatchFromToInject(this, q);
     }
 
     public boolean isAssignableTo(QualifiedType q) {
-        return TypeUtils.isAssignable(getType(), q.getType()) && qualifiersMatch(this, q);
+        return TypeUtils.isAssignable(getType(), q.getType()) && qualifiersMatchFromToInject(this, q);
     }
 
-    static public boolean match(Set<Annotation> produced, Set<Annotation> to) {
+    static public boolean injectableIn(Set<Annotation> produced, Set<Annotation> to) {
         if (to.isEmpty() && produced.isEmpty())
             return true;
         if (to.size() == 1 && to.iterator().next().annotationType().getName().equals("javax.enterprise.inject.Any"))
@@ -276,10 +276,10 @@ class QualifiedType {
     }
 
 
-    public static Boolean qualifiersMatch(final QualifiedType qi, final QualifiedType qp) {
+    public static Boolean qualifiersMatchFromToInject(final QualifiedType qp, final QualifiedType qi) {
         final Set<Annotation> qiqualifiers = qi.getQualifiers();
         final Set<Annotation> qpqualifiers = qp.getQualifiers();
-        return match(qpqualifiers, qiqualifiers);
+        return injectableIn(qpqualifiers, qiqualifiers);
     }
 
     private static boolean hasDefault(final Set<Annotation> qualifiersP) {

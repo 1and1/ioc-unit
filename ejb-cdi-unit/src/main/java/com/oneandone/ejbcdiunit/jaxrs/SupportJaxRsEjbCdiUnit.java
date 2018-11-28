@@ -20,6 +20,7 @@ import java.lang.annotation.RetentionPolicy;
 
 import org.jglue.cdiunit.AdditionalClasses;
 
+import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
 import com.oneandone.cdiunit.internal.jaxrs.JaxRsExtension;
 import com.oneandone.ejbcdiunit.internal.jaxrs.JaxRsProducersEjbCdiUnit;
 
@@ -30,6 +31,7 @@ import com.oneandone.ejbcdiunit.internal.jaxrs.JaxRsProducersEjbCdiUnit;
  *
  */
 @AdditionalClasses({JaxRsExtension.class, JaxRsProducersEjbCdiUnit.class })
+@TestClasses({ JaxRsExtension.class, JaxRsProducersEjbCdiUnit.class })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface SupportJaxRsEjbCdiUnit {
 

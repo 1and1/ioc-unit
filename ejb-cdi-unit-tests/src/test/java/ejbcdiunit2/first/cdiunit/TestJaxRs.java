@@ -20,7 +20,7 @@ import com.oneandone.ejbcdiunit2.runner.EjbCdiUnit2Runner;
 
 @RunWith(EjbCdiUnit2Runner.class)
 @SupportJaxRsEjbCdiUnit
-public class TestJaxRs {
+public class TestJaxRs extends BaseTest {
 
     @Inject
     private WebService webService;

@@ -70,7 +70,7 @@ public class QualifierMatchTest {
     void namedName() {}
 
     static boolean match(Set<Annotation> produced, Set<Annotation> to) {
-        return QualifiedType.match(produced, to);
+        return QualifiedType.injectableIn(produced, to);
     }
 
     Set<Annotation> create(String... annNames) {

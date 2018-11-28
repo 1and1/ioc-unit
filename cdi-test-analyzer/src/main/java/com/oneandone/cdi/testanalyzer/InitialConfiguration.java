@@ -1,12 +1,12 @@
 package com.oneandone.cdi.testanalyzer;
 
-import org.jboss.weld.bootstrap.api.Service;
-
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import org.jboss.weld.bootstrap.api.Service;
 
 public class InitialConfiguration {
 
@@ -39,9 +39,18 @@ public class InitialConfiguration {
      */
     public Set<Class<?>> suTPackages = new HashSet<>(); // managed bean classes in packages of these classes will be created if necessary
     /**
+     * Classes of the packages of these classes are included if necessary to support Injects
+     */
+    public Set<Class<?>> testPackages = new HashSet<>(); // managed bean classes in packages of these classes will be created if necessary
+    /**
      * Classes of the classpaths of these classes are included if necessary to support Injects
      */
     public Set<Class<?>> suTClasspath = new HashSet<>(); // managed bean classes in classpath of these classes will be created if necessary
+
+    /**
+     * Classes of the classpaths of these classes are included if necessary to support Injects
+     */
+    public Set<Class<?>> testClasspath = new HashSet<>(); // managed bean classes in classpath of these classes will be created if necessary
 
     /**
      * Classes which should be enabled Alternatives (makes only sense if they are annotated as @Alternative) or
