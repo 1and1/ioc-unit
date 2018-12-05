@@ -13,16 +13,16 @@ import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.jglue.cdiunit.ProducerConfig;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
-import com.oneandone.ejbcdiunit.internal.ProducerConfigExtension;
-import com.oneandone.ejbcdiunit2.runner.EjbCdiUnit2Runner;
+import com.oneandone.cdi.tester.CdiUnit2Runner;
+import com.oneandone.cdi.tester.ProducerConfig;
+import com.oneandone.cdi.tester.ProducerConfigExtension;
 
-@RunWith(EjbCdiUnit2Runner.class)
+@RunWith(CdiUnit2Runner.class)
 @TestClasses({ TestProducerConfig.Producers.class, ProducerConfigExtension.class })
 @TestProducerConfig.ProducerConfigClass(Object.class)
 @TestProducerConfig.ProducerConfigNum(0)

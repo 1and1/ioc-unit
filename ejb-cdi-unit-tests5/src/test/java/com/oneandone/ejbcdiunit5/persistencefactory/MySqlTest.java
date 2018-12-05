@@ -27,7 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.oneandone.ejbcdiunit.entities.TestEntity1;
-import com.oneandone.ejbcdiunit.persistence.PersistenceFactory;
+import com.oneandone.cdi.tester.ejb.persistence.PersistenceFactory;
 import com.oneandone.ejbcdiunit5.JUnit5Extension;
 import com.oneandone.ejbcdiunit5.helpers.J2eeSimMySqlFactory;
 import com.oneandone.ejbcdiunit5.helpers.MySqlStarter;

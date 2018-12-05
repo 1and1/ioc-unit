@@ -6,7 +6,7 @@ import javax.enterprise.inject.Produces;
 import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 
-import com.oneandone.ejbcdiunit.persistence.TestPersistenceFactory;
+import com.oneandone.cdi.tester.ejb.persistence.TestPersistenceFactory;
 
 /**
  * @author aschoerk

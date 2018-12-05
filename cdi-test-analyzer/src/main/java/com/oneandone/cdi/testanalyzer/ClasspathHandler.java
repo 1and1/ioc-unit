@@ -1,13 +1,13 @@
 package com.oneandone.cdi.testanalyzer;
 
-import org.reflections8.ReflectionUtils;
-import org.reflections8.Reflections;
-import org.reflections8.util.ConfigurationBuilder;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Set;
 import java.util.function.Predicate;
+
+import org.reflections8.ReflectionUtils;
+import org.reflections8.Reflections;
+import org.reflections8.util.ConfigurationBuilder;
 
 /**
  * @author aschoerk
@@ -18,13 +18,17 @@ public class ClasspathHandler {
         final String packageName = additionalPackage.getPackage().getName();
         Reflections reflections = new Reflections(new ConfigurationBuilder()
                 .setScanners(new TypesScanner())
-                .setUrls(additionalPackage.getProtectionDomain().getCodeSource().getLocation()).filterInputsBy(new Predicate<String>() {
-
+                .setUrls(additionalPackage.getProtectionDomain().getCodeSource().getLocation())
+                .filterInputsBy(new Predicate<String>() {
                     @Override
                     public boolean test(String input) {
-                        return input.startsWith(packageName)
-                                && !input.substring(packageName.length() + 1, input.length() - 6).contains(".");
-
+                        final String inputR = input.replace('/', '.').replace('\\', '.');
+                        if (inputR.startsWith(packageName)) {
+                            final String stringAfterPackage =
+                                    inputR.substring(packageName.length() + 1, inputR.length() - ".class".length());
+                            return !stringAfterPackage.contains(".");
+                        }
+                        return false;
                     }
                 }));
         classesToProcess.addAll(ReflectionUtils.forNames(

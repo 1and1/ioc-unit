@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.oneandone.ejbcdiunit.entities.TestEntity1;
-import com.oneandone.ejbcdiunit.persistence.TestPersistenceFactory;
+import com.oneandone.cdi.tester.ejb.persistence.TestPersistenceFactory;
 import com.oneandone.ejbcdiunit5.JUnit5Extension;
 
 /**

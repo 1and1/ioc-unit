@@ -2,11 +2,11 @@ package ejbcdiunit2.first;
 
 import javax.enterprise.inject.Produces;
 
-import org.jglue.cdiunit.ProducesAlternative;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
 import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
+import com.oneandone.cdi.tester.ProducesAlternative;
 import com.oneandone.ejbcdiunit.EjbUnitRunner;
 import com.oneandone.ejbcdiunit.cdiunit.ExcludedClasses;
 

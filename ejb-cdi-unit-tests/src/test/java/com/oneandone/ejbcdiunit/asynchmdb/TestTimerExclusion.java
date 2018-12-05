@@ -9,9 +9,9 @@ import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.Rule;
 import org.junit.Test;
 
-import com.oneandone.ejbcdiunit.AsynchronousManager;
+import com.oneandone.cdi.tester.CdiUnit2Rule;
+import com.oneandone.cdi.tester.ejb.AsynchronousManager;
 import com.oneandone.ejbcdiunit.CdiTestConfig;
-import com.oneandone.ejbcdiunit.EjbUnitRule;
 import com.oneandone.ejbcdiunit.ejbs.CountingBean;
 import com.oneandone.ejbcdiunit.ejbs.SingletonTimerEJB;
 import com.oneandone.ejbcdiunit.ejbs.StatelessTimerEJB;
@@ -25,8 +25,8 @@ public class TestTimerExclusion {
     AsynchronousManager asynchronousManager;
 
     @Rule
-    public EjbUnitRule getEjbUnitRule() {
-        return new EjbUnitRule(this, new CdiTestConfig().addExcluded(SingletonTimerEJB.class));
+    public CdiUnit2Rule getEjbUnitRule() {
+        return new CdiUnit2Rule(this, new CdiTestConfig().addExcluded(SingletonTimerEJB.class));
     }
 
     @Test

@@ -15,27 +15,29 @@ package com.oneandone.ejbcdiunit.cdiunit;
  * limitations under the License.
  */
 
-import com.oneandone.cdi.weldstarter.WeldSetup;
-import com.oneandone.cdi.weldstarter.WeldSetupClass;
-import com.oneandone.cdi.weldstarter.WrappedDeploymentException;
-import com.oneandone.cdi.weldstarter.spi.WeldStarter;
-import com.oneandone.ejbcdiunit.CdiTestConfig;
-import com.oneandone.ejbcdiunit.CreationalContexts;
-import com.oneandone.ejbcdiunit.EjbUnitTransactionServices;
-import com.oneandone.ejbcdiunit.SupportEjbExtended;
-import com.oneandone.ejbcdiunit.cfganalyzer.TestConfigAnalyzer;
-import com.oneandone.ejbcdiunit.internal.EjbInformationBean;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.net.URL;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.spi.BeanManager;
+import javax.naming.InitialContext;
+
 import org.jboss.weld.transaction.spi.TransactionServices;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.naming.InitialContext;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.net.URL;
+import com.oneandone.cdi.tester.ejb.EjbInformationBean;
+import com.oneandone.cdi.tester.ejb.EjbUnitTransactionServices;
+import com.oneandone.cdi.tester.ejb.SupportEjbExtended;
+import com.oneandone.cdi.weldstarter.CreationalContexts;
+import com.oneandone.cdi.weldstarter.WeldSetup;
+import com.oneandone.cdi.weldstarter.WeldSetupClass;
+import com.oneandone.cdi.weldstarter.WrappedDeploymentException;
+import com.oneandone.cdi.weldstarter.spi.WeldStarter;
+import com.oneandone.ejbcdiunit.CdiTestConfig;
+import com.oneandone.ejbcdiunit.cfganalyzer.TestConfigAnalyzer;
 
 /**
  * <code>&#064;CdiRunner</code> is a JUnit runner that uses a CDI container to
@@ -105,7 +107,6 @@ public class CdiRunner extends BlockJUnit4ClassRunner {
             if ("2.2.8 (Final)".equals(version) || "2.2.7 (Final)".equals(version)) {
                 startupException = new Exception("Weld 2.2.8 and 2.2.7 are not supported. Suggest upgrading to 2.2.9");
             }
-
             final CdiTestConfig weldTestConfig =
                     new CdiTestConfig(clazz, frameworkMethod.getMethod(), weldStarter)
                             .addClass(SupportEjbExtended.class)
@@ -115,6 +116,7 @@ public class CdiRunner extends BlockJUnit4ClassRunner {
 
             try {
                 if (weldSetup == null) {
+
                     TestConfigAnalyzer cdiUnitAnalyzer = new TestConfigAnalyzer();
                     cdiUnitAnalyzer.analyze(weldTestConfig);
                     weldSetup = new WeldSetupClass();
@@ -128,9 +130,10 @@ public class CdiRunner extends BlockJUnit4ClassRunner {
                     weldSetup.setExtensionObjects(weldTestConfig.getExtensions());
                     weldSetup.addService(new WeldSetup.ServiceConfig(TransactionServices.class, new EjbUnitTransactionServices()));
                 }
+                weldSetup.handleWeldExtensions(frameworkMethod.getMethod());
                 weldStarter.start(weldSetup);
 
-                System.setProperty("java.naming.factory.initial", "com.oneandone.cdiunit.internal.naming.CdiUnitContextFactory");
+                System.setProperty("java.naming.factory.initial", "com.oneandone.cdi.tester.naming.CdiTesterContextFactory");
 
                 InitialContext initialContext = new InitialContext();
                 final BeanManager beanManager = weldStarter.get(BeanManager.class);
@@ -138,7 +141,7 @@ public class CdiRunner extends BlockJUnit4ClassRunner {
                 try (CreationalContexts creationalContexts = new CreationalContexts(beanManager)) {
                     EjbInformationBean ejbInformationBean =
                             (EjbInformationBean) creationalContexts.create(EjbInformationBean.class, ApplicationScoped.class);
-                    ejbInformationBean.setApplicationExceptionDescriptions(weldTestConfig.getApplicationExceptionDescriptions());
+                    // TODO: ejbInformationBean.setApplicationExceptionDescriptions(weldTestConfig.getApplicationExceptionDescriptions());
                 } finally {
                     initialContext.close();
                 }

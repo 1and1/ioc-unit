@@ -15,14 +15,14 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.oneandone.cdi.tester.ejb.SessionContextFactory;
+import com.oneandone.cdi.tester.ejb.persistence.SinglePersistenceFactory;
 import com.oneandone.ejbcdiunit.EjbUnitRunner;
-import com.oneandone.ejbcdiunit.SessionContextFactory;
 import com.oneandone.ejbcdiunit.ejbs.SingletonEJB;
 import com.oneandone.ejbcdiunit.ejbs.StatelessEJB;
 import com.oneandone.ejbcdiunit.ejbs.StatelessNotSupportedEJB;
 import com.oneandone.ejbcdiunit.entities.TestEntity1;
 import com.oneandone.ejbcdiunit.helpers.LoggerGenerator;
-import com.oneandone.ejbcdiunit.persistence.SinglePersistenceFactory;
 
 /**
  * @author aschoerk

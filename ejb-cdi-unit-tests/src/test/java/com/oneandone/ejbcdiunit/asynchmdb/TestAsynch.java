@@ -15,7 +15,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 
-import com.oneandone.ejbcdiunit.AsynchronousManager;
+import com.oneandone.cdi.tester.ejb.AsynchronousManager;
 import com.oneandone.ejbcdiunit.EjbUnitRunner;
 import com.oneandone.ejbcdiunit.ejbs.CdiAsynchronousBean;
 import com.oneandone.ejbcdiunit.ejbs.CountingBean;
@@ -45,6 +45,7 @@ public class TestAsynch {
 
     @Before
     public void beforeTestAsynch() {
+        CountingBean.clear();
         asynchronousManager.setEnqueAsynchronousCalls(true);
     }
 
@@ -66,10 +67,13 @@ public class TestAsynch {
         assertThat(asynchronousManager.thereAreOnces(), is(false));
     }
 
+    @Inject
+    SingletonTimerEJB singletonTimerEJB;
+
     @Test
     public void testTimer() {
-        SingletonTimerEJB a = new SingletonTimerEJB();
-        a.logcall();
+        // SingletonTimerEJB a = new SingletonTimerEJB();
+        singletonTimerEJB.logcall();
         assertThat(CountingBean.get(), is(CountingBean.INITIALCOUNT + 1));
         asynchronousManager.once();
         // 2 calls of timer beans
@@ -84,8 +88,7 @@ public class TestAsynch {
     @Test
     // repeat testTimer to make sure nothing static is left behind
     public void testTimerSecondTest() {
-        SingletonTimerEJB a = new SingletonTimerEJB();
-        a.logcall();
+        singletonTimerEJB.logcall();
         assertThat(CountingBean.get(), is(CountingBean.INITIALCOUNT + 1));
         asynchronousManager.once();
         assertThat(CountingBean.get(), is(CountingBean.INITIALCOUNT + 3));

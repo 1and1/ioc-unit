@@ -5,7 +5,7 @@ import com.oneandone.ejbcdiunit.ejbs.SingletonEJB;
 import com.oneandone.ejbcdiunit.ejbs.StatelessEJB;
 import com.oneandone.ejbcdiunit.ejbs.StatelessNotSupportedEJB;
 import com.oneandone.ejbcdiunit.entities.TestEntity1;
-import com.oneandone.ejbcdiunit.persistence.SinglePersistenceFactory;
+import com.oneandone.cdi.tester.ejb.persistence.SinglePersistenceFactory;
 import com.oneandone.ejbcdiunit5.JUnit5Extension;
 import com.oneandone.ejbcdiunit5.helpers.LoggerGenerator;
 import org.jglue.cdiunit.AdditionalClasses;

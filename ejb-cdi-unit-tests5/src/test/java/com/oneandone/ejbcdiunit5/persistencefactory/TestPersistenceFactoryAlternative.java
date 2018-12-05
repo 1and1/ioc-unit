@@ -1,6 +1,6 @@
 package com.oneandone.ejbcdiunit5.persistencefactory;
 
-import com.oneandone.ejbcdiunit.persistence.TestPersistenceFactory;
+import com.oneandone.cdi.tester.ejb.persistence.TestPersistenceFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Default;

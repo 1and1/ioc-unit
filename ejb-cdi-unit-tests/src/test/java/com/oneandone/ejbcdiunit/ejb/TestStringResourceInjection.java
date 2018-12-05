@@ -8,8 +8,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.oneandone.cdi.tester.ejb.ResourceQualifier;
 import com.oneandone.ejbcdiunit.EjbUnitRunner;
-import com.oneandone.ejbcdiunit.ResourceQualifier;
 import com.oneandone.ejbcdiunit.ejbs.ResourceTestEjb;
 
 /**

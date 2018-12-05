@@ -115,7 +115,7 @@ public class QualifierMatchTest {
         assertTrue(match(named_namedName, any));
         assertTrue(match(named_namedName, empty));
         assertTrue(match(q1, q1any));
-        assertTrue(match(any, empty));
+        assertFalse(match(any, empty));
         assertFalse(match(any, def));
         assertFalse(match(q2, q1any));
         assertFalse(match(empty, q1any));

@@ -1,6 +1,6 @@
 package com.oneandone.ejbcdiunit5.helpers;
 
-import com.oneandone.ejbcdiunit.resourcesimulators.SessionContextSimulation;
+import com.oneandone.cdi.tester.ejb.resourcesimulators.SessionContextSimulation;
 import org.jglue.cdiunit.ProducesAlternative;
 
 import javax.enterprise.context.ApplicationScoped;

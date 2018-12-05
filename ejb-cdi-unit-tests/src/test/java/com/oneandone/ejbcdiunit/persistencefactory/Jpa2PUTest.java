@@ -19,8 +19,6 @@ import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 
 import org.hibernate.exception.GenericJDBCException;
-import org.jglue.cdiunit.ActivatedAlternatives;
-import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,22 +26,24 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.oneandone.cdi.testanalyzer.annotations.EnabledAlternatives;
+import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
+import com.oneandone.cdi.tester.CdiUnit2Runner;
+import com.oneandone.cdi.tester.ejb.persistence.TestTransaction;
 import com.oneandone.ejbcdiunit.ClassWithTwoDifferentEntityManagers;
-import com.oneandone.ejbcdiunit.EjbUnitRunner;
 import com.oneandone.ejbcdiunit.cdiunit.Pu1Em;
 import com.oneandone.ejbcdiunit.cdiunit.Pu2Em;
 import com.oneandone.ejbcdiunit.entities.TestEntity1;
 import com.oneandone.ejbcdiunit.helpers.J2eeSimTest1Factory;
 import com.oneandone.ejbcdiunit.helpers.J2eeSimTest2Factory;
 import com.oneandone.ejbcdiunit.helpers.TestResources;
-import com.oneandone.ejbcdiunit.persistence.TestTransaction;
 
 /**
  * @author aschoerk
  */
-@RunWith(EjbUnitRunner.class)
-@ActivatedAlternatives({ TestResources.class })
-@AdditionalClasses({ J2eeSimTest1Factory.class, J2eeSimTest2Factory.class, ClassWithTwoDifferentEntityManagers.class })
+@RunWith(CdiUnit2Runner.class)
+@EnabledAlternatives({ TestResources.class })
+@TestClasses({ J2eeSimTest1Factory.class, J2eeSimTest2Factory.class, ClassWithTwoDifferentEntityManagers.class })
 public class Jpa2PUTest {
 
     @Inject

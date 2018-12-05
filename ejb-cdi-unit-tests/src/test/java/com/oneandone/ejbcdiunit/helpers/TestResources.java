@@ -18,9 +18,10 @@ import javax.persistence.EntityManager;
 import javax.transaction.UserTransaction;
 import javax.xml.rpc.handler.MessageContext;
 
-import org.jglue.cdiunit.ProducesAlternative;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.oneandone.cdi.tester.ProducesAlternative;
 
 /**
  * @author aschoerk

@@ -45,6 +45,25 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>net.oneandone</groupId>
+            <artifactId>cdi-tester</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.oneandone</groupId>
+            <artifactId>cdi-tester-contexts</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.oneandone</groupId>
+            <artifactId>cdi-ejb-tester</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
             <groupId>org.jboss.weld</groupId>
             <artifactId>weld-spi</artifactId>
             <version>3.0.Final</version>

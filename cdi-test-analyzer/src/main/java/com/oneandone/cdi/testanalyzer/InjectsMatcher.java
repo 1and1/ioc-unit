@@ -116,7 +116,7 @@ public class InjectsMatcher {
                                 if (dProduces > cProduces) {
                                     classesToBeRemoved.add(c);
                                     log.info("Class {} to be removed from classes to be started.", c);
-                                } else if (dProduces < cProduces) {
+                                } else if (dProduces < cProduces && !builder.isObligatoryClass(d)) {
                                     classesToBeRemoved.add(d);
                                     log.info("Class {} to be removed from classes to be started.", d);
                                 } else {

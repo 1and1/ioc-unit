@@ -13,7 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.oneandone.ejbcdiunit.AsynchronousManager;
+import com.oneandone.cdi.tester.ejb.AsynchronousManager;
 import com.oneandone.ejbcdiunit.EjbUnitRunner;
 import com.oneandone.ejbcdiunit.ejbs.StatelessCompletelyAsynchEJB;
 

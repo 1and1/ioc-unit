@@ -18,27 +18,28 @@ import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 
-import org.jglue.cdiunit.ActivatedAlternatives;
-import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.oneandone.ejbcdiunit.EjbUnitRunner;
+import com.oneandone.cdi.testanalyzer.annotations.EnabledAlternatives;
+import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
+import com.oneandone.cdi.tester.CdiUnit2Runner;
+import com.oneandone.cdi.tester.ejb.persistence.PersistenceFactory;
 import com.oneandone.ejbcdiunit.entities.TestEntity1;
 import com.oneandone.ejbcdiunit.helpers.J2eeSimMySqlFactory;
+import com.oneandone.ejbcdiunit.helpers.J2eeSimTest1Factory;
 import com.oneandone.ejbcdiunit.helpers.MySqlStarter;
 import com.oneandone.ejbcdiunit.helpers.TestResources;
-import com.oneandone.ejbcdiunit.persistence.PersistenceFactory;
 
 /**
  * @author aschoerk
  */
-@RunWith(EjbUnitRunner.class)
-@ActivatedAlternatives({ J2eeSimMySqlFactory.class, TestResources.class })
-@AdditionalClasses({ MySqlStarter.class })
+@RunWith(CdiUnit2Runner.class)
+@EnabledAlternatives({ J2eeSimMySqlFactory.class, TestResources.class })
+@TestClasses({ MySqlStarter.class, J2eeSimTest1Factory.class })
 public class MySqlTest {
 
     private static Logger logger = LoggerFactory.getLogger("logger");

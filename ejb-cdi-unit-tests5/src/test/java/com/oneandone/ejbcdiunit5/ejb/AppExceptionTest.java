@@ -3,7 +3,7 @@ package com.oneandone.ejbcdiunit5.ejb;
 import com.oneandone.ejbcdiunit.cdiunit.EjbJarClasspath;
 import com.oneandone.ejbcdiunit.ejbs.appexc.TestBaseClass;
 import com.oneandone.ejbcdiunit.entities.TestEntity1;
-import com.oneandone.ejbcdiunit.persistence.TestPersistenceFactory;
+import com.oneandone.cdi.tester.ejb.persistence.TestPersistenceFactory;
 import com.oneandone.ejbcdiunit5.JUnit5Extension;
 import org.jglue.cdiunit.AdditionalClasses;
 import org.jglue.cdiunit.AdditionalPackages;

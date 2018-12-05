@@ -7,12 +7,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
-import com.oneandone.ejbcdiunit2.runner.EjbCdiUnit2Runner;
+import com.oneandone.cdi.tester.CdiUnit2Runner;
 
 import ch.qos.logback.classic.filter.ThresholdFilter;
 import ch.qos.logback.core.filter.Filter;
 
-@RunWith(EjbCdiUnit2Runner.class)
+@RunWith(CdiUnit2Runner.class)
 @TestClasses(ThresholdFilter.class)
 public class TestNonCDIClasses {
 

@@ -7,11 +7,11 @@ import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 
 import org.jglue.cdiunit.AdditionalClasses;
-import org.jglue.cdiunit.ProducesAlternative;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
+import com.oneandone.cdi.tester.ProducesAlternative;
 import com.oneandone.ejbcdiunit.EjbUnitRunner;
 
 import cdiunit.tobetestedcode.HelperClass;

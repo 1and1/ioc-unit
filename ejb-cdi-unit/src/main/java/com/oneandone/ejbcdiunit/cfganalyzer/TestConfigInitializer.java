@@ -3,27 +3,26 @@ package com.oneandone.ejbcdiunit.cfganalyzer;
 import java.io.IOException;
 import java.util.Set;
 
-import org.jglue.cdiunit.ProducesAlternative;
-
+import com.oneandone.cdi.testanalyzer.extensions.TestScopeExtension;
+import com.oneandone.cdi.tester.ProducerConfigExtension;
+import com.oneandone.cdi.tester.ProducesAlternative;
+import com.oneandone.cdi.tester.contexts.internal.InConversationInterceptor;
+import com.oneandone.cdi.tester.contexts.internal.InRequestInterceptor;
+import com.oneandone.cdi.tester.contexts.internal.InSessionInterceptor;
+import com.oneandone.cdi.tester.contexts.internal.InitialListenerProducer;
+import com.oneandone.cdi.tester.contexts.internal.jsf.ViewScopeExtension;
+import com.oneandone.cdi.tester.contexts.internal.servlet.ServletObjectsProducer;
+import com.oneandone.cdi.tester.contexts.servlet.MockHttpServletRequestImpl;
+import com.oneandone.cdi.tester.contexts.servlet.MockHttpServletResponseImpl;
+import com.oneandone.cdi.tester.contexts.servlet.MockHttpSessionImpl;
+import com.oneandone.cdi.tester.contexts.servlet.MockServletContextImpl;
+import com.oneandone.cdi.tester.ejb.AsynchronousMethodInterceptor;
+import com.oneandone.cdi.tester.ejb.TransactionalInterceptor;
+import com.oneandone.cdi.tester.ejb.resourcesimulators.SimulatedUserTransaction;
+import com.oneandone.cdi.tester.mocks.EasyMockExtension;
+import com.oneandone.cdi.tester.mocks.MockitoExtension;
 import com.oneandone.cdi.weldstarter.WeldSetupClass;
-import com.oneandone.cdiunit.internal.easymock.EasyMockExtension;
-import com.oneandone.cdiunit.internal.mockito.MockitoExtension;
-import com.oneandone.cdiunit.internal.servlet.MockHttpServletRequestImpl;
-import com.oneandone.cdiunit.internal.servlet.MockHttpServletResponseImpl;
-import com.oneandone.cdiunit.internal.servlet.MockHttpSessionImpl;
-import com.oneandone.cdiunit.internal.servlet.MockServletContextImpl;
 import com.oneandone.ejbcdiunit.CdiTestConfig;
-import com.oneandone.ejbcdiunit.cdiunit.internal.InConversationInterceptor;
-import com.oneandone.ejbcdiunit.cdiunit.internal.TestScopeExtension;
-import com.oneandone.ejbcdiunit.internal.AsynchronousMethodInterceptor;
-import com.oneandone.ejbcdiunit.internal.EjbCdiUnitInitialListenerProducer;
-import com.oneandone.ejbcdiunit.internal.InRequestInterceptorEjbCdiUnit;
-import com.oneandone.ejbcdiunit.internal.InSessionInterceptorEjbCdiUnit;
-import com.oneandone.ejbcdiunit.internal.ProducerConfigExtension;
-import com.oneandone.ejbcdiunit.internal.TransactionalInterceptor;
-import com.oneandone.ejbcdiunit.internal.jsf.EjbUnitViewScopeExtension;
-import com.oneandone.ejbcdiunit.internal.servlet.ServletObjectsProducerEjbCdiUnit;
-import com.oneandone.ejbcdiunit.resourcesimulators.SimulatedUserTransaction;
 
 /**
  * @author aschoerk
@@ -60,16 +59,16 @@ public class TestConfigInitializer {
 
         try {
             Class.forName("javax.faces.view.ViewScoped");
-            testConfig.getExtensions().add(new EjbUnitViewScopeExtension());
+            testConfig.getExtensions().add(new ViewScopeExtension());
         } catch (ClassNotFoundException e) {
 
         }
 
         try {
             Class.forName("javax.servlet.http.HttpServletRequest");
-            classesToProcess.add(EjbCdiUnitInitialListenerProducer.class);
-            classesToProcess.add(InRequestInterceptorEjbCdiUnit.class);
-            classesToProcess.add(InSessionInterceptorEjbCdiUnit.class);
+            classesToProcess.add(InitialListenerProducer.class);
+            classesToProcess.add(InRequestInterceptor.class);
+            classesToProcess.add(InSessionInterceptor.class);
             classesToProcess.add(InConversationInterceptor.class);
             classesToProcess.add(MockServletContextImpl.class);
             classesToProcess.add(MockHttpSessionImpl.class);
@@ -81,7 +80,7 @@ public class TestConfigInitializer {
             try {
                 Class.forName("org.jboss.weld.bean.AbstractSyntheticBean");
             } catch (ClassNotFoundException | NoClassDefFoundError e) {
-                classesToProcess.add(ServletObjectsProducerEjbCdiUnit.class);
+                classesToProcess.add(ServletObjectsProducer.class);
             }
 
         } catch (ClassNotFoundException e) {}

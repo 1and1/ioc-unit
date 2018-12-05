@@ -1,7 +1,7 @@
 package com.oneandone.ejbcdiunit5.ejb;
 
 import com.oneandone.ejbcdiunit.ejbs.StatelessEJB;
-import com.oneandone.ejbcdiunit.persistence.TestPersistenceFactory;
+import com.oneandone.cdi.tester.ejb.persistence.TestPersistenceFactory;
 import com.oneandone.ejbcdiunit5.JUnit5Extension;
 import com.oneandone.ejbcdiunit5.helpers.LoggerGenerator;
 import org.jglue.cdiunit.AdditionalClasses;

@@ -6,23 +6,24 @@ import javax.inject.Inject;
 import org.jboss.weld.environment.se.WeldSEBeanRegistrant;
 
 import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
-import com.oneandone.cdiunit.internal.servlet.MockHttpServletRequestImpl;
-import com.oneandone.cdiunit.internal.servlet.MockHttpServletResponseImpl;
-import com.oneandone.cdiunit.internal.servlet.MockHttpSessionImpl;
-import com.oneandone.cdiunit.internal.servlet.MockServletContextImpl;
-import com.oneandone.ejbcdiunit.ContextControllerEjbCdiUnit;
-import com.oneandone.ejbcdiunit.cdiunit.internal.InConversationInterceptor;
-import com.oneandone.ejbcdiunit.internal.EjbCdiUnitInitialListenerProducer;
-import com.oneandone.ejbcdiunit.internal.InRequestInterceptorEjbCdiUnit;
-import com.oneandone.ejbcdiunit.internal.InSessionInterceptorEjbCdiUnit;
-import com.oneandone.ejbcdiunit.internal.jsf.EjbUnitViewScopeExtension;
+import com.oneandone.cdi.tester.ProducesAlternative;
+import com.oneandone.cdi.tester.contexts.ContextController;
+import com.oneandone.cdi.tester.contexts.internal.InConversationInterceptor;
+import com.oneandone.cdi.tester.contexts.internal.InRequestInterceptor;
+import com.oneandone.cdi.tester.contexts.internal.InSessionInterceptor;
+import com.oneandone.cdi.tester.contexts.internal.InitialListenerProducer;
+import com.oneandone.cdi.tester.contexts.internal.jsf.ViewScopeExtension;
+import com.oneandone.cdi.tester.contexts.servlet.MockHttpServletRequestImpl;
+import com.oneandone.cdi.tester.contexts.servlet.MockHttpServletResponseImpl;
+import com.oneandone.cdi.tester.contexts.servlet.MockHttpSessionImpl;
+import com.oneandone.cdi.tester.contexts.servlet.MockServletContextImpl;
 
-@TestClasses({ ESupportClass.class, ScopedFactory.class,
+@TestClasses({ ScopedFactory.class,
         // added in cdiunit
-        EjbUnitViewScopeExtension.class,
-        ContextControllerEjbCdiUnit.class,
-        InRequestInterceptorEjbCdiUnit.class,
-        InSessionInterceptorEjbCdiUnit.class,
+        ViewScopeExtension.class,
+        ContextController.class,
+        InRequestInterceptor.class,
+        InSessionInterceptor.class,
         InConversationInterceptor.class,
         WeldSEBeanRegistrant.class,
         // ProducerConfigExtension.class,
@@ -30,7 +31,8 @@ import com.oneandone.ejbcdiunit.internal.jsf.EjbUnitViewScopeExtension;
         MockHttpSessionImpl.class,
         MockHttpServletRequestImpl.class,
         MockHttpServletResponseImpl.class,
-        EjbCdiUnitInitialListenerProducer.class
+        InitialListenerProducer.class,
+        ProducesAlternative.class
 })
 public class BaseTest {
     @Inject

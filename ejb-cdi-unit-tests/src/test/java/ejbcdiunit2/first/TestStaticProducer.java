@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.oneandone.cdi.testanalyzer.annotations.SutPackages;
-import com.oneandone.ejbcdiunit2.runner.EjbCdiUnit2Runner;
+import com.oneandone.cdi.tester.CdiUnit2Runner;
 
 import ejbcdiunit2.first.producing.ProducingClass2;
 import ejbcdiunit2.first.test2.Test2Interface;
@@ -17,7 +17,7 @@ import ejbcdiunit2.first.test2.Test2Interface;
 /**
  * @author aschoerk
  */
-@RunWith(EjbCdiUnit2Runner.class)
+@RunWith(CdiUnit2Runner.class)
 @SutPackages({ ProducingClass2.class })
 public class TestStaticProducer {
     @Inject

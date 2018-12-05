@@ -1,5 +1,7 @@
 package com.oneandone.cdi.weldstarter;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -117,6 +119,31 @@ public class WeldSetupBase implements WeldSetup {
 
     public void addExtensionObject(final Extension extension) {
         this.extensions.add(new MetadataImpl<Extension>(extension, "Alternative In Testcode"));
+    }
+
+    public void handleWeldExtensions(final Method method) {
+        try {
+            final Iterable<Metadata<Extension>> localExtensions = getExtensions();
+            extensions = new ArrayList<>();
+            for (Metadata<Extension> extensionMetadata : localExtensions) {
+                final Class<? extends Extension> extensionClass = extensionMetadata.getValue().getClass();
+                if (extensionClass.getName().contains(".ProducerConfigExtension")) {
+                    Constructor<? extends Extension> constructor =
+                            extensionClass.getConstructor(Method.class);
+                    Extension producerConfig = constructor.newInstance(method);
+                    addExtensionObject(producerConfig);
+                } else {
+                    final Constructor<?>[] declaredConstructors = extensionClass.getDeclaredConstructors();
+                    if (declaredConstructors.length == 1 && declaredConstructors[0].getParameters().length == 0) {
+                        addExtensionObject(extensionClass.newInstance());
+                    } else {
+                        addExtensionObject(extensionMetadata.getValue());
+                    }
+                }
+            }
+        } catch (Exception e1) {
+            throw new RuntimeException(e1);
+        }
     }
 
     public <S extends Service> void addService(ServiceConfig<S> serviceConfig) {

@@ -67,12 +67,16 @@ class LeveledBuilder {
     List<Extension> extensionObjects = new ArrayList<>();
     Set<Class<?>> elseClasses = new HashSet<>();
     Set<QualifiedType> handledInjections = new HashSet<>();
+    public final AnalyzeConfiguration analyzeConfiguration;
 
 
-    public LeveledBuilder(InitialConfiguration cfg) {
+    public LeveledBuilder(InitialConfiguration cfg, AnalyzeConfiguration analyzeConfiguration) {
         if (cfg.testClass != null) {
             addClass(cfg.testClass, testClasses, testClassesToBeEvaluated);
         }
+        this.analyzeConfiguration = analyzeConfiguration;
+
+        addClasses(analyzeConfiguration.initialClasses, testClasses, testClassesToBeEvaluated);
         Method testMethod = cfg.testMethod;
         if (cfg.initialClasses != null) {
             addClasses(cfg.initialClasses, testClasses, testClassesToBeEvaluated);
@@ -180,10 +184,18 @@ class LeveledBuilder {
                 if (!found) {
                     foundAlternativeClasses.add(alternative);
                 } else {
-                    testClasses.add(alternative);
+                    if (!testClasses.contains(alternative)) {
+                        testClasses.add(alternative);
+                        testClassesToBeEvaluated.add(alternative);
+                        addToClassMap(alternative);
+                    }
                 }
             } else {
-                testClasses.add(alternative);
+                if (!testClasses.contains(alternative)) {
+                    testClasses.add(alternative);
+                    testClassesToBeEvaluated.add(alternative);
+                    addToClassMap(alternative);
+                }
             }
             addToClassMap(alternative);
         }
@@ -291,6 +303,7 @@ class LeveledBuilder {
 
 
     LeveledBuilder tobeStarted(Class c) {
+        log.info("To be Started: {}", c.getName());
         beansToBeStarted.add(c);
         addToClassMap(c);
         return this;
@@ -312,7 +325,7 @@ class LeveledBuilder {
 
     LeveledBuilder injects(Class c) {
         return doInClassAndSuperClasses(c, c1 -> {
-            InjectFinder injectFinder = new InjectFinder();
+            InjectFinder injectFinder = new InjectFinder(analyzeConfiguration);
             injectFinder.find(c1);
             injections.addAll(injectFinder.getInjectedTypes());
         });
@@ -323,6 +336,7 @@ class LeveledBuilder {
         handledInjections.add(inject);
         return this;
     }
+
 
     LeveledBuilder producerFields(Class c) {
         for (Field f : c.getDeclaredFields()) {
@@ -396,6 +410,22 @@ class LeveledBuilder {
         });
     }
 
+
+    LeveledBuilder extraAnnotations(Class c) {
+        if (this.analyzeConfiguration.extraClassAnnotations.keySet().size() > 0) {
+            return doInClassAndSuperClasses(c, c1 -> {
+                analyzeConfiguration.extraClassAnnotations.keySet()
+                        .stream()
+                        .map(a -> c1.getAnnotation((Class<? extends Annotation>) (a)))
+                        .filter(res -> res != null)
+                        .forEach(res -> analyzeConfiguration.extraClassAnnotations.get(((Annotation) res).annotationType())
+                                .handleExtraClassAnnotation(res, c1));
+            });
+        }
+        return this;
+    }
+
+
     LeveledBuilder packagesAnnotations(Class<?> c) {
         return doInClassAndSuperClasses(c, c1 -> {
             try {
@@ -462,7 +492,8 @@ class LeveledBuilder {
                                     .sutClassAnnotation(annotationType)
                                     .packagesAnnotations(annotationType)
                                     .enabledAlternatives(annotationType)
-                                    .customAnnotations(annotationType);
+                                    .customAnnotations(annotationType)
+                                    .extraAnnotations(annotationType);
                         }
                     }
                 }
@@ -517,7 +548,7 @@ class LeveledBuilder {
         Set<Class<?>> tmp = new HashSet<>();
         tmp.addAll(beansAvailable);
         tmp.removeAll(beansToBeStarted);
-        LeveledBuilder result = new LeveledBuilder(new InitialConfiguration());
+        LeveledBuilder result = new LeveledBuilder(new InitialConfiguration(), analyzeConfiguration);
         for (Class<?> c : tmp) {
             result.available(c); // necessary? already is available
             result.producerFields(c);

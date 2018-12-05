@@ -3,9 +3,9 @@ package ejbcdiunit2.first;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.oneandone.ejbcdiunit2.runner.EjbCdiUnit2Runner;
+import com.oneandone.cdi.tester.CdiUnit2Runner;
 
-@RunWith(EjbCdiUnit2Runner.class)
+@RunWith(CdiUnit2Runner.class)
 public class TestEjbCdiUnit2 {
 
     @Test

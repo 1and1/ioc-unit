@@ -32,8 +32,8 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpException;
+import com.oneandone.cdi.tester.util.LoggerProducer;
 import com.oneandone.ejbcdiunit.EjbUnitRunner;
-import com.oneandone.ejbcdiunit.util.LoggerProducer;
 
 @RunWith(EjbUnitRunner.class)
 @AdditionalClasses({ LoggerProducer.class })

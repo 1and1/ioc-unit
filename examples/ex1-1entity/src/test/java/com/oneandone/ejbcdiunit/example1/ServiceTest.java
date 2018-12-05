@@ -20,11 +20,11 @@ import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.oneandone.cdi.tester.ejb.persistence.PersistenceFactory;
+import com.oneandone.cdi.tester.ejb.persistence.TestClosure;
+import com.oneandone.cdi.tester.ejb.persistence.TestPersistenceFactory;
+import com.oneandone.cdi.tester.ejb.persistence.TestTransactionException;
 import com.oneandone.ejbcdiunit.EjbUnitRunner;
-import com.oneandone.ejbcdiunit.persistence.PersistenceFactory;
-import com.oneandone.ejbcdiunit.persistence.TestClosure;
-import com.oneandone.ejbcdiunit.persistence.TestPersistenceFactory;
-import com.oneandone.ejbcdiunit.persistence.TestTransactionException;
 
 /**
  * @author aschoerk

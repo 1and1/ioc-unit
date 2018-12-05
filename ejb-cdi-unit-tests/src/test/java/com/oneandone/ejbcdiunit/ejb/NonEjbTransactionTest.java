@@ -10,10 +10,10 @@ import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.oneandone.cdi.tester.ejb.EjbTransactional;
+import com.oneandone.cdi.tester.ejb.persistence.TestPersistenceFactory;
 import com.oneandone.ejbcdiunit.EjbUnitRunner;
 import com.oneandone.ejbcdiunit.entities.TestEntity1;
-import com.oneandone.ejbcdiunit.internal.EjbTransactional;
-import com.oneandone.ejbcdiunit.persistence.TestPersistenceFactory;
 
 /**
  * @author aschoerk

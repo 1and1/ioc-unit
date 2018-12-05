@@ -9,7 +9,7 @@ import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 
-import com.oneandone.ejbcdiunit.EjbUnitRule;
+import com.oneandone.cdi.tester.CdiUnit2Rule;
 import com.oneandone.ejbcdiunit.excludedclasses.pcktoinclude.ToExclude;
 import com.oneandone.ejbcdiunit.excludedclasses.pcktoinclude.ToInclude;
 
@@ -25,9 +25,9 @@ public class ExcludeNegativeByRuleTest {
     ToExclude.ToExcludeProduced toExcludeProduced; // produced by not excluded ToExclude
 
     @Rule
-    public EjbUnitRule getEjbUnitRule() {
+    public CdiUnit2Rule getEjbUnitRule() {
         ToInclude.count = 0;
-        return new EjbUnitRule(this);
+        return new CdiUnit2Rule(this);
     }
 
     @Test

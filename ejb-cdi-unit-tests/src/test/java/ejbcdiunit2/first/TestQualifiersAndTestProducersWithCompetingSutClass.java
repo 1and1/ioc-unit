@@ -11,7 +11,7 @@ import org.junit.runner.RunWith;
 
 import com.oneandone.cdi.testanalyzer.annotations.SutClasses;
 import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
-import com.oneandone.ejbcdiunit2.runner.EjbCdiUnit2Runner;
+import com.oneandone.cdi.tester.CdiUnit2Runner;
 
 import ejbcdiunit2.first.producing.ProducingClass1;
 import ejbcdiunit2.first.test1.Qualifier1A;
@@ -22,7 +22,7 @@ import ejbcdiunit2.first.test1.Test1Interface;
 /**
  * @author aschoerk
  */
-@RunWith(EjbCdiUnit2Runner.class)
+@RunWith(CdiUnit2Runner.class)
 @TestClasses({ ProducingClass1.class })
 @SutClasses({ Test1A.class, Test1B.class })
 public class TestQualifiersAndTestProducersWithCompetingSutClass {

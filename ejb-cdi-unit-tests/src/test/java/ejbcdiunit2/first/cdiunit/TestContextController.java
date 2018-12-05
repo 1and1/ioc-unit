@@ -11,21 +11,21 @@ import javax.enterprise.inject.Alternative;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 
-import org.jglue.cdiunit.InRequestScope;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.oneandone.ejbcdiunit.ContextControllerEjbCdiUnit;
-import com.oneandone.ejbcdiunit2.runner.EjbCdiUnit2Runner;
+import com.oneandone.cdi.tester.CdiUnit2Runner;
+import com.oneandone.cdi.tester.contexts.ContextController;
+import com.oneandone.cdi.tester.contexts.InRequestScope;
 
-@RunWith(EjbCdiUnit2Runner.class)
+@RunWith(CdiUnit2Runner.class)
 public class TestContextController extends BaseTest {
 
     private static final AtomicInteger counter = new AtomicInteger(1);
 
     @Inject
-    private ContextControllerEjbCdiUnit contextController;
+    private ContextController contextController;
 
     @Inject
     private TestCounter testCounter1;

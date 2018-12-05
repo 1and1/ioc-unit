@@ -14,10 +14,10 @@ import org.junit.runner.RunWith;
 
 import com.oneandone.cdi.testanalyzer.annotations.EnabledAlternatives;
 import com.oneandone.cdi.testanalyzer.annotations.SutClasses;
-import com.oneandone.ejbcdiunit2.runner.EjbCdiUnit2Runner;
+import com.oneandone.cdi.tester.CdiUnit2Runner;
 
 
-@RunWith(EjbCdiUnit2Runner.class)
+@RunWith(CdiUnit2Runner.class)
 @SutClasses(AImplementation1.class)
 @EnabledAlternatives(AImplementation2.class)
 public class TestAlternativeAnnotations {

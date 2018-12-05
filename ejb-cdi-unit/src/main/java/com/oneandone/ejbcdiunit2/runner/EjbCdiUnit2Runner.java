@@ -5,7 +5,6 @@ import javax.enterprise.inject.spi.BeanManager;
 import javax.naming.InitialContext;
 
 import org.jboss.weld.transaction.spi.TransactionServices;
-import org.jglue.cdiunit.ProducesAlternative;
 import org.junit.Test;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.FrameworkMethod;
@@ -16,19 +15,20 @@ import org.slf4j.LoggerFactory;
 
 import com.oneandone.cdi.testanalyzer.CdiConfigCreator;
 import com.oneandone.cdi.testanalyzer.InitialConfiguration;
+import com.oneandone.cdi.tester.ProducesAlternative;
+import com.oneandone.cdi.tester.contexts.internal.InitialListenerProducer;
+import com.oneandone.cdi.tester.ejb.AsynchronousManager;
+import com.oneandone.cdi.tester.ejb.EjbExtensionExtended;
+import com.oneandone.cdi.tester.ejb.EjbInformationBean;
+import com.oneandone.cdi.tester.ejb.EjbUnitBeanInitializerClass;
+import com.oneandone.cdi.tester.ejb.EjbUnitTransactionServices;
+import com.oneandone.cdi.tester.ejb.SupportEjbExtended;
+import com.oneandone.cdi.tester.ejb.persistence.SimulatedTransactionManager;
+import com.oneandone.cdi.weldstarter.CreationalContexts;
 import com.oneandone.cdi.weldstarter.WeldSetup;
 import com.oneandone.cdi.weldstarter.WeldSetupClass;
 import com.oneandone.cdi.weldstarter.WrappedDeploymentException;
 import com.oneandone.cdi.weldstarter.spi.WeldStarter;
-import com.oneandone.ejbcdiunit.AsynchronousManager;
-import com.oneandone.ejbcdiunit.CreationalContexts;
-import com.oneandone.ejbcdiunit.EjbUnitBeanInitializerClass;
-import com.oneandone.ejbcdiunit.EjbUnitTransactionServices;
-import com.oneandone.ejbcdiunit.SupportEjbExtended;
-import com.oneandone.ejbcdiunit.internal.EjbCdiUnitInitialListenerProducer;
-import com.oneandone.ejbcdiunit.internal.EjbExtensionExtended;
-import com.oneandone.ejbcdiunit.internal.EjbInformationBean;
-import com.oneandone.ejbcdiunit.persistence.SimulatedTransactionManager;
 
 public class EjbCdiUnit2Runner extends BlockJUnit4ClassRunner {
     private static Logger logger = LoggerFactory.getLogger(EjbCdiUnit2Runner.class);
@@ -99,7 +99,7 @@ public class EjbCdiUnit2Runner extends BlockJUnit4ClassRunner {
                     InitialConfiguration cfg = new InitialConfiguration();
                     cfg.testClass = clazz;
                     cfg.testMethod = frameworkMethod.getMethod();
-                    cfg.initialClasses.add(EjbCdiUnitInitialListenerProducer.class);
+                    cfg.initialClasses.add(InitialListenerProducer.class);
                     cfg.initialClasses.add(SupportEjbExtended.class);
                     cfg.initialClasses.add(ProducesAlternative.class);
                     cfg.initialClasses.add(EjbInformationBean.class);

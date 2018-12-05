@@ -1,6 +1,6 @@
 package com.oneandone.ejbcdiunit5.persistencefactory;
 
-import com.oneandone.ejbcdiunit.persistence.SinglePersistenceFactory;
+import com.oneandone.cdi.tester.ejb.persistence.SinglePersistenceFactory;
 import com.oneandone.ejbcdiunit5.JUnit5Extension;
 import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -7,9 +7,7 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ServiceLoader;
 import java.util.Set;
 
 import javax.decorator.Decorator;
@@ -21,9 +19,9 @@ import javax.interceptor.Interceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.oneandone.cdi.extensions.TestExtensionService;
-import com.oneandone.cdi.extensions.TestScopeExtension;
+import com.oneandone.cdi.testanalyzer.extensions.TestScopeExtension;
 import com.oneandone.cdi.weldstarter.WeldSetupClass;
+import com.oneandone.cdi.weldstarter.spi.TestExtensionService;
 
 /**
  * Starting with InitialConfiguraton analyzes the Class-Structure together with Annotations, to create a minimal startable Weld-SE-Configration.
@@ -105,7 +103,7 @@ public class CdiConfigCreator {
     }
 
     public void create(InitialConfiguration cfg) throws MalformedURLException {
-        this.builder = new LeveledBuilder(cfg);
+        this.builder = new LeveledBuilder(cfg, new AnalyzeConfiguration());
         if (cfg.testClass != null && cfg.testClass.getAnnotation(ApplicationScoped.class) == null) {
             builder.extensionObjects.add(new TestScopeExtension(cfg.testClass));
         }
@@ -180,6 +178,7 @@ public class CdiConfigCreator {
                                 .classpathsAnnotations(c)
                                 .packagesAnnotations(c)
                                 .customAnnotations(c)
+                                .extraAnnotations(c)
                                 .excludes(c);
                     }
                 } else if (mightBeBean(c)) {
@@ -196,6 +195,7 @@ public class CdiConfigCreator {
                                 .packagesAnnotations(c)
                                 .enabledAlternatives(c)
                                 .customAnnotations(c)
+                                .extraAnnotations(c)
                                 .excludes(c);
                     }
                 } else {
@@ -207,12 +207,11 @@ public class CdiConfigCreator {
     }
 
 
+
     private Collection<Extension> findExtensions() {
         List<Extension> result = new ArrayList<>();
-        ServiceLoader<TestExtensionService> loader = ServiceLoader.load(TestExtensionService.class);
-        final Iterator<TestExtensionService> testExtensionServiceIterator = loader.iterator();
-        while (testExtensionServiceIterator.hasNext()) {
-            result.addAll(testExtensionServiceIterator.next().getExtensions());
+        for (TestExtensionService testExtensionService : builder.analyzeConfiguration.testExtensionServices) {
+            result.addAll(testExtensionService.getExtensions());
         }
         return result;
     }

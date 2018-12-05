@@ -92,7 +92,7 @@ public class AmbiguousBeanTest extends WeldStarterTestsBase {
         Class1 class1;
 
         @Produces
-        // @StereoTypeAlt
+        @StereoTypeAlt
         @Mock
         AInterface aInterface;
 

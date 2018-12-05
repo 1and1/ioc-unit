@@ -8,6 +8,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import com.oneandone.cdi.tester.CdiUnit2Rule;
+
 /**
  * Test if initializations of EjbUnitRunner work.
  *
@@ -17,8 +19,8 @@ import org.junit.runners.JUnit4;
 public class SimpleTest {
 
     @Rule
-    public EjbUnitRule createEjbUnitRule() {
-        return new EjbUnitRule(this);
+    public CdiUnit2Rule createEjbUnitRule() {
+        return new CdiUnit2Rule(this);
     }
 
     @Before

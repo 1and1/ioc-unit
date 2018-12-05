@@ -11,7 +11,6 @@ import javax.enterprise.inject.Any;
 import javax.enterprise.inject.Default;
 import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.Produces;
-import javax.enterprise.inject.spi.DeploymentException;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Qualifier;
@@ -411,7 +410,7 @@ public class QualifierTest extends WeldStarterTestsBase {
         ToInjectIntf toInjectAny;
     }
 
-    @Test(expected = DeploymentException.class)
+    @Test(expected = WrappedDeploymentException.class)
     public void testAny_intoAnyQ1() {
         setBeanClasses(BeanAnyQ2.class, Producing_Any.class);
         start();
@@ -427,7 +426,7 @@ public class QualifierTest extends WeldStarterTestsBase {
         assertEquals(20, bean.toInjectAny.signifyClass());
     }
 
-    @Test
+    @Test(expected = WrappedDeploymentException.class)
     public void testAny_intoEmpty() {
         setBeanClasses(BeanEmpty.class, Producing_Any.class);
         start();
@@ -435,7 +434,7 @@ public class QualifierTest extends WeldStarterTestsBase {
         assertEquals(22, bean.toInjectAny.signifyClass());
     }
 
-    @Test(expected = DeploymentException.class)
+    @Test(expected = WrappedDeploymentException.class)
     public void testAny_intoDefault() {
         setBeanClasses(BeanDefault.class, Producing_Any.class);
         start();

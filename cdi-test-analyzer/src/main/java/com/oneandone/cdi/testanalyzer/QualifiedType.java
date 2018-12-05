@@ -7,6 +7,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -44,6 +45,7 @@ class QualifiedType {
     private Set<Annotation> qualifiers;   // the qualifiers extracted from the element
     private Annotation alternativeStereotype;
     private boolean alternative;  // true if by @Alternative or alternative-stereotype designated as CDI-Alternative
+    private Collection<? extends Annotation> injects = null;
 
     public QualifiedType(final Class clazz) {
         assert clazz != null;
@@ -90,7 +92,12 @@ class QualifiedType {
     }
 
     public QualifiedType(final Field f) {
+        this(f, null);
+    }
+
+    public QualifiedType(final Field f, Collection<? extends Annotation> injects) {
         assert f != null;
+        this.injects = injects;
         this.f = f;
         if (f.getAnnotation(Alternative.class) != null)
             alternative = true;
@@ -262,9 +269,6 @@ class QualifiedType {
                                                                                                                                                     // Default
                                                                                                                                                     // already
                                                                                                                                                     // checked
-                return true;
-        if (producednames.size() == 1 && producednames.contains("javax.enterprise.inject.Any"))
-            if (toFiltered.isEmpty()) // to is Default already checked
                 return true;
         if (toFiltered.isEmpty()) // produced can not be empty, Default or Named anymore
             return false;

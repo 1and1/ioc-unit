@@ -16,7 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.oneandone.ejbcdiunit.SessionContextFactory;
 import com.oneandone.ejbcdiunit.cdiunit.ExcludedClasses;
-import com.oneandone.ejbcdiunit.persistence.TestPersistenceFactory;
+import com.oneandone.cdi.tester.ejb.persistence.TestPersistenceFactory;
 import com.oneandone.ejbcdiunit5.JUnit5Extension;
 
 /**

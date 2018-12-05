@@ -2,7 +2,7 @@ package com.oneandone.ejbcdiunit5.ejb;
 
 import com.oneandone.ejbcdiunit.entities.TestEntity1;
 import com.oneandone.ejbcdiunit.internal.EjbTransactional;
-import com.oneandone.ejbcdiunit.persistence.TestPersistenceFactory;
+import com.oneandone.cdi.tester.ejb.persistence.TestPersistenceFactory;
 import com.oneandone.ejbcdiunit5.JUnit5Extension;
 import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.jupiter.api.Assertions;

@@ -11,9 +11,9 @@ import java.util.Set;
 
 import javax.enterprise.inject.spi.Extension;
 
+import com.oneandone.cdi.tester.ejb.ApplicationExceptionDescription;
 import com.oneandone.cdi.weldstarter.WeldSetupClass;
 import com.oneandone.cdi.weldstarter.spi.WeldStarter;
-import com.oneandone.ejbcdiunit.internal.ApplicationExceptionDescription;
 
 /**
  * @author aschoerk
@@ -39,6 +39,14 @@ public class CdiTestConfig {
             this.serviceConfigs.addAll(cdiTestConfig.getServiceConfigs());
             this.setApplicationExceptionDescriptions(cdiTestConfig.getApplicationExceptionDescriptions());
         }
+    }
+
+    public List<ApplicationExceptionDescription> getApplicationExceptionDescriptions() {
+        return applicationExceptionDescriptions;
+    }
+
+    public void setApplicationExceptionDescriptions(final List<ApplicationExceptionDescription> applicationExceptionDescriptions) {
+        this.applicationExceptionDescriptions = applicationExceptionDescriptions;
     }
 
     Method testMethod;
@@ -123,14 +131,6 @@ public class CdiTestConfig {
     public CdiTestConfig addServiceConfig(ServiceConfig serviceConfig) {
         serviceConfigs.add(serviceConfig);
         return this;
-    }
-
-    public List<ApplicationExceptionDescription> getApplicationExceptionDescriptions() {
-        return applicationExceptionDescriptions;
-    }
-
-    public void setApplicationExceptionDescriptions(List<ApplicationExceptionDescription> applicationExceptionDescriptionsP) {
-        this.applicationExceptionDescriptions = applicationExceptionDescriptionsP;
     }
 
     public void addExcludedByString(String s) {

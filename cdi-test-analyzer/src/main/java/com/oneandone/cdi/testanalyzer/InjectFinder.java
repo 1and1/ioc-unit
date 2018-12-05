@@ -1,25 +1,50 @@
 package com.oneandone.cdi.testanalyzer;
 
-import org.apache.commons.lang3.reflect.TypeUtils;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.Stack;
+import java.util.stream.Collectors;
 
 import javax.enterprise.inject.Disposes;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.Extension;
 import javax.inject.Inject;
-import java.lang.reflect.*;
-import java.util.*;
+
+import org.apache.commons.lang3.reflect.TypeUtils;
 
 /**
  * @author aschoerk
  */
 public class InjectFinder {
 
-    List<Class<?>> toIgnore = new ArrayList<Class<?>>()
-    {{
-        add(BeanManager.class);
-        add(Extension.class);
-    }};
+    AnalyzeConfiguration a;
+
+    Set<Class<? extends Annotation>> injectAnnotations = new HashSet<>();
+
+    public InjectFinder(final AnalyzeConfiguration a) {
+        this.a = a;
+        injectAnnotations.add(Inject.class);
+        injectAnnotations.addAll(a.injectAnnotations);
+    }
+
+    List<Class<?>> toIgnore = new ArrayList<Class<?>>() {
+        private static final long serialVersionUID = 1929608071838061220L;
+
+        {
+            add(BeanManager.class);
+            add(Extension.class);
+        }
+    };
 
     Set<QualifiedType> injectedTypes = new HashSet<>();
 
@@ -31,8 +56,8 @@ public class InjectFinder {
     boolean used = false;
 
     boolean notIgnoreAble(Type c) {
-        for (Class<?> clazz: toIgnore) {
-            if (TypeUtils.isAssignable(c,clazz))
+        for (Class<?> clazz : toIgnore) {
+            if (TypeUtils.isAssignable(c, clazz))
                 return false;
         }
         return true;
@@ -43,13 +68,24 @@ public class InjectFinder {
             return;
         }
         for (Field f : c.getDeclaredFields()) {
-            if (f.getAnnotation(Inject.class) != null && notIgnoreAble(f.getGenericType())) {
-                injectedTypes.add(new QualifiedType(f));
+            if (notIgnoreAble(f.getGenericType())) {
+                Set<? extends Annotation> annotations = injectAnnotations
+                        .stream()
+                        .map(annotation -> f.getAnnotation(annotation))
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toSet());
+                if (!annotations.isEmpty())
+                    injectedTypes.add(new QualifiedType(f, annotations));
             }
         }
         if (!isSuperclass) {
             boolean injectedConstructorFound = false;
             for (Constructor constructor : c.getDeclaredConstructors()) {
+                Set<? extends Annotation> annotations = injectAnnotations
+                        .stream()
+                        .map(annotation -> constructor.getAnnotation(annotation))
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toSet());
                 if (constructor.getAnnotation(Inject.class) != null) {
                     if (injectedConstructorFound) {
                         throw new RuntimeException("Only one Constructor may be injected" + c.getName());

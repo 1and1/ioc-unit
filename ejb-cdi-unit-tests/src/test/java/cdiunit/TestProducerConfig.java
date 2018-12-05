@@ -14,11 +14,11 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.jglue.cdiunit.AdditionalClasses;
-import org.jglue.cdiunit.ProducerConfig;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.oneandone.cdi.tester.ProducerConfig;
 import com.oneandone.ejbcdiunit.EjbUnitRunner;
 
 @RunWith(EjbUnitRunner.class)

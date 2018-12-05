@@ -15,10 +15,10 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.oneandone.ejbcdiunit.jaxrs.SupportJaxRsEjbCdiUnit;
-import com.oneandone.ejbcdiunit2.runner.EjbCdiUnit2Runner;
+import com.oneandone.cdi.tester.CdiUnit2Runner;
+import com.oneandone.cdi.tester.contexts.jaxrs.SupportJaxRsEjbCdiUnit;
 
-@RunWith(EjbCdiUnit2Runner.class)
+@RunWith(CdiUnit2Runner.class)
 @SupportJaxRsEjbCdiUnit
 public class TestJaxRs extends BaseTest {
 

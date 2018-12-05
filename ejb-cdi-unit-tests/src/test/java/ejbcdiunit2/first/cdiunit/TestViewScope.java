@@ -10,11 +10,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
-import com.oneandone.ejbcdiunit.internal.jsf.EjbUnitViewScopeExtension;
-import com.oneandone.ejbcdiunit2.runner.EjbCdiUnit2Runner;
+import com.oneandone.cdi.tester.CdiUnit2Runner;
+import com.oneandone.cdi.tester.contexts.internal.jsf.ViewScopeExtension;
 
-@RunWith(EjbCdiUnit2Runner.class)
-@TestClasses({ EjbUnitViewScopeExtension.class, TestViewScope.G2ViewScoped.class })
+@RunWith(CdiUnit2Runner.class)
+@TestClasses({ ViewScopeExtension.class, TestViewScope.G2ViewScoped.class })
 public class TestViewScope extends BaseTest {
     @Inject
     private Provider<ViewScopedClass> viewScoped;

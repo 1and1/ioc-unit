@@ -13,10 +13,10 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.oneandone.cdi.tester.ejb.persistence.TestPersistenceFactory;
 import com.oneandone.ejbcdiunit.EjbUnitRunner;
 import com.oneandone.ejbcdiunit.ejbs.StatelessEJB;
 import com.oneandone.ejbcdiunit.helpers.LoggerGenerator;
-import com.oneandone.ejbcdiunit.persistence.TestPersistenceFactory;
 
 /**
  * @author aschoerk

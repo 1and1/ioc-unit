@@ -95,6 +95,9 @@
                 <module>cdi-test-mocks</module>
                 <module>cdi-weld-starter</module>
                 <module>cdi-test-analyzer</module>
+                <module>cdi-tester</module>
+                <module>cdi-ejb-tester</module>
+                <module>cdi-tester-contexts</module>
                 <!--module>purecdi-tests</module-->
             </modules>
         </profile>

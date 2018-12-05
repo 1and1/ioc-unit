@@ -17,6 +17,10 @@ public class CountingBean {
 
     private boolean postConstructCalled = false;
 
+    public static void clear() {
+        counter.set(INITIALCOUNT);
+    }
+
     public boolean isPostConstructCalled() {
         return postConstructCalled;
     }

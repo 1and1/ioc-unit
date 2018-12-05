@@ -39,9 +39,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.oneandone.ejbcdiunit.entities.TestEntity1;
-import com.oneandone.ejbcdiunit.persistence.PersistenceFactory;
-import com.oneandone.ejbcdiunit.persistence.TestClosure;
-import com.oneandone.ejbcdiunit.persistence.TestTransaction;
+import com.oneandone.cdi.tester.ejb.persistence.PersistenceFactory;
+import com.oneandone.cdi.tester.ejb.persistence.TestClosure;
+import com.oneandone.cdi.tester.ejb.persistence.TestTransaction;
 
 
 /**

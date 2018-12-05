@@ -5,17 +5,17 @@ import javax.enterprise.inject.Produces;
 import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 
-import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.runner.RunWith;
 
-import com.oneandone.ejbcdiunit.EjbUnitRunner;
-import com.oneandone.ejbcdiunit.persistence.SinglePersistenceFactory;
+import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
+import com.oneandone.cdi.tester.CdiUnit2Runner;
+import com.oneandone.cdi.tester.ejb.persistence.SinglePersistenceFactory;
 
 /**
  * @author aschoerk
  */
-@RunWith(EjbUnitRunner.class)
-@AdditionalClasses({ PFH2Test.TestDbSinglePersistenceFactory.class })
+@RunWith(CdiUnit2Runner.class)
+@TestClasses({ PFH2Test.TestDbSinglePersistenceFactory.class })
 public class PFH2Test extends PersistenceFactoryTestBase {
 
     @ApplicationScoped

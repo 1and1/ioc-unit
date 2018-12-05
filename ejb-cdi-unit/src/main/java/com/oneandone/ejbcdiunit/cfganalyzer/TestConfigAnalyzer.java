@@ -34,8 +34,9 @@ import org.jglue.cdiunit.AdditionalPackages;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.oneandone.cdi.tester.ejb.EjbJarClasspath;
+import com.oneandone.cdi.tester.ejb.EjbJarParser;
 import com.oneandone.ejbcdiunit.CdiTestConfig;
-import com.oneandone.ejbcdiunit.cdiunit.EjbJarClasspath;
 import com.oneandone.ejbcdiunit.cdiunit.ExcludedClasses;
 
 /**
@@ -282,7 +283,7 @@ public class TestConfigAnalyzer {
     }
 
     private void addDeploymentDescriptor(final CdiTestConfig config, final URL url) throws IOException {
-        new EjbJarParser(config, url).invoke();
+        config.setApplicationExceptionDescriptions(new EjbJarParser(url).invoke());
     }
 
     private boolean isCdiClass(Class<?> c) {

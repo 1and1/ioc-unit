@@ -19,10 +19,6 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.servlet.http.HttpServletRequest;
 
-import org.jglue.cdiunit.InConversationScope;
-import org.jglue.cdiunit.InRequestScope;
-import org.jglue.cdiunit.InSessionScope;
-import org.jglue.cdiunit.ProducesAlternative;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,11 +26,15 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import com.oneandone.cdi.testanalyzer.annotations.SutPackages;
-import com.oneandone.ejbcdiunit.ContextControllerEjbCdiUnit;
+import com.oneandone.cdi.tester.CdiUnit2Runner;
+import com.oneandone.cdi.tester.ProducesAlternative;
+import com.oneandone.cdi.tester.contexts.ContextController;
+import com.oneandone.cdi.tester.contexts.InConversationScope;
+import com.oneandone.cdi.tester.contexts.InRequestScope;
+import com.oneandone.cdi.tester.contexts.InSessionScope;
 import com.oneandone.ejbcdiunit.cdiunit.ExcludedClasses;
-import com.oneandone.ejbcdiunit2.runner.EjbCdiUnit2Runner;
 
-@RunWith(EjbCdiUnit2Runner.class)
+@RunWith(CdiUnit2Runner.class)
 @SutPackages({ AImplementation1.class })
 @ExcludedClasses({ Scoped.class }) // cdi1.0 does not recognize @Vetoed
 public class TestCdiUnitRunner extends BaseTest {
@@ -67,7 +67,7 @@ public class TestCdiUnitRunner extends BaseTest {
     private FApplicationScoped f2;
 
     @Inject
-    private ContextControllerEjbCdiUnit contextControllerEjbCdiUnit;
+    private ContextController contextController;
 
     @Inject
     private BRequestScoped request;
@@ -196,44 +196,44 @@ public class TestCdiUnitRunner extends BaseTest {
 
     @Test
     public void testContextController() {
-        contextControllerEjbCdiUnit.openRequest();
+        contextController.openRequest();
 
         Scoped b1 = scoped.get();
         Scoped b2 = scoped.get();
         Assert.assertEquals(b1, b2);
         b1.setDisposedListener(disposeListener);
-        contextControllerEjbCdiUnit.closeRequest();
+        contextController.closeRequest();
         Mockito.verify(disposeListener).run();
     }
 
     @Test
     public void testContextControllerRequestScoped() {
-        contextControllerEjbCdiUnit.openRequest();
+        contextController.openRequest();
 
         BRequestScoped b1 = requestScoped.get();
         b1.setFoo("Bar");
         BRequestScoped b2 = requestScoped.get();
         Assert.assertSame(b1.getFoo(), b2.getFoo());
-        contextControllerEjbCdiUnit.closeRequest();
-        contextControllerEjbCdiUnit.openRequest();
+        contextController.closeRequest();
+        contextController.openRequest();
         BRequestScoped b3 = requestScoped.get();
         Assert.assertEquals(null, b3.getFoo());
     }
 
     @Test
     public void testContextControllerSessionScoped() {
-        contextControllerEjbCdiUnit.openRequest();
+        contextController.openRequest();
 
 
         CSessionScoped b1 = sessionScoped.get();
         b1.setFoo("Bar");
         CSessionScoped b2 = sessionScoped.get();
         Assert.assertEquals(b1.getFoo(), b2.getFoo());
-        contextControllerEjbCdiUnit.closeRequest();
-        contextControllerEjbCdiUnit.closeSession();
+        contextController.closeRequest();
+        contextController.closeSession();
 
 
-        contextControllerEjbCdiUnit.openRequest();
+        contextController.openRequest();
         CSessionScoped b3 = sessionScoped.get();
         Assert.assertEquals(null, b3.getFoo());
 
@@ -241,7 +241,7 @@ public class TestCdiUnitRunner extends BaseTest {
 
     @Test
     public void testContextControllerSessionScopedWithRequest() {
-        contextControllerEjbCdiUnit.openRequest();
+        contextController.openRequest();
 
 
         CSessionScoped b1 = sessionScoped.get();
@@ -251,8 +251,8 @@ public class TestCdiUnitRunner extends BaseTest {
         b1.setFoo("Bar");
         BRequestScoped r2 = requestScoped.get();
         Assert.assertSame(r1.getFoo(), r2.getFoo());
-        contextControllerEjbCdiUnit.closeRequest();
-        contextControllerEjbCdiUnit.openRequest();
+        contextController.closeRequest();
+        contextController.openRequest();
         BRequestScoped r3 = requestScoped.get();
         Assert.assertEquals(null, r3.getFoo());
 
@@ -265,8 +265,8 @@ public class TestCdiUnitRunner extends BaseTest {
 
     @Test
     public void testContextControllerConversationScoped() {
-        HttpServletRequest request = contextControllerEjbCdiUnit.openRequest();
-        request.getSession(true);
+        HttpServletRequest requestL = contextController.openRequest();
+        requestL.getSession(true);
 
         conversation.begin();
 
@@ -275,8 +275,8 @@ public class TestCdiUnitRunner extends BaseTest {
         DConversationScoped b2 = conversationScoped.get();
         Assert.assertEquals(b1.getFoo(), b2.getFoo());
         conversation.end();
-        contextControllerEjbCdiUnit.closeRequest();
-        contextControllerEjbCdiUnit.openRequest();
+        contextController.closeRequest();
+        contextController.openRequest();
 
         conversation.begin();
         DConversationScoped b3 = conversationScoped.get();

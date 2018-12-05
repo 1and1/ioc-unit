@@ -4,7 +4,7 @@ import com.oneandone.ejbcdiunit.ClassWithTwoDifferentEntityManagers;
 import com.oneandone.ejbcdiunit.cdiunit.Pu1Em;
 import com.oneandone.ejbcdiunit.cdiunit.Pu2Em;
 import com.oneandone.ejbcdiunit.entities.TestEntity1;
-import com.oneandone.ejbcdiunit.persistence.TestTransaction;
+import com.oneandone.cdi.tester.ejb.persistence.TestTransaction;
 import com.oneandone.ejbcdiunit5.JUnit5Extension;
 import com.oneandone.ejbcdiunit5.helpers.J2eeSimTest1Factory;
 import com.oneandone.ejbcdiunit5.helpers.J2eeSimTest2Factory;

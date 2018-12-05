@@ -17,9 +17,6 @@ import javax.transaction.RollbackException;
 import javax.transaction.Status;
 import javax.transaction.SystemException;
 
-import com.oneandone.ejbcdiunit.cdiunit.EjbJarClasspath;
-import com.oneandone.ejbcdiunit.ejbs.appexc.TestBaseClass;
-import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
@@ -28,18 +25,21 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import com.oneandone.ejbcdiunit.EjbUnitRule;
-import com.oneandone.ejbcdiunit.SessionContextFactory;
+import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
+import com.oneandone.cdi.tester.CdiUnit2Rule;
+import com.oneandone.cdi.tester.ejb.EjbJarClasspath;
+import com.oneandone.cdi.tester.ejb.SessionContextFactory;
+import com.oneandone.cdi.tester.ejb.persistence.SinglePersistenceFactory;
+import com.oneandone.cdi.tester.ejb.persistence.TestTransaction;
 import com.oneandone.ejbcdiunit.ejbs.MdbEjbInfoSingleton;
 import com.oneandone.ejbcdiunit.ejbs.QMdbEjb;
 import com.oneandone.ejbcdiunit.ejbs.SingletonEJB;
 import com.oneandone.ejbcdiunit.ejbs.StatelessBeanManagedTrasEJB;
 import com.oneandone.ejbcdiunit.ejbs.StatelessChildEJB;
 import com.oneandone.ejbcdiunit.ejbs.StatelessEJB;
+import com.oneandone.ejbcdiunit.ejbs.appexc.TestBaseClass;
 import com.oneandone.ejbcdiunit.entities.TestEntity1;
 import com.oneandone.ejbcdiunit.helpers.LoggerGenerator;
-import com.oneandone.ejbcdiunit.persistence.SinglePersistenceFactory;
-import com.oneandone.ejbcdiunit.persistence.TestTransaction;
 import com.oneandone.ejbcdiunit.testbases.EJBTransactionTestBase;
 import com.oneandone.ejbcdiunit.testbases.TestEntity1Saver;
 
@@ -47,7 +47,7 @@ import com.oneandone.ejbcdiunit.testbases.TestEntity1Saver;
  * @author aschoerk
  */
 @RunWith(JUnit4.class)
-@AdditionalClasses({ StatelessEJB.class, SingletonEJB.class,
+@TestClasses({ StatelessEJB.class, SingletonEJB.class,
         TestEjb.TestDbPersistenceFactory.class, SessionContextFactory.class,
         StatelessBeanManagedTrasEJB.class, StatelessChildEJB.class,
         QMdbEjb.class, MdbEjbInfoSingleton.class, LoggerGenerator.class })
@@ -72,14 +72,13 @@ public class TestEjb extends EJBTransactionTestBase {
                 break;
             }
             freemem = runtime.freeMemory();
-        }
-        while (true);
+        } while (true);
         runtime.runFinalization();
     }
 
     @Rule
-    public EjbUnitRule getEjbUnitRule() {
-        return new EjbUnitRule(this);
+    public CdiUnit2Rule getEjbUnitRule() {
+        return new CdiUnit2Rule(this);
     }
 
     @Before
@@ -140,7 +139,7 @@ public class TestEjb extends EJBTransactionTestBase {
             Assert.assertThat(res.intValue(), is(num));
             resource1.setRollbackOnly();
         } catch (RollbackException rbe) {
-             // ignore, wanted to roll it back!!!
+            // ignore, wanted to roll it back!!!
         }
     }
 
