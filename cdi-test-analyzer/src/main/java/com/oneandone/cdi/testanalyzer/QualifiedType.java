@@ -253,8 +253,11 @@ class QualifiedType {
             return true;
         if (to.size() == 1 && to.iterator().next().annotationType().getName().equals("javax.enterprise.inject.Any"))
             return true;
-        Set<Annotation> toFiltered =
-                to.stream().filter(a -> !a.annotationType().getName().equals("javax.enterprise.inject.Any")).collect(Collectors.toSet());
+        Set<Annotation> toFiltered = to
+                .stream()
+                .filter(a -> !(a.annotationType().getName().equals("javax.enterprise.inject.Any")
+                        || a.annotationType().getName().equals("javax.enterprise.inject.New")))
+                .collect(Collectors.toSet());
         if (produced.containsAll(toFiltered) && !to.isEmpty())
             return true;
         if (produced.size() == 1 && produced.iterator().next().annotationType().getName().equals("javax.enterprise.inject.Default"))

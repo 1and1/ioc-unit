@@ -103,7 +103,7 @@ public class CdiConfigCreator {
     }
 
     public void create(InitialConfiguration cfg) throws MalformedURLException {
-        this.builder = new LeveledBuilder(cfg, new AnalyzeConfiguration());
+        this.builder = new LeveledBuilder(cfg, new TesterExtensionsConfigsFinder());
         if (cfg.testClass != null && cfg.testClass.getAnnotation(ApplicationScoped.class) == null) {
             builder.extensionObjects.add(new TestScopeExtension(cfg.testClass));
         }
@@ -166,7 +166,9 @@ public class CdiConfigCreator {
             // l.sort((o1, o2) -> o1.getName().compareTo(o2.getName())); -- keep sequence
             for (Class<?> c : l) {
                 log.info("evaluating {}", c);
-                if (isInterceptingBean(c)) {
+                if (builder.excludedClasses.contains(c)) {
+                    log.info("Excluded {}", c.getName());
+                } else if (isInterceptingBean(c)) {
                     // not available for injections and no producer fields!!
                     builder.tobeStarted(c)
                             .innerClasses(c)
@@ -210,7 +212,7 @@ public class CdiConfigCreator {
 
     private Collection<Extension> findExtensions() {
         List<Extension> result = new ArrayList<>();
-        for (TestExtensionService testExtensionService : builder.analyzeConfiguration.testExtensionServices) {
+        for (TestExtensionService testExtensionService : builder.testerExtensionsConfigsFinder.testExtensionServices) {
             result.addAll(testExtensionService.getExtensions());
         }
         return result;

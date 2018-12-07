@@ -29,7 +29,12 @@ import com.oneandone.cdi.weldstarter.spi.TestExtensionService;
  * @author aschoerk
  */
 public class EjbTestExtensionService implements TestExtensionService {
-    private List<ApplicationExceptionDescription> applicationExceptions;
+    private static List<ApplicationExceptionDescription> applicationExceptions;
+
+    @Override
+    public void initAnalyze() {
+        applicationExceptions = null;
+    }
 
     @Override
     public Collection<Extension> getExtensions() {
@@ -52,6 +57,8 @@ public class EjbTestExtensionService implements TestExtensionService {
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
+            } else {
+                applicationExceptions = null;
             }
         }
 

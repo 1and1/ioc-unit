@@ -25,6 +25,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
+import com.oneandone.cdi.testanalyzer.annotations.ExcludedClasses;
 import com.oneandone.cdi.testanalyzer.annotations.SutPackages;
 import com.oneandone.cdi.tester.CdiUnit2Runner;
 import com.oneandone.cdi.tester.ProducesAlternative;
@@ -33,22 +34,21 @@ import com.oneandone.cdi.tester.contexts.InConversationScope;
 import com.oneandone.cdi.tester.contexts.InRequestScope;
 import com.oneandone.cdi.tester.contexts.InSessionScope;
 import com.oneandone.cdi.tester.contexts.internal.InitialListenerProducer;
-import com.oneandone.ejbcdiunit.cdiunit.ExcludedClasses;
 
-import cdiunit.AImplementation1;
-import cdiunit.AInterface;
-import cdiunit.BRequestScoped;
-import cdiunit.BaseTest;
-import cdiunit.CSessionScoped;
-import cdiunit.DConversationScoped;
-import cdiunit.FApplicationScoped;
-import cdiunit.ProducedViaField;
-import cdiunit.ProducedViaMethod;
-import cdiunit.Scoped;
+import ejbcdiunit2.first.cdiunit.AImplementation1;
+import ejbcdiunit2.first.cdiunit.AInterface;
+import ejbcdiunit2.first.cdiunit.BRequestScoped;
+import ejbcdiunit2.first.cdiunit.BaseTest;
+import ejbcdiunit2.first.cdiunit.CSessionScoped;
+import ejbcdiunit2.first.cdiunit.DConversationScoped;
+import ejbcdiunit2.first.cdiunit.FApplicationScoped;
+import ejbcdiunit2.first.cdiunit.ProducedViaField;
+import ejbcdiunit2.first.cdiunit.ProducedViaMethod;
+import ejbcdiunit2.first.cdiunit.Scoped;
 
 @RunWith(CdiUnit2Runner.class)
-@SutPackages({AImplementation1.class})
-@ExcludedClasses({Scoped.class})  // cdi1.0 does not recognize @Vetoed
+@SutPackages({ AImplementation1.class })
+@ExcludedClasses({ Scoped.class }) // cdi1.0 does not recognize @Vetoed
 public class TestCdiUnit2Runner extends BaseTest {
 
     @Inject

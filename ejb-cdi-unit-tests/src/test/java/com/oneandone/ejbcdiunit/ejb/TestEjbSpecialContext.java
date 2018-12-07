@@ -7,13 +7,13 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
 import org.hamcrest.Matchers;
-import org.jglue.cdiunit.ActivatedAlternatives;
-import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.oneandone.ejbcdiunit.EjbUnitRunner;
+import com.oneandone.cdi.testanalyzer.annotations.EnabledAlternatives;
+import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
+import com.oneandone.cdi.tester.CdiUnit2Runner;
 import com.oneandone.ejbcdiunit.ejbs.SingletonEJB;
 import com.oneandone.ejbcdiunit.helpers.J2eeSimTest1Factory;
 import com.oneandone.ejbcdiunit.helpers.LoggerGenerator;
@@ -22,9 +22,9 @@ import com.oneandone.ejbcdiunit.helpers.SessionContextFactoryAlternative;
 /**
  * @author aschoerk
  */
-@RunWith(EjbUnitRunner.class)
-@AdditionalClasses({ SingletonEJB.class, J2eeSimTest1Factory.class, LoggerGenerator.class})
-@ActivatedAlternatives({SessionContextFactoryAlternative.class})
+@RunWith(CdiUnit2Runner.class)
+@TestClasses({ SingletonEJB.class, J2eeSimTest1Factory.class, LoggerGenerator.class })
+@EnabledAlternatives({ SessionContextFactoryAlternative.class })
 public class TestEjbSpecialContext {
 
     @Inject

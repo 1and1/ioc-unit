@@ -52,4 +52,6 @@ public interface TestExtensionService {
     default void preStartupAction(WeldSetupClass weldSetup) {}
 
     default void postStartupAction(CreationalContexts creationalContexts) {}
+
+    default void initAnalyze() {}
 }

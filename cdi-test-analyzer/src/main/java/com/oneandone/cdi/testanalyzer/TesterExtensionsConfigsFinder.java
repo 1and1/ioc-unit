@@ -14,15 +14,17 @@ import javax.inject.Inject;
 import com.oneandone.cdi.weldstarter.spi.TestExtensionService;
 
 /**
+ * Searches for Tester Extensions and uses parts prepared to initialize the analyzation process.
+ *
  * @author aschoerk
  */
-public class AnalyzeConfiguration {
+public class TesterExtensionsConfigsFinder {
     Collection<TestExtensionService> testExtensionServices;
     List<Class<? extends Annotation>> injectAnnotations = new ArrayList<>();
     Map<Class<? extends Annotation>, TestExtensionService> extraClassAnnotations = new HashMap<>();
     List<Class<?>> initialClasses = new ArrayList<>();
 
-    public AnalyzeConfiguration() {
+    public TesterExtensionsConfigsFinder() {
         if (testExtensionServices == null) {
             testExtensionServices = new ArrayList<>();
             ServiceLoader<TestExtensionService> loader = ServiceLoader.load(TestExtensionService.class);
@@ -32,6 +34,7 @@ public class AnalyzeConfiguration {
             }
             injectAnnotations.add(Inject.class);
             for (TestExtensionService testExtensionService : testExtensionServices) {
+                testExtensionService.initAnalyze();
                 injectAnnotations.addAll(testExtensionService.injectAnnotations());
                 for (Class<? extends Annotation> annotation : testExtensionService.extraClassAnnotations()) {
                     extraClassAnnotations.put(annotation, testExtensionService);

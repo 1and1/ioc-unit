@@ -14,7 +14,7 @@ import com.oneandone.cdi.tester.ProducesAlternative;
 /**
  * @author aschoerk
  */
-@SutPackages({ AppScopedServiceBean.class })
+@SutPackages({ AppScopedServiceBean.class, HelperHelperAlias.class })
 @RunWith(CdiUnit2Runner.class)
 public class CdiBeansAliasTest {
 

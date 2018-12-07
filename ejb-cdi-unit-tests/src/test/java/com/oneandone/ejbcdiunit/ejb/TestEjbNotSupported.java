@@ -10,15 +10,15 @@ import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
-import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.oneandone.cdi.testanalyzer.annotations.SutPackages;
+import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
+import com.oneandone.cdi.tester.CdiUnit2Runner;
 import com.oneandone.cdi.tester.ejb.SessionContextFactory;
 import com.oneandone.cdi.tester.ejb.persistence.SinglePersistenceFactory;
-import com.oneandone.ejbcdiunit.EjbUnitRunner;
-import com.oneandone.ejbcdiunit.ejbs.SingletonEJB;
 import com.oneandone.ejbcdiunit.ejbs.StatelessEJB;
 import com.oneandone.ejbcdiunit.ejbs.StatelessNotSupportedEJB;
 import com.oneandone.ejbcdiunit.entities.TestEntity1;
@@ -27,9 +27,9 @@ import com.oneandone.ejbcdiunit.helpers.LoggerGenerator;
 /**
  * @author aschoerk
  */
-@RunWith(EjbUnitRunner.class)
-@AdditionalClasses({ StatelessEJB.class, SingletonEJB.class,
-        TestEjb.TestDbPersistenceFactory.class, SessionContextFactory.class, LoggerGenerator.class})
+@RunWith(CdiUnit2Runner.class)
+@SutPackages(StatelessEJB.class)
+@TestClasses({ TestEjb.TestDbPersistenceFactory.class, SessionContextFactory.class, LoggerGenerator.class })
 public class TestEjbNotSupported {
 
     @Inject

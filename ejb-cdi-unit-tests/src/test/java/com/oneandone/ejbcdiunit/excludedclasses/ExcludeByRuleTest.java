@@ -5,20 +5,20 @@ import static org.hamcrest.Matchers.is;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 
-import org.jglue.cdiunit.AdditionalPackages;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 
+import com.oneandone.cdi.testanalyzer.InitialConfiguration;
+import com.oneandone.cdi.testanalyzer.annotations.TestPackages;
 import com.oneandone.cdi.tester.CdiUnit2Rule;
-import com.oneandone.ejbcdiunit.CdiTestConfig;
 import com.oneandone.ejbcdiunit.excludedclasses.pcktoinclude.ToExclude;
 import com.oneandone.ejbcdiunit.excludedclasses.pcktoinclude.ToInclude;
 
 /**
  * @author aschoerk
  */
-@AdditionalPackages({ ToInclude.class })
+@TestPackages({ ToInclude.class })
 public class ExcludeByRuleTest {
 
     @Inject
@@ -31,7 +31,7 @@ public class ExcludeByRuleTest {
     @Rule
     public CdiUnit2Rule getEjbUnitRule() {
         ToInclude.count = 0;
-        return new CdiUnit2Rule(this, new CdiTestConfig().addExcluded(ToExclude.class));
+        return new CdiUnit2Rule(this, new InitialConfiguration().exclude(ToExclude.class));
     }
 
     @Test

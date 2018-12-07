@@ -25,15 +25,19 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import com.oneandone.cdi.testanalyzer.InitialConfiguration;
 import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
 import com.oneandone.cdi.tester.CdiUnit2Rule;
 import com.oneandone.cdi.tester.ejb.EjbJarClasspath;
 import com.oneandone.cdi.tester.ejb.SessionContextFactory;
 import com.oneandone.cdi.tester.ejb.persistence.SinglePersistenceFactory;
 import com.oneandone.cdi.tester.ejb.persistence.TestTransaction;
+import com.oneandone.ejbcdiunit.ejbs.CDIClass;
 import com.oneandone.ejbcdiunit.ejbs.MdbEjbInfoSingleton;
+import com.oneandone.ejbcdiunit.ejbs.OuterClass;
 import com.oneandone.ejbcdiunit.ejbs.QMdbEjb;
 import com.oneandone.ejbcdiunit.ejbs.SingletonEJB;
+import com.oneandone.ejbcdiunit.ejbs.SingletonTimerEJB;
 import com.oneandone.ejbcdiunit.ejbs.StatelessBeanManagedTrasEJB;
 import com.oneandone.ejbcdiunit.ejbs.StatelessChildEJB;
 import com.oneandone.ejbcdiunit.ejbs.StatelessEJB;
@@ -50,7 +54,7 @@ import com.oneandone.ejbcdiunit.testbases.TestEntity1Saver;
 @TestClasses({ StatelessEJB.class, SingletonEJB.class,
         TestEjb.TestDbPersistenceFactory.class, SessionContextFactory.class,
         StatelessBeanManagedTrasEJB.class, StatelessChildEJB.class,
-        QMdbEjb.class, MdbEjbInfoSingleton.class, LoggerGenerator.class })
+        QMdbEjb.class, MdbEjbInfoSingleton.class, LoggerGenerator.class, CDIClass.class, OuterClass.class })
 @EjbJarClasspath(TestBaseClass.class)
 public class TestEjb extends EJBTransactionTestBase {
 
@@ -78,7 +82,7 @@ public class TestEjb extends EJBTransactionTestBase {
 
     @Rule
     public CdiUnit2Rule getEjbUnitRule() {
-        return new CdiUnit2Rule(this);
+        return new CdiUnit2Rule(this, new InitialConfiguration().exclude(SingletonTimerEJB.class));
     }
 
     @Before

@@ -112,7 +112,6 @@ public class CdiUnit2Runner extends BlockJUnit4ClassRunner {
 
                 InitialContext initialContext = new InitialContext();
                 final BeanManager beanManager = weldStarter.get(BeanManager.class);
-                initialContext.bind("java:comp/BeanManager", beanManager);
                 System.setProperty("java.naming.factory.initial", "com.oneandone.cdi.tester.naming.CdiTesterContextFactory");
                 initialContext.bind("java:comp/BeanManager", beanManager);
                 try (CreationalContexts creationalContexts = new CreationalContexts(beanManager)) {

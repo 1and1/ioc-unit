@@ -4,17 +4,17 @@ import static org.junit.Assert.assertTrue;
 
 import javax.inject.Inject;
 
-import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.oneandone.ejbcdiunit.EjbUnitRunner;
+import com.oneandone.cdi.testanalyzer.annotations.SutClasspaths;
+import com.oneandone.cdi.tester.CdiUnit2Runner;
 
 /**
  * @author aschoerk
  */
-@RunWith(EjbUnitRunner.class)
-@AdditionalClasses({ CdiBean.class, CdiHelperBean.class })
+@RunWith(CdiUnit2Runner.class)
+@SutClasspaths({ CdiBean.class })
 public class NonAlternativeTest {
 
     @Inject

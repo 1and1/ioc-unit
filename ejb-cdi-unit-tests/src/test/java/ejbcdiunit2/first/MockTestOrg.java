@@ -5,19 +5,19 @@ import javax.enterprise.inject.Produces;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
+import com.oneandone.cdi.testanalyzer.annotations.ExcludedClasses;
 import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
+import com.oneandone.cdi.tester.CdiUnit2Runner;
 import com.oneandone.cdi.tester.ProducesAlternative;
-import com.oneandone.ejbcdiunit.EjbUnitRunner;
-import com.oneandone.ejbcdiunit.cdiunit.ExcludedClasses;
 
-import cdiunit.AImplementation1;
-import cdiunit.AInterface;
+import ejbcdiunit2.first.cdiunit.AImplementation1;
+import ejbcdiunit2.first.cdiunit.AInterface;
 
 
 /**
  * @author aschoerk
  */
-@RunWith(EjbUnitRunner.class)
+@RunWith(CdiUnit2Runner.class)
 @TestClasses({ AImplementation1.class })
 @ExcludedClasses({ MockTest.class })
 public class MockTestOrg extends MockTest {

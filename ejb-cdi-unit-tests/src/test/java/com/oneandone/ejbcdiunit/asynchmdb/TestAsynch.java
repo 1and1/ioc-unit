@@ -9,14 +9,15 @@ import java.util.concurrent.Future;
 
 import javax.inject.Inject;
 
-import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 
+import com.oneandone.cdi.testanalyzer.annotations.SutClasses;
+import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
+import com.oneandone.cdi.tester.CdiUnit2Runner;
 import com.oneandone.cdi.tester.ejb.AsynchronousManager;
-import com.oneandone.ejbcdiunit.EjbUnitRunner;
 import com.oneandone.ejbcdiunit.ejbs.CdiAsynchronousBean;
 import com.oneandone.ejbcdiunit.ejbs.CountingBean;
 import com.oneandone.ejbcdiunit.ejbs.SingletonTimerEJB;
@@ -27,8 +28,9 @@ import com.oneandone.ejbcdiunit.helpers.LoggerGenerator;
 /**
  * @author aschoerk
  */
-@RunWith(EjbUnitRunner.class)
-@AdditionalClasses({ StatelessAsynchEJB.class, SingletonTimerEJB.class, StatelessTimerEJB.class, LoggerGenerator.class})
+@RunWith(CdiUnit2Runner.class)
+@TestClasses({ LoggerGenerator.class })
+@SutClasses({ StatelessAsynchEJB.class, SingletonTimerEJB.class, StatelessTimerEJB.class, CdiAsynchronousBean.class })
 public class TestAsynch {
 
     @Inject

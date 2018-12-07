@@ -68,25 +68,27 @@ public class TransactionalInterceptor {
             applicationException = tmp.getAnnotation(ApplicationException.class);
             if (applicationException == null) {
                 List<ApplicationExceptionDescription> ejbJarDescriptions = ejbInformationBean.getApplicationExceptionDescriptions();
-                for (final ApplicationExceptionDescription aed : ejbJarDescriptions) {
-                    if (aed.getClassName().equals(tmp.getName())) {
-                        applicationException = new ApplicationException() {
-                            @Override
-                            public Class<? extends Annotation> annotationType() {
-                                return ApplicationException.class;
-                            }
+                if (ejbJarDescriptions != null) {
+                    for (final ApplicationExceptionDescription aed : ejbJarDescriptions) {
+                        if (aed.getClassName().equals(tmp.getName())) {
+                            applicationException = new ApplicationException() {
+                                @Override
+                                public Class<? extends Annotation> annotationType() {
+                                    return ApplicationException.class;
+                                }
 
-                            @Override
-                            public boolean inherited() {
-                                return aed.isInherited();
-                            }
+                                @Override
+                                public boolean inherited() {
+                                    return aed.isInherited();
+                                }
 
-                            @Override
-                            public boolean rollback() {
-                                return aed.isRollback();
-                            }
-                        };
-                        break;
+                                @Override
+                                public boolean rollback() {
+                                    return aed.isRollback();
+                                }
+                            };
+                            break;
+                        }
                     }
                 }
 

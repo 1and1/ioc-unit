@@ -6,20 +6,20 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.TransactionRequiredException;
 
-import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
+import com.oneandone.cdi.tester.CdiUnit2Runner;
 import com.oneandone.cdi.tester.ejb.EjbTransactional;
 import com.oneandone.cdi.tester.ejb.persistence.TestPersistenceFactory;
-import com.oneandone.ejbcdiunit.EjbUnitRunner;
 import com.oneandone.ejbcdiunit.entities.TestEntity1;
 
 /**
  * @author aschoerk
  */
-@RunWith(EjbUnitRunner.class)
-@AdditionalClasses({ TestPersistenceFactory.class, TestEntity1.class })
+@RunWith(CdiUnit2Runner.class)
+@TestClasses({ TestPersistenceFactory.class, TestEntity1.class })
 public class NonEjbTransactionTest {
 
     @Inject

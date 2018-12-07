@@ -14,6 +14,7 @@ import java.util.Set;
 
 import javax.enterprise.inject.Any;
 import javax.enterprise.inject.Default;
+import javax.enterprise.inject.New;
 import javax.inject.Named;
 import javax.inject.Qualifier;
 
@@ -43,6 +44,10 @@ public class QualifierMatchTest {
 
     Annotation a(String name) {
         Class<? extends QualifierMatchTest> c = this.getClass();
+        return getAnnotation(name, c);
+    }
+
+    private static Annotation getAnnotation(final String name, final Class<? extends QualifierMatchTest> c) {
         try {
             final Method declaredMethod = c.getDeclaredMethod(name);
             return declaredMethod.getDeclaredAnnotations()[0];
@@ -69,8 +74,19 @@ public class QualifierMatchTest {
     @Named("name")
     void namedName() {}
 
+    @New
+    void nw() {}
+
+    static Set<Annotation> cloneAdd(Set<Annotation> set, Annotation... ann) {
+        Set<Annotation> result = new HashSet<>(set);
+        for (Annotation a : ann)
+            result.add(a);
+        return result;
+    }
+
     static boolean match(Set<Annotation> produced, Set<Annotation> to) {
-        return QualifiedType.injectableIn(produced, to);
+        return QualifiedType.injectableIn(produced, to)
+                && QualifiedType.injectableIn(produced, cloneAdd(to, getAnnotation("nw", QualifierMatchTest.class)));
     }
 
     Set<Annotation> create(String... annNames) {

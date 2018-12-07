@@ -14,8 +14,8 @@ import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
 import com.oneandone.cdi.tester.CdiUnit2Runner;
 import com.oneandone.cdi.tester.mocks.MockitoExtension;
 
-import cdiunit.AImplementation1;
-import cdiunit.AInterface;
+import ejbcdiunit2.first.cdiunit.AImplementation1;
+import ejbcdiunit2.first.cdiunit.AInterface;
 
 
 /**

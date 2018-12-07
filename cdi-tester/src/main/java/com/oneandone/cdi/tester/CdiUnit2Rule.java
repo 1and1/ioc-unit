@@ -24,6 +24,7 @@ import com.oneandone.cdi.testanalyzer.CdiConfigCreator;
 import com.oneandone.cdi.testanalyzer.InitialConfiguration;
 import com.oneandone.cdi.weldstarter.CreationalContexts;
 import com.oneandone.cdi.weldstarter.WeldSetupClass;
+import com.oneandone.cdi.weldstarter.WrappedDeploymentException;
 import com.oneandone.cdi.weldstarter.spi.TestExtensionService;
 import com.oneandone.cdi.weldstarter.spi.WeldStarter;
 
@@ -33,6 +34,7 @@ import com.oneandone.cdi.weldstarter.spi.WeldStarter;
 public class CdiUnit2Rule implements TestRule {
     private static Logger logger = LoggerFactory.getLogger(CdiUnit2Rule.class);
     private final Object instance;
+    private final InitialConfiguration initialConfiguration;
     private WeldSetupClass weldSetup;
     private WeldStarter weldStarter;
     private final List<TestExtensionService> testExtensionServices = new ArrayList<>();
@@ -40,7 +42,12 @@ public class CdiUnit2Rule implements TestRule {
     private CdiConfigCreator cdiConfigCreator = null;
 
     public CdiUnit2Rule(final Object instance) {
+        this(instance, new InitialConfiguration());
+    }
+
+    public CdiUnit2Rule(final Object instance, final InitialConfiguration initialConfiguration) {
         this.instance = instance;
+        this.initialConfiguration = initialConfiguration;
         if (testExtensionServices.size() == 0) {
             ServiceLoader<TestExtensionService> loader = ServiceLoader.load(TestExtensionService.class);
             final Iterator<TestExtensionService> testExtensionServiceIterator = loader.iterator();
@@ -87,7 +94,7 @@ public class CdiUnit2Rule implements TestRule {
 
 
                 if (cdiConfigCreator == null) {
-                    InitialConfiguration cfg = new InitialConfiguration();
+                    InitialConfiguration cfg = initialConfiguration;
                     cfg.testClass = clazz;
                     cfg.testMethod = method;
                     cfg.initialClasses.add(BeanManager.class);
@@ -109,7 +116,11 @@ public class CdiUnit2Rule implements TestRule {
 
                 startupException = parseClassFormatError(e);
             } catch (Throwable e) {
-                startupException = new Exception("Unable to start weld", e);
+                if (e instanceof WrappedDeploymentException)
+                    e = e.getCause();
+                if (startupException == null) {
+                    startupException = e;
+                }
             }
 
         }
@@ -140,11 +151,9 @@ public class CdiUnit2Rule implements TestRule {
                 }
                 throw startupException;
             }
-            System.setProperty("java.naming.factory.initial", "com.oneandone.cdiunit.internal.naming.CdiUnitContextFactory");
-            InitialContext initialContext = new InitialContext();
             final BeanManager beanManager = weldStarter.get(BeanManager.class);
-            initialContext.bind("java:comp/BeanManager", beanManager);
             System.setProperty("java.naming.factory.initial", "com.oneandone.cdi.tester.naming.CdiTesterContextFactory");
+            InitialContext initialContext = new InitialContext();
             initialContext.bind("java:comp/BeanManager", beanManager);
             try (CreationalContexts creationalContexts = new CreationalContexts(beanManager)) {
                 if (testExtensionServices != null) {
@@ -179,6 +188,14 @@ public class CdiUnit2Rule implements TestRule {
             }
         }
 
+        /**
+         * Since it is not possible to intercept the Test-Class-Instance creation in JUnitRules, here the Testclass as created by Weld used to fill
+         * the old Testclass-Instance by the injected values.
+         *
+         * @param newTestInstance
+         * @param clazzP
+         * @throws IllegalAccessException
+         */
         private void initWeldFields(Object newTestInstance, Class<?> clazzP) throws IllegalAccessException {
             if (clazzP.equals(Object.class)) {
                 return;

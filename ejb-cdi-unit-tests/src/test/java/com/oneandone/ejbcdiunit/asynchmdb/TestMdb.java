@@ -5,14 +5,16 @@ import static org.hamcrest.core.Is.is;
 import javax.inject.Inject;
 import javax.jms.JMSException;
 
-import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.oneandone.cdi.testanalyzer.annotations.SutClasses;
+import com.oneandone.cdi.testanalyzer.annotations.SutPackages;
+import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
+import com.oneandone.cdi.tester.CdiUnit2Runner;
 import com.oneandone.cdi.tester.ejb.AsynchronousManager;
 import com.oneandone.cdi.tester.ejb.SessionContextFactory;
-import com.oneandone.ejbcdiunit.EjbUnitRunner;
 import com.oneandone.ejbcdiunit.ejbs.CdiMdbClient;
 import com.oneandone.ejbcdiunit.ejbs.MdbEjbInfoSingleton;
 import com.oneandone.ejbcdiunit.ejbs.QMdbEjb;
@@ -24,9 +26,10 @@ import com.oneandone.ejbcdiunit.helpers.LoggerGenerator;
 /**
  * @author aschoerk
  */
-@RunWith(EjbUnitRunner.class)
-@AdditionalClasses({  SessionContextFactory.class, LoggerGenerator.class,
-        QMdbEjb.class, QMdbEjb2.class, TMdbEjb.class })
+@RunWith(CdiUnit2Runner.class)
+@SutClasses({ QMdbEjb.class, QMdbEjb2.class, TMdbEjb.class })
+@SutPackages(CdiMdbClient.class)
+@TestClasses({ SessionContextFactory.class, LoggerGenerator.class })
 public class TestMdb {
     @Inject
     SingletonMdbClient singletonMdbClient;

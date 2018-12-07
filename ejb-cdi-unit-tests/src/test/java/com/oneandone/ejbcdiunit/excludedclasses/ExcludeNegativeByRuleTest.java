@@ -4,19 +4,21 @@ import static org.hamcrest.Matchers.is;
 
 import javax.inject.Inject;
 
-import org.jglue.cdiunit.AdditionalPackages;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 
+import com.oneandone.cdi.testanalyzer.InitialConfiguration;
+import com.oneandone.cdi.testanalyzer.annotations.SutPackages;
 import com.oneandone.cdi.tester.CdiUnit2Rule;
+import com.oneandone.ejbcdiunit.ejbs.SingletonTimerEJB;
 import com.oneandone.ejbcdiunit.excludedclasses.pcktoinclude.ToExclude;
 import com.oneandone.ejbcdiunit.excludedclasses.pcktoinclude.ToInclude;
 
 /**
  * @author aschoerk
  */
-@AdditionalPackages({ ToInclude.class })
+@SutPackages({ ToInclude.class })
 public class ExcludeNegativeByRuleTest {
 
     @Inject
@@ -27,7 +29,7 @@ public class ExcludeNegativeByRuleTest {
     @Rule
     public CdiUnit2Rule getEjbUnitRule() {
         ToInclude.count = 0;
-        return new CdiUnit2Rule(this);
+        return new CdiUnit2Rule(this, new InitialConfiguration().exclude(SingletonTimerEJB.class));
     }
 
     @Test

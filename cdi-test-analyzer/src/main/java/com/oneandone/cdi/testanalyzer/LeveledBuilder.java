@@ -67,16 +67,16 @@ class LeveledBuilder {
     List<Extension> extensionObjects = new ArrayList<>();
     Set<Class<?>> elseClasses = new HashSet<>();
     Set<QualifiedType> handledInjections = new HashSet<>();
-    public final AnalyzeConfiguration analyzeConfiguration;
+    public final TesterExtensionsConfigsFinder testerExtensionsConfigsFinder;
 
 
-    public LeveledBuilder(InitialConfiguration cfg, AnalyzeConfiguration analyzeConfiguration) {
+    public LeveledBuilder(InitialConfiguration cfg, TesterExtensionsConfigsFinder testerExtensionsConfigsFinder) {
         if (cfg.testClass != null) {
             addClass(cfg.testClass, testClasses, testClassesToBeEvaluated);
         }
-        this.analyzeConfiguration = analyzeConfiguration;
+        this.testerExtensionsConfigsFinder = testerExtensionsConfigsFinder;
 
-        addClasses(analyzeConfiguration.initialClasses, testClasses, testClassesToBeEvaluated);
+        addClasses(testerExtensionsConfigsFinder.initialClasses, testClasses, testClassesToBeEvaluated);
         Method testMethod = cfg.testMethod;
         if (cfg.initialClasses != null) {
             addClasses(cfg.initialClasses, testClasses, testClassesToBeEvaluated);
@@ -325,7 +325,7 @@ class LeveledBuilder {
 
     LeveledBuilder injects(Class c) {
         return doInClassAndSuperClasses(c, c1 -> {
-            InjectFinder injectFinder = new InjectFinder(analyzeConfiguration);
+            InjectFinder injectFinder = new InjectFinder(testerExtensionsConfigsFinder);
             injectFinder.find(c1);
             injections.addAll(injectFinder.getInjectedTypes());
         });
@@ -412,13 +412,13 @@ class LeveledBuilder {
 
 
     LeveledBuilder extraAnnotations(Class c) {
-        if (this.analyzeConfiguration.extraClassAnnotations.keySet().size() > 0) {
+        if (this.testerExtensionsConfigsFinder.extraClassAnnotations.keySet().size() > 0) {
             return doInClassAndSuperClasses(c, c1 -> {
-                analyzeConfiguration.extraClassAnnotations.keySet()
+                testerExtensionsConfigsFinder.extraClassAnnotations.keySet()
                         .stream()
                         .map(a -> c1.getAnnotation((Class<? extends Annotation>) (a)))
                         .filter(res -> res != null)
-                        .forEach(res -> analyzeConfiguration.extraClassAnnotations.get(((Annotation) res).annotationType())
+                        .forEach(res -> testerExtensionsConfigsFinder.extraClassAnnotations.get(((Annotation) res).annotationType())
                                 .handleExtraClassAnnotation(res, c1));
             });
         }
@@ -548,7 +548,7 @@ class LeveledBuilder {
         Set<Class<?>> tmp = new HashSet<>();
         tmp.addAll(beansAvailable);
         tmp.removeAll(beansToBeStarted);
-        LeveledBuilder result = new LeveledBuilder(new InitialConfiguration(), analyzeConfiguration);
+        LeveledBuilder result = new LeveledBuilder(new InitialConfiguration(), testerExtensionsConfigsFinder);
         for (Class<?> c : tmp) {
             result.available(c); // necessary? already is available
             result.producerFields(c);

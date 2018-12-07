@@ -5,13 +5,13 @@ import static org.junit.Assert.assertThat;
 
 import javax.inject.Inject;
 
-import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.Rule;
 import org.junit.Test;
 
+import com.oneandone.cdi.testanalyzer.InitialConfiguration;
+import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
 import com.oneandone.cdi.tester.CdiUnit2Rule;
 import com.oneandone.cdi.tester.ejb.AsynchronousManager;
-import com.oneandone.ejbcdiunit.CdiTestConfig;
 import com.oneandone.ejbcdiunit.ejbs.CountingBean;
 import com.oneandone.ejbcdiunit.ejbs.SingletonTimerEJB;
 import com.oneandone.ejbcdiunit.ejbs.StatelessTimerEJB;
@@ -19,14 +19,14 @@ import com.oneandone.ejbcdiunit.ejbs.StatelessTimerEJB;
 /**
  * @author aschoerk
  */
-@AdditionalClasses({ SingletonTimerEJB.class, StatelessTimerEJB.class })
+@TestClasses({ StatelessTimerEJB.class, SingletonTimerEJB.class })
 public class TestTimerExclusion {
     @Inject
     AsynchronousManager asynchronousManager;
 
     @Rule
     public CdiUnit2Rule getEjbUnitRule() {
-        return new CdiUnit2Rule(this, new CdiTestConfig().addExcluded(SingletonTimerEJB.class));
+        return new CdiUnit2Rule(this, new InitialConfiguration().exclude(SingletonTimerEJB.class));
     }
 
     @Test

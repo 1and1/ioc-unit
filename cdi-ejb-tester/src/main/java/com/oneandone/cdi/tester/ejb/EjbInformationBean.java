@@ -5,6 +5,8 @@ import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
 
 /**
+ * Used to transport information from the Analyzation process to the individual started instance of weld.
+ *
  * @author aschoerk
  */
 @ApplicationScoped

@@ -64,4 +64,45 @@ public class InitialConfiguration {
     public Set<Class<?>> excludedClasses = new HashSet<>();
 
     public Map<Class<?>, Service> services = new HashMap<>();
+
+    public InitialConfiguration testClasspath(Class<?> clazz) {
+        testClasspath.add(clazz);
+        return this;
+    }
+
+    public InitialConfiguration testClass(Class<?> clazz) {
+        testClasses.add(clazz);
+        return this;
+    }
+
+    public InitialConfiguration testPackage(Class<?> clazz) {
+        testPackages.add(clazz);
+        return this;
+    }
+
+    public InitialConfiguration sutClasspath(Class<?> clazz) {
+        suTClasspath.add(clazz);
+        return this;
+    }
+
+    public InitialConfiguration sutClass(Class<?> clazz) {
+        suTClasses.add(clazz);
+        return this;
+    }
+
+    public InitialConfiguration sutPackage(Class<?> clazz) {
+        suTPackages.add(clazz);
+        return this;
+    }
+
+    public InitialConfiguration enabledAlternatives(Class<?> clazz) {
+        enabledAlternatives.add(clazz);
+        return this;
+    }
+
+    public InitialConfiguration exclude(Class<?> clazz) {
+        excludedClasses.add(clazz);
+        return this;
+    }
+
 }

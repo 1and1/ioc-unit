@@ -7,13 +7,15 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.oneandone.cdi.testanalyzer.annotations.SutPackages;
+import com.oneandone.cdi.tester.CdiUnit2Runner;
 import com.oneandone.ejbcdiunit.EjbUnitRunner;
 
 import cdiunit.packagetest.PackageImpl;
 import cdiunit.packagetest.PackageInterface;
 
-@AdditionalPackages(PackageInterface.class)
-@RunWith(EjbUnitRunner.class)
+@SutPackages(PackageInterface.class)
+@RunWith(CdiUnit2Runner.class)
 public class TestAdditionalPackages {
 
     @Inject

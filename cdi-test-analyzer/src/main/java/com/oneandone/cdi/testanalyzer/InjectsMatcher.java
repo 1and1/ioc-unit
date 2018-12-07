@@ -182,6 +182,7 @@ public class InjectsMatcher {
             for (QualifiedType q : producingTypes) {
                 Class declaringClass = q.getDeclaringClass();
                 assert declaringClass != null;
+                assert !builder.excludedClasses.contains(declaringClass);
                 if (q.isAlternative()) {
                     if (q.getAlternativeStereotype() != null) {
                         if (builder.isActiveAlternativeStereoType(q.getAlternativeStereotype())) {

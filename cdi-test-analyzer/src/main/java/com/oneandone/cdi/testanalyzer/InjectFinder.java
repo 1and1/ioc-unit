@@ -27,11 +27,11 @@ import org.apache.commons.lang3.reflect.TypeUtils;
  */
 public class InjectFinder {
 
-    AnalyzeConfiguration a;
+    TesterExtensionsConfigsFinder a;
 
     Set<Class<? extends Annotation>> injectAnnotations = new HashSet<>();
 
-    public InjectFinder(final AnalyzeConfiguration a) {
+    public InjectFinder(final TesterExtensionsConfigsFinder a) {
         this.a = a;
         injectAnnotations.add(Inject.class);
         injectAnnotations.addAll(a.injectAnnotations);
@@ -91,7 +91,7 @@ public class InjectFinder {
                         throw new RuntimeException("Only one Constructor may be injected" + c.getName());
                     }
                     for (Parameter p : constructor.getParameters()) {
-                        if (!notIgnoreAble(p.getParameterizedType()))
+                        if (notIgnoreAble(p.getParameterizedType()))
                             injectedTypes.add(new QualifiedType(p, constructor));
                     }
                     injectedConstructorFound = true;

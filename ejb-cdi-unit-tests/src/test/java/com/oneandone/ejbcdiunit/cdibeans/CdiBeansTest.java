@@ -2,17 +2,17 @@ package com.oneandone.ejbcdiunit.cdibeans;
 
 import javax.inject.Inject;
 
-import org.jglue.cdiunit.AdditionalPackages;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.oneandone.ejbcdiunit.EjbUnitRunner;
+import com.oneandone.cdi.testanalyzer.annotations.SutPackages;
+import com.oneandone.cdi.tester.CdiUnit2Runner;
 
 /**
  * @author aschoerk
  */
-@AdditionalPackages({ AppScopedServiceBean.class })
-@RunWith(EjbUnitRunner.class)
+@SutPackages({ AppScopedServiceBean.class })
+@RunWith(CdiUnit2Runner.class)
 public class CdiBeansTest {
 
     @Inject

@@ -11,7 +11,7 @@ import org.junit.runners.JUnit4;
 
 import com.oneandone.cdi.testanalyzer.ClasspathHandler;
 
-import cdiunit.AImplementation1;
+import ejbcdiunit2.first.cdiunit.AImplementation1;
 
 /**
  * @author aschoerk
