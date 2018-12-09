@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-import org.jglue.cdiunit.InRequestScope;
+import com.oneandone.cdi.tester.contexts.InRequestScope;
 
 /**
  * @author aschoerk

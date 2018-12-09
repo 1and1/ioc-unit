@@ -13,22 +13,22 @@ import java.util.List;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 
-import org.jglue.cdiunit.AdditionalClasses;
-import org.jglue.cdiunit.ProducesAlternative;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
-import com.oneandone.ejbcdiunit.EjbUnitRunner;
+import com.oneandone.cdi.testanalyzer.annotations.SutClasses;
+import com.oneandone.cdi.tester.CdiUnit2Runner;
+import com.oneandone.cdi.tester.ProducesAlternative;
 import com.oneandone.ejbcdiunit.example2.uselookup.Resources;
 import com.oneandone.ejbcdiunit.example2.uselookup.ServiceWithLookup;
 
 /**
  * @author aschoerk
  */
-@RunWith(EjbUnitRunner.class)
-@AdditionalClasses({ServiceWithLookup.class})
+@RunWith(CdiUnit2Runner.class)
+@SutClasses({ ServiceWithLookup.class })
 public class ServiceWithAlternativeTest {
     @Inject
     ServiceIntf sut;

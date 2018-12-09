@@ -1,4 +1,4 @@
-package com.oneandone.ejbcdiunit5;
+package com.oneandone.cdi.tester;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

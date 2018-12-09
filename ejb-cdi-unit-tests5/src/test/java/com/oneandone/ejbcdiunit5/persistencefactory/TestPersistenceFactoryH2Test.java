@@ -1,19 +1,19 @@
 package com.oneandone.ejbcdiunit5.persistencefactory;
 
-import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import com.oneandone.ejbcdiunit.entities.TestEntity1;
+import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
+import com.oneandone.cdi.tester.JUnit5Extension;
 import com.oneandone.cdi.tester.ejb.persistence.TestPersistenceFactory;
-import com.oneandone.ejbcdiunit5.JUnit5Extension;
+import com.oneandone.ejbcdiunit.entities.TestEntity1;
 
 /**
  * @author aschoerk
  */
 @ExtendWith(JUnit5Extension.class)
-@AdditionalClasses({ TestPersistenceFactory.class, TestEntity1.class })
+@TestClasses({ TestPersistenceFactory.class, TestEntity1.class })
 public class TestPersistenceFactoryH2Test extends PersistenceFactoryTestBase {
 
     @BeforeAll

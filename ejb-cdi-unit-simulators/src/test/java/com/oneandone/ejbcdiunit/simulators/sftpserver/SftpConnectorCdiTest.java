@@ -33,14 +33,13 @@ import org.mockito.Mockito;
 
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.SftpException;
-import com.oneandone.ejbcdiunit.EjbUnitRunner;
+import com.oneandone.cdi.tester.CdiUnit2Runner;
 import com.oneandone.ejbcdiunit.simulators.sftpclient.SftpConnector;
 import com.oneandone.ejbcdiunit.simulators.sftpclient.TestSftpConfiguration;
 import com.oneandone.ejbcdiunit.simulators.sftpclient.upload.UploadFileStrategy;
 
 
-@RunWith(EjbUnitRunner.class)
-@AdditionalClasses({})
+@RunWith(CdiUnit2Runner.class)
 public class SftpConnectorCdiTest {
 
     private static final String HOST = "localhost";
@@ -195,14 +194,8 @@ public class SftpConnectorCdiTest {
     @Test
     public void testUploadFile() throws UnsupportedEncodingException {
         /*
-        for (int i = 0; i < 1000; i++) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        */
+         * for (int i = 0; i < 1000; i++) { try { Thread.sleep(1000); } catch (InterruptedException e) { e.printStackTrace(); } }
+         */
         uploadFile(sftpConnectorTempDir);
         uploadFile(sftpConnectorTmpFile);
         uploadFile(sftpConnectorNoRename);

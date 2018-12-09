@@ -1,23 +1,9 @@
 package com.oneandone.ejbcdiunit5.persistencefactory;
 
-import com.oneandone.ejbcdiunit.ClassWithTwoDifferentEntityManagers;
-import com.oneandone.ejbcdiunit.cdiunit.Pu1Em;
-import com.oneandone.ejbcdiunit.cdiunit.Pu2Em;
-import com.oneandone.ejbcdiunit.entities.TestEntity1;
-import com.oneandone.cdi.tester.ejb.persistence.TestTransaction;
-import com.oneandone.ejbcdiunit5.JUnit5Extension;
-import com.oneandone.ejbcdiunit5.helpers.J2eeSimTest1Factory;
-import com.oneandone.ejbcdiunit5.helpers.J2eeSimTest2Factory;
-import com.oneandone.ejbcdiunit5.helpers.TestResources;
-import org.hibernate.exception.GenericJDBCException;
-import org.jglue.cdiunit.ActivatedAlternatives;
-import org.jglue.cdiunit.AdditionalClasses;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import javax.ejb.TransactionAttributeType;
 import javax.enterprise.context.ApplicationScoped;
@@ -26,19 +12,40 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
 import javax.persistence.PersistenceException;
-import javax.transaction.*;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.RollbackException;
+import javax.transaction.SystemException;
+import javax.transaction.UserTransaction;
 
-import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.fail;
+import org.hibernate.exception.GenericJDBCException;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.oneandone.cdi.testanalyzer.annotations.EnabledAlternatives;
+import com.oneandone.cdi.testanalyzer.annotations.SutClasses;
+import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
+import com.oneandone.cdi.tester.JUnit5Extension;
+import com.oneandone.cdi.tester.ejb.persistence.TestTransaction;
+import com.oneandone.ejbcdiunit.ClassWithTwoDifferentEntityManagers;
+import com.oneandone.ejbcdiunit.cdiunit.Pu1Em;
+import com.oneandone.ejbcdiunit.cdiunit.Pu2Em;
+import com.oneandone.ejbcdiunit.entities.TestEntity1;
+import com.oneandone.ejbcdiunit5.helpers.J2eeSimTest1Factory;
+import com.oneandone.ejbcdiunit5.helpers.J2eeSimTest2Factory;
+import com.oneandone.ejbcdiunit5.helpers.TestResources;
 
 /**
  * @author aschoerk
  */
 @ExtendWith(JUnit5Extension.class)
-@ActivatedAlternatives({ TestResources.class })
-@AdditionalClasses({ J2eeSimTest1Factory.class, J2eeSimTest2Factory.class, ClassWithTwoDifferentEntityManagers.class })
+@EnabledAlternatives({ TestResources.class })
+@TestClasses({ J2eeSimTest1Factory.class, J2eeSimTest2Factory.class })
+@SutClasses(ClassWithTwoDifferentEntityManagers.class)
 public class Jpa2PUTest {
 
     @Inject
@@ -77,7 +84,7 @@ public class Jpa2PUTest {
         testEntity1b = new TestEntity1();
 
         try (TestTransaction tra1 = factory1.transaction(TransactionAttributeType.REQUIRED);
-             TestTransaction tra2 = factory2.transaction(TransactionAttributeType.REQUIRED)) {
+                TestTransaction tra2 = factory2.transaction(TransactionAttributeType.REQUIRED)) {
             testEntity1a.setStringAttribute("string in entity1");
             testEntity1a.setIntAttribute(10);
             factory1.produceEntityManager().persist(testEntity1a);
@@ -103,14 +110,14 @@ public class Jpa2PUTest {
             factory2.produceEntityManager().refresh(testEntity1a);
             fail("expected Illegal Argument Exception");
         } catch (IllegalArgumentException e) {
-            log.info("expected IllegalArgumentException catched {}",e);
+            log.info("expected IllegalArgumentException catched {}", e);
         }
 
         try {
             factory1.produceEntityManager().refresh(testEntity1b);
             fail("expected Illegal Argument Exception");
         } catch (IllegalArgumentException e) {
-            log.info("expected IllegalArgumentException catched {}",e);
+            log.info("expected IllegalArgumentException catched {}", e);
         }
 
 
@@ -130,7 +137,7 @@ public class Jpa2PUTest {
         try {
             factory2.produceEntityManager().refresh(testEntity1a); // provoke error
             fail("expected Illegal Argument Exception");
-        } catch (IllegalArgumentException e) { }
+        } catch (IllegalArgumentException e) {}
         assertThat(testEntity1a.getIntAttribute(), is(10));
         factory1.produceEntityManager().refresh(testEntity1a); // should be ok
 
@@ -142,7 +149,7 @@ public class Jpa2PUTest {
         try {
             factory1.produceEntityManager().refresh(testEntity1a); // provoke error
             fail("expected Illegal Argument Exception");
-        } catch (IllegalArgumentException e) { }
+        } catch (IllegalArgumentException e) {}
         assertThat(testEntity1a.getIntAttribute(), is(20));
         factory2.produceEntityManager().refresh(testEntity1a); // should be ok
 

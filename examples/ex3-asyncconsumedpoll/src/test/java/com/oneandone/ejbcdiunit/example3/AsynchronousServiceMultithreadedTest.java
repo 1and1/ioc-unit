@@ -10,19 +10,19 @@ import java.util.concurrent.ExecutionException;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 
-import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.oneandone.ejbcdiunit.AsynchronousManager;
-import com.oneandone.ejbcdiunit.EjbUnitRunner;
+import com.oneandone.cdi.testanalyzer.annotations.SutClasses;
+import com.oneandone.cdi.tester.CdiUnit2Runner;
+import com.oneandone.cdi.tester.ejb.AsynchronousManager;
 
 /**
  * @author aschoerk
  */
-@RunWith(EjbUnitRunner.class)
-@AdditionalClasses({AsynchonousService.class})
+@RunWith(CdiUnit2Runner.class)
+@SutClasses({ AsynchonousService.class })
 public class AsynchronousServiceMultithreadedTest {
     @Inject
     AsynchronousServiceIntf sut;
@@ -35,8 +35,8 @@ public class AsynchronousServiceMultithreadedTest {
 
     @Before
     public void beforeReallyAsynchronousServiceTest() {
-        asynchronousManager.setEnqueAsynchronousCalls(true);  // asynchronous futures don't handle the call themselves
-        asynchronousManager.startThread();      // a thread will periodically check for actions to be handled
+        asynchronousManager.setEnqueAsynchronousCalls(true); // asynchronous futures don't handle the call themselves
+        asynchronousManager.startThread(); // a thread will periodically check for actions to be handled
     }
 
     @Test

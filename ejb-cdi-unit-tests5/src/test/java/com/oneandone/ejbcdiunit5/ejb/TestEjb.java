@@ -1,23 +1,7 @@
 package com.oneandone.ejbcdiunit5.ejb;
 
-import com.oneandone.ejbcdiunit.SessionContextFactory;
-import com.oneandone.ejbcdiunit.cdiunit.EjbJarClasspath;
-import com.oneandone.ejbcdiunit.ejbs.*;
-import com.oneandone.ejbcdiunit.ejbs.appexc.TestBaseClass;
-import com.oneandone.ejbcdiunit.entities.TestEntity1;
-import com.oneandone.cdi.tester.ejb.persistence.SinglePersistenceFactory;
-import com.oneandone.cdi.tester.ejb.persistence.TestTransaction;
-import com.oneandone.ejbcdiunit.testbases.EJBTransactionTestBase;
-import com.oneandone.ejbcdiunit.testbases.TestEntity1Saver;
-import com.oneandone.ejbcdiunit5.JUnit5Extension;
-import com.oneandone.ejbcdiunit5.helpers.LoggerGenerator;
-import org.hamcrest.MatcherAssert;
-import org.jglue.cdiunit.AdditionalClasses;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
 import javax.ejb.EJBException;
 import javax.ejb.TransactionAttributeType;
@@ -26,19 +10,48 @@ import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.TransactionRequiredException;
-import javax.transaction.*;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.NotSupportedException;
+import javax.transaction.RollbackException;
+import javax.transaction.Status;
+import javax.transaction.SystemException;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import org.hamcrest.MatcherAssert;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
+import com.oneandone.cdi.tester.JUnit5Extension;
+import com.oneandone.cdi.tester.ejb.EjbJarClasspath;
+import com.oneandone.cdi.tester.ejb.SessionContextFactory;
+import com.oneandone.cdi.tester.ejb.persistence.SinglePersistenceFactory;
+import com.oneandone.cdi.tester.ejb.persistence.TestTransaction;
+import com.oneandone.ejbcdiunit.ejbs.CDIClass;
+import com.oneandone.ejbcdiunit.ejbs.MdbEjbInfoSingleton;
+import com.oneandone.ejbcdiunit.ejbs.OuterClass;
+import com.oneandone.ejbcdiunit.ejbs.QMdbEjb;
+import com.oneandone.ejbcdiunit.ejbs.SingletonEJB;
+import com.oneandone.ejbcdiunit.ejbs.StatelessBeanManagedTrasEJB;
+import com.oneandone.ejbcdiunit.ejbs.StatelessChildEJB;
+import com.oneandone.ejbcdiunit.ejbs.StatelessEJB;
+import com.oneandone.ejbcdiunit.ejbs.appexc.TestBaseClass;
+import com.oneandone.ejbcdiunit.entities.TestEntity1;
+import com.oneandone.ejbcdiunit.testbases.EJBTransactionTestBase;
+import com.oneandone.ejbcdiunit.testbases.TestEntity1Saver;
+import com.oneandone.ejbcdiunit5.helpers.LoggerGenerator;
 
 /**
  * @author aschoerk
  */
 @ExtendWith(JUnit5Extension.class)
-@AdditionalClasses({ StatelessEJB.class, SingletonEJB.class,
+@TestClasses({ StatelessEJB.class, SingletonEJB.class,
         TestEjb.TestDbPersistenceFactory.class, SessionContextFactory.class,
         StatelessBeanManagedTrasEJB.class, StatelessChildEJB.class,
-        QMdbEjb.class, MdbEjbInfoSingleton.class, LoggerGenerator.class })
+        QMdbEjb.class, MdbEjbInfoSingleton.class, LoggerGenerator.class, CDIClass.class, OuterClass.class })
 @EjbJarClasspath(TestBaseClass.class)
 public class TestEjb extends EJBTransactionTestBase {
 
@@ -60,8 +73,7 @@ public class TestEjb extends EJBTransactionTestBase {
                 break;
             }
             freemem = runtime.freeMemory();
-        }
-        while (true);
+        } while (true);
         runtime.runFinalization();
     }
 
@@ -123,7 +135,7 @@ public class TestEjb extends EJBTransactionTestBase {
             MatcherAssert.assertThat(res.intValue(), is(num));
             resource1.setRollbackOnly();
         } catch (RollbackException rbe) {
-             // ignore, wanted to roll it back!!!
+            // ignore, wanted to roll it back!!!
         }
     }
 

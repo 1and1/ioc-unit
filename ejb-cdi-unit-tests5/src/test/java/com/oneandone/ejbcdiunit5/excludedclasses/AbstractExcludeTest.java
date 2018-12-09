@@ -6,13 +6,13 @@ import static org.hamcrest.Matchers.is;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 
-import org.jglue.cdiunit.AdditionalPackages;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import com.oneandone.ejbcdiunit.cdiunit.ExcludedClasses;
-import com.oneandone.ejbcdiunit5.JUnit5Extension;
+import com.oneandone.cdi.testanalyzer.annotations.ExcludedClasses;
+import com.oneandone.cdi.testanalyzer.annotations.SutPackages;
+import com.oneandone.cdi.tester.JUnit5Extension;
 import com.oneandone.ejbcdiunit5.excludedclasses.pcktoinclude.ToExclude;
 import com.oneandone.ejbcdiunit5.excludedclasses.pcktoinclude.ToInclude;
 
@@ -20,7 +20,7 @@ import com.oneandone.ejbcdiunit5.excludedclasses.pcktoinclude.ToInclude;
  * @author aschoerk used to testIntercepted, if inheritence works
  */
 @ExtendWith(JUnit5Extension.class)
-@AdditionalPackages({ ToInclude.class })
+@SutPackages({ ToInclude.class })
 @ExcludedClasses({ ToExclude.class })
 public abstract class AbstractExcludeTest {
 

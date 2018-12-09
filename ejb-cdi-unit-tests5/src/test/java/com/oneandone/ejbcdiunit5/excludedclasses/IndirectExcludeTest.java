@@ -1,17 +1,17 @@
 package com.oneandone.ejbcdiunit5.excludedclasses;
 
-import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import com.oneandone.ejbcdiunit5.ExpectedStartupException;
-import com.oneandone.ejbcdiunit5.JUnit5Extension;
+import com.oneandone.cdi.testanalyzer.annotations.SutClasses;
+import com.oneandone.cdi.tester.ExpectedStartupException;
+import com.oneandone.cdi.tester.JUnit5Extension;
 
 /**
  * @author aschoerk
  */
 @ExtendWith(JUnit5Extension.class)
-@AdditionalClasses({ IndirectExcluding.class })
+@SutClasses({ IndirectExcluding.class })
 public class IndirectExcludeTest {
 
     @Test

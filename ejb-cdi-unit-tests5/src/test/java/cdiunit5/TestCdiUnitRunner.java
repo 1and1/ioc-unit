@@ -22,23 +22,23 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.servlet.http.HttpServletRequest;
 
-import org.jglue.cdiunit.AdditionalClasses;
-import org.jglue.cdiunit.InConversationScope;
-import org.jglue.cdiunit.InRequestScope;
-import org.jglue.cdiunit.InSessionScope;
-import org.jglue.cdiunit.ProducesAlternative;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
-import com.oneandone.ejbcdiunit.ContextControllerEjbCdiUnit;
-import com.oneandone.ejbcdiunit.cdiunit.ExcludedClasses;
-import com.oneandone.ejbcdiunit5.JUnit5Extension;
+import com.oneandone.cdi.testanalyzer.annotations.ExcludedClasses;
+import com.oneandone.cdi.testanalyzer.annotations.SutPackages;
+import com.oneandone.cdi.tester.JUnit5Extension;
+import com.oneandone.cdi.tester.ProducesAlternative;
+import com.oneandone.cdi.tester.contexts.ContextController;
+import com.oneandone.cdi.tester.contexts.InConversationScope;
+import com.oneandone.cdi.tester.contexts.InRequestScope;
+import com.oneandone.cdi.tester.contexts.InSessionScope;
 
 @ExtendWith(JUnit5Extension.class)
-@AdditionalClasses({ ESupportClass.class, ScopedFactory.class })
+@SutPackages({ AImplementation1.class })
 @ExcludedClasses({ Scoped.class }) // cdi1.0 does not recognize @Vetoed
 public class TestCdiUnitRunner extends BaseTest {
 
@@ -71,7 +71,7 @@ public class TestCdiUnitRunner extends BaseTest {
     private FApplicationScoped f2;
 
     @Inject
-    private ContextControllerEjbCdiUnit contextControllerEjbCdiUnit;
+    private ContextController contextControllerEjbCdiUnit;
 
     @Inject
     private BRequestScoped request;

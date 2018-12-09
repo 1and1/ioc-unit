@@ -16,21 +16,21 @@ import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 
-import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
+import com.oneandone.cdi.tester.CdiUnit2Runner;
 import com.oneandone.cdi.tester.ejb.persistence.PersistenceFactory;
 import com.oneandone.cdi.tester.ejb.persistence.TestClosure;
 import com.oneandone.cdi.tester.ejb.persistence.TestPersistenceFactory;
 import com.oneandone.cdi.tester.ejb.persistence.TestTransactionException;
-import com.oneandone.ejbcdiunit.EjbUnitRunner;
 
 /**
  * @author aschoerk
  */
-@RunWith(EjbUnitRunner.class)
-@AdditionalClasses({Service.class, TestPersistenceFactory.class})
+@RunWith(CdiUnit2Runner.class)
+@TestClasses({ Service.class, TestPersistenceFactory.class })
 public class ServiceTest {
     @Inject
     ServiceIntf sut;
@@ -102,7 +102,8 @@ public class ServiceTest {
     }
 
     @Test
-    public void canReadCommittedTestDataUsingServiceInRequiredNew() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+    public void canReadCommittedTestDataUsingServiceInRequiredNew()
+            throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
         userTransaction.begin();
         List<Entity1> entities = new ArrayList<>();
         for (int i = 0; i < 10; i++) {

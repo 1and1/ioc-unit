@@ -1,25 +1,30 @@
 package com.oneandone.ejbcdiunit5.closure;
 
-import com.oneandone.ejbcdiunit.weldstarter.WeldStarterTestBase;
-import com.oneandone.ejbcdiunit2.closure.CdiConfigBuilder;
-import com.oneandone.ejbcdiunit2.closure.InitialConfiguration;
-import com.oneandone.ejbcdiunit2.closure.annotations.EnabledAlternatives;
-import com.oneandone.ejbcdiunit2.closure.annotations.SutClasses;
-import com.oneandone.ejbcdiunit2.closure.annotations.SutPackages;
-import org.jglue.cdiunit.ProducesAlternative;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.net.MalformedURLException;
+import java.util.Arrays;
+
+import javax.enterprise.inject.Alternative;
+import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
-import javax.enterprise.inject.Alternative;
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
-import java.net.MalformedURLException;
-import java.util.Arrays;
-
-import static org.junit.jupiter.api.Assertions.*;
+import com.oneandone.cdi.testanalyzer.CdiConfigCreator;
+import com.oneandone.cdi.testanalyzer.InitialConfiguration;
+import com.oneandone.cdi.testanalyzer.annotations.EnabledAlternatives;
+import com.oneandone.cdi.testanalyzer.annotations.SutClasses;
+import com.oneandone.cdi.testanalyzer.annotations.SutPackages;
+import com.oneandone.cdi.tester.ProducesAlternative;
+import com.oneandone.cdi.weldstarter.WeldStarterTestBase;
 
 /**
  * @author aschoerk
@@ -95,8 +100,6 @@ public class CdiConfigBuilderTest extends WeldStarterTestBase {
     }
 
 
-
-
     static class BeanWith2Inner {
 
         static class InnerDummy extends DummyBean {
@@ -110,8 +113,6 @@ public class CdiConfigBuilderTest extends WeldStarterTestBase {
         @Inject
         DummyBean dummyBean;
     }
-
-
 
 
     @Test
@@ -135,8 +136,7 @@ public class CdiConfigBuilderTest extends WeldStarterTestBase {
     }
 
     static class BeanWithInner {
-        static class InnerDummy extends DummyBean {
-        }
+        static class InnerDummy extends DummyBean {}
 
         @Inject
         DummyBean dummyBean;
@@ -222,8 +222,7 @@ public class CdiConfigBuilderTest extends WeldStarterTestBase {
 
     static class BeanWithInnerProducer {
 
-        interface DummyInterface {
-        }
+        interface DummyInterface {}
 
         static class InnerWithInject extends DummyBean {
             @Mock
@@ -246,12 +245,13 @@ public class CdiConfigBuilderTest extends WeldStarterTestBase {
 
     static class BeanWithInnerProducerDependent {
 
-        interface DummyInterface {
-        }
+        interface DummyInterface {}
+
         static class InnerProducingDummyBean {
             @Mock
             DummyBean dummyBean;
         }
+
         static class InnerWithInject {
             @Mock
             DummyInterface dummyInterfaceMocked;
@@ -270,7 +270,8 @@ public class CdiConfigBuilderTest extends WeldStarterTestBase {
         configureAndStart();
         assertNotNull(selectGet(BeanWithInnerProducerDependent.class).dummyInterfaceBean);
         assertNotNull(selectGet(BeanWithInnerProducerDependent.InnerWithInject.class));
-        assertTrue(BeanWithInnerProducerDependent.DummyInterface.class.isAssignableFrom(selectGet(BeanWithInnerProducerDependent.class).dummyInterfaceBean.getClass()));
+        assertTrue(BeanWithInnerProducerDependent.DummyInterface.class
+                .isAssignableFrom(selectGet(BeanWithInnerProducerDependent.class).dummyInterfaceBean.getClass()));
     }
 
     static class BeanUsingAlternative {
@@ -280,7 +281,7 @@ public class CdiConfigBuilderTest extends WeldStarterTestBase {
 
         }
 
-        @EnabledAlternatives({InnerAlternative.class})
+        @EnabledAlternatives({ InnerAlternative.class })
         static class InjectingAlternative {
 
             @Inject
@@ -299,7 +300,7 @@ public class CdiConfigBuilderTest extends WeldStarterTestBase {
         assertNotNull(selectGet(BeanUsingAlternative.class).injectingAlternative);
         assertNotNull(selectGet(BeanUsingAlternative.InjectingAlternative.class).dummyBean);
         assertNotNull(selectGet(BeanUsingAlternative.InnerAlternative.class));
-     }
+    }
 
     static class BeanUsingAlternative2 {
 
@@ -446,13 +447,14 @@ public class CdiConfigBuilderTest extends WeldStarterTestBase {
 
 
     private void configureAndStart() throws MalformedURLException {
-        CdiConfigBuilder cdiConfigBuilder = new CdiConfigBuilder();
-        cdiConfigBuilder.initialize(cfg);
-        setBeanClasses(cdiConfigBuilder.toBeStarted());
-        setEnabledAlternativeStereotypes(ProducesAlternative.class);
-        setAlternativeClasses(cdiConfigBuilder.getEnabledAlternatives());
-        setExtensions(cdiConfigBuilder.getExtensions());
-        start();
+        CdiConfigCreator cdiConfigBuilder = new CdiConfigCreator();
+        cdiConfigBuilder.create(cfg);
+        throw new RuntimeException();
+        // setBeanClasses(cdiConfigBuilder.toBeStarted());
+        // setEnabledAlternativeStereotypes(ProducesAlternative.class);
+        // setAlternativeClasses(cdiConfigBuilder.getEnabledAlternatives());
+        // setExtensions(cdiConfigBuilder.getExtensions());
+        // start();
     }
 
 

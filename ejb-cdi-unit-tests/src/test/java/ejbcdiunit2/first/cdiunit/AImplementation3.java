@@ -14,10 +14,7 @@ import java.lang.annotation.Target;
 import javax.enterprise.inject.Alternative;
 import javax.enterprise.inject.Stereotype;
 
-import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
 
-
-@TestClasses(AImplementation3.StereotypeAlternative.class)
 @AImplementation3.StereotypeAlternative
 public class AImplementation3 implements AInterface {
 

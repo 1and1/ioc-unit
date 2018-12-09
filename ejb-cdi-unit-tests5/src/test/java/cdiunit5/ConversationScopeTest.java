@@ -3,9 +3,10 @@ package cdiunit5;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-import org.jglue.cdiunit.InConversationScope;
-import org.jglue.cdiunit.InRequestScope;
 import org.junit.jupiter.api.Assertions;
+
+import com.oneandone.cdi.tester.contexts.InConversationScope;
+import com.oneandone.cdi.tester.contexts.InRequestScope;
 
 /**
  * @author aschoerk

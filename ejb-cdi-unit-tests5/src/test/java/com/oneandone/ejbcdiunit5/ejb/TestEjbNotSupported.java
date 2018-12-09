@@ -1,33 +1,35 @@
 package com.oneandone.ejbcdiunit5.ejb;
 
-import com.oneandone.ejbcdiunit.SessionContextFactory;
-import com.oneandone.ejbcdiunit.ejbs.SingletonEJB;
-import com.oneandone.ejbcdiunit.ejbs.StatelessEJB;
-import com.oneandone.ejbcdiunit.ejbs.StatelessNotSupportedEJB;
-import com.oneandone.ejbcdiunit.entities.TestEntity1;
-import com.oneandone.cdi.tester.ejb.persistence.SinglePersistenceFactory;
-import com.oneandone.ejbcdiunit5.JUnit5Extension;
-import com.oneandone.ejbcdiunit5.helpers.LoggerGenerator;
-import org.jglue.cdiunit.AdditionalClasses;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+
+import java.io.IOException;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import java.io.IOException;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import com.oneandone.cdi.testanalyzer.annotations.SutClasses;
+import com.oneandone.cdi.tester.JUnit5Extension;
+import com.oneandone.cdi.tester.ejb.SessionContextFactory;
+import com.oneandone.cdi.tester.ejb.persistence.SinglePersistenceFactory;
+import com.oneandone.ejbcdiunit.ejbs.SingletonEJB;
+import com.oneandone.ejbcdiunit.ejbs.StatelessEJB;
+import com.oneandone.ejbcdiunit.ejbs.StatelessNotSupportedEJB;
+import com.oneandone.ejbcdiunit.entities.TestEntity1;
+import com.oneandone.ejbcdiunit5.helpers.LoggerGenerator;
 
 /**
  * @author aschoerk
  */
 @ExtendWith(JUnit5Extension.class)
-@AdditionalClasses({ StatelessEJB.class, SingletonEJB.class,
-        TestEjb.TestDbPersistenceFactory.class, SessionContextFactory.class, LoggerGenerator.class})
+@SutClasses({ StatelessEJB.class, SingletonEJB.class,
+        TestEjb.TestDbPersistenceFactory.class, SessionContextFactory.class, LoggerGenerator.class })
 public class TestEjbNotSupported {
 
     @Inject

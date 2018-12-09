@@ -11,19 +11,19 @@ import java.util.concurrent.ExecutionException;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 
-import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.oneandone.ejbcdiunit.AsynchronousManager;
-import com.oneandone.ejbcdiunit.EjbUnitRunner;
+import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
+import com.oneandone.cdi.tester.CdiUnit2Runner;
+import com.oneandone.cdi.tester.ejb.AsynchronousManager;
 
 /**
  * @author aschoerk
  */
-@RunWith(EjbUnitRunner.class)
-@AdditionalClasses({AsynchonousService.class})
+@RunWith(CdiUnit2Runner.class)
+@TestClasses({ AsynchonousService.class })
 public class AsynchronousServiceDeterministicTest {
     @Inject
     AsynchronousServiceIntf sut;
@@ -54,11 +54,11 @@ public class AsynchronousServiceDeterministicTest {
             correlationIds.add(sut.newRemoteEntity1(i, "string: " + i));
         }
         assertThat(sut.pollId(correlationIds.get(5)), nullValue());
-        asynchronousManager.once();  // simulate remote answering
+        asynchronousManager.once(); // simulate remote answering
         // fetch the 6th inserted entity.
         final Long id = sut.pollId(correlationIds.get(5));
         final AsynchronousServiceIntf.CorrelationId correlationId = sut.getRemoteStringValueFor(id);
-        asynchronousManager.once();  // simulate remote answering
+        asynchronousManager.once(); // simulate remote answering
         assertThat(sut.pollString(correlationId), is(remoteService.getStringValueFor(id)));
     }
 

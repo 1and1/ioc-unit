@@ -1,23 +1,24 @@
 package com.oneandone.ejbcdiunit5.excludedclasses;
 
-import com.oneandone.ejbcdiunit5.JUnit5Extension;
-import com.oneandone.ejbcdiunit5.excludedclasses.pcktoinclude.ToExclude;
-import com.oneandone.ejbcdiunit5.excludedclasses.pcktoinclude.ToInclude;
+import static org.hamcrest.Matchers.is;
+
+import javax.inject.Inject;
+
 import org.hamcrest.MatcherAssert;
-import org.jglue.cdiunit.AdditionalPackages;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import javax.inject.Inject;
-
-import static org.hamcrest.Matchers.is;
+import com.oneandone.cdi.testanalyzer.annotations.SutPackages;
+import com.oneandone.cdi.tester.JUnit5Extension;
+import com.oneandone.ejbcdiunit5.excludedclasses.pcktoinclude.ToExclude;
+import com.oneandone.ejbcdiunit5.excludedclasses.pcktoinclude.ToInclude;
 
 /**
  * @author aschoerk
  */
 @ExtendWith(JUnit5Extension.class)
-@AdditionalPackages({ ToInclude.class })
+@SutPackages({ ToInclude.class })
 public class ExcludeNegativeTest {
 
     @Inject

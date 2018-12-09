@@ -23,10 +23,22 @@
     <url>https://github.com/1and1/ejb-cdi-unit</url>
     <dependencies>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>ejb-cdi-unit5</artifactId>
-            <scope>test</scope>
+            <groupId>net.oneandone</groupId>
+            <artifactId>cdi-tester</artifactId>
             <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.oneandone</groupId>
+            <artifactId>cdi-ejb-tester</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.oneandone</groupId>
+            <artifactId>cdi-tester-contexts</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -64,11 +76,11 @@
             <version>1.0.9</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
+        <!--dependency>
             <groupId>org.jglue.cdi-unit</groupId>
             <artifactId>cdi-unit-tests-external-dependency</artifactId>
             <version>3.0.1</version>
-        </dependency>
+        </dependency-->
 
         <!-- testing -->
         <dependency>

@@ -6,13 +6,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 
-import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.RepetitionInfo;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import com.oneandone.ejbcdiunit5.JUnit5Extension;
+import com.oneandone.cdi.testanalyzer.annotations.SutClasses;
+import com.oneandone.cdi.tester.JUnit5Extension;
 import com.oneandone.ejbcdiunit5.junit5.beans.AppScopedBean1;
 import com.oneandone.ejbcdiunit5.junit5.beans.AppScopedBean2;
 import com.oneandone.ejbcdiunit5.junit5.beans.BaseBean;
@@ -21,7 +21,7 @@ import com.oneandone.ejbcdiunit5.junit5.beans.BaseBean;
  * @author aschoerk
  */
 @ExtendWith(JUnit5Extension.class)
-@AdditionalClasses({ AppScopedBean1.class, AppScopedBean2.class })
+@SutClasses({ AppScopedBean1.class, AppScopedBean2.class })
 public class InstanceTest {
 
     static int calls = 0;

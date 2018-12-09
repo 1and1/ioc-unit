@@ -5,11 +5,11 @@ import static org.mockito.Mockito.when;
 import javax.annotation.PostConstruct;
 import javax.enterprise.inject.Produces;
 
-import org.jglue.cdiunit.ProducesAlternative;
 import org.junit.jupiter.api.Assertions;
 import org.mockito.Mock;
 import org.mockito.internal.util.reflection.FieldSetter;
 
+import com.oneandone.cdi.tester.ProducesAlternative;
 import com.oneandone.ejbcdiunit.cdibeans.ServiceBeanDepScopedHelper;
 import com.oneandone.ejbcdiunit.cdibeans.ServiceBeanHelperHelper;
 

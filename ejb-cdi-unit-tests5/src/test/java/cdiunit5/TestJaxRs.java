@@ -15,8 +15,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import com.oneandone.cdi.contexts.jaxrs.SupportJaxRsEjbCdiUnit;
-import com.oneandone.ejbcdiunit5.JUnit5Extension;
+import com.oneandone.cdi.tester.JUnit5Extension;
+import com.oneandone.cdi.tester.contexts.jaxrs.SupportJaxRsEjbCdiUnit;
 
 @ExtendWith(JUnit5Extension.class)
 @SupportJaxRsEjbCdiUnit

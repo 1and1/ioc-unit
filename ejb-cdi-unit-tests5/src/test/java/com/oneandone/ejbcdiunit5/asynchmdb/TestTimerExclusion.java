@@ -1,26 +1,27 @@
 package com.oneandone.ejbcdiunit5.asynchmdb;
 
-import com.oneandone.ejbcdiunit.AsynchronousManager;
-import com.oneandone.ejbcdiunit.cdiunit.ExcludedClasses;
-import com.oneandone.ejbcdiunit.ejbs.CountingBean;
-import com.oneandone.ejbcdiunit.ejbs.SingletonTimerEJB;
-import com.oneandone.ejbcdiunit.ejbs.StatelessTimerEJB;
-import com.oneandone.ejbcdiunit5.JUnit5Extension;
-import org.jglue.cdiunit.AdditionalClasses;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
 import javax.inject.Inject;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import com.oneandone.cdi.testanalyzer.annotations.ExcludedClasses;
+import com.oneandone.cdi.testanalyzer.annotations.SutClasses;
+import com.oneandone.cdi.tester.JUnit5Extension;
+import com.oneandone.cdi.tester.ejb.AsynchronousManager;
+import com.oneandone.ejbcdiunit.ejbs.CountingBean;
+import com.oneandone.ejbcdiunit.ejbs.SingletonTimerEJB;
+import com.oneandone.ejbcdiunit.ejbs.StatelessTimerEJB;
 
 /**
  * @author aschoerk
  */
 @ExtendWith(JUnit5Extension.class)
-@AdditionalClasses({ SingletonTimerEJB.class, StatelessTimerEJB.class })
-@ExcludedClasses({SingletonTimerEJB.class})
+@SutClasses({ SingletonTimerEJB.class, StatelessTimerEJB.class })
+@ExcludedClasses({ SingletonTimerEJB.class })
 public class TestTimerExclusion {
     @Inject
     AsynchronousManager asynchronousManager;

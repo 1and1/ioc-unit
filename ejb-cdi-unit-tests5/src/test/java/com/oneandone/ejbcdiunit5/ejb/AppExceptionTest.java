@@ -1,21 +1,22 @@
 package com.oneandone.ejbcdiunit5.ejb;
 
-import com.oneandone.ejbcdiunit.cdiunit.EjbJarClasspath;
-import com.oneandone.ejbcdiunit.ejbs.appexc.TestBaseClass;
-import com.oneandone.ejbcdiunit.entities.TestEntity1;
-import com.oneandone.cdi.tester.ejb.persistence.TestPersistenceFactory;
-import com.oneandone.ejbcdiunit5.JUnit5Extension;
-import org.jglue.cdiunit.AdditionalClasses;
-import org.jglue.cdiunit.AdditionalPackages;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+
+import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
+import com.oneandone.cdi.testanalyzer.annotations.TestPackages;
+import com.oneandone.cdi.tester.JUnit5Extension;
+import com.oneandone.cdi.tester.ejb.EjbJarClasspath;
+import com.oneandone.cdi.tester.ejb.persistence.TestPersistenceFactory;
+import com.oneandone.ejbcdiunit.ejbs.appexc.TestBaseClass;
+import com.oneandone.ejbcdiunit.entities.TestEntity1;
 
 /**
  * @author aschoerk
  */
 @ExtendWith(JUnit5Extension.class)
-@AdditionalClasses({ TestPersistenceFactory.class })
-@AdditionalPackages({ TestBaseClass.class, TestEntity1.class })
+@TestClasses({ TestPersistenceFactory.class })
+@TestPackages({ TestBaseClass.class, TestEntity1.class })
 @EjbJarClasspath(TestBaseClass.class)
 public class AppExceptionTest extends TestBaseClass {
 

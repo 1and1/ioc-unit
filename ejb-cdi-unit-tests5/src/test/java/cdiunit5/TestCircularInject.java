@@ -7,10 +7,12 @@ import org.jboss.weld.exceptions.DeploymentException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import com.oneandone.ejbcdiunit5.ExpectedStartupException;
-import com.oneandone.ejbcdiunit5.JUnit5Extension;
+import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
+import com.oneandone.cdi.tester.ExpectedStartupException;
+import com.oneandone.cdi.tester.JUnit5Extension;
 
 @ExtendWith(JUnit5Extension.class)
+@TestClasses(CircularA.class)
 public class TestCircularInject {
     @Inject
     private Provider<CircularA> circularA;

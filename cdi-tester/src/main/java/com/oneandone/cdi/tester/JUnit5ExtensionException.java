@@ -1,4 +1,4 @@
-package com.oneandone.ejbcdiunit5;
+package com.oneandone.cdi.tester;
 
 /**
  * @author aschoerk

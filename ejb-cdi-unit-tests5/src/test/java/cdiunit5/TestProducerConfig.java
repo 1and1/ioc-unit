@@ -13,18 +13,18 @@ import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.jglue.cdiunit.AdditionalClasses;
-import org.jglue.cdiunit.ProducerConfig;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import com.oneandone.ejbcdiunit5.JUnit5Extension;
+import com.oneandone.cdi.testanalyzer.annotations.SutClasses;
+import com.oneandone.cdi.tester.JUnit5Extension;
+import com.oneandone.cdi.tester.ProducerConfig;
 
 @Disabled
 @ExtendWith(JUnit5Extension.class)
-@AdditionalClasses(TestProducerConfig.Producers.class)
+@SutClasses(TestProducerConfig.Producers.class)
 @TestProducerConfig.ProducerConfigClass(Object.class)
 @TestProducerConfig.ProducerConfigNum(0)
 public class TestProducerConfig {
