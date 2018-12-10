@@ -4,13 +4,13 @@ import static org.junit.Assert.fail;
 
 import javax.inject.Inject;
 
-import org.jboss.weld.exceptions.DeploymentException;
 import org.junit.Rule;
 import org.junit.Test;
 
 import com.oneandone.cdi.testanalyzer.annotations.SutClasses;
 import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
 import com.oneandone.cdi.tester.CdiUnit2Rule;
+import com.oneandone.cdi.weldstarter.StarterDeploymentException;
 import com.oneandone.ejbcdiunit.excludedclasses.pcktoinclude.ToExclude;
 
 /**
@@ -27,7 +27,7 @@ public class IndirectExcludeByRuleTest {
     @Inject
     ToExclude toExclude;
 
-    @Test(expected = DeploymentException.class)
+    @Test(expected = StarterDeploymentException.class)
     public void test() {
         fail("test should not start");
     }

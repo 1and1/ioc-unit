@@ -2,12 +2,12 @@ package ejbcdiunit2.first.cdiunit;
 
 import javax.inject.Inject;
 
-import org.jboss.weld.exceptions.DeploymentException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
 import com.oneandone.cdi.tester.CdiUnit2Runner;
+import com.oneandone.cdi.weldstarter.StarterDeploymentException;
 
 import ch.qos.logback.classic.filter.ThresholdFilter;
 import ch.qos.logback.core.filter.Filter;
@@ -21,7 +21,7 @@ public class TestNonCDIClasses {
 
     private ThresholdFilter bar;
 
-    @Test(expected = DeploymentException.class)
+    @Test(expected = StarterDeploymentException.class)
     public void testNonCDIClassDiscovery() {
 
     }

@@ -10,7 +10,7 @@ import javax.inject.Inject;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import com.oneandone.cdi.weldstarter.WrappedDeploymentException;
+import com.oneandone.cdi.weldstarter.StarterDeploymentException;
 
 /**
  * @author aschoerk
@@ -72,7 +72,7 @@ public class TwoBeanAltTest extends WeldStarterTestsBase {
     }
 
 
-    @Test(expected = WrappedDeploymentException.class)
+    @Test(expected = StarterDeploymentException.class)
     public void testWrappedDeploymentException() {
         setBeanClasses(CdiBean1.class,
                 CdiHelperBean.class,
@@ -80,7 +80,7 @@ public class TwoBeanAltTest extends WeldStarterTestsBase {
         start();
     }
 
-    @Test(expected = WrappedDeploymentException.class)
+    @Test(expected = StarterDeploymentException.class)
     public void testWrappedDeploymentExceptionWithAltSet() {
         setBeanClasses(CdiBean1.class,
                 CdiHelperBean.class,
@@ -120,7 +120,7 @@ public class TwoBeanAltTest extends WeldStarterTestsBase {
         assertFalse(selectGet(CdiBean1.class).cdiHelperBean.callHelper());
     }
 
-    @Test(expected = WrappedDeploymentException.class) // Alternative must be in beanClasses
+    @Test(expected = StarterDeploymentException.class) // Alternative must be in beanClasses
     public void testWithAlternativeWithoutAltClassAvailable() {
         setBeanClasses(
                 DummyClass.class,

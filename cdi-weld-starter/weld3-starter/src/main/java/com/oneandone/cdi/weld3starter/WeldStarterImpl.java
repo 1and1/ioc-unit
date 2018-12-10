@@ -31,8 +31,8 @@ import org.jboss.weld.resources.spi.ResourceLoader;
 import org.jboss.weld.util.reflection.Formats;
 
 import com.oneandone.cdi.weldstarter.BeansXmlImpl;
+import com.oneandone.cdi.weldstarter.StarterDeploymentException;
 import com.oneandone.cdi.weldstarter.WeldSetup;
-import com.oneandone.cdi.weldstarter.WrappedDeploymentException;
 import com.oneandone.cdi.weldstarter.spi.WeldStarter;
 
 
@@ -75,7 +75,7 @@ public class WeldStarterImpl implements WeldStarter {
             weld.disableDiscovery();
             container = weld.initialize();
         } catch (DeploymentException ex) {
-            throw new WrappedDeploymentException(ex);
+            throw new StarterDeploymentException(ex);
         }
     }
 

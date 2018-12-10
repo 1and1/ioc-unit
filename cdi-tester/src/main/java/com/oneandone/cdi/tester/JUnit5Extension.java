@@ -30,7 +30,6 @@ import com.oneandone.cdi.testanalyzer.CdiConfigCreator;
 import com.oneandone.cdi.testanalyzer.InitialConfiguration;
 import com.oneandone.cdi.weldstarter.CreationalContexts;
 import com.oneandone.cdi.weldstarter.WeldSetupClass;
-import com.oneandone.cdi.weldstarter.WrappedDeploymentException;
 import com.oneandone.cdi.weldstarter.spi.TestExtensionService;
 import com.oneandone.cdi.weldstarter.spi.WeldStarter;
 
@@ -117,11 +116,8 @@ public class JUnit5Extension implements BeforeEachCallback,
                 }
                 weldStarter.start(weldSetup);
             } catch (ClassFormatError e) {
-
                 startupException = parseClassFormatError(e);
             } catch (Throwable e) {
-                if (e instanceof WrappedDeploymentException)
-                    e = e.getCause();
                 if (startupException == null) {
                     startupException = e;
                 }

@@ -163,26 +163,38 @@ class LeveledBuilder {
 
     private void addEnabledAlternatives(Iterable<Class<?>> enabledAlternativesP) {
         for (Class<?> alternative : enabledAlternativesP) {
-            this.enabledAlternatives.add(alternative);
-            if (alternative.getAnnotation(Alternative.class) == null) {
-                boolean found = false;
-                for (Method m : alternative.getDeclaredMethods()) {
-                    if (m.getAnnotation(Alternative.class) != null) {
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found) {
-                    for (Field f : alternative.getDeclaredFields()) {
-                        if (f.getAnnotation(Alternative.class) != null) {
+            if (alternative.isAnnotation()
+                    && alternative.getAnnotation(Stereotype.class) != null
+                    && alternative.getAnnotation(Alternative.class) != null) {
+                this.foundAlternativeStereotypes.add(alternative);
+            } else {
+                this.enabledAlternatives.add(alternative);
+                if (alternative.getAnnotation(Alternative.class) == null) {
+                    boolean found = false;
+                    for (Method m : alternative.getDeclaredMethods()) {
+                        if (m.getAnnotation(Alternative.class) != null) {
                             found = true;
                             break;
                         }
                     }
+                    if (!found) {
+                        for (Field f : alternative.getDeclaredFields()) {
+                            if (f.getAnnotation(Alternative.class) != null) {
+                                found = true;
+                                break;
+                            }
+                        }
 
-                }
-                if (!found) {
-                    foundAlternativeClasses.add(alternative);
+                    }
+                    if (!found) {
+                        foundAlternativeClasses.add(alternative);
+                    } else {
+                        if (!testClasses.contains(alternative)) {
+                            testClasses.add(alternative);
+                            testClassesToBeEvaluated.add(alternative);
+                            addToClassMap(alternative);
+                        }
+                    }
                 } else {
                     if (!testClasses.contains(alternative)) {
                         testClasses.add(alternative);
@@ -190,14 +202,8 @@ class LeveledBuilder {
                         addToClassMap(alternative);
                     }
                 }
-            } else {
-                if (!testClasses.contains(alternative)) {
-                    testClasses.add(alternative);
-                    testClassesToBeEvaluated.add(alternative);
-                    addToClassMap(alternative);
-                }
+                addToClassMap(alternative);
             }
-            addToClassMap(alternative);
         }
     }
 

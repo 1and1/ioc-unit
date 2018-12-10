@@ -6,7 +6,7 @@ import javax.inject.Inject;
 
 import org.junit.Test;
 
-import com.oneandone.cdi.weldstarter.WrappedDeploymentException;
+import com.oneandone.cdi.weldstarter.StarterDeploymentException;
 
 /**
  * @author aschoerk
@@ -49,13 +49,13 @@ public class InitMethodTest extends WeldStarterTestsBase {
         assertEquals(1, selectGet(BeanWithPrivateInitMethod.class).i);
     }
 
-    @Test(expected = WrappedDeploymentException.class)
+    @Test(expected = StarterDeploymentException.class)
     public void testInitMethodNotFilledParam() {
         setBeanClasses(Bean.class);
         start();
     }
 
-    @Test(expected = WrappedDeploymentException.class)
+    @Test(expected = StarterDeploymentException.class)
     public void testInitMethodNotFilledParamInPrivate() {
         setBeanClasses(BeanWithPrivateInitMethod.class);
         start();

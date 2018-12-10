@@ -6,11 +6,13 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.oneandone.cdi.testanalyzer.annotations.EnabledAlternatives;
 import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
 import com.oneandone.cdi.tester.CdiUnit2Runner;
 
 @RunWith(CdiUnit2Runner.class)
 @TestClasses({ AImplementation3.class, AImplementation1.class })
+@EnabledAlternatives(AImplementation3.StereotypeAlternative.class)
 public class TestAlternativeStereotype {
     @Inject
     private AImplementation1 impl1;

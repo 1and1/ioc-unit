@@ -17,7 +17,7 @@ import javax.inject.Qualifier;
 
 import org.junit.Test;
 
-import com.oneandone.cdi.weldstarter.WrappedDeploymentException;
+import com.oneandone.cdi.weldstarter.StarterDeploymentException;
 
 /**
  * @author aschoerk
@@ -187,7 +187,7 @@ public class QualifierTest extends WeldStarterTestsBase {
         assertEquals(2, bean5.toInjectQ1.signifyClass());
     }
 
-    @Test(expected = WrappedDeploymentException.class)
+    @Test(expected = StarterDeploymentException.class)
     public void testProducersAmbiguus() {
         setBeanClasses(Bean5.class, ProducingQ1_InjectQ2.class, ToInjectQ2.class, ToInjectQ1.class, ToInject.class);
         start();
@@ -250,7 +250,7 @@ public class QualifierTest extends WeldStarterTestsBase {
         };
     }
 
-    @Test(expected = WrappedDeploymentException.class)
+    @Test(expected = StarterDeploymentException.class)
     public void testQ1Q2_OnlyQ2Produced() {
         setBeanClasses(Bean6.class, Producing_Q2.class);
         start();
@@ -371,7 +371,7 @@ public class QualifierTest extends WeldStarterTestsBase {
         };
     }
 
-    @Test(expected = WrappedDeploymentException.class)
+    @Test(expected = StarterDeploymentException.class)
     public void testAny_intoQ1() {
         setBeanClasses(Bean6_Q1.class, Producing_Any.class);
         start();
@@ -410,7 +410,7 @@ public class QualifierTest extends WeldStarterTestsBase {
         ToInjectIntf toInjectAny;
     }
 
-    @Test(expected = WrappedDeploymentException.class)
+    @Test(expected = StarterDeploymentException.class)
     public void testAny_intoAnyQ1() {
         setBeanClasses(BeanAnyQ2.class, Producing_Any.class);
         start();
@@ -426,7 +426,7 @@ public class QualifierTest extends WeldStarterTestsBase {
         assertEquals(20, bean.toInjectAny.signifyClass());
     }
 
-    @Test(expected = WrappedDeploymentException.class)
+    @Test(expected = StarterDeploymentException.class)
     public void testAny_intoEmpty() {
         setBeanClasses(BeanEmpty.class, Producing_Any.class);
         start();
@@ -434,7 +434,7 @@ public class QualifierTest extends WeldStarterTestsBase {
         assertEquals(22, bean.toInjectAny.signifyClass());
     }
 
-    @Test(expected = WrappedDeploymentException.class)
+    @Test(expected = StarterDeploymentException.class)
     public void testAny_intoDefault() {
         setBeanClasses(BeanDefault.class, Producing_Any.class);
         start();

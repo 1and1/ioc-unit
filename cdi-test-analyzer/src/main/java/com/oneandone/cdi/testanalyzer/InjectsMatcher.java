@@ -3,8 +3,8 @@ package com.oneandone.cdi.testanalyzer;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -14,7 +14,8 @@ import org.slf4j.LoggerFactory;
  * @author aschoerk
  */
 public class InjectsMatcher {
-    static Logger log = LoggerFactory.getLogger("InjectMatching");
+    static AtomicInteger instance = new AtomicInteger(0);
+    Logger log = LoggerFactory.getLogger("InjectMatching" + instance.addAndGet(1));
     HashMultiMap<QualifiedType, QualifiedType> matching = new HashMultiMap<>();
     HashMultiMap<QualifiedType, QualifiedType> ambiguus = new HashMultiMap<>();
     Set<QualifiedType> empty = new HashSet<>();
@@ -33,28 +34,30 @@ public class InjectsMatcher {
     }
 
     public void matchInject(QualifiedType inject) {
+        log.info("matchingInject: {}", inject);
         Set<QualifiedType> producers = builder.producerMap.get(inject.getRawtype());
         if (producers == null)
             return;
         // check types and qualifiers of results
         for (QualifiedType qp : producers) {
             if (qp.isAssignableTo(inject)) {
-                log.debug("Qualified Match \n --- {} \n --- to inject: {}", qp, inject);
+                log.info("Qualified Match {} ", qp);
                 matching.put(inject, qp);
             }
         }
-        handleAlternatives(matching.getValues(inject));
+        leaveOnlyEnabledAlternativesIfThereAre(matching.getValues(inject));
         if (matching.getValues(inject).size() == 0) {
-            log.info("No match found for {}", inject);
+            log.info("No match found");
             empty.add(inject);
             matching.remove(inject);
         } else if (matching.getValues(inject).size() > 1) {
-            log.info("Ambiguus matches found for \n --- inject: {}", inject);
             for (QualifiedType x : matching.get(inject)) {
-                log.debug(" --- {}", x);
+                log.info("Ambiguus match: {}", x);
             }
             ambiguus.put(inject, matching.get(inject));
             matching.remove(inject);
+        } else {
+            log.info("Unambiguus match: {}", matching.get(inject).iterator().next());
         }
     }
 
@@ -133,15 +136,42 @@ public class InjectsMatcher {
         classesToStart.removeAll(classesToBeRemoved);
     }
 
-    private void handleAlternatives(Set<QualifiedType> matching) {
-        Optional<QualifiedType> optionalAlternative = matching.stream().filter(q -> q.isAlternative()).findAny();
-        if (optionalAlternative.isPresent()) {
-            QualifiedType alternative = optionalAlternative.get();
-            if (alternative.getAlternativeStereotype() == null) {
-                if (builder.enabledAlternatives.contains(alternative.getRawtype())) {
-                    matching.clear();
-                    matching.add(alternative);
+    /**
+     * The Matching Producers might be Alternatives. If so, then check if any of them are enabled. If so then remove the non-alternatives, and the not
+     * enabled ones. If no enabled alternative is there, then remove all alternatives.
+     *
+     * @param matchingProducers
+     */
+    private void leaveOnlyEnabledAlternativesIfThereAre(Set<QualifiedType> matchingProducers) {
+        Set<QualifiedType> alternatives = matchingProducers
+                .stream()
+                .filter(q -> q.isAlternative())
+                .collect(Collectors.toSet());
+        if (!alternatives.isEmpty()) {
+            Set<QualifiedType> activeAlternatives = new HashSet<>();
+
+            for (QualifiedType a : alternatives) {
+                log.info("Matching alternative: {}", a);
+                Class declaringClass = a.getDeclaringClass();
+                if (a.getAlternativeStereotype() != null) {
+                    if (builder.isActiveAlternativeStereoType(a.getAlternativeStereotype())) {
+                        log.info("Found StereotypeAlternative in Class {}: {} ", declaringClass.getSimpleName(), a);
+                        activeAlternatives.add(a);
+                    } else
+                        continue;
+                } else if (builder.isAlternative(declaringClass)) {
+                    log.info("Found Alternative in Class {}: {} ", declaringClass.getSimpleName(), a);
+                    activeAlternatives.add(a);
+                } else {
+                    log.info("Not used Alternative Candidate in Class {}: {} ", declaringClass.getSimpleName(), a);
+                    continue;
                 }
+            }
+            if (activeAlternatives.size() > 0) {
+                matchingProducers.clear();
+                matchingProducers.addAll(activeAlternatives);
+            } else {
+                matchingProducers.removeAll(alternatives);
             }
         }
     }
@@ -159,6 +189,8 @@ public class InjectsMatcher {
         for (QualifiedType inject : matching.keySet()) {
             final QualifiedType producingType = matching.getValues(inject).iterator().next();
             if (!builder.beansToBeStarted.contains(producingType.getDeclaringClass())) {
+                log.info("Unambiguus Producer for Inject {}", inject);
+                log.info("--- {}", producingType);
                 newToBeStarted.add(producingType.getDeclaringClass());
                 chosenTypes.add(producingType);
             }
@@ -170,12 +202,21 @@ public class InjectsMatcher {
             Set<Class<?>> sutClasses = new HashSet<>();
             Set<Class<?>> availableTestClasses = new HashSet<>();
             Set<Class<?>> availableClasses = new HashSet<>();
-            Set<QualifiedType> alternatives = new HashSet<>();
             Set<QualifiedType> producingTypes = ambiguus.get(inject);
+            log.info("Ambiguus resolved inject: {}", inject);
+            for (QualifiedType producing : producingTypes) {
+                log.info("--- Producing: {}", producing);
+            }
             Set<QualifiedType> alreadyChosen = producingTypes.stream()
                     .filter(p -> chosenTypes.contains(p))
                     .collect(Collectors.toSet());
             if (alreadyChosen.size() > 0) {
+                if (alreadyChosen.size() > 1) {
+                    log.error("Two producing types should only resolve to one chosen for inject {}", inject);
+                }
+                for (QualifiedType q : alreadyChosen) {
+                    log.info("Already chosen: {}", q);
+                }
                 continue;
             }
             boolean alreadyProduced = false;
@@ -183,20 +224,9 @@ public class InjectsMatcher {
                 Class declaringClass = q.getDeclaringClass();
                 assert declaringClass != null;
                 assert !builder.excludedClasses.contains(declaringClass);
-                if (q.isAlternative()) {
-                    if (q.getAlternativeStereotype() != null) {
-                        if (builder.isActiveAlternativeStereoType(q.getAlternativeStereotype())) {
-                            alternatives.add(q);
-                        } else
-                            continue;
-                    } else if (builder.isAlternative(declaringClass)) {
-                        alternatives.add(q);
-                    } else {
-                        continue;
-                    }
-                } else if (builder.beansToBeStarted.contains(declaringClass) || newToBeStarted.contains(declaringClass))
+                if (builder.beansToBeStarted.contains(declaringClass) || newToBeStarted.contains(declaringClass)) {
                     alreadyProduced = true;
-                else if (builder.isTestClass(declaringClass)) {
+                } else if (builder.isTestClass(declaringClass)) {
                     testClasses.add(declaringClass);
                 } else if (builder.isSuTClass(declaringClass)) {
                     sutClasses.add(declaringClass);
@@ -206,13 +236,7 @@ public class InjectsMatcher {
                     availableClasses.add(declaringClass);
                 }
             }
-            if (alternatives.size() != 0) {
-                if (alternatives.size() > 1) {
-                    problems.add(new CdiConfigCreator.ProblemRecord("Handling Inject: {} more than one active Alternative {} ",
-                            inject, alternatives));
-                }
-                builder.injectHandled(inject);
-            } else if (alreadyProduced) {
+            if (alreadyProduced) {
                 ; // inject handled by producer in already used class.
                 builder.injectHandled(inject);
             } else if (testClasses.size() != 0) {

@@ -2,7 +2,6 @@ package cdiunit;
 
 import javax.inject.Inject;
 
-import org.jboss.weld.exceptions.DeploymentException;
 import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,7 +20,7 @@ public class TestNonCDIClasses {
 
     private ThresholdFilter bar;
 
-    @Test(expected = DeploymentException.class)
+    @Test(expected = StarterDeploymentException.class)
     public void testNonCDIClassDiscovery() {
 
     }

@@ -12,6 +12,7 @@ import java.util.Set;
 
 import javax.decorator.Decorator;
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Alternative;
 import javax.enterprise.inject.spi.Extension;
 import javax.inject.Inject;
 import javax.interceptor.Interceptor;
@@ -111,7 +112,9 @@ public class CdiConfigCreator {
 
         while (true) {
             // Evaluate classes concerning Annotations, injects, producers,...
-            evaluateFoundClasses(currentToBeEvaluated);
+            if (!evaluateFoundClasses(currentToBeEvaluated)) {
+                break;
+            }
 
             // Injects found should be matched to find out if a search in available classes
             // is necessary
@@ -155,59 +158,87 @@ public class CdiConfigCreator {
         new InjectsMatcher(builder).matchHandledInject(builder.beansToBeStarted);
     }
 
-    protected void evaluateFoundClasses(List<Class<?>> currentToBeEvaluated) throws MalformedURLException {
+    protected boolean evaluateFoundClasses(List<Class<?>> currentToBeEvaluated) throws MalformedURLException {
         // Further initialize configuration data by looking at initial classes and their annotations.
         // TestClasses and SuTClasses are to be created, if not replaced by newAlternatives.
 
 
+        boolean didChanges = false;
         while (currentToBeEvaluated.size() > 0) {
-            List<Class<?>> l = new ArrayList<>();
-            l.addAll(currentToBeEvaluated);
-            // l.sort((o1, o2) -> o1.getName().compareTo(o2.getName())); -- keep sequence
-            for (Class<?> c : l) {
+            ArrayList<Class<?>> sortedList = sortByPriority(currentToBeEvaluated);
+
+            for (Class<?> c : sortedList) {
                 log.info("evaluating {}", c);
                 if (builder.excludedClasses.contains(c)) {
                     log.info("Excluded {}", c.getName());
-                } else if (isInterceptingBean(c)) {
-                    // not available for injections and no producer fields!!
-                    builder.tobeStarted(c)
-                            .innerClasses(c)
-                            .injects(c)
-                            .elseClass(c);
-                    if (builder.isTestClass(c)) {
-                        builder.testClassAnnotation(c)
-                                .sutClassAnnotation(c)
-                                .classpathsAnnotations(c)
-                                .packagesAnnotations(c)
-                                .customAnnotations(c)
-                                .extraAnnotations(c)
-                                .excludes(c);
-                    }
-                } else if (mightBeBean(c)) {
-                    builder.tobeStarted(c)
-                            .available(c)
-                            .innerClasses(c)
-                            .injects(c)
-                            .producerFields(c)
-                            .producerMethods(c);
-                    if (builder.isTestClass(c)) {
-                        builder.testClassAnnotation(c)
-                                .sutClassAnnotation(c)
-                                .classpathsAnnotations(c)
-                                .packagesAnnotations(c)
-                                .enabledAlternatives(c)
-                                .customAnnotations(c)
-                                .extraAnnotations(c)
-                                .excludes(c);
-                    }
                 } else {
-                    builder.elseClass(c);
+                    didChanges = true;
+                    if (isInterceptingBean(c)) {
+                        // not available for injections and no producer fields!!
+                        builder.tobeStarted(c)
+                                .innerClasses(c)
+                                .injects(c)
+                                .elseClass(c);
+                        if (builder.isTestClass(c)) {
+                            builder.testClassAnnotation(c)
+                                    .sutClassAnnotation(c)
+                                    .classpathsAnnotations(c)
+                                    .packagesAnnotations(c)
+                                    .customAnnotations(c)
+                                    .extraAnnotations(c)
+                                    .excludes(c);
+                        }
+                    } else if (mightBeBean(c)) {
+                        builder.tobeStarted(c)
+                                .available(c)
+                                .innerClasses(c)
+                                .injects(c)
+                                .producerFields(c)
+                                .producerMethods(c);
+                        if (builder.isTestClass(c)) {
+                            builder.testClassAnnotation(c)
+                                    .sutClassAnnotation(c)
+                                    .classpathsAnnotations(c)
+                                    .packagesAnnotations(c)
+                                    .enabledAlternatives(c)
+                                    .customAnnotations(c)
+                                    .extraAnnotations(c)
+                                    .excludes(c);
+                        }
+                    } else {
+                        builder.elseClass(c);
+                    }
                 }
             }
             currentToBeEvaluated = builder.extractToBeEvaluatedClasses();
         }
+        return didChanges;
     }
 
+    private ArrayList<Class<?>> sortByPriority(final List<Class<?>> currentToBeEvaluated) {
+        Set<Class<?>> priorityClasses = new HashSet<>();
+        ArrayList<Class<?>> sortedList = new ArrayList<>();
+        currentToBeEvaluated
+                .stream()
+                .filter(Class::isAnnotation)
+                .forEach(c -> {
+                    sortedList.add(c);
+                    priorityClasses.add(c);
+                });
+        currentToBeEvaluated
+                .stream()
+                .filter(c -> c.getAnnotation(Alternative.class) != null && !priorityClasses.contains(c))
+                .forEach(c -> {
+                    sortedList.add(c);
+                    priorityClasses.add(c);
+                });
+        priorityClasses.addAll(sortedList);
+        currentToBeEvaluated
+                .stream()
+                .filter(c -> !priorityClasses.contains(c))
+                .forEach(c -> sortedList.add(c));
+        return sortedList;
+    }
 
 
     private Collection<Extension> findExtensions() {

@@ -98,8 +98,6 @@ public class EjbTestExtensionService implements TestExtensionService {
     @Override
     public void preStartupAction(WeldSetupClass weldSetup) {
         weldSetup.addService(new WeldSetup.ServiceConfig(TransactionServices.class, new EjbUnitTransactionServices()));
-
-
     }
 
     @Override

@@ -6,7 +6,7 @@ import javax.inject.Inject;
 
 import org.junit.Test;
 
-import com.oneandone.cdi.weldstarter.WrappedDeploymentException;
+import com.oneandone.cdi.weldstarter.StarterDeploymentException;
 
 /**
  * @author aschoerk
@@ -57,7 +57,7 @@ public class InnerClassTest extends WeldStarterTestsBase {
 
     }
 
-    @Test(expected = WrappedDeploymentException.class)
+    @Test(expected = StarterDeploymentException.class)
     public void testInnerInnerUnfilled() {
         setBeanClasses(Bean.InnerBean.InnerInnerBean.class);
         start();

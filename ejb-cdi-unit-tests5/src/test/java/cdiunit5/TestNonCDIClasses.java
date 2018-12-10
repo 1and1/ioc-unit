@@ -2,13 +2,13 @@ package cdiunit5;
 
 import javax.inject.Inject;
 
-import org.jboss.weld.exceptions.DeploymentException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.oneandone.cdi.testanalyzer.annotations.SutClasses;
 import com.oneandone.cdi.tester.ExpectedStartupException;
 import com.oneandone.cdi.tester.JUnit5Extension;
+import com.oneandone.cdi.weldstarter.StarterDeploymentException;
 
 import ch.qos.logback.classic.filter.ThresholdFilter;
 import ch.qos.logback.core.filter.Filter;
@@ -23,7 +23,7 @@ public class TestNonCDIClasses {
     private ThresholdFilter bar;
 
     @Test
-    @ExpectedStartupException(DeploymentException.class)
+    @ExpectedStartupException(StarterDeploymentException.class)
     public void testNonCDIClassDiscovery() {
 
     }

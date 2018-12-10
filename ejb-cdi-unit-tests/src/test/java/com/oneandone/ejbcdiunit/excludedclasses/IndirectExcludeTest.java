@@ -4,12 +4,12 @@ import static org.junit.Assert.fail;
 
 import javax.inject.Inject;
 
-import org.jboss.weld.exceptions.DeploymentException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
 import com.oneandone.cdi.tester.CdiUnit2Runner;
+import com.oneandone.cdi.weldstarter.StarterDeploymentException;
 import com.oneandone.ejbcdiunit.excludedclasses.pcktoinclude.ToExclude;
 
 /**
@@ -22,7 +22,7 @@ public class IndirectExcludeTest {
     @Inject
     ToExclude toExclude;
 
-    @Test(expected = DeploymentException.class)
+    @Test(expected = StarterDeploymentException.class)
     public void test() {
         fail("test should not start");
     }

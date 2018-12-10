@@ -9,7 +9,7 @@ import javax.inject.Inject;
 
 import org.junit.Test;
 
-import com.oneandone.cdi.weldstarter.WrappedDeploymentException;
+import com.oneandone.cdi.weldstarter.StarterDeploymentException;
 
 /**
  * @author aschoerk
@@ -64,7 +64,7 @@ public class GenericsTestsSimple extends WeldStarterTestsBase {
         assertEquals(Object.class, ((GenericTSub) (bean.genericT)).getClass().getDeclaredField("uvalue").getType());
     }
 
-    @Test(expected = WrappedDeploymentException.class)
+    @Test(expected = StarterDeploymentException.class)
     public void testBeanAmbiguus() throws NoSuchFieldException {
         setBeanClasses(Bean.class, GenericTSub.class, GenericT.class);
         start();
@@ -105,7 +105,7 @@ public class GenericsTestsSimple extends WeldStarterTestsBase {
         bean.genericTSub.setUValue(1002);
     }
 
-    @Test(expected = WrappedDeploymentException.class)
+    @Test(expected = StarterDeploymentException.class)
     public void testGenericBeanAmbiguus() {
         setBeanClasses(GenericBean.class, GenericTSub.class, GenericT.class);
         start();

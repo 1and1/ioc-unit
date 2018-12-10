@@ -14,7 +14,7 @@ import javax.inject.Inject;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import com.oneandone.cdi.weldstarter.WrappedDeploymentException;
+import com.oneandone.cdi.weldstarter.StarterDeploymentException;
 
 /**
  * @author aschoerk
@@ -52,7 +52,7 @@ public class AmbiguousBeanTest extends WeldStarterTestsBase {
     }
 
 
-    @Test(expected = WrappedDeploymentException.class)
+    @Test(expected = StarterDeploymentException.class)
     public void test() {
         setBeanClasses(CdiBean1.class,
                 CdiHelperBean.class, CdiHelperBean2.class);

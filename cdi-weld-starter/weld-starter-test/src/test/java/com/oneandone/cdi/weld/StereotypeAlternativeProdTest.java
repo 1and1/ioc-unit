@@ -16,7 +16,7 @@ import javax.inject.Inject;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import com.oneandone.cdi.weldstarter.WrappedDeploymentException;
+import com.oneandone.cdi.weldstarter.StarterDeploymentException;
 
 /**
  * @author aschoerk
@@ -73,7 +73,7 @@ public class StereotypeAlternativeProdTest extends WeldStarterTestsBase {
     }
 
     // WrappedDeploymentException is produced in spite of CdiHelperBean is replaced by a Producer.
-    @Test(expected = WrappedDeploymentException.class)
+    @Test(expected = StarterDeploymentException.class)
     public void test() {
         setBeanClasses(CdiBean1.class,
                 CdiHelperBean.class,
