@@ -1,17 +1,9 @@
 package com.oneandone.cdi.testanalyzer;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import com.oneandone.cdi.testanalyzer.annotations.*;
+import com.oneandone.cdi.weldstarter.spi.TestExtensionService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.decorator.Decorator;
 import javax.enterprise.inject.Alternative;
@@ -19,18 +11,12 @@ import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.Stereotype;
 import javax.enterprise.inject.spi.Extension;
 import javax.interceptor.Interceptor;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.oneandone.cdi.testanalyzer.annotations.EnabledAlternatives;
-import com.oneandone.cdi.testanalyzer.annotations.ExcludedClasses;
-import com.oneandone.cdi.testanalyzer.annotations.SutClasses;
-import com.oneandone.cdi.testanalyzer.annotations.SutClasspaths;
-import com.oneandone.cdi.testanalyzer.annotations.SutPackages;
-import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
-import com.oneandone.cdi.testanalyzer.annotations.TestClasspaths;
-import com.oneandone.cdi.testanalyzer.annotations.TestPackages;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.net.MalformedURLException;
+import java.util.*;
 
 /**
  * Helps in building up the testconfiguration.
@@ -149,9 +135,19 @@ class LeveledBuilder {
         }
     }
 
+    boolean isSutAccordingToServices(Class<?> clazz) {
+        for (TestExtensionService s : this.testerExtensionsConfigsFinder.testExtensionServices) {
+            if (s.isSutClass(clazz))
+                return true;
+        }
+        return false;
+    }
+
     private void addAvailableClasses(final boolean isSut, final Set<Class<?>> tmpClasses) {
         for (Class clazz : tmpClasses) {
-            if (CdiConfigCreator.mightBeBean(clazz)) {
+            if (isSut && isSutAccordingToServices(clazz)) {
+                addClass(clazz, sutClasses, sutClassesToBeEvaluated);
+            } else if (CdiConfigCreator.mightBeBean(clazz)) {
                 available(clazz);
                 if (isSut)
                     sutClassesAvailable.add(clazz);
@@ -547,7 +543,7 @@ class LeveledBuilder {
     /**
      * create a LeveledBuilder which can be used to find producers for left over injects. An extra builder is used, to be able to select before
      * deciding which classes to use.
-     * 
+     *
      * @return
      */
     public LeveledBuilder producerCandidates() {

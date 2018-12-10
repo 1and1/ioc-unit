@@ -1,17 +1,19 @@
 package cdiunit5;
 
+import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
+import com.oneandone.cdi.tester.JUnit5Extension;
+import com.oneandone.cdi.tester.contexts.internal.jsf.ViewScopeExtension;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-
-import com.oneandone.cdi.tester.JUnit5Extension;
-
 @ExtendWith(JUnit5Extension.class)
+@TestClasses({ ViewScopeExtension.class, TestViewScope.G2ViewScoped.class })
 public class TestViewScope {
     @Inject
     private Provider<ViewScopedClass> viewScoped;

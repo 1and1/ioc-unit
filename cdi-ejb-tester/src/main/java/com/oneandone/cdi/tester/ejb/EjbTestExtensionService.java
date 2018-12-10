@@ -1,22 +1,5 @@
 package com.oneandone.cdi.tester.ejb;
 
-import java.io.IOException;
-import java.lang.annotation.Annotation;
-import java.net.URL;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-
-import javax.annotation.Resource;
-import javax.ejb.EJB;
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.spi.Extension;
-import javax.persistence.PersistenceContext;
-
-import org.jboss.weld.transaction.spi.TransactionServices;
-
 import com.oneandone.cdi.tester.ejb.jms.JmsSingletons;
 import com.oneandone.cdi.tester.ejb.persistence.SimulatedEntityTransaction;
 import com.oneandone.cdi.tester.ejb.persistence.SimulatedTransactionManager;
@@ -24,6 +7,18 @@ import com.oneandone.cdi.weldstarter.CreationalContexts;
 import com.oneandone.cdi.weldstarter.WeldSetup;
 import com.oneandone.cdi.weldstarter.WeldSetupClass;
 import com.oneandone.cdi.weldstarter.spi.TestExtensionService;
+import org.jboss.weld.transaction.spi.TransactionServices;
+
+import javax.annotation.Resource;
+import javax.ejb.EJB;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.spi.Extension;
+import javax.persistence.Entity;
+import javax.persistence.PersistenceContext;
+import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.net.URL;
+import java.util.*;
 
 /**
  * @author aschoerk
@@ -62,6 +57,11 @@ public class EjbTestExtensionService implements TestExtensionService {
             }
         }
 
+    }
+
+    @Override
+    public boolean isSutClass(Class<?> c) {
+        return c.getAnnotation(Entity.class) != null;
     }
 
     @Override

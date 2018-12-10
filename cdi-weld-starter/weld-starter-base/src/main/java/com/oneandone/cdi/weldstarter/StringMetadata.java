@@ -36,4 +36,11 @@ public class StringMetadata implements Metadata<String> {
     public String getLocation() {
         return location;
     }
+
+    @Override
+    public String toString() {
+        return "StringMetadata{" +
+                "name='" + name + '\'' +
+                '}';
+    }
 }
