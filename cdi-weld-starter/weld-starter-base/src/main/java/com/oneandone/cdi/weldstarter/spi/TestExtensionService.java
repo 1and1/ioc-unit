@@ -3,6 +3,7 @@ package com.oneandone.cdi.weldstarter.spi;
 import java.lang.annotation.Annotation;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 import javax.enterprise.inject.spi.Extension;
 
@@ -30,6 +31,10 @@ public interface TestExtensionService {
     default void handleExtraClassAnnotation(final Annotation annotation, Class<?> c) {}
 
     default Collection<Class<? extends Annotation>> injectAnnotations() {
+        return Collections.EMPTY_LIST;
+    }
+
+    default List<Class<?>> interceptorDecoratorSequence() {
         return Collections.EMPTY_LIST;
     }
 

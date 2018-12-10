@@ -40,9 +40,13 @@ public class InjectsMatcher {
             return;
         // check types and qualifiers of results
         for (QualifiedType qp : producers) {
-            if (qp.isAssignableTo(inject)) {
-                log.info("Qualified Match {} ", qp);
-                matching.put(inject, qp);
+            if (!builder.excludedClasses.contains(qp.getDeclaringClass())) {
+                if (qp.isAssignableTo(inject)) {
+                    log.info("Qualified Match {} ", qp);
+                    matching.put(inject, qp);
+                }
+            } else {
+                log.info("Ignored producer because of excluded declaring class: {}", qp);
             }
         }
         leaveOnlyEnabledAlternativesIfThereAre(matching.getValues(inject));

@@ -96,6 +96,10 @@ public class WeldSetupBase implements WeldSetup {
         }
     }
 
+    public void setEnabledInterceptors(List<Metadata<String>> classes) {
+        enabledInterceptors = classes;
+    }
+
     public void addEnabledDecorator(Class<?> clazz) {
         enabledDecorators.add(new StringMetadata(clazz, "Decorator"));
     }
