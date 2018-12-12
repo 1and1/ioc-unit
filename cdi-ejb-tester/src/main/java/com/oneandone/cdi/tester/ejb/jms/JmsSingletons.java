@@ -2,12 +2,17 @@ package com.oneandone.cdi.tester.ejb.jms;
 
 import java.util.concurrent.atomic.AtomicReference;
 
+import javax.annotation.PreDestroy;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Produces;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
+import javax.jms.JMSContext;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.melowe.jms2.compat.Jms2ConnectionFactory;
 import com.mockrunner.jms.ConfigurationManager;
 import com.mockrunner.jms.DestinationManager;
 import com.mockrunner.mock.jms.MockConnectionFactory;
@@ -17,31 +22,47 @@ import com.mockrunner.mock.jms.MockConnectionFactory;
  *
  * @author aschoerk
  */
+@ApplicationScoped
 public class JmsSingletons {
 
-    static AtomicReference<DestinationManager> destinationManagerAtomicReference = new AtomicReference<>();
+    private AtomicReference<DestinationManager> destinationManagerAtomicReference = new AtomicReference<>();
 
-    static AtomicReference<MockConnectionFactory> connectionFactoryAtomicReference = new AtomicReference<>();
+    private AtomicReference<Jms2ConnectionFactory> connectionFactoryAtomicReference = new AtomicReference<>();
 
-    static AtomicReference<Connection> mdbConnection = new AtomicReference<>();
+    private AtomicReference<MockConnectionFactory> mockConnectionFactoryAtomicReference = new AtomicReference<>();
+
+    private AtomicReference<Connection> mdbConnection = new AtomicReference<>();
 
     Logger logger = LoggerFactory.getLogger("JmsFactory");
 
-    JmsSingletons() {
+    Connection getConnection() {
         try {
             getConnectionFactory();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+        return mdbConnection.get();
+    }
+
+    @Produces
+    JMSContext createJMSContext() {
+        try {
+            getConnectionFactory();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return connectionFactoryAtomicReference.get().createContext();
     }
 
 
     /**
      * make sure a new weld-container can be created without residue
      */
+    @PreDestroy
     public void destroy() {
         if (connectionFactoryAtomicReference.get() != null) {
-            connectionFactoryAtomicReference.get().clearConnections();
+            mockConnectionFactoryAtomicReference.get().clearConnections();
+            mockConnectionFactoryAtomicReference = new AtomicReference<>();
             connectionFactoryAtomicReference = new AtomicReference<>();
         }
         destinationManagerAtomicReference = new AtomicReference<>();
@@ -65,12 +86,14 @@ public class JmsSingletons {
         if (connectionFactoryAtomicReference.get() == null) {
             final ConfigurationManager configurationManager = new ConfigurationManager();
             configurationManager.setDoCloneOnSend(true);
-            MockConnectionFactory tmp = new MockConnectionFactory(getDestinationManager(), configurationManager);
+            final MockConnectionFactory mockConnectionFactory = new MockConnectionFactory(getDestinationManager(), configurationManager);
+            Jms2ConnectionFactory tmp = new Jms2ConnectionFactory(mockConnectionFactory);
             if (connectionFactoryAtomicReference.compareAndSet(null, tmp)) {
+                mockConnectionFactoryAtomicReference.compareAndSet(null, mockConnectionFactory);
                 mdbConnection.set(tmp.createConnection());
             }
         }
-        return new MockConnectionFactoryExt(connectionFactoryAtomicReference.get());
+        return connectionFactoryAtomicReference.get();
     }
 
 }

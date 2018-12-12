@@ -47,13 +47,9 @@ public class TestMdb {
     public void testQueues() throws JMSException {
         // jmsFactory.initMessageListeners();
         singletonMdbClient.sendMessageToQueue();
-        asynchronousManager.once();
-        Assert.assertThat(mdbEjbInfoSingleton.getNumberOfQCalls(), is(5));
-        Assert.assertThat(mdbEjbInfoSingleton.getNumberOfQCalls2(), is(5));
+        dispatchAndCheck(5);
         cdiMdbClient.sendMessageToQueue();
-        asynchronousManager.once();
-        Assert.assertThat(mdbEjbInfoSingleton.getNumberOfQCalls(), is(10));
-        Assert.assertThat(mdbEjbInfoSingleton.getNumberOfQCalls2(), is(10));
+        dispatchAndCheck(10);
     }
 
     @Test
@@ -66,4 +62,29 @@ public class TestMdb {
         asynchronousManager.once();
         Assert.assertThat(mdbEjbInfoSingleton.getNumberOfTCalls(), is(20));
     }
+
+    @Test
+    public void testQueuesViaContext() throws JMSException {
+        // jmsFactory.initMessageListeners();
+        singletonMdbClient.sendMessageViaContextToQueue();
+        dispatchAndCheck(5);
+        cdiMdbClient.sendMessageViaContextToQueue();
+        dispatchAndCheck(10);
+    }
+
+    @Test
+    public void testQueuesViaInjectedContext() throws JMSException {
+        // jmsFactory.initMessageListeners();
+        singletonMdbClient.sendMessageViaInjectedContextToQueue();
+        dispatchAndCheck(5);
+        cdiMdbClient.sendMessageViaInjectedContextToQueue();
+        dispatchAndCheck(10);
+    }
+
+    private void dispatchAndCheck(final int i) {
+        asynchronousManager.once();
+        Assert.assertThat(mdbEjbInfoSingleton.getNumberOfQCalls(), is(i));
+        Assert.assertThat(mdbEjbInfoSingleton.getNumberOfQCalls2(), is(i));
+    }
+
 }

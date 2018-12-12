@@ -19,6 +19,7 @@ import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -37,6 +38,7 @@ import com.oneandone.ejbcdiunit.helpers.TestResources;
 /**
  * @author aschoerk
  */
+@Ignore
 @RunWith(CdiUnit2Runner.class)
 @EnabledAlternatives({ J2eeSimMySqlFactory.class, TestResources.class })
 @TestClasses({ MySqlStarter.class, J2eeSimTest1Factory.class })

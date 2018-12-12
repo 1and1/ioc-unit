@@ -1,5 +1,14 @@
 package com.oneandone.cdi.tester.contexts;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.oneandone.cdi.tester.contexts.internal.InConversationInterceptor;
 import com.oneandone.cdi.tester.contexts.internal.InRequestInterceptor;
 import com.oneandone.cdi.tester.contexts.internal.InSessionInterceptor;
@@ -10,14 +19,6 @@ import com.oneandone.cdi.tester.contexts.servlet.MockHttpSessionImpl;
 import com.oneandone.cdi.tester.contexts.servlet.MockServletContextImpl;
 import com.oneandone.cdi.weldstarter.WeldSetupClass;
 import com.oneandone.cdi.weldstarter.spi.TestExtensionService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author aschoerk
@@ -58,11 +59,15 @@ public class ContextsTestExtensionService implements TestExtensionService {
                 add(InConversationInterceptor.class.getName());
             }
         };
-        weldSetup.getEnabledInterceptors().forEach(a -> log.info("Interceptor: {}", a));
+        if (log.isDebugEnabled())
+            weldSetup.getEnabledInterceptors().forEach(a -> log.debug("Interceptor: {}", a));
         weldSetup.setEnabledInterceptors(weldSetup.getEnabledInterceptors()
                 .stream()
                 .sorted((a, b) -> ((Integer) seq.indexOf(a.getValue())).compareTo(seq.indexOf(b.getValue())))
                 .collect(Collectors.toList()));
-        weldSetup.getEnabledInterceptors().forEach(a -> log.info("Interceptor: {}", a));
+        if (log.isDebugEnabled()) {
+            log.debug("After sort of Interceptors");
+            weldSetup.getEnabledInterceptors().forEach(a -> log.debug("Interceptor: {}", a));
+        }
     }
 }

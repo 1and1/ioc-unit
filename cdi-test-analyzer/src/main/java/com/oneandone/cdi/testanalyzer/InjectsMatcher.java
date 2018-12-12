@@ -34,7 +34,7 @@ public class InjectsMatcher {
     }
 
     public void matchInject(QualifiedType inject) {
-        log.info("matchingInject: {}", inject);
+        log.trace("matchingInject: {}", inject);
         Set<QualifiedType> producers = builder.producerMap.get(inject.getRawtype());
         if (producers == null)
             return;
@@ -42,7 +42,7 @@ public class InjectsMatcher {
         for (QualifiedType qp : producers) {
             if (!builder.excludedClasses.contains(qp.getDeclaringClass())) {
                 if (qp.isAssignableTo(inject)) {
-                    log.info("Qualified Match {} ", qp);
+                    log.trace("Qualified Match {} ", qp);
                     matching.put(inject, qp);
                 }
             } else {
@@ -51,17 +51,17 @@ public class InjectsMatcher {
         }
         leaveOnlyEnabledAlternativesIfThereAre(matching.getValues(inject));
         if (matching.getValues(inject).size() == 0) {
-            log.info("No match found");
+            log.info("No match found for inject {}", inject);
             empty.add(inject);
             matching.remove(inject);
         } else if (matching.getValues(inject).size() > 1) {
             for (QualifiedType x : matching.get(inject)) {
-                log.info("Ambiguus match: {}", x);
+                log.info("Ambiguus match: {} for inject", x, inject);
             }
             ambiguus.put(inject, matching.get(inject));
             matching.remove(inject);
         } else {
-            log.info("Unambiguus match: {}", matching.get(inject).iterator().next());
+            log.trace("Unambiguus match: {}", matching.get(inject).iterator().next());
         }
     }
 
@@ -155,16 +155,16 @@ public class InjectsMatcher {
             Set<QualifiedType> activeAlternatives = new HashSet<>();
 
             for (QualifiedType a : alternatives) {
-                log.info("Matching alternative: {}", a);
+                log.trace("Matching alternative: {}", a);
                 Class declaringClass = a.getDeclaringClass();
                 if (a.getAlternativeStereotype() != null) {
                     if (builder.isActiveAlternativeStereoType(a.getAlternativeStereotype())) {
-                        log.info("Found StereotypeAlternative in Class {}: {} ", declaringClass.getSimpleName(), a);
+                        log.trace("Found StereotypeAlternative in Class {}: {} ", declaringClass.getSimpleName(), a);
                         activeAlternatives.add(a);
                     } else
                         continue;
                 } else if (builder.isAlternative(declaringClass)) {
-                    log.info("Found Alternative in Class {}: {} ", declaringClass.getSimpleName(), a);
+                    log.trace("Found Alternative in Class {}: {} ", declaringClass.getSimpleName(), a);
                     activeAlternatives.add(a);
                 } else {
                     log.info("Not used Alternative Candidate in Class {}: {} ", declaringClass.getSimpleName(), a);
@@ -193,8 +193,8 @@ public class InjectsMatcher {
         for (QualifiedType inject : matching.keySet()) {
             final QualifiedType producingType = matching.getValues(inject).iterator().next();
             if (!builder.beansToBeStarted.contains(producingType.getDeclaringClass())) {
-                log.info("Unambiguus Producer for Inject {}", inject);
-                log.info("--- {}", producingType);
+                log.trace("Unambiguus Producer for Inject {}", inject);
+                log.trace("--- {}", producingType);
                 newToBeStarted.add(producingType.getDeclaringClass());
                 chosenTypes.add(producingType);
             }

@@ -62,20 +62,74 @@
             <artifactId>hibernate-entitymanager</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.github.melowe</groupId>
+            <artifactId>jms2-compat</artifactId>
+            <version>1.0.3.7</version>
+        </dependency>
+        <!--dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>artemis-junit</artifactId>
+            <version>2.5.0</version>
+        </dependency-->
+        <!--dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-broker</artifactId>
+            <version>5.15.8</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-kahadb-store</artifactId>
+            <version>5.15.8</version>
+        </dependency-->
+        <!--dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>apache-artemis</artifactId>
+            <version>2.6.2</version>
+        </dependency-->
 
         <dependency>
             <groupId>com.mockrunner</groupId>
             <artifactId>mockrunner-jms</artifactId>
             <exclusions>
                 <exclusion>
+                    <groupId>ant</groupId>
+                    <artifactId>ant</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>xerces</groupId>
+                    <artifactId>xercesImpl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>regexp</groupId>
+                    <artifactId>regexp</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>oro</groupId>
+                    <artifactId>oro</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>jakarta-regexp</groupId>
+                    <artifactId>jakarta-regexp</artifactId>
+                </exclusion>
+                <exclusion>
                     <groupId>nekohtml</groupId>
                     <artifactId>nekohtml</artifactId>
                 </exclusion>
                 <exclusion>
-                    <groupId>junit</groupId>
-                    <artifactId>junit</artifactId>
+                    <groupId>bcel</groupId>
+                    <artifactId>bcel</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.kirkk</groupId>
+                    <artifactId>jaranalyzer</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>jdom</groupId>
+                    <artifactId>jdom</artifactId>
                 </exclusion>
             </exclusions>
+
         </dependency>
     </dependencies>
 </project>

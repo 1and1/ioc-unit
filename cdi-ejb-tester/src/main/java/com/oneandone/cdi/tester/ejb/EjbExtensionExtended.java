@@ -49,6 +49,7 @@ import javax.enterprise.inject.spi.ProcessInjectionTarget;
 import javax.enterprise.inject.spi.ProcessManagedBean;
 import javax.enterprise.util.AnnotationLiteral;
 import javax.inject.Inject;
+import javax.jms.JMSConnectionFactory;
 import javax.persistence.Entity;
 import javax.persistence.PersistenceContext;
 
@@ -255,6 +256,10 @@ public class EjbExtensionExtended implements Extension {
             if (field.getAnnotation(PersistenceContext.class) != null) {
                 addInject = true;
                 builder.removeFromField(field, PersistenceContext.class);
+            }
+            if (field.getAnnotation(JMSConnectionFactory.class) != null) {
+                addInject = true;
+                builder.removeFromField(field, JMSConnectionFactory.class);
             }
             if (addInject) {
                 modified = true;

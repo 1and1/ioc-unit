@@ -1,9 +1,17 @@
 package com.oneandone.cdi.testanalyzer;
 
-import com.oneandone.cdi.testanalyzer.annotations.*;
-import com.oneandone.cdi.weldstarter.spi.TestExtensionService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import javax.decorator.Decorator;
 import javax.enterprise.inject.Alternative;
@@ -11,12 +19,19 @@ import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.Stereotype;
 import javax.enterprise.inject.spi.Extension;
 import javax.interceptor.Interceptor;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.net.MalformedURLException;
-import java.util.*;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.oneandone.cdi.testanalyzer.annotations.EnabledAlternatives;
+import com.oneandone.cdi.testanalyzer.annotations.ExcludedClasses;
+import com.oneandone.cdi.testanalyzer.annotations.SutClasses;
+import com.oneandone.cdi.testanalyzer.annotations.SutClasspaths;
+import com.oneandone.cdi.testanalyzer.annotations.SutPackages;
+import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
+import com.oneandone.cdi.testanalyzer.annotations.TestClasspaths;
+import com.oneandone.cdi.testanalyzer.annotations.TestPackages;
+import com.oneandone.cdi.weldstarter.spi.TestExtensionService;
 
 /**
  * Helps in building up the testconfiguration.
@@ -305,7 +320,7 @@ class LeveledBuilder {
 
 
     LeveledBuilder tobeStarted(Class c) {
-        log.info("To be Started: {}", c.getName());
+        log.trace("To be Started: {}", c.getName());
         beansToBeStarted.add(c);
         addToClassMap(c);
         return this;
@@ -525,10 +540,10 @@ class LeveledBuilder {
     }
 
     boolean isActiveAlternativeStereoType(Annotation c) {
-        log.info("Searching for alternative Stereotype {}", c);
+        log.trace("Searching for alternative Stereotype {}", c);
         for (Class stereoType : foundAlternativeStereotypes) {
             if (stereoType.getName().equals(c.annotationType().getName())) {
-                log.info("Found alternative Stereotype {}", c);
+                log.trace("Search found alternative Stereotype {}", c);
                 return true;
             }
         }

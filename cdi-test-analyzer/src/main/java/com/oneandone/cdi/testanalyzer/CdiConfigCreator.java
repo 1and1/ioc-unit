@@ -168,7 +168,7 @@ public class CdiConfigCreator {
             ArrayList<Class<?>> sortedList = sortByPriority(currentToBeEvaluated);
 
             for (Class<?> c : sortedList) {
-                log.info("evaluating {}", c);
+                log.trace("evaluating {}", c);
                 if (builder.excludedClasses.contains(c)) {
                     log.info("Excluded {}", c.getName());
                 } else {
@@ -254,11 +254,13 @@ public class CdiConfigCreator {
         weldSetup.setBeanClasses(toBeStarted());
         weldSetup.setAlternativeClasses(getEnabledAlternatives());
         weldSetup.setEnabledAlternativeStereotypes(getEnabledAlternativeStereotypes());
-        for (Class<?> i : getDecorators()) {
-            log.info("buildWeldSetup Decorator:   {}", i);
-        }
-        for (Class<?> i : getInterceptors()) {
-            log.info("buildWeldSetup Interceptor: {}", i);
+        if (log.isTraceEnabled()) {
+            for (Class<?> i : getDecorators()) {
+                log.trace("buildWeldSetup Decorator:   {}", i);
+            }
+            for (Class<?> i : getInterceptors()) {
+                log.trace("buildWeldSetup Interceptor: {}", i);
+            }
         }
         weldSetup.setEnabledDecorators(getDecorators());
         weldSetup.setEnabledInterceptors(getInterceptors());
