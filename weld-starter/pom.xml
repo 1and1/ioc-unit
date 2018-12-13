@@ -20,6 +20,7 @@
         <junit4.version>4.12</junit4.version>
         <slf4j.version>1.7.25</slf4j.version>
         <logback.version>1.0.9</logback.version>
+        <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
     </properties>
 
     <dependencyManagement>
