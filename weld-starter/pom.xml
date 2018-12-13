@@ -7,6 +7,23 @@
     <packaging>pom</packaging>
     <name>net.oneandone:weld-starter-parent</name>
     <description>Parentclass for weldstarter. For tests define the profile weld1.1, weld2.3 or weld3.0.</description>
+
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Andreas Schörk</name>
+            <email>andreas.schoerk@1and1.com</email>
+            <organization>1and1</organization>
+            <organizationUrl>http://www.1and1.com</organizationUrl>
+        </developer>
+    </developers>
+
     <modules>
         <module>weld-starter-base</module>
         <module>weld1-starter</module>
@@ -86,11 +103,17 @@
         </profile>
     </profiles>
 
+    <scm>
+        <url>https://github.com/1and1/ejb-cdi-unit</url>
+        <connection>scm:git:ssh://git@github.com/1and1/ejb-cdi-unit.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/1and1/ejb-cdi-unit.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
     <issueManagement>
         <system>GitHub</system>
         <url>https://github.com/1and1/ejb-cdi-unit/issues/</url>
     </issueManagement>
-    <inceptionYear>2018</inceptionYear>
+    <inceptionYear>2017</inceptionYear>
 
     <distributionManagement>
         <snapshotRepository>
