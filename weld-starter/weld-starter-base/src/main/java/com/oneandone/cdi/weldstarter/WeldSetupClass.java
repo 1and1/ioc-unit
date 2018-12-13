@@ -11,8 +11,16 @@ import javax.enterprise.inject.spi.Extension;
 
 import com.oneandone.cdi.weldstarter.spi.WeldStarter;
 
+/**
+ * extends WeldSetupBase to additionally support finding the starter. Also adds some convenience methods.
+ */
 public class WeldSetupClass extends WeldSetupBase implements WeldSetup {
 
+    /**
+     * Returns the weldstarter as configured by maven. If there are more than one the starter for the highest version of weld is returned.
+     *
+     * @return a weld starter as configured by dependencies.
+     */
     public static WeldStarter getWeldStarter() {
         ServiceLoader<WeldStarter> loader = ServiceLoader.load(WeldStarter.class);
         List<WeldStarter> starters = new ArrayList<>();

@@ -10,6 +10,9 @@ import org.jboss.weld.bootstrap.api.Service;
 import org.jboss.weld.bootstrap.api.ServiceRegistry;
 import org.jboss.weld.bootstrap.spi.Metadata;
 
+/**
+ * Common interface of objects used to start weld by all weld-starters.
+ */
 public interface WeldSetup {
     class ServiceConfig<S extends Service> {
         public ServiceConfig(Class<S> serviceClass, S service) {

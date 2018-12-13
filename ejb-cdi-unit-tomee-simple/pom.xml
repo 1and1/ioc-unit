@@ -4,7 +4,7 @@
 
    <parent>
       <groupId>net.oneandone</groupId>
-      <artifactId>ejb-cdi-unit-parent</artifactId>
+      <artifactId>cdi-tester-parent</artifactId>
       <version>1.1.12-SNAPSHOT</version>
    </parent>
 

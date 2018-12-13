@@ -3,6 +3,8 @@ package com.oneandone.cdi.weldstarter;
 import org.jboss.weld.bootstrap.spi.Metadata;
 
 /**
+ * Helperclass to support creation Metadata necessary to start weld.
+ *
  * @author aschoerk
  */
 public class MetadataImpl<T> implements Metadata<T> {

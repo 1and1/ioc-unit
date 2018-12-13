@@ -15,6 +15,8 @@ import org.junit.Before;
 import com.oneandone.cdi.weldstarter.spi.WeldStarter;
 
 /**
+ * Helps develop tests to verify behaviour of CDI using weld-starters
+ *
  * @author aschoerk
  */
 public class WeldStarterTestBase {
@@ -46,12 +48,12 @@ public class WeldStarterTestBase {
         weldSetup.setBeanClasses(classes);
     }
 
-    public void setDecoratorClasses(Class... classes) {
+    public void setDecoratorClasses(Class<?>... classes) {
         weldSetup.setEnabledDecorators(Arrays.asList(classes));
     }
 
-    public void setInterceptorClasses(Class... classes) {
-        weldSetup.setEnabledInterceptors(Arrays.asList(classes));
+    public void setInterceptorClasses(Class<?>... classes) {
+        weldSetup.setEnabledInterceptors((Collection<Class<?>>) Arrays.asList(classes));
     }
 
 

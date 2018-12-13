@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>net.oneandone</groupId>
-        <artifactId>cdi-weld-starter</artifactId>
+        <artifactId>weld-starter-parent</artifactId>
         <version>2.0.1-SNAPSHOT</version>
     </parent>
 
@@ -10,7 +10,7 @@
     <packaging>jar</packaging>
 
     <name>net.oneandone:weld-starter-test</name>
-    <description>A module that supports the starting of a weld standalone engine.</description>
+    <description>Contains tests, used for clearification of behaviour of weld.</description>
     <url>https://github.com/1and1/ejb-cdi-unit</url>
 
     <licenses>

@@ -3,6 +3,8 @@ package com.oneandone.cdi.weldstarter;
 import org.jboss.weld.bootstrap.spi.Metadata;
 
 /**
+ * Helper class to create String-Metadata before starting Weld.
+ *
  * @author aschoerk
  */
 public class StringMetadata implements Metadata<String> {

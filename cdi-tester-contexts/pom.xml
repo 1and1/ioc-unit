@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>net.oneandone</groupId>
-        <artifactId>ejb-cdi-unit-parent</artifactId>
+        <artifactId>cdi-tester-parent</artifactId>
         <version>2.0.1-SNAPSHOT</version>
     </parent>
 

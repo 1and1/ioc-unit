@@ -9,6 +9,9 @@ import org.jboss.weld.bootstrap.spi.Metadata;
 import org.jboss.weld.bootstrap.spi.Scanning;
 
 /**
+ * The weld-starter classes try to support weld 1, 2 and 3. The most common way is to override the creation of the deployment and feed it descriptions
+ * of the desired container using beans.xml. This class simulates a parsed beans.xml-file.
+ *
  * @author aschoerk
  */
 public class BeansXmlImpl implements InvocationHandler {

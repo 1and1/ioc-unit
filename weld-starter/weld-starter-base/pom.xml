@@ -2,15 +2,15 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>net.oneandone</groupId>
-        <artifactId>cdi-weld-starter</artifactId>
+        <artifactId>weld-starter-parent</artifactId>
         <version>2.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>weld2-starter</artifactId>
+    <artifactId>weld-starter-base</artifactId>
     <packaging>jar</packaging>
 
-    <name>net.oneandone:weld2-starter</name>
-    <description>A module that supports the starting of a weld standalone engine.</description>
+    <name>net.oneandone:weld-starter-base</name>
+    <description>Contains the common classes to support the starting of weld standalone engines.</description>
     <url>https://github.com/1and1/ejb-cdi-unit</url>
 
     <licenses>
@@ -19,37 +19,30 @@
             <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
         </license>
     </licenses>
+
     <dependencies>
         <!-- logging -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.oneandone</groupId>
-            <artifactId>weld-starter-base</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.enterprise</groupId>
-            <artifactId>cdi-api</artifactId>
-            <version>1.2</version>
         </dependency>
         <dependency>
             <groupId>org.jboss.weld</groupId>
             <artifactId>weld-spi</artifactId>
-            <version>2.3.Final</version>
+            <version>3.0.Final</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.jboss.weld.se</groupId>
-            <artifactId>weld-se</artifactId>
-            <version>2.3.5.Final</version>
+            <groupId>javax.enterprise</groupId>
+            <artifactId>cdi-api</artifactId>
+            <version>2.0.SP1</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

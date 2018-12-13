@@ -14,6 +14,9 @@ import org.jboss.weld.bootstrap.api.Service;
 import org.jboss.weld.bootstrap.api.ServiceRegistry;
 import org.jboss.weld.bootstrap.spi.Metadata;
 
+/**
+ * Describes a configuration, that can be used to start CDI using a weld-starter.
+ */
 public class WeldSetupBase implements WeldSetup {
     protected Collection<String> beanClasses = Collections.EMPTY_LIST;
     protected List<Metadata<String>> alternativeClasses = Collections.EMPTY_LIST;

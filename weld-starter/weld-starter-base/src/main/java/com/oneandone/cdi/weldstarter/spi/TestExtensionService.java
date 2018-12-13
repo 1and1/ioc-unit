@@ -1,14 +1,16 @@
 package com.oneandone.cdi.weldstarter.spi;
 
-import com.oneandone.cdi.weldstarter.CreationalContexts;
-import com.oneandone.cdi.weldstarter.WeldSetupClass;
-import org.jboss.weld.bootstrap.api.Service;
-
-import javax.enterprise.inject.spi.Extension;
 import java.lang.annotation.Annotation;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+
+import javax.enterprise.inject.spi.Extension;
+
+import org.jboss.weld.bootstrap.api.Service;
+
+import com.oneandone.cdi.weldstarter.CreationalContexts;
+import com.oneandone.cdi.weldstarter.WeldSetupClass;
 
 /**
  * @author aschoerk
