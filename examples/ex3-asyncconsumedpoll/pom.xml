@@ -21,14 +21,6 @@
     <description>Test one service consuming one remote service asynchronously, client polls for result.</description>
     <url>https://github.com/1and1/ejb-cdi-unit</url>
     <dependencies>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>ejb-cdi-unit</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-        </dependency>
         <!-- J2EE 6 -->
         <dependency>
             <groupId>javax.enterprise</groupId>

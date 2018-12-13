@@ -1,26 +1,24 @@
 package com.oneandone.ejbcdiunit.example3;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import com.oneandone.cdi.testanalyzer.annotations.SutPackages;
+import com.oneandone.cdi.tester.CdiUnit2Runner;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
+import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import com.oneandone.cdi.testanalyzer.annotations.SutClasses;
-import com.oneandone.cdi.tester.CdiUnit2Runner;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 
 /**
  * @author aschoerk
  */
 @RunWith(CdiUnit2Runner.class)
-@SutClasses({ AsynchonousService.class })
+@SutPackages({AsynchronousService.class})
 public class AsynchronousServiceTest {
 
     @Inject

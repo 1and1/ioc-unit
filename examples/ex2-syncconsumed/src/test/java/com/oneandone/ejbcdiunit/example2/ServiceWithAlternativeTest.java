@@ -1,34 +1,30 @@
 package com.oneandone.ejbcdiunit.example2;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
-
+import com.oneandone.cdi.testanalyzer.annotations.SutPackages;
+import com.oneandone.cdi.tester.CdiUnit2Runner;
+import com.oneandone.cdi.tester.ProducesAlternative;
+import com.oneandone.ejbcdiunit.example2.uselookup.Resources;
+import com.oneandone.ejbcdiunit.example2.uselookup.ServiceWithLookup;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
-import com.oneandone.cdi.testanalyzer.annotations.SutClasses;
-import com.oneandone.cdi.tester.CdiUnit2Runner;
-import com.oneandone.cdi.tester.ProducesAlternative;
-import com.oneandone.ejbcdiunit.example2.uselookup.Resources;
-import com.oneandone.ejbcdiunit.example2.uselookup.ServiceWithLookup;
+import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.when;
 
 /**
  * @author aschoerk
  */
 @RunWith(CdiUnit2Runner.class)
-@SutClasses({ ServiceWithLookup.class })
+@SutPackages({ServiceWithLookup.class})
 public class ServiceWithAlternativeTest {
     @Inject
     ServiceIntf sut;

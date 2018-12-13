@@ -31,11 +31,6 @@
 
         <!-- testing -->
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>ejb-cdi-unit5</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-all</artifactId>
             <scope>test</scope>

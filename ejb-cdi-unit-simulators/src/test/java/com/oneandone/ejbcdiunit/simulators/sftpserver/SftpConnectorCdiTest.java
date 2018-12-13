@@ -1,16 +1,19 @@
 package com.oneandone.ejbcdiunit.simulators.sftpserver;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import com.jcraft.jsch.ChannelSftp;
+import com.jcraft.jsch.SftpException;
+import com.oneandone.cdi.testanalyzer.annotations.SutPackages;
+import com.oneandone.cdi.tester.CdiUnit2Runner;
+import com.oneandone.ejbcdiunit.simulators.sftpclient.SftpConnector;
+import com.oneandone.ejbcdiunit.simulators.sftpclient.TestSftpConfiguration;
+import com.oneandone.ejbcdiunit.simulators.sftpclient.upload.UploadFileStrategy;
+import org.junit.*;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -18,28 +21,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-
-import org.jglue.cdiunit.AdditionalClasses;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-
-import com.jcraft.jsch.ChannelSftp;
-import com.jcraft.jsch.SftpException;
-import com.oneandone.cdi.tester.CdiUnit2Runner;
-import com.oneandone.ejbcdiunit.simulators.sftpclient.SftpConnector;
-import com.oneandone.ejbcdiunit.simulators.sftpclient.TestSftpConfiguration;
-import com.oneandone.ejbcdiunit.simulators.sftpclient.upload.UploadFileStrategy;
+import static org.junit.Assert.*;
 
 
 @RunWith(CdiUnit2Runner.class)
+@SutPackages(SftpConnector.class)
 public class SftpConnectorCdiTest {
 
     private static final String HOST = "localhost";

@@ -22,11 +22,6 @@
     <description>example of testing a ejb-service handling one entity</description>
     <url>https://github.com/1and1/ejb-cdi-unit</url>
     <dependencies>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>ejb-cdi-unit</artifactId>
-        </dependency>
-
         <!-- logging -->
         <dependency>
             <groupId>org.slf4j</groupId>

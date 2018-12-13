@@ -1,32 +1,29 @@
 package com.oneandone.ejbcdiunit.example6;
 
-import static com.oneandone.ejbcdiunit.example6.AsynchronousServiceIntf.Callbacks;
-import static com.oneandone.ejbcdiunit.example6.AsynchronousServiceIntf.CorrelationId;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import com.oneandone.cdi.tester.CdiUnit2Runner;
+import com.oneandone.cdi.tester.ejb.AsynchronousManager;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
+import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import com.oneandone.cdi.testanalyzer.annotations.SutClasses;
-import com.oneandone.cdi.tester.CdiUnit2Runner;
-import com.oneandone.cdi.tester.ejb.AsynchronousManager;
+import static com.oneandone.ejbcdiunit.example6.AsynchronousServiceIntf.Callbacks;
+import static com.oneandone.ejbcdiunit.example6.AsynchronousServiceIntf.CorrelationId;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 
 /**
  * @author aschoerk
  */
 @RunWith(CdiUnit2Runner.class)
-@SutClasses({ AsynchronousService.class, CallbackMdb.class, SenderMdb.class })
+@SutPackages({AsynchronousService.class, CallbackMdb.class, SenderMdb.class})
 public class AsynchronousServiceWithCallbackTest {
 
     @Inject

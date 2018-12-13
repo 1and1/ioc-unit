@@ -22,12 +22,9 @@
     <url>https://github.com/1and1/ejb-cdi-unit</url>
     <dependencies>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>ejb-cdi-unit</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
+            <groupId>net.oneandone</groupId>
+            <artifactId>cdi-test-mocks</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <!-- J2EE 6 -->
         <dependency>

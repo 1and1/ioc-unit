@@ -91,10 +91,10 @@
         <profile>
             <id>base</id>
             <modules>
-                <module>cdi-test-mocks</module>
                 <module>cdi-weld-starter</module>
                 <module>cdi-test-analyzer</module>
                 <module>cdi-tester</module>
+                <module>cdi-test-mocks</module>
                 <module>cdi-ejb-tester</module>
                 <module>cdi-tester-contexts</module>
                 <!--module>purecdi-tests</module-->
@@ -120,12 +120,6 @@
                 <!--module>ejb-cdi-unit-camunda</module-->
                 <module>examples</module>
             </modules>
-            <dependencies>
-                <dependency>
-                    <groupId>junit</groupId>
-                    <artifactId>junit</artifactId>
-                </dependency>
-            </dependencies>
             <build>
                 <plugins>
                     <plugin>
@@ -173,38 +167,6 @@
                 <module>ejb-cdi-unit-tests5</module>
                 <module>examples</module>
             </modules>
-            <dependencies>
-                <dependency>
-                    <groupId>junit</groupId>
-                    <artifactId>junit</artifactId>
-                </dependency>
-                <dependency>
-                    <groupId>org.junit.jupiter</groupId>
-                    <artifactId>junit-jupiter-params</artifactId>
-                    <version>${junit5.version}</version>
-                    <scope>test</scope>
-                </dependency>
-                <dependency>
-                    <groupId>org.junit.jupiter</groupId>
-                    <artifactId>junit-jupiter-api</artifactId>
-                    <version>${junit5.version}</version>
-                    <scope>test</scope>
-                </dependency>
-                <dependency>
-                    <groupId>org.junit.jupiter</groupId>
-                    <artifactId>junit-jupiter-engine</artifactId>
-                    <version>${junit5.version}</version>
-                    <scope>test</scope>
-                </dependency>
-                <dependency>
-                    <groupId>org.apache.maven.surefire</groupId>
-                    <artifactId>surefire-logger-api</artifactId>
-                    <version>2.21.0</version>
-                    <!-- to get around bug https://github.com/junit-team/junit5/issues/1367 -->
-                    <scope>test</scope>
-                    <optional>true</optional>
-                </dependency>
-            </dependencies>
             <build>
                 <plugins>
                     <plugin>
@@ -383,6 +345,36 @@
             <groupId>net.oneandone</groupId>
             <artifactId>weld-starter-base</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <version>${junit5.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit5.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit5.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven.surefire</groupId>
+            <artifactId>surefire-logger-api</artifactId>
+            <version>2.21.0</version>
+            <!-- to get around bug https://github.com/junit-team/junit5/issues/1367 -->
+            <scope>test</scope>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 

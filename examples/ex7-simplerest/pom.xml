@@ -21,10 +21,6 @@
     <description>Test one rest-service</description>
     <url>https://github.com/1and1/ejb-cdi-unit</url>
     <dependencies>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>ejb-cdi-unit</artifactId>
-        </dependency>
         <!-- J2EE 6 -->
         <dependency>
             <groupId>javax.enterprise</groupId>
