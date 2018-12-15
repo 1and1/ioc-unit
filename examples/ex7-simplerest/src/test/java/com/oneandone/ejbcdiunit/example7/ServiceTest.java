@@ -22,6 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.oneandone.cdi.testanalyzer.annotations.SutClasses;
+import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
 import com.oneandone.cdi.tester.CdiUnit2Runner;
 import com.oneandone.cdi.tester.ejb.persistence.TestPersistenceFactory;
 
@@ -29,7 +30,8 @@ import com.oneandone.cdi.tester.ejb.persistence.TestPersistenceFactory;
  * @author aschoerk
  */
 @RunWith(CdiUnit2Runner.class)
-@SutClasses({ Service.class, TestPersistenceFactory.class })
+@TestClasses(TestPersistenceFactory.class)
+@SutClasses({ Service.class })
 public class ServiceTest {
 
     @Inject

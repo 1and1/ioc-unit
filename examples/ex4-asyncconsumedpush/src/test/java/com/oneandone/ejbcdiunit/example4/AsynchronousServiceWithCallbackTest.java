@@ -18,7 +18,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.oneandone.cdi.testanalyzer.annotations.SutClasses;
+import com.oneandone.cdi.testanalyzer.annotations.SutPackages;
 import com.oneandone.cdi.tester.CdiUnit2Runner;
 import com.oneandone.cdi.tester.ejb.AsynchronousManager;
 
@@ -26,7 +26,7 @@ import com.oneandone.cdi.tester.ejb.AsynchronousManager;
  * @author aschoerk
  */
 @RunWith(CdiUnit2Runner.class)
-@SutClasses({ AsynchronousService.class })
+@SutPackages({ AsynchronousService.class })
 public class AsynchronousServiceWithCallbackTest {
 
     @Inject

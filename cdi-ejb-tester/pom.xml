@@ -66,26 +66,6 @@
             <artifactId>jms2-compat</artifactId>
             <version>1.0.3.7</version>
         </dependency>
-        <!--dependency>
-            <groupId>org.apache.activemq</groupId>
-            <artifactId>artemis-junit</artifactId>
-            <version>2.5.0</version>
-        </dependency-->
-        <!--dependency>
-            <groupId>org.apache.activemq</groupId>
-            <artifactId>activemq-broker</artifactId>
-            <version>5.15.8</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.activemq</groupId>
-            <artifactId>activemq-kahadb-store</artifactId>
-            <version>5.15.8</version>
-        </dependency-->
-        <!--dependency>
-            <groupId>org.apache.activemq</groupId>
-            <artifactId>apache-artemis</artifactId>
-            <version>2.6.2</version>
-        </dependency-->
 
         <dependency>
             <groupId>com.mockrunner</groupId>
