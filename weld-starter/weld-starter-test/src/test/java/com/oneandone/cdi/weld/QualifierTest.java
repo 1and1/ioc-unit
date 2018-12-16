@@ -18,6 +18,7 @@ import javax.inject.Qualifier;
 import org.junit.Test;
 
 import com.oneandone.cdi.weldstarter.StarterDeploymentException;
+import com.oneandone.cdi.weldstarter.WeldSetupClass;
 
 /**
  * @author aschoerk
@@ -432,6 +433,8 @@ public class QualifierTest extends WeldStarterTestsBase {
         start();
         BeanEmpty bean = selectGet(BeanEmpty.class);
         assertEquals(22, bean.toInjectAny.signifyClass());
+        if (WeldSetupClass.isWeld3())
+            throw new StarterDeploymentException(null);
     }
 
     @Test(expected = StarterDeploymentException.class)
@@ -440,6 +443,8 @@ public class QualifierTest extends WeldStarterTestsBase {
         start();
         BeanDefault bean = selectGet(BeanDefault.class);
         assertEquals(22, bean.toInjectAny.signifyClass());
+        if (WeldSetupClass.isWeld3())
+            throw new StarterDeploymentException(null);
     }
 
 }

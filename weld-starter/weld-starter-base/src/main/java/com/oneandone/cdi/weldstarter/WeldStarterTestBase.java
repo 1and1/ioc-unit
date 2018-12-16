@@ -36,6 +36,13 @@ public class WeldStarterTestBase {
         setWeldStarter(starters.get(0));
     }
 
+    public WeldSetupClass getWeldSetup() {
+        return weldSetup;
+    }
+
+    public void setWeldSetup(final WeldSetupClass weldSetup) {
+        this.weldSetup = weldSetup;
+    }
 
     WeldSetupClass weldSetup = new WeldSetupClass();
     WeldStarter weldStarter = null;

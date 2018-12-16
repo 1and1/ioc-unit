@@ -152,7 +152,7 @@ class LeveledBuilder {
 
     boolean isSutAccordingToServices(Class<?> clazz) {
         for (TestExtensionService s : this.testerExtensionsConfigsFinder.testExtensionServices) {
-            if (s.isSutClass(clazz))
+            if (s.candidateToStart(clazz))
                 return true;
         }
         return false;
@@ -220,6 +220,9 @@ class LeveledBuilder {
 
     private void addExcludedClasses(Iterable<Class<?>> excludedClassesL) {
         for (Class<?> excl : excludedClassesL) {
+            for (TestExtensionService s : this.testerExtensionsConfigsFinder.testExtensionServices) {
+                s.explicitlyExcluded(excl);
+            }
             this.excludedClasses.add(excl);
         }
     }

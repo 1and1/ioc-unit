@@ -13,7 +13,9 @@ import java.util.Set;
 import javax.decorator.Decorator;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Alternative;
+import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.spi.Extension;
+import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
 import javax.interceptor.Interceptor;
 
@@ -134,15 +136,16 @@ public class CdiConfigCreator {
                         injectsToProducesMatcher.matchInject(inject);
                     }
                     currentToBeEvaluated = injectsToProducesMatcher.evaluateMatches(problems);
-                    if (currentToBeEvaluated.size() == 0) {
+                    if (currentToBeEvaluated.size() == 0 && builder.injections.size() > 0) {
                         // In available classes nothing could be found to produce for the injects
                         // have to stop algrithm.
                         log.error("New to be started == 0 but");
                         for (QualifiedType q : builder.injections) {
-                            log.error("Not resolved: {}", q);
+                            if (!Instance.class.isAssignableFrom(q.getRawtype())
+                                    && !InjectionPoint.class.isAssignableFrom(q.getRawtype()))
+                                log.error("Not resolved: {}", q);
                         }
                         break;
-                        // throw new RuntimeException("no producer found");
                     }
                     // new classes are necessary, so repeat cycle.
                 } else
