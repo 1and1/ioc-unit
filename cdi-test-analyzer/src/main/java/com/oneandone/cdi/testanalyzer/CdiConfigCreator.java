@@ -139,7 +139,7 @@ public class CdiConfigCreator {
                     if (currentToBeEvaluated.size() == 0 && builder.injections.size() > 0) {
                         // In available classes nothing could be found to produce for the injects
                         // have to stop algrithm.
-                        log.error("New to be started == 0 but");
+                        log.error("New to be started empty but");
                         for (QualifiedType q : builder.injections) {
                             if (!Instance.class.isAssignableFrom(q.getRawtype())
                                     && !InjectionPoint.class.isAssignableFrom(q.getRawtype()))

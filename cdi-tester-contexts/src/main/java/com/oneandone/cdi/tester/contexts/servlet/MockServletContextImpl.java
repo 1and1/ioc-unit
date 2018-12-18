@@ -37,6 +37,7 @@ import javax.servlet.ServletRegistration;
 import javax.servlet.ServletRegistration.Dynamic;
 import javax.servlet.SessionCookieConfig;
 import javax.servlet.SessionTrackingMode;
+import javax.servlet.annotation.WebListener;
 import javax.servlet.descriptor.JspConfigDescriptor;
 
 /**
@@ -65,6 +66,7 @@ public class MockServletContextImpl implements ServletContext {
     private int minorVersion;
     private int effectiveMajorVersion;
     private int effectiveMinorVersion;
+    private String encoding;
 
     public MockServletContextImpl() {
         resetAll();
@@ -455,6 +457,12 @@ public class MockServletContextImpl implements ServletContext {
         throw new UnsupportedOperationException();
     }
 
+
+    @Override
+    public Dynamic addJspFile(final String servletName, final String jspFile) {
+        return null;
+    }
+
     @Override
     public <T extends Servlet> T createServlet(Class<T> clazz)
             throws ServletException {
@@ -572,5 +580,93 @@ public class MockServletContextImpl implements ServletContext {
         return null;
     }
 
+    /**
+     * Gets the session timeout in minutes that are supported by default for this <tt>ServletContext</tt>.
+     *
+     * @return the session timeout in minutes that are supported by default for this <tt>ServletContext</tt>
+     * @throws UnsupportedOperationException
+     *             if this ServletContext was passed to the {@link ServletContextListener#contextInitialized} method of a
+     *             {@link ServletContextListener} that was neither declared in <code>web.xml</code> or <code>web-fragment.xml</code>, nor annotated
+     *             with {@link WebListener}
+     * @since Servlet 4.0
+     */
+    @Override
+    public int getSessionTimeout() {
+        return 0;
+    }
 
+    /**
+     * Sets the session timeout in minutes for this ServletContext.
+     *
+     * @param sessionTimeout
+     *            session timeout in minutes
+     * @throws IllegalStateException
+     *             if this ServletContext has already been initialized
+     * @throws UnsupportedOperationException
+     *             if this ServletContext was passed to the {@link ServletContextListener#contextInitialized} method of a
+     *             {@link ServletContextListener} that was neither declared in <code>web.xml</code> or <code>web-fragment.xml</code>, nor annotated
+     *             with {@link WebListener}
+     * @since Servlet 4.0
+     */
+    @Override
+    public void setSessionTimeout(final int sessionTimeout) {
+
+    }
+
+    /**
+     * Gets the request character encoding that are supported by default for this <tt>ServletContext</tt>. This method returns null if no request
+     * encoding character encoding has been specified in deployment descriptor or container specific configuration (for all web applications in the
+     * container).
+     *
+     * @return the request character encoding that are supported by default for this <tt>ServletContext</tt>
+     * @throws UnsupportedOperationException
+     *             if this ServletContext was passed to the {@link ServletContextListener#contextInitialized} method of a
+     *             {@link ServletContextListener} that was neither declared in <code>web.xml</code> or <code>web-fragment.xml</code>, nor annotated
+     *             with {@link WebListener}
+     * @since Servlet 4.0
+     */
+    @Override
+    public String getRequestCharacterEncoding() {
+        return null;
+    }
+
+    /**
+     * Sets the request character encoding for this ServletContext.
+     *
+     * @param encoding
+     *            request character encoding
+     * @throws IllegalStateException
+     *             if this ServletContext has already been initialized
+     * @throws UnsupportedOperationException
+     *             if this ServletContext was passed to the {@link ServletContextListener#contextInitialized} method of a
+     *             {@link ServletContextListener} that was neither declared in <code>web.xml</code> or <code>web-fragment.xml</code>, nor annotated
+     *             with {@link WebListener}
+     * @since Servlet 4.0
+     */
+    @Override
+    public void setRequestCharacterEncoding(final String encoding) {
+
+    }
+
+    /**
+     * Gets the response character encoding that are supported by default for this <tt>ServletContext</tt>. This method returns null if no response
+     * encoding character encoding has been specified in deployment descriptor or container specific configuration (for all web applications in the
+     * container).
+     *
+     * @return the request character encoding that are supported by default for this <tt>ServletContext</tt>
+     * @throws UnsupportedOperationException
+     *             if this ServletContext was passed to the {@link ServletContextListener#contextInitialized} method of a
+     *             {@link ServletContextListener} that was neither declared in <code>web.xml</code> or <code>web-fragment.xml</code>, nor annotated
+     *             with {@link WebListener}
+     * @since Servlet 4.0
+     */
+    @Override
+    public String getResponseCharacterEncoding() {
+        return null;
+    }
+
+    @Override
+    public void setResponseCharacterEncoding(final String encoding) {
+        this.encoding = encoding;
+    }
 }

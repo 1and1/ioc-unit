@@ -16,14 +16,14 @@ before_cache:
 env:
 - WELD_PROFILE=weld3.0
   JUNIT_PROFILE=junit4
-- WELD_PROFILE=weld2.4
-  JUNIT_PROFILE=junit5
+# - WELD_PROFILE=weld2.4
+#   JUNIT_PROFILE=junit5
 - WELD_PROFILE=weld2.3
   JUNIT_PROFILE=junit4
-- WELD_PROFILE=weld2.3
-  JUNIT_PROFILE=junit5
-- WELD_PROFILE=weld2.3
-  JUNIT_PROFILE=arquillian
+# - WELD_PROFILE=weld2.3
+#   JUNIT_PROFILE=junit5
+# - WELD_PROFILE=weld2.3
+#   JUNIT_PROFILE=arquillian
 - WELD_PROFILE=weld1.1
   JUNIT_PROFILE=junit4
 
@@ -35,5 +35,5 @@ env:
 
 
 
-script: "mvn clean install -P${WELD_PROFILE},${JUNIT_PROFILE}"
+script: "mvn clean install -Pbase,${WELD_PROFILE},${JUNIT_PROFILE}"
 

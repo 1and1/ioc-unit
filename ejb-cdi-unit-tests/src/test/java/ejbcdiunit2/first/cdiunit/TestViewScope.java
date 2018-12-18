@@ -1,5 +1,7 @@
 package ejbcdiunit2.first.cdiunit;
 
+import java.io.Serializable;
+
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -45,7 +47,8 @@ public class TestViewScope extends BaseTest {
 
     @ViewScoped
     @Named
-    static class ViewScopedClass {
+    static class ViewScopedClass implements Serializable {
+        private static final long serialVersionUID = -4340106158381549495L;
         private static int timesConstructed;
 
         public ViewScopedClass() {
@@ -63,7 +66,9 @@ public class TestViewScope extends BaseTest {
      */
     @ViewScoped
     @Named
-    static class G2ViewScoped {
+    static class G2ViewScoped implements Serializable {
+
+        private static final long serialVersionUID = 4772024614157652868L;
         @Inject
         private ViewScopedClass g1ViewScoped;
         private static int timesConstructed;

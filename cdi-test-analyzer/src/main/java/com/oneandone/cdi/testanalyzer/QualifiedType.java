@@ -244,8 +244,32 @@ class QualifiedType {
         return TypeUtils.equals(getType(), q.getType()) && qualifiersMatchFromToInject(this, q);
     }
 
+    boolean isParameterizedType(Type t) {
+        if (t instanceof ParameterizedType)
+            return true;
+        else {
+            if (t == null || t.equals(Object.class))
+                return false;
+            else {
+                if (t instanceof Class) {
+                    return isParameterizedType(((Class) t).getGenericSuperclass());
+                } else {
+                    return false;
+                }
+            }
+        }
+    }
+
     public boolean isAssignableTo(QualifiedType q) {
-        return TypeUtils.isAssignable(getType(), q.getType()) && qualifiersMatchFromToInject(this, q);
+        boolean assignable = TypeUtils.isAssignable(getType(), q.getType()) && qualifiersMatchFromToInject(this, q);
+        if (!assignable)
+            return assignable;
+        else {
+            if (isParameterizedType(getType()) && !isParameterizedType(q.getType()))
+                return false;
+            else
+                return true;
+        }
     }
 
     static public boolean injectableIn(Set<Annotation> produced, Set<Annotation> to) {

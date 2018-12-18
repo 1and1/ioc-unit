@@ -28,7 +28,7 @@
       <java.min.version>1.8</java.min.version>
 
       <version.junit>4.11</version.junit>
-      <version.javaee_api>7.0</version.javaee_api>
+       <version.javaee_api>8.0</version.javaee_api>
 
       <version.arquillian_core>1.1.11.Final</version.arquillian_core>
 

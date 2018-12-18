@@ -49,7 +49,7 @@ public class InitialListenerProducer
                            return m.invoke(handler, args);
                        }
                     }
-                    throw new RuntimeException("expected to find method in EjbCdiUnitInitialListener");
+                        throw new RuntimeException("expected to find method in InitialListenerProxy");
                 }
             });
     }

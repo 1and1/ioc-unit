@@ -41,6 +41,14 @@ public class WeldSetupClass extends WeldSetupBase implements WeldSetup {
         return getWeldStarter().getClass().getName().contains("weld3");
     }
 
+    public static boolean isWeld2() {
+        return getWeldStarter().getClass().getName().contains("weld2");
+    }
+
+    public static boolean isWeld1() {
+        return getWeldStarter().getClass().getName().contains("weld1");
+    }
+
     public void setBeanClasses(Class... classes) {
         beanClasses = new ArrayList<>();
         for (Class clazz : classes) {

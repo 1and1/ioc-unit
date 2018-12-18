@@ -153,8 +153,8 @@
         <profile>
             <id>weld3.0</id>
             <properties>
-                <weld.version>3.0.0.Final</weld.version>
-                <weld-spi.version>3.0.Final</weld-spi.version>
+                <weld.version>3.0.5.Final</weld.version>
+                <weld-spi.version>3.0.SP4</weld-spi.version>
                 <version.org.hibernate.api>1.0.0.Final</version.org.hibernate.api>
                 <version.org.hibernate>5.0.10.Final</version.org.hibernate>
                 <version.org.hibernate.validator>5.2.4.Final</version.org.hibernate.validator>
@@ -232,7 +232,7 @@
         <site-url>${site.deploy.base.url}/${project.groupId}/${project.version}</site-url>
         <javassist.version>3.20.0-GA</javassist.version>
 
-        <version.javaee_api>7.0</version.javaee_api>
+        <version.javaee_api>8.0</version.javaee_api>
         <org-reflections.version>0.9.10</org-reflections.version>
         <jaxrpc.version>1.1</jaxrpc.version>
         <weld-se.version>2.3.5.Final</weld-se.version>

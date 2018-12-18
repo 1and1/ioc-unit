@@ -27,7 +27,8 @@ import javax.persistence.spi.PersistenceUnitTransactionType;
 import javax.sql.DataSource;
 
 import org.apache.commons.dbcp2.BasicDataSource;
-import org.hibernate.ejb.HibernatePersistence;
+import org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl;
+import org.hibernate.jpa.boot.internal.PersistenceUnitInfoDescriptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -228,8 +229,7 @@ public class TestPersistenceFactory extends PersistenceFactory {
 
         final PersistenceUnitInfo persistenceUnitInfo = testPersistenceUnitInfo();
         try {
-            return new HibernatePersistence().createContainerEntityManagerFactory(persistenceUnitInfo,
-                    properties);
+            return new EntityManagerFactoryBuilderImpl(new PersistenceUnitInfoDescriptor(persistenceUnitInfo), properties).build();
         } catch (Throwable thw) {
             if (possiblyToThrow != null) {
                 throw new RuntimeException(possiblyToThrow);

@@ -35,7 +35,7 @@
         <dependency>
             <groupId>org.jboss.weld</groupId>
             <artifactId>weld-spi</artifactId>
-            <version>3.0.Final</version>
+            <version>3.0.SP4</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

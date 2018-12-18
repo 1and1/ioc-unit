@@ -109,6 +109,7 @@
         <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-api</artifactId>
+            <version>${version.javaee_api}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
