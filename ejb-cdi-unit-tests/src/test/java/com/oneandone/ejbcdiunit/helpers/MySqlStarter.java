@@ -19,7 +19,7 @@ public class MySqlStarter {
     @PostConstruct
     public void create() throws ManagedProcessException {
         if (mariaDb == null) {
-            DBConfigurationBuilder config = DBConfigurationBuilder.newBuilder().setPort(3406);
+            DBConfigurationBuilder config = DBConfigurationBuilder.newBuilder().setPort(3407);
             mariaDb = DB.newEmbeddedDB(config.build());
             mariaDb.start();
             url = config.getURL("test");

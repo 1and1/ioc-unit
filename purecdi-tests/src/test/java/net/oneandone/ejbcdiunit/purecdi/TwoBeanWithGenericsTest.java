@@ -4,9 +4,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Arrays;
-import java.util.Collection;
-
 import javax.inject.Inject;
 
 import org.junit.Test;
@@ -14,12 +11,7 @@ import org.junit.Test;
 /**
  * @author aschoerk
  */
-public class TwoBeanWithGenericsTest extends TestBaseClass {
-
-    @Override
-    public Collection<String> getBeanClasses() {
-        return Arrays.asList(CdiBean1.class.getName(), CdiHelperBean.class.getName(), CdiParamInjectHelperBean.class.getName());
-    }
+public class TwoBeanWithGenericsTest extends WeldStarterTestBase {
 
     static class CdiHelperBean<T> {
         T field = null;
@@ -63,10 +55,12 @@ public class TwoBeanWithGenericsTest extends TestBaseClass {
 
     @Test
     public void test() {
-        assertTrue(container.select(CdiBean1.class).get().callThis());
-        assertTrue(container.select(CdiBean1.class).get().getCdiHelperBean().callHelper());
-        assertNull(container.select(CdiBean1.class).get().getCdiHelperBean().field);
-        assertNotNull(container.select(CdiBean1.class).get().getCdiHelperBeanCdiParamInjectHelperBean().field);
+        setBeanClasses(CdiBean1.class, CdiHelperBean.class, CdiParamInjectHelperBean.class);
+        start();
+        assertTrue(getContainer().select(CdiBean1.class).get().callThis());
+        assertTrue(getContainer().select(CdiBean1.class).get().getCdiHelperBean().callHelper());
+        assertNull(getContainer().select(CdiBean1.class).get().getCdiHelperBean().field);
+        assertNotNull(getContainer().select(CdiBean1.class).get().getCdiHelperBeanCdiParamInjectHelperBean().field);
     }
 
 }

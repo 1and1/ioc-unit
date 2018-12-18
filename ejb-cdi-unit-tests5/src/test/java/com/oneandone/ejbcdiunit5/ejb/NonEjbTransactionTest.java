@@ -1,25 +1,26 @@
 package com.oneandone.ejbcdiunit5.ejb;
 
-import com.oneandone.ejbcdiunit.entities.TestEntity1;
-import com.oneandone.ejbcdiunit.internal.EjbTransactional;
-import com.oneandone.ejbcdiunit.persistence.TestPersistenceFactory;
-import com.oneandone.ejbcdiunit5.JUnit5Extension;
-import org.jglue.cdiunit.AdditionalClasses;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.TransactionRequiredException;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import com.oneandone.cdi.testanalyzer.annotations.SutClasses;
+import com.oneandone.cdi.tester.JUnit5Extension;
+import com.oneandone.cdi.tester.ejb.EjbTransactional;
+import com.oneandone.cdi.tester.ejb.persistence.TestPersistenceFactory;
+import com.oneandone.ejbcdiunit.entities.TestEntity1;
+
 /**
  * @author aschoerk
  */
 @ExtendWith(JUnit5Extension.class)
-@AdditionalClasses({ TestPersistenceFactory.class, TestEntity1.class })
+@SutClasses({ TestPersistenceFactory.class, TestEntity1.class })
 public class NonEjbTransactionTest {
 
     @Inject

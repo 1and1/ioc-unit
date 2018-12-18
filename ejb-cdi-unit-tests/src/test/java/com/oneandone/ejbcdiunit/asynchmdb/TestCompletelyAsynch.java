@@ -8,20 +8,20 @@ import java.util.concurrent.Future;
 import javax.inject.Inject;
 
 import org.hamcrest.CoreMatchers;
-import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.oneandone.ejbcdiunit.AsynchronousManager;
-import com.oneandone.ejbcdiunit.EjbUnitRunner;
+import com.oneandone.cdi.testanalyzer.annotations.SutClasses;
+import com.oneandone.cdi.tester.CdiUnit2Runner;
+import com.oneandone.cdi.tester.ejb.AsynchronousManager;
 import com.oneandone.ejbcdiunit.ejbs.StatelessCompletelyAsynchEJB;
 
 /**
  * @author aschoerk
  */
-@RunWith(EjbUnitRunner.class)
-@AdditionalClasses({StatelessCompletelyAsynchEJB.class})
+@RunWith(CdiUnit2Runner.class)
+@SutClasses({ StatelessCompletelyAsynchEJB.class })
 public class TestCompletelyAsynch {
     @Inject
     AsynchronousManager asynchronousManager;

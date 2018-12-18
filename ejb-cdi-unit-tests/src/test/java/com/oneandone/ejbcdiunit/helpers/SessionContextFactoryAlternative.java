@@ -9,9 +9,8 @@ import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
 
-import org.jglue.cdiunit.ProducesAlternative;
-
-import com.oneandone.ejbcdiunit.resourcesimulators.SessionContextSimulation;
+import com.oneandone.cdi.tester.ProducesAlternative;
+import com.oneandone.cdi.tester.ejb.resourcesimulators.SessionContextSimulation;
 
 /**
  * @author aschoerk

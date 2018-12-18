@@ -1,22 +1,57 @@
 package com.oneandone.ejbcdiunit;
 
+import java.lang.reflect.Method;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.jboss.weld.bootstrap.WeldBootstrap;
-import org.jboss.weld.bootstrap.api.Service;
-import org.jboss.weld.util.reflection.Formats;
+import javax.enterprise.inject.spi.Extension;
 
-import com.oneandone.ejbcdiunit.internal.ApplicationExceptionDescription;
+import com.oneandone.cdi.tester.ejb.ApplicationExceptionDescription;
+import com.oneandone.cdi.weldstarter.WeldSetupClass;
+import com.oneandone.cdi.weldstarter.spi.WeldStarter;
 
 /**
  * @author aschoerk
  */
 public class CdiTestConfig {
 
-    public String weldVersion = Formats.version(WeldBootstrap.class.getPackage());
+    private final WeldStarter weldStarter;
+
+    public CdiTestConfig(Class<?> testClass, Method method, WeldStarter weldStarter) {
+        this(weldStarter);
+        this.testClass = testClass;
+        this.testMethod = method;
+    }
+
+    public CdiTestConfig(Class<?> testClass, Method method, CdiTestConfig cdiTestConfig, WeldStarter weldStarter) {
+        this(testClass, method, weldStarter);
+        if (cdiTestConfig != null) {
+            this.additionalClasses.addAll(cdiTestConfig.getAdditionalClasses());
+            this.additionalClassPackages.addAll(cdiTestConfig.getAdditionalClassPackages());
+            this.additionalClassPathes.addAll(cdiTestConfig.getAdditionalClassPathes());
+            this.activatedAlternatives.addAll(cdiTestConfig.getActivatedAlternatives());
+            this.excludedClasses.addAll(cdiTestConfig.getExcludedClasses());
+            this.serviceConfigs.addAll(cdiTestConfig.getServiceConfigs());
+            this.setApplicationExceptionDescriptions(cdiTestConfig.getApplicationExceptionDescriptions());
+        }
+    }
+
+    public List<ApplicationExceptionDescription> getApplicationExceptionDescriptions() {
+        return applicationExceptionDescriptions;
+    }
+
+    public void setApplicationExceptionDescriptions(final List<ApplicationExceptionDescription> applicationExceptionDescriptions) {
+        this.applicationExceptionDescriptions = applicationExceptionDescriptions;
+    }
+
+    Method testMethod;
+    Class<?> testClass;
+
     protected Set<Class<?>> additionalClasses = new HashSet<>();
     protected Set<Class<?>> additionalClassPathes = new HashSet<>();
     protected Set<Class<?>> additionalClassPackages = new HashSet<>();
@@ -24,6 +59,25 @@ public class CdiTestConfig {
     protected Set<Class<?>> activatedAlternatives = new HashSet<>();
     protected Set<ServiceConfig> serviceConfigs = new HashSet<>();
     private List<ApplicationExceptionDescription> applicationExceptionDescriptions = new ArrayList<>();
+
+    public CdiTestConfig() {
+        this.weldStarter = WeldSetupClass.getWeldStarter();
+    }
+
+
+    public CdiTestConfig(WeldStarter weldStarter) {
+        this.weldStarter = weldStarter;
+
+    }
+
+
+    public Method getTestMethod() {
+        return testMethod;
+    }
+
+    public Class<?> getTestClass() {
+        return testClass;
+    }
 
     public Set<Class<?>> getExcludedClasses() {
         return excludedClasses;
@@ -79,48 +133,63 @@ public class CdiTestConfig {
         return this;
     }
 
-    public CdiTestConfig removeClass(Class<?> clazz) {
-        additionalClasses.remove(clazz);
-        return this;
-    }
-
-    public CdiTestConfig removeExcluded(Class<?> clazz) {
-        excludedClasses.remove(clazz);
-        return this;
-    }
-
-    public CdiTestConfig removePackage(Class<?> clazz) {
-        additionalClassPackages.remove(clazz);
-        return this;
-    }
-
-    public CdiTestConfig removeClassPath(Class<?> clazz) {
-        additionalClassPathes.remove(clazz);
-        return this;
-    }
-
-    public CdiTestConfig removeAlternative(Class<?> clazz) {
-        activatedAlternatives.remove(clazz);
-        return this;
-    }
-
-    public CdiTestConfig removeService(Class<?> clazz) {
-        serviceConfigs.remove(new ServiceConfig(clazz, null));
-        return this;
-    }
-
-    public List<ApplicationExceptionDescription> getApplicationExceptionDescriptions() {
-        return applicationExceptionDescriptions;
-    }
-
-    public void setApplicationExceptionDescriptions(List<ApplicationExceptionDescription> applicationExceptionDescriptions) {
-        this.applicationExceptionDescriptions = applicationExceptionDescriptions;
-    }
-
     public void addExcludedByString(String s) {
     }
 
-    public static class ServiceConfig<S extends Service> {
+    /*
+     * TestConfig Part
+     */
+
+    private Collection<Class<?>> alternatives = new ArrayList<>();
+    private Class<?> ejbJarClasspathExample = null;
+    private Collection<Extension> extensions = new ArrayList<Extension>();
+    private Collection<Class<?>> enabledInterceptors = new ArrayList<>();
+    private Collection<Class<?>> enabledDecorators = new ArrayList<>();
+    private Collection<String> enabledAlternativeStereotypes = new ArrayList<String>();
+    private Set<URL> classpathEntries = new HashSet<>();
+    private Set<String> discoveredClasses = new LinkedHashSet<String>();
+
+    public Set<String> getDiscoveredClasses() {
+        return discoveredClasses;
+    }
+
+    public Collection<Class<?>> getAlternatives() {
+        return alternatives;
+    }
+
+    public Class<?> getEjbJarClasspathExample() {
+        return ejbJarClasspathExample;
+    }
+
+    public void setEjbJarClasspathExample(final Class<?> ejbJarClasspathExampleP) {
+        this.ejbJarClasspathExample = ejbJarClasspathExampleP;
+    }
+
+    public Collection<Extension> getExtensions() {
+        return extensions;
+    }
+
+    public Collection<Class<?>> getEnabledInterceptors() {
+        return enabledInterceptors;
+    }
+
+    public Collection<Class<?>> getEnabledDecorators() {
+        return enabledDecorators;
+    }
+
+    public Collection<String> getEnabledAlternativeStereotypes() {
+        return enabledAlternativeStereotypes;
+    }
+
+    public Set<URL> getClasspathEntries() {
+        return classpathEntries;
+    }
+
+    public CharSequence getWeldVersion() {
+        return weldStarter.getVersion();
+    }
+
+    public static class ServiceConfig<S> {
         Class<S> serviceClass;
         S service;
 
@@ -129,7 +198,7 @@ public class CdiTestConfig {
             this.service = service;
         }
 
-        public Class<? extends Service> getServiceClass() {
+        public Class<?> getServiceClass() {
             return serviceClass;
         }
 

@@ -10,20 +10,20 @@ import javax.transaction.NotSupportedException;
 import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
 
-import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import com.oneandone.ejbcdiunit.SessionContextFactory;
-import com.oneandone.ejbcdiunit.cdiunit.ExcludedClasses;
-import com.oneandone.ejbcdiunit.persistence.TestPersistenceFactory;
-import com.oneandone.ejbcdiunit5.JUnit5Extension;
+import com.oneandone.cdi.testanalyzer.annotations.ExcludedClasses;
+import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
+import com.oneandone.cdi.tester.JUnit5Extension;
+import com.oneandone.cdi.tester.ejb.SessionContextFactory;
+import com.oneandone.cdi.tester.ejb.persistence.TestPersistenceFactory;
 
 /**
  * @author aschoerk
  */
 @ExtendWith(JUnit5Extension.class)
-@AdditionalClasses({ TestPersistenceFactoryAlternative.class, SessionContextFactory.class })
+@TestClasses({ TestPersistenceFactoryAlternative.class, SessionContextFactory.class })
 @ExcludedClasses({ TestPersistenceFactory.class })
 public class TestPersistenceFactoryAlternativeH2Test extends PersistenceFactoryTestBase {
 

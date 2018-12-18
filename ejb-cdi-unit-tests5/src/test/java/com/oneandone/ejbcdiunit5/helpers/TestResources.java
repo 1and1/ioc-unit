@@ -1,20 +1,27 @@
 package com.oneandone.ejbcdiunit5.helpers;
 
-import org.jglue.cdiunit.ProducesAlternative;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.security.Identity;
+import java.security.Principal;
+import java.util.Map;
+import java.util.Properties;
 
-import javax.ejb.*;
+import javax.ejb.EJBHome;
+import javax.ejb.EJBLocalHome;
+import javax.ejb.EJBLocalObject;
+import javax.ejb.EJBObject;
+import javax.ejb.SessionContext;
+import javax.ejb.TimerService;
 import javax.enterprise.inject.Alternative;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.UserTransaction;
 import javax.xml.rpc.handler.MessageContext;
-import java.security.Identity;
-import java.security.Principal;
-import java.util.Map;
-import java.util.Properties;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.oneandone.cdi.tester.ProducesAlternative;
 
 /**
  * @author aschoerk

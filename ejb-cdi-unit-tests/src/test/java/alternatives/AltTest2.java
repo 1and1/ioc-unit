@@ -8,19 +8,17 @@ import static org.junit.Assert.assertTrue;
 import javax.enterprise.inject.Alternative;
 import javax.inject.Inject;
 
-import org.jglue.cdiunit.ActivatedAlternatives;
-import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.oneandone.ejbcdiunit.EjbUnitRunner;
+import com.oneandone.cdi.testanalyzer.annotations.EnabledAlternatives;
+import com.oneandone.cdi.tester.CdiUnit2Runner;
 
 /**
  * @author aschoerk
  */
-@RunWith(EjbUnitRunner.class)
-@AdditionalClasses({ AltTest2.CdiBean1.class, AltTest2.CdiHelperBean.class })
-@ActivatedAlternatives({ AltTest2.CdiHelperBeanAlt.class })
+@RunWith(CdiUnit2Runner.class)
+@EnabledAlternatives({ AltTest2.CdiHelperBeanAlt.class })
 public class AltTest2 {
 
     public interface CdiHelperBeanIntf {

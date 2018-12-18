@@ -1,6 +1,7 @@
 package com.oneandone.ejbcdiunit.excludedclasses;
 
-import com.oneandone.ejbcdiunit.cdiunit.ExcludedClasses;
+
+import com.oneandone.cdi.testanalyzer.annotations.ExcludedClasses;
 
 /**
  * @author aschoerk

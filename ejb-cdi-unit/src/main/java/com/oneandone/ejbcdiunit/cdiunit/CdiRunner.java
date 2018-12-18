@@ -15,7 +15,6 @@ package com.oneandone.ejbcdiunit.cdiunit;
  * limitations under the License.
  */
 
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -24,24 +23,20 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.naming.InitialContext;
 
-import org.jboss.weld.bootstrap.WeldBootstrap;
-import org.jboss.weld.bootstrap.api.Bootstrap;
-import org.jboss.weld.bootstrap.api.CDI11Bootstrap;
-import org.jboss.weld.bootstrap.spi.Deployment;
-import org.jboss.weld.environment.se.Weld;
-import org.jboss.weld.environment.se.WeldContainer;
-import org.jboss.weld.resources.spi.ResourceLoader;
 import org.jboss.weld.transaction.spi.TransactionServices;
-import org.jboss.weld.util.reflection.Formats;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 
+import com.oneandone.cdi.tester.ejb.EjbInformationBean;
+import com.oneandone.cdi.tester.ejb.EjbUnitTransactionServices;
+import com.oneandone.cdi.tester.ejb.SupportEjbExtended;
+import com.oneandone.cdi.weldstarter.CreationalContexts;
+import com.oneandone.cdi.weldstarter.WeldSetup;
+import com.oneandone.cdi.weldstarter.WeldSetupClass;
+import com.oneandone.cdi.weldstarter.spi.WeldStarter;
 import com.oneandone.ejbcdiunit.CdiTestConfig;
-import com.oneandone.ejbcdiunit.CreationalContexts;
-import com.oneandone.ejbcdiunit.EjbUnitTransactionServices;
-import com.oneandone.ejbcdiunit.SupportEjbExtended;
-import com.oneandone.ejbcdiunit.internal.EjbInformationBean;
+import com.oneandone.ejbcdiunit.cfganalyzer.TestConfigAnalyzer;
 
 /**
  * <code>&#064;CdiRunner</code> is a JUnit runner that uses a CDI container to
@@ -64,11 +59,11 @@ import com.oneandone.ejbcdiunit.internal.EjbInformationBean;
 public class CdiRunner extends BlockJUnit4ClassRunner {
 
     private static final String ABSENT_CODE_PREFIX = "Absent Code attribute in method that is not native or abstract in class file ";
-    protected Weld weld;
-    protected WeldContainer container;
     protected Throwable startupException;
     protected FrameworkMethod frameworkMethod;
     private Class<?> clazz;
+    protected WeldStarter weldStarter;
+    private WeldSetupClass weldSetup;
 
     public CdiRunner(Class<?> clazz) throws InitializationError {
         super(checkClass(clazz));
@@ -106,49 +101,46 @@ public class CdiRunner extends BlockJUnit4ClassRunner {
 
     protected Object createTest() throws Exception {
         try {
-            String version = Formats.version(WeldBootstrap.class.getPackage());
+            weldStarter = WeldSetupClass.getWeldStarter();
+            String version = weldStarter.getVersion();
             if ("2.2.8 (Final)".equals(version) || "2.2.7 (Final)".equals(version)) {
                 startupException = new Exception("Weld 2.2.8 and 2.2.7 are not supported. Suggest upgrading to 2.2.9");
             }
-
-            final WeldTestConfig weldTestConfig =
-                    new WeldTestConfig(clazz, frameworkMethod.getMethod())
+            final CdiTestConfig weldTestConfig =
+                    new CdiTestConfig(clazz, frameworkMethod.getMethod(), weldStarter)
                             .addClass(SupportEjbExtended.class)
                             .addServiceConfig(new CdiTestConfig.ServiceConfig(TransactionServices.class, new EjbUnitTransactionServices()))
             ;
 
-            weld = new Weld() {
-
-                protected Deployment createDeployment(ResourceLoader resourceLoader, CDI11Bootstrap bootstrap) {
-                    try {
-                        return new Weld11TestUrlDeployment(resourceLoader, bootstrap, weldTestConfig);
-                    } catch (IOException e) {
-                        startupException = e;
-                        throw new RuntimeException(e);
-                    }
-                }
-
-                protected Deployment createDeployment(ResourceLoader resourceLoader, Bootstrap bootstrap) {
-                    try {
-                        return new WeldTestUrlDeployment(resourceLoader, bootstrap, weldTestConfig);
-                    } catch (IOException e) {
-                        startupException = e;
-                        throw new RuntimeException(e);
-                    }
-                };
-
-            };
 
             try {
-                System.setProperty("java.naming.factory.initial", "com.oneandone.cdiunit.internal.naming.CdiUnitContextFactory");
-                container = weld.initialize();
+                if (weldSetup == null) {
+
+                    TestConfigAnalyzer cdiUnitAnalyzer = new TestConfigAnalyzer();
+                    cdiUnitAnalyzer.analyze(weldTestConfig);
+                    weldSetup = new WeldSetupClass();
+                    weldSetup.setBeanClassNames(weldTestConfig.getDiscoveredClasses());
+
+                    weldSetup.setAlternativeClasses(weldTestConfig.getAlternatives());
+                    weldSetup.setEnabledAlternativeStereotypeNames(weldTestConfig.getEnabledAlternativeStereotypes());
+                    weldSetup.setEnabledDecorators(weldTestConfig.getEnabledDecorators());
+                    weldSetup.setEnabledInterceptors(weldTestConfig.getEnabledInterceptors());
+
+                    weldSetup.setExtensionObjects(weldTestConfig.getExtensions());
+                    weldSetup.addService(new WeldSetup.ServiceConfig(TransactionServices.class, new EjbUnitTransactionServices()));
+                }
+                weldSetup.handleWeldExtensions(frameworkMethod.getMethod());
+                weldStarter.start(weldSetup);
+
+                System.setProperty("java.naming.factory.initial", "com.oneandone.cdi.tester.naming.CdiTesterContextFactory");
+
                 InitialContext initialContext = new InitialContext();
-                final BeanManager beanManager = container.getBeanManager();
+                final BeanManager beanManager = weldStarter.get(BeanManager.class);
                 initialContext.bind("java:comp/BeanManager", beanManager);
                 try (CreationalContexts creationalContexts = new CreationalContexts(beanManager)) {
                     EjbInformationBean ejbInformationBean =
                             (EjbInformationBean) creationalContexts.create(EjbInformationBean.class, ApplicationScoped.class);
-                    ejbInformationBean.setApplicationExceptionDescriptions(weldTestConfig.getApplicationExceptionDescriptions());
+                    // TODO: ejbInformationBean.setApplicationExceptionDescriptions(weldTestConfig.getApplicationExceptionDescriptions());
                 } finally {
                     initialContext.close();
                 }
@@ -173,7 +165,7 @@ public class CdiRunner extends BlockJUnit4ClassRunner {
 
     private <T> T createTest(Class<T> testClass) {
 
-        T t = container.instance().select(testClass).get();
+        T t = weldStarter.get(testClass);
 
         return t;
     }

@@ -1,30 +1,27 @@
 package cdiunit5;
 
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
+import com.oneandone.cdi.tester.JUnit5Extension;
+import com.oneandone.cdi.tester.ProducerConfig;
+import com.oneandone.cdi.tester.ProducerConfigExtension;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
+import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
+import javax.inject.Named;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
-import javax.inject.Named;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-import org.jglue.cdiunit.AdditionalClasses;
-import org.jglue.cdiunit.ProducerConfig;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-
-import com.oneandone.ejbcdiunit5.JUnit5Extension;
-
-@Disabled
 @ExtendWith(JUnit5Extension.class)
-@AdditionalClasses(TestProducerConfig.Producers.class)
+@TestClasses({ TestProducerConfig.Producers.class, ProducerConfigExtension.class })
 @TestProducerConfig.ProducerConfigClass(Object.class)
 @TestProducerConfig.ProducerConfigNum(0)
 public class TestProducerConfig {

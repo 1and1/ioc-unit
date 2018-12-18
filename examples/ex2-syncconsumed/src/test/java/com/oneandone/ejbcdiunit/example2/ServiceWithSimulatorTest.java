@@ -8,18 +8,18 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.oneandone.ejbcdiunit.EjbUnitRunner;
+import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
+import com.oneandone.cdi.tester.CdiUnit2Runner;
 import com.oneandone.ejbcdiunit.example2.useejbinject.Service;
 
 /**
  * @author aschoerk
  */
-@RunWith(EjbUnitRunner.class)
-@AdditionalClasses({Service.class, RemoteServiceSimulator.class})
+@RunWith(CdiUnit2Runner.class)
+@TestClasses({ Service.class, RemoteServiceSimulator.class })
 public class ServiceWithSimulatorTest {
     @Inject
     ServiceIntf sut;

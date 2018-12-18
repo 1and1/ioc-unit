@@ -1,7 +1,6 @@
 package com.oneandone.ejbcdiunit5.helpers;
 
-import com.oneandone.ejbcdiunit.resourcesimulators.SessionContextSimulation;
-import org.jglue.cdiunit.ProducesAlternative;
+import java.security.Principal;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Alternative;
@@ -9,7 +8,9 @@ import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
-import java.security.Principal;
+
+import com.oneandone.cdi.tester.ProducesAlternative;
+import com.oneandone.cdi.tester.ejb.resourcesimulators.SessionContextSimulation;
 
 /**
  * @author aschoerk
@@ -28,10 +29,9 @@ public class SessionContextFactoryAlternative {
         /**
          * Obtain the <code>java.security.Principal</code> that identifies the caller.
          *
-         * @return The <code>Principal</code> object that identifies the caller. This
-         * method never returns <code>null</code>.
-         * @throws IllegalStateException The Container throws the exception
-         *                               if the instance is not allowed to call this method.
+         * @return The <code>Principal</code> object that identifies the caller. This method never returns <code>null</code>.
+         * @throws IllegalStateException
+         *             The Container throws the exception if the instance is not allowed to call this method.
          * @since EJB 1.1
          */
         @Override

@@ -5,14 +5,16 @@ import static org.hamcrest.core.Is.is;
 import javax.inject.Inject;
 import javax.jms.JMSException;
 
-import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.oneandone.ejbcdiunit.AsynchronousManager;
-import com.oneandone.ejbcdiunit.EjbUnitRunner;
-import com.oneandone.ejbcdiunit.SessionContextFactory;
+import com.oneandone.cdi.testanalyzer.annotations.SutClasses;
+import com.oneandone.cdi.testanalyzer.annotations.SutPackages;
+import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
+import com.oneandone.cdi.tester.CdiUnit2Runner;
+import com.oneandone.cdi.tester.ejb.AsynchronousManager;
+import com.oneandone.cdi.tester.ejb.SessionContextFactory;
 import com.oneandone.ejbcdiunit.ejbs.CdiMdbClient;
 import com.oneandone.ejbcdiunit.ejbs.MdbEjbInfoSingleton;
 import com.oneandone.ejbcdiunit.ejbs.QMdbEjb;
@@ -24,9 +26,10 @@ import com.oneandone.ejbcdiunit.helpers.LoggerGenerator;
 /**
  * @author aschoerk
  */
-@RunWith(EjbUnitRunner.class)
-@AdditionalClasses({  SessionContextFactory.class, LoggerGenerator.class,
-        QMdbEjb.class, QMdbEjb2.class, TMdbEjb.class })
+@RunWith(CdiUnit2Runner.class)
+@SutClasses({ QMdbEjb.class, QMdbEjb2.class, TMdbEjb.class })
+@SutPackages(CdiMdbClient.class)
+@TestClasses({ SessionContextFactory.class, LoggerGenerator.class })
 public class TestMdb {
     @Inject
     SingletonMdbClient singletonMdbClient;
@@ -44,13 +47,9 @@ public class TestMdb {
     public void testQueues() throws JMSException {
         // jmsFactory.initMessageListeners();
         singletonMdbClient.sendMessageToQueue();
-        asynchronousManager.once();
-        Assert.assertThat(mdbEjbInfoSingleton.getNumberOfQCalls(), is(5));
-        Assert.assertThat(mdbEjbInfoSingleton.getNumberOfQCalls2(), is(5));
+        dispatchAndCheck(5);
         cdiMdbClient.sendMessageToQueue();
-        asynchronousManager.once();
-        Assert.assertThat(mdbEjbInfoSingleton.getNumberOfQCalls(), is(10));
-        Assert.assertThat(mdbEjbInfoSingleton.getNumberOfQCalls2(), is(10));
+        dispatchAndCheck(10);
     }
 
     @Test
@@ -63,4 +62,29 @@ public class TestMdb {
         asynchronousManager.once();
         Assert.assertThat(mdbEjbInfoSingleton.getNumberOfTCalls(), is(20));
     }
+
+    @Test
+    public void testQueuesViaContext() throws JMSException {
+        // jmsFactory.initMessageListeners();
+        singletonMdbClient.sendMessageViaContextToQueue();
+        dispatchAndCheck(5);
+        cdiMdbClient.sendMessageViaContextToQueue();
+        dispatchAndCheck(10);
+    }
+
+    @Test
+    public void testQueuesViaInjectedContext() throws JMSException {
+        // jmsFactory.initMessageListeners();
+        singletonMdbClient.sendMessageViaInjectedContextToQueue();
+        dispatchAndCheck(5);
+        cdiMdbClient.sendMessageViaInjectedContextToQueue();
+        dispatchAndCheck(10);
+    }
+
+    private void dispatchAndCheck(final int i) {
+        asynchronousManager.once();
+        Assert.assertThat(mdbEjbInfoSingleton.getNumberOfQCalls(), is(i));
+        Assert.assertThat(mdbEjbInfoSingleton.getNumberOfQCalls2(), is(i));
+    }
+
 }

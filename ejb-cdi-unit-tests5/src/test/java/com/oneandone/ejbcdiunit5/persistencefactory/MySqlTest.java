@@ -19,16 +19,16 @@ import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 
 import org.hamcrest.MatcherAssert;
-import org.jglue.cdiunit.ActivatedAlternatives;
-import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.oneandone.cdi.testanalyzer.annotations.EnabledAlternatives;
+import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
+import com.oneandone.cdi.tester.JUnit5Extension;
+import com.oneandone.cdi.tester.ejb.persistence.PersistenceFactory;
 import com.oneandone.ejbcdiunit.entities.TestEntity1;
-import com.oneandone.ejbcdiunit.persistence.PersistenceFactory;
-import com.oneandone.ejbcdiunit5.JUnit5Extension;
 import com.oneandone.ejbcdiunit5.helpers.J2eeSimMySqlFactory;
 import com.oneandone.ejbcdiunit5.helpers.MySqlStarter;
 import com.oneandone.ejbcdiunit5.helpers.TestResources;
@@ -37,8 +37,8 @@ import com.oneandone.ejbcdiunit5.helpers.TestResources;
  * @author aschoerk
  */
 @ExtendWith(JUnit5Extension.class)
-@ActivatedAlternatives({ J2eeSimMySqlFactory.class, TestResources.class })
-@AdditionalClasses({ MySqlStarter.class })
+@EnabledAlternatives({ J2eeSimMySqlFactory.class, TestResources.class })
+@TestClasses({ MySqlStarter.class })
 public class MySqlTest {
 
     private static Logger logger = LoggerFactory.getLogger("logger");

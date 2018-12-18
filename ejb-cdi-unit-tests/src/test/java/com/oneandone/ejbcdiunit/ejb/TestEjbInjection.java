@@ -8,21 +8,21 @@ import java.lang.reflect.Field;
 
 import javax.ejb.EJB;
 
-import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.oneandone.ejbcdiunit.EjbUnitRunner;
+import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
+import com.oneandone.cdi.tester.CdiUnit2Runner;
+import com.oneandone.cdi.tester.ejb.persistence.TestPersistenceFactory;
 import com.oneandone.ejbcdiunit.ejbs.StatelessEJB;
 import com.oneandone.ejbcdiunit.helpers.LoggerGenerator;
-import com.oneandone.ejbcdiunit.persistence.TestPersistenceFactory;
 
 /**
  * @author aschoerk
  */
-@RunWith(EjbUnitRunner.class)
-@AdditionalClasses({ StatelessEJB.class, LoggerGenerator.class, TestPersistenceFactory.class })
+@RunWith(CdiUnit2Runner.class)
+@TestClasses({ StatelessEJB.class, LoggerGenerator.class, TestPersistenceFactory.class })
 public class TestEjbInjection {
 
     @EJB(name = "StatelessEJB")

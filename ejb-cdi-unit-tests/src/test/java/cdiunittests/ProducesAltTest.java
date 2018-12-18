@@ -6,22 +6,24 @@ import static org.mockito.Mockito.verify;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 
-import org.jglue.cdiunit.AdditionalClasses;
-import org.jglue.cdiunit.ProducesAlternative;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
-import com.oneandone.ejbcdiunit.EjbUnitRunner;
+import com.oneandone.cdi.testanalyzer.annotations.SutPackages;
+import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
+import com.oneandone.cdi.tester.CdiUnit2Runner;
+import com.oneandone.cdi.tester.ProducesAlternative;
 
-import cdiunit.tobetestedcode.HelperClass;
-import cdiunit.tobetestedcode.Sut;
+import ejbcdiunit2.first.cdiunit.tobetestedcode.HelperClass;
+import ejbcdiunit2.first.cdiunit.tobetestedcode.Sut;
 
 /**
  * @author aschoerk
  */
-@RunWith(EjbUnitRunner.class)
-@AdditionalClasses({ Sut.class })
+@RunWith(CdiUnit2Runner.class)
+@TestClasses(TestResources.class)
+@SutPackages({ Sut.class })
 public class ProducesAltTest {
 
     @ProducesAlternative

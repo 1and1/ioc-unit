@@ -8,6 +8,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import com.oneandone.cdi.testanalyzer.InitialConfiguration;
+import com.oneandone.cdi.tester.CdiUnit2Rule;
+import com.oneandone.cdi.tester.CdiUnit2Runner;
+import com.oneandone.ejbcdiunit.ejbs.SingletonTimerEJB;
+
 /**
  * Test if initializations of EjbUnitRunner work.
  *
@@ -17,8 +22,8 @@ import org.junit.runners.JUnit4;
 public class SimpleTest {
 
     @Rule
-    public EjbUnitRule createEjbUnitRule() {
-        return new EjbUnitRule(this);
+    public CdiUnit2Rule createEjbUnitRule() {
+        return new CdiUnit2Rule(this, new InitialConfiguration().exclude(SingletonTimerEJB.class));
     }
 
     @Before
@@ -29,7 +34,7 @@ public class SimpleTest {
     @Test
     public void test() {
         TestBooleanClass t = new TestBooleanClass();
-        assertFalse (t.b);
+        assertFalse(t.b);
         assert true;
     }
 
@@ -37,7 +42,7 @@ public class SimpleTest {
         boolean b;
     }
 
-    @RunWith(EjbUnitRunner.class)
+    @RunWith(CdiUnit2Runner.class)
     class Member {
         @Test
         public void test2() {

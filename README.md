@@ -1,5 +1,60 @@
 ejb-cdi-unit
 ============
+
+# Currently 
+
+In this branch there is no ejb-cdi-unit anymore.
+The past showed that it is sometimes quite cumbersome to create a new test for an existing module. There causes for that 
+lie in the most of the time helping intelligence of CDI-Unit in adding classes to the test-configuration.
+There is more about that in ....
+
+Therefore a module has been developed that 
+* discrimates between Test-Classes and "System under Test"-Classes. This is done using new Annotations which are similar 
+in their function to the CDI-Unit-Annotations 
+* analyzes the injection points during adding of Classes to the system-configuration. 
+* finds according to so called available classes the best fitting candidate as producer for the injections.
+
+# Concepts
+
+## Defined and Available classes
+
+Defined classes are: 
+* The Testclass
+* Classes added by Annotations @TestClasses, @SutClasses
+* Will be added to the configuration to be started when weld starts in any event.
+
+Available classes are:
+* Classes added by Annotations @TestPackages, @SutPackages, @TestClasspaths, @SutClasspaths
+* Will be added to the configuration
+** if an instance of themselves can be used as inject
+** if they provide a producer that can be used as inject
+** only if ambiguity heuristics decide their priority against other classes
+
+## Test-Sut
+
+Testclasses are
+* The Testclass itself
+* All classes added usinig @TestClasses,@TestPackages,@TestClasspaths
+
+Sutclasses are
+* All classes added usinig @SutClasses,@SutPackages,@SutClasspaths
+
+In case of ambiguities, Testclasses get priority over Sutclasses
+
+## Alternatives
+If a producer or a class itself or containing producers are enabled themselves or by stereotype the these 
+get priority over other classes possibly usable for injects. Alternative-Stereotypes must be encountered
+using @SutClasses or @TestClasses. @ProducesAlternative is defined by default.
+
+
+
+
+# Open issues
+
+* Should Entities, Message Driven Beans, Startup-Annotated beans automatically be added to the test-configuration, if 
+they are encountered as "Available beans".
+
+
 Make test driven development of ejb-3.x services and processes easy.
 Supports:
 
@@ -188,7 +243,7 @@ by copying them from another Instance of the test-class which is created during 
 	<ejb-cdi-unit.version>1.1.16</ejb-cdi-unit.version>
         <weld-se.version>2.3.5.Final</weld-se.version>
         <junit5.version>5.3.0</junit5.version>
-        <surefire.version>2.22.0</surefire.version>
+        <surefire.version>${maven-surefire-plugin.version}</surefire.version>
         <junit-platform.version>1.3.0</junit-platform.version>
 </properties>
 ```

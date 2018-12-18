@@ -1,35 +1,33 @@
 package com.oneandone.ejbcdiunit.ejb;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-
-import java.io.IOException;
+import com.oneandone.cdi.testanalyzer.annotations.SutPackages;
+import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
+import com.oneandone.cdi.tester.CdiUnit2Runner;
+import com.oneandone.cdi.tester.ejb.SessionContextFactory;
+import com.oneandone.cdi.tester.ejb.persistence.SinglePersistenceFactory;
+import com.oneandone.ejbcdiunit.ejbs.StatelessEJB;
+import com.oneandone.ejbcdiunit.ejbs.StatelessNotSupportedEJB;
+import com.oneandone.ejbcdiunit.entities.TestEntity1;
+import com.oneandone.ejbcdiunit.helpers.LoggerGenerator;
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import java.io.IOException;
 
-import org.jglue.cdiunit.AdditionalClasses;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import com.oneandone.ejbcdiunit.EjbUnitRunner;
-import com.oneandone.ejbcdiunit.SessionContextFactory;
-import com.oneandone.ejbcdiunit.ejbs.SingletonEJB;
-import com.oneandone.ejbcdiunit.ejbs.StatelessEJB;
-import com.oneandone.ejbcdiunit.ejbs.StatelessNotSupportedEJB;
-import com.oneandone.ejbcdiunit.entities.TestEntity1;
-import com.oneandone.ejbcdiunit.helpers.LoggerGenerator;
-import com.oneandone.ejbcdiunit.persistence.SinglePersistenceFactory;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 
 /**
  * @author aschoerk
  */
-@RunWith(EjbUnitRunner.class)
-@AdditionalClasses({ StatelessEJB.class, SingletonEJB.class,
-        TestEjb.TestDbPersistenceFactory.class, SessionContextFactory.class, LoggerGenerator.class})
+@RunWith(CdiUnit2Runner.class)
+@SutPackages(StatelessEJB.class)
+@TestClasses({ SessionContextFactory.class, LoggerGenerator.class })
 public class TestEjbNotSupported {
 
     @Inject

@@ -9,14 +9,15 @@ import java.util.concurrent.Future;
 
 import javax.inject.Inject;
 
-import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 
-import com.oneandone.ejbcdiunit.AsynchronousManager;
-import com.oneandone.ejbcdiunit.EjbUnitRunner;
+import com.oneandone.cdi.testanalyzer.annotations.SutClasses;
+import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
+import com.oneandone.cdi.tester.CdiUnit2Runner;
+import com.oneandone.cdi.tester.ejb.AsynchronousManager;
 import com.oneandone.ejbcdiunit.ejbs.CdiAsynchronousBean;
 import com.oneandone.ejbcdiunit.ejbs.CountingBean;
 import com.oneandone.ejbcdiunit.ejbs.SingletonTimerEJB;
@@ -27,8 +28,9 @@ import com.oneandone.ejbcdiunit.helpers.LoggerGenerator;
 /**
  * @author aschoerk
  */
-@RunWith(EjbUnitRunner.class)
-@AdditionalClasses({ StatelessAsynchEJB.class, SingletonTimerEJB.class, StatelessTimerEJB.class, LoggerGenerator.class})
+@RunWith(CdiUnit2Runner.class)
+@TestClasses({ LoggerGenerator.class })
+@SutClasses({ StatelessAsynchEJB.class, SingletonTimerEJB.class, StatelessTimerEJB.class, CdiAsynchronousBean.class })
 public class TestAsynch {
 
     @Inject
@@ -45,6 +47,7 @@ public class TestAsynch {
 
     @Before
     public void beforeTestAsynch() {
+        CountingBean.clear();
         asynchronousManager.setEnqueAsynchronousCalls(true);
     }
 
@@ -66,10 +69,13 @@ public class TestAsynch {
         assertThat(asynchronousManager.thereAreOnces(), is(false));
     }
 
+    @Inject
+    SingletonTimerEJB singletonTimerEJB;
+
     @Test
     public void testTimer() {
-        SingletonTimerEJB a = new SingletonTimerEJB();
-        a.logcall();
+        // SingletonTimerEJB a = new SingletonTimerEJB();
+        singletonTimerEJB.logcall();
         assertThat(CountingBean.get(), is(CountingBean.INITIALCOUNT + 1));
         asynchronousManager.once();
         // 2 calls of timer beans
@@ -84,8 +90,7 @@ public class TestAsynch {
     @Test
     // repeat testTimer to make sure nothing static is left behind
     public void testTimerSecondTest() {
-        SingletonTimerEJB a = new SingletonTimerEJB();
-        a.logcall();
+        singletonTimerEJB.logcall();
         assertThat(CountingBean.get(), is(CountingBean.INITIALCOUNT + 1));
         asynchronousManager.once();
         assertThat(CountingBean.get(), is(CountingBean.INITIALCOUNT + 3));

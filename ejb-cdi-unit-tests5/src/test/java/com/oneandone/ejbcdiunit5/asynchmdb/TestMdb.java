@@ -1,26 +1,33 @@
 package com.oneandone.ejbcdiunit5.asynchmdb;
 
-import com.oneandone.ejbcdiunit.AsynchronousManager;
-import com.oneandone.ejbcdiunit.SessionContextFactory;
-import com.oneandone.ejbcdiunit.ejbs.*;
-import com.oneandone.ejbcdiunit5.JUnit5Extension;
-import com.oneandone.ejbcdiunit5.helpers.LoggerGenerator;
-import org.jglue.cdiunit.AdditionalClasses;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 
 import javax.inject.Inject;
 import javax.jms.JMSException;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import com.oneandone.cdi.testanalyzer.annotations.SutClasses;
+import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
+import com.oneandone.cdi.tester.JUnit5Extension;
+import com.oneandone.cdi.tester.ejb.AsynchronousManager;
+import com.oneandone.cdi.tester.ejb.SessionContextFactory;
+import com.oneandone.ejbcdiunit.ejbs.CdiMdbClient;
+import com.oneandone.ejbcdiunit.ejbs.MdbEjbInfoSingleton;
+import com.oneandone.ejbcdiunit.ejbs.QMdbEjb;
+import com.oneandone.ejbcdiunit.ejbs.QMdbEjb2;
+import com.oneandone.ejbcdiunit.ejbs.SingletonMdbClient;
+import com.oneandone.ejbcdiunit.ejbs.TMdbEjb;
+import com.oneandone.ejbcdiunit5.helpers.LoggerGenerator;
 
 /**
  * @author aschoerk
  */
 @ExtendWith(JUnit5Extension.class)
-@AdditionalClasses({  SessionContextFactory.class, LoggerGenerator.class,
-        QMdbEjb.class, QMdbEjb2.class, TMdbEjb.class })
+@TestClasses({ SessionContextFactory.class, LoggerGenerator.class })
+@SutClasses({ QMdbEjb.class, QMdbEjb2.class, TMdbEjb.class })
 public class TestMdb {
     @Inject
     SingletonMdbClient singletonMdbClient;

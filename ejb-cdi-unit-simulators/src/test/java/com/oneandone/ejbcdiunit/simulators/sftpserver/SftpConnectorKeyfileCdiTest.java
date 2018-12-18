@@ -1,26 +1,24 @@
 package com.oneandone.ejbcdiunit.simulators.sftpserver;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
-import java.util.regex.Pattern;
-
-import javax.inject.Inject;
-
-import org.jglue.cdiunit.AdditionalClasses;
+import com.oneandone.cdi.testanalyzer.annotations.SutPackages;
+import com.oneandone.cdi.tester.CdiUnit2Runner;
+import com.oneandone.ejbcdiunit.simulators.sftpclient.SftpConfiguration;
+import com.oneandone.ejbcdiunit.simulators.sftpclient.SftpConnector;
+import com.oneandone.ejbcdiunit.simulators.sftpclient.TestSftpConfiguration;
+import com.oneandone.ejbcdiunit.simulators.sftpclient.upload.UploadFileStrategy;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.oneandone.ejbcdiunit.EjbUnitRunner;
-import com.oneandone.ejbcdiunit.simulators.sftpclient.SftpConfiguration;
-import com.oneandone.ejbcdiunit.simulators.sftpclient.SftpConnector;
-import com.oneandone.ejbcdiunit.simulators.sftpclient.TestSftpConfiguration;
-import com.oneandone.ejbcdiunit.simulators.sftpclient.upload.UploadFileStrategy;
+import javax.inject.Inject;
+import java.util.regex.Pattern;
 
-@RunWith(EjbUnitRunner.class)
-@AdditionalClasses({})
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
+@RunWith(CdiUnit2Runner.class)
+@SutPackages(SftpConnector.class)
 public class SftpConnectorKeyfileCdiTest {
 
     static final Pattern DEFAULT_NAME_PATTERN = Pattern.compile(".*");
@@ -106,7 +104,7 @@ public class SftpConnectorKeyfileCdiTest {
         }
     }
 
-    @Ignore  // don't want to expect cloners to have JCE installed
+    @Ignore // don't want to expect cloners to have JCE installed
     @Test
     // test needs "Java Cryptography Extension (JCE) Unlimited Strength" to work correctly
     public void testKeyfileOnlyWithPassword() throws Exception {

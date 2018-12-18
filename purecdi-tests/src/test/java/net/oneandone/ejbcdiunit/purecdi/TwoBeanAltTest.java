@@ -1,50 +1,29 @@
 package net.oneandone.ejbcdiunit.purecdi;
 
-import static org.junit.Assert.assertNotNull;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import javax.enterprise.inject.Alternative;
+import javax.enterprise.inject.Produces;
+import javax.enterprise.inject.spi.DeploymentException;
 import javax.inject.Inject;
 
-import org.jboss.weld.bootstrap.spi.Metadata;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
  * @author aschoerk
  */
-public class TwoBeanAltTest extends TestBaseClass {
-
-    @Override
-    public Collection<String> getBeanClasses() {
-        return Arrays.asList(CdiBean1.class.getName(),
-                // DummyClass.class.getName(),
-                CdiHelperBean.class.getName(),
-                CdiHelperBeanAlt.class.getName());
-    }
-
-    @Override
-    public List<Metadata<String>> getAlternativeClasses() {
-        return Arrays.asList(new Metadata<String>() {
-            @Override
-            public String getValue() {
-                return CdiHelperBeanAlt.class.getName();
-            }
-
-            @Override
-            public String getLocation() {
-                return "In Testcode";
-            }
-        });
-    }
+public class TwoBeanAltTest extends WeldStarterTestBase {
 
     public interface CdiHelperBeanIntf {
         boolean callHelper();
     }
 
     static class Dummy2Class {
+        boolean returnTrue() {
+            return true;
+        }
 
     }
 
@@ -54,12 +33,16 @@ public class TwoBeanAltTest extends TestBaseClass {
         Dummy2Class dummy2Class;
     }
 
-
     @Alternative
     static class CdiHelperBeanAlt implements CdiHelperBeanIntf {
         @Override
         public boolean callHelper() {
             return false;
+        }
+
+        @Produces
+        Dummy2Class produceDummy2Class() {
+            return Mockito.mock(Dummy2Class.class);
         }
     }
 
@@ -87,9 +70,98 @@ public class TwoBeanAltTest extends TestBaseClass {
         }
     }
 
-    @Test
-    public void test() {
-        assertNotNull(this.deploymentException);
+
+
+
+
+    @Test(expected = DeploymentException.class)
+    public void testDeploymentException() {
+        setBeanClasses(CdiBean1.class,
+                CdiHelperBean.class,
+                CdiHelperBeanAlt.class);
+        start();
     }
 
+    @Test(expected = DeploymentException.class)
+    public void testDeploymentExceptionWithAltSet() {
+        setBeanClasses(CdiBean1.class,
+                CdiHelperBean.class,
+                CdiHelperBeanAlt.class);
+        setAlternativeClasses(CdiHelperBeanAlt.class);
+        start();
+    }
+
+
+    @Test
+    public void testWithAlternative() {
+        weldSetup.setBeanClasses(CdiBean1.class,
+                DummyClass.class,
+                Dummy2Class.class,
+                CdiBean1.class,
+                CdiHelperBean.class,
+                CdiHelperBeanAlt.class);
+        weldSetup.setAlternativeClasses(CdiHelperBeanAlt.class);
+        start();
+        assertFalse(selectGet(CdiBean1.class).cdiHelperBean.callHelper());
+    }
+
+    @Test
+    public void testWithAlternativeWithoutOrgClassAvailable() {
+        weldSetup.setBeanClasses(CdiBean1.class,
+                DummyClass.class,
+                Dummy2Class.class,
+                CdiBean1.class,
+                CdiHelperBeanAlt.class);
+        weldSetup.setAlternativeClasses(CdiHelperBeanAlt.class);
+        start();
+        assertFalse(selectGet(CdiBean1.class).cdiHelperBean.callHelper());
+    }
+
+    @Test(expected = DeploymentException.class) // Alternative must be in beanClasses
+    public void testWithAlternativeWithoutAltClassAvailable() {
+        weldSetup.setBeanClasses(
+                DummyClass.class,
+                Dummy2Class.class,
+                CdiBean1.class);
+        weldSetup.setAlternativeClasses(CdiHelperBeanAlt.class);
+        start();
+    }
+
+    @Test
+    public void testWithMock() {
+        setBeanClasses(
+                DummyClass.class,
+                CdiBean1.class,
+                CdiHelperBeanAlt.class);
+        setAlternativeClasses(CdiHelperBeanAlt.class);
+        start();
+        assertFalse(selectGet(CdiBean1.class).cdiHelperBean.callHelper());
+        assertFalse(selectGet(Dummy2Class.class).returnTrue());
+    }
+
+    @Test
+    public void testWithMockCompetingAgainstOriginal() {
+        setBeanClasses(
+                DummyClass.class,
+                Dummy2Class.class, // ambiguus dependency should lead to error
+                CdiBean1.class,
+                CdiHelperBeanAlt.class);
+        setAlternativeClasses(CdiHelperBeanAlt.class);
+        start();
+        assertFalse(selectGet(CdiBean1.class).cdiHelperBean.callHelper());
+        assertFalse(selectGet(Dummy2Class.class).returnTrue());
+    }
+
+    @Test
+    public void testWithMockCompetingAgainstOriginaWithoutAlternative() {
+        setBeanClasses(
+                DummyClass.class,
+                Dummy2Class.class,
+                CdiBean1.class,
+                CdiHelperBean.class);
+        // setAlternativeClasses(CdiHelperBeanAlt.class);
+        start();
+        assertTrue(selectGet(CdiBean1.class).cdiHelperBean.callHelper());
+        assertTrue(selectGet(Dummy2Class.class).returnTrue());
+    }
 }

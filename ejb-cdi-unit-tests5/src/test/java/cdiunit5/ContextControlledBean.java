@@ -11,10 +11,10 @@ import javax.enterprise.inject.Alternative;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 
-import org.jglue.cdiunit.InRequestScope;
 import org.junit.jupiter.api.Assertions;
 
-import com.oneandone.ejbcdiunit.ContextControllerEjbCdiUnit;
+import com.oneandone.cdi.tester.contexts.ContextController;
+import com.oneandone.cdi.tester.contexts.InRequestScope;
 
 /**
  * @author aschoerk
@@ -23,7 +23,7 @@ public class ContextControlledBean {
     private static final AtomicInteger counter = new AtomicInteger(1);
 
     @Inject
-    private ContextControllerEjbCdiUnit contextController;
+    private ContextController contextController;
 
     @Inject
     private ContextControlledBean.TestCounter testCounter1;

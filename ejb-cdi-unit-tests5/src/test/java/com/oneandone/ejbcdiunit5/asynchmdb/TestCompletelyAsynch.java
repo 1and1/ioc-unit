@@ -1,26 +1,28 @@
 package com.oneandone.ejbcdiunit5.asynchmdb;
 
-import com.oneandone.ejbcdiunit.AsynchronousManager;
-import com.oneandone.ejbcdiunit.ejbs.StatelessCompletelyAsynchEJB;
-import com.oneandone.ejbcdiunit5.JUnit5Extension;
+import static org.hamcrest.MatcherAssert.assertThat;
+
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+
+import javax.inject.Inject;
+
 import org.hamcrest.CoreMatchers;
-import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import javax.inject.Inject;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-
-import static org.hamcrest.MatcherAssert.assertThat;
+import com.oneandone.cdi.testanalyzer.annotations.SutClasses;
+import com.oneandone.cdi.tester.JUnit5Extension;
+import com.oneandone.cdi.tester.ejb.AsynchronousManager;
+import com.oneandone.ejbcdiunit.ejbs.StatelessCompletelyAsynchEJB;
 
 
 /**
  * @author aschoerk
  */
 @ExtendWith(JUnit5Extension.class)
-@AdditionalClasses({StatelessCompletelyAsynchEJB.class})
+@SutClasses({ StatelessCompletelyAsynchEJB.class })
 public class TestCompletelyAsynch {
     @Inject
     AsynchronousManager asynchronousManager;

@@ -5,19 +5,19 @@ import static org.junit.Assert.assertTrue;
 
 import javax.inject.Inject;
 
-import org.jglue.cdiunit.ActivatedAlternatives;
-import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.oneandone.ejbcdiunit.EjbUnitRunner;
+import com.oneandone.cdi.testanalyzer.annotations.EnabledAlternatives;
+import com.oneandone.cdi.testanalyzer.annotations.SutPackages;
+import com.oneandone.cdi.tester.CdiUnit2Runner;
 
 /**
  * @author aschoerk
  */
-@RunWith(EjbUnitRunner.class)
-@AdditionalClasses({ CdiBean.class, CdiHelperBean.class })
-@ActivatedAlternatives({ CdiHelperBeanAlt.class })
+@RunWith(CdiUnit2Runner.class)
+@SutPackages({ CdiBean.class })
+@EnabledAlternatives({ CdiHelperBeanAlt.class })
 public class AlternativeTest {
 
     @Inject

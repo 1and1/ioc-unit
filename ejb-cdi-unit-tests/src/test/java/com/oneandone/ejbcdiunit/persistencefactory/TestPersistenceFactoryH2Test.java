@@ -1,19 +1,19 @@
 package com.oneandone.ejbcdiunit.persistencefactory;
 
-import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 
-import com.oneandone.ejbcdiunit.EjbUnitRunner;
+import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
+import com.oneandone.cdi.tester.CdiUnit2Runner;
+import com.oneandone.cdi.tester.ejb.persistence.TestPersistenceFactory;
 import com.oneandone.ejbcdiunit.entities.TestEntity1;
-import com.oneandone.ejbcdiunit.persistence.TestPersistenceFactory;
 
 /**
  * @author aschoerk
  */
-@RunWith(EjbUnitRunner.class)
-@AdditionalClasses({ TestPersistenceFactory.class, TestEntity1.class })
+@RunWith(CdiUnit2Runner.class)
+@TestClasses({ TestPersistenceFactory.class, TestEntity1.class })
 public class TestPersistenceFactoryH2Test extends PersistenceFactoryTestBase {
 
     @BeforeClass

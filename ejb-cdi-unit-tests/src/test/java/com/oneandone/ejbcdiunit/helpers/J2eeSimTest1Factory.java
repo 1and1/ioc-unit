@@ -4,7 +4,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.sql.DataSource;
 
-import com.oneandone.ejbcdiunit.persistence.PersistenceFactory;
+import com.oneandone.cdi.tester.ejb.persistence.PersistenceFactory;
 
 /**
  * @author aschoerk

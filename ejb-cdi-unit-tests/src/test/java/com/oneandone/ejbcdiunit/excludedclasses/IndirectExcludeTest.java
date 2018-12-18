@@ -2,20 +2,27 @@ package com.oneandone.ejbcdiunit.excludedclasses;
 
 import static org.junit.Assert.fail;
 
-import org.jglue.cdiunit.AdditionalClasses;
+import javax.inject.Inject;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.oneandone.ejbcdiunit.EjbUnitRunner;
+import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
+import com.oneandone.cdi.tester.CdiUnit2Runner;
+import com.oneandone.cdi.weldstarter.StarterDeploymentException;
+import com.oneandone.ejbcdiunit.excludedclasses.pcktoinclude.ToExclude;
 
 /**
  * @author aschoerk
  */
-@RunWith(EjbUnitRunner.class)
-@AdditionalClasses({ IndirectExcluding.class })
+@RunWith(CdiUnit2Runner.class)
+@TestClasses({ IndirectExcluding.class, ToExclude.class })
 public class IndirectExcludeTest {
 
-    @Test(expected = RuntimeException.class)
+    @Inject
+    ToExclude toExclude;
+
+    @Test(expected = StarterDeploymentException.class)
     public void test() {
         fail("test should not start");
     }

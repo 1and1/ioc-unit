@@ -27,10 +27,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import com.oneandone.ejbcdiunit.persistence.PersistenceFactory;
-import com.oneandone.ejbcdiunit.persistence.TestClosure;
-import com.oneandone.ejbcdiunit.persistence.TestPersistenceFactory;
-import com.oneandone.ejbcdiunit.persistence.TestTransactionException;
+import com.oneandone.cdi.tester.ejb.persistence.PersistenceFactory;
+import com.oneandone.cdi.tester.ejb.persistence.TestClosure;
+import com.oneandone.cdi.tester.ejb.persistence.TestPersistenceFactory;
+import com.oneandone.cdi.tester.ejb.persistence.TestTransactionException;
 import com.oneandone.ejbcdiunit5.JUnit5Extension;
 
 

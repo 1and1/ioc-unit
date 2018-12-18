@@ -12,6 +12,7 @@ import java.sql.Statement;
 import javax.sql.DataSource;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -57,7 +58,7 @@ public class MvccTest {
             }
             case MYSQL: {
                 if (mariaDb == null) {
-                    DBConfigurationBuilder config = DBConfigurationBuilder.newBuilder().setPort(3406);
+                    DBConfigurationBuilder config = DBConfigurationBuilder.newBuilder().setPort(3407);
                     mariaDb = DB.newEmbeddedDB(config.build());
                     mariaDb.start();
                     mariaDbUrl = config.getURL("test");
@@ -128,6 +129,7 @@ public class MvccTest {
         }
     }
 
+    @Ignore
     @Test
     public void testMariaDb() throws SQLException, ClassNotFoundException, IllegalAccessException, ManagedProcessException, InstantiationException {
         initDb();

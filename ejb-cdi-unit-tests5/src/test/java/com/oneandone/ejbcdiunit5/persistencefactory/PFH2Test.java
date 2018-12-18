@@ -1,20 +1,21 @@
 package com.oneandone.ejbcdiunit5.persistencefactory;
 
-import com.oneandone.ejbcdiunit.persistence.SinglePersistenceFactory;
-import com.oneandone.ejbcdiunit5.JUnit5Extension;
-import org.jglue.cdiunit.AdditionalClasses;
-import org.junit.jupiter.api.extension.ExtendWith;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
+import com.oneandone.cdi.tester.JUnit5Extension;
+import com.oneandone.cdi.tester.ejb.persistence.SinglePersistenceFactory;
+
 /**
  * @author aschoerk
  */
 @ExtendWith(JUnit5Extension.class)
-@AdditionalClasses({ PFH2Test.TestDbSinglePersistenceFactory.class })
+@TestClasses({ PFH2Test.TestDbSinglePersistenceFactory.class })
 public class PFH2Test extends PersistenceFactoryTestBase {
 
     @ApplicationScoped

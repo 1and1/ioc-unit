@@ -3,10 +3,11 @@ package cdiunittests;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 
-import org.jglue.cdiunit.ProducesAlternative;
 import org.mockito.Mock;
 
-import cdiunit.tobetestedcode.HelperClassInTestResources;
+import com.oneandone.cdi.tester.ProducesAlternative;
+
+import ejbcdiunit2.first.cdiunit.tobetestedcode.HelperClassInTestResources;
 
 /**
  * @author aschoerk

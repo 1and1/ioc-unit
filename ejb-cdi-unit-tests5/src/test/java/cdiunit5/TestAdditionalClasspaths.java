@@ -2,15 +2,15 @@ package cdiunit5;
 
 import javax.inject.Inject;
 
-import org.jglue.cdiunit.AdditionalClasspaths;
-import org.jglue.cdiunit.external.ExternalInterface;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import com.oneandone.ejbcdiunit5.JUnit5Extension;
+import com.oneandone.cdi.testanalyzer.annotations.SutClasspaths;
+import com.oneandone.cdi.tester.JUnit5Extension;
+import com.oneandone.ejbcdiunit.cdiunit.ExternalInterface;
 
-@AdditionalClasspaths(ExternalInterface.class)
+@SutClasspaths(ExternalInterface.class)
 @ExtendWith(JUnit5Extension.class)
 public class TestAdditionalClasspaths {
 

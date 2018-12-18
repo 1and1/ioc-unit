@@ -1,28 +1,34 @@
 package com.oneandone.ejbcdiunit5.asynchmdb;
 
-import com.oneandone.ejbcdiunit.AsynchronousManager;
-import com.oneandone.ejbcdiunit.ejbs.*;
-import com.oneandone.ejbcdiunit5.JUnit5Extension;
-import com.oneandone.ejbcdiunit5.helpers.LoggerGenerator;
-import org.jglue.cdiunit.AdditionalClasses;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.is;
+
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+
+import javax.inject.Inject;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
 
-import javax.inject.Inject;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.is;
+import com.oneandone.cdi.testanalyzer.annotations.SutClasses;
+import com.oneandone.cdi.tester.JUnit5Extension;
+import com.oneandone.cdi.tester.ejb.AsynchronousManager;
+import com.oneandone.ejbcdiunit.ejbs.CdiAsynchronousBean;
+import com.oneandone.ejbcdiunit.ejbs.CountingBean;
+import com.oneandone.ejbcdiunit.ejbs.SingletonTimerEJB;
+import com.oneandone.ejbcdiunit.ejbs.StatelessAsynchEJB;
+import com.oneandone.ejbcdiunit.ejbs.StatelessTimerEJB;
+import com.oneandone.ejbcdiunit5.helpers.LoggerGenerator;
 
 /**
  * @author aschoerk
  */
 @ExtendWith(JUnit5Extension.class)
-@AdditionalClasses({ StatelessAsynchEJB.class, SingletonTimerEJB.class, StatelessTimerEJB.class, LoggerGenerator.class})
+@SutClasses({ StatelessAsynchEJB.class, SingletonTimerEJB.class, StatelessTimerEJB.class, LoggerGenerator.class })
 public class TestAsynch {
 
     @Inject

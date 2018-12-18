@@ -4,21 +4,21 @@ import static org.hamcrest.Matchers.is;
 
 import javax.inject.Inject;
 
-import org.jglue.cdiunit.AdditionalPackages;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.oneandone.ejbcdiunit.EjbUnitRunner;
+import com.oneandone.cdi.testanalyzer.annotations.TestPackages;
+import com.oneandone.cdi.tester.CdiUnit2Runner;
 import com.oneandone.ejbcdiunit.excludedclasses.pcktoinclude.ToExclude;
 import com.oneandone.ejbcdiunit.excludedclasses.pcktoinclude.ToInclude;
 
 /**
  * @author aschoerk
  */
-@RunWith(EjbUnitRunner.class)
-@AdditionalPackages({ ToInclude.class })
+@RunWith(CdiUnit2Runner.class)
+@TestPackages({ ToInclude.class })
 public class ExcludeNegativeTest {
 
     @Inject
