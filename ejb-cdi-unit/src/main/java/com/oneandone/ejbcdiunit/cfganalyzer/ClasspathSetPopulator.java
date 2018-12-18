@@ -1,10 +1,12 @@
 package com.oneandone.ejbcdiunit.cfganalyzer;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -75,21 +77,21 @@ class ClasspathSetPopulator {
         return manifestURLs;
     }
 
-    public void invoke(Set<URL> cdiClasspathEntries) throws IOException {
+    public void invoke(Set<URI> cdiClasspathEntries) throws IOException {
 
         String systemClasspath = System.getProperty("java.class.path");
         String pathseparator = System.getProperty("path.separator");
         String[] classpathes = systemClasspath.split(pathseparator);
-        Set<URL> classpathEntries = new HashSet<>();
+        Set<URI> classpathEntries = new HashSet<>();
         for (String path: classpathes) {
-            classpathEntries.add(new File(path).toURL());
+            classpathEntries.add(new File(path).toURI());
         }
 
         // ClassLoader classLoader = ClasspathSetPopulator.class.getClassLoader();
         // Set<URL> classpathEntries = new HashSet<URL>(Arrays.asList(((URLClassLoader) classLoader).getURLs()));
 
         // If this is surefire we need to get the original claspath
-        try (JarInputStream firstEntry = new JarInputStream(classpathEntries.iterator().next().openStream())) {
+        try (JarInputStream firstEntry = new JarInputStream(classpathEntries.iterator().next().toURL().openStream())) {
             Manifest manifest = firstEntry.getManifest();
             if (manifest != null) {
                 String classpath = (String) manifest.getMainAttributes().get(Attributes.Name.CLASS_PATH);
@@ -97,32 +99,43 @@ class ClasspathSetPopulator {
                     String[] manifestEntries = classpath.split(" ?file:");
                     for (String entry : manifestEntries) {
                         if (!entry.isEmpty()) {
-                            classpathEntries.add(new URL("file:" + entry));
+                            classpathEntries.add(new URL("file:" + entry).toURI());
                         }
                     }
                 }
             }
+        } catch (URISyntaxException e) {
+            throw new IOException(e);
         }
 
-        for (URL url : classpathEntries) {
-            URLClassLoader cl = new URLClassLoader(new URL[] { url }, null);
+        for (URI uri : classpathEntries) {
+            URL url = uri.toURL();
+            URLClassLoader cl = new URLClassLoader(new URL[] {url}, null);
             try {
 
                 if (url.getFile().endsWith("/classes/")) {
                     URL webInfBeans = new URL(url, "../../src/main/WEB-INF/beans.xml");
                     try {
-                        webInfBeans.openConnection().connect();
-                        cdiClasspathEntries.add(url);
-                    } catch (IOException e) {
+                        try {
+                            webInfBeans.openConnection().connect();
+                        } catch (FileNotFoundException fnfe) {
+                            webInfBeans = new URL(url, "../../src/main/webapp/WEB-INF/beans.xml");
+                            webInfBeans.openConnection().connect();
+                        }
+                        cdiClasspathEntries.add(url.toURI());
+                    }
+                    catch (IOException e) {
 
                     }
                 }
                 // TODO beans.xml is no longer required by CDI (1.1+)
                 URL resource = cl.getResource("META-INF/beans.xml");
-                boolean ejbCdiUnit = url.equals(ClasspathSetPopulator.class.getProtectionDomain().getCodeSource().getLocation());
+                boolean ejbCdiUnit = url.toURI().equals(ClasspathSetPopulator.class.getProtectionDomain().getCodeSource().getLocation().toURI());
                 if (ejbCdiUnit || resource != null || isDirectory(url)) {
-                    cdiClasspathEntries.add(url);
+                    cdiClasspathEntries.add(url.toURI());
                 }
+            } catch (URISyntaxException e) {
+                throw new IOException(e);
             } finally {
                 try {
                     Method method = cl.getClass().getMethod("close");
@@ -133,8 +146,8 @@ class ClasspathSetPopulator {
             }
         }
         log.trace("CDI classpath classpathEntries discovered:");
-        for (URL url : cdiClasspathEntries) {
-            log.trace("{}", url);
+        for (URI uri : cdiClasspathEntries) {
+            log.trace("{}", uri);
         }
     }
 

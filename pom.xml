@@ -113,7 +113,7 @@
                 <module>cdi-test-analyzer</module>
                 <module>cdi-test-mocks</module>
                 <module>purecdi-tests</module>
-                <module>ejb-cdi-unit</module>
+                <!--module>ejb-cdi-unit</module-->
                 <module>ejb-cdi-unit-test-war</module>
                 <module>ejb-cdi-unit-tests</module>
                 <module>ejb-cdi-unit-simulators</module>
