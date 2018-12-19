@@ -4,8 +4,8 @@ ejb-cdi-unit
 # Currently 
 
 In this branch there is no ejb-cdi-unit anymore.
-The past showed that it is sometimes quite cumbersome to create a new test for an existing module. There causes for that 
-lie in the most of the time helping intelligence of CDI-Unit in adding classes to the test-configuration.
+The past showed that it is sometimes quite cumbersome to create a new test for an existing module. The causes for that 
+lie in the, most of the time helpful, intelligence of CDI-Unit in adding classes to the test-configuration.
 There is more about that in ....
 
 Therefore a module has been developed that 
