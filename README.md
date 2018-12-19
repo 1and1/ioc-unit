@@ -18,12 +18,12 @@ in their function to the CDI-Unit-Annotations
 
 ## Defined and Available classes
 
-Defined classes are: 
+**Defined classes** are: 
 * The Testclass
 * Classes added by Annotations @TestClasses, @SutClasses
 * Will be added to the configuration to be started when weld starts in any event.
 
-Available classes are:
+**Available classes** are:
 * Classes added by Annotations @TestPackages, @SutPackages, @TestClasspaths, @SutClasspaths
 * Will be added to the configuration
 ** if an instance of themselves can be used as inject
@@ -32,19 +32,21 @@ Available classes are:
 
 ## Test-Sut
 
-Testclasses are
+**Testclasses** are
 * The Testclass itself
-* All classes added usinig @TestClasses,@TestPackages,@TestClasspaths
+* All classes added using @TestClasses,@TestPackages,@TestClasspaths
 
-Sutclasses are
-* All classes added usinig @SutClasses,@SutPackages,@SutClasspaths
+**Sutclasses** are
+* All classes added using @SutClasses,@SutPackages,@SutClasspaths
 
 In case of ambiguities, Testclasses get priority over Sutclasses
 
 ## Alternatives
-If a producer or a class itself or containing producers are enabled themselves or by stereotype the these 
-get priority over other classes possibly usable for injects. Alternative-Stereotypes must be encountered
-using @SutClasses or @TestClasses. @ProducesAlternative is defined by default.
+
+If something is defined as Alternative according to the CDI-Spec and enabled according CDI-Spec. They get priority over 
+other productions usable for injects. Alternative-Stereotypes must be added to the configuration
+using @SutClasses or @TestClasses. @ProducesAlternative is defined by default. Alternative-Classes can be added using 
+@EnabledAlternatives.
 
 
 

@@ -1,7 +1,5 @@
 package com.oneandone.cdi.tester;
 
-import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_METHOD;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -15,7 +13,6 @@ import javax.enterprise.inject.spi.BeanManager;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -53,7 +50,7 @@ public class JUnit5Extension implements BeforeEachCallback,
     InitialContext initialContext;
 
     public JUnit5Extension() {
-        if (testExtensionServices.size() == 0) {
+        if(testExtensionServices.size() == 0) {
             ServiceLoader<TestExtensionService> loader = ServiceLoader.load(TestExtensionService.class);
             final Iterator<TestExtensionService> testExtensionServiceIterator = loader.iterator();
             while (testExtensionServiceIterator.hasNext()) {
@@ -69,15 +66,16 @@ public class JUnit5Extension implements BeforeEachCallback,
     }
 
     private void shutdownWeldIfRunning(boolean ignoreException) throws NamingException {
-        if (weldStarter != null) {
+        if(weldStarter != null) {
             logger.trace("----> shutting down Weld");
-            if (ignoreException) {
+            if(ignoreException) {
                 try {
                     weldStarter.tearDown();
                 } catch (Throwable thw) {
                     logger.debug("Ignored {}", thw);
                 }
-            } else {
+            }
+            else {
                 weldStarter.tearDown();
             }
             weldStarter = null;
@@ -87,19 +85,19 @@ public class JUnit5Extension implements BeforeEachCallback,
     private Object createTestInstance(Class<?> clazz) throws Exception {
         startupException = null;
         shutdownWeldIfRunning(false);
-        if (weldStarter == null) {
+        if(weldStarter == null) {
             logger.trace("----> starting up Weld.");
 
             weldStarter = WeldSetupClass.getWeldStarter();
             String version = weldStarter.getVersion();
-            if ("2.2.8 (Final)".equals(version) || "2.2.7 (Final)".equals(version)) {
+            if("2.2.8 (Final)".equals(version) || "2.2.7 (Final)".equals(version)) {
                 startupException = new Exception("Weld 2.2.8 and 2.2.7 are not supported. Suggest upgrading to 2.2.9");
             }
 
             System.setProperty("java.naming.factory.initial", "com.oneandone.cdi.tester.naming.CdiTesterContextFactory");
 
             try {
-                if (cdiConfigCreator == null) {
+                if(cdiConfigCreator == null) {
                     InitialConfiguration cfg = new InitialConfiguration();
                     cfg.testClass = clazz;
                     cfg.testMethod = testMethod;
@@ -109,7 +107,7 @@ public class JUnit5Extension implements BeforeEachCallback,
                 }
 
                 weldSetup = cdiConfigCreator.buildWeldSetup(testMethod);
-                if (testExtensionServices != null) {
+                if(testExtensionServices != null) {
                     for (TestExtensionService te : testExtensionServices) {
                         te.preStartupAction(weldSetup);
                     }
@@ -118,11 +116,11 @@ public class JUnit5Extension implements BeforeEachCallback,
             } catch (ClassFormatError e) {
                 startupException = parseClassFormatError(e);
             } catch (Throwable e) {
-                if (startupException == null) {
+                if(startupException == null) {
                     startupException = e;
                 }
             } // store info about explicit param injection, either from global settings or from annotation on the test class
-            if (startupException != null) {
+            if(startupException != null) {
                 return clazz.newInstance(); // prepare default, to allow beforeEach to handle exception.
             }
             System.setProperty("java.naming.factory.initial", "com.oneandone.cdi.tester.naming.CdiTesterContextFactory");
@@ -130,7 +128,7 @@ public class JUnit5Extension implements BeforeEachCallback,
             final BeanManager beanManager = weldStarter.get(BeanManager.class);
             initialContext.bind("java:comp/BeanManager", beanManager);
             creationalContexts = new CreationalContexts(beanManager);
-            if (testExtensionServices != null) {
+            if(testExtensionServices != null) {
                 for (TestExtensionService te : testExtensionServices) {
                     te.postStartupAction(creationalContexts);
                 }
@@ -143,56 +141,24 @@ public class JUnit5Extension implements BeforeEachCallback,
         return null;
     }
 
-    private Class<?> findEnclosingClass(Class<?> clazz) {
-        Class<?> enclosingClazz = clazz;
-        while (enclosingClazz.getEnclosingClass() != null)
-            enclosingClazz = enclosingClazz.getEnclosingClass();
-        return enclosingClazz;
-    }
-
-    public void initWeld() {
-        if (startupException == null) {
-            try {
-                weldStarter.start(weldSetup);
-            } catch (Throwable e) {
-                if (startupException == null) {
-                    startupException = e;
-                }
-                if (e instanceof ClassFormatError) {
-                    throw e;
-                }
-            }
-        }
-    }
 
     private ClassFormatError parseClassFormatError(ClassFormatError e) {
-        if (e.getMessage().startsWith(ABSENT_CODE_PREFIX)) {
+        if(e.getMessage().startsWith(ABSENT_CODE_PREFIX)) {
             String offendingClass = e.getMessage().substring(ABSENT_CODE_PREFIX.length());
             URL url = JUnit5Extension.class.getClassLoader().getResource(offendingClass + ".class");
 
             return new ClassFormatError("'" + offendingClass.replace('/', '.')
-                    + "' is an API only class. You need to remove '"
-                    + url.toString().substring(9, url.toString().indexOf("!")) + "' from your classpath");
-        } else {
+                                        + "' is an API only class. You need to remove '"
+                                        + url.toString().substring(9, url.toString().indexOf("!")) + "' from your classpath");
+        }
+        else {
             return e;
         }
     }
 
-
-    private TestInstance.Lifecycle determineTestLifecycle(ExtensionContext ec) {
-        // check the test for import org.junit.jupiter.api.TestInstance annotation
-        TestInstance annotation = ec.getRequiredTestClass().getAnnotation(TestInstance.class);
-        if (annotation != null) {
-            return annotation.value();
-        } else {
-            return PER_METHOD;
-        }
-    }
-
-
     @Override
     public void handleTestExecutionException(ExtensionContext extensionContext, Throwable throwable) throws Throwable {
-        if (startupException != null) {
+        if(startupException != null) {
             logger.info("\"{}\" Ignored because of StartupException \"{}\"", throwable, startupException.getMessage());
             return;
         }
@@ -204,10 +170,11 @@ public class JUnit5Extension implements BeforeEachCallback,
             throws TestInstantiationException {
         try {
             logger.trace("---->createTestInstance {} {}", testInstanceFactoryContext.getTestClass(), testInstanceFactoryContext.getOuterInstance());
-            if (!testInstanceFactoryContext.getOuterInstance().isPresent()) {
+            if(!testInstanceFactoryContext.getOuterInstance().isPresent()) {
                 Object test = this.createTestInstance(testInstanceFactoryContext.getTestClass());
                 return test;
-            } else {
+            }
+            else {
                 final Object outerInstance = testInstanceFactoryContext.getOuterInstance().get();
                 Constructor<?> c = testInstanceFactoryContext.getTestClass().getDeclaredConstructor(outerInstance.getClass());
                 c.setAccessible(true);
@@ -220,21 +187,23 @@ public class JUnit5Extension implements BeforeEachCallback,
 
     @Override
     public void beforeEach(final ExtensionContext extensionContext) throws Exception {
-        if (startupException != null) {
+        if(startupException != null) {
             this.testMethod = extensionContext.getTestMethod().orElse(null);
             this.testClass = extensionContext.getTestClass().orElse(null);
-            if (extensionContext.getTestMethod().isPresent()
-                    && extensionContext.getTestMethod().get().isAnnotationPresent(ExpectedStartupException.class)) {
+            if(extensionContext.getTestMethod().isPresent()
+               && extensionContext.getTestMethod().get().isAnnotationPresent(ExpectedStartupException.class)) {
                 ExpectedStartupException ann = extensionContext.getTestMethod().get().getAnnotation(ExpectedStartupException.class);
-                if (ann.value().isAssignableFrom(startupException.getClass())) {
+                if(ann.value().isAssignableFrom(startupException.getClass())) {
                     shutdownWeldIfRunning(true);
                     return;
                 }
             }
-            if (startupException instanceof Exception)
+            if(startupException instanceof Exception) {
                 throw (Exception) startupException;
-            else
+            }
+            else {
                 throw new RuntimeException(startupException);
+            }
         }
     }
 

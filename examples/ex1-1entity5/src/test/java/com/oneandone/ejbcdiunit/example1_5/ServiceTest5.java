@@ -27,6 +27,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import com.oneandone.cdi.testanalyzer.annotations.SutClasses;
+import com.oneandone.cdi.tester.JUnit5Extension;
 import com.oneandone.cdi.tester.ejb.persistence.PersistenceFactory;
 import com.oneandone.cdi.tester.ejb.persistence.TestClosure;
 import com.oneandone.cdi.tester.ejb.persistence.TestPersistenceFactory;
@@ -39,7 +41,7 @@ import com.oneandone.ejbcdiunit5.JUnit5Extension;
  */
 @ExtendWith(JUnit5Extension.class)
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
-@AdditionalClasses({ Service.class, TestPersistenceFactory.class })
+@SutClasses({ Service.class, TestPersistenceFactory.class })
 public class ServiceTest5 {
     @Inject
     ServiceIntf sut;

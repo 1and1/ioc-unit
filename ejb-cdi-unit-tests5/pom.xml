@@ -76,11 +76,6 @@
             <version>1.0.9</version>
             <scope>test</scope>
         </dependency>
-        <!--dependency>
-            <groupId>org.jglue.cdi-unit</groupId>
-            <artifactId>cdi-unit-tests-external-dependency</artifactId>
-            <version>3.0.1</version>
-        </dependency-->
 
         <!-- testing -->
         <dependency>

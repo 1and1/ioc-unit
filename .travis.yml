@@ -24,7 +24,6 @@ env:
   JUNIT_PROFILE=junit4
 
 
-
 # We don't want to overtax travis (or get throttled), so we try to limit the number of combinations.
 # Current strategy is, for each supported minor version of Weld, to test one early point release plus
 # the most recent point release, plus some point releases which caused problems.s
