@@ -56,12 +56,7 @@ public class EjbTestExtensionService implements TestExtensionService {
     }
 
     @Override
-    public Collection<Extension> getExtensions() {
-        return Collections.EMPTY_LIST;
-    }
-
-    @Override
-    public Collection<Class<? extends Annotation>> extraClassAnnotations() {
+    public List<Class<? extends Annotation>> extraClassAnnotations() {
         return Arrays.asList(EjbJarClasspath.class);
     }
 
@@ -105,8 +100,8 @@ public class EjbTestExtensionService implements TestExtensionService {
     }
 
     @Override
-    public Collection<Class<?>> testClasses() {
-        HashSet<Class<?>> result = new HashSet<Class<?>>() {
+    public List<Class<?>> testClasses() {
+        List<Class<?>> result = new ArrayList<Class<?>>() {
             private static final long serialVersionUID = -1661631254833065243L;
 
             {

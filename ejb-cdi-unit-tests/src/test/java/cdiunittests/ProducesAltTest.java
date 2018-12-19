@@ -15,8 +15,8 @@ import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
 import com.oneandone.cdi.tester.CdiUnit2Runner;
 import com.oneandone.cdi.tester.ProducesAlternative;
 
-import ejbcdiunit2.first.cdiunit.tobetestedcode.HelperClass;
-import ejbcdiunit2.first.cdiunit.tobetestedcode.Sut;
+import cditester.cdiunit.tobetestedcode.HelperClass;
+import cditester.cdiunit.tobetestedcode.Sut;
 
 /**
  * @author aschoerk

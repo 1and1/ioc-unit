@@ -27,8 +27,8 @@ public class ContextsTestExtensionService implements TestExtensionService {
     Logger log = LoggerFactory.getLogger("ContextsTestExtensionService");
 
     @Override
-    public Collection<Class<?>> testClasses() {
-        HashSet<Class<?>> result = new HashSet<Class<?>>() {
+    public List<Class<?>> testClasses() {
+        ArrayList<Class<?>> result = new ArrayList<Class<?>>() {
             private static final long serialVersionUID = -1661631254833065243L;
 
             {

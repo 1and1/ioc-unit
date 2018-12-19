@@ -16,15 +16,15 @@ import com.oneandone.cdi.weldstarter.WeldSetupClass;
  * @author aschoerk
  */
 public interface TestExtensionService {
-    default Collection<Extension> getExtensions() {
+    default List<Extension> getExtensions() {
         return Collections.EMPTY_LIST;
     }
 
-    default Collection<Class<? extends Annotation>> extraClassAnnotations() {
+    default List<Class<? extends Annotation>> extraClassAnnotations() {
         return Collections.EMPTY_LIST;
     }
 
-    default Collection<Class<? extends Annotation>> extraFieldAnnotations() {
+    default List<Class<? extends Annotation>> extraFieldAnnotations() {
         return Collections.EMPTY_LIST;
     }
 
@@ -40,19 +40,19 @@ public interface TestExtensionService {
         return Collections.EMPTY_LIST;
     }
 
-    default Collection<Class<?>> producingAnnotations() {
+    default List<Class<?>> producingAnnotations() {
         return Collections.EMPTY_LIST;
     }
 
-    default Collection<Class<? extends Service>> serviceClasses() {
+    default List<Class<? extends Service>> serviceClasses() {
         return Collections.EMPTY_LIST;
     }
 
-    default Collection<Class<? extends Extension>> extensionClasses() {
+    default List<Class<? extends Extension>> extensionClasses() {
         return Collections.EMPTY_LIST;
     }
 
-    default Collection<Class<?>> testClasses() {
+    default List<Class<?>> testClasses() {
         return Collections.EMPTY_LIST;
     }
 

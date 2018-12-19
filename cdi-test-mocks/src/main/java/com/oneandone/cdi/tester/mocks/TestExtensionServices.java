@@ -16,7 +16,7 @@ import com.oneandone.cdi.weldstarter.spi.TestExtensionService;
  */
 public class TestExtensionServices implements TestExtensionService {
     @Override
-    public Collection<Extension> getExtensions() {
+    public List<Extension> getExtensions() {
         List<Extension> result = new ArrayList<>();
         try {
             if (Mockito.class.getName() != null)

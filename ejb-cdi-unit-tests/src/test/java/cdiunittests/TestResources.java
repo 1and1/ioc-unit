@@ -7,7 +7,7 @@ import org.mockito.Mock;
 
 import com.oneandone.cdi.tester.ProducesAlternative;
 
-import ejbcdiunit2.first.cdiunit.tobetestedcode.HelperClassInTestResources;
+import cditester.cdiunit.tobetestedcode.HelperClassInTestResources;
 
 /**
  * @author aschoerk
