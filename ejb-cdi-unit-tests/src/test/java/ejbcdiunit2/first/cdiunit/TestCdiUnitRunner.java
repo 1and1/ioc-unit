@@ -25,6 +25,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
+import com.oneandone.cdi.testanalyzer.annotations.ExcludedClasses;
 import com.oneandone.cdi.testanalyzer.annotations.SutPackages;
 import com.oneandone.cdi.tester.CdiUnit2Runner;
 import com.oneandone.cdi.tester.ProducesAlternative;
@@ -32,11 +33,10 @@ import com.oneandone.cdi.tester.contexts.ContextController;
 import com.oneandone.cdi.tester.contexts.InConversationScope;
 import com.oneandone.cdi.tester.contexts.InRequestScope;
 import com.oneandone.cdi.tester.contexts.InSessionScope;
-import com.oneandone.ejbcdiunit.cdiunit.ExcludedClasses;
 
 @RunWith(CdiUnit2Runner.class)
-@SutPackages({ AImplementation1.class })
-@ExcludedClasses({ Scoped.class }) // cdi1.0 does not recognize @Vetoed
+@SutPackages({AImplementation1.class})
+@ExcludedClasses({Scoped.class}) // cdi1.0 does not recognize @Vetoed
 public class TestCdiUnitRunner extends BaseTest {
 
 
@@ -89,9 +89,9 @@ public class TestCdiUnitRunner extends BaseTest {
     public static <T> T getContextualInstance(final BeanManager manager, final Class<T> type, Annotation... qualifiers) {
         T result = null;
         Bean<T> bean = (Bean<T>) manager.resolve(manager.getBeans(type, qualifiers));
-        if (bean != null) {
+        if(bean != null) {
             CreationalContext<T> context = manager.createCreationalContext(bean);
-            if (context != null) {
+            if(context != null) {
                 result = (T) manager.getReference(bean, type, context);
             }
         }

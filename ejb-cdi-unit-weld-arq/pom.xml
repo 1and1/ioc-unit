@@ -45,11 +45,6 @@
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>net.oneandone</groupId>
-                <artifactId>ejb-cdi-unit</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.apache.deltaspike.distribution</groupId>
                 <artifactId>distributions-bom</artifactId>
                 <version>${delta-spike.version}</version>
@@ -95,11 +90,6 @@
         <dependency>
             <groupId>net.oneandone</groupId>
             <artifactId>ejb-cdi-unit-test-war</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>net.oneandone</groupId>
-            <artifactId>ejb-cdi-unit</artifactId>
-            <!--exclusions><exclusion><groupId>org.apache.deltaspike.core</groupId><artifactId>deltaspike-core-impl</artifactId></exclusion></exclusions-->
         </dependency>
         <dependency>
             <groupId>com.h2database</groupId>

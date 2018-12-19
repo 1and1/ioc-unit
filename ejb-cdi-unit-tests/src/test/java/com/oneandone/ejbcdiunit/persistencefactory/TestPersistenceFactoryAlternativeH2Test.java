@@ -13,18 +13,18 @@ import javax.transaction.SystemException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.oneandone.cdi.testanalyzer.annotations.ExcludedClasses;
 import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
 import com.oneandone.cdi.tester.CdiUnit2Runner;
 import com.oneandone.cdi.tester.ejb.SessionContextFactory;
 import com.oneandone.cdi.tester.ejb.persistence.TestPersistenceFactory;
-import com.oneandone.ejbcdiunit.cdiunit.ExcludedClasses;
 
 /**
  * @author aschoerk
  */
 @RunWith(CdiUnit2Runner.class)
-@TestClasses({ TestPersistenceFactoryAlternative.class, SessionContextFactory.class })
-@ExcludedClasses({ TestPersistenceFactory.class })
+@TestClasses({TestPersistenceFactoryAlternative.class, SessionContextFactory.class})
+@ExcludedClasses({TestPersistenceFactory.class})
 public class TestPersistenceFactoryAlternativeH2Test extends PersistenceFactoryTestBase {
 
     @Override
@@ -45,36 +45,40 @@ public class TestPersistenceFactoryAlternativeH2Test extends PersistenceFactoryT
     @Override
     public void checkUserTransactionAndDataSource()
             throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException, SQLException {
-        if (isHibernate5())
+        if(isHibernate5()) {
             return;
+        }
         super.checkUserTransactionAndDataSource();
     }
 
     @Test
     public void canExecuteStatementsUsingDataSource() {
-        if (isHibernate5())
+        if(isHibernate5()) {
             return;
+        }
         try {
             try (Connection connection = dataSource.getConnection()) {
                 connection.setAutoCommit(true);
-                String[] lines = new String[] {
+                String[] lines = new String[]{
                         "Insert into test_entity_1 (id, string_attribute, int_attribute) values (10, 's1', 1);",
                         "Insert into test_entity_1 (id, string_attribute, int_attribute) values (11, 's2', 2);",
                 };
                 StringBuffer sb = new StringBuffer();
                 for (String line : lines) {
-                    if (line.startsWith("--")) {
+                    if(line.startsWith("--")) {
                         sb.delete(0, sb.length());
-                    } else {
+                    }
+                    else {
                         try (Statement stmt = connection.createStatement()) {
-                            if (line.trim().endsWith(";")) {
+                            if(line.trim().endsWith(";")) {
                                 try {
                                     stmt.execute(sb.append(line).toString());
                                 } catch (Exception e) {
                                     throw new RuntimeException(e);
                                 }
                                 sb.delete(0, sb.length());
-                            } else {
+                            }
+                            else {
                                 sb.append(line);
                             }
                         }

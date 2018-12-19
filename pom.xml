@@ -113,10 +113,9 @@
                 <module>cdi-test-analyzer</module>
                 <module>cdi-test-mocks</module>
                 <module>purecdi-tests</module>
-                <!--module>ejb-cdi-unit</module-->
                 <module>ejb-cdi-unit-test-war</module>
                 <module>ejb-cdi-unit-tests</module>
-                <module>ejb-cdi-unit-simulators</module>
+                <!--module>ejb-cdi-unit-simulators</module-->
                 <!--module>ejb-cdi-unit-camunda</module-->
                 <module>examples</module>
             </modules>
@@ -161,8 +160,7 @@
             <id>junit5</id>
             <modules>
                 <module>cdi-test-analyzer</module>
-                <!--module>ejb-cdi-unit</module>
-                <module>ejb-cdi-unit5</module-->
+                <module>ejb-cdi-unit5</module>
                 <module>ejb-cdi-unit-test-war</module>
                 <module>ejb-cdi-unit-tests5</module>
                 <module>examples</module>
@@ -380,17 +378,6 @@
 
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>ejb-cdi-unit</artifactId>
-                <version>${project.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.javassist</groupId>
-                        <artifactId>javassist</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
             <dependency>
                 <groupId>javax.enterprise</groupId>
                 <artifactId>cdi-api</artifactId>
