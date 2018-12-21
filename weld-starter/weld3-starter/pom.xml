@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>net.oneandone</groupId>
+        <groupId>net.oneandone.cdi-tester</groupId>
         <artifactId>weld-starter-parent</artifactId>
         <version>2.0.1-alpha-04-SNAPSHOT</version>
     </parent>
@@ -9,7 +9,7 @@
     <artifactId>weld3-starter</artifactId>
     <packaging>jar</packaging>
 
-    <name>net.oneandone:weld3-starter</name>
+    <name>net.oneandone.cdi-tester:weld3-starter</name>
     <description>Supports the starting of a weld 3 standalone engine using a version-independent configuration.
     </description>
     <url>https://github.com/1and1/ejb-cdi-unit</url>
@@ -34,7 +34,7 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>net.oneandone</groupId>
+            <groupId>net.oneandone.cdi-tester</groupId>
             <artifactId>weld-starter-base</artifactId>
             <version>${project.version}</version>
         </dependency>

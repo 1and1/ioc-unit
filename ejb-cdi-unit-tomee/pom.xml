@@ -3,7 +3,7 @@
    <modelVersion>4.0.0</modelVersion>
 
    <parent>
-      <groupId>net.oneandone</groupId>
+      <groupId>net.oneandone.cdi-tester</groupId>
       <artifactId>cdi-tester-parent</artifactId>
       <version>1.1.12-SNAPSHOT</version>
    </parent>
@@ -12,7 +12,7 @@
    <artifactId>ejb-cdi-unit-tomee</artifactId>
    <packaging>war</packaging>
 
-   <name>net.oneandone:ejb-cdi-unit tomee tests</name>
+   <name>net.oneandone.cdi-tester:ejb-cdi-unit tomee tests</name>
    <description>Some tomee tests using the same code as ejb-cdi-unit, to prove that the test-container works
       in the same way as tomee.</description>
    <url>https://github.com/1and1/ejb-cdi-unit</url>

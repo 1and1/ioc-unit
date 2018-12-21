@@ -1,12 +1,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>net.oneandone</groupId>
+    <groupId>net.oneandone.cdi-tester</groupId>
     <artifactId>cdi-tester-parent</artifactId>
     <version>2.0.1-alpha-04-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>net.oneandone:cdi-tester-parent</name>
+    <name>net.oneandone.cdi-tester:cdi-tester-parent</name>
     <description>The parent-pom for ejb-cdi-unit a module developed to ease test driven ejb3.x service-development.
     </description>
     <url>https://github.com/1and1/ejb-cdi-unit</url>
@@ -251,7 +251,7 @@
             </properties>
             <dependencies>
                 <dependency>
-                    <groupId>net.oneandone</groupId>
+                    <groupId>net.oneandone.cdi-tester</groupId>
                     <artifactId>weld1-starter</artifactId>
                     <version>${project.version}</version>
                     <scope>test</scope>
@@ -271,7 +271,7 @@
             </properties>
             <dependencies>
                 <dependency>
-                    <groupId>net.oneandone</groupId>
+                    <groupId>net.oneandone.cdi-tester</groupId>
                     <artifactId>weld2-starter</artifactId>
                     <version>${project.version}</version>
                     <scope>test</scope>
@@ -296,7 +296,7 @@
                     <scope>test</scope>
                 </dependency>
                 <dependency>
-                    <groupId>net.oneandone</groupId>
+                    <groupId>net.oneandone.cdi-tester</groupId>
                     <artifactId>weld2-starter</artifactId>
                     <version>${project.version}</version>
                     <scope>test</scope>
@@ -321,7 +321,7 @@
             </properties>
             <dependencies>
                 <dependency>
-                    <groupId>net.oneandone</groupId>
+                    <groupId>net.oneandone.cdi-tester</groupId>
                     <artifactId>weld3-starter</artifactId>
                     <version>${project.version}</version>
                     <scope>test</scope>
@@ -339,7 +339,7 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>net.oneandone</groupId>
+            <groupId>net.oneandone.cdi-tester</groupId>
             <artifactId>weld-starter-base</artifactId>
             <version>${project.version}</version>
         </dependency>

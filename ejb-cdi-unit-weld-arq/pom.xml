@@ -4,12 +4,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>net.oneandone</groupId>
+        <groupId>net.oneandone.cdi-tester</groupId>
         <artifactId>cdi-tester-parent</artifactId>
         <version>1.1.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>net.oneandone</groupId>
+    <groupId>net.oneandone.cdi-tester</groupId>
     <artifactId>ejb-cdi-unit-weld-arq</artifactId>
     <version>1.1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
@@ -40,7 +40,7 @@
                 <type>pom</type>
             </dependency>
             <dependency>
-                <groupId>net.oneandone</groupId>
+                <groupId>net.oneandone.cdi-tester</groupId>
                 <artifactId>ejb-cdi-unit-test-war</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -88,7 +88,7 @@
             <version>1.1.14.Final</version>
         </dependency>
         <dependency>
-            <groupId>net.oneandone</groupId>
+            <groupId>net.oneandone.cdi-tester</groupId>
             <artifactId>ejb-cdi-unit-test-war</artifactId>
         </dependency>
         <dependency>

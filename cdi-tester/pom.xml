@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>net.oneandone</groupId>
+        <groupId>net.oneandone.cdi-tester</groupId>
         <artifactId>cdi-tester-parent</artifactId>
         <version>2.0.1-alpha-04-SNAPSHOT</version>
     </parent>
@@ -9,7 +9,7 @@
     <artifactId>cdi-tester</artifactId>
     <packaging>jar</packaging>
 
-    <name>net.oneandone:cdi-tester</name>
+    <name>net.oneandone.cdi-tester:cdi-tester</name>
     <description>Allows tests based on cdi only</description>
     <url>https://github.com/1and1/ejb-cdi-unit</url>
 
@@ -32,7 +32,7 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>net.oneandone</groupId>
+            <groupId>net.oneandone.cdi-tester</groupId>
             <artifactId>cdi-test-analyzer</artifactId>
             <version>${project.version}</version>
         </dependency>

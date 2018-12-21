@@ -3,7 +3,7 @@
    <modelVersion>4.0.0</modelVersion>
 
    <parent>
-      <groupId>net.oneandone</groupId>
+      <groupId>net.oneandone.cdi-tester</groupId>
       <artifactId>cdi-tester-parent</artifactId>
       <version>1.1.12-SNAPSHOT</version>
    </parent>
@@ -12,7 +12,7 @@
    <artifactId>ejb-cdi-unit-tomee-repro</artifactId>
    <packaging>war</packaging>
 
-   <name>net.oneandone:ejb-cdi-unit tomee repros</name>
+   <name>net.oneandone.cdi-tester:ejb-cdi-unit tomee repros</name>
    <description>Some simpler tests to reproduce strange tomee scenarios.</description>
    <url>https://github.com/1and1/ejb-cdi-unit</url>
 

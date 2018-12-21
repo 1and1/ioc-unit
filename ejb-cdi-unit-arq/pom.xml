@@ -3,7 +3,7 @@
    <modelVersion>4.0.0</modelVersion>
 
    <parent>
-      <groupId>net.oneandone</groupId>
+      <groupId>net.oneandone.cdi-tester</groupId>
       <artifactId>cdi-tester-parent</artifactId>
        <version>2.0.1-alpha-04-SNAPSHOT</version>
    </parent>
@@ -12,7 +12,7 @@
    <artifactId>ejb-cdi-unit-arq</artifactId>
    <packaging>war</packaging>
 
-   <name>net.oneandone:ejb-cdi-unit arquillian tests</name>
+   <name>net.oneandone.cdi-tester:ejb-cdi-unit arquillian tests</name>
    <description>Some arquillian tests using the same code as ejb-cdi-unit, to prove that the test-container works
       in the same way as wildfly 10.</description>
    <url>https://github.com/1and1/ejb-cdi-unit</url>

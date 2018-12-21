@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>net.oneandone</groupId>
+    <groupId>net.oneandone.cdi-tester</groupId>
     <artifactId>ejb-cdi-unit-examples-parent</artifactId>
     <version>2.0.1-alpha-04-SNAPSHOT</version>
     <packaging>pom</packaging>
@@ -92,7 +92,7 @@
             </properties>
             <dependencies>
                 <dependency>
-                    <groupId>net.oneandone</groupId>
+                    <groupId>net.oneandone.cdi-tester</groupId>
                     <artifactId>weld1-starter</artifactId>
                     <version>${project.version}</version>
                     <scope>test</scope>
@@ -112,7 +112,7 @@
             </properties>
             <dependencies>
                 <dependency>
-                    <groupId>net.oneandone</groupId>
+                    <groupId>net.oneandone.cdi-tester</groupId>
                     <artifactId>weld2-starter</artifactId>
                     <version>${project.version}</version>
                     <scope>test</scope>
@@ -137,7 +137,7 @@
                     <scope>test</scope>
                 </dependency>
                 <dependency>
-                    <groupId>net.oneandone</groupId>
+                    <groupId>net.oneandone.cdi-tester</groupId>
                     <artifactId>weld2-starter</artifactId>
                     <version>${project.version}</version>
                     <scope>test</scope>
@@ -162,7 +162,7 @@
             </properties>
             <dependencies>
                 <dependency>
-                    <groupId>net.oneandone</groupId>
+                    <groupId>net.oneandone.cdi-tester</groupId>
                     <artifactId>weld3-starter</artifactId>
                     <version>${project.version}</version>
                     <scope>test</scope>
@@ -171,7 +171,7 @@
         </profile>
     </profiles>
 
-    <name>net.oneandone:ejb-cdi-unit-examples</name>
+    <name>net.oneandone.cdi-tester:ejb-cdi-unit-examples</name>
     <description>The parent-pom for examples using ejb-cdi-unit  for test driven ejb3.x service-development.
     </description>
     <url>https://github.com/1and1/ejb-cdi-unit/ejb-cdi-unit-examples</url>
@@ -252,22 +252,22 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>net.oneandone</groupId>
+                <groupId>net.oneandone.cdi-tester</groupId>
                 <artifactId>cdi-ejb-tester</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>net.oneandone</groupId>
+                <groupId>net.oneandone.cdi-tester</groupId>
                 <artifactId>cdi-tester</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>net.oneandone</groupId>
+                <groupId>net.oneandone.cdi-tester</groupId>
                 <artifactId>cdi-test-mocks</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>net.oneandone</groupId>
+                <groupId>net.oneandone.cdi-tester</groupId>
                 <artifactId>cdi-tester-contexts</artifactId>
                 <version>${project.version}</version>
             </dependency>
