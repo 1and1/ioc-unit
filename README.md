@@ -1,5 +1,6 @@
-ejb-cdi-unit
-============
+cdi-tester (formerly ejb-cdi-unit)
+================================
+Yet Work in Progress, if you are looking for ejb-cdi-unit please checkout the branch https://github.com/1and1/cdi-tester/tree/ejb-cdi-unit
 
 # Currently 
 
@@ -48,13 +49,6 @@ other productions usable for injects. Alternative-Stereotypes must be added to t
 using @SutClasses or @TestClasses. @ProducesAlternative is defined by default. Alternative-Classes can be added using 
 @EnabledAlternatives.
 
-
-
-
-# Open issues
-
-* Should Entities, Message Driven Beans, Startup-Annotated beans automatically be added to the test-configuration, if 
-they are encountered as "Available beans".
 
 
 Make test driven development of ejb-3.x services and processes easy.
