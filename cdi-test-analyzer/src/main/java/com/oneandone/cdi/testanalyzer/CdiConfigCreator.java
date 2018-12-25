@@ -4,6 +4,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.MalformedURLException;
+import java.util.AbstractQueue;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -125,6 +126,7 @@ public class CdiConfigCreator {
             injectsMatcher.match();
 
             currentToBeEvaluated = injectsMatcher.evaluateMatches(problems);
+            builder.incrementLevel();
 
             if (currentToBeEvaluated.size() == 0) {
                 if (builder.injections.size() > 0) {
@@ -139,12 +141,18 @@ public class CdiConfigCreator {
                     if (currentToBeEvaluated.size() == 0 && builder.injections.size() > 0) {
                         // In available classes nothing could be found to produce for the injects
                         // have to stop algrithm.
-                        log.error("New to be started empty but");
+
+                        List<QualifiedType> handled = new ArrayList<>();
                         for (QualifiedType q : builder.injections) {
                             if (!Instance.class.isAssignableFrom(q.getRawtype())
                                     && !InjectionPoint.class.isAssignableFrom(q.getRawtype()))
                                 log.error("Not resolved: {}", q);
+                            else {
+                                handled.add(q);
+                            }
                         }
+                        builder.injections.removeAll(handled);
+                        builder.handledInjections.addAll(handled);
                         break;
                     }
                     // new classes are necessary, so repeat cycle.

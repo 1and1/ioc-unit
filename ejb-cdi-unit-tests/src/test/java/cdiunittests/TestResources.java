@@ -5,7 +5,7 @@ import javax.enterprise.inject.Produces;
 
 import org.mockito.Mock;
 
-import com.oneandone.cdi.tester.ProducesAlternative;
+import com.oneandone.cdi.testanalyzer.annotations.ProducesAlternative;
 
 import cditester.cdiunit.tobetestedcode.HelperClassInTestResources;
 

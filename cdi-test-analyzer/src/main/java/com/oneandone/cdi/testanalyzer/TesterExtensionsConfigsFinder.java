@@ -23,6 +23,8 @@ public class TesterExtensionsConfigsFinder {
     List<Class<? extends Annotation>> injectAnnotations = new ArrayList<>();
     Map<Class<? extends Annotation>, TestExtensionService> extraClassAnnotations = new HashMap<>();
     List<Class<?>> initialClasses = new ArrayList<>();
+    List<Class<?>> fakeClasses = new ArrayList<>();
+
 
     public TesterExtensionsConfigsFinder() {
         if (testExtensionServices == null) {
@@ -40,6 +42,7 @@ public class TesterExtensionsConfigsFinder {
                     extraClassAnnotations.put(annotation, testExtensionService);
                 }
                 initialClasses.addAll(testExtensionService.testClasses());
+                fakeClasses.addAll(testExtensionService.fakeClasses());
             }
         }
     }

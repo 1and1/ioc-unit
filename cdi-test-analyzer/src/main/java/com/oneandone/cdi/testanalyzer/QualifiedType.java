@@ -46,13 +46,19 @@ class QualifiedType {
     private Annotation alternativeStereotype;
     private boolean alternative;  // true if by @Alternative or alternative-stereotype designated as CDI-Alternative
     private Collection<? extends Annotation> injects = null;
+    private boolean fake;
+
+    public boolean isFake() {
+        return fake;
+    }
 
     public QualifiedType(final Class clazz) {
         assert clazz != null;
         this.clazz = clazz;
         this.declaringClass = clazz;
-        if (clazz.getAnnotation(Alternative.class) != null)
+        if(clazz.getAnnotation(Alternative.class) != null) {
             alternative = true;
+        }
     }
 
 
@@ -73,8 +79,8 @@ class QualifiedType {
     void checkGetAlternativeStereoType(Annotation[] annotations) {
         for (Annotation ann : annotations) {
             Class<? extends Annotation> annotationType = ann.annotationType();
-            if (annotationType.getAnnotation(Stereotype.class) != null
-                    && annotationType.getAnnotation(Alternative.class) != null) {
+            if(annotationType.getAnnotation(Stereotype.class) != null
+               && annotationType.getAnnotation(Alternative.class) != null) {
 
                 alternative = true;
                 alternativeStereotype = ann;
@@ -86,8 +92,9 @@ class QualifiedType {
     public QualifiedType(final Method m) {
         assert m != null;
         this.m = m;
-        if (m.getAnnotation(Alternative.class) != null)
+        if(m.getAnnotation(Alternative.class) != null) {
             alternative = true;
+        }
         checkGetAlternativeStereoType(m.getAnnotations());
     }
 
@@ -99,16 +106,18 @@ class QualifiedType {
         assert f != null;
         this.injects = injects;
         this.f = f;
-        if (f.getAnnotation(Alternative.class) != null)
+        if(f.getAnnotation(Alternative.class) != null) {
             alternative = true;
+        }
         checkGetAlternativeStereoType(f.getAnnotations());
     }
 
     private Class getRawtypeInternal() {
         Type t = getTypeInternal();
-        if (t instanceof ParameterizedType) {
+        if(t instanceof ParameterizedType) {
             return (Class<?>) ((ParameterizedType) t).getRawType();
-        } else {
+        }
+        else {
             return (Class<?>) t;
         }
     }
@@ -120,19 +129,20 @@ class QualifiedType {
 
     Class getRawtype() {
         Class res = getRawtypeInternal();
-        if (isProviderOrInstance()) {
+        if(isProviderOrInstance()) {
             ParameterizedType pType = ((ParameterizedType) getTypeInternal());
             return (Class) (pType.getActualTypeArguments()[0]);
-        } else {
+        }
+        else {
             return res;
         }
     }
 
     Set<Annotation> getQualifiers() {
-        if (this.qualifiers == null) {
+        if(this.qualifiers == null) {
             Set<Annotation> tmpQualifiers = new HashSet<>();
             for (Annotation annotation : getAnnotations()) {
-                if (annotation.annotationType().isAnnotationPresent(Qualifier.class)) {
+                if(annotation.annotationType().isAnnotationPresent(Qualifier.class)) {
                     tmpQualifiers.add(annotation);
                 }
             }
@@ -147,85 +157,89 @@ class QualifiedType {
      * @return the type that can be used for matching.
      */
     private Type getTypeInternal() {
-        if (p != null) {
+        if(p != null) {
             return p.getParameterizedType();
         }
-        if (m != null) {
+        if(m != null) {
             return m.getGenericReturnType();
         }
-        if (f != null) {
+        if(f != null) {
             return f.getGenericType();
         }
-        if (clazz != null)
+        if(clazz != null) {
             return clazz;
+        }
         throw new AssertionError();
     }
 
     Type getType() {
         Class res = getRawtypeInternal();
-        if (isProviderOrInstance()) {
+        if(isProviderOrInstance()) {
             ParameterizedType pType = ((ParameterizedType) getTypeInternal());
             return (Class) (pType.getActualTypeArguments()[0]);
-        } else {
+        }
+        else {
             return getTypeInternal();
         }
 
     }
 
     boolean hasAnnotation(Class ann) {
-        if (p != null) {
+        if(p != null) {
             return p.getAnnotation(ann) != null;
         }
-        if (m != null) {
+        if(m != null) {
             return m.getAnnotation(ann) != null;
         }
-        if (f != null) {
+        if(f != null) {
             return f.getAnnotation(ann) != null;
         }
-        if (clazz != null)
+        if(clazz != null) {
             return clazz.getAnnotation(ann) != null;
+        }
         throw new AssertionError();
     }
 
     Annotation[] getAnnotations() {
-        if (p != null) {
+        if(p != null) {
             return p.getAnnotations();
         }
-        if (m != null) {
+        if(m != null) {
             return m.getAnnotations();
         }
-        if (f != null) {
+        if(f != null) {
             return f.getAnnotations();
         }
-        if (clazz != null)
+        if(clazz != null) {
             return clazz.getAnnotations();
+        }
         throw new AssertionError();
     }
 
     public Class getDeclaringClass() {
-        if (p != null) {
+        if(p != null) {
             return m != null ? m.getDeclaringClass() : c.getDeclaringClass();
         }
-        if (m != null) {
+        if(m != null) {
             return m.getDeclaringClass();
         }
-        if (f != null) {
+        if(f != null) {
             return f.getDeclaringClass();
         }
-        if (clazz != null) {
+        if(clazz != null) {
             return declaringClass;
         }
         return null;
     }
 
     public String getMemberName() {
-        if (p != null) {
+        if(p != null) {
             return p.getName();
         }
-        if (m != null) {
+        if(m != null) {
             return m.getName();
         }
-        if (f != null) {
+        if(f != null) {
             return f.getName();
         }
         return null;
@@ -245,15 +259,18 @@ class QualifiedType {
     }
 
     boolean isParameterizedType(Type t) {
-        if (t instanceof ParameterizedType)
+        if(t instanceof ParameterizedType) {
             return true;
+        }
         else {
-            if (t == null || t.equals(Object.class))
+            if(t == null || t.equals(Object.class)) {
                 return false;
+            }
             else {
-                if (t instanceof Class) {
+                if(t instanceof Class) {
                     return isParameterizedType(((Class) t).getGenericSuperclass());
-                } else {
+                }
+                else {
                     return false;
                 }
             }
@@ -262,47 +279,70 @@ class QualifiedType {
 
     public boolean isAssignableTo(QualifiedType q) {
         boolean assignable = TypeUtils.isAssignable(getType(), q.getType()) && qualifiersMatchFromToInject(this, q);
-        if (!assignable)
+        if(!assignable) {
             return assignable;
+        }
         else {
-            if (isParameterizedType(getType()) && !isParameterizedType(q.getType()))
+            if(isParameterizedType(getType()) && !isParameterizedType(q.getType())) {
                 return false;
-            else
+            }
+            else {
                 return true;
+            }
         }
     }
 
     static public boolean injectableIn(Set<Annotation> produced, Set<Annotation> to) {
-        if (to.isEmpty() && produced.isEmpty())
+        if(to.isEmpty()) {
+            if(produced.isEmpty()
+               || produced
+                    .stream()
+                    .anyMatch(a -> a.annotationType().getName().equals("javax.enterprise.inject.Default"))) {
+                return true;
+            }
+        }
+        if(to.size() == 1 && to.iterator().next().annotationType().getName().equals("javax.enterprise.inject.Any")) {
             return true;
-        if (to.size() == 1 && to.iterator().next().annotationType().getName().equals("javax.enterprise.inject.Any"))
-            return true;
+        }
         Set<Annotation> toFiltered = to
                 .stream()
                 .filter(a -> !(a.annotationType().getName().equals("javax.enterprise.inject.Any")
-                        || a.annotationType().getName().equals("javax.enterprise.inject.New")))
+                               || a.annotationType().getName().equals("javax.enterprise.inject.New")))
                 .collect(Collectors.toSet());
-        if (produced.containsAll(toFiltered) && !to.isEmpty())
+        if(produced.containsAll(toFiltered) && !to.isEmpty()) {
             return true;
-        if (produced.size() == 1 && produced.iterator().next().annotationType().getName().equals("javax.enterprise.inject.Default"))
-            if (toFiltered.isEmpty()) // to is Default already checked
+        }
+        if(produced.size() == 1 && produced.iterator().next().annotationType().getName().equals("javax.enterprise.inject.Default")) {
+            if(toFiltered.isEmpty()) // to is Default already checked
+            {
                 return true;
+            }
+        }
         Set<String> producednames = produced.stream().map(a -> a.annotationType().getName()).filter(n -> !n.equals("javax.enterprise.inject.Default"))
                 .collect(Collectors.toSet());
-        if (producednames.size() == 1 && producednames.contains("javax.inject.Named"))
-            if (toFiltered.isEmpty()
-                    || toFiltered.size() == 1 && toFiltered.iterator().next().annotationType().getName().equals("javax.enterprise.inject.Default")) // to
-                                                                                                                                                    // is
-                                                                                                                                                    // Default
-                                                                                                                                                    // already
-                                                                                                                                                    // checked
+        if(producednames.size() == 1 && producednames.contains("javax.inject.Named")) {
+            if(toFiltered.isEmpty()
+               || toFiltered.size() == 1
+                  && toFiltered.iterator().next().annotationType()
+                          .getName().equals("javax.enterprise.inject.Default")) // to
+            // is
+            // Default
+            // already
+            // checked
+            {
                 return true;
-        if (toFiltered.isEmpty()) // produced can not be empty, Default or Named anymore
+            }
+        }
+        if(toFiltered.isEmpty()) // produced can not be empty, Default or Named anymore
+        {
             return false;
-        if (produced.containsAll(toFiltered))
+        }
+        if(produced.containsAll(toFiltered)) {
             return true;
-        if (produced.size() > 0)
+        }
+        if(produced.size() > 0) {
             return false;
+        }
         return false;
     }
 
@@ -314,35 +354,40 @@ class QualifiedType {
     }
 
     private static boolean hasDefault(final Set<Annotation> qualifiersP) {
-        if (qualifiersP.isEmpty())
+        if(qualifiersP.isEmpty()) {
             return true;
+        }
         for (Annotation a : qualifiersP) {
-            if (a.annotationType().getName().equals(Default.class.getName()))
+            if(a.annotationType().getName().equals(Default.class.getName())) {
                 return true;
+            }
         }
         return false;
     }
 
     private static boolean hasAny(final Set<Annotation> qualifiersP) {
         for (Annotation a : qualifiersP) {
-            if (a.annotationType().getName().equals(Any.class.getName()))
+            if(a.annotationType().getName().equals(Any.class.getName())) {
                 return true;
+            }
         }
         return false;
     }
 
     @Override
     public boolean equals(final Object o) {
-        if (this == o)
+        if(this == o) {
             return true;
-        if (o == null || getClass() != o.getClass())
+        }
+        if(o == null || getClass() != o.getClass()) {
             return false;
+        }
         QualifiedType that = (QualifiedType) o;
         return Objects.equals(f, that.f) &&
-                Objects.equals(m, that.m) &&
-                Objects.equals(c, that.c) &&
-                Objects.equals(p, that.p) &&
-                Objects.equals(clazz, that.clazz);
+               Objects.equals(m, that.m) &&
+               Objects.equals(c, that.c) &&
+               Objects.equals(p, that.p) &&
+               Objects.equals(clazz, that.clazz);
     }
 
     @Override
@@ -355,17 +400,22 @@ class QualifiedType {
         Class declaringClass = getDeclaringClass();
         String memberName = getMemberName();
         return "QualifiedType{" +
-                (memberName != null ? " name=" + memberName : "") +
-                " type=" + getType().getTypeName() +
-                (declaringClass != null ? " declared by=" + declaringClass.getSimpleName() : "") +
-                ", qualifiers=" + qualifiers +
-                ", altStereotype=" + alternativeStereotype +
-                ", alt=" + alternative +
-                ", providerOrInstance=" + isProviderOrInstance() +
-                '}';
+               (memberName != null ? " name=" + memberName : "") +
+               " type=" + getType().getTypeName() +
+               (declaringClass != null ? " declared by=" + declaringClass.getSimpleName() : "") +
+               ", qualifiers=" + qualifiers +
+               ", altStereotype=" + alternativeStereotype +
+               ", alt=" + alternative +
+               ", providerOrInstance=" + isProviderOrInstance() +
+               '}';
     }
 
     public void setAlternative() {
         this.alternative = true;
+    }
+
+    public QualifiedType fake() {
+        this.fake = true;
+        return this;
     }
 }

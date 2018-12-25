@@ -7,16 +7,9 @@
         </encoder>
     </appender>
 
-    <logger name="com.oneandone.cdi.testanalyzer" level="info">
+    <logger name="com.oneandone.cdi.testanalyzer" level="trace">
         <appender-ref ref="STDOUT"/>
     </logger>
-    <logger name="org.hibernate.ejb.packaging" level="error">
-        <appender-ref ref="STDOUT"/>
-    </logger>
-    <logger name="org.hibernate.orm.url" level="error">
-        <appender-ref ref="STDOUT"/>
-    </logger>
-
     <root level="info">
         <appender-ref ref="STDOUT"/>
     </root>

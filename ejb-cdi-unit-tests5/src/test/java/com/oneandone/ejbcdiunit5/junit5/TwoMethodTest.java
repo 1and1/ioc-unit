@@ -11,6 +11,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import com.oneandone.cdi.testanalyzer.annotations.SutPackages;
 import com.oneandone.cdi.tester.JUnit5Extension;
 import com.oneandone.ejbcdiunit5.junit5.beans.AppScopedBean1;
 
@@ -18,6 +19,7 @@ import com.oneandone.ejbcdiunit5.junit5.beans.AppScopedBean1;
  * @author aschoerk
  */
 @ExtendWith(JUnit5Extension.class)
+@SutPackages(AppScopedBean1.class)
 public class TwoMethodTest {
 
     public static final int VALUE_INIT = -10;

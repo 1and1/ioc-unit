@@ -1,9 +1,13 @@
 package com.oneandone.cdi.testanalyzer;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The map contained in this class should allow it to find "Injection-Candidates".
@@ -15,17 +19,24 @@ import java.util.Set;
  * @author aschoerk
  */
 public class ProducerMap {
-    private Map<Class<?>, Set<QualifiedType>> map = new HashMap<>();
+    private Logger log = LoggerFactory.getLogger(ProducerMap.class);
+    private Map<String, Set<QualifiedType>> map = new HashMap<>();
 
-    Set<QualifiedType> get(Class<?> c) {
-        return map.get(c);
+    Set<QualifiedType> get(String c) {
+        Set<QualifiedType> tmp = map.get(c);
+        if (tmp == null) {
+            return Collections.EMPTY_SET;
+        } else {
+            return tmp;
+        }
     }
 
     void addToProducerMap(Class c, QualifiedType q) {
-        Set<QualifiedType> existing = map.get(c);
+        log.trace("adding to ProducerMap: {}/{} ", c.getCanonicalName(), q);
+        Set<QualifiedType> existing = map.get(c.getCanonicalName());
         if (existing == null) {
             existing = new HashSet<>();
-            map.put(c, existing);
+            map.put(c.getCanonicalName(), existing);
         }
         existing.add(q);
     }
@@ -42,13 +53,17 @@ public class ProducerMap {
     void addToProducerMap(QualifiedType q) {
         Class c = q.getRawtype();
         Class tmpC = c;
-        while (tmpC != null && !tmpC.equals(Object.class)) {
-            addToProducerMap(tmpC, q);
-            tmpC = tmpC.getSuperclass();
-        }
-        Class[] interfaces = c.getInterfaces();
-        for (Class iface : interfaces) {
-            addInterfaceToProducerMap(iface, q);
+        if (c.isInterface()) {
+            addInterfaceToProducerMap(c, q);
+        } else {
+            while (tmpC != null && !tmpC.equals(Object.class)) {
+                addToProducerMap(tmpC, q);
+                tmpC = tmpC.getSuperclass();
+            }
+            Class[] interfaces = c.getInterfaces();
+            for (Class iface : interfaces) {
+                addInterfaceToProducerMap(iface, q);
+            }
         }
     }
 

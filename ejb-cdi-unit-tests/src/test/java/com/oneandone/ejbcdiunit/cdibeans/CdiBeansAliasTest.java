@@ -9,7 +9,7 @@ import org.junit.runner.RunWith;
 
 import com.oneandone.cdi.testanalyzer.annotations.SutPackages;
 import com.oneandone.cdi.tester.CdiUnit2Runner;
-import com.oneandone.cdi.tester.ProducesAlternative;
+import com.oneandone.cdi.testanalyzer.annotations.ProducesAlternative;
 
 /**
  * @author aschoerk

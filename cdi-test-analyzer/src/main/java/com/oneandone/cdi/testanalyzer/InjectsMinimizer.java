@@ -17,7 +17,7 @@ public class InjectsMinimizer {
     public static HashMultiMap<QualifiedType, QualifiedType> minimize(Collection<QualifiedType> injects, LeveledBuilder builder) {
         HashMultiMap<QualifiedType, QualifiedType> currentMinimum = new HashMultiMap<>();
         for (QualifiedType q : injects) {
-            Set<QualifiedType> altProducer = builder.alternativeMap.get(q.getRawtype());
+            Set<QualifiedType> altProducer = builder.alternativeMap.get(q.getRawtype().getCanonicalName());
             if (altProducer != null) {
                 for (QualifiedType t : altProducer) {
                     if (t.isAssignableTo(q) && t.isAlternative())

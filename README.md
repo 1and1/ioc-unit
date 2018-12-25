@@ -1,6 +1,6 @@
 cdi-tester (formerly ejb-cdi-unit)
 ================================
-Yet Work in Progress, if you are looking for ejb-cdi-unit please checkout the branch https://github.com/1and1/cdi-tester/tree/ejb-cdi-unit
+Yet a "Work in Progress", if you are looking for ejb-cdi-unit please checkout the branch https://github.com/1and1/cdi-tester/tree/ejb-cdi-unit
 
 # Currently 
 
@@ -10,12 +10,61 @@ lie in the, most of the time helpful, intelligence of CDI-Unit in adding classes
 There is more about that in ....
 
 Therefore a module has been developed that 
-* discrimates between Test-Classes and "System under Test"-Classes. This is done using new Annotations which are similar 
+* discrimates between Test-Classes and "System under Test" Sut-Classes. This is done using new Annotations which are similar 
 in their function to the CDI-Unit-Annotations 
 * analyzes the injection points during adding of Classes to the system-configuration. 
 * finds according to so called available classes the best fitting candidate as producer for the injections.
 
+# Usecases
+
+* Test a selection of java classes comprising a service based on CDI and/or Ejb later possibly also on a jBPM-Engine
+* Replace parts of the code to be tested by mocks
+
 # Concepts
+
+## Leveled Builder
+The algorith trying to create a configuration for the standalone engine works in several levels
+
+Initially: the testclass, all defined classes and some initial classes defined by the -tester-jars are input to the 
+first level.
+
+Each level the builder handles contains 3 phases:
+* Analyzing and Collecting Phase: Input classes are analyzed collections of injects and producers are built up.   
+   * configuring annotations of testclasses are interpreted. new defined classes are added to the level and 
+analyzed during this level as well.  
+   * the classes are searched for producers
+   * the classes are searched for injects (fields, constructors and injects)
+   * the classes are searched for static inner classes. these are added as "available" classes.
+* Matching Phase Found injects
+   * all encountered injects will be matched with producers and defined classes
+   * if an inject matches, it is denoted as handled
+   * if there are more than one matches for one inject and one of it originates from a Testclass.
+      * exclude the Sut-Classes comprising the other match. 
+      * Write warning. 
+      * This might lead to dangling other injects! It is an easy decision if the inject is the only match, otherwise search for
+        injects.
+* Fixing Phase builds probably up new input for the next level  
+   * injects not yet matched are tried to be matched using available testclasses and their contained producers
+   * injects not yet matched are tried to be matched using available sutclasses and their contained producers
+   * classes found during the extensionphase are new input to the next level. If more than one classes is found 
+   then the priority is:
+      * enabled Alternatives
+      * testclasses
+      * sutclasses   
+
+## Configuring Annotations
+By using Annotations at the Testclass itself or other classes denoted as Testclasses the configuration information
+provided to Weld-Se is defined.
+These Annotations are _@TestClasses, @SutClasses, @TestPackages, @SutPackages, @TestClasspaths, @SutClasspaths, 
+@EnablesAlternatives, @ExcludedClasses_ 
+Since the building process works in several levels during which "available" classes might be added which themselves 
+might be annotated by configuring annotations, annotations encountered in a later level might contradict decisions made 
+earlier. 
+* An enabled Alternative might have already been excluded as candidate for an inject
+* An inner class denoted as testclass or sutclass because of the containing class, might be changed at a later level by
+a configuring annotation. This will lead to an error if this class already has been used to satisfy an inject in an 
+earlier level.                       
+                 
 
 ## Defined and Available classes
 
@@ -26,21 +75,39 @@ in their function to the CDI-Unit-Annotations
 
 **Available classes** are:
 * Classes added by Annotations @TestPackages, @SutPackages, @TestClasspaths, @SutClasspaths
+* Static inner classes found when adding Defined Classes to the set of available classes.
 * Will be added to the configuration
-** if an instance of themselves can be used as inject
-** if they provide a producer that can be used as inject
-** only if ambiguity heuristics decide their priority against other classes
+   * if an instance of themselves can be used as inject
+   * if they provide a producer that can be used as inject
+   * only if ambiguity heuristics decide their priority against other classes
+
+**Available Candidates** are:
+* no defined class
+* previously available classes
+* the classes themselves or a producer contained matches an inject
+* has been chosen amongst probably multiple candidates to match the inject. The competing classes are 
+rejected candidates.
+* might be a testclass and as such might be annotated by configuring annotations.
+
+**Rejected Candidates** are:
+* no defined classes
+* currently availabe classes but might lead to ambiguity concerning one certain inject
+* the classes themselves or a producer contained matches an inject
+
 
 ## Test-Sut
 
 **Testclasses** are
 * The Testclass itself
 * All classes added using @TestClasses,@TestPackages,@TestClasspaths
+* Static inner classes of Testclasses, if these are not denoted otherwise as Sutclasses
+* Can hold Configuring Annotations 
 
 **Sutclasses** are
 * All classes added using @SutClasses,@SutPackages,@SutClasspaths
+* May not hold Configuring Annotations. If a Sutclass does, a Warning is produced.
 
-In case of ambiguities, Testclasses get priority over Sutclasses
+In case of ambiguities, Testclasses and Producers in Testclasses get priority over Sutclasses and their producers.
 
 ## Alternatives
 

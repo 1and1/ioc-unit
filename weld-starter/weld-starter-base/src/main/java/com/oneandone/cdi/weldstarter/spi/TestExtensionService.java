@@ -30,7 +30,9 @@ public interface TestExtensionService {
 
     default void handleExtraClassAnnotation(final Annotation annotation, Class<?> c) {}
 
-    default void explicitlyExcluded(Class<?> c) {};
+    default void explicitlyExcluded(Class<?> c) {}
+
+    ;
 
     default Collection<Class<? extends Annotation>> injectAnnotations() {
         return Collections.EMPTY_LIST;
@@ -66,11 +68,14 @@ public interface TestExtensionService {
      * Available classes can be evaluated to be forced to be started. The evaluation also can show that some of those classes might be strong
      * candidates to be started.
      *
-     * @param c
-     *            the class
+     * @param c the class
      * @return true if candidate is voted to be started.
      */
     default boolean candidateToStart(Class<?> c) {
         return false;
+    }
+
+    default List<? extends Class<?>> fakeClasses() {
+        return Collections.EMPTY_LIST;
     }
 }

@@ -15,6 +15,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.oneandone.cdi.testanalyzer.annotations.SutClasses;
+import com.oneandone.cdi.testanalyzer.annotations.SutPackages;
+import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
+import com.oneandone.cdi.testanalyzer.annotations.TestPackages;
 import com.oneandone.cdi.tester.JUnit5Extension;
 import com.oneandone.cdi.tester.ejb.SessionContextFactory;
 import com.oneandone.cdi.tester.ejb.persistence.SinglePersistenceFactory;
@@ -28,8 +31,8 @@ import com.oneandone.ejbcdiunit5.helpers.LoggerGenerator;
  * @author aschoerk
  */
 @ExtendWith(JUnit5Extension.class)
-@SutClasses({ StatelessEJB.class, SingletonEJB.class,
-        TestEjb.TestDbPersistenceFactory.class, SessionContextFactory.class, LoggerGenerator.class })
+@SutPackages(StatelessNotSupportedEJB.class)
+@TestClasses({SessionContextFactory.class, LoggerGenerator.class })
 public class TestEjbNotSupported {
 
     @Inject

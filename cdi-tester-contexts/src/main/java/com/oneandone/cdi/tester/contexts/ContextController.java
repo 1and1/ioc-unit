@@ -30,6 +30,7 @@ import javax.servlet.http.HttpSessionEvent;
 
 import org.jboss.weld.context.ConversationContext;
 import org.jboss.weld.context.http.Http;
+import org.jboss.weld.context.http.HttpConversationContext;
 
 import com.oneandone.cdi.tester.contexts.internal.InitialListener;
 import com.oneandone.cdi.tester.contexts.internal.servlet.LifecycleAwareRequest;
@@ -100,7 +101,6 @@ public class ContextController {
 
 	@PreDestroy
 	void destroyContext() {
-
 		listener.contextDestroyed(new ServletContextEvent(context));
 		requests = null;
 	}
@@ -112,6 +112,10 @@ public class ContextController {
 	@Inject
 	@Http
 	private ConversationContext conversationContext;
+
+	public ConversationContext getConversationContext() {
+		return conversationContext;
+	}
 
 	/**
 	 * Start a request.

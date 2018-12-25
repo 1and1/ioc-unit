@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
  */
 public class InjectsMatcher {
     static AtomicInteger instance = new AtomicInteger(0);
-    Logger log = LoggerFactory.getLogger("InjectMatching" + instance.addAndGet(1));
+    Logger log = LoggerFactory.getLogger("com.oneandone.cdi.testanalyzer.InjectMatching" + instance.addAndGet(1));
     HashMultiMap<QualifiedType, QualifiedType> matching = new HashMultiMap<>();
     HashMultiMap<QualifiedType, QualifiedType> ambiguus = new HashMultiMap<>();
     Set<QualifiedType> empty = new HashSet<>();
@@ -35,7 +35,7 @@ public class InjectsMatcher {
 
     public void matchInject(QualifiedType inject) {
         log.trace("matchingInject: {}", inject);
-        Set<QualifiedType> producers = builder.producerMap.get(inject.getRawtype());
+        Set<QualifiedType> producers = builder.producerMap.get(inject.getRawtype().getCanonicalName());
         if (producers == null)
             return;
         // check types and qualifiers of results
@@ -51,12 +51,12 @@ public class InjectsMatcher {
         }
         leaveOnlyEnabledAlternativesIfThereAre(matching.getValues(inject));
         if (matching.getValues(inject).size() == 0) {
-            log.info("No match found for inject {}", inject);
+            log.trace("No match found for inject {}", inject);
             empty.add(inject);
             matching.remove(inject);
         } else if (matching.getValues(inject).size() > 1) {
             for (QualifiedType x : matching.get(inject)) {
-                log.info("Ambiguus match: {} for inject", x, inject);
+                log.trace("Ambiguus match: {} for inject", x, inject);
             }
             ambiguus.put(inject, matching.get(inject));
             matching.remove(inject);
@@ -78,7 +78,7 @@ public class InjectsMatcher {
 
         final HashMultiMap<QualifiedType, QualifiedType> minimizeMap = InjectsMinimizer.minimize(builder.handledInjections, builder);
         for (QualifiedType inject : minimizeMap.keySet()) {
-            Set<QualifiedType> producers = builder.producerMap.get(inject.getRawtype());
+            Set<QualifiedType> producers = builder.producerMap.get(inject.getRawtype().getCanonicalName());
             for (QualifiedType producer : producers) {
                 Class declaringClass = producer.getDeclaringClass();
                 if (builder.beansToBeStarted.contains(declaringClass)) {
@@ -167,7 +167,7 @@ public class InjectsMatcher {
                     log.trace("Found Alternative in Class {}: {} ", declaringClass.getSimpleName(), a);
                     activeAlternatives.add(a);
                 } else {
-                    log.info("Not used Alternative Candidate in Class {}: {} ", declaringClass.getSimpleName(), a);
+                    log.warn("Not used Alternative Candidate in Class {}: {} ", declaringClass.getSimpleName(), a);
                     continue;
                 }
             }
@@ -193,10 +193,14 @@ public class InjectsMatcher {
         for (QualifiedType inject : matching.keySet()) {
             final QualifiedType producingType = matching.getValues(inject).iterator().next();
             if (!builder.beansToBeStarted.contains(producingType.getDeclaringClass())) {
-                log.trace("Unambiguus Producer for Inject {}", inject);
-                log.trace("--- {}", producingType);
-                newToBeStarted.add(producingType.getDeclaringClass());
-                chosenTypes.add(producingType);
+                if (producingType.isFake()) {
+                    log.trace("Fake Unambiguus Producer for Inject {}", inject, producingType);
+                } else {
+                    log.trace("Unambiguus Producer for Inject {}", inject);
+                    log.trace("--- {}", producingType);
+                    newToBeStarted.add(producingType.getDeclaringClass());
+                    chosenTypes.add(producingType);
+                }
             }
             builder.injectHandled(inject);
         }

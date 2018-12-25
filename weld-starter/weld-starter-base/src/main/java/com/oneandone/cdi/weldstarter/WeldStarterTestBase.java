@@ -101,6 +101,7 @@ public class WeldStarterTestBase {
 
     @After
     public void tearDown() {
-        weldStarter.tearDown();
+        if (weldStarter != null)
+            weldStarter.tearDown();
     }
 }

@@ -41,6 +41,7 @@ import com.oneandone.cdi.weldstarter.spi.TestExtensionService;
 class LeveledBuilder {
 
     Logger log = LoggerFactory.getLogger(this.getClass());
+    int level = 0;
 
     Set<QualifiedType> injections = new HashSet<>();
     Set<QualifiedType> produces = new HashSet<>();
@@ -70,6 +71,14 @@ class LeveledBuilder {
     Set<QualifiedType> handledInjections = new HashSet<>();
     public final TesterExtensionsConfigsFinder testerExtensionsConfigsFinder;
 
+    public int getLevel() {
+        return level;
+    }
+
+    public LeveledBuilder incrementLevel() {
+        level++;
+        return this;
+    }
 
     public LeveledBuilder(InitialConfiguration cfg, TesterExtensionsConfigsFinder testerExtensionsConfigsFinder) {
         if (cfg.testClass != null) {
@@ -78,6 +87,10 @@ class LeveledBuilder {
         this.testerExtensionsConfigsFinder = testerExtensionsConfigsFinder;
 
         addClasses(testerExtensionsConfigsFinder.initialClasses, testClasses, testClassesToBeEvaluated);
+        for (Class<?> c: testerExtensionsConfigsFinder.fakeClasses) {
+            addToProducerMap(new QualifiedType(c).fake());
+        }
+
         Method testMethod = cfg.testMethod;
         if (cfg.initialClasses != null) {
             addClasses(cfg.initialClasses, testClasses, testClassesToBeEvaluated);
@@ -174,6 +187,9 @@ class LeveledBuilder {
 
     private void addEnabledAlternatives(Iterable<Class<?>> enabledAlternativesP) {
         for (Class<?> alternative : enabledAlternativesP) {
+            if (level > 0) {
+                log.warn("In Level: {} enabling Alternative {} might be to late.", level, alternative);
+            }
             if (alternative.isAnnotation()
                     && alternative.getAnnotation(Stereotype.class) != null
                     && alternative.getAnnotation(Alternative.class) != null) {
@@ -280,6 +296,8 @@ class LeveledBuilder {
         for (Class innerClass : c.getDeclaredClasses()) {
             if (Modifier.isStatic(innerClass.getModifiers()) && CdiConfigCreator.mightBeBean(innerClass)) {
                 staticInnerClasses.add(innerClass);
+                if (isTestClass(c))
+                    testClassesAvailable.add(innerClass);
                 addToClassMap(innerClass);
                 findInnerClasses(innerClass, staticInnerClasses);
             }
@@ -287,7 +305,7 @@ class LeveledBuilder {
     }
 
     boolean isTestClass(Class<?> c) {
-        if (testClasses.contains(c)) {
+        if (testClasses.contains(c) || testClassesAvailable.contains(c)) {
             return true;
         } else
             return false;
@@ -530,7 +548,7 @@ class LeveledBuilder {
             addInterceptor(c);
         } else if (c.isAnnotation()) {
             if (c.isAnnotationPresent(Stereotype.class) && c.isAnnotationPresent(Alternative.class)) {
-                log.info("Found alternative Stereotype {}", c);
+                log.trace("Found alternative Stereotype {}", c);
                 foundAlternativeStereotypes.add(c);
             } else {
                 elseClasses.add(c);
@@ -569,6 +587,7 @@ class LeveledBuilder {
         tmp.addAll(beansAvailable);
         tmp.removeAll(beansToBeStarted);
         LeveledBuilder result = new LeveledBuilder(new InitialConfiguration(), testerExtensionsConfigsFinder);
+
         for (Class<?> c : tmp) {
             result.available(c); // necessary? already is available
             result.producerFields(c);

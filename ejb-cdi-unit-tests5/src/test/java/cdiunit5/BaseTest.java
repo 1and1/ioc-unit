@@ -6,7 +6,7 @@ import javax.inject.Inject;
 import org.jboss.weld.environment.se.WeldSEBeanRegistrant;
 
 import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
-import com.oneandone.cdi.tester.ProducesAlternative;
+import com.oneandone.cdi.testanalyzer.annotations.ProducesAlternative;
 import com.oneandone.cdi.tester.contexts.ContextController;
 import com.oneandone.cdi.tester.contexts.internal.InConversationInterceptor;
 import com.oneandone.cdi.tester.contexts.internal.InRequestInterceptor;
