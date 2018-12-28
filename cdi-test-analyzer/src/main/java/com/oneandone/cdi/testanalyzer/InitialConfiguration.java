@@ -33,11 +33,11 @@ public class InitialConfiguration {
     /**
      * Classes to be declared as beans to CDI, if there is no collision with classes produced by the Testconfiguration.
      */
-    public Set<Class<?>> suTClasses = new HashSet<>();
+    public Set<Class<?>> sutClasses = new HashSet<>();
     /**
      * Classes of the packages of these classes are included if necessary to support Injects
      */
-    public Set<Class<?>> suTPackages = new HashSet<>(); // managed bean classes in packages of these classes will be created if necessary
+    public Set<Class<?>> sutPackages = new HashSet<>(); // managed bean classes in packages of these classes will be created if necessary
     /**
      * Classes of the packages of these classes are included if necessary to support Injects
      */
@@ -45,7 +45,7 @@ public class InitialConfiguration {
     /**
      * Classes of the classpaths of these classes are included if necessary to support Injects
      */
-    public Set<Class<?>> suTClasspath = new HashSet<>(); // managed bean classes in classpath of these classes will be created if necessary
+    public Set<Class<?>> sutClasspath = new HashSet<>(); // managed bean classes in classpath of these classes will be created if necessary
 
     /**
      * Classes of the classpaths of these classes are included if necessary to support Injects
@@ -81,17 +81,17 @@ public class InitialConfiguration {
     }
 
     public InitialConfiguration sutClasspath(Class<?> clazz) {
-        suTClasspath.add(clazz);
+        sutClasspath.add(clazz);
         return this;
     }
 
     public InitialConfiguration sutClass(Class<?> clazz) {
-        suTClasses.add(clazz);
+        sutClasses.add(clazz);
         return this;
     }
 
     public InitialConfiguration sutPackage(Class<?> clazz) {
-        suTPackages.add(clazz);
+        sutPackages.add(clazz);
         return this;
     }
 

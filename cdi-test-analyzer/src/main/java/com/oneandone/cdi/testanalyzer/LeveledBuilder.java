@@ -1,5 +1,8 @@
 package com.oneandone.cdi.testanalyzer;
 
+import static com.oneandone.cdi.testanalyzer.ConfigStatics.doInClassAndSuperClasses;
+import static com.oneandone.cdi.testanalyzer.ConfigStatics.setToArray;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -13,12 +16,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.decorator.Decorator;
 import javax.enterprise.inject.Alternative;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.Stereotype;
-import javax.enterprise.inject.spi.Extension;
-import javax.interceptor.Interceptor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,15 +38,15 @@ import com.oneandone.cdi.weldstarter.spi.TestExtensionService;
  *
  * @author aschoerk
  */
-class LeveledBuilder {
+class LeveledBuilder extends ConfigCreatorBase {
 
     Logger log = LoggerFactory.getLogger(this.getClass());
     int level = 0;
 
     Set<QualifiedType> injections = new HashSet<>();
     Set<QualifiedType> produces = new HashSet<>();
-    ProducerMap producerMap = new ProducerMap();
-    ProducerMap alternativeMap = new ProducerMap();
+    ProducerMap producerMap = new ProducerMap(null, "");
+    ProducerMap alternativeMap = new ProducerMap(null, "");
     Set<QualifiedType> newAlternatives = new HashSet<>();
     Collection<ProducerPlugin> producerPlugins = Collections.EMPTY_LIST;
     Set<Class<?>> beansToBeStarted = new HashSet<>(); // these beans must be given to CDI to be started
@@ -60,15 +60,8 @@ class LeveledBuilder {
     List<Class<?>> sutClassesToBeEvaluated = new ArrayList<>();
     Set<Class<?>> testClassesAvailable = new HashSet<>();
     Set<Class<?>> sutClassesAvailable = new HashSet<>();
-    Set<Class<?>> foundAlternativeStereotypes = new HashSet<>();
-    Set<Class<?>> foundAlternativeClasses = new HashSet<>();
-    List<Class<?>> decorators = new ArrayList<>();
-    List<Class<?>> interceptors = new ArrayList<>();
-
-    Set<Class<? extends Extension>> extensionClasses = new HashSet<>();
-    List<Extension> extensionObjects = new ArrayList<>();
-    Set<Class<?>> elseClasses = new HashSet<>();
     Set<QualifiedType> handledInjections = new HashSet<>();
+    ElseClasses elseClasses = new ElseClasses();
     public final TesterExtensionsConfigsFinder testerExtensionsConfigsFinder;
 
     public int getLevel() {
@@ -98,8 +91,8 @@ class LeveledBuilder {
         if (cfg.testClasses != null) {
             addClasses(cfg.testClasses, testClasses, testClassesToBeEvaluated);
         }
-        if (cfg.suTClasses != null) {
-            addClasses(cfg.suTClasses, sutClasses, sutClassesToBeEvaluated);
+        if(cfg.sutClasses != null) {
+            addClasses(cfg.sutClasses, sutClasses, sutClassesToBeEvaluated);
         }
         if (cfg.enabledAlternatives != null) {
             addEnabledAlternatives(cfg.enabledAlternatives);
@@ -107,15 +100,17 @@ class LeveledBuilder {
         // prepare available classes
         // they are not further investigated,
         try {
-            if (cfg.suTClasspath != null) {
-                addClasspaths(setToArray(cfg.suTClasspath), true);
+            if(cfg.sutClasspath != null) {
+                addClasspaths(setToArray(cfg.sutClasspath), true);
             }
             if (cfg.testClasspath != null)
                 addClasspaths(setToArray(cfg.testClasspath), false);
-            if (cfg.suTPackages != null)
-                addPackages(setToArray(cfg.suTPackages), true);
-            if (cfg.testPackages != null)
-                addPackages(setToArray(cfg.suTPackages), false);
+            if(cfg.sutPackages != null) {
+                addPackages(setToArray(cfg.sutPackages), true);
+            }
+            if(cfg.testPackages != null) {
+                addPackages(setToArray(cfg.sutPackages), false);
+            }
         } catch (MalformedURLException ex) {
             throw new RuntimeException(ex);
         }
@@ -123,9 +118,6 @@ class LeveledBuilder {
             addExcludedClasses(cfg.excludedClasses);
     }
 
-    private Class<?>[] setToArray(final Set<Class<?>> suTClasspath) {
-        return suTClasspath.toArray(new Class<?>[suTClasspath.size()]);
-    }
 
     public LeveledBuilder available(Class c) {
         beansAvailable.add(c);
@@ -175,7 +167,8 @@ class LeveledBuilder {
         for (Class clazz : tmpClasses) {
             if (isSut && isSutAccordingToServices(clazz)) {
                 addClass(clazz, sutClasses, sutClassesToBeEvaluated);
-            } else if (CdiConfigCreator.mightBeBean(clazz)) {
+            }
+            else if(ConfigStatics.mightBeBean(clazz)) {
                 available(clazz);
                 if (isSut)
                     sutClassesAvailable.add(clazz);
@@ -193,7 +186,7 @@ class LeveledBuilder {
             if (alternative.isAnnotation()
                     && alternative.getAnnotation(Stereotype.class) != null
                     && alternative.getAnnotation(Alternative.class) != null) {
-                this.foundAlternativeStereotypes.add(alternative);
+                this.elseClasses.foundAlternativeStereotypes.add(alternative);
             } else {
                 this.enabledAlternatives.add(alternative);
                 if (alternative.getAnnotation(Alternative.class) == null) {
@@ -214,7 +207,7 @@ class LeveledBuilder {
 
                     }
                     if (!found) {
-                        foundAlternativeClasses.add(alternative);
+                        elseClasses.foundAlternativeClasses.add(alternative);
                     } else {
                         if (!testClasses.contains(alternative)) {
                             testClasses.add(alternative);
@@ -260,7 +253,7 @@ class LeveledBuilder {
             Class altStereoType = q.getAlternativeStereotype() != null ? q.getAlternativeStereotype().annotationType() : null;
             boolean foundStereotype = false;
             if (altStereoType != null) {
-                for (Class c : foundAlternativeStereotypes) {
+                for (Class c : elseClasses.foundAlternativeStereotypes) {
                     if (altStereoType.getName().equals(c.getName())) {
                         foundStereotype = true;
                         break;
@@ -277,24 +270,9 @@ class LeveledBuilder {
     }
 
 
-    private void addDecorator(final Class<?> c) {
-        decorators.add(c);
-
-    }
-
-    private void addInterceptor(final Class<?> c) {
-        interceptors.add(c);
-    }
-
-
-    public Set<Class<? extends Extension>> getExtensionClasses() {
-        return extensionClasses;
-    }
-
-
     private void findInnerClasses(final Class c, final Set<Class<?>> staticInnerClasses) {
         for (Class innerClass : c.getDeclaredClasses()) {
-            if (Modifier.isStatic(innerClass.getModifiers()) && CdiConfigCreator.mightBeBean(innerClass)) {
+            if(Modifier.isStatic(innerClass.getModifiers()) && ConfigStatics.mightBeBean(innerClass)) {
                 staticInnerClasses.add(innerClass);
                 if (isTestClass(c))
                     testClassesAvailable.add(innerClass);
@@ -347,26 +325,20 @@ class LeveledBuilder {
         return this;
     }
 
+
     LeveledBuilder innerClasses(Class c) {
-        return doInClassAndSuperClasses(c, c1 -> findInnerClasses(c1, beansAvailable));
+        doInClassAndSuperClasses(c, c1 -> findInnerClasses(c1, beansAvailable));
+        return this;
     }
 
-    private LeveledBuilder doInClassAndSuperClasses(final Class<?> c, final ClassHandler classHandler) {
-        if (c == null || c.equals(Object.class)) {
-            return this;
-        } else {
-            classHandler.handle(c);
-            doInClassAndSuperClasses(c.getSuperclass(), classHandler);
-            return this;
-        }
-    }
 
     LeveledBuilder injects(Class c) {
-        return doInClassAndSuperClasses(c, c1 -> {
+        doInClassAndSuperClasses(c, c1 -> {
             InjectFinder injectFinder = new InjectFinder(testerExtensionsConfigsFinder);
             injectFinder.find(c1);
             injections.addAll(injectFinder.getInjectedTypes());
         });
+        return this;
     }
 
     LeveledBuilder injectHandled(QualifiedType inject) {
@@ -401,7 +373,7 @@ class LeveledBuilder {
     private boolean containsProducingAnnotation(final Annotation[] annotations) {
         for (ProducerPlugin producerPlugin : producerPlugins) {
             if (producerPlugin.isProducing(annotations)) {
-                extensionClasses.add(producerPlugin.extensionToInstall());
+                elseClasses.extensionClasses.add(producerPlugin.extensionToInstall());
                 return true;
             }
         }
@@ -431,27 +403,29 @@ class LeveledBuilder {
     }
 
     LeveledBuilder testClassAnnotation(Class<?> c) {
-        return doInClassAndSuperClasses(c, c1 -> {
+        doInClassAndSuperClasses(c, c1 -> {
             TestClasses testClassesL = c1.getAnnotation(TestClasses.class);
             if (testClassesL != null) {
                 addClasses(Arrays.asList(testClassesL.value()), this.testClasses, testClassesToBeEvaluated);
             }
         });
+        return this;
     }
 
     LeveledBuilder sutClassAnnotation(Class<?> c) {
-        return doInClassAndSuperClasses(c, c1 -> {
+        doInClassAndSuperClasses(c, c1 -> {
             SutClasses sutClassesL = c1.getAnnotation(SutClasses.class);
             if (sutClassesL != null) {
                 addClasses(Arrays.asList(sutClassesL.value()), this.sutClasses, sutClassesToBeEvaluated);
             }
         });
+        return this;
     }
 
 
     LeveledBuilder extraAnnotations(Class c) {
         if (this.testerExtensionsConfigsFinder.extraClassAnnotations.keySet().size() > 0) {
-            return doInClassAndSuperClasses(c, c1 -> {
+            doInClassAndSuperClasses(c, c1 -> {
                 testerExtensionsConfigsFinder.extraClassAnnotations.keySet()
                         .stream()
                         .map(a -> c1.getAnnotation((Class<? extends Annotation>) (a)))
@@ -465,7 +439,7 @@ class LeveledBuilder {
 
 
     LeveledBuilder packagesAnnotations(Class<?> c) {
-        return doInClassAndSuperClasses(c, c1 -> {
+        doInClassAndSuperClasses(c, c1 -> {
             try {
                 SutPackages sutPackages = c1.getAnnotation(SutPackages.class);
                 if (sutPackages != null) {
@@ -479,10 +453,11 @@ class LeveledBuilder {
                 throw new RuntimeException(e);
             }
         });
+        return this;
     }
 
     LeveledBuilder classpathsAnnotations(Class<?> c) {
-        return doInClassAndSuperClasses(c, c1 -> {
+        doInClassAndSuperClasses(c, c1 -> {
             try {
                 SutClasspaths sutClasspaths = c1.getAnnotation(SutClasspaths.class);
                 if (sutClasspaths != null) {
@@ -496,29 +471,32 @@ class LeveledBuilder {
                 throw new RuntimeException(e);
             }
         });
+        return this;
     }
 
     LeveledBuilder enabledAlternatives(Class<?> c) {
-        return doInClassAndSuperClasses(c, c1 -> {
+        doInClassAndSuperClasses(c, c1 -> {
             EnabledAlternatives enabledAlternativesL = c1.getAnnotation(EnabledAlternatives.class);
 
             if (enabledAlternativesL != null) {
                 addEnabledAlternatives(Arrays.asList(enabledAlternativesL.value()));
             }
         });
+        return this;
     }
 
     LeveledBuilder excludes(Class<?> c) {
-        return doInClassAndSuperClasses(c, c1 -> {
+        doInClassAndSuperClasses(c, c1 -> {
             ExcludedClasses excludedClassesL = c1.getAnnotation(ExcludedClasses.class);
             if (excludedClassesL != null) {
                 addExcludedClasses(Arrays.asList(excludedClassesL.value()));
             }
         });
+        return this;
     }
 
     LeveledBuilder customAnnotations(Class<?> c) {
-        return doInClassAndSuperClasses(c, c1 -> {
+        doInClassAndSuperClasses(c, c1 -> {
             Annotation[] annotations = c1.getAnnotations();
             for (Annotation ann : annotations) {
                 final Class<? extends Annotation> annotationType = ann.annotationType();
@@ -537,32 +515,17 @@ class LeveledBuilder {
                 }
             }
         });
+        return this;
     }
 
     LeveledBuilder elseClass(Class<?> c) {
-        if (CdiConfigCreator.isExtension(c)) {
-            extensionClasses.add((Class<? extends Extension>) c);
-        } else if (c.getAnnotation(Decorator.class) != null) {
-            addDecorator(c);
-        } else if (c.getAnnotation(Interceptor.class) != null) {
-            addInterceptor(c);
-        } else if (c.isAnnotation()) {
-            if (c.isAnnotationPresent(Stereotype.class) && c.isAnnotationPresent(Alternative.class)) {
-                log.trace("Found alternative Stereotype {}", c);
-                foundAlternativeStereotypes.add(c);
-            } else {
-                elseClasses.add(c);
-            }
-        } else {
-            elseClasses.add(c);
-        }
-
+        elseClasses.elseClass(c);
         return this;
     }
 
     boolean isActiveAlternativeStereoType(Annotation c) {
         log.trace("Searching for alternative Stereotype {}", c);
-        for (Class stereoType : foundAlternativeStereotypes) {
+        for (Class stereoType : elseClasses.foundAlternativeStereotypes) {
             if (stereoType.getName().equals(c.annotationType().getName())) {
                 log.trace("Search found alternative Stereotype {}", c);
                 return true;

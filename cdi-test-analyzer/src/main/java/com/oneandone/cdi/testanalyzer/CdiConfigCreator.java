@@ -2,23 +2,18 @@ package com.oneandone.cdi.testanalyzer;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.net.MalformedURLException;
-import java.util.AbstractQueue;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.decorator.Decorator;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Alternative;
 import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.InjectionPoint;
-import javax.inject.Inject;
-import javax.interceptor.Interceptor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,47 +31,12 @@ public class CdiConfigCreator {
     private LeveledBuilder builder;
     private List<ProblemRecord> problems = new ArrayList<>();
 
-    private static boolean isInterceptingBean(Class<?> c) {
-        if (c.getAnnotation(Interceptor.class) != null || c.getAnnotation(Decorator.class) != null) {
-            return true;
-        } else
-            return false;
-    }
-
-    public static boolean mightBeBean(Class<?> c) {
-        if (c.isInterface() || c.isPrimitive() || c.isLocalClass()
-                || c.isAnonymousClass() || c.isLocalClass() || c.isAnnotation()
-                || (c.getEnclosingClass() != null && !Modifier.isStatic(c.getModifiers())))
-            return false;
-        final Constructor<?>[] declaredConstructors = c.getDeclaredConstructors();
-        if (declaredConstructors.length == 0)
-            return false;
-        boolean constructorOk = false;
-        for (Constructor constructor : declaredConstructors) {
-            if (constructor.getParameters().length == 0) {
-                constructorOk = true;
-            } else {
-                if (constructor.getAnnotation(Inject.class) != null)
-                    constructorOk = true;
-            }
-        }
-        if (!constructorOk)
-            return false;
-        if (isExtension(c))
-            return false;
-        return true;
-    }
-
-    public static boolean isExtension(final Class<?> c) {
-        return (Extension.class.isAssignableFrom(c));
-    }
-
     public Collection<Class<? extends Extension>> getExtensions() {
-        return builder.extensionClasses;
+        return builder.elseClasses.extensionClasses;
     }
 
     public Collection<Extension> getExtensionÓbjects() {
-        return builder.extensionObjects;
+        return builder.elseClasses.extensionObjects;
     }
 
     public Set<Class<?>> getEnabledAlternatives() {
@@ -84,7 +44,7 @@ public class CdiConfigCreator {
     }
 
     public Set<Class<?>> getEnabledAlternativeStereotypes() {
-        return builder.foundAlternativeStereotypes;
+        return builder.elseClasses.foundAlternativeStereotypes;
     }
 
     public static class ProblemRecord {
@@ -109,7 +69,7 @@ public class CdiConfigCreator {
     public void create(InitialConfiguration cfg) throws MalformedURLException {
         this.builder = new LeveledBuilder(cfg, new TesterExtensionsConfigsFinder());
         if (cfg.testClass != null && cfg.testClass.getAnnotation(ApplicationScoped.class) == null) {
-            builder.extensionObjects.add(new TestScopeExtension(cfg.testClass));
+            builder.elseClasses.extensionObjects.add(new TestScopeExtension(cfg.testClass));
         }
         List<Class<?>> currentToBeEvaluated = builder.extractToBeEvaluatedClasses();
 
@@ -184,7 +144,7 @@ public class CdiConfigCreator {
                     log.info("Excluded {}", c.getName());
                 } else {
                     didChanges = true;
-                    if (isInterceptingBean(c)) {
+                    if(ConfigStatics.isInterceptingBean(c)) {
                         // not available for injections and no producer fields!!
                         builder.tobeStarted(c)
                                 .innerClasses(c)
@@ -199,7 +159,8 @@ public class CdiConfigCreator {
                                     .extraAnnotations(c)
                                     .excludes(c);
                         }
-                    } else if (mightBeBean(c)) {
+                    }
+                    else if(ConfigStatics.mightBeBean(c)) {
                         builder.tobeStarted(c)
                                 .available(c)
                                 .innerClasses(c)
@@ -318,11 +279,11 @@ public class CdiConfigCreator {
 
 
     private List<Class<?>> getDecorators() {
-        return builder.decorators;
+        return builder.elseClasses.decorators;
     }
 
     private List<Class<?>> getInterceptors() {
-        return builder.interceptors;
+        return builder.elseClasses.interceptors;
     }
 
 }

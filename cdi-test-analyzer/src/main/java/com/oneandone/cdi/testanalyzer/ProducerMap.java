@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,8 +20,81 @@ import org.slf4j.LoggerFactory;
  * @author aschoerk
  */
 public class ProducerMap {
-    private Logger log = LoggerFactory.getLogger(ProducerMap.class);
+    private String mapName = "Unknown";
+    private Logger log = null;
     private Map<String, Set<QualifiedType>> map = new HashMap<>();
+    private Configuration configuration;
+
+    public ProducerMap(final Configuration configuration, String mapName) {
+        this.configuration = configuration;
+        this.mapName = mapName;
+        this.log = LoggerFactory.getLogger(ProducerMap.class.getName() + "_" + mapName);
+    }
+
+    public Set<QualifiedType> findMatchingProducers(final QualifiedType inject) {
+        Set<QualifiedType> matching = new HashSet<>();
+
+        Set<QualifiedType> producers = get(inject.getRawtype().getCanonicalName());
+        // check types and qualifiers of results
+        for (QualifiedType qp : producers) {
+            if(!configuration.getExcludedClasses().contains(qp.getDeclaringClass())) {
+                if(qp.isAssignableTo(inject)) {
+                    ConfigCreator.logger.trace("Qualified Match {} ", qp);
+                    matching.add(qp);
+                }
+            }
+            else {
+                ConfigCreator.logger.info("Ignored producer because of excluded declaring class: {}", qp);
+            }
+        }
+        leaveOnlyEnabledAlternativesIfThereAre(matching);
+        return matching;
+    }
+
+    /**
+     * The Matching Producers might be Alternatives. If so, then check if any of them are enabled. If so then remove the non-alternatives, and the not
+     * enabled ones. If no enabled alternative is there, then remove all alternatives.
+     *
+     * @param matchingProducers
+     */
+    public void leaveOnlyEnabledAlternativesIfThereAre(Set<QualifiedType> matchingProducers) {
+        Set<QualifiedType> alternatives = matchingProducers
+                .stream()
+                .filter(q -> q.isAlternative())
+                .collect(Collectors.toSet());
+        if(!alternatives.isEmpty()) {
+            Set<QualifiedType> activeAlternatives = new HashSet<>();
+
+            for (QualifiedType a : alternatives) {
+                ConfigStatics.logger.trace("Matching alternative: {}", a);
+                Class declaringClass = a.getDeclaringClass();
+                if(a.getAlternativeStereotype() != null) {
+                    if(configuration.isActiveAlternativeStereoType(a.getAlternativeStereotype())) {
+                        ConfigStatics.logger.trace("Found StereotypeAlternative in Class {}: {} ", declaringClass.getSimpleName(), a);
+                        activeAlternatives.add(a);
+                    }
+                    else {
+                        continue;
+                    }
+                }
+                else if(configuration.isAlternative(declaringClass)) {
+                    ConfigStatics.logger.trace("Found Alternative in Class {}: {} ", declaringClass.getSimpleName(), a);
+                    activeAlternatives.add(a);
+                }
+                else {
+                    ConfigStatics.logger.warn("Not used Alternative Candidate in Class {}: {} ", declaringClass.getSimpleName(), a);
+                    continue;
+                }
+            }
+            if(activeAlternatives.size() > 0) {
+                matchingProducers.clear();
+                matchingProducers.addAll(activeAlternatives);
+            }
+            else {
+                matchingProducers.removeAll(alternatives);
+            }
+        }
+    }
 
     Set<QualifiedType> get(String c) {
         Set<QualifiedType> tmp = map.get(c);
@@ -32,7 +106,7 @@ public class ProducerMap {
     }
 
     void addToProducerMap(Class c, QualifiedType q) {
-        log.trace("adding to ProducerMap: {}/{} ", c.getCanonicalName(), q);
+        log.trace("adding: {}/test?{}/{} ", c.getCanonicalName(), configuration.isTestClass(q.getDeclaringClass()), q);
         Set<QualifiedType> existing = map.get(c.getCanonicalName());
         if (existing == null) {
             existing = new HashSet<>();
@@ -49,6 +123,9 @@ public class ProducerMap {
         }
     }
 
+    void addToProducerMap(Class<?> c) {
+        addToProducerMap(new QualifiedType(c));
+    }
 
     void addToProducerMap(QualifiedType q) {
         Class c = q.getRawtype();
