@@ -77,7 +77,7 @@ public class ProducerMap {
                         continue;
                     }
                 }
-                else if(configuration.isAlternative(declaringClass)) {
+                else if(configuration.isEnabledAlternative(declaringClass)) {
                     ConfigStatics.logger.trace("Found Alternative in Class {}: {} ", declaringClass.getSimpleName(), a);
                     activeAlternatives.add(a);
                 }

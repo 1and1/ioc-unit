@@ -12,6 +12,8 @@ import javax.enterprise.inject.Alternative;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 
+import com.oneandone.cdi.testanalyzer.ConfigCreator;
+import com.oneandone.cdi.testanalyzer.SetupCreator;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,7 +32,7 @@ import com.oneandone.cdi.weldstarter.WeldStarterTestBase;
 /**
  * @author aschoerk
  */
-public class CdiConfigBuilderTest extends WeldStarterTestBase {
+public class ConfigCreatorTest extends WeldStarterTestBase {
 
     @BeforeEach
     public void beforeEach() {
@@ -387,8 +389,9 @@ public class CdiConfigBuilderTest extends WeldStarterTestBase {
 
     static class BeanUsingAlternativeAtField {
 
+        @Alternative
         static class ProducingAlternative {
-            @Alternative
+            @Produces
             @Mock
             DummyBean dummyBeanMock;
         }
@@ -418,6 +421,7 @@ public class CdiConfigBuilderTest extends WeldStarterTestBase {
 
     static class BeanUsingAlternativeAtMethod {
 
+        @Alternative
         static class ProducingAlternative {
 
             static class DummyBeanAlternative extends DummyBean {
@@ -427,10 +431,7 @@ public class CdiConfigBuilderTest extends WeldStarterTestBase {
                 }
             }
 
-            ;
-
             @Produces
-            @Alternative
             DummyBeanAlternative dummyBeanMock() {
                 return new DummyBeanAlternative();
             }
@@ -462,15 +463,15 @@ public class CdiConfigBuilderTest extends WeldStarterTestBase {
 
     private void configureAndStart() throws MalformedURLException {
         initWeldStarter();
-        CdiConfigCreator cdiConfigBuilder = new CdiConfigCreator();
-        cdiConfigBuilder.create(cfg);
-        WeldSetupClass res = cdiConfigBuilder.buildWeldSetup(null);
+        ConfigCreator configCreator = new ConfigCreator();
+        configCreator.create(cfg);
+        WeldSetupClass res = new SetupCreator(configCreator.getConfiguration()).buildWeldSetup(null);
         setWeldSetup(res);
         // throw new RuntimeException();
-        // setBeanClasses(cdiConfigBuilder.toBeStarted());
+        // setBeanClasses(configCreator.toBeStarted());
         // setEnabledAlternativeStereotypes(ProducesAlternative.class);
-        // setAlternativeClasses(cdiConfigBuilder.getEnabledAlternatives());
-        // setExtensions(cdiConfigBuilder.getExtensions());
+        // setAlternativeClasses(configCreator.getEnabledAlternatives());
+        // setExtensions(configCreator.getExtensions());
         start();
     }
 

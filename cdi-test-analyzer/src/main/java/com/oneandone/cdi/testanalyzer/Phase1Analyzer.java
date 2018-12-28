@@ -1,8 +1,11 @@
 package com.oneandone.cdi.testanalyzer;
 
-import static com.oneandone.cdi.testanalyzer.ConfigStatics.doInClassAndSuperClasses;
-import static com.oneandone.cdi.testanalyzer.ConfigStatics.isInterceptingBean;
+import com.oneandone.cdi.testanalyzer.annotations.*;
+import com.oneandone.cdi.weldstarter.spi.TestExtensionService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.enterprise.inject.Produces;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -13,17 +16,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import javax.enterprise.inject.Produces;
-
-import com.oneandone.cdi.testanalyzer.annotations.EnabledAlternatives;
-import com.oneandone.cdi.testanalyzer.annotations.ExcludedClasses;
-import com.oneandone.cdi.testanalyzer.annotations.SutClasses;
-import com.oneandone.cdi.testanalyzer.annotations.SutClasspaths;
-import com.oneandone.cdi.testanalyzer.annotations.SutPackages;
-import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
-import com.oneandone.cdi.testanalyzer.annotations.TestClasspaths;
-import com.oneandone.cdi.testanalyzer.annotations.TestPackages;
-import com.oneandone.cdi.weldstarter.spi.TestExtensionService;
+import static com.oneandone.cdi.testanalyzer.ConfigStatics.doInClassAndSuperClasses;
+import static com.oneandone.cdi.testanalyzer.ConfigStatics.isInterceptingBean;
 
 /**
  * Analyzes the candidates. Works until no new candidates are found.
@@ -32,6 +26,7 @@ import com.oneandone.cdi.weldstarter.spi.TestExtensionService;
  * Producers in classes to start found in producerMap. Producers in available classes found in availableProducerMap.
  */
 class Phase1Analyzer {
+    static Logger logger = LoggerFactory.getLogger(Phase1Analyzer.class);
     private final Configuration configuration;
     private ArrayList<Class<?>> newAvailables = new ArrayList<>();
 
@@ -41,12 +36,11 @@ class Phase1Analyzer {
 
     private void findInnerClasses(final Class c) {
         for (Class innerClass : c.getDeclaredClasses()) {
-            if(Modifier.isStatic(innerClass.getModifiers()) && ConfigStatics.mightBeBean(innerClass)) {
+            if (Modifier.isStatic(innerClass.getModifiers()) && ConfigStatics.mightBeBean(innerClass)) {
                 configuration.available(innerClass);
-                if(configuration.isTestClass(c)) {
+                if (configuration.isTestClass(c)) {
                     configuration.testClass(innerClass);
-                }
-                else {
+                } else {
                     configuration.sutClass(innerClass);
                 }
                 findInnerClasses(innerClass);
@@ -73,7 +67,7 @@ class Phase1Analyzer {
     private void testClassAnnotation(Class<?> c) {
         doInClassAndSuperClasses(c, c1 -> {
             TestClasses testClassesL = c1.getAnnotation(TestClasses.class);
-            if(testClassesL != null) {
+            if (testClassesL != null) {
                 for (Class<?> testClass : testClassesL.value())
                     configuration
                             .testClass(testClass)
@@ -85,7 +79,7 @@ class Phase1Analyzer {
     private void sutClassAnnotation(Class<?> c) {
         doInClassAndSuperClasses(c, c1 -> {
             SutClasses sutClassesL = c1.getAnnotation(SutClasses.class);
-            if(sutClassesL != null) {
+            if (sutClassesL != null) {
                 for (Class<?> sutClass : sutClassesL.value()) {
                     configuration
                             .sutClass(sutClass)
@@ -99,7 +93,7 @@ class Phase1Analyzer {
     void extraAnnotations(Class c) {
         final Map<Class<? extends Annotation>, TestExtensionService> extraClassAnnotations =
                 configuration.testerExtensionsConfigsFinder.extraClassAnnotations;
-        if(extraClassAnnotations.keySet().size() > 0) {
+        if (extraClassAnnotations.keySet().size() > 0) {
             doInClassAndSuperClasses(c, c1 -> {
                 extraClassAnnotations.keySet()
                         .stream()
@@ -129,10 +123,9 @@ class Phase1Analyzer {
 
     private void addAvailables(final boolean isSut, final Set<Class<?>> tmpClasses) {
         for (Class<?> c : tmpClasses) {
-            if(!isSut) {
+            if (!isSut) {
                 configuration.testClass(c);
-            }
-            else {
+            } else {
                 configuration.sutClass(c);
             }
             configuration.available(c);
@@ -144,11 +137,11 @@ class Phase1Analyzer {
         doInClassAndSuperClasses(c, c1 -> {
             try {
                 SutPackages sutPackages = c1.getAnnotation(SutPackages.class);
-                if(sutPackages != null) {
+                if (sutPackages != null) {
                     addPackages(sutPackages.value(), true);
                 }
                 TestPackages testPackages = c1.getAnnotation(TestPackages.class);
-                if(testPackages != null) {
+                if (testPackages != null) {
                     addPackages(testPackages.value(), false);
                 }
             } catch (MalformedURLException e) {
@@ -161,11 +154,11 @@ class Phase1Analyzer {
         doInClassAndSuperClasses(c, c1 -> {
             try {
                 SutClasspaths sutClasspaths = c1.getAnnotation(SutClasspaths.class);
-                if(sutClasspaths != null) {
+                if (sutClasspaths != null) {
                     addClasspaths(sutClasspaths.value(), true);
                 }
                 TestClasspaths testClasspaths = c1.getAnnotation(TestClasspaths.class);
-                if(testClasspaths != null) {
+                if (testClasspaths != null) {
                     addClasspaths(testClasspaths.value(), false);
                 }
             } catch (MalformedURLException e) {
@@ -178,7 +171,7 @@ class Phase1Analyzer {
         doInClassAndSuperClasses(c, c1 -> {
             EnabledAlternatives enabledAlternativesL = c1.getAnnotation(EnabledAlternatives.class);
 
-            if(enabledAlternativesL != null) {
+            if (enabledAlternativesL != null) {
                 for (Class<?> aClass : enabledAlternativesL.value()) {
                     configuration
                             .testClass(aClass)
@@ -192,7 +185,7 @@ class Phase1Analyzer {
     private void excludes(Class<?> c) {
         doInClassAndSuperClasses(c, c1 -> {
             ExcludedClasses excludedClassesL = c1.getAnnotation(ExcludedClasses.class);
-            if(excludedClassesL != null) {
+            if (excludedClassesL != null) {
                 for (Class<?> aClass : excludedClassesL.value())
                     configuration.excluded(aClass);
             }
@@ -205,8 +198,8 @@ class Phase1Analyzer {
             for (Annotation ann : annotations) {
                 final Class<? extends Annotation> annotationType = ann.annotationType();
                 for (Annotation annann : annotationType.getAnnotations()) {
-                    if(annann.annotationType().getPackage().equals(TestClasses.class.getPackage())) {
-                        if(!configuration.isAvailable(annotationType)) {
+                    if (annann.annotationType().getPackage().equals(TestClasses.class.getPackage())) {
+                        if (!configuration.isAvailable(annotationType)) {
                             testClassAnnotation(annotationType);
                             classpathsAnnotations(annotationType);
                             sutClassAnnotation(annotationType);
@@ -223,7 +216,7 @@ class Phase1Analyzer {
 
     private boolean containsProducingAnnotation(final Annotation[] annotations) {
         for (Annotation ann : annotations) {
-            if(ann.annotationType().equals(Produces.class)) {
+            if (ann.annotationType().equals(Produces.class)) {
                 return true;
             }
         }
@@ -232,7 +225,7 @@ class Phase1Analyzer {
 
     private void producerFields(Class c, ProducerMap producerMap) {
         for (Field f : c.getDeclaredFields()) {
-            if(containsProducingAnnotation(f.getAnnotations())) {
+            if (containsProducingAnnotation(f.getAnnotations())) {
                 producerMap.addToProducerMap(new QualifiedType(f));
             }
         }
@@ -240,7 +233,7 @@ class Phase1Analyzer {
 
     private void producerMethods(Class c, ProducerMap producerMap) {
         for (Method m : c.getDeclaredMethods()) {
-            if(containsProducingAnnotation(m.getAnnotations())) {
+            if (containsProducingAnnotation(m.getAnnotations())) {
                 producerMap.addToProducerMap(new QualifiedType(m));
             }
         }
@@ -252,12 +245,13 @@ class Phase1Analyzer {
                 .elseClass(c);
         innerClasses(c);
         injects(c);
-        if(configuration.isTestClass(c)) {
+        if (configuration.isTestClass(c)) {
             testClassAnnotation(c);
             sutClassAnnotation(c);
             classpathsAnnotations(c);
             packagesAnnotations(c);
             customAnnotations(c);
+            enabledAlternatives(c);
             extraAnnotations(c);
             excludes(c);
         }
@@ -270,34 +264,32 @@ class Phase1Analyzer {
     }
 
     void work() {
+        logger.trace("Phase1Analyzer starting");
         do {
             ArrayList<Class<?>> currentCandidates = new ArrayList<>();
             currentCandidates.addAll(configuration.getCandidates());
             configuration.getCandidates().clear();
             for (Class<?> c : currentCandidates) {
-                ConfigCreator.logger.trace("evaluating {}", c);
-                if(configuration.isExcluded(c)) {
-                    ConfigCreator.logger.info("Excluded {}", c.getName());
-                }
-                else {
-                    if(isInterceptingBean(c)) {
+                logger.trace("evaluating {}", c);
+                if (configuration.isExcluded(c)) {
+                    logger.info("Excluded {}", c.getName());
+                } else {
+                    if (isInterceptingBean(c)) {
                         beanWithoutProducer(c);
-                    }
-                    else if(ConfigStatics.mightBeBean(c)) {
+                    } else if (ConfigStatics.mightBeBean(c)) {
                         beanWithoutProducer(c);
                         final ProducerMap producerMap = configuration.getProducerMap();
                         addToProducerMap(c, producerMap);
-                    }
-                    else {
+                    } else {
                         configuration.elseClass(c);
                     }
                 }
             }
         } while (configuration.getCandidates().size() > 0);
         for (Class<?> c : newAvailables) {
-            final ProducerMap producerMap = configuration.getAvailableProducerMap();
-            addToProducerMap(c, producerMap);
+            addToProducerMap(c, configuration.getAvailableProducerMap());
         }
+        logger.trace("Phase1Analyzer ready");
     }
 
 

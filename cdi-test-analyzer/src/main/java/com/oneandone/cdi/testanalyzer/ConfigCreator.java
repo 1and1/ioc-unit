@@ -1,7 +1,11 @@
 package com.oneandone.cdi.testanalyzer;
 
+import com.oneandone.cdi.weldstarter.WeldSetupClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.enterprise.inject.spi.Extension;
+import java.lang.reflect.Method;
 
 /**
  * @author aschoerk
@@ -65,7 +69,7 @@ public class ConfigCreator extends ConfigCreatorBase {
             new Phase1Analyzer(configuration).work();
             new Phase2Matcher(configuration).work();
             new Phase3Fixer(configuration).work();
-
+            logger.trace("One Level done candidates size: {} injects.size: {}",configuration.getCandidates().size(),configuration.getInjects().size());
         }
         while (configuration.getCandidates().size() > 0 && configuration.getInjects().size() > 0);
     }

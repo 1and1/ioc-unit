@@ -1,17 +1,12 @@
 package com.oneandone.cdi.testanalyzer;
 
-import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.enterprise.inject.Alternative;
 import javax.enterprise.inject.Stereotype;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.lang.annotation.Annotation;
+import java.util.*;
 
 /**
  * @author aschoerk
@@ -92,7 +87,7 @@ public class Configuration {
     }
 
     public Configuration testClassCandidates(final Collection<Class<?>> classes) {
-        if(classes != null) {
+        if (classes != null) {
             for (Class<?> c : classes)
                 testClass(c)
                         .candidate(c);
@@ -130,7 +125,7 @@ public class Configuration {
     }
 
     public Configuration enabledAlternative(final Class<?> c) {
-        if(c.getAnnotation(Alternative.class) == null || c.isAnnotation() && c.getAnnotation(Stereotype.class) == null) {
+        if (c.getAnnotation(Alternative.class) == null || c.isAnnotation() && c.getAnnotation(Stereotype.class) == null) {
             logger.error("Invalid enabled Alternative {}", c.getName());
         }
         enabledAlternatives.add(c);
@@ -198,7 +193,7 @@ public class Configuration {
     public boolean isActiveAlternativeStereoType(final Annotation c) {
         logger.trace("Searching for alternative Stereotype {}", c);
         for (Class stereoType : elseClasses.foundAlternativeStereotypes) {
-            if(stereoType.getName().equals(c.annotationType().getName())) {
+            if (stereoType.getName().equals(c.annotationType().getName())) {
                 logger.trace("Search found alternative Stereotype {}", c);
                 return true;
             }
@@ -206,7 +201,7 @@ public class Configuration {
         return false;
     }
 
-    public boolean isAlternative(final Class declaringClass) {
+    public boolean isEnabledAlternative(final Class declaringClass) {
         return enabledAlternatives.contains(declaringClass);
     }
 
@@ -226,5 +221,14 @@ public class Configuration {
 
     Set<QualifiedType> getInjectsForClass(Class<?> key) {
         return classes2Injects.get(key);
+    }
+
+
+    public ElseClasses getElseClasses() {
+        return elseClasses;
+    }
+
+    public Set<Class<?>> getEnabledAlternatives() {
+        return enabledAlternatives;
     }
 }

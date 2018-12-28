@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 class Phase2Matcher {
     private final Configuration configuration;
     static AtomicInteger instance = new AtomicInteger(0);
-    static Logger log = LoggerFactory.getLogger(Phase2Matcher.class);
+    static Logger logger = LoggerFactory.getLogger(Phase2Matcher.class);
     HashMap<QualifiedType, QualifiedType> matching = new HashMap<>();
     HashMultiMap<QualifiedType, QualifiedType> ambiguus = new HashMultiMap<>();
     Set<QualifiedType> empty = new HashSet<>();
@@ -28,22 +28,22 @@ class Phase2Matcher {
     }
 
     public void matchInject(QualifiedType inject) {
-        log.trace("matchingInject: {}", inject);
+        logger.trace("matchingInject: {}", inject);
         Set<QualifiedType> matchingProducers = configuration.getProducerMap().findMatchingProducers(inject);
         if(matchingProducers.size() == 0) {
-            log.trace("No match found for inject {}", inject);
+            logger.trace("No match found for inject {}", inject);
             empty.add(inject);
         }
         else if(matchingProducers.size() > 1) {
             for (QualifiedType x : matchingProducers) {
-                log.trace("Ambiguus match: {} for inject", x, inject);
+                logger.trace("Ambiguus match: {} for inject", x, inject);
             }
             ambiguus.put(inject, matchingProducers);
         }
         else {
             final QualifiedType theMatch = matchingProducers.iterator().next();
             matching.put(inject, theMatch);
-            log.trace("Unambiguus match: {}", theMatch);
+            logger.trace("Unambiguus match: {}", theMatch);
         }
     }
 
@@ -59,11 +59,11 @@ class Phase2Matcher {
             final QualifiedType producingType = matching.get(inject);
             if(!configuration.getToBeStarted().contains(producingType.getDeclaringClass())) {
                 if(producingType.isFake()) {
-                    log.trace("Fake Unambiguus Producer for Inject {}", inject, producingType);
+                    logger.trace("Fake Unambiguus Producer for Inject {}", inject, producingType);
                 }
                 else {
-                    log.trace("Unambiguus Producer for Inject {}", inject);
-                    log.trace("--- {}", producingType);
+                    logger.trace("Unambiguus Producer for Inject {}", inject);
+                    logger.trace("--- {}", producingType);
                     newToBeStarted.add(producingType.getDeclaringClass());
                     chosenTypes.add(producingType);
                 }
@@ -75,19 +75,19 @@ class Phase2Matcher {
             Map<Class<?>, QualifiedType> testClasses = new HashMap<>();
             Map<Class<?>, QualifiedType> sutClasses = new HashMap<>();
             Set<QualifiedType> producingTypes = ambiguus.get(inject);
-            log.info("Ambiguus resolved inject: {}", inject);
+            logger.info("Ambiguus resolved inject: {}", inject);
             for (QualifiedType producing : producingTypes) {
-                log.info("--- Producing: {}", producing);
+                logger.info("--- Producing: {}", producing);
             }
             Set<QualifiedType> alreadyChosen = producingTypes.stream()
                     .filter(p -> chosenTypes.contains(p))
                     .collect(Collectors.toSet());
             if(alreadyChosen.size() > 0) {
                 if(alreadyChosen.size() > 1) {
-                    log.error("Two producing types should only resolve to one chosen for inject {}", inject);
+                    logger.error("Two producing types should only resolve to one chosen for inject {}", inject);
                 }
                 for (QualifiedType q : alreadyChosen) {
-                    log.info("Already chosen: {}", q);
+                    logger.info("Already chosen: {}", q);
                 }
                 continue;
             }
@@ -161,10 +161,12 @@ class Phase2Matcher {
     }
 
     public void work() {
+        logger.trace("Phase2Matcher starting");
         for (QualifiedType i : configuration.getInjects()) {
             matchInject(i);
 
         }
         evaluateMatches();
+        logger.trace("Phase2Matcher ready");
     }
 }

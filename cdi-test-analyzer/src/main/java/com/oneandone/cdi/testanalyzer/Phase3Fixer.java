@@ -20,6 +20,7 @@ public class Phase3Fixer {
     }
 
     public void work() {
+        logger.trace("Phase3Fixer starting");
         for (QualifiedType inject : configuration.getInjects()) {
             Set<QualifiedType> matching = configuration.getAvailableProducerMap().findMatchingProducers(inject);
             if(matching.size() == 1) {
@@ -37,7 +38,7 @@ public class Phase3Fixer {
                         .collect(Collectors.groupingBy(
                                 match -> configuration.isTestClass(match.getDeclaringClass())));
                 final List<QualifiedType> testClassBackedProducers = testClassBacked.get(true);
-                if(testClassBackedProducers.size() > 0) {
+                if(testClassBackedProducers != null && testClassBackedProducers.size() > 0) {
                     if(testClassBackedProducers.size() > 1) {
                         logger.error("More than one available Testclass available to produce: {}", inject);
                     }
@@ -45,13 +46,16 @@ public class Phase3Fixer {
                 }
                 else {
                     final List<QualifiedType> sutClassBackedProducers = testClassBacked.get(false);
-                    if(sutClassBackedProducers.size() > 1) {
-                        logger.error("More than one available Sutclass available to produce: {}", inject);
+                    if(sutClassBackedProducers!= null) {
+                        if (sutClassBackedProducers != null && sutClassBackedProducers.size() > 1) {
+                            logger.error("More than one available Sutclass available to produce: {}", inject);
+                        }
+                        configuration.candidate(sutClassBackedProducers.iterator().next().getDeclaringClass());
                     }
-                    configuration.candidate(sutClassBackedProducers.iterator().next().getDeclaringClass());
                 }
             }
         }
+        logger.trace("Phase3Fixer ready");
 
     }
 }
