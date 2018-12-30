@@ -1,4 +1,4 @@
-package cditester.test1;
+package com.oneandone.cdi.testanalyzer.test1;
 
 import javax.enterprise.inject.Produces;
 
@@ -8,7 +8,7 @@ import javax.enterprise.inject.Produces;
 public class ProducingClass1 {
 
     @Produces
-    Test1A test1AProducer() {
-        return new Test1A();
+    Test1A test1AProducer(Test1A test1A) {
+        return test1A;
     }
 }

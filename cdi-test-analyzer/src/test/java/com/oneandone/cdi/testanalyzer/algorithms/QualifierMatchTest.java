@@ -1,4 +1,4 @@
-package com.oneandone.cdi.testanalyzer;
+package com.oneandone.cdi.testanalyzer.algorithms;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -18,6 +18,7 @@ import javax.enterprise.inject.New;
 import javax.inject.Named;
 import javax.inject.Qualifier;
 
+import com.oneandone.cdi.testanalyzer.QualifiedType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;

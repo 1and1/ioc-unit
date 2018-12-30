@@ -30,6 +30,7 @@ class Phase1Analyzer {
     static Logger logger = LoggerFactory.getLogger(Phase1Analyzer.class);
     private final Configuration configuration;
     private ArrayList<Class<?>> newAvailables = new ArrayList<>();
+    private Set<Class<?>> handledCandidates = new HashSet<>();
 
     public Phase1Analyzer(Configuration configuration) {
         this.configuration = configuration;
@@ -70,11 +71,9 @@ class Phase1Analyzer {
             TestClasses testClassesL = c1.getAnnotation(TestClasses.class);
             if (testClassesL != null) {
                 for (Class<?> testClass : testClassesL.value()) {
-                    if (!configuration.isTestClass(testClass)) {
-                        configuration
-                                .testClass(testClass)
-                                .candidate(testClass);
-                    }
+                    configuration
+                            .testClass(testClass)
+                            .candidate(testClass);
                 }
             }
         });
@@ -85,11 +84,9 @@ class Phase1Analyzer {
             SutClasses sutClassesL = c1.getAnnotation(SutClasses.class);
             if (sutClassesL != null) {
                 for (Class<?> sutClass : sutClassesL.value()) {
-                    if (!configuration.isSuTClass(sutClass)) {
                         configuration
                                 .sutClass(sutClass)
                                 .candidate(sutClass);
-                    }
                 }
             }
         });
@@ -129,6 +126,8 @@ class Phase1Analyzer {
 
     private void addAvailables(final boolean isSut, final Set<Class<?>> tmpClasses) {
         for (Class<?> c : tmpClasses) {
+            if (c.isInterface() || c.isAnnotation() || Modifier.isAbstract(c.getModifiers()))
+                continue;
             if (!isSut) {
                 configuration.testClass(c);
             } else {
@@ -176,15 +175,12 @@ class Phase1Analyzer {
     private void enabledAlternatives(Class<?> c) {
         doInClassAndSuperClasses(c, c1 -> {
             EnabledAlternatives enabledAlternativesL = c1.getAnnotation(EnabledAlternatives.class);
-
             if (enabledAlternativesL != null) {
                 for (Class<?> aClass : enabledAlternativesL.value()) {
-                    if (!configuration.isEnabledAlternative(aClass)) {
-                        configuration
-                                .testClass(aClass)
-                                .candidate(aClass)
-                                .enabledAlternative(aClass);
-                    }
+                    configuration
+                            .testClass(aClass)
+                            .candidate(aClass)
+                            .enabledAlternative(aClass);
                 }
             }
         });
@@ -287,6 +283,8 @@ class Phase1Analyzer {
             currentCandidates.addAll(configuration.getCandidates());
             configuration.getCandidates().clear();
             for (Class<?> c : currentCandidates) {
+                if (handledCandidates.contains(c))
+                    continue;
                 logger.trace("evaluating {}", c);
                 if (configuration.isExcluded(c)) {
                     logger.info("Excluded {}", c.getName());
@@ -301,6 +299,7 @@ class Phase1Analyzer {
                         configuration.elseClass(c);
                     }
                 }
+                handledCandidates.add(c);
             }
         } while (configuration.getCandidates().size() > 0);
         for (Class<?> c : newAvailables) {

@@ -58,15 +58,11 @@ public class ConfigCreator extends ConfigCreatorBase {
 
     }
 
-
-    private void addTestClass(final Class<?> c) {
-        configuration.testClass(c);
-    }
-
     public void create(InitialConfiguration initial) {
         this.init(initial, new TesterExtensionsConfigsFinder());
+        Phase1Analyzer phase1Analyzer = new Phase1Analyzer(configuration);
         do {
-            new Phase1Analyzer(configuration).work();
+            phase1Analyzer.work();
             new Phase2Matcher(configuration).work();
             new Phase3Fixer(configuration).work();
             logger.trace("One Level done candidates size: {} injects.size: {}",configuration.getCandidates().size(),configuration.getInjects().size());

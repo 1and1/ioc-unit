@@ -88,4 +88,14 @@ class HashMultiMap<K, V> {
             return result;
         }
     }
+
+    public HashMultiMap<K, V> clone() {
+        HashMultiMap<K, V> result = new HashMultiMap<>();
+        for (K k: keySet()) {
+            for (V e: get(k)) {
+                result.put(k,e);
+            }
+        }
+        return result;
+    }
 }
