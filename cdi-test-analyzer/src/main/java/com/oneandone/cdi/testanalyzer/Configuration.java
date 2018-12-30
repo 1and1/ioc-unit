@@ -163,6 +163,7 @@ public class Configuration {
 
     Configuration elseClass(Class<?> c) {
         elseClasses.elseClass(c);
+        tobeStarted(c);
         return this;
     }
 

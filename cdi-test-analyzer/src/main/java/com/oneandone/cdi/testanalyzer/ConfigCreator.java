@@ -78,4 +78,8 @@ public class ConfigCreator extends ConfigCreatorBase {
     public Configuration getConfiguration() {
         return configuration;
     }
+
+    public WeldSetupClass buildWeldSetup(Method method) {
+        return new SetupCreator(configuration).buildWeldSetup(method);
+    }
 }

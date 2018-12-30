@@ -1,33 +1,27 @@
 package com.oneandone.cdi.tester;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.net.MalformedURLException;
-import java.util.Arrays;
-
-import javax.enterprise.inject.Alternative;
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
-
 import com.oneandone.cdi.testanalyzer.ConfigCreator;
-import com.oneandone.cdi.testanalyzer.SetupCreator;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-
-import com.oneandone.cdi.testanalyzer.CdiConfigCreator;
 import com.oneandone.cdi.testanalyzer.InitialConfiguration;
+import com.oneandone.cdi.testanalyzer.SetupCreator;
 import com.oneandone.cdi.testanalyzer.annotations.EnabledAlternatives;
 import com.oneandone.cdi.testanalyzer.annotations.ProducesAlternative;
 import com.oneandone.cdi.testanalyzer.annotations.SutClasses;
 import com.oneandone.cdi.testanalyzer.annotations.SutPackages;
 import com.oneandone.cdi.weldstarter.WeldSetupClass;
 import com.oneandone.cdi.weldstarter.WeldStarterTestBase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+
+import javax.enterprise.inject.Alternative;
+import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
+import java.net.MalformedURLException;
+import java.util.Arrays;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author aschoerk
@@ -77,7 +71,7 @@ public class ConfigCreatorTest extends WeldStarterTestBase {
     }
 
     static class TestMocks {
-        // @Produces
+        @Produces
         @Mock // , extension not available yet
                 DummyBean dummyBeanMock; // = Mockito.mock(DummyBean.class);
     }
@@ -360,26 +354,24 @@ public class ConfigCreatorTest extends WeldStarterTestBase {
 
         static class ProducingAlternative {
             @ProducesAlternative
-            @Mock
-            DummyBean dummyBeanMock;
+            @Produces
+            DummyBean dummyBeanMock = new DummyBean();
         }
 
 
         static class InjectingAlternative {
-
             @Inject
             DummyBean dummyBean;
         }
 
         @Inject
         InjectingAlternative injectingAlternative;
-
     }
 
     @Test
     public void canInjectAlternativeStereotypedField() throws MalformedURLException {
         testClass(BeanUsingAlternativeStereotype.class);
-        initialClasses(ProducesAlternative.class);
+        initialClasses(ProducesAlternative.class, BeanUsingAlternativeStereotype.ProducingAlternative.class);
         configureAndStart();
         assertNotNull(selectGet(BeanUsingAlternativeStereotype.class).injectingAlternative);
         assertNotNull(selectGet(BeanUsingAlternativeStereotype.InjectingAlternative.class).dummyBean);

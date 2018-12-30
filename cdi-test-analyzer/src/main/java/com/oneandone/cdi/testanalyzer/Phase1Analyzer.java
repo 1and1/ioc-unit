@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.enterprise.inject.Produces;
+import javax.enterprise.inject.Stereotype;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -68,10 +69,13 @@ class Phase1Analyzer {
         doInClassAndSuperClasses(c, c1 -> {
             TestClasses testClassesL = c1.getAnnotation(TestClasses.class);
             if (testClassesL != null) {
-                for (Class<?> testClass : testClassesL.value())
-                    configuration
-                            .testClass(testClass)
-                            .candidate(testClass);
+                for (Class<?> testClass : testClassesL.value()) {
+                    if (!configuration.isTestClass(testClass)) {
+                        configuration
+                                .testClass(testClass)
+                                .candidate(testClass);
+                    }
+                }
             }
         });
     }
@@ -81,9 +85,11 @@ class Phase1Analyzer {
             SutClasses sutClassesL = c1.getAnnotation(SutClasses.class);
             if (sutClassesL != null) {
                 for (Class<?> sutClass : sutClassesL.value()) {
-                    configuration
-                            .sutClass(sutClass)
-                            .candidate(sutClass);
+                    if (!configuration.isSuTClass(sutClass)) {
+                        configuration
+                                .sutClass(sutClass)
+                                .candidate(sutClass);
+                    }
                 }
             }
         });
@@ -173,10 +179,12 @@ class Phase1Analyzer {
 
             if (enabledAlternativesL != null) {
                 for (Class<?> aClass : enabledAlternativesL.value()) {
-                    configuration
-                            .testClass(aClass)
-                            .candidate(aClass)
-                            .enabledAlternative(aClass);
+                    if (!configuration.isEnabledAlternative(aClass)) {
+                        configuration
+                                .testClass(aClass)
+                                .candidate(aClass)
+                                .enabledAlternative(aClass);
+                    }
                 }
             }
         });
@@ -217,6 +225,15 @@ class Phase1Analyzer {
     private boolean containsProducingAnnotation(final Annotation[] annotations) {
         for (Annotation ann : annotations) {
             if (ann.annotationType().equals(Produces.class)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isStereotype(Annotation ann) {
+        for (Annotation subann: ann.annotationType().getAnnotations()) {
+            if (subann.annotationType().equals(Stereotype.class)) {
                 return true;
             }
         }

@@ -13,6 +13,7 @@ import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 import javax.naming.InitialContext;
 
+import com.oneandone.cdi.testanalyzer.ConfigCreator;
 import org.junit.Test;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
@@ -20,7 +21,6 @@ import org.junit.runners.model.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.oneandone.cdi.testanalyzer.CdiConfigCreator;
 import com.oneandone.cdi.testanalyzer.InitialConfiguration;
 import com.oneandone.cdi.weldstarter.CreationalContexts;
 import com.oneandone.cdi.weldstarter.WeldSetupClass;
@@ -38,7 +38,7 @@ public class CdiUnit2Rule implements TestRule {
     private WeldStarter weldStarter;
     private final List<TestExtensionService> testExtensionServices = new ArrayList<>();
     private Method method;
-    private CdiConfigCreator cdiConfigCreator = null;
+    private ConfigCreator cdiConfigCreator = null;
 
     public CdiUnit2Rule(final Object instance) {
         this(instance, new InitialConfiguration());
@@ -97,7 +97,7 @@ public class CdiUnit2Rule implements TestRule {
                     cfg.testClass = clazz;
                     cfg.testMethod = method;
                     cfg.initialClasses.add(BeanManager.class);
-                    cdiConfigCreator = new CdiConfigCreator();
+                    cdiConfigCreator = new ConfigCreator();
                     cdiConfigCreator.create(cfg);
                 }
 

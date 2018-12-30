@@ -13,6 +13,7 @@ import javax.enterprise.inject.spi.BeanManager;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
+import com.oneandone.cdi.testanalyzer.ConfigCreator;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -23,7 +24,6 @@ import org.junit.jupiter.api.extension.TestInstantiationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.oneandone.cdi.testanalyzer.CdiConfigCreator;
 import com.oneandone.cdi.testanalyzer.InitialConfiguration;
 import com.oneandone.cdi.weldstarter.CreationalContexts;
 import com.oneandone.cdi.weldstarter.WeldSetupClass;
@@ -38,7 +38,7 @@ public class JUnit5Extension implements BeforeEachCallback,
     private static final String ABSENT_CODE_PREFIX = "Absent Code attribute in method that is not native or abstract in class file ";
     protected WeldStarter weldStarter;
     private WeldSetupClass weldSetup;
-    CdiConfigCreator cdiConfigCreator = null;
+    ConfigCreator cdiConfigCreator = null;
     private final List<TestExtensionService> testExtensionServices = new ArrayList<>();
 
 
@@ -102,7 +102,7 @@ public class JUnit5Extension implements BeforeEachCallback,
                     cfg.testClass = clazz;
                     cfg.testMethod = testMethod;
                     cfg.initialClasses.add(BeanManager.class);
-                    cdiConfigCreator = new CdiConfigCreator();
+                    cdiConfigCreator = new ConfigCreator();
                     cdiConfigCreator.create(cfg);
                 }
 

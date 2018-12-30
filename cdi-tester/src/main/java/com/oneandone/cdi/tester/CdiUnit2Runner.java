@@ -1,13 +1,11 @@
 package com.oneandone.cdi.tester;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ServiceLoader;
-
-import javax.enterprise.inject.spi.BeanManager;
-import javax.naming.InitialContext;
-
+import com.oneandone.cdi.testanalyzer.ConfigCreator;
+import com.oneandone.cdi.testanalyzer.InitialConfiguration;
+import com.oneandone.cdi.weldstarter.CreationalContexts;
+import com.oneandone.cdi.weldstarter.WeldSetupClass;
+import com.oneandone.cdi.weldstarter.spi.TestExtensionService;
+import com.oneandone.cdi.weldstarter.spi.WeldStarter;
 import org.junit.Test;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.FrameworkMethod;
@@ -16,12 +14,12 @@ import org.junit.runners.model.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.oneandone.cdi.testanalyzer.CdiConfigCreator;
-import com.oneandone.cdi.testanalyzer.InitialConfiguration;
-import com.oneandone.cdi.weldstarter.CreationalContexts;
-import com.oneandone.cdi.weldstarter.WeldSetupClass;
-import com.oneandone.cdi.weldstarter.spi.TestExtensionService;
-import com.oneandone.cdi.weldstarter.spi.WeldStarter;
+import javax.enterprise.inject.spi.BeanManager;
+import javax.naming.InitialContext;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ServiceLoader;
 
 /**
  * @author aschoerk
@@ -77,7 +75,7 @@ public class CdiUnit2Runner extends BlockJUnit4ClassRunner {
 
     WeldSetupClass weldSetup = null;
     WeldStarter weldStarter = null;
-    CdiConfigCreator cdiConfigCreator = null;
+    ConfigCreator cdiConfigCreator = null;
 
 
     @Override
@@ -97,7 +95,7 @@ public class CdiUnit2Runner extends BlockJUnit4ClassRunner {
                     cfg.testClass = clazz;
                     cfg.testMethod = frameworkMethod.getMethod();
                     cfg.initialClasses.add(BeanManager.class);
-                    cdiConfigCreator = new CdiConfigCreator();
+                    cdiConfigCreator = new ConfigCreator();
                     cdiConfigCreator.create(cfg);
                 }
 

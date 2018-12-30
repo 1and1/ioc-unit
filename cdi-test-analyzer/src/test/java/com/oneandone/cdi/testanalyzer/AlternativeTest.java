@@ -2,6 +2,8 @@ package com.oneandone.cdi.testanalyzer;
 
 import com.oneandone.cdi.testanalyzer.annotations.EnabledAlternatives;
 
+import com.oneandone.cdi.testanalyzer.annotations.ProducesAlternative;
+import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -12,6 +14,7 @@ import java.net.MalformedURLException;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class AlternativeTest extends BaseTest {
 
@@ -41,11 +44,45 @@ public class AlternativeTest extends BaseTest {
     public void canInjectAlternativeField() throws MalformedURLException {
         Configuration configuration = createTest(BeanUsingAlternativeAtField.class);
         final Set<Class<?>> toBeStarted = configuration.getToBeStarted();
+        assertEquals(3, toBeStarted.size());
 //        assertNotNull(selectGet(BeanUsingAlternativeAtField.class).injectingAlternative);
 //        assertNotNull(selectGet(BeanUsingAlternativeAtField.InjectingAlternative.class).dummyBean);
 //        assertNotNull(selectGet(BeanUsingAlternativeAtField.ProducingAlternative.class));
 //        assertNotNull(selectGet(DummyBean.class));
     }
+
+    @TestClasses(ProducesAlternative.class)
+    static class BeanUsingAlternativeStereotype {
+
+        static class ProducingAlternative {
+            @ProducesAlternative
+            @Mock
+            DummyBean dummyBeanMock;
+        }
+
+
+        static class InjectingAlternative {
+
+            @Inject
+            DummyBean dummyBean;
+        }
+
+        @Inject
+        InjectingAlternative injectingAlternative;
+
+    }
+
+    @Test
+    public void canInjectAlternativeStereotype() throws MalformedURLException {
+        Configuration configuration = createTest(BeanUsingAlternativeStereotype.class);
+        final Set<Class<?>> toBeStarted = configuration.getToBeStarted();
+        assertEquals(3, toBeStarted.size());
+//        assertNotNull(selectGet(BeanUsingAlternativeAtField.class).injectingAlternative);
+//        assertNotNull(selectGet(BeanUsingAlternativeAtField.InjectingAlternative.class).dummyBean);
+//        assertNotNull(selectGet(BeanUsingAlternativeAtField.ProducingAlternative.class));
+//        assertNotNull(selectGet(DummyBean.class));
+    }
+
     static class DummyBean {
 
     }
