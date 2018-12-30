@@ -128,7 +128,10 @@ public class Configuration {
         if (c.getAnnotation(Alternative.class) == null || c.isAnnotation() && c.getAnnotation(Stereotype.class) == null) {
             logger.error("Invalid enabled Alternative {}", c.getName());
         }
-        enabledAlternatives.add(c);
+        if (c.isAnnotation() && c.getAnnotation(Stereotype.class) != null)
+            elseClasses.foundAlternativeStereotypes.add(c);
+        else
+            enabledAlternatives.add(c);
         return this;
     }
 

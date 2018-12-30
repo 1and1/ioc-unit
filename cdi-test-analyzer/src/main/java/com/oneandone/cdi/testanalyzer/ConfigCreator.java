@@ -1,9 +1,11 @@
 package com.oneandone.cdi.testanalyzer;
 
+import com.oneandone.cdi.testanalyzer.extensions.TestScopeExtension;
 import com.oneandone.cdi.weldstarter.WeldSetupClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.spi.Extension;
 import java.lang.reflect.Method;
 
@@ -18,6 +20,9 @@ public class ConfigCreator extends ConfigCreatorBase {
 
     private void init(InitialConfiguration initial, TesterExtensionsConfigsFinder testerExtensionsConfigsFinder) {
         if(initial.testClass != null) {
+            if (initial.testClass.getAnnotation(ApplicationScoped.class) == null) {
+                configuration.getElseClasses().extensionObjects.add(new TestScopeExtension(initial.testClass));
+            }
             configuration.testClass(initial.testClass).candidate(initial.testClass);
         }
         configuration.setTesterExtensionsConfigsFinder(testerExtensionsConfigsFinder);
@@ -76,6 +81,7 @@ public class ConfigCreator extends ConfigCreatorBase {
     }
 
     public WeldSetupClass buildWeldSetup(Method method) {
+
         return new SetupCreator(configuration).buildWeldSetup(method);
     }
 }
