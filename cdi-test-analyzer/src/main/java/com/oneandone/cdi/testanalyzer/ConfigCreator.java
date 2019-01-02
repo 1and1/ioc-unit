@@ -14,7 +14,7 @@ import java.lang.reflect.Method;
  */
 public class ConfigCreator extends ConfigCreatorBase {
 
-    static Logger logger = LoggerFactory.getLogger(ConfigCreator.class);
+    static private Logger logger = LoggerFactory.getLogger(ConfigCreator.class);
 
     Configuration configuration = new Configuration();
 

@@ -39,12 +39,12 @@ public class ProducerMap {
         for (QualifiedType qp : producers) {
             if(!configuration.getExcludedClasses().contains(qp.getDeclaringClass())) {
                 if(qp.isAssignableTo(inject)) {
-                    ConfigCreator.logger.trace("Qualified Match {} ", qp);
+                    log.trace("Qualified Match {} ", qp);
                     matching.add(qp);
                 }
             }
             else {
-                ConfigCreator.logger.info("Ignored producer because of excluded declaring class: {}", qp);
+                log.info("Ignored producer because of excluded declaring class: {}", qp);
             }
         }
         leaveOnlyEnabledAlternativesIfThereAre(matching);

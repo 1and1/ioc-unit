@@ -27,8 +27,7 @@ public class TestQualifiers extends BaseTest {
 
     @Test
     public void canInjectFromQualifiedProducer() {
-        Configuration configuration = createTest(TestClass.class);
-        Set<Class<?>> toBeStarted = configuration.getToBeStarted();
+        createTest(TestClass.class);
         assertEquals(2, toBeStarted.size());
         assertTrue(toBeStarted.contains(ProducingClass1.class));
     }

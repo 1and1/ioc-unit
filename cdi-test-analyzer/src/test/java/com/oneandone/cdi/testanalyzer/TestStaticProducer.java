@@ -24,8 +24,7 @@ public class TestStaticProducer extends BaseTest {
 
     @Test
     public void test() {
-        Configuration configuration = createTest(TestClass.class);
-        final Set<Class<?>> toBeStarted = configuration.getToBeStarted();
+        createTest(TestClass.class);
 //        Assert.assertNotNull(test2b);
 //        assertEquals("Test2B", test2b.call());
     }

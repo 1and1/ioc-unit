@@ -29,16 +29,14 @@ public class TestSutPackage extends BaseTest {
 
     @Test
     public void test() {
-        Configuration configuration = createTest(TestClass.class);
-        final Set<Class<?>> toBeStarted = configuration.getToBeStarted();
+        createTest(TestClass.class);
 //        assertNotNull(test1);
 //        assertEquals("Test1A", test1.call());
     }
 
     @Test
     public void canOptimizeInjecting() {
-        Configuration configuration = createTest(TestClass.class);
-        final Set<Class<?>> toBeStarted = configuration.getToBeStarted();
+        createTest(TestClass.class);
 //        assertNotNull(test1Interface);
 //        assertEquals("Test1A", test1Interface.call());
     }

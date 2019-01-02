@@ -42,8 +42,7 @@ public class AlternativeTest extends BaseTest {
 
     @Test
     public void canInjectAlternativeField() throws MalformedURLException {
-        Configuration configuration = createTest(BeanUsingAlternativeAtField.class);
-        final Set<Class<?>> toBeStarted = configuration.getToBeStarted();
+        createTest(BeanUsingAlternativeAtField.class);
         assertEquals(3, toBeStarted.size());
 //        assertNotNull(selectGet(BeanUsingAlternativeAtField.class).injectingAlternative);
 //        assertNotNull(selectGet(BeanUsingAlternativeAtField.InjectingAlternative.class).dummyBean);
@@ -74,8 +73,7 @@ public class AlternativeTest extends BaseTest {
 
     @Test
     public void canInjectAlternativeStereotype() throws MalformedURLException {
-        Configuration configuration = createTest(BeanUsingAlternativeStereotype.class);
-        final Set<Class<?>> toBeStarted = configuration.getToBeStarted();
+        createTest(BeanUsingAlternativeStereotype.class);
         assertEquals(3, toBeStarted.size());
 //        assertNotNull(selectGet(BeanUsingAlternativeAtField.class).injectingAlternative);
 //        assertNotNull(selectGet(BeanUsingAlternativeAtField.InjectingAlternative.class).dummyBean);
@@ -108,8 +106,7 @@ public class AlternativeTest extends BaseTest {
 
     @org.junit.Test
     public void canInjectAlternativeClass() throws MalformedURLException {
-        Configuration configuration = createTest(BeanUsingAlternative.class);
-        final Set<Class<?>> toBeStarted = configuration.getToBeStarted();
+        createTest(BeanUsingAlternative.class);
         assertEquals(3,toBeStarted.size());
         assertEquals(1, configuration.getEnabledAlternatives().size());
 //        assertNotNull(selectGet(BeanUsingAlternative.class).injectingAlternative);

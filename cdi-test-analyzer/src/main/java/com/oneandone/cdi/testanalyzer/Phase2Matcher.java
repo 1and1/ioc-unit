@@ -113,23 +113,23 @@ class Phase2Matcher {
             }
             else if(testClasses.size() != 0) {
                 if(testClasses.size() > 1) {
-                    ConfigCreator.logger.error("Handling Inject: {} Testclass(es) {} clashing",
+                    logger.error("Handling Inject: {} Testclass(es) {} clashing",
                             inject, testClasses);
                 }
                 else {
                     if(sutClasses.size() > 0) {
-                        ConfigCreator.logger.error("Handling Inject: {} Testclass {} clashing with sutClasses",
+                        logger.error("Handling Inject: {} Testclass {} clashing with sutClasses",
                                 inject, testClasses, sutClasses);
                         for (Class<?> c : sutClasses.keySet()) {
                             Set<QualifiedType> injects = configuration.getInjectsForClass(c);
                             if(injects.size() == 0) {
-                                ConfigCreator.logger.error("SutClass {} excluded because of clashing with Testclass {}"
+                                logger.error("SutClass {} excluded because of clashing with Testclass {}"
                                         , c, testClasses.keySet().iterator().next());
                                 configuration.excluded(c);
                                 sutClasses.remove(c);
                             }
                             else {
-                                ConfigCreator.logger.error("Tried to exclude SutClass {} excluded because of clashing "
+                                logger.error("Tried to exclude SutClass {} excluded because of clashing "
                                                            + "with Testclass {} not possible because of other injects"
                                         , c, testClasses.keySet().iterator().next());
                             }
@@ -144,7 +144,7 @@ class Phase2Matcher {
             }
             else if(sutClasses.size() > 0) {
                 if(sutClasses.size() > 1) {
-                    ConfigCreator.logger.error("Handling Inject: {} too many SutClass(es) {}",
+                    logger.error("Handling Inject: {} too many SutClass(es) {}",
                             inject, sutClasses);
                 }
                 else {

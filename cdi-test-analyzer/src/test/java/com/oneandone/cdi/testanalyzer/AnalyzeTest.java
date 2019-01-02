@@ -24,16 +24,14 @@ public class AnalyzeTest extends BaseTest {
 
     @Test
     public void doesStartTestClass() {
-        Configuration configuration = createTest(DoesStartTestClass.class);
-        final Set<Class<?>> toBeStarted = configuration.getToBeStarted();
+        createTest(DoesStartTestClass.class);
         assertEquals(1, toBeStarted.size());
         assertEquals(DoesStartTestClass.class, toBeStarted.iterator().next());
     }
 
     @Test
     public void canReplaceSutClassByTestClass() throws MalformedURLException {
-        Configuration configuration = createTest(TestClassOverridingInject.class);
-        final Set<Class<?>> toBeStarted = configuration.getToBeStarted();
+        createTest(TestClassOverridingInject.class);
         assertEquals(3, toBeStarted.size());
         assertTrue(toBeStarted.contains(TestClassOverridingInject.class));
         assertTrue(toBeStarted.contains(SutClass.class));
@@ -43,8 +41,7 @@ public class AnalyzeTest extends BaseTest {
 
     @Test
     public void canFindAvailableSutClass() throws MalformedURLException {
-        Configuration configuration = createTest(TestClassNotOverridingInject.class);
-        final Set<Class<?>> toBeStarted = configuration.getToBeStarted();
+        createTest(TestClassNotOverridingInject.class);
         assertEquals(3, toBeStarted.size());
         assertTrue(toBeStarted.contains(TestClassNotOverridingInject.class));
         assertTrue(toBeStarted.contains(SutClass.class));
@@ -53,8 +50,7 @@ public class AnalyzeTest extends BaseTest {
 
     @Test
     public void availableTestExtendHasPrio() {
-        Configuration configuration = createTest(TestClassOverridingInjectByAvailable.class);
-        final Set<Class<?>> toBeStarted = configuration.getToBeStarted();
+        createTest(TestClassOverridingInjectByAvailable.class);
         assertEquals(3, toBeStarted.size());
         assertTrue(toBeStarted.contains(TestClassOverridingInjectByAvailable.class));
         assertTrue(toBeStarted.contains(TestClassOverridingInjectByAvailable.InnerInnerSutTestClass.class));
@@ -65,8 +61,7 @@ public class AnalyzeTest extends BaseTest {
 
     @Test
     public void availableTestInterfaceImplHasPrio() {
-        Configuration configuration = createTest(TestClassOverridingInjectByAvailable2.class);
-        final Set<Class<?>> toBeStarted = configuration.getToBeStarted();
+        createTest(TestClassOverridingInjectByAvailable2.class);
         assertEquals(3, toBeStarted.size());
         assertTrue(toBeStarted.contains(TestClassOverridingInjectByAvailable2.class));
         assertTrue(toBeStarted.contains(TestClassOverridingInjectByAvailable2.InnerInnerSutTestClass.class));

@@ -24,18 +24,27 @@ public class Phase3Fixer {
         HashMultiMap<QualifiedType, Class<?>> ambiguus = new HashMultiMap<>();
         for (QualifiedType inject : configuration.getInjects()) {
             Set<QualifiedType> matching = configuration.getAvailableProducerMap().findMatchingProducers(inject);
+            matching = matching
+                    .stream()
+                    .filter(q -> !configuration.isExcluded(q.getDeclaringClass()))
+                    .collect(Collectors.toSet());
             if (matching.size() == 1) {
                 QualifiedType producer = matching.iterator().next();
-                if (configuration.getToBeStarted().contains(producer.getDeclaringClass())) {
+                Class declaringClass = producer.getDeclaringClass();
+                if (configuration.getToBeStarted().contains(declaringClass)) {
                     logger.error("Phase3: Declaring Class already to be started {}", producer);
                 } else {
-                    configuration.candidate(producer.getDeclaringClass());
+                    configuration.candidate(declaringClass);
                 }
             }
         }
 
         for (QualifiedType inject : configuration.getInjects()) {
             Set<QualifiedType> matching = configuration.getAvailableProducerMap().findMatchingProducers(inject);
+            matching = matching
+                    .stream()
+                    .filter(q -> !configuration.isExcluded(q.getDeclaringClass()))
+                    .collect(Collectors.toSet());
             Map<Boolean, List<QualifiedType>> testClassBacked = matching
                     .stream()
                     .collect(Collectors.groupingBy(
