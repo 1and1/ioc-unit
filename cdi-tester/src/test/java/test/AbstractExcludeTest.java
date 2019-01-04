@@ -13,7 +13,7 @@ import javax.inject.Inject;
  */
 @RunWith(CdiUnit2Runner.class)
 @ExcludedClasses(AbstractExcludeTest.ToInclude.class)
-public class AbstractExcludeTest {
+public abstract class AbstractExcludeTest {
 
     static class ToInclude {
         public static int count;

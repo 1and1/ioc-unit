@@ -3,6 +3,7 @@ package com.oneandone.ejbcdiunit.ejb;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.oneandone.cdi.testanalyzer.annotations.SutClasses;
 import com.oneandone.cdi.testanalyzer.annotations.SutPackages;
 import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
 import com.oneandone.cdi.testanalyzer.annotations.TestPackages;

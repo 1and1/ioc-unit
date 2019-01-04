@@ -1,11 +1,18 @@
 package com.oneandone.cdi.weld;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+import java.util.Arrays;
+
+import org.junit.Ignore;
 import org.junit.Test;
 
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
+
+import com.oneandone.cdi.weld.beans.ConcreteClass3;
+import com.oneandone.cdi.weld.beans.ToInclude;
 
 public class AbstractProducerTest extends WeldStarterTestsBase {
 
@@ -51,33 +58,14 @@ public class AbstractProducerTest extends WeldStarterTestsBase {
     }
 
 
-    static abstract class AbstractClassToBeInjected {
-
-            static class ToInclude {
-                public static int count;
-                @PostConstruct
-                public void postConstruct() {
-                    count++;
-                }
-            }
-
-            @Inject
-            ToInclude toInclude;
-            @Produces
-            ToInclude tmp = new ToInclude(); // no produces clash with excluded ToExclude
-
-    }
-
-
-    @ApplicationScoped
-    static class ConcreteClass3 extends AbstractClassToBeInjected {
-
-    }
-
-
+    @Ignore
     @Test
     public void test3() {
         setBeanClasses(ConcreteClass3.class);
+        setExtensionObjects(Arrays.asList(new TestScopeExtension(ConcreteClass3.class)));
         start();
+        ConcreteClass3 testBean = selectGet(ConcreteClass3.class);
+        testBean.getTmp();
+        assertEquals(1, ToInclude.count);
     }
 }

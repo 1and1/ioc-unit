@@ -72,6 +72,10 @@ public class WeldStarterTestBase {
         weldSetup.setExtensions(classes);
     }
 
+    public void setExtensionObjects(Collection<Extension> objects) {
+        weldSetup.setExtensionObjects(objects);
+    }
+
     public void setBeanClasses(Collection<Class<?>> classes) {
         weldSetup.setBeanClasses(classes.toArray(new Class<?>[classes.size()]));
     }

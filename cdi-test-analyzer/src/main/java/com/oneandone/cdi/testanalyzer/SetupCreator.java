@@ -56,7 +56,7 @@ public class SetupCreator {
 
     public WeldSetupClass buildWeldSetup(Method method) {
         WeldSetupClass weldSetup = new WeldSetupClass();
-        weldSetup.setBeanClasses(configuration.getToBeStarted());
+        weldSetup.setBeanClasses(configuration.getObligatory());
         weldSetup.setAlternativeClasses(configuration.getEnabledAlternatives());
         weldSetup.setEnabledAlternativeStereotypes(configuration.getElseClasses().foundAlternativeStereotypes);
         if (logger.isTraceEnabled()) {

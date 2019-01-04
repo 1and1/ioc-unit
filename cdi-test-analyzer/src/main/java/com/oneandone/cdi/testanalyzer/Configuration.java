@@ -26,7 +26,7 @@ public class Configuration {
     // candidates to be started.
     // The testclass, all classes found in @TestClasses
     // classes usable to fill injects in beansToBeStarted.
-    private Set<Class<?>> beansToBeStarted = new HashSet<>(); // these beans must be given to CDI to be started
+    private List<Class<?>> beansToBeStarted = new ArrayList<>(); // these beans must be given to CDI to be started
 
     // the testclass itself and beans defined by @TestClasses or @SutClasses, or by services
     private List<Class<?>> obligatory = new ArrayList<>();
@@ -146,9 +146,12 @@ public class Configuration {
 
 
     public Configuration tobeStarted(final Class<?> c) {
-        obligatory(c);
-        beansToBeStarted.add(c);
+        addToBeStarted(c);
         return this;
+    }
+
+    public boolean isToBeStarted(Class<?> c) {
+        return beansToBeStarted.contains(c);
     }
 
     public void setTesterExtensionsConfigsFinder(final TesterExtensionsConfigsFinder testerExtensionsConfigsFinder) {
@@ -166,7 +169,6 @@ public class Configuration {
 
     Configuration elseClass(Class<?> c) {
         elseClasses.elseClass(c);
-        tobeStarted(c);
         return this;
     }
 
@@ -209,8 +211,14 @@ public class Configuration {
         return enabledAlternatives.contains(declaringClass);
     }
 
-    public Set<Class<?>> getToBeStarted() {
-        return beansToBeStarted;
+
+    public void addToBeStarted(Class<?> c) {
+        if (beansToBeStarted.contains(c)) {
+            logger.warn("Trying to add {} a second time",c);
+        } else {
+            beansToBeStarted.add(c);
+            obligatory.add(c);
+        }
     }
 
     public boolean isSuTClass(final Class declaringClass) {
@@ -234,5 +242,9 @@ public class Configuration {
 
     public Set<Class<?>> getEnabledAlternatives() {
         return enabledAlternatives;
+    }
+
+    public List<Class<?>> getObligatory() {
+        return obligatory;
     }
 }

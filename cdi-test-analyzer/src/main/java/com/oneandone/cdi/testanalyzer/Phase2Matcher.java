@@ -57,7 +57,7 @@ class Phase2Matcher {
 
         for (QualifiedType inject : matching.keySet()) {
             final QualifiedType producingType = matching.get(inject);
-            if(!configuration.getToBeStarted().contains(producingType.getDeclaringClass())) {
+            if(!configuration.isToBeStarted(producingType.getDeclaringClass())) {
                 if(producingType.isFake()) {
                     logger.trace("Fake Unambiguus Producer for Inject {}", inject, producingType);
                 }
@@ -96,7 +96,7 @@ class Phase2Matcher {
                 Class declaringClass = q.getDeclaringClass();
                 assert declaringClass != null;
                 assert !configuration.getExcludedClasses().contains(declaringClass);
-                if(configuration.getToBeStarted().contains(declaringClass) || newToBeStarted.contains(declaringClass)) {
+                if(configuration.isToBeStarted(declaringClass) || newToBeStarted.contains(declaringClass)) {
                     alreadyProduced = true;
                     configuration.injectHandled(inject, q);
                 }
@@ -136,7 +136,7 @@ class Phase2Matcher {
                         }
                     }
                     final Class<?> testClass = testClasses.keySet().iterator().next();
-                    if(!configuration.getToBeStarted().contains(testClass)) {
+                    if(!configuration.isToBeStarted(testClass)) {
                         newToBeStarted.add(testClass);
                     }
                     configuration.injectHandled(inject, testClasses.values().iterator().next());
@@ -149,7 +149,7 @@ class Phase2Matcher {
                 }
                 else {
                     final Class<?> sutClass = sutClasses.keySet().iterator().next();
-                    if(!configuration.getToBeStarted().contains(sutClass)) {
+                    if(!configuration.isToBeStarted(sutClass)) {
                         newToBeStarted.add(sutClass);
                     }
                     configuration.injectHandled(inject, sutClasses.values().iterator().next());

@@ -31,7 +31,7 @@ public class Phase3Fixer {
             if (matching.size() == 1) {
                 QualifiedType producer = matching.iterator().next();
                 Class declaringClass = producer.getDeclaringClass();
-                if (configuration.getToBeStarted().contains(declaringClass)) {
+                if (configuration.isToBeStarted(declaringClass)) {
                     logger.error("Phase3: Declaring Class already to be started {}", producer);
                 } else {
                     configuration.candidate(declaringClass);
@@ -63,7 +63,7 @@ public class Phase3Fixer {
                         logger.warn("More than one available Sutclass available to produce: {}", inject);
                         if (sutClassBackedProducers
                                 .stream()
-                                .filter(q -> configuration.getToBeStarted().contains(q.getDeclaringClass()) ||
+                                .filter(q -> configuration.isToBeStarted(q.getDeclaringClass()) ||
                                         configuration.getCandidates().contains(q.getDeclaringClass()) )
                                 .findAny()
                                 .isPresent()) {

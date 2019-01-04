@@ -67,10 +67,14 @@ public class ConfigCreator extends ConfigCreatorBase {
         this.init(initial, new TesterExtensionsConfigsFinder());
         Phase1Analyzer phase1Analyzer = new Phase1Analyzer(configuration);
         do {
-            phase1Analyzer.work();
-            new Phase2Matcher(configuration).work();
-            new Phase3Fixer(configuration).work();
-            logger.trace("One Level done candidates size: {} injects.size: {}",configuration.getCandidates().size(),configuration.getInjects().size());
+            if (phase1Analyzer.work()) {
+                new Phase2Matcher(configuration).work();
+                new Phase3Fixer(configuration).work();
+
+                logger.trace("One Level done candidates size: {} injects.size: {}", configuration.getCandidates().size(), configuration.getInjects().size());
+            } else {
+                break;
+            }
         }
         while (configuration.getCandidates().size() > 0 && configuration.getInjects().size() > 0);
     }

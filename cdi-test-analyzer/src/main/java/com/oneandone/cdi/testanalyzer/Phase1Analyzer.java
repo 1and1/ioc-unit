@@ -124,6 +124,14 @@ class Phase1Analyzer {
         }
     }
 
+    boolean isObligatoryAccordingToServices(Class<?> clazz) {
+        for (TestExtensionService s : configuration.testerExtensionsConfigsFinder.testExtensionServices) {
+            if (s.candidateToStart(clazz))
+                return true;
+        }
+        return false;
+    }
+
     private void addAvailables(final boolean isSut, final Set<Class<?>> tmpClasses) {
         for (Class<?> c : tmpClasses) {
             if (c.isInterface() || c.isAnnotation() || Modifier.isAbstract(c.getModifiers()))
@@ -133,8 +141,12 @@ class Phase1Analyzer {
             } else {
                 configuration.sutClass(c);
             }
-            configuration.available(c);
-            newAvailables.add(c);
+            if (isObligatoryAccordingToServices(c)) {
+                configuration.candidate(c);
+            } else {
+                configuration.available(c);
+                newAvailables.add(c);
+            }
         }
     }
 
@@ -276,8 +288,9 @@ class Phase1Analyzer {
         producerMethods(c, producerMap);
     }
 
-    void work() {
+    boolean work() {
         logger.trace("Phase1Analyzer starting");
+        boolean didAnyThing = false;
         do {
             ArrayList<Class<?>> currentCandidates = new ArrayList<>();
             currentCandidates.addAll(configuration.getCandidates());
@@ -285,6 +298,7 @@ class Phase1Analyzer {
             for (Class<?> c : currentCandidates) {
                 if (handledCandidates.contains(c))
                     continue;
+                didAnyThing = true;
                 logger.trace("evaluating {}", c);
                 if (configuration.isExcluded(c)) {
                     logger.info("Excluded {}", c.getName());
@@ -296,7 +310,9 @@ class Phase1Analyzer {
                         final ProducerMap producerMap = configuration.getProducerMap();
                         addToProducerMap(c, producerMap);
                     } else {
-                        configuration.elseClass(c);
+                        configuration
+                                .tobeStarted(c)
+                                .elseClass(c);
                     }
                 }
                 handledCandidates.add(c);
@@ -306,6 +322,8 @@ class Phase1Analyzer {
             addToProducerMap(c, configuration.getAvailableProducerMap());
         }
         logger.trace("Phase1Analyzer ready");
+        return didAnyThing;
+
     }
 
 
