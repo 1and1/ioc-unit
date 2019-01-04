@@ -24,6 +24,8 @@ public class Phase3Fixer {
         HashMultiMap<QualifiedType, Class<?>> ambiguus = new HashMultiMap<>();
         for (QualifiedType inject : configuration.getInjects()) {
             Set<QualifiedType> matching = configuration.getAvailableProducerMap().findMatchingProducers(inject);
+            if (matching.size() == 0)
+                continue;
             matching = matching
                     .stream()
                     .filter(q -> !configuration.isExcluded(q.getDeclaringClass()))
@@ -41,6 +43,8 @@ public class Phase3Fixer {
 
         for (QualifiedType inject : configuration.getInjects()) {
             Set<QualifiedType> matching = configuration.getAvailableProducerMap().findMatchingProducers(inject);
+            if (matching.size() == 0)
+                continue;
             matching = matching
                     .stream()
                     .filter(q -> !configuration.isExcluded(q.getDeclaringClass()))
@@ -59,15 +63,15 @@ public class Phase3Fixer {
             else {
                 final List<QualifiedType> sutClassBackedProducers = testClassBacked.get(false);
                 if(sutClassBackedProducers != null) {
-                    if (sutClassBackedProducers != null && sutClassBackedProducers.size() > 1) {
+                    if (sutClassBackedProducers.size() > 1) {
                         logger.warn("More than one available Sutclass available to produce: {}", inject);
-                        if (sutClassBackedProducers
+                        Optional<QualifiedType> oneAlreadyThere = sutClassBackedProducers
                                 .stream()
                                 .filter(q -> configuration.isToBeStarted(q.getDeclaringClass()) ||
-                                        configuration.getCandidates().contains(q.getDeclaringClass()) )
-                                .findAny()
-                                .isPresent()) {
-                            logger.warn("Chose one because of backing class already there");
+                                        configuration.isCandidate(q.getDeclaringClass()))
+                                .findAny();
+                        if (oneAlreadyThere.isPresent()) {
+                            logger.warn("Chose one because of backing class {} already there", oneAlreadyThere.get());
                         } else {
                             sutClassBackedProducers.forEach(q -> {
                                 ambiguus.put(inject, q.getDeclaringClass());

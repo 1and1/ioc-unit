@@ -34,9 +34,28 @@ public class Configuration {
     // classes defined to be excluded from configuration. Done by servcices or @ExcludedClasses
     private Set<Class<?>> excluded = new HashSet<>();
 
-    public List<Class<?>> getCandidates() {
-        return candidates;
+    public void addCandidate(Class<?> c) {
+        if (!candidates.contains(c)) {
+            candidates.add(c);
+        } else {
+            logger.error("candidates already contains {}",c);
+        }
     }
+
+    public boolean isCandidate(Class<?> c) {
+        return candidates.contains(c);
+    }
+
+    public void moveCandidates(Collection<Class<?>> dest) {
+        dest.addAll(candidates);
+        candidates.clear();
+    }
+
+    public boolean emptyCandidates() {
+        return candidates.isEmpty();
+    }
+
+
 
     // previously available classes to be added to the startconfiguration
     private List<Class<?>> candidates = new ArrayList<>();
@@ -120,7 +139,7 @@ public class Configuration {
 
 
     public Configuration candidate(final Class<?> c) {
-        candidates.add(c);
+        addCandidate(c);
         return this;
     }
 
@@ -163,6 +182,7 @@ public class Configuration {
     }
 
     public Configuration inject(final QualifiedType i) {
+        logger.trace("Adding Inject {}",i);
         injects.add(i);
         return this;
     }

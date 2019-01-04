@@ -293,8 +293,7 @@ class Phase1Analyzer {
         boolean didAnyThing = false;
         do {
             ArrayList<Class<?>> currentCandidates = new ArrayList<>();
-            currentCandidates.addAll(configuration.getCandidates());
-            configuration.getCandidates().clear();
+            configuration.moveCandidates(currentCandidates);
             for (Class<?> c : currentCandidates) {
                 if (handledCandidates.contains(c))
                     continue;
@@ -304,12 +303,15 @@ class Phase1Analyzer {
                     logger.info("Excluded {}", c.getName());
                 } else {
                     if (isInterceptingBean(c)) {
+                        logger.trace("intercepting {}", c);
                         beanWithoutProducer(c);
                     } else if (ConfigStatics.mightBeBean(c)) {
+                        logger.trace("might be Bean {}", c);
                         beanWithoutProducer(c);
                         final ProducerMap producerMap = configuration.getProducerMap();
                         addToProducerMap(c, producerMap);
                     } else {
+                        logger.trace("else but to be started {}", c);
                         configuration
                                 .tobeStarted(c)
                                 .elseClass(c);
@@ -317,9 +319,10 @@ class Phase1Analyzer {
                 }
                 handledCandidates.add(c);
             }
-        } while (configuration.getCandidates().size() > 0);
+        } while (!configuration.emptyCandidates());
         for (Class<?> c : newAvailables) {
-            addToProducerMap(c, configuration.getAvailableProducerMap());
+            if (ConfigStatics.mightBeBean(c))
+                addToProducerMap(c, configuration.getAvailableProducerMap());
         }
         logger.trace("Phase1Analyzer ready");
         return didAnyThing;

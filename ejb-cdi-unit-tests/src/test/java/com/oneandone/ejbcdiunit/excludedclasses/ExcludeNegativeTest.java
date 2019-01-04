@@ -4,6 +4,7 @@ import static org.hamcrest.Matchers.is;
 
 import javax.inject.Inject;
 
+import com.oneandone.cdi.testanalyzer.annotations.ExcludedClasses;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -20,6 +21,7 @@ import com.oneandone.ejbcdiunit.excludedclasses.pcktoinclude.ToInclude;
  */
 @RunWith(CdiUnit2Runner.class)
 @SutPackages({ ToInclude.class })
+// @ExcludedClasses(ToExclude.ToExcludeProduced.class)
 public class ExcludeNegativeTest {
 
     @Inject
