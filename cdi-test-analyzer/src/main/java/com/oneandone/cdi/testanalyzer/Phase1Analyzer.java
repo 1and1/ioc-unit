@@ -26,14 +26,14 @@ import static com.oneandone.cdi.testanalyzer.ConfigStatics.isInterceptingBean;
  * Also detects interceptors, decorators, extension, stereotypes
  * Producers in classes to start found in producerMap. Producers in available classes found in availableProducerMap.
  */
-class Phase1Analyzer {
+class Phase1Analyzer extends PhasesBase {
     static Logger logger = LoggerFactory.getLogger(Phase1Analyzer.class);
-    private final Configuration configuration;
+
     private ArrayList<Class<?>> newAvailables = new ArrayList<>();
     private Set<Class<?>> handledCandidates = new HashSet<>();
 
     public Phase1Analyzer(Configuration configuration) {
-        this.configuration = configuration;
+        super(configuration);
     }
 
     private void findInnerClasses(final Class c) {

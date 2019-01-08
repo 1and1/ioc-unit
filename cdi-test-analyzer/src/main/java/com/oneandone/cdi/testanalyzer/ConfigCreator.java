@@ -77,6 +77,7 @@ public class ConfigCreator extends ConfigCreatorBase {
             }
         }
         while (!configuration.emptyCandidates() && configuration.getInjects().size() > 0);
+        new Phase4Warner(initial, configuration).work();
     }
 
 

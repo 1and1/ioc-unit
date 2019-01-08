@@ -15,8 +15,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author aschoerk
  */
-class Phase2Matcher {
-    private final Configuration configuration;
+class Phase2Matcher extends PhasesBase {
     static AtomicInteger instance = new AtomicInteger(0);
     static Logger logger = LoggerFactory.getLogger(Phase2Matcher.class);
     HashMap<QualifiedType, QualifiedType> matching = new HashMap<>();
@@ -24,7 +23,7 @@ class Phase2Matcher {
     Set<QualifiedType> empty = new HashSet<>();
 
     public Phase2Matcher(Configuration configuration) {
-        this.configuration = configuration;
+        super(configuration);
     }
 
     public void matchInject(QualifiedType inject) {

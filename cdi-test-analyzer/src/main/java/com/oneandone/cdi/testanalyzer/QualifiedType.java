@@ -66,6 +66,16 @@ public class QualifiedType {
         this.c = c;
     }
 
+    public boolean isField() {
+        return f != null;
+    }
+
+    public Field getField() {
+        if (!isField())
+            throw new RuntimeException("expected QualifiedType to be Field");
+        return f;
+    }
+
     public QualifiedType(final Parameter p, final Method m) {
         assert p != null;
         assert m != null;
@@ -348,27 +358,6 @@ public class QualifiedType {
         final Set<Annotation> qiqualifiers = qi.getQualifiers();
         final Set<Annotation> qpqualifiers = qp.getQualifiers();
         return injectableIn(qpqualifiers, qiqualifiers);
-    }
-
-    private static boolean hasDefault(final Set<Annotation> qualifiersP) {
-        if(qualifiersP.isEmpty()) {
-            return true;
-        }
-        for (Annotation a : qualifiersP) {
-            if(a.annotationType().getName().equals(Default.class.getName())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private static boolean hasAny(final Set<Annotation> qualifiersP) {
-        for (Annotation a : qualifiersP) {
-            if(a.annotationType().getName().equals(Any.class.getName())) {
-                return true;
-            }
-        }
-        return false;
     }
 
     @Override

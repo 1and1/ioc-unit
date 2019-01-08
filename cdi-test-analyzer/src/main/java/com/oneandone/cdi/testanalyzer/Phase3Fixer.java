@@ -11,12 +11,11 @@ import static java.lang.Integer.min;
 /**
  * @author aschoerk
  */
-public class Phase3Fixer {
-    private final Configuration configuration;
+public class Phase3Fixer extends PhasesBase {
     static Logger logger = LoggerFactory.getLogger(Phase3Fixer.class);
 
     public Phase3Fixer(Configuration configuration) {
-        this.configuration = configuration;
+        super(configuration);
     }
 
     public void work() {

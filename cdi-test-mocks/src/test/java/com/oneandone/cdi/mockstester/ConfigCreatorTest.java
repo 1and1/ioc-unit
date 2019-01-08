@@ -1,17 +1,11 @@
-package com.oneandone.cdi.tester;
+package com.oneandone.cdi.mockstester;
 
-import com.oneandone.cdi.testanalyzer.ConfigCreator;
-import com.oneandone.cdi.testanalyzer.InitialConfiguration;
-import com.oneandone.cdi.testanalyzer.SetupCreator;
 import com.oneandone.cdi.testanalyzer.annotations.EnabledAlternatives;
 import com.oneandone.cdi.testanalyzer.annotations.ProducesAlternative;
 import com.oneandone.cdi.testanalyzer.annotations.SutClasses;
 import com.oneandone.cdi.testanalyzer.annotations.SutPackages;
-import com.oneandone.cdi.weldstarter.WeldSetupClass;
-import com.oneandone.cdi.weldstarter.WeldStarterTestBase;
-import org.junit.jupiter.api.AfterEach;
+
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
@@ -19,44 +13,16 @@ import javax.enterprise.inject.Alternative;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import java.net.MalformedURLException;
-import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author aschoerk
  */
-public class ConfigCreatorTest extends WeldStarterTestBase {
-
-    @BeforeEach
-    public void beforeEach() {
-        cfg = new InitialConfiguration();
-    }
-
-    InitialConfiguration cfg = new InitialConfiguration();
-
-    public void initialClasses(Class<?>... classes) {
-        cfg.initialClasses.addAll(Arrays.asList(classes));
-    }
-
-    public void enabledAlternatives(Class<?>... classes) {
-        cfg.enabledAlternatives.addAll(Arrays.asList(classes));
-    }
-
-    public void testClass(Class clazz) {
-        cfg.testClass = clazz;
-    }
+public class ConfigCreatorTest extends TestsBase {
 
 
-    @AfterEach
-    public void afterEach() {
-        tearDown();
-    }
 
-
-    static class DummyBean {
-
-    }
 
     static class Bean {
         @Inject
@@ -80,20 +46,20 @@ public class ConfigCreatorTest extends WeldStarterTestBase {
     @SutClasses(TestResources.class)
     static class BeanWithProducer {
         @Inject
-        DummyBean dummyBean;
+        private DummyBean dummyBean;
     }
 
 
     @SutClasses({TestMocks.class})
     static class BeanWithProducedMock {
         @Inject
-        DummyBean dummyBean;
+        private DummyBean dummyBean;
     }
 
     @SutPackages({TestMocks.class})
     static class BeanWithSutPackages {
         @Inject
-        DummyBean dummyBean;
+        private DummyBean dummyBean;
     }
 
 
@@ -108,7 +74,7 @@ public class ConfigCreatorTest extends WeldStarterTestBase {
         }
 
         @Inject
-        DummyBean dummyBean;
+        private DummyBean dummyBean;
     }
 
 
@@ -137,7 +103,7 @@ public class ConfigCreatorTest extends WeldStarterTestBase {
         }
 
         @Inject
-        DummyBean dummyBean;
+        private DummyBean dummyBean;
 
     }
 
@@ -231,16 +197,21 @@ public class ConfigCreatorTest extends WeldStarterTestBase {
         }
 
         @Inject
-        DummyInterface dummyBean;
+        private DummyInterface dummyBean;
+
+        public DummyInterface getDummyBean() {
+            return dummyBean;
+        }
     }
 
     @Test
     public void canFindProducerInAvailableClass() throws MalformedURLException {
-        initialClasses(BeanWithInnerProducer.class);
+        testClass(BeanWithInnerProducer.class);
         configureAndStart();
-        assertNotNull(selectGet(BeanWithInnerProducer.class).dummyBean);
+        assertNotNull(selectGet(BeanWithInnerProducer.class).getDummyBean());
         assertNotNull(selectGet(BeanWithInnerProducer.InnerWithInject.class));
-        assertTrue(BeanWithInnerProducer.DummyInterface.class.isAssignableFrom(selectGet(BeanWithInnerProducer.class).dummyBean.getClass()));
+        assertTrue(BeanWithInnerProducer.DummyInterface.class.isAssignableFrom(selectGet(BeanWithInnerProducer.class)
+                .getDummyBean().getClass()));
     }
 
 
@@ -265,7 +236,7 @@ public class ConfigCreatorTest extends WeldStarterTestBase {
         }
 
         @Inject
-        DummyInterface dummyInterfaceBean;
+        private DummyInterface dummyInterfaceBean;
     }
 
     @Test
@@ -294,7 +265,7 @@ public class ConfigCreatorTest extends WeldStarterTestBase {
         }
 
         @Inject
-        InjectingAlternative injectingAlternative;
+        private InjectingAlternative injectingAlternative;
 
 
     }
@@ -310,45 +281,6 @@ public class ConfigCreatorTest extends WeldStarterTestBase {
         assertNotNull(selectGet(BeanUsingAlternative.InnerAlternative.class));
     }
 
-    static class BeanUsingAlternative2 {
-
-        @Alternative
-        static class InnerAlternative extends DummyBean {
-
-        }
-
-        static class InjectingAlternative {
-
-            @Inject
-            DummyBean dummyBean;
-        }
-
-        @Inject
-        InjectingAlternative injectingAlternative;
-
-    }
-
-    @Test
-    public void canInjectAlternativeClass2() throws MalformedURLException {
-        testClass(BeanUsingAlternative2.class);
-        enabledAlternatives(BeanUsingAlternative2.InnerAlternative.class);
-        configureAndStart();
-        assertNotNull(selectGet(BeanUsingAlternative2.class).injectingAlternative);
-        assertNotNull(selectGet(BeanUsingAlternative2.InjectingAlternative.class).dummyBean);
-        assertNotNull(selectGet(BeanUsingAlternative2.InnerAlternative.class));
-        assertEquals(selectGet(DummyBean.class).getClass(), BeanUsingAlternative2.InnerAlternative.class);
-    }
-
-    @Test
-    public void canInjectAlternativeClass2NotEnabled() throws MalformedURLException {
-        testClass(BeanUsingAlternative2.class);
-        initialClasses(DummyBean.class);
-        configureAndStart();
-        assertNotNull(selectGet(BeanUsingAlternative2.class).injectingAlternative);
-        assertNotNull(selectGet(BeanUsingAlternative2.InjectingAlternative.class).dummyBean);
-        assertNotNull(selectGet(DummyBean.class));
-        assertEquals(selectGet(DummyBean.class).getClass(), DummyBean.class);
-    }
 
     static class BeanUsingAlternativeStereotype {
 
@@ -365,7 +297,11 @@ public class ConfigCreatorTest extends WeldStarterTestBase {
         }
 
         @Inject
-        InjectingAlternative injectingAlternative;
+        private InjectingAlternative injectingAlternative;
+
+        public InjectingAlternative getInjectingAlternative() {
+            return injectingAlternative;
+        }
     }
 
     @Test
@@ -373,7 +309,7 @@ public class ConfigCreatorTest extends WeldStarterTestBase {
         testClass(BeanUsingAlternativeStereotype.class);
         initialClasses(ProducesAlternative.class, BeanUsingAlternativeStereotype.ProducingAlternative.class);
         configureAndStart();
-        assertNotNull(selectGet(BeanUsingAlternativeStereotype.class).injectingAlternative);
+        assertNotNull(selectGet(BeanUsingAlternativeStereotype.class).getInjectingAlternative());
         assertNotNull(selectGet(BeanUsingAlternativeStereotype.InjectingAlternative.class).dummyBean);
         assertNotNull(selectGet(BeanUsingAlternativeStereotype.ProducingAlternative.class));
         assertNotNull(selectGet(DummyBean.class));
@@ -396,8 +332,11 @@ public class ConfigCreatorTest extends WeldStarterTestBase {
         }
 
         @Inject
-        InjectingAlternative injectingAlternative;
+        private InjectingAlternative injectingAlternative;
 
+        public InjectingAlternative getInjectingAlternative() {
+            return injectingAlternative;
+        }
     }
 
     @Test
@@ -405,7 +344,7 @@ public class ConfigCreatorTest extends WeldStarterTestBase {
         testClass(BeanUsingAlternativeAtField.class);
         enabledAlternatives(BeanUsingAlternativeAtField.ProducingAlternative.class);
         configureAndStart();
-        assertNotNull(selectGet(BeanUsingAlternativeAtField.class).injectingAlternative);
+        assertNotNull(selectGet(BeanUsingAlternativeAtField.class).getInjectingAlternative());
         assertNotNull(selectGet(BeanUsingAlternativeAtField.InjectingAlternative.class).dummyBean);
         assertNotNull(selectGet(BeanUsingAlternativeAtField.ProducingAlternative.class));
         assertNotNull(selectGet(DummyBean.class));
@@ -436,8 +375,11 @@ public class ConfigCreatorTest extends WeldStarterTestBase {
         }
 
         @Inject
-        InjectingAlternative injectingAlternative;
+        private  InjectingAlternative injectingAlternative;
 
+        public InjectingAlternative getInjectingAlternative() {
+            return injectingAlternative;
+        }
     }
 
     @Test
@@ -445,7 +387,7 @@ public class ConfigCreatorTest extends WeldStarterTestBase {
         testClass(BeanUsingAlternativeAtMethod.class);
         enabledAlternatives(BeanUsingAlternativeAtMethod.ProducingAlternative.class);
         configureAndStart();
-        assertNotNull(selectGet(BeanUsingAlternativeAtMethod.class).injectingAlternative);
+        assertNotNull(selectGet(BeanUsingAlternativeAtMethod.class).getInjectingAlternative());
         assertNotNull(selectGet(BeanUsingAlternativeAtMethod.InjectingAlternative.class).dummyBean);
         assertNotNull(selectGet(BeanUsingAlternativeAtMethod.ProducingAlternative.class));
         assertNotNull(selectGet(DummyBean.class));
@@ -453,19 +395,6 @@ public class ConfigCreatorTest extends WeldStarterTestBase {
     }
 
 
-    private void configureAndStart() throws MalformedURLException {
-        initWeldStarter();
-        ConfigCreator configCreator = new ConfigCreator();
-        configCreator.create(cfg);
-        WeldSetupClass res = new SetupCreator(configCreator.getConfiguration()).buildWeldSetup(null);
-        setWeldSetup(res);
-        // throw new RuntimeException();
-        // setBeanClasses(configCreator.toBeStarted());
-        // setEnabledAlternativeStereotypes(ProducesAlternative.class);
-        // setAlternativeClasses(configCreator.getEnabledAlternatives());
-        // setExtensions(configCreator.getExtensions());
-        start();
-    }
 
 
 }
