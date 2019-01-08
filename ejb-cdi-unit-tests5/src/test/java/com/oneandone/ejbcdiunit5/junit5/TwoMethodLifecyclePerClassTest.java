@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import com.oneandone.cdi.testanalyzer.annotations.SutClasses;
 import com.oneandone.cdi.tester.JUnit5Extension;
 import com.oneandone.ejbcdiunit5.junit5.beans.AppScopedBean1;
 
@@ -20,6 +21,7 @@ import com.oneandone.ejbcdiunit5.junit5.beans.AppScopedBean1;
  */
 @ExtendWith(JUnit5Extension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@SutClasses(AppScopedBean1.class)
 public class TwoMethodLifecyclePerClassTest {
 
     static int testCalled = 0; // used to find out how many testmethods where called

@@ -18,21 +18,7 @@ import com.oneandone.cdi.tester.contexts.servlet.MockHttpServletResponseImpl;
 import com.oneandone.cdi.tester.contexts.servlet.MockHttpSessionImpl;
 import com.oneandone.cdi.tester.contexts.servlet.MockServletContextImpl;
 
-@TestClasses({ ScopedFactory.class,
-        // added in cdiunit
-        ViewScopeExtension.class,
-        ContextController.class,
-        InRequestInterceptor.class,
-        InSessionInterceptor.class,
-        InConversationInterceptor.class,
-        WeldSEBeanRegistrant.class,
-        // ProducerConfigExtension.class,
-        MockServletContextImpl.class,
-        MockHttpSessionImpl.class,
-        MockHttpServletRequestImpl.class,
-        MockHttpServletResponseImpl.class,
-        InitialListenerProducer.class,
-        ProducesAlternative.class
+@TestClasses({ ScopedFactory.class
 })
 public class BaseTest {
     @Inject

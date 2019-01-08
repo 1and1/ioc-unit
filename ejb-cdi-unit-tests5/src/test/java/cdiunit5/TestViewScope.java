@@ -1,5 +1,7 @@
 package cdiunit5;
 
+import java.io.Serializable;
+
 import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
 import com.oneandone.cdi.tester.JUnit5Extension;
 import com.oneandone.cdi.tester.contexts.internal.jsf.ViewScopeExtension;
@@ -14,7 +16,7 @@ import javax.inject.Provider;
 
 @ExtendWith(JUnit5Extension.class)
 @TestClasses({ ViewScopeExtension.class, TestViewScope.G2ViewScoped.class })
-public class TestViewScope {
+public class TestViewScope extends BaseTest {
     @Inject
     private Provider<ViewScopedClass> viewScoped;
 
@@ -44,7 +46,8 @@ public class TestViewScope {
 
     @ViewScoped
     @Named
-    static class ViewScopedClass {
+    static class ViewScopedClass implements Serializable {
+        private static final long serialVersionUID = -1141566687058637334L;
         private static int timesConstructed;
 
         public ViewScopedClass() {
@@ -62,7 +65,8 @@ public class TestViewScope {
      */
     @ViewScoped
     @Named
-    static class G2ViewScoped {
+    static class G2ViewScoped implements Serializable {
+        private static final long serialVersionUID = -1601109675904966856L;
         private static int timesConstructed;
         @Inject
         private ViewScopedClass g1ViewScoped;

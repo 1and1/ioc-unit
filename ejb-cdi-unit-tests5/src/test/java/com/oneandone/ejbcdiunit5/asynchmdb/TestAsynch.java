@@ -15,6 +15,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
 
 import com.oneandone.cdi.testanalyzer.annotations.SutClasses;
+import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
 import com.oneandone.cdi.tester.JUnit5Extension;
 import com.oneandone.cdi.tester.ejb.AsynchronousManager;
 import com.oneandone.ejbcdiunit.ejbs.CdiAsynchronousBean;
@@ -28,7 +29,8 @@ import com.oneandone.ejbcdiunit5.helpers.LoggerGenerator;
  * @author aschoerk
  */
 @ExtendWith(JUnit5Extension.class)
-@SutClasses({ StatelessAsynchEJB.class, SingletonTimerEJB.class, StatelessTimerEJB.class, LoggerGenerator.class })
+@TestClasses({ LoggerGenerator.class })
+@SutClasses({ StatelessAsynchEJB.class, SingletonTimerEJB.class, StatelessTimerEJB.class, CdiAsynchronousBean.class })
 public class TestAsynch {
 
     @Inject

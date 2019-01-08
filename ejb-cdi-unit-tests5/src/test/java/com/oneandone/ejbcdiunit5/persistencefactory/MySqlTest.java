@@ -19,6 +19,8 @@ import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 
 import org.hamcrest.MatcherAssert;
+import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
@@ -36,6 +38,7 @@ import com.oneandone.ejbcdiunit5.helpers.TestResources;
 /**
  * @author aschoerk
  */
+@Disabled
 @ExtendWith(JUnit5Extension.class)
 @EnabledAlternatives({ J2eeSimMySqlFactory.class, TestResources.class })
 @TestClasses({ MySqlStarter.class })

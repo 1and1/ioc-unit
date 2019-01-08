@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.oneandone.cdi.testanalyzer.annotations.SutClasses;
+import com.oneandone.cdi.testanalyzer.annotations.SutPackages;
 import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
 import com.oneandone.cdi.tester.JUnit5Extension;
 import com.oneandone.cdi.tester.ejb.AsynchronousManager;
@@ -26,8 +27,9 @@ import com.oneandone.ejbcdiunit5.helpers.LoggerGenerator;
  * @author aschoerk
  */
 @ExtendWith(JUnit5Extension.class)
-@TestClasses({ SessionContextFactory.class, LoggerGenerator.class })
 @SutClasses({ QMdbEjb.class, QMdbEjb2.class, TMdbEjb.class })
+@SutPackages(CdiMdbClient.class)
+@TestClasses({ SessionContextFactory.class, LoggerGenerator.class })
 public class TestMdb {
     @Inject
     SingletonMdbClient singletonMdbClient;

@@ -6,9 +6,7 @@ import javax.inject.Inject;
 import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
 import com.oneandone.cdi.tester.contexts.internal.jsf.ViewScopeExtension;
 
-@TestClasses({ ScopedFactory.class,
-        // added in cdiunit
-        ViewScopeExtension.class
+@TestClasses({ ScopedFactory.class
 })
 public class BaseTest {
     @Inject
