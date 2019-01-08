@@ -19,7 +19,6 @@ import javax.transaction.Status;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 
-import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -33,7 +32,6 @@ import com.oneandone.cdi.tester.ejb.persistence.PersistenceFactory;
 import com.oneandone.cdi.tester.ejb.persistence.TestClosure;
 import com.oneandone.cdi.tester.ejb.persistence.TestPersistenceFactory;
 import com.oneandone.cdi.tester.ejb.persistence.TestTransactionException;
-import com.oneandone.ejbcdiunit5.JUnit5Extension;
 
 
 /**
@@ -41,7 +39,7 @@ import com.oneandone.ejbcdiunit5.JUnit5Extension;
  */
 @ExtendWith(JUnit5Extension.class)
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
-@SutClasses({ Service.class, TestPersistenceFactory.class })
+@SutClasses({Service.class, TestPersistenceFactory.class})
 public class ServiceTest5 {
     @Inject
     ServiceIntf sut;
@@ -64,8 +62,8 @@ public class ServiceTest5 {
     @AfterEach
     void afterEach() throws SystemException {
         final int status = userTransaction.getStatus();
-        if (status != Status.STATUS_NO_TRANSACTION && status != Status.STATUS_ROLLEDBACK
-                && status != Status.STATUS_COMMITTED) {
+        if(status != Status.STATUS_NO_TRANSACTION && status != Status.STATUS_ROLLEDBACK
+           && status != Status.STATUS_COMMITTED) {
             userTransaction.rollback();
         }
     }
