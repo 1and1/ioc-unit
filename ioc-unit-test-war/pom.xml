@@ -1,14 +1,21 @@
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>net.oneandone.ioc-unit</groupId>
-        <artifactId>ioc-unit-examples-parent</artifactId>
+        <artifactId>ioc-unit-parent</artifactId>
         <version>2.0.1-alpha-04-SNAPSHOT</version>
     </parent>
 
 
-    <artifactId>ex6-asyncconsumedjms2</artifactId>
+    <artifactId>ioc-unit-test-war</artifactId>
     <packaging>war</packaging>
+
+
+    <name>net.oneandone.ioc-unit:ioc-unit-test-war</name>
+    <description>An ejb3.x deployable war used to test ioc-unit.
+        Also can contain base classes for tests used in both ioc-unit-tests and ioc-unit-arq.</description>
+    <url>https://github.com/1and1/ioc-unit</url>
 
     <licenses>
         <license>
@@ -17,68 +24,61 @@
         </license>
     </licenses>
 
-    <name>service asyncconsumed with callback use jms</name>
-    <description>Test one service consuming one remote service asynchronously return the result using
-        callback internally use jms only one queue</description>
-    <url>https://github.com/1and1/ioc-unit</url>
     <dependencies>
+        <!-- J2EE 6 -->
+        <dependency>
+            <groupId>javax.enterprise</groupId>
+            <artifactId>cdi-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.jms</groupId>
+            <artifactId>javax.jms-api</artifactId>
+            <version>2.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- general apis -->
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+        </dependency>
+
         <!-- logging -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.hibernate.javax.persistence</groupId>
-            <artifactId>hibernate-jpa-2.1-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>javax</groupId>
-            <artifactId>javaee-api</artifactId>
-            <version>${version.javaee_api}</version>
-            <scope>provided</scope>
-        </dependency>
-
         <!-- testing -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-all</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
+          <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>net.oneandone.ioc-unit</groupId>
-            <artifactId>ioc-unit-ejb</artifactId>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>net.oneandone.ioc-unit</groupId>
-            <artifactId>ioc-unit</artifactId>
-            <scope>test</scope>
+            <groupId>org.jboss.spec.javax.transaction</groupId>
+            <artifactId>jboss-transaction-api_1.1_spec</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>1.0.9</version>
+            <groupId>org.javassist</groupId>
+            <artifactId>javassist</artifactId>
             <scope>test</scope>
         </dependency>
-
-        <!-- additional dependencies weldX-starter for testing defined
-                by profile: weldx.y in parent -->
     </dependencies>
 
     <build>
@@ -96,7 +96,10 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>${maven-war-plugin.version}</version>
                 <configuration>
+                    <attachClasses>true</attachClasses>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
+                    <packagingExcludes>**/META-INF/beans.xml</packagingExcludes>
+                    <packagingExcludes>**/META-INF/ejb-jar.xml</packagingExcludes>
                 </configuration>
             </plugin>
             <plugin>

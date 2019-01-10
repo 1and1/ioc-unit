@@ -1,14 +1,13 @@
-<!--suppress ALL -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>net.oneandone.ioc-unit</groupId>
-        <artifactId>ejb-cdi-unit-examples-parent</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <artifactId>ioc-unit-parent</artifactId>
+        <version>2.0.1-alpha-04-SNAPSHOT</version>
     </parent>
 
 
-    <artifactId>&exampletemplate&</artifactId>
+    <artifactId>ioc-unit-camunda</artifactId>
     <packaging>war</packaging>
 
     <licenses>
@@ -18,13 +17,36 @@
         </license>
     </licenses>
 
-    <name>&template pom to be copied to new examples&</name>
-    <description>&template for description of service&</description>
-    <url>https://github.com/1and1/ejb-cdi-unit</url>
+    <name>net.oneandone.ioc-unit:ioc-unit-camunda</name>
+    <description>Camunda tests for ioc-unit, they mostly use ioc-unit-test-war as module to be tested.
+    </description>
+    <url>https://github.com/1and1/ioc-unit</url>
+    <properties>
+        <weld.version>1.1.14.Final</weld.version>
+    </properties>
     <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>ioc-unit-test-war</artifactId>
+            <classifier>classes</classifier>
+            <scope>test</scope>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.vintage</groupId>
+            <artifactId>junit-vintage-engine</artifactId>
+            <version>${junit5.version}</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>ch.vorburger.mariaDB4j</groupId>
+            <artifactId>mariaDB4j</artifactId>
+            <version>2.2.2</version>
         </dependency>
         <!-- J2EE 6 -->
         <dependency>
@@ -37,12 +59,6 @@
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
-        </dependency>
-
-        <!-- logging -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
         </dependency>
 
         <!-- testing -->
@@ -75,9 +91,39 @@
             <artifactId>jboss-transaction-api_1.1_spec</artifactId>
         </dependency>
         <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.javassist</groupId>
+            <artifactId>javassist</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>com.mockrunner</groupId>
             <artifactId>mockrunner-jms</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.camunda.bpm</groupId>
+            <artifactId>camunda-engine</artifactId>
+            <version>7.8.0-alpha3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.camunda.bpm</groupId>
+            <artifactId>camunda-engine-cdi</artifactId>
+            <version>7.8.0-alpha3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jul-to-slf4j</artifactId>
+            <version>1.7.11</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
         </dependency>
     </dependencies>
 
@@ -92,7 +138,6 @@
                 </configuration>
             </plugin>
             <plugin>
-                <!-- prevent deployment -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>${maven-war-plugin.version}</version>
@@ -107,6 +152,17 @@
                 <configuration>
                     <skip>true</skip>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.maven.surefire</groupId>
+                        <artifactId>surefire-junit47</artifactId>
+                        <version>${maven-surefire-plugin.version}</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>

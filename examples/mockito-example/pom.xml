@@ -2,8 +2,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>net.oneandone.cdi-tester</groupId>
-        <artifactId>ejb-cdi-unit-examples-parent</artifactId>
+        <groupId>net.oneandone.ioc-unit</groupId>
+        <artifactId>ioc-unit-examples-parent</artifactId>
         <version>2.0.1-alpha-04-SNAPSHOT</version>
     </parent>
 
@@ -20,7 +20,7 @@
 
     <name>mockito-example</name>
     <description>Testing Junit5 plus mockito 2.17 and later</description>
-    <url>https://github.com/1and1/ejb-cdi-unit</url>
+    <url>https://github.com/1and1/ioc-unit</url>
     <properties>
         <mockito.version>2.21.0</mockito.version>
     </properties>
@@ -74,8 +74,8 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>net.oneandone.cdi-tester</groupId>
-            <artifactId>cdi-test-mocks</artifactId>
+            <groupId>net.oneandone.ioc-unit</groupId>
+            <artifactId>ioc-unit-mocks</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -94,13 +94,13 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>net.oneandone.cdi-tester</groupId>
-            <artifactId>cdi-ejb-tester</artifactId>
+            <groupId>net.oneandone.ioc-unit</groupId>
+            <artifactId>ioc-unit-ejb</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>net.oneandone.cdi-tester</groupId>
-            <artifactId>cdi-tester</artifactId>
+            <groupId>net.oneandone.ioc-unit</groupId>
+            <artifactId>ioc-unit</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

@@ -1,13 +1,14 @@
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>net.oneandone.ioc-unit</groupId>
-        <artifactId>ioc-unit-examples-parent</artifactId>
+        <artifactId>ioc-unit-parent</artifactId>
         <version>2.0.1-alpha-04-SNAPSHOT</version>
     </parent>
 
 
-    <artifactId>ex6-asyncconsumedjms2</artifactId>
+    <artifactId>ioc-unit-tests</artifactId>
     <packaging>war</packaging>
 
     <licenses>
@@ -17,34 +18,48 @@
         </license>
     </licenses>
 
-    <name>service asyncconsumed with callback use jms</name>
-    <description>Test one service consuming one remote service asynchronously return the result using
-        callback internally use jms only one queue</description>
+    <name>net.oneandone.ioc-unit:ioc-unit-tests</name>
+    <description>Regression tests for ioc-unit, they mostly use ioc-unit-test-war as module to be tested.</description>
     <url>https://github.com/1and1/ioc-unit</url>
     <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>ioc-unit-test-war</artifactId>
+            <classifier>classes</classifier>
+            <scope>test</scope>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.vorburger.mariaDB4j</groupId>
+            <artifactId>mariaDB4j</artifactId>
+            <version>2.2.2</version>
+        </dependency>
+        <!-- J2EE 6 -->
+        <dependency>
+            <groupId>javax.enterprise</groupId>
+            <artifactId>cdi-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- general apis -->
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+        </dependency>
+
         <!-- logging -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.hibernate.javax.persistence</groupId>
-            <artifactId>hibernate-jpa-2.1-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>javax</groupId>
-            <artifactId>javaee-api</artifactId>
-            <version>${version.javaee_api}</version>
-            <scope>provided</scope>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.0.9</version>
+            <scope>test</scope>
         </dependency>
 
         <!-- testing -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-all</artifactId>
@@ -56,29 +71,61 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.jboss.weld.se</groupId>
+            <artifactId>weld-se-core</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.spec.javax.transaction</groupId>
+            <artifactId>jboss-transaction-api_1.1_spec</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.mockrunner</groupId>
+            <artifactId>mockrunner-jms</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>net.oneandone.ioc-unit</groupId>
-            <artifactId>ioc-unit-ejb</artifactId>
+            <artifactId>ioc-unit-mocks</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>net.oneandone.ioc-unit</groupId>
             <artifactId>ioc-unit</artifactId>
+            <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>1.0.9</version>
+            <groupId>net.oneandone.ioc-unit</groupId>
+            <artifactId>ioc-unit-ejb</artifactId>
+            <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
-
-        <!-- additional dependencies weldX-starter for testing defined
-                by profile: weldx.y in parent -->
+        <dependency>
+            <groupId>net.oneandone.ioc-unit</groupId>
+            <artifactId>ioc-unit-contexts</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
