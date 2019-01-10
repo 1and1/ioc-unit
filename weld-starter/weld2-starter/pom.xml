@@ -3,7 +3,7 @@
     <parent>
         <groupId>net.oneandone.ioc-unit</groupId>
         <artifactId>weld-starter-parent</artifactId>
-        <version>2.0.1-alpha-04-SNAPSHOT</version>
+        <version>2.0.1-alpha-04</version>
     </parent>
 
     <artifactId>weld2-starter</artifactId>
