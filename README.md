@@ -1,6 +1,6 @@
 ioc-unit (formerly ejb-cdi-unit)
 ================================
-Yet a "Work in Progress", if you are looking for ioc-unit please checkout the branch https://github.com/1and1/ioc-unit/tree/ejb-cdi-unit
+Yet a "Work in Progress", if you are looking for ejb-cdi-unit please checkout the branch https://github.com/1and1/ioc-unit/tree/ejb-cdi-unit
 
 # Currently 
 
