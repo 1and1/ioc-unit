@@ -11,7 +11,7 @@ cache:
   - $HOME/.m2/repository
 #  - $HOME/.m2/wrapper
 before_cache:
-  - rm -rf $HOME/.m2/repository/net/oneandone/ejb-cdi-unit/
+  - rm -rf $HOME/.m2/repository/net/oneandone/ioc-unit/
 
 env:
 - WELD_PROFILE=weld3.0
