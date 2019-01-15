@@ -15,9 +15,9 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.oneandone.cdi.tester.CdiUnit2Runner;
-import com.oneandone.cdi.tester.contexts.ContextController;
-import com.oneandone.cdi.tester.contexts.InRequestScope;
+import com.oneandone.iocunit.CdiUnit2Runner;
+import com.oneandone.iocunit.contexts.ContextController;
+import com.oneandone.iocunit.contexts.InRequestScope;
 
 @RunWith(CdiUnit2Runner.class)
 public class TestContextController extends BaseTest {

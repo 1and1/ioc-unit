@@ -12,7 +12,7 @@ import org.junit.jupiter.api.RepetitionInfo;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.oneandone.iocunit.analyzer.annotations.SutClasses;
-import com.oneandone.cdi.tester.JUnit5Extension;
+import com.oneandone.iocunit.JUnit5Extension;
 import com.oneandone.ejbcdiunit5.junit5.beans.AppScopedBean1;
 import com.oneandone.ejbcdiunit5.junit5.beans.AppScopedBean2;
 import com.oneandone.ejbcdiunit5.junit5.beans.BaseBean;

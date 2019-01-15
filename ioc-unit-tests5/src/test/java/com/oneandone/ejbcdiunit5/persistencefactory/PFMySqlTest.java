@@ -4,7 +4,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.oneandone.iocunit.analyzer.annotations.EnabledAlternatives;
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.cdi.tester.JUnit5Extension;
+import com.oneandone.iocunit.JUnit5Extension;
 import com.oneandone.ejbcdiunit5.helpers.J2eeSimTest1Factory;
 import com.oneandone.ejbcdiunit5.helpers.TestResources;
 

@@ -7,7 +7,7 @@ import org.mockito.Mock;
 
 import com.oneandone.iocunit.analyzer.annotations.ExcludedClasses;
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.cdi.tester.CdiUnit2Runner;
+import com.oneandone.iocunit.CdiUnit2Runner;
 import com.oneandone.iocunit.analyzer.annotations.ProducesAlternative;
 
 import cditester.cdiunit.AImplementation1;

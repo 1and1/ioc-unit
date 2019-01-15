@@ -1,7 +1,7 @@
 package test;
 
 import com.oneandone.iocunit.analyzer.annotations.ExcludedClasses;
-import com.oneandone.cdi.tester.CdiUnit2Runner;
+import com.oneandone.iocunit.CdiUnit2Runner;
 import org.junit.runner.RunWith;
 
 import javax.annotation.PostConstruct;

@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.oneandone.iocunit.analyzer.annotations.SutPackages;
-import com.oneandone.cdi.tester.CdiUnit2Runner;
+import com.oneandone.iocunit.CdiUnit2Runner;
 
 import cditester.test1.Test1A;
 import cditester.test1.Test1Interface;

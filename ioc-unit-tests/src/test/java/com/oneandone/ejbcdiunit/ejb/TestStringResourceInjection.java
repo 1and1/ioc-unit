@@ -8,8 +8,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.cdi.tester.CdiUnit2Runner;
-import com.oneandone.cdi.tester.ejb.ResourceQualifier;
+import com.oneandone.iocunit.CdiUnit2Runner;
+import com.oneandone.iocunit.ejb.ResourceQualifier;
 import com.oneandone.ejbcdiunit.ejbs.ResourceTestEjb;
 
 /**

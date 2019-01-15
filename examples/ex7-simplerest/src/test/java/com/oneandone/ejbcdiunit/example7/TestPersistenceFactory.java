@@ -3,7 +3,7 @@ package com.oneandone.ejbcdiunit.example7;
 import javax.enterprise.inject.Produces;
 import javax.persistence.EntityManager;
 
-import com.oneandone.cdi.tester.ejb.persistence.PersistenceFactory;
+import com.oneandone.iocunit.ejb.persistence.PersistenceFactory;
 
 /**
  * @author aschoerk

@@ -13,8 +13,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.oneandone.iocunit.analyzer.annotations.SutClasses;
-import com.oneandone.cdi.tester.JUnit5Extension;
-import com.oneandone.cdi.tester.ejb.persistence.TestPersistenceFactory;
+import com.oneandone.iocunit.JUnit5Extension;
+import com.oneandone.iocunit.ejb.persistence.TestPersistenceFactory;
 import com.oneandone.ejbcdiunit.ejbs.StatelessEJB;
 import com.oneandone.ejbcdiunit5.helpers.LoggerGenerator;
 

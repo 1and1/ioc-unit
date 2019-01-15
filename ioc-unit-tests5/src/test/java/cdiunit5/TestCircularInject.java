@@ -7,8 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.cdi.tester.ExpectedStartupException;
-import com.oneandone.cdi.tester.JUnit5Extension;
+import com.oneandone.iocunit.ExpectedStartupException;
+import com.oneandone.iocunit.JUnit5Extension;
 import com.oneandone.cdi.weldstarter.StarterDeploymentException;
 
 @ExtendWith(JUnit5Extension.class)

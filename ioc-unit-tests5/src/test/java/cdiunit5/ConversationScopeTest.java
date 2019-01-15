@@ -5,8 +5,8 @@ import javax.inject.Provider;
 
 import org.junit.jupiter.api.Assertions;
 
-import com.oneandone.cdi.tester.contexts.InConversationScope;
-import com.oneandone.cdi.tester.contexts.InRequestScope;
+import com.oneandone.iocunit.contexts.InConversationScope;
+import com.oneandone.iocunit.contexts.InRequestScope;
 
 /**
  * @author aschoerk

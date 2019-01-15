@@ -4,7 +4,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Alternative;
 import javax.inject.Inject;
 
-import com.oneandone.cdi.tester.ejb.persistence.PersistenceFactory;
+import com.oneandone.iocunit.ejb.persistence.PersistenceFactory;
 
 /**
  * @author aschoerk

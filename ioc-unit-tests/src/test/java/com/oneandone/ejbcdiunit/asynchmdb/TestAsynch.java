@@ -16,8 +16,8 @@ import org.slf4j.Logger;
 
 import com.oneandone.iocunit.analyzer.annotations.SutClasses;
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.cdi.tester.CdiUnit2Runner;
-import com.oneandone.cdi.tester.ejb.AsynchronousManager;
+import com.oneandone.iocunit.CdiUnit2Runner;
+import com.oneandone.iocunit.ejb.AsynchronousManager;
 import com.oneandone.ejbcdiunit.ejbs.CdiAsynchronousBean;
 import com.oneandone.ejbcdiunit.ejbs.CountingBean;
 import com.oneandone.ejbcdiunit.ejbs.SingletonTimerEJB;

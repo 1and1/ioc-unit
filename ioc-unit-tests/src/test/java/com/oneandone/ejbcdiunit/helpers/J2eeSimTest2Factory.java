@@ -2,7 +2,7 @@ package com.oneandone.ejbcdiunit.helpers;
 
 import javax.enterprise.context.ApplicationScoped;
 
-import com.oneandone.cdi.tester.ejb.persistence.PersistenceFactory;
+import com.oneandone.iocunit.ejb.persistence.PersistenceFactory;
 
 /**
  * @author aschoerk

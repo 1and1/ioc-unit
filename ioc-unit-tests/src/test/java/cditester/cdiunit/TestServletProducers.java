@@ -10,8 +10,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.oneandone.cdi.tester.CdiUnit2Runner;
-import com.oneandone.cdi.tester.contexts.servlet.CdiUnitServlet;
+import com.oneandone.iocunit.CdiUnit2Runner;
+import com.oneandone.iocunit.contexts.servlet.CdiUnitServlet;
 
 /**
  * Taken from cdiunit-tests.

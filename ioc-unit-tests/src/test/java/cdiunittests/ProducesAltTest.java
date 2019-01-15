@@ -12,7 +12,7 @@ import org.mockito.Mock;
 
 import com.oneandone.iocunit.analyzer.annotations.SutPackages;
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.cdi.tester.CdiUnit2Runner;
+import com.oneandone.iocunit.CdiUnit2Runner;
 import com.oneandone.iocunit.analyzer.annotations.ProducesAlternative;
 
 import cditester.cdiunit.tobetestedcode.HelperClass;

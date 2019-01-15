@@ -11,8 +11,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.cdi.tester.CdiUnit2Runner;
-import com.oneandone.cdi.tester.mocks.MockitoExtension;
+import com.oneandone.iocunit.CdiUnit2Runner;
+import com.oneandone.iocunit.mocks.MockitoExtension;
 
 import cditester.cdiunit.AImplementation1;
 import cditester.cdiunit.AInterface;

@@ -10,8 +10,8 @@ import org.junit.Test;
 
 import com.oneandone.iocunit.analyzer.InitialConfiguration;
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.cdi.tester.CdiUnit2Rule;
-import com.oneandone.cdi.tester.ejb.AsynchronousManager;
+import com.oneandone.iocunit.CdiUnit2Rule;
+import com.oneandone.iocunit.ejb.AsynchronousManager;
 import com.oneandone.ejbcdiunit.ejbs.CountingBean;
 import com.oneandone.ejbcdiunit.ejbs.SingletonTimerEJB;
 import com.oneandone.ejbcdiunit.ejbs.StatelessTimerEJB;

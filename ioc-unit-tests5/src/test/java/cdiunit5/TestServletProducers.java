@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import com.oneandone.cdi.tester.JUnit5Extension;
+import com.oneandone.iocunit.JUnit5Extension;
 
 @ExtendWith(JUnit5Extension.class)
 public class TestServletProducers {

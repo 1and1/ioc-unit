@@ -15,8 +15,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.oneandone.cdi.tester.CdiUnit2Runner;
-import com.oneandone.cdi.tester.contexts.jaxrs.SupportJaxRsEjbCdiUnit;
+import com.oneandone.iocunit.CdiUnit2Runner;
+import com.oneandone.iocunit.contexts.jaxrs.SupportJaxRsEjbCdiUnit;
 
 @RunWith(CdiUnit2Runner.class)
 @SupportJaxRsEjbCdiUnit

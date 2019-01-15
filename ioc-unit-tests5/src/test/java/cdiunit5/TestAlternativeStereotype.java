@@ -2,7 +2,7 @@ package cdiunit5;
 
 import com.oneandone.iocunit.analyzer.annotations.EnabledAlternatives;
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.cdi.tester.JUnit5Extension;
+import com.oneandone.iocunit.JUnit5Extension;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

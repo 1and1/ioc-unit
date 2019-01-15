@@ -6,9 +6,9 @@ import org.junit.runner.RunWith;
 import com.oneandone.iocunit.analyzer.annotations.SutPackages;
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 import com.oneandone.iocunit.analyzer.annotations.TestPackages;
-import com.oneandone.cdi.tester.CdiUnit2Runner;
-import com.oneandone.cdi.tester.ejb.EjbJarClasspath;
-import com.oneandone.cdi.tester.ejb.persistence.TestPersistenceFactory;
+import com.oneandone.iocunit.CdiUnit2Runner;
+import com.oneandone.iocunit.ejb.EjbJarClasspath;
+import com.oneandone.iocunit.ejb.persistence.TestPersistenceFactory;
 import com.oneandone.ejbcdiunit.ejbs.appexc.TestBaseClass;
 import com.oneandone.ejbcdiunit.entities.TestEntity1;
 

@@ -5,7 +5,7 @@ import org.junit.runner.RunWith;
 
 import com.oneandone.iocunit.analyzer.annotations.EnabledAlternatives;
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.cdi.tester.CdiUnit2Runner;
+import com.oneandone.iocunit.CdiUnit2Runner;
 import com.oneandone.ejbcdiunit.helpers.J2eeSimTest1Factory;
 import com.oneandone.ejbcdiunit.helpers.TestResources;
 

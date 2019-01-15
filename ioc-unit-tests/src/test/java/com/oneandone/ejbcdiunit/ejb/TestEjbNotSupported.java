@@ -2,9 +2,9 @@ package com.oneandone.ejbcdiunit.ejb;
 
 import com.oneandone.iocunit.analyzer.annotations.SutPackages;
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.cdi.tester.CdiUnit2Runner;
-import com.oneandone.cdi.tester.ejb.SessionContextFactory;
-import com.oneandone.cdi.tester.ejb.persistence.SinglePersistenceFactory;
+import com.oneandone.iocunit.CdiUnit2Runner;
+import com.oneandone.iocunit.ejb.SessionContextFactory;
+import com.oneandone.iocunit.ejb.persistence.SinglePersistenceFactory;
 import com.oneandone.ejbcdiunit.ejbs.StatelessEJB;
 import com.oneandone.ejbcdiunit.ejbs.StatelessNotSupportedEJB;
 import com.oneandone.ejbcdiunit.entities.TestEntity1;

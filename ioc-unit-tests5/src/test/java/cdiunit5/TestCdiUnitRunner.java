@@ -30,12 +30,12 @@ import org.mockito.Mockito;
 
 import com.oneandone.iocunit.analyzer.annotations.ExcludedClasses;
 import com.oneandone.iocunit.analyzer.annotations.SutPackages;
-import com.oneandone.cdi.tester.JUnit5Extension;
+import com.oneandone.iocunit.JUnit5Extension;
 import com.oneandone.iocunit.analyzer.annotations.ProducesAlternative;
-import com.oneandone.cdi.tester.contexts.ContextController;
-import com.oneandone.cdi.tester.contexts.InConversationScope;
-import com.oneandone.cdi.tester.contexts.InRequestScope;
-import com.oneandone.cdi.tester.contexts.InSessionScope;
+import com.oneandone.iocunit.contexts.ContextController;
+import com.oneandone.iocunit.contexts.InConversationScope;
+import com.oneandone.iocunit.contexts.InRequestScope;
+import com.oneandone.iocunit.contexts.InSessionScope;
 
 @ExtendWith(JUnit5Extension.class)
 @SutPackages({ AImplementation1.class })

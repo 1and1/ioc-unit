@@ -27,11 +27,11 @@ import org.junit.runners.JUnit4;
 
 import com.oneandone.iocunit.analyzer.InitialConfiguration;
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.cdi.tester.CdiUnit2Rule;
-import com.oneandone.cdi.tester.ejb.EjbJarClasspath;
-import com.oneandone.cdi.tester.ejb.SessionContextFactory;
-import com.oneandone.cdi.tester.ejb.persistence.SinglePersistenceFactory;
-import com.oneandone.cdi.tester.ejb.persistence.TestTransaction;
+import com.oneandone.iocunit.CdiUnit2Rule;
+import com.oneandone.iocunit.ejb.EjbJarClasspath;
+import com.oneandone.iocunit.ejb.SessionContextFactory;
+import com.oneandone.iocunit.ejb.persistence.SinglePersistenceFactory;
+import com.oneandone.iocunit.ejb.persistence.TestTransaction;
 import com.oneandone.ejbcdiunit.ejbs.CDIClass;
 import com.oneandone.ejbcdiunit.ejbs.MdbEjbInfoSingleton;
 import com.oneandone.ejbcdiunit.ejbs.OuterClass;

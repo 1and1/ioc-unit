@@ -18,9 +18,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.cdi.tester.CdiUnit2Runner;
-import com.oneandone.cdi.tester.ProducerConfig;
-import com.oneandone.cdi.tester.ProducerConfigExtension;
+import com.oneandone.iocunit.CdiUnit2Runner;
+import com.oneandone.iocunit.ProducerConfig;
+import com.oneandone.iocunit.ProducerConfigExtension;
 
 @RunWith(CdiUnit2Runner.class)
 @TestClasses({TestProducerConfig.Producers.class, ProducerConfigExtension.class})

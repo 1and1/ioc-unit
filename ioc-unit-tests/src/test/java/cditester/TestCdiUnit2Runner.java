@@ -27,13 +27,13 @@ import org.mockito.Mockito;
 
 import com.oneandone.iocunit.analyzer.annotations.ExcludedClasses;
 import com.oneandone.iocunit.analyzer.annotations.SutPackages;
-import com.oneandone.cdi.tester.CdiUnit2Runner;
+import com.oneandone.iocunit.CdiUnit2Runner;
 import com.oneandone.iocunit.analyzer.annotations.ProducesAlternative;
-import com.oneandone.cdi.tester.contexts.ContextController;
-import com.oneandone.cdi.tester.contexts.InConversationScope;
-import com.oneandone.cdi.tester.contexts.InRequestScope;
-import com.oneandone.cdi.tester.contexts.InSessionScope;
-import com.oneandone.cdi.tester.contexts.internal.InitialListenerProducer;
+import com.oneandone.iocunit.contexts.ContextController;
+import com.oneandone.iocunit.contexts.InConversationScope;
+import com.oneandone.iocunit.contexts.InRequestScope;
+import com.oneandone.iocunit.contexts.InSessionScope;
+import com.oneandone.iocunit.contexts.internal.InitialListenerProducer;
 
 import cditester.cdiunit.Scoped;
 import cditester.cdiunit.AImplementation1;

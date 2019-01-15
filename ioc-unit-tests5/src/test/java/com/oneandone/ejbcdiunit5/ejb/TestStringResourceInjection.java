@@ -8,8 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.oneandone.iocunit.analyzer.annotations.SutClasses;
-import com.oneandone.cdi.tester.JUnit5Extension;
-import com.oneandone.cdi.tester.ejb.ResourceQualifier;
+import com.oneandone.iocunit.JUnit5Extension;
+import com.oneandone.iocunit.ejb.ResourceQualifier;
 import com.oneandone.ejbcdiunit.ejbs.ResourceTestEjb;
 
 /**

@@ -12,8 +12,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.cdi.tester.CdiUnit2Runner;
-import com.oneandone.cdi.tester.contexts.internal.jsf.ViewScopeExtension;
+import com.oneandone.iocunit.CdiUnit2Runner;
+import com.oneandone.iocunit.contexts.internal.jsf.ViewScopeExtension;
 
 @RunWith(CdiUnit2Runner.class)
 @TestClasses({ ViewScopeExtension.class, TestViewScope.G2ViewScoped.class })

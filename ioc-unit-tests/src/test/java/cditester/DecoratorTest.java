@@ -10,7 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.oneandone.iocunit.analyzer.annotations.SutClasses;
-import com.oneandone.cdi.tester.CdiUnit2Runner;
+import com.oneandone.iocunit.CdiUnit2Runner;
 
 /**
  * @author aschoerk

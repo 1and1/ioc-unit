@@ -19,7 +19,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
 import com.oneandone.iocunit.analyzer.annotations.SutClasses;
-import com.oneandone.cdi.tester.CdiUnit2Runner;
+import com.oneandone.iocunit.CdiUnit2Runner;
 import com.oneandone.ejbcdiunit.example2.useejbinject.Service;
 
 /**

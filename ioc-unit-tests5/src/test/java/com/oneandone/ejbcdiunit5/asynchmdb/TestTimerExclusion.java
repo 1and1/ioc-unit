@@ -10,8 +10,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.oneandone.iocunit.analyzer.annotations.ExcludedClasses;
 import com.oneandone.iocunit.analyzer.annotations.SutClasses;
-import com.oneandone.cdi.tester.JUnit5Extension;
-import com.oneandone.cdi.tester.ejb.AsynchronousManager;
+import com.oneandone.iocunit.JUnit5Extension;
+import com.oneandone.iocunit.ejb.AsynchronousManager;
 import com.oneandone.ejbcdiunit.ejbs.CountingBean;
 import com.oneandone.ejbcdiunit.ejbs.SingletonTimerEJB;
 import com.oneandone.ejbcdiunit.ejbs.StatelessTimerEJB;

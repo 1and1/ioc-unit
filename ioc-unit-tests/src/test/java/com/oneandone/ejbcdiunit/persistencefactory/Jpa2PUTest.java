@@ -28,8 +28,8 @@ import org.slf4j.LoggerFactory;
 
 import com.oneandone.iocunit.analyzer.annotations.EnabledAlternatives;
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.cdi.tester.CdiUnit2Runner;
-import com.oneandone.cdi.tester.ejb.persistence.TestTransaction;
+import com.oneandone.iocunit.CdiUnit2Runner;
+import com.oneandone.iocunit.ejb.persistence.TestTransaction;
 import com.oneandone.ejbcdiunit.ClassWithTwoDifferentEntityManagers;
 import com.oneandone.ejbcdiunit.cdiunit.Pu1Em;
 import com.oneandone.ejbcdiunit.cdiunit.Pu2Em;

@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import com.oneandone.iocunit.analyzer.annotations.SutClasses;
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.cdi.tester.CdiUnit2Rule;
+import com.oneandone.iocunit.CdiUnit2Rule;
 import com.oneandone.cdi.weldstarter.StarterDeploymentException;
 import com.oneandone.ejbcdiunit.excludedclasses.pcktoinclude.ToExclude;
 

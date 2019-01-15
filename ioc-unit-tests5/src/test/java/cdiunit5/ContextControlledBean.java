@@ -13,8 +13,8 @@ import javax.inject.Inject;
 
 import org.junit.jupiter.api.Assertions;
 
-import com.oneandone.cdi.tester.contexts.ContextController;
-import com.oneandone.cdi.tester.contexts.InRequestScope;
+import com.oneandone.iocunit.contexts.ContextController;
+import com.oneandone.iocunit.contexts.InRequestScope;
 
 /**
  * @author aschoerk
