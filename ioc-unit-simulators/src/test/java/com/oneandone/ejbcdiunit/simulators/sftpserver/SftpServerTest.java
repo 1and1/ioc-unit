@@ -20,7 +20,6 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
-import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,13 +31,12 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpException;
-import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 import com.oneandone.iocunit.CdiUnit2Runner;
+import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 import com.oneandone.iocunit.util.LoggerProducer;
-import com.oneandone.ejbcdiunit.EjbUnitRunner;
 
 @RunWith(CdiUnit2Runner.class)
-@TestClasses({ LoggerProducer.class })
+@TestClasses({LoggerProducer.class})
 public class SftpServerTest {
 
     private static final String HOST = "localhost";
@@ -84,7 +82,7 @@ public class SftpServerTest {
                 skipRun = true;
             }
 
-            if (!skipRun) {
+            if(!skipRun) {
                 int threadCount = 10;
                 BlockingQueue<Runnable> workQueue = new ArrayBlockingQueue<>(threadCount);
                 ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(threadCount, threadCount, 0, TimeUnit.SECONDS, workQueue);
@@ -107,7 +105,7 @@ public class SftpServerTest {
                 }
 
                 for (Exception e : exceptions) {
-                    if (!isCausedBySignatureException(e) && !isCausedByFileNotFoundException(e)) {
+                    if(!isCausedBySignatureException(e) && !isCausedByFileNotFoundException(e)) {
                         logger.info("failing exception", e);
                         fail();
                     }
@@ -200,10 +198,11 @@ public class SftpServerTest {
                         countDownLatch.countDown();
                         countDownLatch.await(100, TimeUnit.MILLISECONDS);
 
-                        if (id == threadForRmId) {
+                        if(id == threadForRmId) {
                             logger.info("Task " + id + ": rm");
                             channel.rm(FILE_NAME);
-                        } else {
+                        }
+                        else {
                             logger.info("Task " + id + ": ls");
 
                             List<ChannelSftp.LsEntry> files;

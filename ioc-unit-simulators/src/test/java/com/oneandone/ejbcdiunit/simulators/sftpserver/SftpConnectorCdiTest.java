@@ -1,19 +1,16 @@
 package com.oneandone.ejbcdiunit.simulators.sftpserver;
 
-import com.jcraft.jsch.ChannelSftp;
-import com.jcraft.jsch.SftpException;
-import com.oneandone.iocunit.analyzer.annotations.SutPackages;
-import com.oneandone.iocunit.CdiUnit2Runner;
-import com.oneandone.ejbcdiunit.simulators.sftpclient.SftpConnector;
-import com.oneandone.ejbcdiunit.simulators.sftpclient.TestSftpConfiguration;
-import com.oneandone.ejbcdiunit.simulators.sftpclient.upload.UploadFileStrategy;
-import org.junit.*;
-import org.junit.runner.RunWith;
-import org.mockito.Mockito;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -21,7 +18,25 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import static org.junit.Assert.*;
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+
+import com.jcraft.jsch.ChannelSftp;
+import com.jcraft.jsch.SftpException;
+import com.oneandone.ejbcdiunit.simulators.sftpclient.SftpConnector;
+import com.oneandone.ejbcdiunit.simulators.sftpclient.TestSftpConfiguration;
+import com.oneandone.ejbcdiunit.simulators.sftpclient.upload.UploadFileStrategy;
+import com.oneandone.iocunit.CdiUnit2Runner;
+import com.oneandone.iocunit.analyzer.annotations.SutPackages;
 
 
 @RunWith(CdiUnit2Runner.class)
@@ -298,8 +313,8 @@ public class SftpConnectorCdiTest {
     }
 
     /**
-     * @see <a href="https://dev-jira.1and1.org/browse/MOPI-1968">MOPI-1968</a>
      * @throws IOException
+     * @see <a href="https://dev-jira.1and1.org/browse/MOPI-1968">MOPI-1968</a>
      */
     @Test
     public void testDownloadFileToTempPermissionDenied() throws IOException {

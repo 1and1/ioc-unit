@@ -1,21 +1,23 @@
 package com.oneandone.ejbcdiunit.simulators.sftpserver;
 
-import com.oneandone.cdi.testanalyzer.annotations.SutPackages;
-import com.oneandone.iocunit.CdiUnit2Runner;
-import com.oneandone.ejbcdiunit.simulators.sftpclient.SftpConfiguration;
-import com.oneandone.ejbcdiunit.simulators.sftpclient.SftpConnector;
-import com.oneandone.ejbcdiunit.simulators.sftpclient.TestSftpConfiguration;
-import com.oneandone.ejbcdiunit.simulators.sftpclient.upload.UploadFileStrategy;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
+import java.util.regex.Pattern;
+
+import javax.inject.Inject;
+
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import javax.inject.Inject;
-import java.util.regex.Pattern;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import com.oneandone.ejbcdiunit.simulators.sftpclient.SftpConfiguration;
+import com.oneandone.ejbcdiunit.simulators.sftpclient.SftpConnector;
+import com.oneandone.ejbcdiunit.simulators.sftpclient.TestSftpConfiguration;
+import com.oneandone.ejbcdiunit.simulators.sftpclient.upload.UploadFileStrategy;
+import com.oneandone.iocunit.CdiUnit2Runner;
+import com.oneandone.iocunit.analyzer.annotations.SutPackages;
 
 @RunWith(CdiUnit2Runner.class)
 @SutPackages(SftpConnector.class)

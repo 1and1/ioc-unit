@@ -97,7 +97,8 @@
                 <module>ioc-unit-mocks</module>
                 <module>ioc-unit-ejb</module>
                 <module>ioc-unit-contexts</module>
-                <!--module>purecdi-tests</module-->
+                <module>ioc-unit-simulators</module>
+                <module>purecdi-tests</module>
             </modules>
             <dependencies>
                 <dependency>
@@ -117,7 +118,6 @@
         <profile>
             <id>junit4</id>
             <modules>
-                <module>ioc-unit-mocks</module>
                 <module>purecdi-tests</module>
                 <module>ioc-unit-test-war</module>
                 <module>ioc-unit-tests</module>
