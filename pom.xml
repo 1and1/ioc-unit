@@ -99,6 +99,13 @@
                 <module>ioc-unit-contexts</module>
                 <!--module>purecdi-tests</module-->
             </modules>
+            <dependencies>
+                <dependency>
+                    <groupId>net.oneandone.ioc-unit</groupId>
+                    <artifactId>weld-starter-base</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+            </dependencies>
         </profile>
         <profile>
             <id>arquillian</id>
@@ -315,11 +322,6 @@
             <artifactId>javaee-api</artifactId>
             <version>${version.javaee_api}</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.oneandone.ioc-unit</groupId>
-            <artifactId>weld-starter-base</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>net.oneandone.ioc-unit</groupId>
-        <artifactId>ejb-cdi-unit-examples-parent</artifactId>
+        <artifactId>ioc-unit-examples-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
