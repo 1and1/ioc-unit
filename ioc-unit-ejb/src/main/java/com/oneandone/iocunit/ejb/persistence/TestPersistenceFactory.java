@@ -50,7 +50,7 @@ public class TestPersistenceFactory extends PersistenceFactory {
     public static Set<String> notFoundPersistenceUnits = new HashSet<>();
     static Logger logger = LoggerFactory.getLogger("TestPersistenceFactory");
     @Inject
-    EjbExtensionExtended ejbExtensionExtended;
+    private EjbExtensionExtended ejbExtensionExtended;
 
     @Override
     protected String getPersistenceUnitName() {

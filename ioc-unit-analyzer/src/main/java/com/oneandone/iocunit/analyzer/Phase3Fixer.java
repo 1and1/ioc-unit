@@ -21,6 +21,7 @@ public class Phase3Fixer extends PhasesBase {
     public void work() {
         logger.trace("Phase3Fixer starting");
         HashMultiMap<QualifiedType, Class<?>> ambiguus = new HashMultiMap<>();
+        HashMap<QualifiedType, QualifiedType> injectsDone = new HashMap<>();
         for (QualifiedType inject : configuration.getInjects()) {
             Set<QualifiedType> matching = configuration.getAvailableProducerMap().findMatchingProducers(inject);
             if (matching.size() == 0)
@@ -37,8 +38,11 @@ public class Phase3Fixer extends PhasesBase {
                 } else {
                     configuration.candidate(declaringClass);
                 }
+                injectsDone.put(inject, producer);
             }
         }
+
+       injectsDone.entrySet().forEach(entry -> configuration.injectHandled(entry.getKey(), entry.getValue()));
 
         for (QualifiedType inject : configuration.getInjects()) {
             Set<QualifiedType> matching = configuration.getAvailableProducerMap().findMatchingProducers(inject);

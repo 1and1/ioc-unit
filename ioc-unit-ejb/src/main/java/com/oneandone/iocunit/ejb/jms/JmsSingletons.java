@@ -33,7 +33,7 @@ public class JmsSingletons {
 
     private AtomicReference<Connection> mdbConnection = new AtomicReference<>();
 
-    Logger logger = LoggerFactory.getLogger("JmsFactory");
+    private Logger logger = LoggerFactory.getLogger("JmsFactory");
 
     Connection getConnection() {
         try {

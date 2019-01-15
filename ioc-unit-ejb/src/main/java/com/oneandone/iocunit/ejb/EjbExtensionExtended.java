@@ -47,6 +47,7 @@ import javax.enterprise.inject.spi.InjectionTarget;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
 import javax.enterprise.inject.spi.ProcessInjectionTarget;
 import javax.enterprise.inject.spi.ProcessManagedBean;
+import javax.enterprise.inject.spi.WithAnnotations;
 import javax.enterprise.util.AnnotationLiteral;
 import javax.inject.Inject;
 import javax.jms.JMSConnectionFactory;
@@ -170,7 +171,19 @@ public class EjbExtensionExtended implements Extension {
      * @param pat the description of the beanclass
      * @param <T> The type
      */
-    public <T> void processAnnotatedType(@Observes ProcessAnnotatedType<T> pat) {
+    public <T> void processAnnotatedType(@Observes
+                                         @WithAnnotations({
+                                                 Stateless.class,
+                                                 Stateful.class,
+                                                 Singleton.class,
+                                                 MessageDriven.class,
+                                                 Entity.class,
+                                                 EJB.class,
+                                                 Resource.class,
+                                                 PersistenceContext.class,
+                                                 JMSConnectionFactory.class,
+                                         })
+                                                 ProcessAnnotatedType<T> pat) {
         logger.trace("processing annotated Type: " + pat.getAnnotatedType().getJavaClass().getName());
 
         boolean modified = false;
@@ -292,7 +305,12 @@ public class EjbExtensionExtended implements Extension {
      * @param <X> the type
      */
     public <X> void processInjectionTarget(
-            @Observes ProcessAnnotatedType<X> pat) {
+            @Observes  @WithAnnotations({
+                    Stateless.class,
+                    Stateful.class,
+                    Singleton.class,
+                    MessageDriven.class,
+            }) ProcessAnnotatedType<X> pat) {
         if (isAnnotationPresent(pat, Stateless.class) || isAnnotationPresent(pat, Stateful.class)
                 || isAnnotationPresent(pat, Singleton.class)
                 || isAnnotationPresent(pat, MessageDriven.class)) {

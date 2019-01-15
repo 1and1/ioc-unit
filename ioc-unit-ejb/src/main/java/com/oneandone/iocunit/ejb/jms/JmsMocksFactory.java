@@ -39,17 +39,17 @@ import com.oneandone.iocunit.ejb.AsynchronousMessageListenerProxy;
 public class JmsMocksFactory {
 
     @Inject
-    JmsSingletons jmsSingletons;
+    private JmsSingletons jmsSingletons;
 
     private AtomicBoolean initedMessageListeners = new AtomicBoolean(false);
 
     private ArrayList<MessageConsumer> messageConsumers = new ArrayList<>();
 
     @Inject
-    Instance<MessageListener> messageListeners;
+    private Instance<MessageListener> messageListeners;
 
     @Inject
-    AsynchronousManager asynchronousManager;
+    private AsynchronousManager asynchronousManager;
 
     private Logger logger = LoggerFactory.getLogger("JmsMdbConnector");
 

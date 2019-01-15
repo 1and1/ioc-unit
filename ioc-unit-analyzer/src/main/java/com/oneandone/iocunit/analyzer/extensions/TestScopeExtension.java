@@ -7,9 +7,12 @@
 package com.oneandone.iocunit.analyzer.extensions;
 
 import javax.enterprise.event.Observes;
+import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.AnnotatedType;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
+import javax.enterprise.inject.spi.WithAnnotations;
+import javax.inject.Inject;
 
 import org.apache.deltaspike.core.api.literal.ApplicationScopedLiteral;
 import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
@@ -27,7 +30,7 @@ public class TestScopeExtension implements Extension {
     }
 
 
-    <T> void processAnnotatedType(@Observes ProcessAnnotatedType<T> pat) {
+    <T> void processAnnotatedType(@Observes @WithAnnotations({Inject.class}) ProcessAnnotatedType<T> pat) {
         final AnnotatedType<T> annotatedType = pat.getAnnotatedType();
         if (annotatedType.getJavaClass().equals(testClass)) {
             AnnotatedTypeBuilder<T> builder = new AnnotatedTypeBuilder<T>().readFromType(annotatedType).addToClass(APPLICATIONSCOPED);

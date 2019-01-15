@@ -35,11 +35,11 @@ public class AsynchronousManager {
     private static final int TIME_TO_WAIT_FOR_INTERRUPT = 200;
     private static final int TIME_TO_STOP_LOOPING_ONCE = 200;
     @Inject
-    SimulatedTransactionManager transactionManager;
+    private SimulatedTransactionManager transactionManager;
     @Inject
-    EjbExtensionExtended ejbExtensionExtended;
+    private EjbExtensionExtended ejbExtensionExtended;
     @Inject
-    BeanManager bm;
+    private BeanManager bm;
     private Logger logger = LoggerFactory.getLogger("AsynchronousManager");
     private CreationalContexts creationalContexts = null;
 

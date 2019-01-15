@@ -27,13 +27,26 @@ public class Phase4Warner extends PhasesBase {
     }
 
     private void checkApplicationScoped() {
-        if (initial.testClass != null)
-            checkInjectedFieldsOfApplicationScoped(initial.testClass);
+        // normally should check test class as well. Since this normally is not used as injected type
+        // no problem here.
+        // if (initial.testClass != null)
+        //     checkInjectedFieldsOfApplicationScoped(initial.testClass);
         for (Class<?> b: configuration.getObligatory()) {
             if (b.getAnnotation(ApplicationScoped.class) != null) {
-                checkInjectedFieldsOfApplicationScoped(b);
+                if (!isTestClassOrSuper(b))
+                    checkInjectedFieldsOfApplicationScoped(b);
             }
         }
+    }
+
+    private boolean isTestClassOrSuper(final Class<?> b) {
+        Class<?> testClass = initial.testClass;
+        while (testClass != null && !testClass.equals(Object.class)) {
+            if (b.equals(testClass))
+                return true;
+            testClass = testClass.getSuperclass();
+        }
+        return false;
     }
 
     private void checkInjectedFieldsOfApplicationScoped(final Class<?> aClass) {
@@ -45,7 +58,7 @@ public class Phase4Warner extends PhasesBase {
             if (i.isField()) {
                 Field f = i.getField();
                 if (f.getAnnotation(Inject.class) == null
-                    || Modifier.isPrivate(f.getModifiers()) || Modifier.isPrivate(f.getModifiers())) {
+                    || Modifier.isPrivate(f.getModifiers()) || Modifier.isProtected(f.getModifiers())) {
                     ; // ok
                 } else {
                     logger.warn("ApplicationScoped class {} has non private injected field {}",aClass, f);
