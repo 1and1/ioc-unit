@@ -44,7 +44,7 @@
         </dependency>
         <dependency>
             <groupId>net.oneandone.ioc-unit</groupId>
-            <artifactId>ioc-unit-analyzer</artifactId>
+            <artifactId>ioc-unit</artifactId>
             <version>${project.version}</version>
         </dependency>
         <!-- logging -->
@@ -61,4 +61,5 @@
         </dependency>
 
     </dependencies>
+
 </project>
