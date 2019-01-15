@@ -2,8 +2,8 @@ package com.oneandone.ejbcdiunit.simulators.sftpserver;
 
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.SftpException;
-import com.oneandone.cdi.testanalyzer.annotations.SutPackages;
-import com.oneandone.cdi.tester.CdiUnit2Runner;
+import com.oneandone.iocunit.analyzer.annotations.SutPackages;
+import com.oneandone.iocunit.CdiUnit2Runner;
 import com.oneandone.ejbcdiunit.simulators.sftpclient.SftpConnector;
 import com.oneandone.ejbcdiunit.simulators.sftpclient.TestSftpConfiguration;
 import com.oneandone.ejbcdiunit.simulators.sftpclient.upload.UploadFileStrategy;

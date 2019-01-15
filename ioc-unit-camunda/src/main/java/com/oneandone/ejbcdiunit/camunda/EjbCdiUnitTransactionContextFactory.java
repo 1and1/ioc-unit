@@ -10,8 +10,8 @@ import org.camunda.bpm.engine.impl.interceptor.CommandContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.oneandone.cdi.tester.ejb.persistence.SimulatedTransactionManager;
-import com.oneandone.cdi.tester.ejb.persistence.TestTransaction;
+import com.oneandone.iocunit.ejb.persistence.SimulatedTransactionManager;
+import com.oneandone.iocunit.ejb.persistence.TestTransaction;
 
 /**
  * @author aschoerk

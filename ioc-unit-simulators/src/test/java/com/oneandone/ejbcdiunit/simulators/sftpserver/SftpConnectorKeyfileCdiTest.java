@@ -1,7 +1,7 @@
 package com.oneandone.ejbcdiunit.simulators.sftpserver;
 
 import com.oneandone.cdi.testanalyzer.annotations.SutPackages;
-import com.oneandone.cdi.tester.CdiUnit2Runner;
+import com.oneandone.iocunit.CdiUnit2Runner;
 import com.oneandone.ejbcdiunit.simulators.sftpclient.SftpConfiguration;
 import com.oneandone.ejbcdiunit.simulators.sftpclient.SftpConnector;
 import com.oneandone.ejbcdiunit.simulators.sftpclient.TestSftpConfiguration;

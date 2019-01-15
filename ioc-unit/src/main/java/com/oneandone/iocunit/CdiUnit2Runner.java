@@ -58,7 +58,7 @@ public class CdiUnit2Runner extends BlockJUnit4ClassRunner {
                     }
                     throw startupException;
                 }
-                System.setProperty("java.naming.factory.initial", "com.oneandone.cdi.tester.naming.CdiTesterContextFactory");
+                System.setProperty("java.naming.factory.initial", "com.oneandone.iocunit.naming.CdiTesterContextFactory");
                 InitialContext initialContext = new InitialContext();
                 final BeanManager beanManager = weldStarter.get(BeanManager.class);
                 initialContext.bind("java:comp/BeanManager", beanManager);
@@ -87,7 +87,7 @@ public class CdiUnit2Runner extends BlockJUnit4ClassRunner {
             if ("2.2.8 (Final)".equals(version) || "2.2.7 (Final)".equals(version)) {
                 startupException = new Exception("Weld 2.2.8 and 2.2.7 are not supported. Suggest upgrading to 2.2.9");
             }
-            System.setProperty("java.naming.factory.initial", "com.oneandone.cdi.tester.naming.CdiTesterContextFactory");
+            System.setProperty("java.naming.factory.initial", "com.oneandone.iocunit.naming.CdiTesterContextFactory");
 
             try {
                 if (cdiConfigCreator == null) {
@@ -109,7 +109,7 @@ public class CdiUnit2Runner extends BlockJUnit4ClassRunner {
 
                 InitialContext initialContext = new InitialContext();
                 final BeanManager beanManager = weldStarter.get(BeanManager.class);
-                System.setProperty("java.naming.factory.initial", "com.oneandone.cdi.tester.naming.CdiTesterContextFactory");
+                System.setProperty("java.naming.factory.initial", "com.oneandone.iocunit.naming.CdiTesterContextFactory");
                 initialContext.bind("java:comp/BeanManager", beanManager);
                 try (CreationalContexts creationalContexts = new CreationalContexts(beanManager)) {
                     if (testExtensionServices != null) {

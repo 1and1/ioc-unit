@@ -28,10 +28,10 @@ import com.oneandone.ejbcdiunit.ejbs.SingletonEJB;
 import com.oneandone.ejbcdiunit.ejbs.StatelessEJB;
 import com.oneandone.ejbcdiunit.entities.TestEntity1;
 import com.oneandone.ejbcdiunit.internal.EjbExtensionExtended;
-import com.oneandone.cdi.tester.ejb.persistence.SimulatedTransactionManager;
-import com.oneandone.cdi.tester.ejb.persistence.TestPersistenceFactory;
+import com.oneandone.iocunit.ejb.persistence.SimulatedTransactionManager;
+import com.oneandone.iocunit.ejb.persistence.TestPersistenceFactory;
 import com.oneandone.ejbcdiunit.resources.Resources;
-import com.oneandone.cdi.tester.ejb.resourcesimulators.SimulatedUserTransaction;
+import com.oneandone.iocunit.ejb.resourcesimulators.SimulatedUserTransaction;
 import com.oneandone.ejbcdiunit.testbases.EJBTransactionTestBase;
 
 /**

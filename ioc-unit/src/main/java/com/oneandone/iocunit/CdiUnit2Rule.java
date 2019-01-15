@@ -149,7 +149,7 @@ public class CdiUnit2Rule implements TestRule {
                 throw startupException;
             }
             final BeanManager beanManager = weldStarter.get(BeanManager.class);
-            System.setProperty("java.naming.factory.initial", "com.oneandone.cdi.tester.naming.CdiTesterContextFactory");
+            System.setProperty("java.naming.factory.initial", "com.oneandone.iocunit.naming.CdiTesterContextFactory");
             InitialContext initialContext = new InitialContext();
             initialContext.bind("java:comp/BeanManager", beanManager);
             try (CreationalContexts creationalContexts = new CreationalContexts(beanManager)) {

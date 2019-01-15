@@ -32,9 +32,9 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpException;
-import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
-import com.oneandone.cdi.tester.CdiUnit2Runner;
-import com.oneandone.cdi.tester.util.LoggerProducer;
+import com.oneandone.iocunit.analyzer.annotations.TestClasses;
+import com.oneandone.iocunit.CdiUnit2Runner;
+import com.oneandone.iocunit.util.LoggerProducer;
 import com.oneandone.ejbcdiunit.EjbUnitRunner;
 
 @RunWith(CdiUnit2Runner.class)
