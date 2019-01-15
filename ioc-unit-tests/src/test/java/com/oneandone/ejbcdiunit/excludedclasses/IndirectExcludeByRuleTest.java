@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import com.oneandone.iocunit.analyzer.annotations.SutClasses;
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.iocunit.CdiUnit2Rule;
+import com.oneandone.iocunit.IocUnitRule;
 import com.oneandone.cdi.weldstarter.StarterDeploymentException;
 import com.oneandone.ejbcdiunit.excludedclasses.pcktoinclude.ToExclude;
 
@@ -20,8 +20,8 @@ import com.oneandone.ejbcdiunit.excludedclasses.pcktoinclude.ToExclude;
 @SutClasses({ ToExclude.class })
 public class IndirectExcludeByRuleTest {
     @Rule
-    public CdiUnit2Rule getEjbUnitRule() {
-        return new CdiUnit2Rule(this);
+    public IocUnitRule getEjbUnitRule() {
+        return new IocUnitRule(this);
     }
 
     @Inject

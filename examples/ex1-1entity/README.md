@@ -7,7 +7,7 @@ add an Entity to a database and to search for it by its id.
 
 To enable testing the [Test-Class](https://github.com/1and1/ejb-cdi-unit/blob/master/ejb-cdi-unit-examples/ex1-1entity/src/test/java/com/oneandone/ejbcdiunit/test/ServiceTest.java) must be shaped as following:
 
-        @RunWith(CdiUnit2Runner.class)
+        @RunWith(IocUnitRunner.class)
         @TestClasses({Service.class, TestPersistenceFactory.class})
         public class ServiceTest {
             @Inject
@@ -16,7 +16,7 @@ To enable testing the [Test-Class](https://github.com/1and1/ejb-cdi-unit/blob/ma
             @Inject
             EntityManager entityManager;
 
-* CdiUnit2Runner is an adapted CdiRunner which makes sure that the EjbExtensions are activated during the CDI-Initialization.
+* IocUnitRunner is an adapted CdiRunner which makes sure that the EjbExtensions are activated during the CDI-Initialization.
 * TestClasses builds up the Test-Container.
     * Service defines a minimal Deployable containing the class to be tested and it's dependent classes.
     * TestPersistenceFactory defines an object which is able to produce EntityManagers for the PersistenceUnit with name "test".

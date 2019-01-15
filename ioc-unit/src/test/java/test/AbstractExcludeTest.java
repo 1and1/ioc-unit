@@ -1,7 +1,7 @@
 package test;
 
 import com.oneandone.iocunit.analyzer.annotations.ExcludedClasses;
-import com.oneandone.iocunit.CdiUnit2Runner;
+import com.oneandone.iocunit.IocUnitRunner;
 import org.junit.runner.RunWith;
 
 import javax.annotation.PostConstruct;
@@ -11,7 +11,7 @@ import javax.inject.Inject;
 /**
  * @author aschoerk
  */
-@RunWith(CdiUnit2Runner.class)
+@RunWith(IocUnitRunner.class)
 @ExcludedClasses(AbstractExcludeTest.ToInclude.class)
 public abstract class AbstractExcludeTest {
 

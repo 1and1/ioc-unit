@@ -15,11 +15,11 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.oneandone.iocunit.CdiUnit2Runner;
+import com.oneandone.iocunit.IocUnitRunner;
 import com.oneandone.iocunit.contexts.ContextController;
 import com.oneandone.iocunit.contexts.InRequestScope;
 
-@RunWith(CdiUnit2Runner.class)
+@RunWith(IocUnitRunner.class)
 public class TestContextController extends BaseTest {
 
     private static final AtomicInteger counter = new AtomicInteger(1);

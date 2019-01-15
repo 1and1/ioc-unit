@@ -8,12 +8,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.iocunit.CdiUnit2Runner;
+import com.oneandone.iocunit.IocUnitRunner;
 
 /**
  * Created by pcasaes on 30/03/17.
  */
-@RunWith(CdiUnit2Runner.class)
+@RunWith(IocUnitRunner.class)
 @TestClasses({
         DecoratedImpl.class,
         AddOneDecorator.class

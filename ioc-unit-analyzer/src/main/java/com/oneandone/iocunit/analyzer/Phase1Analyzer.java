@@ -312,6 +312,7 @@ class Phase1Analyzer extends PhasesBase {
     }
 
     boolean work() {
+        configuration.setPhase(Configuration.Phase.ANALYZING);
         logger.trace("Phase1Analyzer starting");
         boolean didAnyThing = false;
         do {

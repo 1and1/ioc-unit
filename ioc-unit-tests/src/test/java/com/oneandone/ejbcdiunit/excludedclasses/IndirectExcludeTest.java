@@ -8,14 +8,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.iocunit.CdiUnit2Runner;
+import com.oneandone.iocunit.IocUnitRunner;
 import com.oneandone.cdi.weldstarter.StarterDeploymentException;
 import com.oneandone.ejbcdiunit.excludedclasses.pcktoinclude.ToExclude;
 
 /**
  * @author aschoerk
  */
-@RunWith(CdiUnit2Runner.class)
+@RunWith(IocUnitRunner.class)
 @TestClasses({ IndirectExcluding.class, ToExclude.class })
 public class IndirectExcludeTest {
 

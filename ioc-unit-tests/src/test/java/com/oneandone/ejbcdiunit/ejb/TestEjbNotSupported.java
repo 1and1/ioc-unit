@@ -2,7 +2,7 @@ package com.oneandone.ejbcdiunit.ejb;
 
 import com.oneandone.iocunit.analyzer.annotations.SutPackages;
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.iocunit.CdiUnit2Runner;
+import com.oneandone.iocunit.IocUnitRunner;
 import com.oneandone.iocunit.ejb.SessionContextFactory;
 import com.oneandone.iocunit.ejb.persistence.SinglePersistenceFactory;
 import com.oneandone.ejbcdiunit.ejbs.StatelessEJB;
@@ -25,7 +25,7 @@ import static org.junit.Assert.assertThat;
 /**
  * @author aschoerk
  */
-@RunWith(CdiUnit2Runner.class)
+@RunWith(IocUnitRunner.class)
 @SutPackages(StatelessEJB.class)
 @TestClasses({ SessionContextFactory.class, LoggerGenerator.class })
 public class TestEjbNotSupported {

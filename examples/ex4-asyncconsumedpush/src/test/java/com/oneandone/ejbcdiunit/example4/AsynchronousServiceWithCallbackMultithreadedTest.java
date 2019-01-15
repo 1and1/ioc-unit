@@ -1,7 +1,7 @@
 package com.oneandone.ejbcdiunit.example4;
 
 import com.oneandone.iocunit.analyzer.annotations.SutPackages;
-import com.oneandone.iocunit.CdiUnit2Runner;
+import com.oneandone.iocunit.IocUnitRunner;
 import com.oneandone.iocunit.ejb.AsynchronousManager;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +22,7 @@ import static org.junit.Assert.assertThat;
 /**
  * @author aschoerk
  */
-@RunWith(CdiUnit2Runner.class)
+@RunWith(IocUnitRunner.class)
 @SutPackages({AsynchronousService.class})
 public class AsynchronousServiceWithCallbackMultithreadedTest {
 

@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.oneandone.iocunit.analyzer.annotations.SutPackages;
-import com.oneandone.iocunit.CdiUnit2Runner;
+import com.oneandone.iocunit.IocUnitRunner;
 
 import cditester.producing.ProducingClass2;
 import cditester.test2.Test2Interface;
@@ -17,7 +17,7 @@ import cditester.test2.Test2Interface;
 /**
  * @author aschoerk
  */
-@RunWith(CdiUnit2Runner.class)
+@RunWith(IocUnitRunner.class)
 @SutPackages({ ProducingClass2.class })
 public class TestStaticProducer {
     @Inject

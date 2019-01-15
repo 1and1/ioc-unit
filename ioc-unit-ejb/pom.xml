@@ -37,6 +37,12 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-api</artifactId>
+            <version>[6.0,8.0]</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>org.jboss.weld</groupId>
             <artifactId>weld-spi</artifactId>
             <version>3.0.SP4</version>

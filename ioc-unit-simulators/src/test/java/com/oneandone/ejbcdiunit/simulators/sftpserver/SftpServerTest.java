@@ -31,11 +31,11 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpException;
-import com.oneandone.iocunit.CdiUnit2Runner;
+import com.oneandone.iocunit.IocUnitRunner;
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 import com.oneandone.iocunit.util.LoggerProducer;
 
-@RunWith(CdiUnit2Runner.class)
+@RunWith(IocUnitRunner.class)
 @TestClasses({LoggerProducer.class})
 public class SftpServerTest {
 

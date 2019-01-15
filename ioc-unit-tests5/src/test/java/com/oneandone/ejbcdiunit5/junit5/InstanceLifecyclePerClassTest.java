@@ -13,7 +13,7 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.oneandone.iocunit.analyzer.annotations.SutClasses;
-import com.oneandone.iocunit.JUnit5Extension;
+import com.oneandone.iocunit.IocJUnit5Extension;
 import com.oneandone.ejbcdiunit5.junit5.beans.AppScopedBean1;
 import com.oneandone.ejbcdiunit5.junit5.beans.AppScopedBean2;
 import com.oneandone.ejbcdiunit5.junit5.beans.BaseBean;
@@ -21,7 +21,7 @@ import com.oneandone.ejbcdiunit5.junit5.beans.BaseBean;
 /**
  * @author aschoerk
  */
-@ExtendWith(JUnit5Extension.class)
+@ExtendWith(IocJUnit5Extension.class)
 @SutClasses({ AppScopedBean1.class, AppScopedBean2.class })
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class InstanceLifecyclePerClassTest {

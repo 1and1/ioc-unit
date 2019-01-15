@@ -19,7 +19,9 @@ public class Phase3Fixer extends PhasesBase {
     }
 
     public void work() {
+        configuration.setPhase(Configuration.Phase.FIXING);
         logger.trace("Phase3Fixer starting");
+        HashSet<Class<?>> newCandidates = new HashSet<>();
         HashMultiMap<QualifiedType, Class<?>> ambiguus = new HashMultiMap<>();
         HashMap<QualifiedType, QualifiedType> injectsDone = new HashMap<>();
         for (QualifiedType inject : configuration.getInjects()) {
@@ -35,8 +37,11 @@ public class Phase3Fixer extends PhasesBase {
                 Class declaringClass = producer.getDeclaringClass();
                 if (configuration.isToBeStarted(declaringClass)) {
                     logger.error("Phase3: Declaring Class already to be started {}", producer);
+                } else if (newCandidates.contains(declaringClass)) {
+                        logger.trace("Phase3: Declaring Class already to new Candidate {}", producer);
                 } else {
                     configuration.candidate(declaringClass);
+                    newCandidates.add(declaringClass);
                 }
                 injectsDone.put(inject, producer);
             }
@@ -81,7 +86,13 @@ public class Phase3Fixer extends PhasesBase {
                             });
                         }
                     } else {
-                        configuration.candidate(sutClassBackedProducers.iterator().next().getDeclaringClass());
+                        final Class declaringClass = sutClassBackedProducers.iterator().next().getDeclaringClass();
+                        if (newCandidates.contains(declaringClass)) {
+                            logger.trace("Phase3: Declaring Class already to new Candidate {}", declaringClass);
+                        } else {
+                            newCandidates.add(declaringClass);
+                            configuration.candidate(declaringClass);
+                        }
                     }
                 }
             }

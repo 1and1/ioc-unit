@@ -19,13 +19,13 @@ import org.junit.runner.RunWith;
 
 import com.oneandone.iocunit.analyzer.annotations.SutClasses;
 import com.oneandone.iocunit.analyzer.annotations.SutPackages;
-import com.oneandone.iocunit.CdiUnit2Runner;
+import com.oneandone.iocunit.IocUnitRunner;
 import com.oneandone.iocunit.ejb.AsynchronousManager;
 
 /**
  * @author aschoerk
  */
-@RunWith(CdiUnit2Runner.class)
+@RunWith(IocUnitRunner.class)
 @SutClasses({ CallbackMdb.class, SenderMdb.class })
 @SutPackages({ AsynchronousServiceIntf.class })
 public class AsynchronousServiceWithCallbackMultithreadedTest {

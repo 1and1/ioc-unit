@@ -6,14 +6,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.iocunit.CdiUnit2Runner;
+import com.oneandone.iocunit.IocUnitRunner;
 import com.oneandone.cdi.weldstarter.StarterDeploymentException;
 import com.oneandone.cdi.weldstarter.WeldSetupClass;
 
 import ch.qos.logback.classic.filter.ThresholdFilter;
 import ch.qos.logback.core.filter.Filter;
 
-@RunWith(CdiUnit2Runner.class)
+@RunWith(IocUnitRunner.class)
 @TestClasses(ThresholdFilter.class)
 public class TestNonCDIClasses {
 

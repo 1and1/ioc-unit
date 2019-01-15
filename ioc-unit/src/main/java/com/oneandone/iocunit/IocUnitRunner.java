@@ -24,14 +24,14 @@ import java.util.ServiceLoader;
 /**
  * @author aschoerk
  */
-public class CdiUnit2Runner extends BlockJUnit4ClassRunner {
-    private static Logger logger = LoggerFactory.getLogger(CdiUnit2Runner.class);
+public class IocUnitRunner extends BlockJUnit4ClassRunner {
+    private static Logger logger = LoggerFactory.getLogger(IocUnitRunner.class);
     private final Class<?> clazz;
     private final List<TestExtensionService> testExtensionServices = new ArrayList<>();
     private FrameworkMethod frameworkMethod;
     private Throwable startupException;
 
-    public CdiUnit2Runner(Class<?> clazz) throws InitializationError {
+    public IocUnitRunner(Class<?> clazz) throws InitializationError {
         super(clazz);
         if (testExtensionServices.size() == 0) {
             ServiceLoader<TestExtensionService> loader = ServiceLoader.load(TestExtensionService.class);

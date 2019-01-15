@@ -10,12 +10,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.oneandone.iocunit.analyzer.annotations.SutClasses;
-import com.oneandone.iocunit.CdiUnit2Runner;
+import com.oneandone.iocunit.IocUnitRunner;
 
 /**
  * @author aschoerk
  */
-@RunWith(CdiUnit2Runner.class)
+@RunWith(IocUnitRunner.class)
 @SutClasses({ DecoratorTest.Bean.class, DecoratorTest.IImpl.class, DecoratorTest.IDecorator1.class })
 public class DecoratorTest {
     interface I {

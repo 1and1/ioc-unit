@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.oneandone.iocunit.analyzer.annotations.SutPackages;
-import com.oneandone.iocunit.CdiUnit2Runner;
+import com.oneandone.iocunit.IocUnitRunner;
 
 import cditester.test1.Test1A;
 import cditester.test1.Test1Interface;
@@ -17,7 +17,7 @@ import cditester.test1.Test1Interface;
 /**
  * @author aschoerk
  */
-@RunWith(CdiUnit2Runner.class)
+@RunWith(IocUnitRunner.class)
 @SutPackages({ Test1A.class })
 public class TestSutPackage {
     @Inject

@@ -27,7 +27,7 @@ import org.junit.runners.JUnit4;
 
 import com.oneandone.iocunit.analyzer.InitialConfiguration;
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.iocunit.CdiUnit2Rule;
+import com.oneandone.iocunit.IocUnitRule;
 import com.oneandone.iocunit.ejb.EjbJarClasspath;
 import com.oneandone.iocunit.ejb.SessionContextFactory;
 import com.oneandone.iocunit.ejb.persistence.SinglePersistenceFactory;
@@ -81,8 +81,8 @@ public class TestEjb extends EJBTransactionTestBase {
     }
 
     @Rule
-    public CdiUnit2Rule getEjbUnitRule() {
-        return new CdiUnit2Rule(this, new InitialConfiguration().exclude(SingletonTimerEJB.class));
+    public IocUnitRule getEjbUnitRule() {
+        return new IocUnitRule(this, new InitialConfiguration().exclude(SingletonTimerEJB.class));
     }
 
     @Before

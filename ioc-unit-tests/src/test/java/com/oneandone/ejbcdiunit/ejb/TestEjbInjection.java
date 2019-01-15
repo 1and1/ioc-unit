@@ -13,7 +13,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.iocunit.CdiUnit2Runner;
+import com.oneandone.iocunit.IocUnitRunner;
 import com.oneandone.iocunit.ejb.persistence.TestPersistenceFactory;
 import com.oneandone.ejbcdiunit.ejbs.StatelessEJB;
 import com.oneandone.ejbcdiunit.helpers.LoggerGenerator;
@@ -21,7 +21,7 @@ import com.oneandone.ejbcdiunit.helpers.LoggerGenerator;
 /**
  * @author aschoerk
  */
-@RunWith(CdiUnit2Runner.class)
+@RunWith(IocUnitRunner.class)
 @TestClasses({ StatelessEJB.class, LoggerGenerator.class, TestPersistenceFactory.class })
 public class TestEjbInjection {
 

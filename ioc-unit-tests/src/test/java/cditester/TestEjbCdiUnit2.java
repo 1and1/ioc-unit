@@ -3,9 +3,9 @@ package cditester;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.oneandone.iocunit.CdiUnit2Runner;
+import com.oneandone.iocunit.IocUnitRunner;
 
-@RunWith(CdiUnit2Runner.class)
+@RunWith(IocUnitRunner.class)
 public class TestEjbCdiUnit2 {
 
     @Test

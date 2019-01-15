@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import com.oneandone.iocunit.analyzer.annotations.EnabledAlternatives;
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.iocunit.CdiUnit2Runner;
+import com.oneandone.iocunit.IocUnitRunner;
 import com.oneandone.iocunit.ejb.persistence.TestTransaction;
 import com.oneandone.ejbcdiunit.ClassWithTwoDifferentEntityManagers;
 import com.oneandone.ejbcdiunit.cdiunit.Pu1Em;
@@ -41,7 +41,7 @@ import com.oneandone.ejbcdiunit.helpers.TestResources;
 /**
  * @author aschoerk
  */
-@RunWith(CdiUnit2Runner.class)
+@RunWith(IocUnitRunner.class)
 @EnabledAlternatives({ TestResources.class })
 @TestClasses({ J2eeSimTest1Factory.class, J2eeSimTest2Factory.class, ClassWithTwoDifferentEntityManagers.class })
 public class Jpa2PUTest {

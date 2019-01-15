@@ -160,6 +160,7 @@ class Phase2Matcher extends PhasesBase {
     }
 
     public void work() {
+        configuration.setPhase(Configuration.Phase.MATCHING);
         logger.trace("Phase2Matcher starting");
         for (QualifiedType i : configuration.getInjects()) {
             matchInject(i);

@@ -27,7 +27,7 @@ import org.mockito.Mockito;
 
 import com.oneandone.iocunit.analyzer.annotations.ExcludedClasses;
 import com.oneandone.iocunit.analyzer.annotations.SutPackages;
-import com.oneandone.iocunit.CdiUnit2Runner;
+import com.oneandone.iocunit.IocUnitRunner;
 import com.oneandone.iocunit.analyzer.annotations.ProducesAlternative;
 import com.oneandone.iocunit.contexts.ContextController;
 import com.oneandone.iocunit.contexts.InConversationScope;
@@ -46,10 +46,10 @@ import cditester.cdiunit.FApplicationScoped;
 import cditester.cdiunit.ProducedViaField;
 import cditester.cdiunit.ProducedViaMethod;
 
-@RunWith(CdiUnit2Runner.class)
+@RunWith(IocUnitRunner.class)
 @SutPackages({ AImplementation1.class })
 @ExcludedClasses({ Scoped.class }) // cdi1.0 does not recognize @Vetoed
-public class TestCdiUnit2Runner extends BaseTest {
+public class TestIocUnitRunner extends BaseTest {
 
     @Inject
     InitialListenerProducer ejbCdiUnitInitialListenerProducer;

@@ -30,8 +30,8 @@ import com.oneandone.cdi.weldstarter.spi.WeldStarter;
 /**
  * @author aschoerk
  */
-public class CdiUnit2Rule implements TestRule {
-    private static Logger logger = LoggerFactory.getLogger(CdiUnit2Rule.class);
+public class IocUnitRule implements TestRule {
+    private static Logger logger = LoggerFactory.getLogger(IocUnitRule.class);
     private final Object instance;
     private final InitialConfiguration initialConfiguration;
     private WeldSetupClass weldSetup;
@@ -40,11 +40,11 @@ public class CdiUnit2Rule implements TestRule {
     private Method method;
     private ConfigCreator cdiConfigCreator = null;
 
-    public CdiUnit2Rule(final Object instance) {
+    public IocUnitRule(final Object instance) {
         this(instance, new InitialConfiguration());
     }
 
-    public CdiUnit2Rule(final Object instance, final InitialConfiguration initialConfiguration) {
+    public IocUnitRule(final Object instance, final InitialConfiguration initialConfiguration) {
         this.instance = instance;
         this.initialConfiguration = initialConfiguration;
         if (testExtensionServices.size() == 0) {
@@ -125,7 +125,7 @@ public class CdiUnit2Rule implements TestRule {
         private ClassFormatError parseClassFormatError(ClassFormatError e) {
             if (e.getMessage().startsWith(ABSENT_CODE_PREFIX)) {
                 String offendingClass = e.getMessage().substring(ABSENT_CODE_PREFIX.length());
-                URL url = CdiUnit2Rule.class.getClassLoader().getResource(offendingClass + ".class");
+                URL url = IocUnitRule.class.getClassLoader().getResource(offendingClass + ".class");
 
                 return new ClassFormatError("'" + offendingClass.replace('/', '.')
                         + "' is an API only class. You need to remove '"

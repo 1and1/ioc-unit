@@ -15,14 +15,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.oneandone.iocunit.analyzer.annotations.ExcludedClasses;
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.iocunit.JUnit5Extension;
+import com.oneandone.iocunit.IocJUnit5Extension;
 import com.oneandone.iocunit.ejb.SessionContextFactory;
 import com.oneandone.iocunit.ejb.persistence.TestPersistenceFactory;
 
 /**
  * @author aschoerk
  */
-@ExtendWith(JUnit5Extension.class)
+@ExtendWith(IocJUnit5Extension.class)
 @TestClasses({ TestPersistenceFactoryAlternative.class, SessionContextFactory.class })
 @ExcludedClasses({ TestPersistenceFactory.class })
 public class TestPersistenceFactoryAlternativeH2Test extends PersistenceFactoryTestBase {

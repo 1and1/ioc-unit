@@ -12,7 +12,7 @@ import org.junit.runner.RunWith;
 import com.oneandone.iocunit.analyzer.annotations.SutClasses;
 import com.oneandone.iocunit.analyzer.annotations.SutPackages;
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.iocunit.CdiUnit2Runner;
+import com.oneandone.iocunit.IocUnitRunner;
 import com.oneandone.iocunit.ejb.AsynchronousManager;
 import com.oneandone.iocunit.ejb.SessionContextFactory;
 import com.oneandone.ejbcdiunit.ejbs.CdiMdbClient;
@@ -26,7 +26,7 @@ import com.oneandone.ejbcdiunit.helpers.LoggerGenerator;
 /**
  * @author aschoerk
  */
-@RunWith(CdiUnit2Runner.class)
+@RunWith(IocUnitRunner.class)
 @SutClasses({ QMdbEjb.class, QMdbEjb2.class, TMdbEjb.class })
 @SutPackages(CdiMdbClient.class)
 @TestClasses({ SessionContextFactory.class, LoggerGenerator.class })

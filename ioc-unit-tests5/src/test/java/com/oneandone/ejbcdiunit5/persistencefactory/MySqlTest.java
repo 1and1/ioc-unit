@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 
 import com.oneandone.iocunit.analyzer.annotations.EnabledAlternatives;
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.iocunit.JUnit5Extension;
+import com.oneandone.iocunit.IocJUnit5Extension;
 import com.oneandone.iocunit.ejb.persistence.PersistenceFactory;
 import com.oneandone.ejbcdiunit.entities.TestEntity1;
 import com.oneandone.ejbcdiunit5.helpers.J2eeSimMySqlFactory;
@@ -38,7 +38,7 @@ import com.oneandone.ejbcdiunit5.helpers.TestResources;
  * @author aschoerk
  */
 @Disabled
-@ExtendWith(JUnit5Extension.class)
+@ExtendWith(IocJUnit5Extension.class)
 @EnabledAlternatives({ J2eeSimMySqlFactory.class, TestResources.class })
 @TestClasses({ MySqlStarter.class })
 public class MySqlTest {

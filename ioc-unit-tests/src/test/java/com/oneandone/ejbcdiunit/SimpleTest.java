@@ -9,8 +9,8 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import com.oneandone.iocunit.analyzer.InitialConfiguration;
-import com.oneandone.iocunit.CdiUnit2Rule;
-import com.oneandone.iocunit.CdiUnit2Runner;
+import com.oneandone.iocunit.IocUnitRule;
+import com.oneandone.iocunit.IocUnitRunner;
 import com.oneandone.ejbcdiunit.ejbs.SingletonTimerEJB;
 
 /**
@@ -22,8 +22,8 @@ import com.oneandone.ejbcdiunit.ejbs.SingletonTimerEJB;
 public class SimpleTest {
 
     @Rule
-    public CdiUnit2Rule createEjbUnitRule() {
-        return new CdiUnit2Rule(this, new InitialConfiguration().exclude(SingletonTimerEJB.class));
+    public IocUnitRule createEjbUnitRule() {
+        return new IocUnitRule(this, new InitialConfiguration().exclude(SingletonTimerEJB.class));
     }
 
     @Before
@@ -42,7 +42,7 @@ public class SimpleTest {
         boolean b;
     }
 
-    @RunWith(CdiUnit2Runner.class)
+    @RunWith(IocUnitRunner.class)
     class Member {
         @Test
         public void test2() {

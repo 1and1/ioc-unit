@@ -11,7 +11,7 @@ import org.junit.Test;
 
 import com.oneandone.iocunit.analyzer.InitialConfiguration;
 import com.oneandone.iocunit.analyzer.annotations.TestPackages;
-import com.oneandone.iocunit.CdiUnit2Rule;
+import com.oneandone.iocunit.IocUnitRule;
 import com.oneandone.ejbcdiunit.excludedclasses.pcktoinclude.ToExclude;
 import com.oneandone.ejbcdiunit.excludedclasses.pcktoinclude.ToInclude;
 
@@ -29,9 +29,9 @@ public class ExcludeByRuleTest {
     ToExclude.ToExcludeProduced toExcludeProduced;
 
     @Rule
-    public CdiUnit2Rule getEjbUnitRule() {
+    public IocUnitRule getEjbUnitRule() {
         ToInclude.count = 0;
-        return new CdiUnit2Rule(this, new InitialConfiguration().exclude(ToExclude.class));
+        return new IocUnitRule(this, new InitialConfiguration().exclude(ToExclude.class));
     }
 
     @Test

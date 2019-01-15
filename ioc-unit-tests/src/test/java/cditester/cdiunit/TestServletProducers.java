@@ -10,7 +10,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.oneandone.iocunit.CdiUnit2Runner;
+import com.oneandone.iocunit.IocUnitRunner;
 import com.oneandone.iocunit.contexts.servlet.CdiUnitServlet;
 
 /**
@@ -18,7 +18,7 @@ import com.oneandone.iocunit.contexts.servlet.CdiUnitServlet;
  * Originally no Qualifier @CdiUnitServlet so the SE-builtin (from >weld2) objects were used.
  * 
  */
-@RunWith(CdiUnit2Runner.class)
+@RunWith(IocUnitRunner.class)
 public class TestServletProducers {
     @Inject
     @CdiUnitServlet

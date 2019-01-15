@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.oneandone.iocunit.analyzer.annotations.SutPackages;
-import com.oneandone.iocunit.CdiUnit2Runner;
+import com.oneandone.iocunit.IocUnitRunner;
 
 import cditester.producing.ProducingClass1;
 import cditester.test1.Qualifier1A;
@@ -19,7 +19,7 @@ import cditester.test1.Test1Interface;
 /**
  * @author aschoerk
  */
-@RunWith(CdiUnit2Runner.class)
+@RunWith(IocUnitRunner.class)
 @SutPackages({ Test1A.class, ProducingClass1.class })
 public class TestQualifiersWithPackagedef {
     @Inject

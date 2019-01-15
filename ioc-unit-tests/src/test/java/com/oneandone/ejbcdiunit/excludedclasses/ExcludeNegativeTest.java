@@ -10,14 +10,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.oneandone.iocunit.analyzer.annotations.SutPackages;
-import com.oneandone.iocunit.CdiUnit2Runner;
+import com.oneandone.iocunit.IocUnitRunner;
 import com.oneandone.ejbcdiunit.excludedclasses.pcktoinclude.ToExclude;
 import com.oneandone.ejbcdiunit.excludedclasses.pcktoinclude.ToInclude;
 
 /**
  * @author aschoerk
  */
-@RunWith(CdiUnit2Runner.class)
+@RunWith(IocUnitRunner.class)
 @SutPackages({ ToInclude.class })
 // @ExcludedClasses(ToExclude.ToExcludeProduced.class)
 public class ExcludeNegativeTest {

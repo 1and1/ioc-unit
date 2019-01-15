@@ -30,14 +30,14 @@ import org.mockito.Mockito;
 
 import com.oneandone.iocunit.analyzer.annotations.ExcludedClasses;
 import com.oneandone.iocunit.analyzer.annotations.SutPackages;
-import com.oneandone.iocunit.JUnit5Extension;
+import com.oneandone.iocunit.IocJUnit5Extension;
 import com.oneandone.iocunit.analyzer.annotations.ProducesAlternative;
 import com.oneandone.iocunit.contexts.ContextController;
 import com.oneandone.iocunit.contexts.InConversationScope;
 import com.oneandone.iocunit.contexts.InRequestScope;
 import com.oneandone.iocunit.contexts.InSessionScope;
 
-@ExtendWith(JUnit5Extension.class)
+@ExtendWith(IocJUnit5Extension.class)
 @SutPackages({ AImplementation1.class })
 @ExcludedClasses({ Scoped.class }) // cdi1.0 does not recognize @Vetoed
 public class TestCdiUnitRunner extends BaseTest {

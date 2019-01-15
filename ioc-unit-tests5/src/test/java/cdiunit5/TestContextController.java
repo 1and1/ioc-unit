@@ -1,14 +1,14 @@
 package cdiunit5;
 
 import com.oneandone.iocunit.analyzer.annotations.SutClasses;
-import com.oneandone.iocunit.JUnit5Extension;
+import com.oneandone.iocunit.IocJUnit5Extension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import javax.inject.Inject;
 import java.util.concurrent.ExecutionException;
 
-@ExtendWith(JUnit5Extension.class)
+@ExtendWith(IocJUnit5Extension.class)
 @SutClasses(ContextControlledBean.class)
 public class TestContextController {
 

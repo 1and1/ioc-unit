@@ -10,7 +10,7 @@ import org.junit.Test;
 
 import com.oneandone.iocunit.analyzer.InitialConfiguration;
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.iocunit.CdiUnit2Rule;
+import com.oneandone.iocunit.IocUnitRule;
 import com.oneandone.iocunit.ejb.AsynchronousManager;
 import com.oneandone.ejbcdiunit.ejbs.CountingBean;
 import com.oneandone.ejbcdiunit.ejbs.SingletonTimerEJB;
@@ -25,8 +25,8 @@ public class TestTimerExclusion {
     AsynchronousManager asynchronousManager;
 
     @Rule
-    public CdiUnit2Rule getEjbUnitRule() {
-        return new CdiUnit2Rule(this, new InitialConfiguration().exclude(SingletonTimerEJB.class));
+    public IocUnitRule getEjbUnitRule() {
+        return new IocUnitRule(this, new InitialConfiguration().exclude(SingletonTimerEJB.class));
     }
 
     @Test

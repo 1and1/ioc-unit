@@ -8,13 +8,13 @@ import javax.sql.DataSource;
 import org.junit.runner.RunWith;
 
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.iocunit.CdiUnit2Runner;
+import com.oneandone.iocunit.IocUnitRunner;
 import com.oneandone.iocunit.ejb.persistence.SinglePersistenceFactory;
 
 /**
  * @author aschoerk
  */
-@RunWith(CdiUnit2Runner.class)
+@RunWith(IocUnitRunner.class)
 @TestClasses({ PFH2Test.TestDbSinglePersistenceFactory.class })
 public class PFH2Test extends PersistenceFactoryTestBase {
 

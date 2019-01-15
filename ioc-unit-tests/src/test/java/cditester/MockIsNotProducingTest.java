@@ -11,7 +11,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.iocunit.CdiUnit2Runner;
+import com.oneandone.iocunit.IocUnitRunner;
 import com.oneandone.iocunit.mocks.MockitoExtension;
 
 import cditester.cdiunit.AImplementation1;
@@ -21,7 +21,7 @@ import cditester.cdiunit.AInterface;
 /**
  * @author aschoerk
  */
-@RunWith(CdiUnit2Runner.class)
+@RunWith(IocUnitRunner.class)
 @TestClasses({ AImplementation1.class, MockitoExtension.class })
 public class MockIsNotProducingTest {
     @Mock

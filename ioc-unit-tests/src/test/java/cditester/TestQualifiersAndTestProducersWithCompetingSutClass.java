@@ -10,7 +10,7 @@ import org.junit.runner.RunWith;
 
 import com.oneandone.iocunit.analyzer.annotations.SutClasses;
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.iocunit.CdiUnit2Runner;
+import com.oneandone.iocunit.IocUnitRunner;
 import com.oneandone.cdi.weldstarter.StarterDeploymentException;
 
 import cditester.producing.ProducingClass1;
@@ -22,7 +22,7 @@ import cditester.test1.Test1Interface;
 /**
  * @author aschoerk
  */
-@RunWith(CdiUnit2Runner.class)
+@RunWith(IocUnitRunner.class)
 @TestClasses({ ProducingClass1.class })
 @SutClasses({ Test1A.class, Test1B.class })
 public class TestQualifiersAndTestProducersWithCompetingSutClass {

@@ -19,12 +19,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.iocunit.JUnit5Extension;
+import com.oneandone.iocunit.IocJUnit5Extension;
 import com.oneandone.iocunit.ProducerConfig;
 import com.oneandone.iocunit.ProducerConfigExtension;
 
 @Disabled
-@ExtendWith(JUnit5Extension.class)
+@ExtendWith(IocJUnit5Extension.class)
 @TestClasses({TestProducerConfig.Producers.class, ProducerConfigExtension.class})
 @TestProducerConfig.ProducerConfigClass(Object.class)
 @TestProducerConfig.ProducerConfigNum(0)

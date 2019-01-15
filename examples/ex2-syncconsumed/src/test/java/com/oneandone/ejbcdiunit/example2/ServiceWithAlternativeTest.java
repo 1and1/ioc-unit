@@ -1,7 +1,7 @@
 package com.oneandone.ejbcdiunit.example2;
 
 import com.oneandone.iocunit.analyzer.annotations.SutPackages;
-import com.oneandone.iocunit.CdiUnit2Runner;
+import com.oneandone.iocunit.IocUnitRunner;
 import com.oneandone.iocunit.analyzer.annotations.ProducesAlternative;
 import com.oneandone.ejbcdiunit.example2.uselookup.Resources;
 import com.oneandone.ejbcdiunit.example2.uselookup.ServiceWithLookup;
@@ -23,7 +23,7 @@ import static org.mockito.Mockito.when;
 /**
  * @author aschoerk
  */
-@RunWith(CdiUnit2Runner.class)
+@RunWith(IocUnitRunner.class)
 @SutPackages({ServiceWithLookup.class})
 public class ServiceWithAlternativeTest {
     @Inject

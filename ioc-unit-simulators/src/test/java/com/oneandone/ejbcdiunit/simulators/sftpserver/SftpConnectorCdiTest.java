@@ -35,11 +35,11 @@ import com.jcraft.jsch.SftpException;
 import com.oneandone.ejbcdiunit.simulators.sftpclient.SftpConnector;
 import com.oneandone.ejbcdiunit.simulators.sftpclient.TestSftpConfiguration;
 import com.oneandone.ejbcdiunit.simulators.sftpclient.upload.UploadFileStrategy;
-import com.oneandone.iocunit.CdiUnit2Runner;
+import com.oneandone.iocunit.IocUnitRunner;
 import com.oneandone.iocunit.analyzer.annotations.SutPackages;
 
 
-@RunWith(CdiUnit2Runner.class)
+@RunWith(IocUnitRunner.class)
 @SutPackages(SftpConnector.class)
 public class SftpConnectorCdiTest {
 

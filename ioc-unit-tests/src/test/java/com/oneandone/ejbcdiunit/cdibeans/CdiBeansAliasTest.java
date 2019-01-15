@@ -8,14 +8,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.oneandone.iocunit.analyzer.annotations.SutPackages;
-import com.oneandone.iocunit.CdiUnit2Runner;
+import com.oneandone.iocunit.IocUnitRunner;
 import com.oneandone.iocunit.analyzer.annotations.ProducesAlternative;
 
 /**
  * @author aschoerk
  */
 @SutPackages({ AppScopedServiceBean.class, HelperHelperAlias.class })
-@RunWith(CdiUnit2Runner.class)
+@RunWith(IocUnitRunner.class)
 public class CdiBeansAliasTest {
 
     @Produces

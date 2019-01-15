@@ -30,10 +30,10 @@ import com.oneandone.cdi.weldstarter.WeldSetupClass;
 import com.oneandone.cdi.weldstarter.spi.TestExtensionService;
 import com.oneandone.cdi.weldstarter.spi.WeldStarter;
 
-public class JUnit5Extension implements BeforeEachCallback,
+public class IocJUnit5Extension implements BeforeEachCallback,
         AfterAllCallback, TestExecutionExceptionHandler, TestInstanceFactory {
 
-    private static Logger logger = LoggerFactory.getLogger(JUnit5Extension.class);
+    private static Logger logger = LoggerFactory.getLogger(IocJUnit5Extension.class);
     // global system property
     private static final String ABSENT_CODE_PREFIX = "Absent Code attribute in method that is not native or abstract in class file ";
     protected WeldStarter weldStarter;
@@ -49,7 +49,7 @@ public class JUnit5Extension implements BeforeEachCallback,
     CreationalContexts creationalContexts;
     InitialContext initialContext;
 
-    public JUnit5Extension() {
+    public IocJUnit5Extension() {
         if(testExtensionServices.size() == 0) {
             ServiceLoader<TestExtensionService> loader = ServiceLoader.load(TestExtensionService.class);
             final Iterator<TestExtensionService> testExtensionServiceIterator = loader.iterator();
@@ -145,7 +145,7 @@ public class JUnit5Extension implements BeforeEachCallback,
     private ClassFormatError parseClassFormatError(ClassFormatError e) {
         if(e.getMessage().startsWith(ABSENT_CODE_PREFIX)) {
             String offendingClass = e.getMessage().substring(ABSENT_CODE_PREFIX.length());
-            URL url = JUnit5Extension.class.getClassLoader().getResource(offendingClass + ".class");
+            URL url = IocJUnit5Extension.class.getClassLoader().getResource(offendingClass + ".class");
 
             return new ClassFormatError("'" + offendingClass.replace('/', '.')
                                         + "' is an API only class. You need to remove '"

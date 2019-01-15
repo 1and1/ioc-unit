@@ -6,13 +6,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.oneandone.iocunit.analyzer.annotations.SutPackages;
-import com.oneandone.iocunit.CdiUnit2Runner;
+import com.oneandone.iocunit.IocUnitRunner;
 
 /**
  * @author aschoerk
  */
 @SutPackages({ AppScopedServiceBean.class })
-@RunWith(CdiUnit2Runner.class)
+@RunWith(IocUnitRunner.class)
 public class CdiBeansTest {
 
     @Inject

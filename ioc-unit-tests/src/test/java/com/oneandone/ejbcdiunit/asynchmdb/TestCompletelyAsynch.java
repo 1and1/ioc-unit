@@ -13,14 +13,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.oneandone.iocunit.analyzer.annotations.SutClasses;
-import com.oneandone.iocunit.CdiUnit2Runner;
+import com.oneandone.iocunit.IocUnitRunner;
 import com.oneandone.iocunit.ejb.AsynchronousManager;
 import com.oneandone.ejbcdiunit.ejbs.StatelessCompletelyAsynchEJB;
 
 /**
  * @author aschoerk
  */
-@RunWith(CdiUnit2Runner.class)
+@RunWith(IocUnitRunner.class)
 @SutClasses({ StatelessCompletelyAsynchEJB.class })
 public class TestCompletelyAsynch {
     @Inject

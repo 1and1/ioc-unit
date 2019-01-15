@@ -6,7 +6,7 @@ import org.junit.runner.RunWith;
 import com.oneandone.iocunit.analyzer.annotations.SutPackages;
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 import com.oneandone.iocunit.analyzer.annotations.TestPackages;
-import com.oneandone.iocunit.CdiUnit2Runner;
+import com.oneandone.iocunit.IocUnitRunner;
 import com.oneandone.iocunit.ejb.EjbJarClasspath;
 import com.oneandone.iocunit.ejb.persistence.TestPersistenceFactory;
 import com.oneandone.ejbcdiunit.ejbs.appexc.TestBaseClass;
@@ -15,7 +15,7 @@ import com.oneandone.ejbcdiunit.entities.TestEntity1;
 /**
  * @author aschoerk
  */
-@RunWith(CdiUnit2Runner.class)
+@RunWith(IocUnitRunner.class)
 @TestClasses({ TestPersistenceFactory.class })
 @TestPackages(TestBaseClass.class)
 @SutPackages({ TestEntity1.class })

@@ -16,7 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.oneandone.iocunit.analyzer.annotations.SutPackages;
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.iocunit.JUnit5Extension;
+import com.oneandone.iocunit.IocJUnit5Extension;
 import com.oneandone.iocunit.ejb.SessionContextFactory;
 import com.oneandone.iocunit.ejb.persistence.SinglePersistenceFactory;
 import com.oneandone.ejbcdiunit.ejbs.StatelessNotSupportedEJB;
@@ -26,7 +26,7 @@ import com.oneandone.ejbcdiunit5.helpers.LoggerGenerator;
 /**
  * @author aschoerk
  */
-@ExtendWith(JUnit5Extension.class)
+@ExtendWith(IocJUnit5Extension.class)
 @SutPackages(StatelessNotSupportedEJB.class)
 @TestClasses({SessionContextFactory.class, LoggerGenerator.class })
 public class TestEjbNotSupported {

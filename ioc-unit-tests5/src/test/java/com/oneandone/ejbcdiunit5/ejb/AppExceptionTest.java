@@ -3,7 +3,7 @@ package com.oneandone.ejbcdiunit5.ejb;
 import com.oneandone.iocunit.analyzer.annotations.SutPackages;
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 import com.oneandone.iocunit.analyzer.annotations.TestPackages;
-import com.oneandone.iocunit.JUnit5Extension;
+import com.oneandone.iocunit.IocJUnit5Extension;
 import com.oneandone.iocunit.ejb.EjbJarClasspath;
 import com.oneandone.iocunit.ejb.persistence.TestPersistenceFactory;
 import com.oneandone.ejbcdiunit.ejbs.appexc.TestBaseClass;
@@ -14,7 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 /**
  * @author aschoerk
  */
-@ExtendWith(JUnit5Extension.class)
+@ExtendWith(IocJUnit5Extension.class)
 @TestClasses({ TestPersistenceFactory.class })
 @TestPackages(TestBaseClass.class)
 @SutPackages({ TestEntity1.class })

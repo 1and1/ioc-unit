@@ -10,7 +10,7 @@ import org.junit.Test;
 
 import com.oneandone.iocunit.analyzer.InitialConfiguration;
 import com.oneandone.iocunit.analyzer.annotations.SutPackages;
-import com.oneandone.iocunit.CdiUnit2Rule;
+import com.oneandone.iocunit.IocUnitRule;
 import com.oneandone.ejbcdiunit.ejbs.SingletonTimerEJB;
 import com.oneandone.ejbcdiunit.excludedclasses.pcktoinclude.ToExclude;
 import com.oneandone.ejbcdiunit.excludedclasses.pcktoinclude.ToInclude;
@@ -27,9 +27,9 @@ public class ExcludeNegativeByRuleTest {
     ToExclude.ToExcludeProduced toExcludeProduced; // produced by not excluded ToExclude
 
     @Rule
-    public CdiUnit2Rule getEjbUnitRule() {
+    public IocUnitRule getEjbUnitRule() {
         ToInclude.count = 0;
-        return new CdiUnit2Rule(this, new InitialConfiguration().exclude(SingletonTimerEJB.class));
+        return new IocUnitRule(this, new InitialConfiguration().exclude(SingletonTimerEJB.class));
     }
 
     @Test

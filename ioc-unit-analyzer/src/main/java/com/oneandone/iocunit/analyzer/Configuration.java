@@ -13,6 +13,20 @@ import java.util.*;
  */
 public class Configuration {
 
+    enum Phase {
+        UNKNOWN,
+        ANALYZING,
+        MATCHING,
+        FIXING,
+        WARNING
+    }
+
+    private Phase phase = Phase.UNKNOWN;
+
+    public void setPhase(final Phase phase) {
+        this.phase = phase;
+    }
+
     public TesterExtensionsConfigsFinder testerExtensionsConfigsFinder = null;
 
     Logger logger = LoggerFactory.getLogger(Configuration.class);
@@ -38,7 +52,8 @@ public class Configuration {
         if (!candidates.contains(c)) {
             candidates.add(c);
         } else {
-            logger.error("candidates already contains {}",c);
+            if (phase != Phase.ANALYZING)
+                logger.error("candidates already contains {}",c);
         }
     }
 

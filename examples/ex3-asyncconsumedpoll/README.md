@@ -3,7 +3,7 @@
 The service-interface of the previous tests has been changed, so that the answer of the remote service will not be awaited. Instead of returning the actual result, a CorrelationId is returned which later can be used to query for the result itself. For this query 2 function pollId and pushString have been added. They return null, if the result is not ready yet.
 The Servercode achieves the asynchronous behaviour by using the @Asynchronous annotation. Each request to the consumed service is forwarded to a bean that delegates these calls to the remote interface inside asynchronous methods. These Methods return "Future"-object which can be used to check, whether the call has been completed, and when, which return the result.
 
-The EjbExtensions which are initiated by CdiUnit2Runner intercept these calls by AsynchronousInterceptor which generates a special future. There are two modes of operation possible. Either the future methods: "isDone" and "get" lead to synchronous calls, or the future checks if a lambda routine created to handle the embedded call is completed. In the second mode the AsynchronousManager-Singleton is responsible to handle the call.
+The EjbExtensions which are initiated by IocUnitRunner intercept these calls by AsynchronousInterceptor which generates a special future. There are two modes of operation possible. Either the future methods: "isDone" and "get" lead to synchronous calls, or the future checks if a lambda routine created to handle the embedded call is completed. In the second mode the AsynchronousManager-Singleton is responsible to handle the call.
 
 To illustrate this the following Tests are created
 * [ServiceTest]()

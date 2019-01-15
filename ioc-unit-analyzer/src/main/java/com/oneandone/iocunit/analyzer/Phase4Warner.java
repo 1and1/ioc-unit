@@ -22,7 +22,9 @@ public class Phase4Warner extends PhasesBase {
     }
 
     public void work() {
+        configuration.setPhase(Configuration.Phase.WARNING);
         checkApplicationScoped();
+        configuration.setPhase(Configuration.Phase.UNKNOWN);
 
     }
 

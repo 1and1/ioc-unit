@@ -12,7 +12,7 @@ import org.mockito.Mock;
 
 import com.oneandone.iocunit.analyzer.annotations.SutPackages;
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.iocunit.CdiUnit2Runner;
+import com.oneandone.iocunit.IocUnitRunner;
 import com.oneandone.iocunit.analyzer.annotations.ProducesAlternative;
 
 import cditester.cdiunit.tobetestedcode.HelperClass;
@@ -21,7 +21,7 @@ import cditester.cdiunit.tobetestedcode.Sut;
 /**
  * @author aschoerk
  */
-@RunWith(CdiUnit2Runner.class)
+@RunWith(IocUnitRunner.class)
 @TestClasses(TestResources.class)
 @SutPackages({ Sut.class })
 public class ProducesAltTest {
