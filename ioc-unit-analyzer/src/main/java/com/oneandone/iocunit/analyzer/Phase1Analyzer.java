@@ -43,17 +43,22 @@ class Phase1Analyzer extends PhasesBase {
     }
 
     private void findInnerClasses(final Class c) {
-        for (Class innerClass : c.getDeclaredClasses()) {
-            if (Modifier.isStatic(innerClass.getModifiers()) && ConfigStatics.mightBeBean(innerClass)) {
-                configuration.available(innerClass);
-                if (configuration.isTestClass(c)) {
-                    configuration.testClass(innerClass);
-                } else {
-                    configuration.sutClass(innerClass);
+        try {
+            for (Class innerClass : c.getDeclaredClasses()) {
+                if(Modifier.isStatic(innerClass.getModifiers()) && ConfigStatics.mightBeBean(innerClass)) {
+                    configuration.available(innerClass);
+                    if(configuration.isTestClass(c)) {
+                        configuration.testClass(innerClass);
+                    }
+                    else {
+                        configuration.sutClass(innerClass);
+                    }
+                    findInnerClasses(innerClass);
+                    newAvailables.add(innerClass);
                 }
-                findInnerClasses(innerClass);
-                newAvailables.add(innerClass);
             }
+        } catch (NoClassDefFoundError e) {
+            logger.warn("Did not find Class {}", c.getName());
         }
     }
 
@@ -75,7 +80,7 @@ class Phase1Analyzer extends PhasesBase {
     private void testClassAnnotation(Class<?> c) {
         ConfigStatics.doInClassAndSuperClasses(c, c1 -> {
             TestClasses testClassesL = c1.getAnnotation(TestClasses.class);
-            if (testClassesL != null) {
+            if(testClassesL != null) {
                 for (Class<?> testClass : testClassesL.value()) {
                     configuration
                             .testClass(testClass)
@@ -88,11 +93,11 @@ class Phase1Analyzer extends PhasesBase {
     private void sutClassAnnotation(Class<?> c) {
         ConfigStatics.doInClassAndSuperClasses(c, c1 -> {
             SutClasses sutClassesL = c1.getAnnotation(SutClasses.class);
-            if (sutClassesL != null) {
+            if(sutClassesL != null) {
                 for (Class<?> sutClass : sutClassesL.value()) {
-                        configuration
-                                .sutClass(sutClass)
-                                .candidate(sutClass);
+                    configuration
+                            .sutClass(sutClass)
+                            .candidate(sutClass);
                 }
             }
         });
@@ -102,7 +107,7 @@ class Phase1Analyzer extends PhasesBase {
     void extraAnnotations(Class c) {
         final Map<Class<? extends Annotation>, TestExtensionService> extraClassAnnotations =
                 configuration.testerExtensionsConfigsFinder.extraClassAnnotations;
-        if (extraClassAnnotations.keySet().size() > 0) {
+        if(extraClassAnnotations.keySet().size() > 0) {
             ConfigStatics.doInClassAndSuperClasses(c, c1 -> {
                 extraClassAnnotations.keySet()
                         .stream()
@@ -132,24 +137,28 @@ class Phase1Analyzer extends PhasesBase {
 
     boolean isObligatoryAccordingToServices(Class<?> clazz) {
         for (TestExtensionService s : configuration.testerExtensionsConfigsFinder.testExtensionServices) {
-            if (s.candidateToStart(clazz))
+            if(s.candidateToStart(clazz)) {
                 return true;
+            }
         }
         return false;
     }
 
     private void addAvailables(final boolean isSut, final Set<Class<?>> tmpClasses) {
         for (Class<?> c : tmpClasses) {
-            if (c.isInterface() || c.isAnnotation() || Modifier.isAbstract(c.getModifiers()))
+            if(c.isInterface() || c.isAnnotation() || Modifier.isAbstract(c.getModifiers())) {
                 continue;
-            if (!isSut) {
+            }
+            if(!isSut) {
                 configuration.testClass(c);
-            } else {
+            }
+            else {
                 configuration.sutClass(c);
             }
-            if (isObligatoryAccordingToServices(c)) {
+            if(isObligatoryAccordingToServices(c)) {
                 configuration.candidate(c);
-            } else {
+            }
+            else {
                 configuration.available(c);
                 newAvailables.add(c);
             }
@@ -160,11 +169,11 @@ class Phase1Analyzer extends PhasesBase {
         ConfigStatics.doInClassAndSuperClasses(c, c1 -> {
             try {
                 SutPackages sutPackages = c1.getAnnotation(SutPackages.class);
-                if (sutPackages != null) {
+                if(sutPackages != null) {
                     addPackages(sutPackages.value(), true);
                 }
                 TestPackages testPackages = c1.getAnnotation(TestPackages.class);
-                if (testPackages != null) {
+                if(testPackages != null) {
                     addPackages(testPackages.value(), false);
                 }
             } catch (MalformedURLException e) {
@@ -177,11 +186,11 @@ class Phase1Analyzer extends PhasesBase {
         ConfigStatics.doInClassAndSuperClasses(c, c1 -> {
             try {
                 SutClasspaths sutClasspaths = c1.getAnnotation(SutClasspaths.class);
-                if (sutClasspaths != null) {
+                if(sutClasspaths != null) {
                     addClasspaths(sutClasspaths.value(), true);
                 }
                 TestClasspaths testClasspaths = c1.getAnnotation(TestClasspaths.class);
-                if (testClasspaths != null) {
+                if(testClasspaths != null) {
                     addClasspaths(testClasspaths.value(), false);
                 }
             } catch (MalformedURLException e) {
@@ -193,7 +202,7 @@ class Phase1Analyzer extends PhasesBase {
     private void enabledAlternatives(Class<?> c) {
         ConfigStatics.doInClassAndSuperClasses(c, c1 -> {
             EnabledAlternatives enabledAlternativesL = c1.getAnnotation(EnabledAlternatives.class);
-            if (enabledAlternativesL != null) {
+            if(enabledAlternativesL != null) {
                 for (Class<?> aClass : enabledAlternativesL.value()) {
                     configuration
                             .testClass(aClass)
@@ -207,7 +216,7 @@ class Phase1Analyzer extends PhasesBase {
     private void excludes(Class<?> c) {
         ConfigStatics.doInClassAndSuperClasses(c, c1 -> {
             ExcludedClasses excludedClassesL = c1.getAnnotation(ExcludedClasses.class);
-            if (excludedClassesL != null) {
+            if(excludedClassesL != null) {
                 for (Class<?> aClass : excludedClassesL.value())
                     configuration.excluded(aClass);
             }
@@ -220,8 +229,8 @@ class Phase1Analyzer extends PhasesBase {
             for (Annotation ann : annotations) {
                 final Class<? extends Annotation> annotationType = ann.annotationType();
                 for (Annotation annann : annotationType.getAnnotations()) {
-                    if (annann.annotationType().getPackage().equals(TestClasses.class.getPackage())) {
-                        if (!configuration.isAvailable(annotationType)) {
+                    if(annann.annotationType().getPackage().equals(TestClasses.class.getPackage())) {
+                        if(!configuration.isAvailable(annotationType)) {
                             testClassAnnotation(annotationType);
                             classpathsAnnotations(annotationType);
                             sutClassAnnotation(annotationType);
@@ -238,7 +247,7 @@ class Phase1Analyzer extends PhasesBase {
 
     private boolean containsProducingAnnotation(final Annotation[] annotations) {
         for (Annotation ann : annotations) {
-            if (ann.annotationType().equals(Produces.class)) {
+            if(ann.annotationType().equals(Produces.class)) {
                 return true;
             }
         }
@@ -246,8 +255,8 @@ class Phase1Analyzer extends PhasesBase {
     }
 
     private boolean isStereotype(Annotation ann) {
-        for (Annotation subann: ann.annotationType().getAnnotations()) {
-            if (subann.annotationType().equals(Stereotype.class)) {
+        for (Annotation subann : ann.annotationType().getAnnotations()) {
+            if(subann.annotationType().equals(Stereotype.class)) {
                 return true;
             }
         }
@@ -255,18 +264,26 @@ class Phase1Analyzer extends PhasesBase {
     }
 
     private void producerFields(Class c, ProducerMap producerMap) {
-        for (Field f : c.getDeclaredFields()) {
-            if (containsProducingAnnotation(f.getAnnotations())) {
-                producerMap.addToProducerMap(new QualifiedType(f));
+        try {
+            for (Field f : c.getDeclaredFields()) {
+                if(containsProducingAnnotation(f.getAnnotations())) {
+                    producerMap.addToProducerMap(new QualifiedType(f));
+                }
             }
+        } catch (NoClassDefFoundError e) {
+            logger.warn("Did not find Class {}", c.getName());
         }
     }
 
     private void producerMethods(Class c, ProducerMap producerMap) {
-        for (Method m : c.getDeclaredMethods()) {
-            if (containsProducingAnnotation(m.getAnnotations())) {
-                producerMap.addToProducerMap(new QualifiedType(m));
+        try {
+            for (Method m : c.getDeclaredMethods()) {
+                if(containsProducingAnnotation(m.getAnnotations())) {
+                    producerMap.addToProducerMap(new QualifiedType(m));
+                }
             }
+        } catch (NoClassDefFoundError e) {
+            logger.warn("Did not find Class {}", c.getName());
         }
     }
 
@@ -276,7 +293,7 @@ class Phase1Analyzer extends PhasesBase {
                 .elseClass(c);
         innerClasses(c);
         injects(c);
-        if (configuration.isTestClass(c)) {
+        if(configuration.isTestClass(c)) {
             testClassAnnotation(c);
             sutClassAnnotation(c);
             classpathsAnnotations(c);
@@ -301,22 +318,26 @@ class Phase1Analyzer extends PhasesBase {
             ArrayList<Class<?>> currentCandidates = new ArrayList<>();
             configuration.moveCandidates(currentCandidates);
             for (Class<?> c : currentCandidates) {
-                if (handledCandidates.contains(c))
+                if(handledCandidates.contains(c)) {
                     continue;
+                }
                 didAnyThing = true;
                 logger.trace("evaluating {}", c);
-                if (configuration.isExcluded(c)) {
+                if(configuration.isExcluded(c)) {
                     logger.info("Excluded {}", c.getName());
-                } else {
-                    if (ConfigStatics.isInterceptingBean(c)) {
+                }
+                else {
+                    if(ConfigStatics.isInterceptingBean(c)) {
                         logger.trace("intercepting {}", c);
                         beanWithoutProducer(c);
-                    } else if (ConfigStatics.mightBeBean(c)) {
+                    }
+                    else if(ConfigStatics.mightBeBean(c)) {
                         logger.trace("might be Bean {}", c);
                         beanWithoutProducer(c);
                         final ProducerMap producerMap = configuration.getProducerMap();
                         addToProducerMap(c, producerMap);
-                    } else {
+                    }
+                    else {
                         logger.trace("else but to be started {}", c);
                         configuration
                                 .tobeStarted(c)
@@ -327,8 +348,9 @@ class Phase1Analyzer extends PhasesBase {
             }
         } while (!configuration.emptyCandidates());
         for (Class<?> c : newAvailables) {
-            if (ConfigStatics.mightBeBean(c))
+            if(ConfigStatics.mightBeBean(c)) {
                 addToProducerMap(c, configuration.getAvailableProducerMap());
+            }
         }
         logger.trace("Phase1Analyzer ready");
         return didAnyThing;
