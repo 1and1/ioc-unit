@@ -13,7 +13,7 @@ import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 import javax.naming.InitialContext;
 
-import com.oneandone.cdi.testanalyzer.ConfigCreator;
+import com.oneandone.iocunit.analyzer.ConfigCreator;
 import org.junit.Test;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
@@ -21,7 +21,7 @@ import org.junit.runners.model.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.oneandone.cdi.testanalyzer.InitialConfiguration;
+import com.oneandone.iocunit.analyzer.InitialConfiguration;
 import com.oneandone.cdi.weldstarter.CreationalContexts;
 import com.oneandone.cdi.weldstarter.WeldSetupClass;
 import com.oneandone.cdi.weldstarter.spi.TestExtensionService;

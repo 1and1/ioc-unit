@@ -26,8 +26,8 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.oneandone.cdi.testanalyzer.annotations.EnabledAlternatives;
-import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
+import com.oneandone.iocunit.analyzer.annotations.EnabledAlternatives;
+import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 import com.oneandone.cdi.tester.CdiUnit2Runner;
 import com.oneandone.cdi.tester.ejb.persistence.TestTransaction;
 import com.oneandone.ejbcdiunit.ClassWithTwoDifferentEntityManagers;

@@ -14,12 +14,11 @@ import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
+import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 import com.oneandone.cdi.tester.JUnit5Extension;
 import com.oneandone.cdi.tester.ProducerConfig;
 import com.oneandone.cdi.tester.ProducerConfigExtension;

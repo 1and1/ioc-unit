@@ -6,7 +6,7 @@ import javax.inject.Provider;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
+import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 import com.oneandone.cdi.tester.ExpectedStartupException;
 import com.oneandone.cdi.tester.JUnit5Extension;
 import com.oneandone.cdi.weldstarter.StarterDeploymentException;

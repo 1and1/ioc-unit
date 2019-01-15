@@ -8,8 +8,8 @@ import javax.inject.Inject;
 import org.junit.Rule;
 import org.junit.Test;
 
-import com.oneandone.cdi.testanalyzer.InitialConfiguration;
-import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
+import com.oneandone.iocunit.analyzer.InitialConfiguration;
+import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 import com.oneandone.cdi.tester.CdiUnit2Rule;
 import com.oneandone.cdi.tester.ejb.AsynchronousManager;
 import com.oneandone.ejbcdiunit.ejbs.CountingBean;

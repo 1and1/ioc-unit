@@ -1,7 +1,7 @@
 package com.oneandone.cdi.tester;
 
-import com.oneandone.cdi.testanalyzer.ConfigCreator;
-import com.oneandone.cdi.testanalyzer.InitialConfiguration;
+import com.oneandone.iocunit.analyzer.ConfigCreator;
+import com.oneandone.iocunit.analyzer.InitialConfiguration;
 import com.oneandone.cdi.weldstarter.CreationalContexts;
 import com.oneandone.cdi.weldstarter.WeldSetupClass;
 import com.oneandone.cdi.weldstarter.spi.TestExtensionService;

@@ -6,9 +6,9 @@ import java.util.Arrays;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
-import com.oneandone.cdi.testanalyzer.ConfigCreator;
-import com.oneandone.cdi.testanalyzer.InitialConfiguration;
-import com.oneandone.cdi.testanalyzer.SetupCreator;
+import com.oneandone.iocunit.analyzer.ConfigCreator;
+import com.oneandone.iocunit.analyzer.InitialConfiguration;
+import com.oneandone.iocunit.analyzer.SetupCreator;
 import com.oneandone.cdi.weldstarter.WeldSetupClass;
 import com.oneandone.cdi.weldstarter.WeldStarterTestBase;
 

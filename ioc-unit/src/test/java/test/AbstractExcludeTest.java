@@ -1,6 +1,6 @@
 package test;
 
-import com.oneandone.cdi.testanalyzer.annotations.ExcludedClasses;
+import com.oneandone.iocunit.analyzer.annotations.ExcludedClasses;
 import com.oneandone.cdi.tester.CdiUnit2Runner;
 import org.junit.runner.RunWith;
 

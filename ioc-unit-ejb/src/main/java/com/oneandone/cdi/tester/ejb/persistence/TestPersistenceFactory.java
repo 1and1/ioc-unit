@@ -32,7 +32,7 @@ import org.hibernate.jpa.boot.internal.PersistenceUnitInfoDescriptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
+import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 import com.oneandone.cdi.tester.ejb.EjbExtensionExtended;
 import com.oneandone.cdi.tester.ejb.SessionContextFactory;
 

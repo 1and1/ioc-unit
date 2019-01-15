@@ -1,8 +1,0 @@
-package com.oneandone.cdi.testanalyzer.test2;
-
-/**
- * @author aschoerk
- */
-public interface Test2Interface {
-    String call();
-}

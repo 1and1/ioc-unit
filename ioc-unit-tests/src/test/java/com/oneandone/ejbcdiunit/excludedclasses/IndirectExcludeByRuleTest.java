@@ -7,8 +7,8 @@ import javax.inject.Inject;
 import org.junit.Rule;
 import org.junit.Test;
 
-import com.oneandone.cdi.testanalyzer.annotations.SutClasses;
-import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
+import com.oneandone.iocunit.analyzer.annotations.SutClasses;
+import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 import com.oneandone.cdi.tester.CdiUnit2Rule;
 import com.oneandone.cdi.weldstarter.StarterDeploymentException;
 import com.oneandone.ejbcdiunit.excludedclasses.pcktoinclude.ToExclude;

@@ -8,7 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import com.oneandone.cdi.testanalyzer.InitialConfiguration;
+import com.oneandone.iocunit.analyzer.InitialConfiguration;
 import com.oneandone.cdi.tester.CdiUnit2Rule;
 import com.oneandone.cdi.tester.CdiUnit2Runner;
 import com.oneandone.ejbcdiunit.ejbs.SingletonTimerEJB;

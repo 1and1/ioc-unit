@@ -11,7 +11,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import com.oneandone.cdi.testanalyzer.annotations.SutPackages;
+import com.oneandone.iocunit.analyzer.annotations.SutPackages;
 import com.oneandone.cdi.tester.JUnit5Extension;
 import com.oneandone.ejbcdiunit5.junit5.beans.AppScopedBean1;
 

@@ -4,7 +4,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
+import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 import com.oneandone.cdi.tester.JUnit5Extension;
 import com.oneandone.cdi.tester.ejb.persistence.TestPersistenceFactory;
 import com.oneandone.ejbcdiunit.entities.TestEntity1;

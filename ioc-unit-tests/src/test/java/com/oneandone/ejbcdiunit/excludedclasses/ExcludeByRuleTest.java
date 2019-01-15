@@ -9,8 +9,8 @@ import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 
-import com.oneandone.cdi.testanalyzer.InitialConfiguration;
-import com.oneandone.cdi.testanalyzer.annotations.TestPackages;
+import com.oneandone.iocunit.analyzer.InitialConfiguration;
+import com.oneandone.iocunit.analyzer.annotations.TestPackages;
 import com.oneandone.cdi.tester.CdiUnit2Rule;
 import com.oneandone.ejbcdiunit.excludedclasses.pcktoinclude.ToExclude;
 import com.oneandone.ejbcdiunit.excludedclasses.pcktoinclude.ToInclude;

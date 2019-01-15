@@ -28,10 +28,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
-import com.oneandone.cdi.testanalyzer.annotations.ExcludedClasses;
-import com.oneandone.cdi.testanalyzer.annotations.SutPackages;
+import com.oneandone.iocunit.analyzer.annotations.ExcludedClasses;
+import com.oneandone.iocunit.analyzer.annotations.SutPackages;
 import com.oneandone.cdi.tester.JUnit5Extension;
-import com.oneandone.cdi.testanalyzer.annotations.ProducesAlternative;
+import com.oneandone.iocunit.analyzer.annotations.ProducesAlternative;
 import com.oneandone.cdi.tester.contexts.ContextController;
 import com.oneandone.cdi.tester.contexts.InConversationScope;
 import com.oneandone.cdi.tester.contexts.InRequestScope;

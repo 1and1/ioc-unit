@@ -8,8 +8,8 @@ import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 
-import com.oneandone.cdi.testanalyzer.InitialConfiguration;
-import com.oneandone.cdi.testanalyzer.annotations.SutPackages;
+import com.oneandone.iocunit.analyzer.InitialConfiguration;
+import com.oneandone.iocunit.analyzer.annotations.SutPackages;
 import com.oneandone.cdi.tester.CdiUnit2Rule;
 import com.oneandone.ejbcdiunit.ejbs.SingletonTimerEJB;
 import com.oneandone.ejbcdiunit.excludedclasses.pcktoinclude.ToExclude;

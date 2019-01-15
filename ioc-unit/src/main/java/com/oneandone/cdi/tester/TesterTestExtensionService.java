@@ -3,7 +3,7 @@ package com.oneandone.cdi.tester;
 import java.util.Arrays;
 import java.util.List;
 
-import com.oneandone.cdi.testanalyzer.annotations.ProducesAlternative;
+import com.oneandone.iocunit.analyzer.annotations.ProducesAlternative;
 import com.oneandone.cdi.weldstarter.spi.TestExtensionService;
 
 /**

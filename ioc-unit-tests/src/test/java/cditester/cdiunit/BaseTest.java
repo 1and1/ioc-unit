@@ -3,8 +3,7 @@ package cditester.cdiunit;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 
-import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
-import com.oneandone.cdi.tester.contexts.internal.jsf.ViewScopeExtension;
+import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 
 @TestClasses({ ScopedFactory.class
 })

@@ -3,7 +3,7 @@ package cditester.cdiunit;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
+import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 import com.oneandone.cdi.tester.CdiUnit2Runner;
 
 @RunWith(CdiUnit2Runner.class)

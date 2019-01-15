@@ -21,7 +21,7 @@ import javax.xml.rpc.handler.MessageContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.oneandone.cdi.testanalyzer.annotations.ProducesAlternative;
+import com.oneandone.iocunit.analyzer.annotations.ProducesAlternative;
 
 /**
  * @author aschoerk

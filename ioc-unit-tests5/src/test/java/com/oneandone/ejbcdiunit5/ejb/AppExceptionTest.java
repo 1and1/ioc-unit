@@ -1,8 +1,8 @@
 package com.oneandone.ejbcdiunit5.ejb;
 
-import com.oneandone.cdi.testanalyzer.annotations.SutPackages;
-import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
-import com.oneandone.cdi.testanalyzer.annotations.TestPackages;
+import com.oneandone.iocunit.analyzer.annotations.SutPackages;
+import com.oneandone.iocunit.analyzer.annotations.TestClasses;
+import com.oneandone.iocunit.analyzer.annotations.TestPackages;
 import com.oneandone.cdi.tester.JUnit5Extension;
 import com.oneandone.cdi.tester.ejb.EjbJarClasspath;
 import com.oneandone.cdi.tester.ejb.persistence.TestPersistenceFactory;

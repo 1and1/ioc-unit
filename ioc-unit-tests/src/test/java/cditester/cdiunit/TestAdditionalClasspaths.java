@@ -6,7 +6,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.oneandone.cdi.testanalyzer.annotations.SutClasspaths;
+import com.oneandone.iocunit.analyzer.annotations.SutClasspaths;
 import com.oneandone.cdi.tester.CdiUnit2Runner;
 import com.oneandone.ejbcdiunit.cdiunit.ExternalInterface;
 

@@ -6,17 +6,12 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.net.MalformedURLException;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Alternative;
 import javax.inject.Inject;
 
-import org.jboss.weld.environment.se.Weld;
-import org.jboss.weld.environment.se.WeldContainer;
-import org.jboss.weld.resources.spi.ScheduledExecutorServiceFactory;
 import org.junit.jupiter.api.Test;
 
-import com.oneandone.cdi.testanalyzer.annotations.EnabledAlternatives;
-import com.oneandone.cdi.testanalyzer.annotations.SutClasses;
+import com.oneandone.iocunit.analyzer.annotations.SutClasses;
 
 /**
  * @author aschoerk

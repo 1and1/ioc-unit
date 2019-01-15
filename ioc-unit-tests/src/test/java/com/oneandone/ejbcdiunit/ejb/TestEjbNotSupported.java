@@ -1,7 +1,7 @@
 package com.oneandone.ejbcdiunit.ejb;
 
-import com.oneandone.cdi.testanalyzer.annotations.SutPackages;
-import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
+import com.oneandone.iocunit.analyzer.annotations.SutPackages;
+import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 import com.oneandone.cdi.tester.CdiUnit2Runner;
 import com.oneandone.cdi.tester.ejb.SessionContextFactory;
 import com.oneandone.cdi.tester.ejb.persistence.SinglePersistenceFactory;

@@ -1,6 +1,6 @@
 package com.oneandone.ejbcdiunit5.excludedclasses;
 
-import com.oneandone.cdi.testanalyzer.annotations.ExcludedClasses;
+import com.oneandone.iocunit.analyzer.annotations.ExcludedClasses;
 import com.oneandone.ejbcdiunit5.excludedclasses.pcktoinclude.ToExclude;
 
 /**

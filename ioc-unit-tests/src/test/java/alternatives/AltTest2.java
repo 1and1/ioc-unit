@@ -11,7 +11,7 @@ import javax.inject.Inject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.oneandone.cdi.testanalyzer.annotations.EnabledAlternatives;
+import com.oneandone.iocunit.analyzer.annotations.EnabledAlternatives;
 import com.oneandone.cdi.tester.CdiUnit2Runner;
 
 /**

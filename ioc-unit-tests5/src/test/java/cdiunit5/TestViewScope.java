@@ -2,7 +2,7 @@ package cdiunit5;
 
 import java.io.Serializable;
 
-import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
+import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 import com.oneandone.cdi.tester.JUnit5Extension;
 import com.oneandone.cdi.tester.contexts.internal.jsf.ViewScopeExtension;
 import org.junit.jupiter.api.Assertions;

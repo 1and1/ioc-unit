@@ -9,7 +9,7 @@ package com.oneandone.cdi.tester.contexts.jaxrs;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-import com.oneandone.cdi.testanalyzer.annotations.TestClasses;
+import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 
 /**
  * Enable support for JaxRs mocking.

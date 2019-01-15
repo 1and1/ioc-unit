@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import com.oneandone.cdi.testanalyzer.annotations.SutClasses;
+import com.oneandone.iocunit.analyzer.annotations.SutClasses;
 import com.oneandone.cdi.tester.JUnit5Extension;
 
 /**

@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import com.oneandone.cdi.testanalyzer.ClasspathHandler;
+import com.oneandone.iocunit.analyzer.ClasspathHandler;
 
 import cditester.cdiunit.AImplementation1;
 

@@ -4,14 +4,12 @@ import static org.hamcrest.Matchers.is;
 
 import javax.inject.Inject;
 
-import com.oneandone.cdi.testanalyzer.annotations.ExcludedClasses;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.oneandone.cdi.testanalyzer.annotations.SutPackages;
-import com.oneandone.cdi.testanalyzer.annotations.TestPackages;
+import com.oneandone.iocunit.analyzer.annotations.SutPackages;
 import com.oneandone.cdi.tester.CdiUnit2Runner;
 import com.oneandone.ejbcdiunit.excludedclasses.pcktoinclude.ToExclude;
 import com.oneandone.ejbcdiunit.excludedclasses.pcktoinclude.ToInclude;

@@ -1,6 +1,6 @@
 package com.oneandone.ejbcdiunit.example3;
 
-import com.oneandone.cdi.testanalyzer.annotations.SutPackages;
+import com.oneandone.iocunit.analyzer.annotations.SutPackages;
 import com.oneandone.cdi.tester.CdiUnit2Runner;
 import org.junit.Test;
 import org.junit.runner.RunWith;

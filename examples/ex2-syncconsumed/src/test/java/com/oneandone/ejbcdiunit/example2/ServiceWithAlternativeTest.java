@@ -1,8 +1,8 @@
 package com.oneandone.ejbcdiunit.example2;
 
-import com.oneandone.cdi.testanalyzer.annotations.SutPackages;
+import com.oneandone.iocunit.analyzer.annotations.SutPackages;
 import com.oneandone.cdi.tester.CdiUnit2Runner;
-import com.oneandone.cdi.testanalyzer.annotations.ProducesAlternative;
+import com.oneandone.iocunit.analyzer.annotations.ProducesAlternative;
 import com.oneandone.ejbcdiunit.example2.uselookup.Resources;
 import com.oneandone.ejbcdiunit.example2.uselookup.ServiceWithLookup;
 import org.junit.Before;
