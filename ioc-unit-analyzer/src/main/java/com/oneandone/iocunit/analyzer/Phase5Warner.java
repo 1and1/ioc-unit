@@ -12,11 +12,11 @@ import org.slf4j.LoggerFactory;
 /**
  * @author aschoerk
  */
-public class Phase4Warner extends PhasesBase {
-    Logger logger = LoggerFactory.getLogger(Phase4Warner.class);
+public class Phase5Warner extends PhasesBase {
+    Logger logger = LoggerFactory.getLogger(Phase5Warner.class);
     private final InitialConfiguration initial;
 
-    public Phase4Warner(InitialConfiguration initial, final Configuration configuration) {
+    public Phase5Warner(InitialConfiguration initial, final Configuration configuration) {
         super(configuration);
         this.initial = initial;
     }
