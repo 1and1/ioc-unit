@@ -12,9 +12,9 @@ import com.oneandone.iocunit.analyzer.annotations.ExcludedClasses;
 import com.oneandone.iocunit.analyzer.annotations.SutClasses;
 import com.oneandone.iocunit.IocJUnit5Extension;
 import com.oneandone.iocunit.ejb.AsynchronousManager;
-import com.oneandone.ejbcdiunit.ejbs.CountingBean;
-import com.oneandone.ejbcdiunit.ejbs.SingletonTimerEJB;
-import com.oneandone.ejbcdiunit.ejbs.StatelessTimerEJB;
+import com.oneandone.iocunitejb.ejbs.CountingBean;
+import com.oneandone.iocunitejb.ejbs.SingletonTimerEJB;
+import com.oneandone.iocunitejb.ejbs.StatelessTimerEJB;
 
 /**
  * @author aschoerk

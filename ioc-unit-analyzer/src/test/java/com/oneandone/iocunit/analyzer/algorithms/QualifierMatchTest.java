@@ -107,6 +107,7 @@ public class QualifierMatchTest {
         Set<Annotation> defq1 = create("def", "q1");
         Set<Annotation> q1q2 = create("q1", "q2");
         Set<Annotation> q1any = create("q1", "any");
+        Set<Annotation> q1any2 = create("q1", "any");
         Set<Annotation> q1defany = create("q1", "any");
         Set<Annotation> empty = create();
         Set<Annotation> named = create("named");
@@ -135,6 +136,8 @@ public class QualifierMatchTest {
         assertTrue(match(named_namedName, any));
         assertTrue(match(named_namedName, empty));
         assertTrue(match(q1, q1any));
+        assertTrue(match(q1any, q1));
+        assertTrue(match(q1any2, q1any));
         assertFalse(match(any, empty));
         assertFalse(match(any, def));
         assertFalse(match(q2, q1any));

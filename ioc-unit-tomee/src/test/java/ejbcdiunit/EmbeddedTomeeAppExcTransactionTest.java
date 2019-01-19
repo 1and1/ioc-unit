@@ -21,26 +21,26 @@ import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
-import com.oneandone.ejbcdiunit.ejbs.CDIClass;
-import com.oneandone.ejbcdiunit.ejbs.appexc.SaveAndThrowCaller;
-import com.oneandone.ejbcdiunit.ejbs.appexc.SaveAndThrower;
-import com.oneandone.ejbcdiunit.ejbs.appexc.TestBaseClass;
-import com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.AppExcExampleInheritedNoRollback;
-import com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.AppExcExampleInheritedRollback;
-import com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.AppExcExampleNotInheritedNoRollback;
-import com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.AppExcExampleNotInheritedRollback;
-import com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.DerivedAppExcExampleInheritedNoRollback;
-import com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.DerivedAppExcExampleInheritedRollback;
-import com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.declared.notrtex.DeclaredAppExcExampleInheritedNoRollback;
-import com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.declared.notrtex.DeclaredAppExcExampleInheritedRollback;
-import com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.declared.notrtex.DeclaredAppExcExampleNotInheritedNoRollback;
-import com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.declared.notrtex.DeclaredAppExcExampleNotInheritedRollback;
-import com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.declared.rtex.DeclaredAppRtExcExampleInheritedNoRollback;
-import com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.declared.rtex.DeclaredAppRtExcExampleInheritedRollback;
-import com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.declared.rtex.DeclaredAppRtExcExampleNotInheritedNoRollback;
-import com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.declared.rtex.DeclaredAppRtExcExampleNotInheritedRollback;
-import com.oneandone.ejbcdiunit.entities.TestEntity1;
-import com.oneandone.ejbcdiunit.jpa.TomeeResources;
+import com.oneandone.iocunitejb.ejbs.CDIClass;
+import com.oneandone.iocunitejb.ejbs.appexc.SaveAndThrowCaller;
+import com.oneandone.iocunitejb.ejbs.appexc.SaveAndThrower;
+import com.oneandone.iocunitejb.ejbs.appexc.TestBaseClass;
+import com.oneandone.iocunitejb.ejbs.appexc.exceptions.AppExcExampleInheritedNoRollback;
+import com.oneandone.iocunitejb.ejbs.appexc.exceptions.AppExcExampleInheritedRollback;
+import com.oneandone.iocunitejb.ejbs.appexc.exceptions.AppExcExampleNotInheritedNoRollback;
+import com.oneandone.iocunitejb.ejbs.appexc.exceptions.AppExcExampleNotInheritedRollback;
+import com.oneandone.iocunitejb.ejbs.appexc.exceptions.DerivedAppExcExampleInheritedNoRollback;
+import com.oneandone.iocunitejb.ejbs.appexc.exceptions.DerivedAppExcExampleInheritedRollback;
+import com.oneandone.iocunitejb.ejbs.appexc.exceptions.declared.notrtex.DeclaredAppExcExampleInheritedNoRollback;
+import com.oneandone.iocunitejb.ejbs.appexc.exceptions.declared.notrtex.DeclaredAppExcExampleInheritedRollback;
+import com.oneandone.iocunitejb.ejbs.appexc.exceptions.declared.notrtex.DeclaredAppExcExampleNotInheritedNoRollback;
+import com.oneandone.iocunitejb.ejbs.appexc.exceptions.declared.notrtex.DeclaredAppExcExampleNotInheritedRollback;
+import com.oneandone.iocunitejb.ejbs.appexc.exceptions.declared.rtex.DeclaredAppRtExcExampleInheritedNoRollback;
+import com.oneandone.iocunitejb.ejbs.appexc.exceptions.declared.rtex.DeclaredAppRtExcExampleInheritedRollback;
+import com.oneandone.iocunitejb.ejbs.appexc.exceptions.declared.rtex.DeclaredAppRtExcExampleNotInheritedNoRollback;
+import com.oneandone.iocunitejb.ejbs.appexc.exceptions.declared.rtex.DeclaredAppRtExcExampleNotInheritedRollback;
+import com.oneandone.iocunitejb.entities.TestEntity1;
+import com.oneandone.iocunitejb.jpa.TomeeResources;
 
 public class EmbeddedTomeeAppExcTransactionTest extends TestBaseClass {
 

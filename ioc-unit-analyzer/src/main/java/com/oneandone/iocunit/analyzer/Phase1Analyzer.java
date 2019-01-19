@@ -5,6 +5,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Map;
@@ -37,6 +38,7 @@ class Phase1Analyzer extends PhasesBase {
 
     private ArrayList<Class<?>> newAvailables = new ArrayList<>();
     private Set<Class<?>> handledCandidates = new HashSet<>();
+    private Set<URL> testClassPaths = new HashSet<>();
 
     public Phase1Analyzer(Configuration configuration) {
         super(configuration);
@@ -161,6 +163,27 @@ class Phase1Analyzer extends PhasesBase {
             else {
                 configuration.available(c);
                 newAvailables.add(c);
+            }
+        }
+    }
+
+    public void extend(final Set<Class<?>> tmpClasses, boolean isSut) {
+        for (Class<?> c : tmpClasses) {
+            if(c.isInterface() || c.isAnnotation() || Modifier.isAbstract(c.getModifiers())) {
+                continue;
+            }
+            if (isSut)
+                configuration.sutClass(c);
+            else
+                configuration.testClass(c);
+            if(isObligatoryAccordingToServices(c)) {
+                configuration.candidate(c);
+            }
+            else {
+                if(ConfigStatics.mightBeBean(c)) {
+                    configuration.available(c);
+                    addToProducerMap(c, configuration.getAvailableProducerMap());
+                }
             }
         }
     }
@@ -353,6 +376,7 @@ class Phase1Analyzer extends PhasesBase {
                 addToProducerMap(c, configuration.getAvailableProducerMap());
             }
         }
+        newAvailables.clear();
         logger.trace("Phase1Analyzer ready");
         return didAnyThing;
 

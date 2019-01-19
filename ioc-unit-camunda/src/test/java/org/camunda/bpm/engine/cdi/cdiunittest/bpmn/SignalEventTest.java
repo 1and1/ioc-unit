@@ -22,7 +22,7 @@ import org.camunda.bpm.engine.test.Deployment;
 import org.jglue.cdiunit.AdditionalClasses;
 import org.junit.Test;
 
-import com.oneandone.ejbcdiunit.camunda.CdiProcessEngineTestCase;
+import com.oneandone.iocunitejb.camunda.CdiProcessEngineTestCase;
 
 @AdditionalClasses({ SignalEventTest.SignalReceivedDelegate.class, SignalEventTest.SendSignalDelegate.class })
 public class SignalEventTest extends CdiProcessEngineTestCase {

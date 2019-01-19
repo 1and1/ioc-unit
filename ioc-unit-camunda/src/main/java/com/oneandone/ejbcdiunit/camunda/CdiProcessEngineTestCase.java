@@ -10,7 +10,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.oneandone.ejbcdiunit.camunda;
+package com.oneandone.iocunitejb.camunda;
 
 import java.util.Timer;
 import java.util.TimerTask;

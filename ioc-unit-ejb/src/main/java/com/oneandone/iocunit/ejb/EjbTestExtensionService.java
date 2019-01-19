@@ -21,6 +21,7 @@ import org.jboss.weld.transaction.spi.TransactionServices;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.oneandone.iocunit.ejb.jms.JmsMocksFactory;
 import com.oneandone.iocunit.ejb.jms.JmsSingletons;
 import com.oneandone.iocunit.ejb.persistence.SimulatedEntityTransaction;
 import com.oneandone.iocunit.ejb.persistence.SimulatedTransactionManager;
@@ -148,5 +149,11 @@ public class EjbTestExtensionService implements TestExtensionService {
                     (EjbInformationBean) creationalContexts.create(EjbInformationBean.class, ApplicationScoped.class);
             ejbInformationBean.setApplicationExceptionDescriptions(ejbTestExtensionServiceData.get().applicationExceptions);
         }
+    }
+
+    @Override
+    public Collection<? extends Class<?>> excludeFromIndexScan() {
+        return Arrays.asList(JmsMocksFactory.class, EjbUnitBeanInitializerClass.class,
+                AsynchronousManager.class, SessionContextFactory.class, TransactionalInterceptor.class);
     }
 }

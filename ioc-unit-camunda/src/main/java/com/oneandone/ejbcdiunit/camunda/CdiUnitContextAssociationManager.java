@@ -1,4 +1,4 @@
-package com.oneandone.ejbcdiunit.camunda;
+package com.oneandone.iocunitejb.camunda;
 
 import java.io.Serializable;
 import java.util.ArrayList;

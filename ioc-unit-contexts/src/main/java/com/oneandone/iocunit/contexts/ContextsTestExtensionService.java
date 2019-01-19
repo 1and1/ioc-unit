@@ -2,6 +2,7 @@ package com.oneandone.iocunit.contexts;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -230,5 +231,9 @@ public class ContextsTestExtensionService implements TestExtensionService {
             log.debug("After sort of Interceptors");
             weldSetup.getEnabledInterceptors().forEach(a -> log.debug("Interceptor: {}", a));
         }
+    }
+    @Override
+    public Collection<? extends Class<?>> excludeFromIndexScan() {
+        return Arrays.asList(ContextController.class);
     }
 }

@@ -540,7 +540,7 @@ class LeveledBuilder extends ConfigCreatorBase {
     }
 
     /**
-     * create a LeveledBuilder which can be used to find producers for left over injects. An extra builder is used, to be able to select before
+     * create testerExtensionsConfigsFinder LeveledBuilder which can be used to find producers for left over injects. An extra builder is used, to be able to select before
      * deciding which classes to use.
      *
      * @return

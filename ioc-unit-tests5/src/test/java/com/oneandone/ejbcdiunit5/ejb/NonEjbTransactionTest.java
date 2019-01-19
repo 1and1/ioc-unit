@@ -14,7 +14,7 @@ import com.oneandone.iocunit.analyzer.annotations.SutClasses;
 import com.oneandone.iocunit.IocJUnit5Extension;
 import com.oneandone.iocunit.ejb.EjbTransactional;
 import com.oneandone.iocunit.ejb.persistence.TestPersistenceFactory;
-import com.oneandone.ejbcdiunit.entities.TestEntity1;
+import com.oneandone.iocunitejb.entities.TestEntity1;
 
 /**
  * @author aschoerk

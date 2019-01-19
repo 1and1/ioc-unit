@@ -10,8 +10,8 @@ import org.mockito.Mock;
 import org.mockito.internal.util.reflection.FieldSetter;
 
 import com.oneandone.iocunit.analyzer.annotations.ProducesAlternative;
-import com.oneandone.ejbcdiunit.cdibeans.ServiceBeanDepScopedHelper;
-import com.oneandone.ejbcdiunit.cdibeans.ServiceBeanHelperHelper;
+import com.oneandone.iocunitejb.cdibeans.ServiceBeanDepScopedHelper;
+import com.oneandone.iocunitejb.cdibeans.ServiceBeanHelperHelper;
 
 /**
  * @author aschoerk

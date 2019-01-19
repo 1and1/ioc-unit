@@ -7,7 +7,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.oneandone.iocunit.analyzer.annotations.SutPackages;
 import com.oneandone.iocunit.IocJUnit5Extension;
-import com.oneandone.ejbcdiunit.cdibeans.AppScopedServiceBean;
+import com.oneandone.iocunitejb.cdibeans.AppScopedServiceBean;
 
 /**
  * @author aschoerk

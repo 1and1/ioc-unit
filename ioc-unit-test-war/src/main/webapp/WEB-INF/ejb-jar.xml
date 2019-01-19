@@ -7,41 +7,41 @@
     <assembly-descriptor>
         <application-exception>
             <exception-class>
-                com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.declared.notrtex.DeclaredAppExcExampleNotInheritedRollback
+                com.oneandone.iocunitejb.ejbs.appexc.exceptions.declared.notrtex.DeclaredAppExcExampleNotInheritedRollback
             </exception-class>
             <rollback>true</rollback>
             <inherited>false</inherited>
         </application-exception>
         <application-exception>
             <exception-class>
-                com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.declared.notrtex.DeclaredAppExcExampleNotInheritedNoRollback
+                com.oneandone.iocunitejb.ejbs.appexc.exceptions.declared.notrtex.DeclaredAppExcExampleNotInheritedNoRollback
             </exception-class>
             <rollback>false</rollback>
             <inherited>false</inherited>
         </application-exception>
         <application-exception>
             <exception-class>
-                com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.declared.notrtex.DeclaredAppExcExampleNotInheritedRollbackDefault
+                com.oneandone.iocunitejb.ejbs.appexc.exceptions.declared.notrtex.DeclaredAppExcExampleNotInheritedRollbackDefault
             </exception-class>
             <inherited>false</inherited>
         </application-exception>
         <application-exception>
             <exception-class>
-                com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.declared.notrtex.DeclaredAppExcExampleInheritedRollback
+                com.oneandone.iocunitejb.ejbs.appexc.exceptions.declared.notrtex.DeclaredAppExcExampleInheritedRollback
             </exception-class>
             <rollback>true</rollback>
             <inherited>true</inherited>
         </application-exception>
         <application-exception>
             <exception-class>
-                com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.declared.notrtex.DeclaredAppExcExampleInheritedNoRollback
+                com.oneandone.iocunitejb.ejbs.appexc.exceptions.declared.notrtex.DeclaredAppExcExampleInheritedNoRollback
             </exception-class>
             <rollback>false</rollback>
             <inherited>true</inherited>
         </application-exception>
         <application-exception>
             <exception-class>
-                com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.declared.notrtex.DeclaredAppExcExampleInheritedRollbackDefault
+                com.oneandone.iocunitejb.ejbs.appexc.exceptions.declared.notrtex.DeclaredAppExcExampleInheritedRollbackDefault
             </exception-class>
             <inherited>true</inherited>
         </application-exception>
@@ -49,41 +49,41 @@
 
         <application-exception>
             <exception-class>
-                com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.declared.rtex.DeclaredAppRtExcExampleNotInheritedRollback
+                com.oneandone.iocunitejb.ejbs.appexc.exceptions.declared.rtex.DeclaredAppRtExcExampleNotInheritedRollback
             </exception-class>
             <rollback>true</rollback>
             <inherited>false</inherited>
         </application-exception>
         <application-exception>
             <exception-class>
-                com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.declared.rtex.DeclaredAppRtExcExampleNotInheritedNoRollback
+                com.oneandone.iocunitejb.ejbs.appexc.exceptions.declared.rtex.DeclaredAppRtExcExampleNotInheritedNoRollback
             </exception-class>
             <rollback>false</rollback>
             <inherited>false</inherited>
         </application-exception>
         <application-exception>
             <exception-class>
-                com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.declared.rtex.DeclaredAppRtExcExampleNotInheritedRollbackDefault
+                com.oneandone.iocunitejb.ejbs.appexc.exceptions.declared.rtex.DeclaredAppRtExcExampleNotInheritedRollbackDefault
             </exception-class>
             <inherited>false</inherited>
         </application-exception>
         <application-exception>
             <exception-class>
-                com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.declared.rtex.DeclaredAppRtExcExampleInheritedRollback
+                com.oneandone.iocunitejb.ejbs.appexc.exceptions.declared.rtex.DeclaredAppRtExcExampleInheritedRollback
             </exception-class>
             <rollback>true</rollback>
             <inherited>true</inherited>
         </application-exception>
         <application-exception>
             <exception-class>
-                com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.declared.rtex.DeclaredAppRtExcExampleInheritedNoRollback
+                com.oneandone.iocunitejb.ejbs.appexc.exceptions.declared.rtex.DeclaredAppRtExcExampleInheritedNoRollback
             </exception-class>
             <rollback>false</rollback>
             <inherited>true</inherited>
         </application-exception>
         <application-exception>
             <exception-class>
-                com.oneandone.ejbcdiunit.ejbs.appexc.exceptions.declared.rtex.DeclaredAppRtExcExampleInheritedRollbackDefault
+                com.oneandone.iocunitejb.ejbs.appexc.exceptions.declared.rtex.DeclaredAppRtExcExampleInheritedRollbackDefault
             </exception-class>
             <inherited>true</inherited>
         </application-exception>

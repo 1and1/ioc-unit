@@ -15,7 +15,7 @@ import org.camunda.bpm.engine.test.Deployment;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.oneandone.ejbcdiunit.camunda.CdiProcessEngineTestCase;
+import com.oneandone.iocunitejb.camunda.CdiProcessEngineTestCase;
 
 public class ProcessVariablesTest extends CdiProcessEngineTestCase {
 

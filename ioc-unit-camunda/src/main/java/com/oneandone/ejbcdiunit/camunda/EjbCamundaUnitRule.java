@@ -1,4 +1,4 @@
-package com.oneandone.ejbcdiunit.camunda;
+package com.oneandone.iocunitejb.camunda;
 
 import org.camunda.bpm.BpmPlatform;
 import org.camunda.bpm.container.RuntimeContainerDelegate;
@@ -11,8 +11,8 @@ import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
-import com.oneandone.ejbcdiunit.CdiTestConfig;
-import com.oneandone.ejbcdiunit.EjbUnitRule;
+import com.oneandone.iocunitejb.CdiTestConfig;
+import com.oneandone.iocunitejb.EjbUnitRule;
 
 /**
  * @author aschoerk

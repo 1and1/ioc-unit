@@ -35,6 +35,7 @@
             <groupId>net.oneandone.ioc-unit</groupId>
             <artifactId>ioc-unit</artifactId>
             <version>${project.version}</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>javax</groupId>

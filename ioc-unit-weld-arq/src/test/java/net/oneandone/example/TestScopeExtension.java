@@ -8,7 +8,7 @@ import javax.enterprise.inject.spi.ProcessAnnotatedType;
 import org.apache.deltaspike.core.api.literal.ApplicationScopedLiteral;
 import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
 
-import com.oneandone.ejbcdiunit.internal.EjbExtensionExtended;
+import com.oneandone.iocunitejb.internal.EjbExtensionExtended;
 
 /**
  * @author aschoerk

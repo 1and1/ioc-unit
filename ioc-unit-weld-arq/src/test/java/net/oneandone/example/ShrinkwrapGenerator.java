@@ -15,7 +15,7 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.weld.bootstrap.spi.Metadata;
 import org.jboss.weld.injection.spi.EjbInjectionServices;
 
-import com.oneandone.ejbcdiunit.cfganalyzer.TestConfigAnalyzer;
+import com.oneandone.iocunitejb.cfganalyzer.TestConfigAnalyzer;
 
 /**
  * @author aschoerk

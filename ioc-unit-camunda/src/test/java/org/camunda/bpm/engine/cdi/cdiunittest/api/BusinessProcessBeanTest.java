@@ -25,7 +25,7 @@ import org.camunda.bpm.engine.variable.type.ValueType;
 import org.camunda.bpm.engine.variable.value.TypedValue;
 import org.junit.Test;
 
-import com.oneandone.ejbcdiunit.camunda.CdiProcessEngineTestCase;
+import com.oneandone.iocunitejb.camunda.CdiProcessEngineTestCase;
 
 /**
  * @author Daniel Meyer

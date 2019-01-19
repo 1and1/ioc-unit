@@ -12,7 +12,7 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.oneandone.ejbcdiunit.ejbs.appexc.TestBaseClass;
+import com.oneandone.iocunitejb.ejbs.appexc.TestBaseClass;
 
 @RunWith(Arquillian.class)
 public class WildflyArquillianAppExcTransactionTest extends TestBaseClass {

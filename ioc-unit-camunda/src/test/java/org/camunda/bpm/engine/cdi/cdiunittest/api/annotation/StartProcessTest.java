@@ -22,7 +22,7 @@ import org.camunda.bpm.engine.variable.value.TypedValue;
 import org.jglue.cdiunit.AdditionalPackages;
 import org.junit.Test;
 
-import com.oneandone.ejbcdiunit.camunda.CdiProcessEngineTestCase;
+import com.oneandone.iocunitejb.camunda.CdiProcessEngineTestCase;
 
 /**
  * Testcase for assuring that the {@link StartProcessInterceptor} behaves as expected.

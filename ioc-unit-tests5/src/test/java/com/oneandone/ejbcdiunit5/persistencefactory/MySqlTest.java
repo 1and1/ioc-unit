@@ -29,7 +29,7 @@ import com.oneandone.iocunit.analyzer.annotations.EnabledAlternatives;
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 import com.oneandone.iocunit.IocJUnit5Extension;
 import com.oneandone.iocunit.ejb.persistence.PersistenceFactory;
-import com.oneandone.ejbcdiunit.entities.TestEntity1;
+import com.oneandone.iocunitejb.entities.TestEntity1;
 import com.oneandone.ejbcdiunit5.helpers.J2eeSimMySqlFactory;
 import com.oneandone.ejbcdiunit5.helpers.MySqlStarter;
 import com.oneandone.ejbcdiunit5.helpers.TestResources;

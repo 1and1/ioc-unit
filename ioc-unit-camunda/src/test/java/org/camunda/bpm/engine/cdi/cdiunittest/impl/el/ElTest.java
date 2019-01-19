@@ -21,7 +21,7 @@ import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
-import com.oneandone.ejbcdiunit.camunda.EjbCamundaUnitRule;
+import com.oneandone.iocunitejb.camunda.EjbCamundaUnitRule;
 
 /**
  * @author Daniel Meyer

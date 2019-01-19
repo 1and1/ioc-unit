@@ -16,7 +16,7 @@ import org.camunda.bpm.engine.task.Task;
 import org.camunda.bpm.engine.test.Deployment;
 import org.junit.Test;
 
-import com.oneandone.ejbcdiunit.camunda.CdiProcessEngineTestCase;
+import com.oneandone.iocunitejb.camunda.CdiProcessEngineTestCase;
 
 /**
  * Testcase for assuring that the {@link CompleteTaskInterceptor} works as expected

@@ -15,12 +15,12 @@ import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 import com.oneandone.iocunit.IocJUnit5Extension;
 import com.oneandone.iocunit.ejb.AsynchronousManager;
 import com.oneandone.iocunit.ejb.SessionContextFactory;
-import com.oneandone.ejbcdiunit.ejbs.CdiMdbClient;
-import com.oneandone.ejbcdiunit.ejbs.MdbEjbInfoSingleton;
-import com.oneandone.ejbcdiunit.ejbs.QMdbEjb;
-import com.oneandone.ejbcdiunit.ejbs.QMdbEjb2;
-import com.oneandone.ejbcdiunit.ejbs.SingletonMdbClient;
-import com.oneandone.ejbcdiunit.ejbs.TMdbEjb;
+import com.oneandone.iocunitejb.ejbs.CdiMdbClient;
+import com.oneandone.iocunitejb.ejbs.MdbEjbInfoSingleton;
+import com.oneandone.iocunitejb.ejbs.QMdbEjb;
+import com.oneandone.iocunitejb.ejbs.QMdbEjb2;
+import com.oneandone.iocunitejb.ejbs.SingletonMdbClient;
+import com.oneandone.iocunitejb.ejbs.TMdbEjb;
 import com.oneandone.ejbcdiunit5.helpers.LoggerGenerator;
 
 /**

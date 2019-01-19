@@ -1,4 +1,4 @@
-package com.oneandone.ejbcdiunit.repro;
+package com.oneandone.iocunitejb.repro;
 
 import java.util.Properties;
 

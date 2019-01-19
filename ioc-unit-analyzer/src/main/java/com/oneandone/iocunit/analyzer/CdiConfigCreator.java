@@ -23,7 +23,7 @@ import com.oneandone.cdi.weldstarter.WeldSetupClass;
 import com.oneandone.cdi.weldstarter.spi.TestExtensionService;
 
 /**
- * Starting with InitialConfiguraton analyzes the Class-Structure together with Annotations, to create a minimal startable Weld-SE-Configration.
+ * Starting with InitialConfiguraton analyzes the Class-Structure together with Annotations, to create testerExtensionsConfigsFinder minimal startable Weld-SE-Configration.
  */
 public class CdiConfigCreator {
     Logger log = LoggerFactory.getLogger(this.getClass());
@@ -79,7 +79,7 @@ public class CdiConfigCreator {
                 break;
             }
 
-            // Injects found should be matched to find out if a search in available classes
+            // Injects found should be matched to find out if testerExtensionsConfigsFinder search in available classes
             // is necessary
 
             InjectsMatcher injectsMatcher = new InjectsMatcher(builder);

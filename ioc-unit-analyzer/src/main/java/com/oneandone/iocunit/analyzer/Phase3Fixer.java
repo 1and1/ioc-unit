@@ -25,7 +25,7 @@ public class Phase3Fixer extends PhasesBase {
         HashMultiMap<QualifiedType, Class<?>> ambiguus = new HashMultiMap<>();
         HashMap<QualifiedType, QualifiedType> injectsDone = new HashMap<>();
         for (QualifiedType inject : configuration.getInjects()) {
-            Set<QualifiedType> matching = configuration.getAvailableProducerMap().findMatchingProducers(inject);
+            Set<QualifiedType> matching = configuration.getAvailableProducerMap().findMatchingProducersRegardingAlternatives(inject);
             if (matching.size() == 0)
                 continue;
             matching = matching
@@ -44,13 +44,23 @@ public class Phase3Fixer extends PhasesBase {
                     newCandidates.add(declaringClass);
                 }
                 injectsDone.put(inject, producer);
+            } else {
+                if (inject.isInstance()) {
+                    // add everything fitting if Instance-Inject
+                    for (QualifiedType q: matching) {
+                        addToCandidates(newCandidates, q.getDeclaringClass());
+                        // TODO: add to classes2injects
+                    }
+                }
             }
         }
 
-       injectsDone.entrySet().forEach(entry -> configuration.injectHandled(entry.getKey(), entry.getValue()));
+        injectsDone.entrySet().forEach(entry -> configuration.injectHandled(entry.getKey(), entry.getValue()));
 
         for (QualifiedType inject : configuration.getInjects()) {
-            Set<QualifiedType> matching = configuration.getAvailableProducerMap().findMatchingProducers(inject);
+            if (inject.isInstance())
+                continue;
+            Set<QualifiedType> matching = configuration.getAvailableProducerMap().findMatchingProducersRegardingAlternatives(inject);
             if (matching.size() == 0)
                 continue;
             matching = matching
@@ -76,23 +86,19 @@ public class Phase3Fixer extends PhasesBase {
                         Optional<QualifiedType> oneAlreadyThere = sutClassBackedProducers
                                 .stream()
                                 .filter(q -> configuration.isToBeStarted(q.getDeclaringClass()) ||
-                                        configuration.isCandidate(q.getDeclaringClass()))
+                                             configuration.isCandidate(q.getDeclaringClass()))
                                 .findAny();
-                        if (oneAlreadyThere.isPresent()) {
+                        if(oneAlreadyThere.isPresent()) {
                             logger.warn("Chose one because of backing class {} already there", oneAlreadyThere.get());
-                        } else {
+                        }
+                        else {
                             sutClassBackedProducers.forEach(q -> {
                                 ambiguus.put(inject, q.getDeclaringClass());
                             });
                         }
                     } else {
                         final Class declaringClass = sutClassBackedProducers.iterator().next().getDeclaringClass();
-                        if (newCandidates.contains(declaringClass)) {
-                            logger.trace("Phase3: Declaring Class already to new Candidate {}", declaringClass);
-                        } else {
-                            newCandidates.add(declaringClass);
-                            configuration.candidate(declaringClass);
-                        }
+                        addToCandidates(newCandidates, declaringClass);
                     }
                 }
             }
@@ -130,9 +136,18 @@ public class Phase3Fixer extends PhasesBase {
 
     }
 
+    private void addToCandidates(final HashSet<Class<?>> newCandidates, final Class declaringClass) {
+        if (newCandidates.contains(declaringClass)) {
+            logger.trace("Phase3: Declaring Class already to new Candidate {}", declaringClass);
+        } else {
+            newCandidates.add(declaringClass);
+            configuration.candidate(declaringClass);
+        }
+    }
+
     /**
      * for each entry of input choose one element from the candidates
-     * @param input a list of non empty sets of unique candidates. These sets might share elements.
+     * @param input testerExtensionsConfigsFinder list of non empty sets of unique candidates. These sets might share elements.
      * @param <T> the type of the elements
      * @return the combination of single elements of the sets so that: if two sets share  elements, the solution
      * for these two sets must contain exactly one of these shared elements.

@@ -25,9 +25,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.oneandone.ejbcdiunit.entities.TestEntity1;
-import com.oneandone.ejbcdiunit.testbases.EJBTransactionTestBase;
-import com.oneandone.ejbcdiunit.testbases.TestEntity1Saver;
+import com.oneandone.iocunitejb.entities.TestEntity1;
+import com.oneandone.iocunitejb.testbases.EJBTransactionTestBase;
+import com.oneandone.iocunitejb.testbases.TestEntity1Saver;
 
 @RunWith(Arquillian.class)
 public class WildflyArquillianTransactionTest extends EJBTransactionTestBase {

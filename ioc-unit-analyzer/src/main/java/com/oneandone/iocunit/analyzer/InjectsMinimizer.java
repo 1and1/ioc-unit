@@ -26,8 +26,6 @@ public class InjectsMinimizer {
             }
         }
         for (QualifiedType q : injects) {
-            if (q.isProviderOrInstance())
-                continue;
             boolean addIt = true;
             for (QualifiedType m : currentMinimum.keySet()) {
                 if (q.isAssignableTo(m) && q.isAlternative() == m.isAlternative()) {

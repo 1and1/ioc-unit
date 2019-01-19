@@ -1,17 +1,24 @@
 package com.oneandone.iocunit.analyzer;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.lang.annotation.Annotation;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import javax.enterprise.inject.Alternative;
 import javax.enterprise.inject.Stereotype;
-import java.lang.annotation.Annotation;
-import java.util.*;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author aschoerk
  */
 public class Configuration {
+
 
     enum Phase {
         UNKNOWN,
@@ -48,12 +55,20 @@ public class Configuration {
     // classes defined to be excluded from configuration. Done by servcices or @ExcludedClasses
     private Set<Class<?>> excluded = new HashSet<>();
 
+    private Set<URL> testClassPaths = new HashSet<>();
+
+    public Set<URL> getTestClassPaths() {
+        return testClassPaths;
+    }
+
     public void addCandidate(Class<?> c) {
-        if (!candidates.contains(c)) {
+        if(!candidates.contains(c)) {
             candidates.add(c);
-        } else {
-            if (phase != Phase.ANALYZING)
-                logger.error("candidates already contains {}",c);
+        }
+        else {
+            if(phase != Phase.ANALYZING) {
+                logger.error("candidates already contains {}", c);
+            }
         }
     }
 
@@ -69,7 +84,6 @@ public class Configuration {
     public boolean emptyCandidates() {
         return candidates.isEmpty();
     }
-
 
 
     // previously available classes to be added to the startconfiguration
@@ -117,11 +131,13 @@ public class Configuration {
      */
     Configuration testClass(Class<?> clazz) {
         testClasses.add(clazz);
+        testClassPaths.add(clazz.getProtectionDomain().getCodeSource().getLocation());
+
         return this;
     }
 
     public Configuration testClassCandidates(final Collection<Class<?>> classes) {
-        if (classes != null) {
+        if(classes != null) {
             for (Class<?> c : classes)
                 testClass(c)
                         .candidate(c);
@@ -159,13 +175,15 @@ public class Configuration {
     }
 
     public Configuration enabledAlternative(final Class<?> c) {
-        if (c.getAnnotation(Alternative.class) == null || c.isAnnotation() && c.getAnnotation(Stereotype.class) == null) {
+        if(c.getAnnotation(Alternative.class) == null || c.isAnnotation() && c.getAnnotation(Stereotype.class) == null) {
             logger.error("Invalid enabled Alternative {}", c.getName());
         }
-        if (c.isAnnotation() && c.getAnnotation(Stereotype.class) != null)
+        if(c.isAnnotation() && c.getAnnotation(Stereotype.class) != null) {
             elseClasses.foundAlternativeStereotypes.add(c);
-        else
+        }
+        else {
             enabledAlternatives.add(c);
+        }
         return this;
     }
 
@@ -197,7 +215,7 @@ public class Configuration {
     }
 
     public Configuration inject(final QualifiedType i) {
-        logger.trace("Adding Inject {}",i);
+        logger.trace("Adding Inject {}", i);
         injects.add(i);
         return this;
     }
@@ -234,7 +252,7 @@ public class Configuration {
     public boolean isActiveAlternativeStereoType(final Annotation c) {
         logger.trace("Searching for alternative Stereotype {}", c);
         for (Class stereoType : elseClasses.foundAlternativeStereotypes) {
-            if (stereoType.getName().equals(c.annotationType().getName())) {
+            if(stereoType.getName().equals(c.annotationType().getName())) {
                 logger.trace("Search found alternative Stereotype {}", c);
                 return true;
             }
@@ -248,9 +266,10 @@ public class Configuration {
 
 
     public void addToBeStarted(Class<?> c) {
-        if (beansToBeStarted.contains(c)) {
-            logger.warn("Trying to add {} a second time",c);
-        } else {
+        if(beansToBeStarted.contains(c)) {
+            logger.warn("Trying to add {} testerExtensionsConfigsFinder second time", c);
+        }
+        else {
             beansToBeStarted.add(c);
             obligatory.add(c);
         }
@@ -263,7 +282,9 @@ public class Configuration {
     void injectHandled(QualifiedType inject, final QualifiedType producingType) {
         injects.remove(inject);
         handledInjects.add(inject);
-        classes2Injects.put(producingType.getDeclaringClass(), inject);
+        if(producingType != null) {
+            classes2Injects.put(producingType.getDeclaringClass(), inject);
+        }
     }
 
     Set<QualifiedType> getInjectsForClass(Class<?> key) {

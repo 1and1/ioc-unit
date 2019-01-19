@@ -1,4 +1,4 @@
-package com.oneandone.ejbcdiunit.camunda;
+package com.oneandone.iocunitejb.camunda;
 
 import java.util.Iterator;
 import java.util.List;
@@ -13,7 +13,7 @@ import org.camunda.bpm.engine.impl.jobexecutor.SequentialJobAcquisitionRunnable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.oneandone.ejbcdiunit.AsynchronousManager;
+import com.oneandone.iocunitejb.AsynchronousManager;
 
 /**
  * Camunda JobExecutor using AsynchronousManager.

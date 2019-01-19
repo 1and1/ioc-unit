@@ -17,22 +17,22 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.oneandone.ejbcdiunit.AsynchronousManager;
-import com.oneandone.ejbcdiunit.ClassWithTwoDifferentEntityManagers;
-import com.oneandone.ejbcdiunit.SessionContextFactory;
-import com.oneandone.ejbcdiunit.SupportEjbExtended;
-import com.oneandone.ejbcdiunit.cdiunit.ExcludedClasses;
-import com.oneandone.ejbcdiunit.ejbs.MdbEjbInfoSingleton;
-import com.oneandone.ejbcdiunit.ejbs.QMdbEjb;
-import com.oneandone.ejbcdiunit.ejbs.SingletonEJB;
-import com.oneandone.ejbcdiunit.ejbs.StatelessEJB;
-import com.oneandone.ejbcdiunit.entities.TestEntity1;
-import com.oneandone.ejbcdiunit.internal.EjbExtensionExtended;
+import com.oneandone.iocunitejb.AsynchronousManager;
+import com.oneandone.iocunitejb.ClassWithTwoDifferentEntityManagers;
+import com.oneandone.iocunitejb.SessionContextFactory;
+import com.oneandone.iocunitejb.SupportEjbExtended;
+import com.oneandone.iocunitejb.cdiunit.ExcludedClasses;
+import com.oneandone.iocunitejb.ejbs.MdbEjbInfoSingleton;
+import com.oneandone.iocunitejb.ejbs.QMdbEjb;
+import com.oneandone.iocunitejb.ejbs.SingletonEJB;
+import com.oneandone.iocunitejb.ejbs.StatelessEJB;
+import com.oneandone.iocunitejb.entities.TestEntity1;
+import com.oneandone.iocunitejb.internal.EjbExtensionExtended;
 import com.oneandone.iocunit.ejb.persistence.SimulatedTransactionManager;
 import com.oneandone.iocunit.ejb.persistence.TestPersistenceFactory;
-import com.oneandone.ejbcdiunit.resources.Resources;
+import com.oneandone.iocunitejb.resources.Resources;
 import com.oneandone.iocunit.ejb.resourcesimulators.SimulatedUserTransaction;
-import com.oneandone.ejbcdiunit.testbases.EJBTransactionTestBase;
+import com.oneandone.iocunitejb.testbases.EJBTransactionTestBase;
 
 /**
  * @author aschoerk

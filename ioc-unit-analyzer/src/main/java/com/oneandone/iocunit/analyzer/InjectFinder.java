@@ -18,6 +18,7 @@ import javax.enterprise.inject.Disposes;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.Extension;
+import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.reflect.TypeUtils;
@@ -27,12 +28,12 @@ import org.apache.commons.lang3.reflect.TypeUtils;
  */
 public class InjectFinder {
 
-    TesterExtensionsConfigsFinder a;
+    TesterExtensionsConfigsFinder testerExtensionsConfigsFinder;
 
     Set<Class<? extends Annotation>> injectAnnotations = new HashSet<>();
 
     public InjectFinder(final TesterExtensionsConfigsFinder a) {
-        this.a = a;
+        this.testerExtensionsConfigsFinder = a;
         injectAnnotations.add(Inject.class);
         injectAnnotations.addAll(a.injectAnnotations);
     }
@@ -43,6 +44,7 @@ public class InjectFinder {
         {
             add(BeanManager.class);
             add(Extension.class);
+            add(InjectionPoint.class);
         }
     };
 
@@ -157,8 +159,6 @@ public class InjectFinder {
 
 
     public void find(Class c) {
-
-
         if (used) {
             throw new RuntimeException("InjectFinder can only be used once");
         }

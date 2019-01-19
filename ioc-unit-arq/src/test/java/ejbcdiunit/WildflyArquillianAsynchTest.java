@@ -18,8 +18,8 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.oneandone.ejbcdiunit.ejbs.CdiAsynchronousBean;
-import com.oneandone.ejbcdiunit.ejbs.StatelessAsynchEJB;
+import com.oneandone.iocunitejb.ejbs.CdiAsynchronousBean;
+import com.oneandone.iocunitejb.ejbs.StatelessAsynchEJB;
 
 /**
  * @author aschoerk

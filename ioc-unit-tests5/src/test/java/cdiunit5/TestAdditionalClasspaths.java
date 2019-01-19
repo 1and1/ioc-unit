@@ -8,7 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.oneandone.iocunit.analyzer.annotations.SutClasspaths;
 import com.oneandone.iocunit.IocJUnit5Extension;
-import com.oneandone.ejbcdiunit.cdiunit.ExternalInterface;
+import com.oneandone.iocunitejb.cdiunit.ExternalInterface;
 
 @SutClasspaths(ExternalInterface.class)
 @ExtendWith(IocJUnit5Extension.class)

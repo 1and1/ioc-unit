@@ -41,7 +41,9 @@ public class ClasspathHandler {
     }
 
 
-    public static void addClassPath(Class<?> additionalClasspath, Set<Class<?>> classesToProcess, Set<URL> classpathEntries)
+    public static void addClassPath(Class<?> additionalClasspath,
+                                    Set<Class<?>> classesToProcess,
+                                    Set<URL> classpathEntries)
             throws MalformedURLException {
         final URL path = additionalClasspath.getProtectionDomain().getCodeSource().getLocation();
 
@@ -54,6 +56,10 @@ public class ClasspathHandler {
 
         if (classpathEntries != null)
             classpathEntries.add(path);
+    }
+
+    public static URL getPath(Class<?> clazz) {
+        return clazz.getProtectionDomain().getCodeSource().getLocation();
     }
 
 }

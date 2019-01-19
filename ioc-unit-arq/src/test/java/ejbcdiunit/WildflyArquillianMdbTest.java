@@ -10,9 +10,9 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.oneandone.ejbcdiunit.ejbs.CdiMdbClient;
-import com.oneandone.ejbcdiunit.ejbs.MdbEjbInfoSingleton;
-import com.oneandone.ejbcdiunit.ejbs.SingletonMdbClient;
+import com.oneandone.iocunitejb.ejbs.CdiMdbClient;
+import com.oneandone.iocunitejb.ejbs.MdbEjbInfoSingleton;
+import com.oneandone.iocunitejb.ejbs.SingletonMdbClient;
 
 /**
  * @author aschoerk

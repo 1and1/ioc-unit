@@ -15,8 +15,8 @@ import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 import com.oneandone.iocunit.IocUnitRunner;
 import com.oneandone.iocunit.analyzer.annotations.ProducesAlternative;
 
-import cditester.cdiunit.tobetestedcode.HelperClass;
-import cditester.cdiunit.tobetestedcode.Sut;
+import iocunit.cdiunit.tobetestedcode.HelperClass;
+import iocunit.cdiunit.tobetestedcode.Sut;
 
 /**
  * @author aschoerk

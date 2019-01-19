@@ -15,8 +15,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.oneandone.ejbcdiunit.EjbUnitRunner;
-import com.oneandone.ejbcdiunit.camunda.CdiUnitContextAssociationManager;
+import com.oneandone.iocunitejb.EjbUnitRunner;
+import com.oneandone.iocunitejb.camunda.CdiUnitContextAssociationManager;
 
 /**
  * @author Christopher Zell <christopher.zell@camunda.com>

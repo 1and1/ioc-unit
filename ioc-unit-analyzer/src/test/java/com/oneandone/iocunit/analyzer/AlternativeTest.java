@@ -13,6 +13,7 @@ import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import java.net.MalformedURLException;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -44,6 +45,10 @@ public class AlternativeTest extends BaseTest {
     public void canInjectAlternativeField() throws MalformedURLException {
         createTest(BeanUsingAlternativeAtField.class);
         assertEquals(3, toBeStarted.size());
+        assertArrayEquals(toBeStarted.toArray(), new Class<?>[] {
+                BeanUsingAlternativeAtField.class,
+                BeanUsingAlternativeAtField.ProducingAlternative.class,
+                BeanUsingAlternativeAtField.InjectingAlternative.class});
 //        assertNotNull(selectGet(BeanUsingAlternativeAtField.class).injectingAlternative);
 //        assertNotNull(selectGet(BeanUsingAlternativeAtField.InjectingAlternative.class).dummyBean);
 //        assertNotNull(selectGet(BeanUsingAlternativeAtField.ProducingAlternative.class));
@@ -55,6 +60,7 @@ public class AlternativeTest extends BaseTest {
 
         static class ProducingAlternative {
             @ProducesAlternative
+            @Produces
             @Mock
             DummyBean dummyBeanMock;
         }
@@ -74,11 +80,12 @@ public class AlternativeTest extends BaseTest {
     @Test
     public void canInjectAlternativeStereotype() throws MalformedURLException {
         createTest(BeanUsingAlternativeStereotype.class);
-        assertEquals(3, toBeStarted.size());
-//        assertNotNull(selectGet(BeanUsingAlternativeAtField.class).injectingAlternative);
-//        assertNotNull(selectGet(BeanUsingAlternativeAtField.InjectingAlternative.class).dummyBean);
-//        assertNotNull(selectGet(BeanUsingAlternativeAtField.ProducingAlternative.class));
-//        assertNotNull(selectGet(DummyBean.class));
+        assertEquals(4, toBeStarted.size());
+        assertArrayEquals(toBeStarted.toArray(), new Class<?>[] {
+                BeanUsingAlternativeStereotype.class,
+                ProducesAlternative.class,
+                BeanUsingAlternativeStereotype.InjectingAlternative.class,
+                BeanUsingAlternativeStereotype.ProducingAlternative.class});
     }
 
     static class DummyBean {

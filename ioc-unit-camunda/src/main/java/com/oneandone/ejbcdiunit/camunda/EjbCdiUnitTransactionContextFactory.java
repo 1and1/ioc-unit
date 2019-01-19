@@ -1,4 +1,4 @@
-package com.oneandone.ejbcdiunit.camunda;
+package com.oneandone.iocunitejb.camunda;
 
 import javax.ejb.TransactionAttributeType;
 import javax.transaction.Status;

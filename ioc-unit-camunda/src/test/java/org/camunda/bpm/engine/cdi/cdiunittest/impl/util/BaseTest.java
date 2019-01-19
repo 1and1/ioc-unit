@@ -11,8 +11,8 @@ import org.camunda.bpm.engine.cdi.BusinessProcess;
 import org.camunda.bpm.engine.impl.jobexecutor.JobExecutor;
 import org.junit.Rule;
 
-import com.oneandone.ejbcdiunit.AsynchronousManager;
-import com.oneandone.ejbcdiunit.camunda.EjbCamundaUnitRule;
+import com.oneandone.iocunitejb.AsynchronousManager;
+import com.oneandone.iocunitejb.camunda.EjbCamundaUnitRule;
 
 /**
  * @author aschoerk

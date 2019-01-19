@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.enterprise.inject.Alternative;
+import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.Stereotype;
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -127,19 +128,38 @@ public class QualifiedType {
         }
     }
 
-    boolean isProviderOrInstance() {
+    boolean isInstance() {
         Class res = getRawtypeInternal();
-        return (res.equals(Provider.class) || res.equals(Inject.class));
+        return (res.equals(Instance.class));
+    }
+
+    boolean isProvider() {
+        Class res = getRawtypeInternal();
+        return (res.equals(Provider.class));
     }
 
     Class getRawtype() {
         Class res = getRawtypeInternal();
         if(isProviderOrInstance()) {
-            ParameterizedType pType = ((ParameterizedType) getTypeInternal());
-            return (Class) (pType.getActualTypeArguments()[0]);
+            return getProviderOrInstanceRawType();
         }
         else {
             return res;
+        }
+    }
+
+    private boolean isProviderOrInstance() {
+        return isProvider() || isInstance();
+    }
+
+    private Class getProviderOrInstanceRawType() {
+        ParameterizedType pType = ((ParameterizedType) getTypeInternal());
+        Type t =  (pType.getActualTypeArguments()[0]);
+        if(t instanceof ParameterizedType) {
+            return (Class<?>) ((ParameterizedType) t).getRawType();
+        }
+        else {
+            return (Class<?>) t;
         }
     }
 
@@ -181,7 +201,7 @@ public class QualifiedType {
         Class res = getRawtypeInternal();
         if(isProviderOrInstance()) {
             ParameterizedType pType = ((ParameterizedType) getTypeInternal());
-            return (Class) (pType.getActualTypeArguments()[0]);
+            return (pType.getActualTypeArguments()[0]);
         }
         else {
             return getTypeInternal();

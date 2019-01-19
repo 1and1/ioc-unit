@@ -10,9 +10,9 @@ import org.mockito.Mockito;
 import com.oneandone.iocunit.analyzer.annotations.SutPackages;
 import com.oneandone.iocunit.IocJUnit5Extension;
 import com.oneandone.iocunit.analyzer.annotations.ProducesAlternative;
-import com.oneandone.ejbcdiunit.cdibeans.AppScopedServiceBean;
-import com.oneandone.ejbcdiunit.cdibeans.ServiceBeanHelperHelper;
-import com.oneandone.ejbcdiunit.cdibeans.ServiceBeanHelperHelperIf;
+import com.oneandone.iocunitejb.cdibeans.AppScopedServiceBean;
+import com.oneandone.iocunitejb.cdibeans.ServiceBeanHelperHelper;
+import com.oneandone.iocunitejb.cdibeans.ServiceBeanHelperHelperIf;
 
 /**
  * @author aschoerk

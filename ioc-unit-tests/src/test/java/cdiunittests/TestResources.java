@@ -7,7 +7,7 @@ import org.mockito.Mock;
 
 import com.oneandone.iocunit.analyzer.annotations.ProducesAlternative;
 
-import cditester.cdiunit.tobetestedcode.HelperClassInTestResources;
+import iocunit.cdiunit.tobetestedcode.HelperClassInTestResources;
 
 /**
  * @author aschoerk

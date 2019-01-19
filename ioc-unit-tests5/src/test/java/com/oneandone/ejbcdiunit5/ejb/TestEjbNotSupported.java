@@ -19,8 +19,8 @@ import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 import com.oneandone.iocunit.IocJUnit5Extension;
 import com.oneandone.iocunit.ejb.SessionContextFactory;
 import com.oneandone.iocunit.ejb.persistence.SinglePersistenceFactory;
-import com.oneandone.ejbcdiunit.ejbs.StatelessNotSupportedEJB;
-import com.oneandone.ejbcdiunit.entities.TestEntity1;
+import com.oneandone.iocunitejb.ejbs.StatelessNotSupportedEJB;
+import com.oneandone.iocunitejb.entities.TestEntity1;
 import com.oneandone.ejbcdiunit5.helpers.LoggerGenerator;
 
 /**

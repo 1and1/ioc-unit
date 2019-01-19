@@ -28,7 +28,7 @@ class Phase2Matcher extends PhasesBase {
 
     public void matchInject(QualifiedType inject) {
         logger.trace("matchingInject: {}", inject);
-        Set<QualifiedType> matchingProducers = configuration.getProducerMap().findMatchingProducers(inject);
+        Set<QualifiedType> matchingProducers = configuration.getProducerMap().findMatchingProducersRegardingAlternatives(inject);
         if(matchingProducers.size() == 0) {
             logger.trace("No match found for inject {}", inject);
             empty.add(inject);
@@ -71,12 +71,15 @@ class Phase2Matcher extends PhasesBase {
         }
 
         for (QualifiedType inject : ambiguus.keySet()) {
+
             Map<Class<?>, QualifiedType> testClasses = new HashMap<>();
             Map<Class<?>, QualifiedType> sutClasses = new HashMap<>();
             Set<QualifiedType> producingTypes = ambiguus.get(inject);
-            logger.info("Ambiguus resolved inject: {}", inject);
-            for (QualifiedType producing : producingTypes) {
-                logger.info("--- Producing: {}", producing);
+            if (!inject.isInstance()){
+                logger.info("Ambiguus resolved inject: {}", inject);
+                for (QualifiedType producing : producingTypes) {
+                    logger.info("--- Producing: {}", producing);
+                }
             }
             Set<QualifiedType> alreadyChosen = producingTypes.stream()
                     .filter(p -> chosenTypes.contains(p))

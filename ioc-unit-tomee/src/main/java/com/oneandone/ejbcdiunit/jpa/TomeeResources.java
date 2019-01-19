@@ -1,4 +1,4 @@
-package com.oneandone.ejbcdiunit.jpa;
+package com.oneandone.iocunitejb.jpa;
 
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.Specializes;
@@ -9,9 +9,9 @@ import javax.persistence.PersistenceContextType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.oneandone.ejbcdiunit.cdiunit.Pu1Em;
-import com.oneandone.ejbcdiunit.cdiunit.Pu2Em;
-import com.oneandone.ejbcdiunit.resources.Resources;
+import com.oneandone.iocunitejb.cdiunit.Pu1Em;
+import com.oneandone.iocunitejb.cdiunit.Pu2Em;
+import com.oneandone.iocunitejb.resources.Resources;
 
 /**
  * @author aschoerk

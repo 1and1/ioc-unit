@@ -18,11 +18,11 @@ import com.oneandone.iocunit.analyzer.annotations.SutClasses;
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 import com.oneandone.iocunit.IocJUnit5Extension;
 import com.oneandone.iocunit.ejb.AsynchronousManager;
-import com.oneandone.ejbcdiunit.ejbs.CdiAsynchronousBean;
-import com.oneandone.ejbcdiunit.ejbs.CountingBean;
-import com.oneandone.ejbcdiunit.ejbs.SingletonTimerEJB;
-import com.oneandone.ejbcdiunit.ejbs.StatelessAsynchEJB;
-import com.oneandone.ejbcdiunit.ejbs.StatelessTimerEJB;
+import com.oneandone.iocunitejb.ejbs.CdiAsynchronousBean;
+import com.oneandone.iocunitejb.ejbs.CountingBean;
+import com.oneandone.iocunitejb.ejbs.SingletonTimerEJB;
+import com.oneandone.iocunitejb.ejbs.StatelessAsynchEJB;
+import com.oneandone.iocunitejb.ejbs.StatelessTimerEJB;
 import com.oneandone.ejbcdiunit5.helpers.LoggerGenerator;
 
 /**

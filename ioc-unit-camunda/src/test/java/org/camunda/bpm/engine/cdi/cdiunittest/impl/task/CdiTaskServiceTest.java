@@ -3,7 +3,7 @@ package org.camunda.bpm.engine.cdi.cdiunittest.impl.task;
 import org.camunda.bpm.engine.task.Task;
 import org.junit.Test;
 
-import com.oneandone.ejbcdiunit.camunda.CdiProcessEngineTestCase;
+import com.oneandone.iocunitejb.camunda.CdiProcessEngineTestCase;
 
 
 public class CdiTaskServiceTest extends CdiProcessEngineTestCase {

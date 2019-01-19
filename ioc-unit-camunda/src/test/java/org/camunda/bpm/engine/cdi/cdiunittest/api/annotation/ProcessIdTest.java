@@ -12,7 +12,7 @@ import org.jglue.cdiunit.AdditionalClasspaths;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.oneandone.ejbcdiunit.camunda.CdiProcessEngineTestCase;
+import com.oneandone.iocunitejb.camunda.CdiProcessEngineTestCase;
 
 /**
  * @author Daniel Meyer

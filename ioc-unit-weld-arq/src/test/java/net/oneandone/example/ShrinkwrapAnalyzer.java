@@ -7,7 +7,7 @@ import javax.enterprise.inject.spi.Extension;
 import org.jboss.weld.metadata.MetadataImpl;
 import org.jglue.cdiunit.internal.ProducerConfigExtension;
 
-import com.oneandone.ejbcdiunit.cfganalyzer.TestConfigAnalyzer;
+import com.oneandone.iocunitejb.cfganalyzer.TestConfigAnalyzer;
 
 /**
  * @author aschoerk

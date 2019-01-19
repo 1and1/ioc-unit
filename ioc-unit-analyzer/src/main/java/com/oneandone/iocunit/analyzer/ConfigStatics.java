@@ -29,30 +29,35 @@ public class ConfigStatics {
     }
 
     public static boolean mightBeBean(Class<?> c) {
-        if(c.isInterface() || c.isPrimitive() || c.isLocalClass() || Modifier.isAbstract(c.getModifiers())
-           || c.isAnonymousClass() || c.isLocalClass() || c.isAnnotation()
-           || (c.getEnclosingClass() != null && !Modifier.isStatic(c.getModifiers()))) {
-            return false;
-        }
-        final Constructor<?>[] declaredConstructors = c.getDeclaredConstructors();
-        if(declaredConstructors.length == 0) {
-            return false;
-        }
-        boolean constructorOk = false;
-        for (Constructor constructor : declaredConstructors) {
-            if(constructor.getParameters().length == 0) {
-                constructorOk = true;
+
+        try {
+            if(c.isInterface() || c.isPrimitive() || c.isLocalClass() || Modifier.isAbstract(c.getModifiers())
+               || c.isAnonymousClass() || c.isLocalClass() || c.isAnnotation()
+               || (c.getEnclosingClass() != null && !Modifier.isStatic(c.getModifiers()))) {
+                return false;
             }
-            else {
-                if(constructor.getAnnotation(Inject.class) != null) {
+            final Constructor<?>[] declaredConstructors = c.getDeclaredConstructors();
+            if(declaredConstructors.length == 0) {
+                return false;
+            }
+            boolean constructorOk = false;
+            for (Constructor constructor : declaredConstructors) {
+                if(constructor.getParameters().length == 0) {
                     constructorOk = true;
                 }
+                else {
+                    if(constructor.getAnnotation(Inject.class) != null) {
+                        constructorOk = true;
+                    }
+                }
             }
-        }
-        if(!constructorOk) {
-            return false;
-        }
-        if(isExtension(c)) {
+            if(!constructorOk) {
+                return false;
+            }
+            if(isExtension(c)) {
+                return false;
+            }
+        } catch (NoClassDefFoundError|IncompatibleClassChangeError e) {
             return false;
         }
         return true;

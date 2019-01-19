@@ -30,6 +30,7 @@ public class ConnectionDelegate implements Connection {
 
     Connection connection;
     private Object jdbcConnectionAccess;
+    private boolean inAutocommit = false;
 
     public ConnectionDelegate(SessionImplementor sessionImplementor) {
         try {
@@ -37,6 +38,7 @@ public class ConnectionDelegate implements Connection {
                 Method method = SessionImplementor.class.getMethod("connection");
 
                 this.connection = (Connection) method.invoke(sessionImplementor);
+                connection.setAutoCommit(false);
 
                 this.jdbcConnectionAccess = null;
 
@@ -47,6 +49,8 @@ public class ConnectionDelegate implements Connection {
                 } catch (NoSuchMethodException e1) {
                     throw new RuntimeException(e1);
                 }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
         } catch (IllegalAccessException e) {
             e.printStackTrace();
@@ -83,6 +87,7 @@ public class ConnectionDelegate implements Connection {
     @Override
     public void setAutoCommit(boolean autoCommit) throws SQLException {
         connection.setAutoCommit(autoCommit);
+        inAutocommit = autoCommit;
     }
 
     @Override
@@ -97,6 +102,12 @@ public class ConnectionDelegate implements Connection {
 
     @Override
     public void close() throws SQLException {
+        try {
+            if (!inAutocommit)
+                connection.commit();
+        } catch (Exception e) {
+            ;
+        }
         if (jdbcConnectionAccess != null) {
             try {
                 Method method = jdbcConnectionAccess.getClass().getMethod("releaseConnection", Connection.class);
