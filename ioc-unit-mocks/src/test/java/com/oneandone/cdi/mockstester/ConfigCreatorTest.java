@@ -92,10 +92,10 @@ public class ConfigCreatorTest extends TestsBase {
 
     @Test
     public void testSimplePart() throws MalformedURLException {
-        Assertions.assertThrows(RuntimeException.class, () -> {
-            initialClasses(Bean.class);
-            configureAndStart();
-        });
+        initialClasses(Bean.class);
+        // DummyBean will be added by Phase4
+        configureAndStart();
+        assertNotNull(selectGet(Bean.class).dummyBean);
     }
 
     static class BeanWithInner {
