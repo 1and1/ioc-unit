@@ -97,7 +97,7 @@
                 <module>ioc-unit-mocks</module>
                 <module>ioc-unit-ejb</module>
                 <module>ioc-unit-contexts</module>
-                <!--module>ioc-unit-simulators</module-->
+                <module>ioc-unit-simulators</module>
                 <module>purecdi-tests</module>
             </modules>
             <dependencies>
