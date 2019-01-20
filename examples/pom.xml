@@ -10,13 +10,13 @@
         <profile>
             <id>junit4</id>
             <modules>
-                <module>ex1-1entity</module>
-                <module>ex2-syncconsumed</module>
+                <!--module>ex1-1entity</module-->
+                <!--module>ex2-syncconsumed</module>
                 <module>ex3-asyncconsumedpoll</module>
                 <module>ex4-asyncconsumedpush</module>
                 <module>ex5-asyncconsumedjms1</module>
                 <module>ex6-asyncconsumedjms2</module>
-                <module>ex7-simplerest</module>
+                <module>ex7-simplerest</module-->
                 <module>mockito-example</module>
             </modules>
             <dependencies>

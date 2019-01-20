@@ -123,7 +123,7 @@
                 <module>ioc-unit-tests</module>
                 <!--module>ioc-unit-simulators</module-->
                 <!--module>ioc-unit-camunda</module-->
-                <module>examples</module>
+                <module>examples2</module>
             </modules>
             <build>
                 <plugins>

@@ -2,6 +2,7 @@ package com.oneandone.iocunit.analyzer;
 
 import java.lang.annotation.Annotation;
 import java.net.URL;
+import java.security.CodeSource;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -131,7 +132,9 @@ public class Configuration {
      */
     Configuration testClass(Class<?> clazz) {
         testClasses.add(clazz);
-        testClassPaths.add(clazz.getProtectionDomain().getCodeSource().getLocation());
+        final CodeSource codeSource = clazz.getProtectionDomain().getCodeSource();
+        if (codeSource != null)
+            testClassPaths.add(codeSource.getLocation());
 
         return this;
     }
