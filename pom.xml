@@ -167,7 +167,6 @@
             <modules>
                 <module>ioc-unit-test-war</module>
                 <module>ioc-unit-tests5</module>
-                <module>examples</module>
             </modules>
             <build>
                 <plugins>
