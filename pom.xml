@@ -98,6 +98,7 @@
                 <module>ioc-unit-ejb</module>
                 <module>ioc-unit-contexts</module>
                 <module>ioc-unit-simulators</module>
+                <module>examples2</module>
                 <module>purecdi-tests</module>
             </modules>
             <dependencies>
@@ -121,9 +122,8 @@
                 <module>purecdi-tests</module>
                 <module>ioc-unit-test-war</module>
                 <module>ioc-unit-tests</module>
-                <!--module>ioc-unit-simulators</module-->
                 <!--module>ioc-unit-camunda</module-->
-                <module>examples2</module>
+
             </modules>
             <build>
                 <plugins>
