@@ -100,6 +100,7 @@ class Phase2Matcher extends PhasesBase {
                 assert !configuration.getExcludedClasses().contains(declaringClass);
                 if(configuration.isToBeStarted(declaringClass) || newToBeStarted.contains(declaringClass)) {
                     alreadyProduced = true;
+                    logger.info("Already produced by declaring class: {}", declaringClass.getName());
                     configuration.injectHandled(inject, q);
                 }
                 else if(configuration.isTestClass(declaringClass)) {
@@ -110,6 +111,7 @@ class Phase2Matcher extends PhasesBase {
                 }
             }
             if(alreadyProduced) {
+
                 ; // inject handled by producer in already used class.
 
             }
@@ -120,8 +122,8 @@ class Phase2Matcher extends PhasesBase {
                 }
                 else {
                     if(sutClasses.size() > 0) {
-                        logger.error("Handling Inject: {} Testclass {} clashing with sutClasses",
-                                inject, testClasses, sutClasses);
+                        logger.error("Handling Inject: {} Testclasses clashing with sutClasses",
+                                inject);
                         for (Class<?> c : sutClasses.keySet()) {
                             Set<QualifiedType> injects = configuration.getInjectsForClass(c);
                             if(injects.size() == 0) {
@@ -140,6 +142,9 @@ class Phase2Matcher extends PhasesBase {
                     final Class<?> testClass = testClasses.keySet().iterator().next();
                     if(!configuration.isToBeStarted(testClass)) {
                         newToBeStarted.add(testClass);
+                        logger.info("Selected producing test class {}", testClass.getName());
+                    } else {
+                        logger.info("Already selected producing test class {}", testClass.getName());
                     }
                     configuration.injectHandled(inject, testClasses.values().iterator().next());
                 }
@@ -152,7 +157,10 @@ class Phase2Matcher extends PhasesBase {
                 else {
                     final Class<?> sutClass = sutClasses.keySet().iterator().next();
                     if(!configuration.isToBeStarted(sutClass)) {
+                        logger.info("Selected producing sut class {}", sutClass.getName());
                         newToBeStarted.add(sutClass);
+                    } else {
+                        logger.info("Already selected producing sut class {}", sutClass.getName());
                     }
                     configuration.injectHandled(inject, sutClasses.values().iterator().next());
                 }

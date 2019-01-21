@@ -66,7 +66,7 @@ public class InjectFinder {
     }
 
     private void findInjects(final Class<?> c, boolean isSuperclass) {
-        if (c == null || c.equals(Object.class)) {
+        if (c == null || c.equals(Object.class) || testerExtensionsConfigsFinder.excludeFromInjectScan.contains(c)) {
             return;
         }
         try {

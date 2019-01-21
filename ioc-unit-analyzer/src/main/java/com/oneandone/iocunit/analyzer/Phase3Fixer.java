@@ -36,10 +36,11 @@ public class Phase3Fixer extends PhasesBase {
                 QualifiedType producer = matching.iterator().next();
                 Class declaringClass = producer.getDeclaringClass();
                 if (configuration.isToBeStarted(declaringClass)) {
-                    logger.error("Phase3: Declaring Class already to be started {}", producer);
+                    logger.error("Declaring Class {} already to be started", declaringClass.getName());
                 } else if (newCandidates.contains(declaringClass)) {
-                        logger.trace("Phase3: Declaring Class already to new Candidate {}", producer);
+                        logger.trace("Declaring Class {} already in new candidates", declaringClass.getName());
                 } else {
+                    logger.trace("Adding declaring Class {} to new candidates", declaringClass.getName());
                     configuration.candidate(declaringClass);
                     newCandidates.add(declaringClass);
                 }
@@ -76,7 +77,9 @@ public class Phase3Fixer extends PhasesBase {
                 if(testClassBackedProducers.size() > 1) {
                     logger.error("More than one available Testclass available to produce: {}", inject);
                 }
-                configuration.candidate(testClassBackedProducers.iterator().next().getDeclaringClass());
+                final Class declaringClass = testClassBackedProducers.iterator().next().getDeclaringClass();
+                logger.trace("Selected test class: {}", declaringClass.getName());
+                configuration.candidate(declaringClass);
             }
             else {
                 final List<QualifiedType> sutClassBackedProducers = testClassBacked.get(false);
@@ -98,6 +101,7 @@ public class Phase3Fixer extends PhasesBase {
                         }
                     } else {
                         final Class declaringClass = sutClassBackedProducers.iterator().next().getDeclaringClass();
+                        logger.trace("Selected sut class: {}", declaringClass.getName());
                         addToCandidates(newCandidates, declaringClass);
                     }
                 }
@@ -128,6 +132,7 @@ public class Phase3Fixer extends PhasesBase {
                 }
             }
             for (Class<?> c: solution) {
+                logger.trace("Optimize usage selected test? {} class: {}", configuration.isTestClass(c), c);
                 configuration.candidate(c);
             }
 
@@ -138,7 +143,7 @@ public class Phase3Fixer extends PhasesBase {
 
     private void addToCandidates(final HashSet<Class<?>> newCandidates, final Class declaringClass) {
         if (newCandidates.contains(declaringClass)) {
-            logger.trace("Phase3: Declaring Class already to new Candidate {}", declaringClass);
+            logger.trace("Declaring Class {} already in new candidates", declaringClass.getName());
         } else {
             newCandidates.add(declaringClass);
             configuration.candidate(declaringClass);
