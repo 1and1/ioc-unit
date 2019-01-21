@@ -100,7 +100,7 @@
         </dependency>
         <dependency>
             <groupId>net.oneandone.ioc-unit</groupId>
-            <artifactId>ioc-unit-mocks</artifactId>
+            <artifactId>ioc-unit-mockseasy</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

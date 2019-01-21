@@ -6,11 +6,11 @@
         <version>2.0.1-alpha-06-SNAPSHOT</version>
     </parent>
 
-    <artifactId>ioc-unit-mocks</artifactId>
+    <artifactId>ioc-unit-mockseasy</artifactId>
     <packaging>jar</packaging>
 
-    <name>net.oneandone.ioc-unit:ioc-unit-mocks</name>
-    <description>A module that can be used together with cdiunit to build en ejb-test-environment.</description>
+    <name>net.oneandone.ioc-unit:ioc-unit-mockseasy</name>
+    <description>Let weld inject mocks created(and produced) by mockito or easymock.</description>
     <url>https://github.com/1and1/ioc-unit</url>
 
     <licenses>
