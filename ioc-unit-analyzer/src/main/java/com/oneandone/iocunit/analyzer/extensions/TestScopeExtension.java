@@ -7,7 +7,6 @@
 package com.oneandone.iocunit.analyzer.extensions;
 
 import javax.enterprise.event.Observes;
-import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.AnnotatedType;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
@@ -32,7 +31,7 @@ public class TestScopeExtension implements Extension {
 
     <T> void processAnnotatedType(@Observes @WithAnnotations({Inject.class}) ProcessAnnotatedType<T> pat) {
         final AnnotatedType<T> annotatedType = pat.getAnnotatedType();
-        if (annotatedType.getJavaClass().equals(testClass)) {
+        if(annotatedType.getJavaClass().equals(testClass)) {
             AnnotatedTypeBuilder<T> builder = new AnnotatedTypeBuilder<T>().readFromType(annotatedType).addToClass(APPLICATIONSCOPED);
             pat.setAnnotatedType(builder.create());
         }

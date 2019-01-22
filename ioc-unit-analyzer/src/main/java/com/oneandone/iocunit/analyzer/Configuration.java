@@ -28,6 +28,15 @@ public class Configuration {
         FIXING,
         WARNING
     }
+    private Class<?> testClass;
+
+    public Class<?> getTestClass() {
+        return testClass;
+    }
+
+    public void setTestClass(final Class<?> testClass) {
+        this.testClass = testClass;
+    }
 
     private Phase phase = Phase.UNKNOWN;
 

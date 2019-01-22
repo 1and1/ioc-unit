@@ -328,10 +328,23 @@ class Phase1Analyzer extends PhasesBase {
         }
     }
 
-    private void addToProducerMap(final Class<?> c, final ProducerMap producerMap) {
-        producerMap.addToProducerMap(new QualifiedType(c));
+    private void abstractSuperClasses(final Class<?> c) {
+        final Class<?> superclass = c.getSuperclass();
+        if (!(superclass.equals(Object.class)
+              || superclass == null)) {
+            addToProducerMap(superclass, configuration.getProducerMap());
+            abstractSuperClasses(superclass);
+        }
+    }
+
+    private QualifiedType addToProducerMap(final Class<?> c, final ProducerMap producerMap) {
+        final QualifiedType result = new QualifiedType(c);
+        if (!Modifier.isAbstract(c.getModifiers())) {
+            producerMap.addToProducerMap(result);
+        }
         producerFields(c, producerMap);
         producerMethods(c, producerMap);
+        return result;
     }
 
     boolean work() {
@@ -359,7 +372,10 @@ class Phase1Analyzer extends PhasesBase {
                         logger.trace("might be Bean {}", c);
                         beanWithoutProducer(c);
                         final ProducerMap producerMap = configuration.getProducerMap();
-                        addToProducerMap(c, producerMap);
+                        QualifiedType q = addToProducerMap(c, producerMap);
+                        if (c.equals(configuration.getTestClass()) || q.isAlternative()) {
+                            abstractSuperClasses(c);
+                        }
                     }
                     else {
                         logger.trace("else but to be started {}", c);

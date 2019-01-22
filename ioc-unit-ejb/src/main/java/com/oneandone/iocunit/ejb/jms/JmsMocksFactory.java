@@ -118,7 +118,7 @@ public class JmsMocksFactory {
                     if ("destinationType".equals(p.propertyName())) {
                         destinationType = p.propertyValue();
                     } else if ("destination".equals(p.propertyName())) {
-                        destination = calculateCommonName(p.propertyValue());
+                        destination = JmsProducers.calculateCommonName(p.propertyValue());
                     } else if ("acknowledgeMode".equals(p.propertyName())) {
                         acknowledgeMode = "Auto_acknowledge".equals(p.propertyValue()) ? Session.AUTO_ACKNOWLEDGE : Session.DUPS_OK_ACKNOWLEDGE;
                     } else if ("messageSelector".equals(p.propertyName())) {
@@ -146,57 +146,5 @@ public class JmsMocksFactory {
         }
     }
 
-    private String getResourceName(InjectionPoint ip) {
-        Resource resourceAnnotation = ip.getAnnotated().getAnnotation(Resource.class);
-        String name = resourceAnnotation.mappedName();
-        if (name.trim().isEmpty()) {
-            name = resourceAnnotation.lookup();
-            if (name.trim().isEmpty())  {
-                name = "dummyName";
-            }
-        }
-        return name;
-    }
 
-    private String calculateCommonName(String name) {
-        int lastSlashIndex = name.lastIndexOf("/");
-        if (lastSlashIndex < 0) {
-            return name;
-        } else {
-            return name.substring(lastSlashIndex + 1);
-        }
-    }
-
-    /**
-     * called by CDI on each @Inject Queue. SupportEjb added this when @Resource was found
-     * @param ip information about the injectionpoint can be used to analyze the annotations. - Queuename, ...
-     * @return representation of the Queue to be injected
-     */
-    @Produces
-    public Queue createQueue(InjectionPoint ip) {
-        String name = getResourceName(ip);
-        return jmsSingletons.getDestinationManager().createQueue(calculateCommonName(name));
-    }
-
-    /**
-     * called by CDI on each @Inject Topic. SupportEjb added this when @Resource was found
-     * @param ip information about the injectionpoint can be used to analyze the annotations. - Topicname, ...
-     * @return representation of the Topic to be injected
-     */
-    @Produces
-    public Topic createTopic(InjectionPoint ip) {
-        String name = getResourceName(ip);
-        return jmsSingletons.getDestinationManager().createTopic(calculateCommonName(name));
-    }
-
-    /**
-     * creates the jms-connectionfactory which is injected anywhere during the tests.
-     * @return one ConnectionFactory able to create mockrunner-jms-objects
-     * @throws Exception should not occur since mockrunner uses the main memory for jms.
-     */
-    @Produces
-    @ApplicationScoped
-    public ConnectionFactory getConnectionFactory() throws Exception {
-        return jmsSingletons.getConnectionFactory();
-    }
-}
+  }

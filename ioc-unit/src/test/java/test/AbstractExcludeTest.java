@@ -5,6 +5,7 @@ import com.oneandone.iocunit.IocUnitRunner;
 import org.junit.runner.RunWith;
 
 import javax.annotation.PostConstruct;
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 
@@ -12,17 +13,7 @@ import javax.inject.Inject;
  * @author aschoerk
  */
 @RunWith(IocUnitRunner.class)
-@ExcludedClasses(AbstractExcludeTest.ToInclude.class)
-public abstract class AbstractExcludeTest {
-
-    static class ToInclude {
-        public static int count;
-
-        @PostConstruct
-        public void postConstruct() {
-            count++;
-        }
-    }
+public class AbstractExcludeTest {
 
     @Inject
     ToInclude toInclude;

@@ -24,6 +24,7 @@ public class ConfigCreator extends ConfigCreatorBase {
             if(initial.testClass.getAnnotation(ApplicationScoped.class) == null) {
                 configuration.getElseClasses().extensionObjects.add(new TestScopeExtension(initial.testClass));
             }
+            configuration.setTestClass(initial.testClass);
             configuration.testClass(initial.testClass).candidate(initial.testClass);
         }
         configuration.setTesterExtensionsConfigsFinder(testerExtensionsConfigsFinder);
