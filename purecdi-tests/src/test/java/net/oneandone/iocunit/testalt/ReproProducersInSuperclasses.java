@@ -28,13 +28,13 @@ public class ReproProducersInSuperclasses {
         Weld weld = new Weld()
                 .disableDiscovery()
                 .addBeanClass(MainClass.class)
-                .addBeanClass(Container.class)
-                .addBeanClass(ContainerAlt.class)
-                .alternatives(ContainerAlt.class);
+                .addBeanClass(BeanContainer.class)
+                .addBeanClass(BeanContainerAlt.class)
+                .alternatives(BeanContainerAlt.class);
         WeldContainer container = weld.initialize();
         final MainClass mainClass = container.select(MainClass.class).get();
-        final Container containerObject = container.select(Container.class).get();
-        assertEquals(ContainerAlt.class, containerObject.getClass());
+        final BeanContainer containerObject = container.select(BeanContainer.class).get();
+        assertEquals(BeanContainerAlt.class, containerObject.getClass());
         assertFalse(mainClass.bean.didPostConstruct);
         assertEquals(10, (long)mainClass.producedInt);
     }
@@ -47,9 +47,9 @@ public class ReproProducersInSuperclasses {
                 .disableDiscovery()
                 .addBeanClass(MainClass.class)
                 .addBeanClass(Bean.class)
-                .addBeanClass(Container.class)
-                .addBeanClass(ContainerAlt.class)
-                .alternatives(ContainerAlt.class);
+                .addBeanClass(BeanContainer.class)
+                .addBeanClass(BeanContainerAlt.class)
+                .alternatives(BeanContainerAlt.class);
         WeldContainer container = weld.initialize();
         final MainClass mainClass = container.select(MainClass.class).get();
         assertFalse(mainClass.bean.didPostConstruct);

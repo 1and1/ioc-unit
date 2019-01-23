@@ -1,4 +1,4 @@
-package testalt;
+package net.oneandone.iocunit.testalt;
 
 import javax.enterprise.inject.Alternative;
 import javax.enterprise.inject.Produces;
@@ -7,7 +7,7 @@ import javax.enterprise.inject.Produces;
  * @author aschoerk
  */
 @Alternative
-public class ContainerAlt extends Container {
+public class BeanContainerAlt extends BeanContainer {
 
     @Produces
     int producerInt = 10;

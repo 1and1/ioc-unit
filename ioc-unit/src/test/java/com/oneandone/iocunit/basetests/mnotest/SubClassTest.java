@@ -1,6 +1,5 @@
-package mnotest;
+package com.oneandone.iocunit.basetests.mnotest;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import org.junit.Test;

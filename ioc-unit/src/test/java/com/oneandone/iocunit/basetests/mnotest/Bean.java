@@ -1,4 +1,4 @@
-package mnotest;
+package com.oneandone.iocunit.basetests.mnotest;
 
 /**
  * @author aschoerk
