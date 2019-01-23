@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.ejb.Schedule;
 import javax.ejb.Schedules;
@@ -16,10 +17,12 @@ import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
+import javax.jms.JMSException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.oneandone.iocunit.ejb.jms.JmsMocksFactory;
 import com.oneandone.iocunit.ejb.persistence.SimulatedTransactionManager;
 import com.oneandone.cdi.weldstarter.CreationalContexts;
 
@@ -40,6 +43,8 @@ public class AsynchronousManager {
     private EjbExtensionExtended ejbExtensionExtended;
     @Inject
     private BeanManager bm;
+    @Inject
+    JmsMocksFactory jmsMocksFactory;
     private Logger logger = LoggerFactory.getLogger("AsynchronousManager");
     private CreationalContexts creationalContexts = null;
 
@@ -47,6 +52,11 @@ public class AsynchronousManager {
 
     private boolean enqueAsynchronousCalls = false;
     private Thread asyncHandler = null;
+
+    @PostConstruct
+    public void postConstruct() throws JMSException{
+        jmsMocksFactory.initMessageListeners();
+    }
 
     /**
      * check if Asynchronous Methods may be dispatched

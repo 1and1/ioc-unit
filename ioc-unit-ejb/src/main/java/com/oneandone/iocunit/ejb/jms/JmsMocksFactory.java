@@ -57,29 +57,6 @@ public class JmsMocksFactory {
     private static ThreadLocal<Boolean> postConstructing = new ThreadLocal<>();
 
     /**
-     * create mockrunner to produce singleton.
-     * strangely is called recursively by weld 1.1.14. Which is prevented using postConstructing.
-     */
-    @PostConstruct
-    public void postConstruct() {
-        logger.info("JmsMdbConnector.postConstruct start");
-        if (postConstructing.get() != null && postConstructing.get()) {
-            logger.error("JmsMdbConnector already postConstructing");
-        } else {
-            try {
-                this.postConstructing.set(true);
-                initMessageListeners(); // leads in maven to out of memory errors, need to analyze this first, so
-            } catch (JMSException e) {
-                throw new RuntimeException(e);
-            } finally {
-                this.postConstructing.set(false);
-            }
-        }
-        // call it during test create until further notice.
-        logger.info("JmsMdbConnector.postConstruct done");
-    }
-
-    /**
      * Handle multiple creation/destroys of cdi-containers correctly. remove all in mockrunner-jms
      */
     @PreDestroy
@@ -100,7 +77,7 @@ public class JmsMocksFactory {
      * @throws JMSException should not occur since mockrunner creates everything in main memory.
      */
     @SuppressWarnings("resource")
-    private synchronized void initMessageListeners() throws JMSException {
+    public synchronized void initMessageListeners() throws JMSException {
         if (!initedMessageListeners.get()) {
             logger.info("JmsMdbConnector.postConstruct initMessageListeners start");
             for (MessageListener messageListener : messageListeners) {
