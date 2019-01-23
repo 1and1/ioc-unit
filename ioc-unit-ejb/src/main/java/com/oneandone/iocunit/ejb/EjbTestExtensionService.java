@@ -3,6 +3,7 @@ package com.oneandone.iocunit.ejb;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.net.URL;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -12,16 +13,19 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.MessageDriven;
+import javax.ejb.SessionContext;
 import javax.ejb.Startup;
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.Entity;
 import javax.persistence.PersistenceContext;
+import javax.transaction.UserTransaction;
 
 import org.jboss.weld.transaction.spi.TransactionServices;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.oneandone.iocunit.ejb.jms.JmsMocksFactory;
+import com.oneandone.iocunit.ejb.jms.JmsProducers;
 import com.oneandone.iocunit.ejb.jms.JmsSingletons;
 import com.oneandone.iocunit.ejb.persistence.SimulatedEntityTransaction;
 import com.oneandone.iocunit.ejb.persistence.SimulatedTransactionManager;
@@ -114,6 +118,8 @@ public class EjbTestExtensionService implements TestExtensionService {
                 add(EjbUnitBeanInitializerClass.class);
                 add(EjbUnitTransactionServices.class);
                 add(JmsSingletons.class);
+                add(JmsMocksFactory.class);
+                add(JmsProducers.class);
                 add(SessionContextFactory.class);
                 add(AsynchronousManager.class);
                 add(AsynchronousMethodInterceptor.class);
@@ -153,7 +159,18 @@ public class EjbTestExtensionService implements TestExtensionService {
 
     @Override
     public Collection<? extends Class<?>> excludeFromIndexScan() {
-        return Arrays.asList(JmsMocksFactory.class, EjbUnitBeanInitializerClass.class,
-                AsynchronousManager.class, SessionContextFactory.class, TransactionalInterceptor.class);
+        return Arrays.asList(
+                JmsMocksFactory.class,
+                EjbUnitBeanInitializerClass.class,
+                AsynchronousManager.class,
+                SessionContextFactory.class,
+                TransactionalInterceptor.class);
+    }
+
+    @Override
+    public Collection<? extends Class<?>> excludeAsInjects() {
+        return Arrays.asList(
+                SessionContext.class,
+                UserTransaction.class);
     }
 }

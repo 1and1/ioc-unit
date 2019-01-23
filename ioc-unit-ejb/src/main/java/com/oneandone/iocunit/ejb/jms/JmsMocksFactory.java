@@ -149,28 +149,6 @@ public class JmsMocksFactory {
 
 
     /**
-     * called by CDI on each @Inject Queue. SupportEjb added this when @Resource was found
-     * @param ip information about the injectionpoint can be used to analyze the annotations. - Queuename, ...
-     * @return representation of the Queue to be injected
-     */
-    @Produces
-    public Queue createQueue(InjectionPoint ip) {
-        String name = getResourceName(ip);
-        return jmsSingletons.getDestinationManager().createQueue(calculateCommonName(name));
-    }
-
-    /**
-     * called by CDI on each @Inject Topic. SupportEjb added this when @Resource was found
-     * @param ip information about the injectionpoint can be used to analyze the annotations. - Topicname, ...
-     * @return representation of the Topic to be injected
-     */
-    @Produces
-    public Topic createTopic(InjectionPoint ip) {
-        String name = getResourceName(ip);
-        return jmsSingletons.getDestinationManager().createTopic(calculateCommonName(name));
-    }
-
-    /**
      * creates the jms-connectionfactory which is injected anywhere during the tests.
      * @return one ConnectionFactory able to create mockrunner-jms-objects
      * @throws Exception should not occur since mockrunner uses the main memory for jms.
@@ -180,6 +158,8 @@ public class JmsMocksFactory {
     public ConnectionFactory getConnectionFactory() throws Exception {
         return jmsSingletons.getConnectionFactory();
     }
+
+
 
     static String getResourceName(InjectionPoint ip) {
         Resource resourceAnnotation = ip.getAnnotated().getAnnotation(Resource.class);

@@ -36,6 +36,7 @@ public class InjectFinder {
         this.testerExtensionsConfigsFinder = a;
         injectAnnotations.add(Inject.class);
         injectAnnotations.addAll(a.injectAnnotations);
+        toIgnore.addAll(a.excludeAsInjects);
     }
 
     List<Class<?>> toIgnore = new ArrayList<Class<?>>() {

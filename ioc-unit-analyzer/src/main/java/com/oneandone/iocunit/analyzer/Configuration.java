@@ -26,7 +26,8 @@ public class Configuration {
         ANALYZING,
         MATCHING,
         FIXING,
-        WARNING
+        WARNING,
+        INITIALIZING;
     }
     private Class<?> testClass;
 
@@ -76,7 +77,7 @@ public class Configuration {
             candidates.add(c);
         }
         else {
-            if(phase != Phase.ANALYZING) {
+            if(phase != Phase.ANALYZING && phase != Phase.INITIALIZING) {
                 logger.error("candidates already contains {}", c);
             }
         }

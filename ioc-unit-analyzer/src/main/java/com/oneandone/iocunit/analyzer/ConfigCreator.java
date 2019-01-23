@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 
 import javax.enterprise.context.ApplicationScoped;
 
+import org.apache.commons.lang3.reflect.TypeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +21,7 @@ public class ConfigCreator extends ConfigCreatorBase {
     Configuration configuration = new Configuration();
 
     private void init(InitialConfiguration initial, TesterExtensionsConfigsFinder testerExtensionsConfigsFinder) {
+        configuration.setPhase(Configuration.Phase.INITIALIZING);
         if(initial.testClass != null) {
             if(initial.testClass.getAnnotation(ApplicationScoped.class) == null) {
                 configuration.getElseClasses().extensionObjects.add(new TestScopeExtension(initial.testClass));
@@ -62,10 +64,17 @@ public class ConfigCreator extends ConfigCreatorBase {
             throw new RuntimeException("not implemented yet");
             // addPackages(setToArray(initial.sutPackages), false);
         }
+    }
 
+    static void checkVersions() {
+        final String lang3Version = TypeUtils.class.getPackage().getImplementationVersion();
+        if (lang3Version.compareTo("3.5") < 0) {
+            logger.error("org.apache.commons.lang3 version is {} but should be at least 3.5", lang3Version);
+        }
     }
 
     public void create(InitialConfiguration initial) {
+        checkVersions();
         this.init(initial, new TesterExtensionsConfigsFinder());
         Phase1Analyzer phase1Analyzer = new Phase1Analyzer(configuration);
         Phase4AvailablesGuesser phase4AvailablesGuesser = new Phase4AvailablesGuesser(configuration, phase1Analyzer);

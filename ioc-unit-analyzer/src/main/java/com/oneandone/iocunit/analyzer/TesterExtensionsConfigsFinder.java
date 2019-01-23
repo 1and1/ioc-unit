@@ -25,6 +25,7 @@ public class TesterExtensionsConfigsFinder {
     List<Class<?>> initialClasses = new ArrayList<>();
     List<Class<?>> fakeClasses = new ArrayList<>();
     List<Class<?>> excludeFromInjectScan = new ArrayList<>();
+    List<Class<?>> excludeAsInjects = new ArrayList<>();
 
 
     public TesterExtensionsConfigsFinder() {
@@ -45,6 +46,7 @@ public class TesterExtensionsConfigsFinder {
                 }
                 initialClasses.addAll(testExtensionService.testClasses());
                 fakeClasses.addAll(testExtensionService.fakeClasses());
+                excludeAsInjects.addAll(testExtensionService.excludeAsInjects());
             }
         }
     }

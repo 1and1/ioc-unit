@@ -80,4 +80,8 @@ public interface TestExtensionService {
     default Collection<? extends Class<?>> excludeFromIndexScan()  {
         return Collections.EMPTY_LIST;
     }
+
+    default Collection<? extends Class<?>> excludeAsInjects()  {
+        return Collections.EMPTY_LIST;
+    }
 }

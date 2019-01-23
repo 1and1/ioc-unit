@@ -105,4 +105,8 @@ public class InitialConfiguration {
         return this;
     }
 
+    public InitialConfiguration setTestClass(final Class<?> aClass) {
+        testClass = aClass;
+        return this;
+    }
 }

@@ -7,10 +7,12 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.ejb.SessionContext;
 import javax.enterprise.context.Conversation;
 import javax.enterprise.context.spi.Contextual;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.Default;
+import javax.transaction.UserTransaction;
 
 import org.jboss.weld.context.ConversationContext;
 import org.jboss.weld.context.ManagedConversation;
@@ -235,5 +237,11 @@ public class ContextsTestExtensionService implements TestExtensionService {
     @Override
     public Collection<? extends Class<?>> excludeFromIndexScan() {
         return Arrays.asList(ContextController.class);
+    }
+
+    @Override
+    public Collection<? extends Class<?>> excludeAsInjects() {
+        return Arrays.asList(
+                Conversation.class);
     }
 }

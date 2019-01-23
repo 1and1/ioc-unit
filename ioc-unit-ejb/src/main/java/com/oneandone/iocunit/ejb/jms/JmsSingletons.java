@@ -5,6 +5,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
+import javax.inject.Singleton;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSContext;
@@ -22,7 +23,7 @@ import com.mockrunner.mock.jms.MockConnectionFactory;
  *
  * @author aschoerk
  */
-@ApplicationScoped
+@Singleton
 public class JmsSingletons {
 
     private AtomicReference<DestinationManager> destinationManagerAtomicReference = new AtomicReference<>();
