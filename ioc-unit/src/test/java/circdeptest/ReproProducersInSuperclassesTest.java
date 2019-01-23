@@ -30,15 +30,15 @@ import org.jboss.weld.environment.se.Weld;
 import org.jboss.weld.environment.se.WeldContainer;
 import org.jboss.weld.resources.spi.ResourceLoader;
 import org.jboss.weld.resources.spi.ScheduledExecutorServiceFactory;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import com.oneandone.cdi.weldstarter.WeldSetup;
-
 /**
  * @author aschoerk
  */
+@Ignore
 @RunWith(JUnit4.class)
 public class ReproProducersInSuperclassesTest {
     @Test
@@ -65,7 +65,7 @@ public class ReproProducersInSuperclassesTest {
 
                 final SimpleServiceRegistry services = new SimpleServiceRegistry();
 
-                services.add(ScheduledExecutorServiceFactory.class,  new ScheduledExecutorServiceFactory() {
+                services.add(ScheduledExecutorServiceFactory.class, new ScheduledExecutorServiceFactory() {
                     @Override
                     public ScheduledExecutorService get() {
                         return new ScheduledThreadPoolExecutor(10);

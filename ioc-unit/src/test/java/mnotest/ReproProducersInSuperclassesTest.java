@@ -30,6 +30,7 @@ import org.jboss.weld.environment.se.Weld;
 import org.jboss.weld.environment.se.WeldContainer;
 import org.jboss.weld.resources.spi.ResourceLoader;
 import org.jboss.weld.resources.spi.ScheduledExecutorServiceFactory;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -47,6 +48,7 @@ import circdeptest.SubContainer;
  */
 @RunWith(JUnit4.class)
 public class ReproProducersInSuperclassesTest {
+    @Ignore
     @Test
     public void test() {
         Weld weld = new Weld()
