@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.enterprise.inject.Produces;
+import javax.enterprise.inject.Specializes;
 import javax.enterprise.inject.Stereotype;
 
 import org.slf4j.Logger;
@@ -325,6 +326,28 @@ class Phase1Analyzer extends PhasesBase {
             enabledAlternatives(c);
             extraAnnotations(c);
             excludes(c);
+        }
+        specializes(c);
+    }
+
+    private void specializes(final Class<?> c) {
+        if (c != null && c != Object.class && !c.isInterface()) {
+            Specializes specializesL = c.getAnnotation(Specializes.class);
+            final Class<?> superclass = c.getSuperclass();
+            if (!configuration.getObligatory().contains(superclass)) {
+                if(specializesL != null) {
+                    if(configuration.isTestClass(c)) {
+                        configuration.testClass(superclass);
+                    }
+                    else {
+                        configuration.sutClass(superclass);
+                    }
+                    configuration.candidate(superclass);
+                }
+                else {
+                    specializes(superclass);
+                }
+            }
         }
     }
 

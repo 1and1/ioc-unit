@@ -8,7 +8,7 @@
         </encoder>
     </appender>
 
-    <logger name="com.oneandone.cdi.testanalyzer" level="trace"/>
+    <logger name="com.oneandone.iocunit.analyzer" level="trace"/>
 
     <root level="info">
         <appender-ref ref="STDOUT"/>

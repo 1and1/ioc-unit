@@ -54,8 +54,12 @@ public class AsynchronousManager {
     private Thread asyncHandler = null;
 
     @PostConstruct
-    public void postConstruct() throws JMSException{
-        jmsMocksFactory.initMessageListeners();
+    public void postConstruct() {
+        try {
+            jmsMocksFactory.initMessageListeners();
+        } catch (JMSException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**

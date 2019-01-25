@@ -3,17 +3,11 @@ package com.oneandone.iocunit;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ServiceLoader;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.naming.InitialContext;
-import javax.naming.NamingException;
 
-import com.oneandone.iocunit.analyzer.ConfigCreator;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -24,11 +18,7 @@ import org.junit.jupiter.api.extension.TestInstantiationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.oneandone.iocunit.analyzer.InitialConfiguration;
 import com.oneandone.cdi.weldstarter.CreationalContexts;
-import com.oneandone.cdi.weldstarter.WeldSetupClass;
-import com.oneandone.cdi.weldstarter.spi.TestExtensionService;
-import com.oneandone.cdi.weldstarter.spi.WeldStarter;
 
 public class IocJUnit5Extension implements BeforeEachCallback,
         AfterAllCallback, TestExecutionExceptionHandler, TestInstanceFactory {
@@ -36,83 +26,36 @@ public class IocJUnit5Extension implements BeforeEachCallback,
     private static Logger logger = LoggerFactory.getLogger(IocJUnit5Extension.class);
     // global system property
     private static final String ABSENT_CODE_PREFIX = "Absent Code attribute in method that is not native or abstract in class file ";
-    protected WeldStarter weldStarter;
-    private WeldSetupClass weldSetup;
-    ConfigCreator cdiConfigCreator = null;
-    private final List<TestExtensionService> testExtensionServices = new ArrayList<>();
-
+    IocUnitAnalyzeAndStarter analyzeAndStarter = new IocUnitAnalyzeAndStarter();
 
     protected Throwable startupException;
     private Method testMethod;
     private Class<?> testClass;
 
-    CreationalContexts creationalContexts;
-    InitialContext initialContext;
 
     public IocJUnit5Extension() {
-        if(testExtensionServices.size() == 0) {
-            ServiceLoader<TestExtensionService> loader = ServiceLoader.load(TestExtensionService.class);
-            final Iterator<TestExtensionService> testExtensionServiceIterator = loader.iterator();
-            while (testExtensionServiceIterator.hasNext()) {
-                testExtensionServices.add(testExtensionServiceIterator.next());
-            }
-        }
+
     }
 
     @Override
     public void afterAll(final ExtensionContext extensionContext) throws Exception {
         logger.trace("---->after All execution {} {}\n", extensionContext.getDisplayName(), this);
-        shutdownWeldIfRunning(false);
+        analyzeAndStarter.shutdownWeldIfRunning(false);
     }
 
-    private void shutdownWeldIfRunning(boolean ignoreException) throws NamingException {
-        if(weldStarter != null) {
-            logger.trace("----> shutting down Weld");
-            if(ignoreException) {
-                try {
-                    weldStarter.tearDown();
-                } catch (Throwable thw) {
-                    logger.debug("Ignored {}", thw);
-                }
-            }
-            else {
-                weldStarter.tearDown();
-            }
-            weldStarter = null;
-        }
-    }
 
     private Object createTestInstance(Class<?> clazz) throws Exception {
         startupException = null;
-        shutdownWeldIfRunning(false);
-        if(weldStarter == null) {
+        analyzeAndStarter.shutdownWeldIfRunning(false);
+        if(!analyzeAndStarter.isRunning()) {
             logger.trace("----> starting up Weld.");
 
-            weldStarter = WeldSetupClass.getWeldStarter();
-            String version = weldStarter.getVersion();
-            if("2.2.8 (Final)".equals(version) || "2.2.7 (Final)".equals(version)) {
-                startupException = new Exception("Weld 2.2.8 and 2.2.7 are not supported. Suggest upgrading to 2.2.9");
-            }
-
+            startupException = analyzeAndStarter.checkVersion();
             System.setProperty("java.naming.factory.initial", "com.oneandone.iocunit.naming.CdiTesterContextFactory");
 
             try {
-                if(cdiConfigCreator == null) {
-                    InitialConfiguration cfg = new InitialConfiguration();
-                    cfg.testClass = clazz;
-                    cfg.testMethod = testMethod;
-                    cfg.initialClasses.add(BeanManager.class);
-                    cdiConfigCreator = new ConfigCreator();
-                    cdiConfigCreator.create(cfg);
-                }
-
-                weldSetup = cdiConfigCreator.buildWeldSetup(testMethod);
-                if(testExtensionServices != null) {
-                    for (TestExtensionService te : testExtensionServices) {
-                        te.preStartupAction(weldSetup);
-                    }
-                }
-                weldStarter.start(weldSetup);
+                if (startupException == null)
+                    analyzeAndStarter.analyzeAndStart(clazz, null);
             } catch (ClassFormatError e) {
                 startupException = parseClassFormatError(e);
             } catch (Throwable e) {
@@ -123,23 +66,16 @@ public class IocJUnit5Extension implements BeforeEachCallback,
             if(startupException != null) {
                 return clazz.newInstance(); // prepare default, to allow beforeEach to handle exception.
             }
-            System.setProperty("java.naming.factory.initial", "com.oneandone.iocunit.naming.CdiTesterContextFactory");
-            initialContext = new InitialContext();
-            final BeanManager beanManager = weldStarter.get(BeanManager.class);
-            initialContext.bind("java:comp/BeanManager", beanManager);
-            creationalContexts = new CreationalContexts(beanManager);
-            if(testExtensionServices != null) {
-                for (TestExtensionService te : testExtensionServices) {
-                    te.postStartupAction(creationalContexts);
-                }
-            }
-            Object test = creationalContexts.create(clazz, ApplicationScoped.class);
+            analyzeAndStarter.initContexts();
+            Object test = analyzeAndStarter.getCreationalContexts().create(clazz, ApplicationScoped.class);
             logger.trace("---->Found testinstance {}\n", test);
             return test;
 
         }
         return null;
     }
+
+
 
 
     private ClassFormatError parseClassFormatError(ClassFormatError e) {
@@ -194,7 +130,7 @@ public class IocJUnit5Extension implements BeforeEachCallback,
                && extensionContext.getTestMethod().get().isAnnotationPresent(ExpectedStartupException.class)) {
                 ExpectedStartupException ann = extensionContext.getTestMethod().get().getAnnotation(ExpectedStartupException.class);
                 if(ann.value().isAssignableFrom(startupException.getClass())) {
-                    shutdownWeldIfRunning(true);
+                    analyzeAndStarter.shutdownWeldIfRunning(true);
                     return;
                 }
             }

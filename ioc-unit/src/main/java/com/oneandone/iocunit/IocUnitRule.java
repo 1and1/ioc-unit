@@ -4,16 +4,13 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ServiceLoader;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 import javax.naming.InitialContext;
 
-import com.oneandone.iocunit.analyzer.ConfigCreator;
 import org.junit.Test;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
@@ -23,9 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import com.oneandone.iocunit.analyzer.InitialConfiguration;
 import com.oneandone.cdi.weldstarter.CreationalContexts;
-import com.oneandone.cdi.weldstarter.WeldSetupClass;
 import com.oneandone.cdi.weldstarter.spi.TestExtensionService;
-import com.oneandone.cdi.weldstarter.spi.WeldStarter;
 
 /**
  * @author aschoerk
@@ -34,11 +29,9 @@ public class IocUnitRule implements TestRule {
     private static Logger logger = LoggerFactory.getLogger(IocUnitRule.class);
     private final Object instance;
     private final InitialConfiguration initialConfiguration;
-    private WeldSetupClass weldSetup;
-    private WeldStarter weldStarter;
     private final List<TestExtensionService> testExtensionServices = new ArrayList<>();
     private Method method;
-    private ConfigCreator cdiConfigCreator = null;
+    IocUnitAnalyzeAndStarter analyzeAndStarter;
 
     public IocUnitRule(final Object instance) {
         this(instance, new InitialConfiguration());
@@ -47,13 +40,7 @@ public class IocUnitRule implements TestRule {
     public IocUnitRule(final Object instance, final InitialConfiguration initialConfiguration) {
         this.instance = instance;
         this.initialConfiguration = initialConfiguration;
-        if (testExtensionServices.size() == 0) {
-            ServiceLoader<TestExtensionService> loader = ServiceLoader.load(TestExtensionService.class);
-            final Iterator<TestExtensionService> testExtensionServiceIterator = loader.iterator();
-            while (testExtensionServiceIterator.hasNext()) {
-                testExtensionServices.add(testExtensionServiceIterator.next());
-            }
-        }
+        analyzeAndStarter = new IocUnitAnalyzeAndStarter();
     }
 
     @Override
@@ -85,31 +72,8 @@ public class IocUnitRule implements TestRule {
             this.testInstance = instance;
             this.next = next;
             try {
-                weldStarter = WeldSetupClass.getWeldStarter();
-                String version = weldStarter.getVersion();
-                if ("2.2.8 (Final)".equals(version) || "2.2.7 (Final)".equals(version)) {
-                    startupException = new Exception("Weld 2.2.8 and 2.2.7 are not supported. Suggest upgrading to 2.2.9");
-                }
-
-
-                if (cdiConfigCreator == null) {
-                    InitialConfiguration cfg = initialConfiguration;
-                    cfg.testClass = clazz;
-                    cfg.testMethod = method;
-                    cfg.initialClasses.add(BeanManager.class);
-                    cdiConfigCreator = new ConfigCreator();
-                    cdiConfigCreator.create(cfg);
-                }
-
-
-                weldSetup = cdiConfigCreator.buildWeldSetup(method);
-                if (testExtensionServices != null) {
-                    for (TestExtensionService te : testExtensionServices) {
-                        te.preStartupAction(weldSetup);
-                    }
-                }
-                weldStarter.start(weldSetup);
-
+                startupException = analyzeAndStarter.checkVersion();
+                analyzeAndStarter.analyzeAndStart(clazz, method);
 
             } catch (ClassFormatError e) {
 
@@ -140,7 +104,7 @@ public class IocUnitRule implements TestRule {
          */
         @Override
         public void evaluate() throws Throwable {
-            if (weldSetup == null)
+            if (analyzeAndStarter.weldSetup == null)
                 initWeld();
             if (startupException != null) {
                 if (method != null && method.getAnnotation(Test.class).expected() == startupException.getClass()) {
@@ -148,23 +112,13 @@ public class IocUnitRule implements TestRule {
                 }
                 throw startupException;
             }
-            final BeanManager beanManager = weldStarter.get(BeanManager.class);
-            System.setProperty("java.naming.factory.initial", "com.oneandone.iocunit.naming.CdiTesterContextFactory");
-            InitialContext initialContext = new InitialContext();
-            initialContext.bind("java:comp/BeanManager", beanManager);
-            try (CreationalContexts creationalContexts = new CreationalContexts(beanManager)) {
-                if (testExtensionServices != null) {
-                    for (TestExtensionService te : testExtensionServices) {
-                        te.postStartupAction(creationalContexts);
-                    }
-                }
-                Object test = creationalContexts.create(clazz, ApplicationScoped.class);
+            try {
+                analyzeAndStarter.initContexts();
+                Object test = analyzeAndStarter.getCreationalContexts().create(clazz, ApplicationScoped.class);
                 initWeldFields(test, test.getClass());
                 next.evaluate();
             } finally {
-                initialContext.close();
-                weldStarter.tearDown();
-                weldStarter = null;
+                analyzeAndStarter.tearDown();
             }
 
 
@@ -173,7 +127,7 @@ public class IocUnitRule implements TestRule {
         public void initWeld() {
             if (startupException == null) {
                 try {
-                    weldStarter = WeldSetupClass.getWeldStarter();
+                    analyzeAndStarter.getWeldStarter();
                 } catch (Throwable e) {
                     if (startupException == null) {
                         startupException = e;

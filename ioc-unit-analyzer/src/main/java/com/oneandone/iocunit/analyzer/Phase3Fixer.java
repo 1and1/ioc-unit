@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 
 import static java.lang.Integer.min;
 
+import javax.enterprise.inject.Specializes;
+
 /**
  * @author aschoerk
  */
@@ -52,6 +54,25 @@ public class Phase3Fixer extends PhasesBase {
                         addToCandidates(newCandidates, q.getDeclaringClass());
                         // TODO: add to classes2injects
                     }
+                } else {  // Search for specializing and make them higher prior
+                    List<Class<?>> specializingCandidates  = new ArrayList<>();
+                    QualifiedType firstQ = null;
+                    for (QualifiedType q: matching) {
+                        if (q.getDeclaringClass().getAnnotation(Specializes.class) != null) {
+                            specializingCandidates.add(q.getDeclaringClass());
+                            firstQ = q;
+                        }
+                    }
+                    if (specializingCandidates.size() == 1) {
+                        addToCandidates(newCandidates, specializingCandidates.get(0));
+                        injectsDone.put(inject, firstQ);
+                    } else if (specializingCandidates.size() > 1) {
+                        matching = matching
+                                .stream()
+                                .filter(q -> q.getDeclaringClass().getAnnotation(Specializes.class) != null)
+                                .collect(Collectors.toSet());
+                    }
+
                 }
             }
         }

@@ -28,7 +28,15 @@ public class Phase5Warner extends PhasesBase {
         configuration.setPhase(Configuration.Phase.WARNING);
         checkApplicationScoped();
         checkProducersInSuperClass();
+        outputUnresolvedInjects();
         configuration.setPhase(Configuration.Phase.UNKNOWN);
+    }
+
+    private void outputUnresolvedInjects() {
+
+        for (QualifiedType i: configuration.getInjects()) {
+            logger.error("Unresolved Inject: {}", i);
+        }
     }
 
     private void checkProducersInSuperClass(Class<?> c) {
