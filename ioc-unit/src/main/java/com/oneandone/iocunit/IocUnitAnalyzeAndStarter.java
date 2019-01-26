@@ -25,6 +25,7 @@ import com.oneandone.iocunit.analyzer.InitialConfiguration;
  */
 public class IocUnitAnalyzeAndStarter {
     private static Logger logger = LoggerFactory.getLogger(IocUnitAnalyzeAndStarter.class);
+    private final InitialConfiguration initialConfiguration;
 
     private WeldStarter weldStarter = null;
     WeldSetupClass weldSetup;
@@ -48,7 +49,8 @@ public class IocUnitAnalyzeAndStarter {
 
     private final List<TestExtensionService> testExtensionServices = new ArrayList<>();
 
-    public IocUnitAnalyzeAndStarter() {
+    public IocUnitAnalyzeAndStarter(InitialConfiguration initialConfiguration) {
+        this.initialConfiguration = initialConfiguration;
         if(testExtensionServices.size() == 0) {
             ServiceLoader<TestExtensionService> loader = ServiceLoader.load(TestExtensionService.class);
             final Iterator<TestExtensionService> testExtensionServiceIterator = loader.iterator();
@@ -58,9 +60,13 @@ public class IocUnitAnalyzeAndStarter {
         }
     }
 
-    public void analyzeAndStart(final Class<?> clazz, Method testMethod) {
+    public IocUnitAnalyzeAndStarter() {
+        this(new InitialConfiguration());
+    }
+
+        public void analyzeAndStart(final Class<?> clazz, Method testMethod) {
         if(cdiConfigCreator == null) {
-            InitialConfiguration cfg = new InitialConfiguration();
+            InitialConfiguration cfg = initialConfiguration;
             cfg.testClass = clazz;
             cfg.testMethod = testMethod;
             cfg.initialClasses.add(BeanManager.class);

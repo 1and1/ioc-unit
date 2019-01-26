@@ -40,7 +40,7 @@ public class IocUnitRule implements TestRule {
     public IocUnitRule(final Object instance, final InitialConfiguration initialConfiguration) {
         this.instance = instance;
         this.initialConfiguration = initialConfiguration;
-        analyzeAndStarter = new IocUnitAnalyzeAndStarter();
+        analyzeAndStarter = new IocUnitAnalyzeAndStarter(initialConfiguration);
     }
 
     @Override

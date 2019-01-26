@@ -20,7 +20,7 @@ import com.oneandone.iocunitejb.ejbs.StatelessTimerEJB;
  * @author aschoerk
  */
 @ExtendWith(IocJUnit5Extension.class)
-@SutClasses({ SingletonTimerEJB.class, StatelessTimerEJB.class })
+@SutClasses({StatelessTimerEJB.class })
 @ExcludedClasses({ SingletonTimerEJB.class })
 public class TestTimerExclusion {
     @Inject

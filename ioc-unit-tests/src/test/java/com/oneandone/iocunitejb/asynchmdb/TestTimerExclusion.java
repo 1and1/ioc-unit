@@ -5,6 +5,8 @@ import static org.junit.Assert.assertThat;
 
 import javax.inject.Inject;
 
+import com.oneandone.iocunit.analyzer.annotations.ExcludedClasses;
+import com.oneandone.iocunit.analyzer.annotations.SutClasses;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -19,7 +21,7 @@ import com.oneandone.iocunitejb.ejbs.StatelessTimerEJB;
 /**
  * @author aschoerk
  */
-@TestClasses({ StatelessTimerEJB.class, SingletonTimerEJB.class })
+@SutClasses({ StatelessTimerEJB.class, SingletonTimerEJB.class })
 public class TestTimerExclusion {
     @Inject
     AsynchronousManager asynchronousManager;
