@@ -76,9 +76,9 @@ class Phase2Matcher extends PhasesBase {
             Map<Class<?>, QualifiedType> sutClasses = new HashMap<>();
             Set<QualifiedType> producingTypes = ambiguus.get(inject);
             if (!inject.isInstance()){
-                logger.info("Ambiguus resolved inject: {}", inject);
+                logger.debug("Ambiguus resolved inject: {}", inject);
                 for (QualifiedType producing : producingTypes) {
-                    logger.info("--- Producing: {}", producing);
+                    logger.debug("--- Producing: {}", producing);
                 }
             }
             Set<QualifiedType> alreadyChosen = producingTypes.stream()
@@ -101,7 +101,7 @@ class Phase2Matcher extends PhasesBase {
                 if(configuration.isToBeStarted(declaringClass) || newToBeStarted.contains(declaringClass)) {
                     alreadyProduced = true;
                     if (!inject.isInstance())
-                        logger.info("{} Already produced by declaring class: {}", inject, declaringClass.getName());
+                        logger.trace("{} Already produced by declaring class: {}", inject, declaringClass.getName());
                     configuration.injectHandled(inject, q);
                 }
                 else if(configuration.isTestClass(declaringClass)) {

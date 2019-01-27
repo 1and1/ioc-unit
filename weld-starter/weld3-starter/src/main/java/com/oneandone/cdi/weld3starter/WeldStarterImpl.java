@@ -70,7 +70,7 @@ public class WeldStarterImpl implements WeldStarter {
         this.version = Formats.version(WeldBootstrap.class.getPackage());
         System.setProperty("org.jboss.weld.bootstrap.concurrentDeployment", "false");
 
-        Weld weld = new Weld() {
+        Weld weld = new Weld("WeldStarter" + weldSetup.getNewInstanceNumber()) {
 
             protected Deployment createDeployment(final ResourceLoader resourceLoader, final CDI11Bootstrap bootstrap) {
 

@@ -11,6 +11,7 @@ import java.util.Set;
 
 import javax.enterprise.inject.Alternative;
 import javax.enterprise.inject.Stereotype;
+import javax.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +30,14 @@ public class Configuration {
         WARNING,
         INITIALIZING;
     }
+    Set<Class<? extends Annotation>> injectAnnotations = new HashSet<>();
+
+    public Configuration(final TesterExtensionsConfigsFinder a) {
+        this.testerExtensionsConfigsFinder = a;
+        injectAnnotations.add(Inject.class);
+        injectAnnotations.addAll(a.injectAnnotations);
+    }
+
     private Class<?> testClass;
 
     public Class<?> getTestClass() {

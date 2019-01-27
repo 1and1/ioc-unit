@@ -107,6 +107,13 @@ public class Phase3Fixer extends PhasesBase {
                 if(sutClassBackedProducers != null) {
                     if (sutClassBackedProducers.size() > 1) {
                         logger.warn("More than one available Sutclass available to produce: {}", inject);
+                        for (QualifiedType q: sutClassBackedProducers) {
+                            logger.warn("-- : {}", q);
+                            addToCandidates(newCandidates, q.getDeclaringClass());
+                        }
+                        logger.warn("Added all of them to candidates");
+
+                        /*
                         Optional<QualifiedType> oneAlreadyThere = sutClassBackedProducers
                                 .stream()
                                 .filter(q -> configuration.isToBeStarted(q.getDeclaringClass()) ||
@@ -120,6 +127,7 @@ public class Phase3Fixer extends PhasesBase {
                                 ambiguus.put(inject, q.getDeclaringClass());
                             });
                         }
+                        */
                     } else {
                         final Class declaringClass = sutClassBackedProducers.iterator().next().getDeclaringClass();
                         logger.trace("Selected sut class: {}", declaringClass.getName());

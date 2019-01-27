@@ -18,9 +18,10 @@ public class ConfigCreator extends ConfigCreatorBase {
 
     static private Logger logger = LoggerFactory.getLogger(ConfigCreator.class);
 
-    Configuration configuration = new Configuration();
+    Configuration configuration = null;
 
     private void init(InitialConfiguration initial, TesterExtensionsConfigsFinder testerExtensionsConfigsFinder) {
+        configuration = new Configuration(testerExtensionsConfigsFinder);
         configuration.setPhase(Configuration.Phase.INITIALIZING);
         if(initial.testClass != null) {
             if(initial.testClass.getAnnotation(ApplicationScoped.class) == null) {

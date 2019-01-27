@@ -24,6 +24,8 @@ public interface WeldSetup {
         public S service;
     }
 
+    Integer getNewInstanceNumber();
+
     Collection<String> getBeanClasses();
 
     List<Metadata<String>> getAlternativeClasses();

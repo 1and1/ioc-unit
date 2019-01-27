@@ -99,7 +99,7 @@ public class Phase5Warner extends PhasesBase {
     private void checkInjectedFieldsOfApplicationScoped(final Class<?> aClass) {
         if (aClass.equals(Object.class))
             return;
-        InjectFinder injectFinder = new InjectFinder(configuration.testerExtensionsConfigsFinder);
+        InjectFinder injectFinder = new InjectFinder(configuration);
         injectFinder.find(aClass);
         for (QualifiedType i : injectFinder.getInjectedTypes()) {
             if (i.isField()) {

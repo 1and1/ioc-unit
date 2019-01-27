@@ -29,15 +29,13 @@ import com.oneandone.iocunit.analyzer.reflect.IocUnitTypeUtils;
  */
 public class InjectFinder {
 
+    private final Configuration configuration;
     TesterExtensionsConfigsFinder testerExtensionsConfigsFinder;
 
-    Set<Class<? extends Annotation>> injectAnnotations = new HashSet<>();
-
-    public InjectFinder(final TesterExtensionsConfigsFinder a) {
-        this.testerExtensionsConfigsFinder = a;
-        injectAnnotations.add(Inject.class);
-        injectAnnotations.addAll(a.injectAnnotations);
-        toIgnore.addAll(a.excludeAsInjects);
+    public InjectFinder(Configuration configuration) {
+        this.testerExtensionsConfigsFinder = configuration.testerExtensionsConfigsFinder;
+        toIgnore.addAll(testerExtensionsConfigsFinder.excludeAsInjects);
+        this.configuration = configuration;
     }
 
     List<Class<?>> toIgnore = new ArrayList<Class<?>>() {
@@ -74,7 +72,7 @@ public class InjectFinder {
         try {
             for (Field f : c.getDeclaredFields()) {
                 if(notIgnoreAble(f.getGenericType())) {
-                    Set<? extends Annotation> annotations = injectAnnotations
+                    Set<? extends Annotation> annotations = configuration.injectAnnotations
                             .stream()
                             .map(annotation -> f.getAnnotation(annotation))
                             .filter(Objects::nonNull)
@@ -86,7 +84,7 @@ public class InjectFinder {
             if(!isSuperclass) {
                 boolean injectedConstructorFound = false;
                 for (Constructor constructor : c.getDeclaredConstructors()) {
-                    Set<? extends Annotation> annotations = injectAnnotations
+                    Set<? extends Annotation> annotations = configuration.injectAnnotations
                             .stream()
                             .map(annotation -> constructor.getAnnotation(annotation))
                             .filter(Objects::nonNull)

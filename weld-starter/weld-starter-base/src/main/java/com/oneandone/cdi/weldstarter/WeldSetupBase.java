@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.enterprise.inject.spi.DeploymentException;
 import javax.enterprise.inject.spi.Extension;
@@ -18,6 +19,8 @@ import org.jboss.weld.bootstrap.spi.Metadata;
  * Describes a configuration, that can be used to start CDI using a weld-starter.
  */
 public class WeldSetupBase implements WeldSetup {
+    static AtomicInteger instanceNumber = new AtomicInteger();
+
     protected Collection<String> beanClasses = Collections.EMPTY_LIST;
     protected List<Metadata<String>> alternativeClasses = Collections.EMPTY_LIST;
     protected List<Metadata<String>> enabledAlternativeStereotypes = Collections.EMPTY_LIST;
@@ -39,6 +42,11 @@ public class WeldSetupBase implements WeldSetup {
     @Override
     public List<Metadata<String>> getEnabledDecorators() {
         return enabledDecorators;
+    }
+
+    @Override
+    public Integer getNewInstanceNumber() {
+        return instanceNumber.incrementAndGet();
     }
 
     @Override

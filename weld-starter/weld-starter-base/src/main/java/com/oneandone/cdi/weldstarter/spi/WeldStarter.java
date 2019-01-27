@@ -1,5 +1,7 @@
 package com.oneandone.cdi.weldstarter.spi;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import javax.enterprise.inject.spi.Extension;
 
 import com.oneandone.cdi.weldstarter.WeldSetup;

@@ -73,7 +73,7 @@ class Phase1Analyzer extends PhasesBase {
 
     private void injects(Class c) {
         ConfigStatics.doInClassAndSuperClasses(c, c1 -> {
-            InjectFinder injectFinder = new InjectFinder(configuration.testerExtensionsConfigsFinder);
+            InjectFinder injectFinder = new InjectFinder(configuration);
             injectFinder.find(c1);
             for (QualifiedType i : injectFinder.getInjectedTypes())
                 configuration.inject(i);
@@ -270,12 +270,16 @@ class Phase1Analyzer extends PhasesBase {
     }
 
     private boolean containsProducingAnnotation(final Annotation[] annotations) {
+        boolean foundProduces = false;
+        boolean foundInject = false;
         for (Annotation ann : annotations) {
             if(ann.annotationType().equals(Produces.class)) {
-                return true;
+                foundProduces = true;
+            } else if (configuration.injectAnnotations.contains(ann.annotationType())) {
+                foundInject = true;
             }
         }
-        return false;
+        return !foundInject && foundProduces;
     }
 
     private boolean isStereotype(Annotation ann) {

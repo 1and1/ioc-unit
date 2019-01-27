@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import javax.enterprise.inject.Alternative;
 import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.Stereotype;
+import javax.enterprise.inject.Typed;
 import javax.inject.Provider;
 import javax.inject.Qualifier;
 
@@ -308,6 +309,17 @@ public class QualifiedType {
             return assignable;
         }
         else {
+            Typed typedAnnotation = (Typed)getRawtype().getAnnotation(Typed.class);
+            if (typedAnnotation != null) {
+                boolean oneIsAssignable = false;
+                for (Class<?> aClass: typedAnnotation.value()) {
+                    if (!IocUnitTypeUtils.isAssignable(aClass, q.getType()))
+                        oneIsAssignable = true;
+                }
+                if (!oneIsAssignable)
+                    return false;
+            }
+
             if(isParameterizedType(getType()) && !isParameterizedType(q.getType())) {
                 return false;
             }

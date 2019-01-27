@@ -68,7 +68,12 @@ public class ConfigStatics {
         return (Extension.class.isAssignableFrom(c));
     }
 
-    protected static void doInClassAndSuperClasses(final Class<?> c, final LeveledBuilder.ClassHandler classHandler) {
+    interface ClassHandler {
+        void handle(Class<?> c);
+    }
+
+
+    protected static void doInClassAndSuperClasses(final Class<?> c, final ClassHandler classHandler) {
         if(c == null || c.equals(Object.class)) {
             return;
         }
