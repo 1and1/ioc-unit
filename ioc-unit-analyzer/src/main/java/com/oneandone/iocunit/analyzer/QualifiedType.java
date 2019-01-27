@@ -11,13 +11,13 @@ import java.util.stream.Collectors;
 import javax.enterprise.inject.Alternative;
 import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.Stereotype;
-import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Qualifier;
 
-import org.apache.commons.lang3.reflect.TypeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.oneandone.iocunit.analyzer.reflect.IocUnitTypeUtils;
 
 /**
  * Wraps elements found during the class-scan, that might be used as producers or injection-destinations.
@@ -280,7 +280,7 @@ public class QualifiedType {
     }
 
     public boolean injectableIn(QualifiedType q) {
-        return TypeUtils.equals(getType(), q.getType()) && qualifiersMatchFromToInject(this, q);
+        return IocUnitTypeUtils.equals(getType(), q.getType()) && qualifiersMatchFromToInject(this, q);
     }
 
     boolean isParameterizedType(Type t) {
@@ -303,7 +303,7 @@ public class QualifiedType {
     }
 
     public boolean isAssignableTo(QualifiedType q) {
-        boolean assignable = TypeUtils.isAssignable(getType(), q.getType()) && qualifiersMatchFromToInject(this, q);
+        boolean assignable = IocUnitTypeUtils.isAssignable(getType(), q.getType()) && qualifiersMatchFromToInject(this, q);
         if(!assignable) {
             return assignable;
         }

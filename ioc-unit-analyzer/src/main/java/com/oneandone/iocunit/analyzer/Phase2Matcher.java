@@ -100,7 +100,8 @@ class Phase2Matcher extends PhasesBase {
                 assert !configuration.getExcludedClasses().contains(declaringClass);
                 if(configuration.isToBeStarted(declaringClass) || newToBeStarted.contains(declaringClass)) {
                     alreadyProduced = true;
-                    logger.info("Already produced by declaring class: {}", declaringClass.getName());
+                    if (!inject.isInstance())
+                        logger.info("{} Already produced by declaring class: {}", inject, declaringClass.getName());
                     configuration.injectHandled(inject, q);
                 }
                 else if(configuration.isTestClass(declaringClass)) {

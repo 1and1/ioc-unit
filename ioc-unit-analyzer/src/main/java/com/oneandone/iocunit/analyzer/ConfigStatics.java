@@ -33,7 +33,8 @@ public class ConfigStatics {
         try {
             if(c.isInterface() || c.isPrimitive() || c.isLocalClass() || Modifier.isAbstract(c.getModifiers())
                || c.isAnonymousClass() || c.isLocalClass() || c.isAnnotation()
-               || (c.getEnclosingClass() != null && !Modifier.isStatic(c.getModifiers()))) {
+               || (c.getEnclosingClass() != null && !Modifier.isStatic(c.getModifiers()))
+               || String.class.isAssignableFrom(c)) {
                 return false;
             }
             final Constructor<?>[] declaredConstructors = c.getDeclaredConstructors();

@@ -66,15 +66,7 @@ public class ConfigCreator extends ConfigCreatorBase {
         }
     }
 
-    static void checkVersions() {
-        final String lang3Version = TypeUtils.class.getPackage().getImplementationVersion();
-        if (lang3Version.compareTo("3.5") < 0) {
-            logger.error("org.apache.commons.lang3 version is {} but should be at least 3.5", lang3Version);
-        }
-    }
-
     public void create(InitialConfiguration initial) {
-        checkVersions();
         this.init(initial, new TesterExtensionsConfigsFinder());
         Phase1Analyzer phase1Analyzer = new Phase1Analyzer(configuration);
         Phase4AvailablesGuesser phase4AvailablesGuesser = new Phase4AvailablesGuesser(configuration, phase1Analyzer);

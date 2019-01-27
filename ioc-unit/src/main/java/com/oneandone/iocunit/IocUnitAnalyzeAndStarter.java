@@ -39,11 +39,11 @@ public class IocUnitAnalyzeAndStarter {
         return weldStarter;
     }
 
-    <T> T get(Class<T> clazz) {
+    public <T> T get(Class<T> clazz) {
         return getWeldStarter().get(clazz);
     }
 
-    boolean isRunning() {
+    public boolean isRunning() {
         return weldStarter != null;
     }
 
@@ -77,10 +77,10 @@ public class IocUnitAnalyzeAndStarter {
         weldSetup = cdiConfigCreator.buildWeldSetup(testMethod);
         preStartupActions();
 
-        weldStarter.start(weldSetup);
+        getWeldStarter().start(weldSetup);
     }
 
-    private void preStartupActions() {
+    public void preStartupActions() {
         if(testExtensionServices != null) {
             for (TestExtensionService te : testExtensionServices) {
                 te.preStartupAction(weldSetup);

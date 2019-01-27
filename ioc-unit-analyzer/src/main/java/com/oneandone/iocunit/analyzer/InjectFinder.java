@@ -21,7 +21,8 @@ import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
 
-import org.apache.commons.lang3.reflect.TypeUtils;
+import com.oneandone.iocunit.analyzer.reflect.IocUnitTypeUtils;
+
 
 /**
  * @author aschoerk
@@ -60,7 +61,7 @@ public class InjectFinder {
 
     boolean notIgnoreAble(Type c) {
         for (Class<?> clazz : toIgnore) {
-            if (TypeUtils.isAssignable(c, clazz))
+            if (IocUnitTypeUtils.isAssignable(c, clazz))
                 return false;
         }
         return true;
