@@ -87,7 +87,7 @@ public class Configuration {
         }
         else {
             if(phase != Phase.ANALYZING && phase != Phase.INITIALIZING) {
-                logger.error("candidates already contains {}", c);
+                logger.debug("candidates already contains {}", c);
             }
         }
     }
