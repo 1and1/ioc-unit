@@ -1,5 +1,6 @@
 package com.oneandone.cdi.weld2starter;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -52,6 +53,11 @@ public class WeldStarterImpl implements WeldStarter {
         }
     }
 
+    @Override
+    public String getContainerId() {
+        return container.getId();
+    }
+
     public void start(WeldSetup weldSetup) {
         WeldSetup.ServiceConfig serviceConfig = new WeldSetup.ServiceConfig(ScheduledExecutorServiceFactory.class,
                 new ScheduledExecutorServiceFactory() {
@@ -69,7 +75,8 @@ public class WeldStarterImpl implements WeldStarter {
         this.version = Formats.version(WeldBootstrap.class.getPackage());
         System.setProperty("org.jboss.weld.bootstrap.concurrentDeployment", "false");
 
-        Weld weld = new Weld("WeldStarter" + weldSetup.getNewInstanceNumber()) {
+        String containerId = "WeldStarter" + weldSetup.getNewInstanceNumber();
+        Weld weld = new Weld(containerId) {
 
             protected Deployment createDeployment(final ResourceLoader resourceLoader, final CDI11Bootstrap bootstrap) {
 
@@ -95,8 +102,8 @@ public class WeldStarterImpl implements WeldStarter {
     }
 
     @Override
-    public <T> T get(final Class<T> clazz) {
-        return container.instance().select(clazz).get();
+    public <T> T get(final Class<T> clazz, Annotation... qualifiers) {
+        return container.instance().select(clazz,qualifiers).get();
     }
 
     private BeanDeploymentArchive createOneDeploymentArchive(WeldSetup weldSetup, final ServiceRegistry services) {

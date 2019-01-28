@@ -359,13 +359,17 @@ class Phase1Analyzer extends PhasesBase {
         final Class<?> superclass = c.getSuperclass();
         if (!(superclass.equals(Object.class)
               || superclass == null)) {
-            addToProducerMap(superclass, configuration.getProducerMap());
+            addToProducerMap(superclass, configuration.getProducerMap(), false);
             abstractSuperClasses(superclass);
         }
     }
 
     private QualifiedType addToProducerMap(final Class<?> c, final ProducerMap producerMap) {
-        final QualifiedType result = new QualifiedType(c);
+        return addToProducerMap(c, producerMap, true);
+    }
+
+    private QualifiedType addToProducerMap(final Class<?> c, final ProducerMap producerMap, boolean checkAbstract) {
+        final QualifiedType result = new QualifiedType(c, checkAbstract);
         if (!Modifier.isAbstract(c.getModifiers())) {
             producerMap.addToProducerMap(result);
         }

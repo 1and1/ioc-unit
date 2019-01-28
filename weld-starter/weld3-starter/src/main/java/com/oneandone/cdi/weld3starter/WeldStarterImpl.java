@@ -1,5 +1,6 @@
 package com.oneandone.cdi.weld3starter;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -166,10 +167,9 @@ public class WeldStarterImpl implements WeldStarter {
     }
 
     @Override
-    public <T> T get(final Class<T> clazz) {
-        return container.instance().select(clazz).get();
+    public <T> T get(final Class<T> clazz, Annotation... qualifiers) {
+        return container.instance().select(clazz, qualifiers).get();
     }
-
     public WeldContainer getContainer() {
         return container;
     }
@@ -242,5 +242,10 @@ public class WeldStarterImpl implements WeldStarter {
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public String getContainerId() {
+        return container.getId();
     }
 }

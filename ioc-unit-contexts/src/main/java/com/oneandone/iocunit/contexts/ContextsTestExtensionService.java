@@ -8,10 +8,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.ejb.SessionContext;
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Conversation;
 import javax.enterprise.context.spi.Contextual;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.Default;
+import javax.servlet.ServletContext;
 import javax.transaction.UserTransaction;
 
 import org.jboss.weld.context.ConversationContext;
@@ -20,10 +22,13 @@ import org.jboss.weld.context.http.Http;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.oneandone.cdi.weldstarter.CreationalContexts;
+import com.oneandone.cdi.weldstarter.spi.WeldStarter;
 import com.oneandone.iocunit.contexts.internal.InConversationInterceptor;
 import com.oneandone.iocunit.contexts.internal.InRequestInterceptor;
 import com.oneandone.iocunit.contexts.internal.InSessionInterceptor;
 import com.oneandone.iocunit.contexts.internal.InitialListenerProducer;
+import com.oneandone.iocunit.contexts.servlet.CdiUnitServlet;
 import com.oneandone.iocunit.contexts.servlet.MockHttpServletRequestImpl;
 import com.oneandone.iocunit.contexts.servlet.MockHttpServletResponseImpl;
 import com.oneandone.iocunit.contexts.servlet.MockHttpSessionImpl;
@@ -243,5 +248,16 @@ public class ContextsTestExtensionService implements TestExtensionService {
     public Collection<? extends Class<?>> excludeAsInjects() {
         return Arrays.asList(
                 Conversation.class);
+    }
+
+    @Override
+    public void postStartupAction(final CreationalContexts creationalContexts, WeldStarter weldStarter) {
+        try {
+            ServletContext servletContext = weldStarter.get(MockServletContextImpl.class,
+                MockServletContextImpl.class.getAnnotation(CdiUnitServlet.class));
+            servletContext.setInitParameter("WELD_CONTEXT_ID_KEY", weldStarter.getContainerId());
+        } catch (RuntimeException e) {
+            log.error("error: ", e);
+        }
     }
 }

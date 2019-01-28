@@ -48,8 +48,12 @@ public class QualifiedType {
     }
 
     public QualifiedType(final Class clazz) {
+        this(clazz, true);
+    }
+
+    public QualifiedType(final Class clazz, boolean checkAbstract) {
         assert clazz != null;
-        if (clazz.isInterface() || clazz.isAnnotation() || Modifier.isAbstract(clazz.getModifiers()))
+        if (clazz.isInterface() || clazz.isAnnotation() || checkAbstract && Modifier.isAbstract(clazz.getModifiers()))
             log.error("Invalid Producer for clazz: {}", clazz);
         this.clazz = clazz;
         this.declaringClass = clazz;
@@ -313,7 +317,7 @@ public class QualifiedType {
             if (typedAnnotation != null) {
                 boolean oneIsAssignable = false;
                 for (Class<?> aClass: typedAnnotation.value()) {
-                    if (!IocUnitTypeUtils.isAssignable(aClass, q.getType()))
+                    if (IocUnitTypeUtils.isAssignable(aClass, q.getType()) && IocUnitTypeUtils.isAssignable(q.getType(),aClass))
                         oneIsAssignable = true;
                 }
                 if (!oneIsAssignable)

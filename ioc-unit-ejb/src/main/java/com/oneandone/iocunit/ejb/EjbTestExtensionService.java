@@ -24,6 +24,7 @@ import org.jboss.weld.transaction.spi.TransactionServices;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.oneandone.cdi.weldstarter.spi.WeldStarter;
 import com.oneandone.iocunit.ejb.jms.JmsMocksFactory;
 import com.oneandone.iocunit.ejb.jms.JmsProducers;
 import com.oneandone.iocunit.ejb.jms.JmsSingletons;
@@ -147,8 +148,7 @@ public class EjbTestExtensionService implements TestExtensionService {
     }
 
     @Override
-    public void postStartupAction(CreationalContexts creationalContexts) {
-
+    public void postStartupAction(CreationalContexts creationalContexts, WeldStarter weldStarter) {
         creationalContexts.create(EjbUnitBeanInitializerClass.class, ApplicationScoped.class);
         if (ejbTestExtensionServiceData.get().applicationExceptions.size() > 0) {
             EjbInformationBean ejbInformationBean =

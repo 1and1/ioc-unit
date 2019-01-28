@@ -128,7 +128,7 @@ public class IocUnitAnalyzeAndStarter {
     public void postStartupActions() {
         if(testExtensionServices != null) {
             for (TestExtensionService te : testExtensionServices) {
-                te.postStartupAction(creationalContexts);
+                te.postStartupAction(creationalContexts, weldStarter);
             }
         }
     }
