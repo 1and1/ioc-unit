@@ -8,17 +8,20 @@ import javax.inject.Inject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.oneandone.iocunit.analyzer.annotations.SutPackages;
 import com.oneandone.iocunit.IocUnitRunner;
+import com.oneandone.iocunit.analyzer.annotations.SutPackages;
 
 import iocunit.test1.Test1A;
 import iocunit.test1.Test1Interface;
 
 /**
  * @author aschoerk
+ * <p>
+ * was TestSutPackage. Meanwhile the assumption is, that in available SutClasses ambiguities should be
+ * intended.
  */
 @RunWith(IocUnitRunner.class)
-@SutPackages({ Test1A.class })
+@SutPackages({Test1A.class})
 public class TestSutPackage {
     @Inject
     Test1A test1;

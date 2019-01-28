@@ -1,14 +1,21 @@
 package com.oneandone.iocunit.analyzer;
 
-import java.util.*;
+import static java.lang.Integer.min;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
+
+import javax.enterprise.inject.Specializes;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import static java.lang.Integer.min;
-
-import javax.enterprise.inject.Specializes;
 
 /**
  * @author aschoerk
@@ -107,27 +114,27 @@ public class Phase3Fixer extends PhasesBase {
                 if(sutClassBackedProducers != null) {
                     if (sutClassBackedProducers.size() > 1) {
                         logger.warn("More than one available Sutclass available to produce: {}", inject);
-                        for (QualifiedType q: sutClassBackedProducers) {
-                            logger.warn("-- : {}", q);
-                            addToCandidates(newCandidates, q.getDeclaringClass());
+                        if (inject.getDeclaringClass().getTypeParameters().length > 0) {
+                            for (QualifiedType q : sutClassBackedProducers) {
+                                logger.warn("-- : {}", q);
+                                addToCandidates(newCandidates, q.getDeclaringClass());
+                            }
+                            logger.warn("Added all of them to candidates since declaring class is generic.");
+                        } else {
+                            Optional<QualifiedType> oneAlreadyThere = sutClassBackedProducers
+                                    .stream()
+                                    .filter(q -> configuration.isToBeStarted(q.getDeclaringClass()) ||
+                                                 configuration.isCandidate(q.getDeclaringClass()))
+                                    .findAny();
+                            if(oneAlreadyThere.isPresent()) {
+                                logger.warn("Chose one because of backing class {} already there", oneAlreadyThere.get());
+                            }
+                            else {
+                                sutClassBackedProducers.forEach(q -> {
+                                    ambiguus.put(inject, q.getDeclaringClass());
+                                });
+                            }
                         }
-                        logger.warn("Added all of them to candidates");
-
-                        /*
-                        Optional<QualifiedType> oneAlreadyThere = sutClassBackedProducers
-                                .stream()
-                                .filter(q -> configuration.isToBeStarted(q.getDeclaringClass()) ||
-                                             configuration.isCandidate(q.getDeclaringClass()))
-                                .findAny();
-                        if(oneAlreadyThere.isPresent()) {
-                            logger.warn("Chose one because of backing class {} already there", oneAlreadyThere.get());
-                        }
-                        else {
-                            sutClassBackedProducers.forEach(q -> {
-                                ambiguus.put(inject, q.getDeclaringClass());
-                            });
-                        }
-                        */
                     } else {
                         final Class declaringClass = sutClassBackedProducers.iterator().next().getDeclaringClass();
                         logger.trace("Selected sut class: {}", declaringClass.getName());
