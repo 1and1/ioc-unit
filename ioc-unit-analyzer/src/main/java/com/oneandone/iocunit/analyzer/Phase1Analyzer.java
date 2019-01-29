@@ -369,7 +369,7 @@ class Phase1Analyzer extends PhasesBase {
     }
 
     private QualifiedType addToProducerMap(final Class<?> c, final ProducerMap producerMap, boolean checkAbstract) {
-        final QualifiedType result = new QualifiedType(c, checkAbstract, configuration.allowParameterizedInjectedToRawtype);
+        final QualifiedType result = new QualifiedType(c, checkAbstract);
         if (!Modifier.isAbstract(c.getModifiers())) {
             producerMap.addToProducerMap(result);
         }
