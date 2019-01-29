@@ -26,7 +26,7 @@ public class ConfigCreator extends ConfigCreatorBase {
             if(initial.testClass.getAnnotation(ApplicationScoped.class) == null) {
                 configuration.getElseClasses().extensionObjects.add(new TestScopeExtension(initial.testClass));
             }
-            configuration.setTestClass(initial.testClass);
+            configuration.setTheTestClass(initial.testClass);
             configuration.testClass(initial.testClass).candidate(initial.testClass);
         }
         configuration.setTesterExtensionsConfigsFinder(testerExtensionsConfigsFinder);
@@ -69,14 +69,15 @@ public class ConfigCreator extends ConfigCreatorBase {
     public void create(InitialConfiguration initial) {
         this.init(initial, new TesterExtensionsConfigsFinder());
         Phase1Analyzer phase1Analyzer = new Phase1Analyzer(configuration);
-        Phase4AvailablesGuesser phase4AvailablesGuesser = new Phase4AvailablesGuesser(configuration, phase1Analyzer);
-
+        Phase4AvailablesGuesser phase4AvailablesGuesser =
+                configuration.allowGuessing? new Phase4AvailablesGuesser(configuration, phase1Analyzer) : null;
         do {
             configuration.setAvailablesChanged(false);
             if(phase1Analyzer.work()) {
                 new Phase2Matcher(configuration).work();
                 new Phase3Fixer(configuration).work();
-                phase4AvailablesGuesser.work();
+                if (configuration.allowGuessing)
+                    phase4AvailablesGuesser.work();
                 logger.trace("One Level done candidates size: {} injects.size: {}", !configuration.emptyCandidates(), configuration.getInjects().size());
             }
             else {

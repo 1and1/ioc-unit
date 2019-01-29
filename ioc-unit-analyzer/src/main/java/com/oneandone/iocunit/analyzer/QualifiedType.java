@@ -1,7 +1,13 @@
 package com.oneandone.iocunit.analyzer;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Parameter;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
@@ -42,13 +48,10 @@ public class QualifiedType {
     private boolean alternative;  // true if by @Alternative or alternative-stereotype designated as CDI-Alternative
     private Collection<? extends Annotation> injects = null;
     private boolean fake;
+    private boolean allowParameterizedInjectedToRawtype;
 
     public boolean isFake() {
         return fake;
-    }
-
-    public QualifiedType(final Class clazz) {
-        this(clazz, true);
     }
 
     public QualifiedType(final Class clazz, boolean checkAbstract) {
@@ -323,13 +326,15 @@ public class QualifiedType {
                 if (!oneIsAssignable)
                     return false;
             }
-
+            return true;
+            /*
             if(isParameterizedType(getType()) && !isParameterizedType(q.getType())) {
-                return false;
+                return allowParameterizedInjectedToRawtype;
             }
             else {
                 return true;
             }
+            */
         }
     }
 

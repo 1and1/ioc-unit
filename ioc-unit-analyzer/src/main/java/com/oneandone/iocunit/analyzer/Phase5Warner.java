@@ -64,7 +64,7 @@ public class Phase5Warner extends PhasesBase {
     private void checkProducersInSuperClass() {
         for (Class<?> c: configuration.getObligatory()) {
             if (ConfigStatics.mightBeBean(c)) {
-                if (c.getAnnotation(Alternative.class) != null || c.equals(configuration.getTestClass())){
+                if (c.getAnnotation(Alternative.class) != null || c.equals(configuration.getTheTestClass())){
                     continue;
                 } else {
                     checkProducersInSuperClass(c.getSuperclass());

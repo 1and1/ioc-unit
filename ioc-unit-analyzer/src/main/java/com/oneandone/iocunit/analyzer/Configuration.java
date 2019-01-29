@@ -16,6 +16,8 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.oneandone.iocunit.analyzer.annotations.AnalyzerFlags;
+
 /**
  * @author aschoerk
  */
@@ -30,6 +32,11 @@ public class Configuration {
         WARNING,
         INITIALIZING;
     }
+    public boolean allowGuessing = true;
+    public boolean produceInstanceInjectsByAvailables = false;
+    public boolean addAllStartableBeans = false;
+    public boolean allowParameterizedInjectedToRawtype = true;
+
     Set<Class<? extends Annotation>> injectAnnotations = new HashSet<>();
 
     public Configuration(final TesterExtensionsConfigsFinder a) {
@@ -38,14 +45,28 @@ public class Configuration {
         injectAnnotations.addAll(a.injectAnnotations);
     }
 
-    private Class<?> testClass;
+    private Class<?> theTestClass;
 
-    public Class<?> getTestClass() {
-        return testClass;
+    public Class<?> getTheTestClass() {
+        return theTestClass;
     }
 
-    public void setTestClass(final Class<?> testClass) {
-        this.testClass = testClass;
+    private void handleAnalyzerFlags(Class<?> aClass) {
+        if (aClass.equals(Object.class))
+            return;
+        AnalyzerFlags analyzerFlags = aClass.getAnnotation(AnalyzerFlags.class);
+        handleAnalyzerFlags(aClass.getSuperclass());
+        if (analyzerFlags != null) {
+            this.allowGuessing = analyzerFlags.allowGuessing();
+            this.produceInstanceInjectsByAvailables = analyzerFlags.produceInstanceInjectsByAvailables();
+            this.addAllStartableBeans = analyzerFlags.addAllStartableBeans();
+            this.allowParameterizedInjectedToRawtype = analyzerFlags.allowParameterizedInjectedToRawtype();
+        }
+    }
+
+    public void setTheTestClass(final Class<?> testClass) {
+        this.theTestClass = testClass;
+        handleAnalyzerFlags(testClass);
     }
 
     private Phase phase = Phase.UNKNOWN;
@@ -247,10 +268,12 @@ public class Configuration {
     public Configuration inject(final QualifiedType i) {
         logger.trace("Adding Inject {}", i);
         injects.add(i);
-        if (i.isInstance())
+        if (i.isInstance() && produceInstanceInjectsByAvailables) {
+            logger.info("Found Instance-Inject {} will be filled by all found availables.",i);
             instanceInjects.add(i);
-        else
+        } else {
             injects.add(i);
+        }
         return this;
     }
 

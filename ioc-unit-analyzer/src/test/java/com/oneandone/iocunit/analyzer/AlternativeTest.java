@@ -1,24 +1,25 @@
 package com.oneandone.iocunit.analyzer;
 
-import com.oneandone.iocunit.analyzer.annotations.EnabledAlternatives;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 
-import com.oneandone.iocunit.analyzer.annotations.ProducesAlternative;
-import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-
-import org.junit.Test;
-import org.mockito.Mock;
+import java.net.MalformedURLException;
 
 import javax.enterprise.inject.Alternative;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
-import java.net.MalformedURLException;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import org.junit.Test;
+import org.mockito.Mock;
+
+import com.oneandone.iocunit.analyzer.annotations.AnalyzerFlags;
+import com.oneandone.iocunit.analyzer.annotations.EnabledAlternatives;
+import com.oneandone.iocunit.analyzer.annotations.ProducesAlternative;
+import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 
 public class AlternativeTest extends BaseTest {
 
+    @AnalyzerFlags(allowGuessing = false, produceInstanceInjectsByAvailables = false)
     @EnabledAlternatives(BeanUsingAlternativeAtField.ProducingAlternative.class)
     static class BeanUsingAlternativeAtField {
 
