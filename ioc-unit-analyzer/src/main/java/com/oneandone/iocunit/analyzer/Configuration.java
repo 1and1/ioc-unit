@@ -112,6 +112,8 @@ public class Configuration {
     // classes available to be added to configuration
     private Set<Class<?>> available = new HashSet<>();
 
+    private boolean availablesChanged = false;
+
     // producers available from obligatory and candidates
     private ProducerMap producerMap = new ProducerMap(this, "Obligatory");
 
@@ -123,6 +125,9 @@ public class Configuration {
 
     // injects found in obligatory and candidates
     private Set<QualifiedType> injects = new HashSet<QualifiedType>();
+
+    // Instance-injects found in obligatory and candidates
+    private Set<QualifiedType> instanceInjects = new HashSet<QualifiedType>();
 
     // injects found in obligatory and candidates which are handled
     private Set<QualifiedType> handledInjects = new HashSet<QualifiedType>();
@@ -186,7 +191,10 @@ public class Configuration {
      * @return
      */
     Configuration available(Class<?> clazz) {
-        available.add(clazz);
+        if (!available.contains(clazz)) {
+            available.add(clazz);
+            availablesChanged = true;
+        }
         return this;
     }
 
@@ -239,6 +247,10 @@ public class Configuration {
     public Configuration inject(final QualifiedType i) {
         logger.trace("Adding Inject {}", i);
         injects.add(i);
+        if (i.isInstance())
+            instanceInjects.add(i);
+        else
+            injects.add(i);
         return this;
     }
 
@@ -324,5 +336,17 @@ public class Configuration {
 
     public List<Class<?>> getObligatory() {
         return obligatory;
+    }
+
+    public Set<QualifiedType> getInstanceInjects() {
+        return instanceInjects;
+    }
+
+    public boolean isAvailablesChanged() {
+        return availablesChanged;
+    }
+
+    public void setAvailablesChanged(final boolean availablesChanged) {
+        this.availablesChanged = availablesChanged;
     }
 }

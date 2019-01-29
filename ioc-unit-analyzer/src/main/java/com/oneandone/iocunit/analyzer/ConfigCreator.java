@@ -4,7 +4,6 @@ import java.lang.reflect.Method;
 
 import javax.enterprise.context.ApplicationScoped;
 
-import org.apache.commons.lang3.reflect.TypeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,6 +72,7 @@ public class ConfigCreator extends ConfigCreatorBase {
         Phase4AvailablesGuesser phase4AvailablesGuesser = new Phase4AvailablesGuesser(configuration, phase1Analyzer);
 
         do {
+            configuration.setAvailablesChanged(false);
             if(phase1Analyzer.work()) {
                 new Phase2Matcher(configuration).work();
                 new Phase3Fixer(configuration).work();
@@ -83,7 +83,7 @@ public class ConfigCreator extends ConfigCreatorBase {
                 break;
             }
         }
-        while (!configuration.emptyCandidates());
+        while (!configuration.emptyCandidates() || configuration.isAvailablesChanged());
         new Phase5Warner(initial, configuration).work();
 
     }

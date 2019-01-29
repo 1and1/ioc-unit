@@ -176,9 +176,23 @@ class Phase2Matcher extends PhasesBase {
         logger.trace("Phase2Matcher starting");
         for (QualifiedType i : configuration.getInjects()) {
             matchInject(i);
-
         }
         evaluateMatches();
+        for (QualifiedType i : configuration.getInstanceInjects()) {
+            matchInstanceInjects(i);
+        }
+
         logger.trace("Phase2Matcher ready");
+    }
+
+    private void matchInstanceInjects(final QualifiedType inject) {
+        Set<QualifiedType> matchingProducers = configuration
+                .getAvailableProducerMap()
+                .findMatchingProducersRegardingAlternatives(inject);
+        for (QualifiedType producer: matchingProducers) {
+            if (!configuration.isToBeStarted(producer.getDeclaringClass()))
+                configuration.candidate(producer.getDeclaringClass());
+        }
+
     }
 }
