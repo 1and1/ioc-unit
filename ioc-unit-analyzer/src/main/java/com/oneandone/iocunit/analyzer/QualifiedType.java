@@ -296,7 +296,7 @@ public class QualifiedType {
     }
 
     public static boolean isRawType(Type type) {
-        if (type.equals(Object.class))
+        if (type == null || type.equals(Object.class))
             return false;
         if (type instanceof ParameterizedType) {
             return false;

@@ -34,7 +34,20 @@ public class RawParamTest extends BaseTest {
         testAndCheckProducer(ParameterizedListContainerStringListExcluded.class, ParameterizedProducer.class);
     }
     @Test
-    public void analyzeStringListContainer() {
-        testAndCheckProducer(StringListContainer.class, StringListProducer.class);
+    public void analyzeStringListContainerNotItself() {
+        testAndCheckProducer(StringListContainerNotItself.class, StringListProducer.class);
+    }
+    @Test
+    public void analyzeStringListContainerNoProducer() {
+        testAndCheckProducer(StringListContainerNoProducer.class, StringList.class);
+    }
+    @Test
+    public void analyzeRawListSubContainerNotItself() {
+        testAndCheckProducer(RawListSubContainerNotItself.class, RawListSubProducer.class);
+    }
+    @Test
+    public void analyzeRawListSubContainerNoProducer() {
+        testAndCheckProducer(RawListSubContainerNoProducer.class, RawListSub.class);
     }
 }
+
