@@ -114,7 +114,7 @@ public class Phase3Fixer extends PhasesBase {
                 if(sutClassBackedProducers != null) {
                     if (sutClassBackedProducers.size() > 1) {
                         logger.warn("More than one available Sutclass available to produce: {}", inject);
-                        if (inject.getDeclaringClass().getTypeParameters().length > 0) {
+                        if (ConfigStatics.isParameterizedType(inject.getDeclaringClass())) {
                             for (QualifiedType q : sutClassBackedProducers) {
                                 logger.warn("-- : {}", q);
                                 addToCandidates(newCandidates, q.getDeclaringClass());
@@ -143,12 +143,12 @@ public class Phase3Fixer extends PhasesBase {
                 }
             }
         }
-        /**
-         * If two different classes are started which back producers to the same inject it comes to ambiguity problems
-         * So search for that case.
-         * Search for the best solution
-         */
         if (ambiguus.size() > 0) {
+            /**
+             * If two different classes are started which back producers to the same inject it comes to ambiguity problems
+             * So search for that case.
+             * Search for the best solution: the backing class which is usable for the most injects.
+             */
             List<List<Class<?>>> classesArrayList = new ArrayList();
 
             for (QualifiedType inject : ambiguus.keySet()) {

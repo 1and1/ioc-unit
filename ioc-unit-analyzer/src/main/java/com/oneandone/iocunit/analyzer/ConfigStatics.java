@@ -2,6 +2,8 @@ package com.oneandone.iocunit.analyzer;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.Set;
 
 import javax.decorator.Decorator;
@@ -67,6 +69,26 @@ public class ConfigStatics {
     public static boolean isExtension(final Class<?> c) {
         return (Extension.class.isAssignableFrom(c));
     }
+
+    public static boolean isParameterizedType(Type t) {
+        if(t instanceof ParameterizedType) {
+            return true;
+        }
+        else {
+            if(t == null || t.equals(Object.class)) {
+                return false;
+            }
+            else {
+                if(t instanceof Class) {
+                    return isParameterizedType(((Class) t).getGenericSuperclass());
+                }
+                else {
+                    return false;
+                }
+            }
+        }
+    }
+
 
     interface ClassHandler {
         void handle(Class<?> c);

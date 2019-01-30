@@ -11,9 +11,11 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.decorator.Decorator;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.Specializes;
 import javax.enterprise.inject.Stereotype;
+import javax.interceptor.Interceptor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,6 +46,7 @@ class Phase1Analyzer extends PhasesBase {
     public Phase1Analyzer(Configuration configuration) {
         super(configuration);
     }
+
 
     private void findInnerClasses(final Class c) {
         try {
@@ -181,13 +184,11 @@ class Phase1Analyzer extends PhasesBase {
                 configuration.candidate(c);
             }
             else {
-                if(ConfigStatics.mightBeBean(c)) {
-                    configuration.available(c);
-                    addToProducerMap(c, configuration.getAvailableProducerMap());
-                }
+                makeAvailable(c);
             }
         }
     }
+
 
     private void packagesAnnotations(Class<?> c) {
         ConfigStatics.doInClassAndSuperClasses(c, c1 -> {
@@ -419,9 +420,7 @@ class Phase1Analyzer extends PhasesBase {
             }
         } while (!configuration.emptyCandidates());
         for (Class<?> c : newAvailables) {
-            if(ConfigStatics.mightBeBean(c)) {
-                addToProducerMap(c, configuration.getAvailableProducerMap());
-            }
+            makeAvailable(c);
         }
         newAvailables.clear();
         logger.trace("Phase1Analyzer ready");
@@ -429,5 +428,17 @@ class Phase1Analyzer extends PhasesBase {
 
     }
 
+    private void makeAvailable(final Class<?> c) {
+        if (configuration.addAvailableInterceptorsAndDecorators) {
+            if (c.getAnnotation(Interceptor.class) != null || c.getAnnotation(Decorator.class) != null) {
+                logger.info("Flag addAvailableInterceptorsAndDecorator: {}",c);
+                configuration.candidate(c);
+            }
+        }
+        if(ConfigStatics.mightBeBean(c)) {
+            configuration.available(c);
+            addToProducerMap(c, configuration.getAvailableProducerMap());
+        }
+    }
 
 }

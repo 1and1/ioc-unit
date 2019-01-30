@@ -29,16 +29,20 @@ public class MockTest {
     @Inject
     private Instance<Classes.I> a;
 
+    Classes.I getMockA() {
+        return mockA;
+    }
+
     /**
      * Test that we can use the test alternative annotation to specify that a mock is used
      */
     @Test
     public void testTestAlternative() {
         Classes.I a1 = a.get();
-        mockA.call();
-        assertNotNull(mockA);
-        Mockito.verify(mockA, Mockito.times(1)).call();
-        assertEquals(mockA.toString(), a1.toString());
+        getMockA().call();
+        assertNotNull(getMockA());
+        Mockito.verify(getMockA(), Mockito.times(1)).call();
+        assertEquals(getMockA().toString(), a1.toString());
         Mockito.verify(a1, Mockito.times(1)).call();
     }
 

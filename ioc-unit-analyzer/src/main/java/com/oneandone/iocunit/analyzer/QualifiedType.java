@@ -291,22 +291,23 @@ public class QualifiedType {
         return IocUnitTypeUtils.equals(getType(), q.getType()) && qualifiersMatchFromToInject(this, q);
     }
 
-    boolean isParameterizedType(Type t) {
-        if(t instanceof ParameterizedType) {
-            return true;
-        }
-        else {
-            if(t == null || t.equals(Object.class)) {
+    public boolean isRawType() {
+        return isRawType(getType());
+    }
+
+    public static boolean isRawType(Type type) {
+        if (type.equals(Object.class))
+            return false;
+        if (type instanceof ParameterizedType) {
+            return false;
+        } else {
+            if (type instanceof Class)
+                if (((Class)type).getTypeParameters().length > 0)
+                    return true;
+                else
+                    return isRawType(((Class)type).getGenericSuperclass());
+            else
                 return false;
-            }
-            else {
-                if(t instanceof Class) {
-                    return isParameterizedType(((Class) t).getGenericSuperclass());
-                }
-                else {
-                    return false;
-                }
-            }
         }
     }
 
@@ -326,15 +327,7 @@ public class QualifiedType {
                 if (!oneIsAssignable)
                     return false;
             }
-            return true;
-            /*
-            if(isParameterizedType(getType()) && !isParameterizedType(q.getType())) {
-                return allowParameterizedInjectedToRawtype;
-            }
-            else {
-                return true;
-            }
-            */
+            return isRawType() == q.isRawType();
         }
     }
 
@@ -422,12 +415,12 @@ public class QualifiedType {
 
     @Override
     public String toString() {
-        Class declaringClass = getDeclaringClass();
+        Class declaringClassL = getDeclaringClass();
         String memberName = getMemberName();
         return "QualifiedType{" +
                (memberName != null ? " name=" + memberName : "") +
                " type=" + getType().getTypeName() +
-               (declaringClass != null ? " declared by=" + declaringClass.getSimpleName() : "") +
+               (declaringClassL != null ? " declared by=" + declaringClassL.getSimpleName() : "") +
                ", qualifiers=" + qualifiers +
                ", altStereotype=" + alternativeStereotype +
                ", alt=" + alternative +

@@ -21,13 +21,6 @@ public @interface AnalyzerFlags {
     public boolean addAllStartableBeans() default false;
 
     // TODO:
-    public boolean addAllFoundInterceptors() default false;
-
-    // TODO:
-    public boolean addAllFoundDelegates() default false;
-
-    // TODO:
-    public boolean allowParameterizedInjectedToRawtype() default true;
-
+    public boolean addAvailableInterceptorsAndDecorators() default false;
 
 }

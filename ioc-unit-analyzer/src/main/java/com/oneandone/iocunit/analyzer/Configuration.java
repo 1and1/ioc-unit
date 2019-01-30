@@ -35,7 +35,7 @@ public class Configuration {
     public boolean allowGuessing = true;
     public boolean produceInstanceInjectsByAvailables = false;
     public boolean addAllStartableBeans = false;
-    public boolean allowParameterizedInjectedToRawtype = true;
+    public boolean addAvailableInterceptorsAndDecorators = false;
 
     Set<Class<? extends Annotation>> injectAnnotations = new HashSet<>();
 
@@ -60,7 +60,7 @@ public class Configuration {
             this.allowGuessing = analyzerFlags.allowGuessing();
             this.produceInstanceInjectsByAvailables = analyzerFlags.produceInstanceInjectsByAvailables();
             this.addAllStartableBeans = analyzerFlags.addAllStartableBeans();
-            this.allowParameterizedInjectedToRawtype = analyzerFlags.allowParameterizedInjectedToRawtype();
+            this.addAvailableInterceptorsAndDecorators = analyzerFlags.addAvailableInterceptorsAndDecorators();
         }
     }
 
@@ -257,8 +257,8 @@ public class Configuration {
         return beansToBeStarted.contains(c);
     }
 
-    public void setTesterExtensionsConfigsFinder(final TesterExtensionsConfigsFinder testerExtensionsConfigsFinder) {
-        this.testerExtensionsConfigsFinder = testerExtensionsConfigsFinder;
+    public void setTesterExtensionsConfigsFinder(final TesterExtensionsConfigsFinder testerExtensionsConfigsFinderP) {
+        this.testerExtensionsConfigsFinder = testerExtensionsConfigsFinderP;
     }
 
     public boolean isTestClass(final Class c) {
