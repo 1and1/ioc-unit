@@ -80,6 +80,8 @@ public class ConfigStatics {
             }
             else {
                 if(t instanceof Class) {
+                    if (((Class) t).getTypeParameters().length > 0)
+                        return true;
                     return isParameterizedType(((Class) t).getGenericSuperclass());
                 }
                 else {

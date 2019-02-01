@@ -231,11 +231,7 @@ public class TestPersistenceFactory extends PersistenceFactory {
         try {
             return new EntityManagerFactoryBuilderImpl(new PersistenceUnitInfoDescriptor(persistenceUnitInfo), properties).build();
         } catch (Throwable thw) {
-            if (possiblyToThrow != null) {
-                throw new RuntimeException(possiblyToThrow);
-            } else {
-                throw (RuntimeException) thw;
-            }
+            throw new RuntimeException(thw);
         }
     }
 }

@@ -77,6 +77,11 @@ public class QualifiedType {
         return f != null;
     }
 
+    public boolean isClass() {
+        return clazz != null && clazz.equals(declaringClass);
+    }
+
+
     public Field getField() {
         if (!isField())
             throw new RuntimeException("expected QualifiedType to be Field");
@@ -327,7 +332,13 @@ public class QualifiedType {
                 if (!oneIsAssignable)
                     return false;
             }
-            return isRawType() == q.isRawType();
+
+            if (q.isInstance() || !q.isRawType())
+                return true;
+            if (isClass() && isRawType())
+                return false;
+            else
+                return isRawType() == q.isRawType();
         }
     }
 

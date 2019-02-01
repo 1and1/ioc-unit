@@ -59,8 +59,8 @@ import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.oneandone.iocunit.ejb.persistence.SimulatedTransactionManager;
 import com.oneandone.cdi.weldstarter.WeldSetupClass;
+import com.oneandone.iocunit.ejb.persistence.SimulatedTransactionManager;
 
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.InvocationHandler;
@@ -121,10 +121,11 @@ public class EjbExtensionExtended implements Extension {
         new SimulatedTransactionManager().init();
     }
 
-    private <T> void processClass(AnnotatedTypeBuilder<T> builder, String name, boolean isSingleton, boolean scopeIsPresent) {
-        logger.trace("processing class: {} singleton: {} scopeIsPresent: {}", name, isSingleton, scopeIsPresent);
+    private <T> void processClass(AnnotatedTypeBuilder<T> builder,
+                                  String name, boolean makeApplicationScoped, boolean scopeIsPresent) {
+        logger.trace("processing class: {} singleton: {} scopeIsPresent: {}", name, makeApplicationScoped, scopeIsPresent);
         if (!scopeIsPresent) {
-            if (!isSingleton || builder.getJavaClass().getFields().length > 0) {
+            if (!makeApplicationScoped || builder.getJavaClass().getFields().length > 0) {
                 builder.addToClass(createDependentAnnotation());
             } else {
                 builder.addToClass(createApplicationScopedAnnotation());  // For Singleton normally only ApplicationScoped
@@ -201,33 +202,7 @@ public class EjbExtensionExtended implements Extension {
             entityClasses.add(annotatedType.getJavaClass());
         }
 
-        Stateless stateless = findAnnotation(annotatedType.getJavaClass(), Stateless.class);
 
-        // Stateless stateless = annotatedType.getJavaClass().getAnnotation(Stateless.class);
-
-        if (stateless != null) {
-            processClass(builder, stateless.name(), false, scopeIsPresent);
-            modified = true;
-        }
-
-        Stateful stateful = findAnnotation(annotatedType.getJavaClass(),Stateful.class);
-
-        if (stateful != null) {
-            processClass(builder, stateful.name(), false, scopeIsPresent);
-            modified = true;
-        }
-        try {
-            Singleton singleton = findAnnotation(annotatedType.getJavaClass(),Singleton.class);
-            if (singleton != null) {
-                processClass(builder, singleton.name(), true, scopeIsPresent);
-                modified = true;
-                if (annotatedType.getAnnotation(Startup.class) != null) {
-                    startupSingletons.add(annotatedType.getJavaClass());
-                }
-            }
-        } catch (NoClassDefFoundError e) {
-            // EJB 3.0
-        }
 
         for (AnnotatedMethod<? super T> method : annotatedType.getMethods()) {
             EJB ejb = method.getAnnotation(EJB.class);
@@ -241,17 +216,24 @@ public class EjbExtensionExtended implements Extension {
                 }
             }
         }
-
+        boolean makeApplicationScoped = false;
         for (AnnotatedField<? super T> field : annotatedType.getFields()) {
             boolean addInject = false;
             EJB ejb = field.getAnnotation(EJB.class);
             if (ejb != null) {
                 modified = true;
                 addInject = true;
-                if (field.getJavaMember().getType().equals(annotatedType.getJavaClass())) {
-                    logger.error("Self injection of EJB Type {} in field {} of Class {} can't get simulated by ejb-cdi-unit",
-                            field.getJavaMember().getType().getName(), field.getJavaMember().getName(),
-                            field.getJavaMember().getDeclaringClass().getName());
+                if (field.getJavaMember().getType().isAssignableFrom(annotatedType.getJavaClass())) {
+                    makeApplicationScoped = true;
+                    if (!scopeIsPresent || annotatedType.isAnnotationPresent(ApplicationScoped.class)) {
+                        logger.warn("Self injection of EJB Type {} in field {} of Class {} simulated by ioc-unit-ejb only as ApplicationScoped",
+                                field.getJavaMember().getType().getName(), field.getJavaMember().getName(),
+                                field.getJavaMember().getDeclaringClass().getName());
+                    } else {
+                        logger.error("Self injection of EJB Type {} in field {} of Class {} cannot be simulated by ioc-unit-ejb with the current scope",
+                                field.getJavaMember().getType().getName(), field.getJavaMember().getName(),
+                                field.getJavaMember().getDeclaringClass().getName());
+                    }
                 }
 
                 builder.removeFromField(field, EJB.class);
@@ -292,6 +274,33 @@ public class EjbExtensionExtended implements Extension {
 
                 }
             }
+        }
+        Stateless stateless = findAnnotation(annotatedType.getJavaClass(), Stateless.class);
+
+        // Stateless stateless = annotatedType.getJavaClass().getAnnotation(Stateless.class);
+
+        if (stateless != null) {
+            processClass(builder, stateless.name(), makeApplicationScoped || false, scopeIsPresent);
+            modified = true;
+        }
+
+        Stateful stateful = findAnnotation(annotatedType.getJavaClass(),Stateful.class);
+
+        if (stateful != null) {
+            processClass(builder, stateful.name(), makeApplicationScoped ||false, scopeIsPresent);
+            modified = true;
+        }
+        try {
+            Singleton singleton = findAnnotation(annotatedType.getJavaClass(),Singleton.class);
+            if (singleton != null) {
+                processClass(builder, singleton.name(), true, scopeIsPresent);
+                modified = true;
+                if (annotatedType.getAnnotation(Startup.class) != null) {
+                    startupSingletons.add(annotatedType.getJavaClass());
+                }
+            }
+        } catch (NoClassDefFoundError e) {
+            // EJB 3.0
         }
         if (modified) {
             pat.setAnnotatedType(builder.create());
