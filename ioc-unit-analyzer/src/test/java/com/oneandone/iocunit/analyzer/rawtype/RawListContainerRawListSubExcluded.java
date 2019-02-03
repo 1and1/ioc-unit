@@ -5,12 +5,12 @@ import java.util.List;
 import javax.inject.Inject;
 
 import com.oneandone.iocunit.analyzer.annotations.ExcludedClasses;
-import com.oneandone.iocunit.analyzer.annotations.SutClasspaths;
+import com.oneandone.iocunit.analyzer.annotations.SutPackages;
 
 /**
  * @author aschoerk
  */
-@SutClasspaths({RawListContainerRawListSubExcluded.class})
+@SutPackages({RawListContainerRawListSubExcluded.class})
 @ExcludedClasses({RawListSubProducer.class, RawListSub.class})
 public class RawListContainerRawListSubExcluded {
     @Inject

@@ -3,7 +3,6 @@ package net.oneandone.iocunit.testalt;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
-
 import org.jboss.weld.bootstrap.WeldBootstrap;
 import org.jboss.weld.environment.se.Weld;
 import org.jboss.weld.environment.se.WeldContainer;
@@ -23,8 +22,9 @@ public class ReproProducersInSuperclasses {
 
     @Test
     public void repro1() {
-        if (getVersion().startsWith("2"))
+        if(getVersion().startsWith("2")) {
             throw new RuntimeException("does not work in Weld 2");
+        }
         Weld weld = new Weld()
                 .disableDiscovery()
                 .addBeanClass(MainClass.class)
@@ -36,13 +36,14 @@ public class ReproProducersInSuperclasses {
         final BeanContainer containerObject = container.select(BeanContainer.class).get();
         assertEquals(BeanContainerAlt.class, containerObject.getClass());
         assertFalse(mainClass.bean.didPostConstruct);
-        assertEquals(10, (long)mainClass.producedInt);
+        assertEquals(10, (long) mainClass.producedInt);
     }
 
     @Test(expected = RuntimeException.class)
     public void reproDeploymentException() {
-        if (getVersion().startsWith("2"))
+        if(getVersion().startsWith("2")) {
             throw new RuntimeException("does not work in Weld 2");
+        }
         Weld weld = new Weld()
                 .disableDiscovery()
                 .addBeanClass(MainClass.class)
@@ -53,7 +54,8 @@ public class ReproProducersInSuperclasses {
         WeldContainer container = weld.initialize();
         final MainClass mainClass = container.select(MainClass.class).get();
         assertFalse(mainClass.bean.didPostConstruct);
-        assertEquals(10, (long)mainClass.producedInt);
+        assertEquals(10, (long) mainClass.producedInt);
     }
+
 
 }

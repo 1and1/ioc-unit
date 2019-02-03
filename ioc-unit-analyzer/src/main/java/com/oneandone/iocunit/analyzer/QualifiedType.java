@@ -8,6 +8,7 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
@@ -292,7 +293,7 @@ public class QualifiedType {
         return alternative;
     }
 
-    public boolean injectableIn(QualifiedType q) {
+    public boolean qualifiersInjectableIn(QualifiedType q) {
         return IocUnitTypeUtils.equals(getType(), q.getType()) && qualifiersMatchFromToInject(this, q);
     }
 
@@ -304,11 +305,11 @@ public class QualifiedType {
         if (type == null || type.equals(Object.class))
             return false;
         if (type instanceof ParameterizedType) {
-            return false;
+            return isArrayOfUnboundedTypeVariablesOrObjects(((ParameterizedType)type).getActualTypeArguments());
         } else {
             if (type instanceof Class)
                 if (((Class)type).getTypeParameters().length > 0)
-                    return true;
+                    return isArrayOfUnboundedTypeVariablesOrObjects(((Class)type).getTypeParameters());
                 else
                     return isRawType(((Class)type).getGenericSuperclass());
             else
@@ -316,8 +317,31 @@ public class QualifiedType {
         }
     }
 
-    public boolean isAssignableTo(QualifiedType q) {
-        boolean assignable = IocUnitTypeUtils.isAssignable(getType(), q.getType()) && qualifiersMatchFromToInject(this, q);
+    /**
+     * Determines whether the given array only contains unbounded type variables or Object.class.
+     *
+     * @param types the given array of types
+     * @return true if and only if the given array only contains unbounded type variables or Object.class
+     */
+    private static boolean isArrayOfUnboundedTypeVariablesOrObjects(Type[] types) {
+        for (Type type : types) {
+            if (Object.class.equals(type)) {
+                continue;
+            }
+            if (type instanceof TypeVariable<?>) {
+                Type[] bounds = ((TypeVariable<?>) type).getBounds();
+                if (bounds == null || bounds.length == 0 || (bounds.length == 1 && Object.class.equals(bounds[0]))) {
+                    continue;
+                }
+            }
+            return false;
+        }
+        return true;
+    }
+
+    public boolean isAssignableTo(QualifiedType inject) {
+        boolean assignable = IocUnitTypeUtils.isAssignable(getType(), inject.getType())
+                             && qualifiersMatchFromToInject(this, inject);
         if(!assignable) {
             return assignable;
         }
@@ -326,23 +350,22 @@ public class QualifiedType {
             if (typedAnnotation != null) {
                 boolean oneIsAssignable = false;
                 for (Class<?> aClass: typedAnnotation.value()) {
-                    if (IocUnitTypeUtils.isAssignable(aClass, q.getType()) && IocUnitTypeUtils.isAssignable(q.getType(),aClass))
+                    if (IocUnitTypeUtils.isAssignable(aClass, inject.getType()) && IocUnitTypeUtils.isAssignable(inject.getType(),aClass))
                         oneIsAssignable = true;
                 }
                 if (!oneIsAssignable)
                     return false;
             }
 
-            if (q.isInstance() || !q.isRawType())
+            if (inject.isInstance())
                 return true;
-            if (isClass() && isRawType())
-                return false;
-            else
-                return isRawType() == q.isRawType();
+
+            return isRawType() == inject.isRawType();
         }
+
     }
 
-    static public boolean injectableIn(Set<Annotation> produced, Set<Annotation> to) {
+    static public boolean qualifiersInjectableIn(Set<Annotation> produced, Set<Annotation> to) {
         if(to.isEmpty()) {
             if(produced.isEmpty()
                || produced
@@ -400,7 +423,7 @@ public class QualifiedType {
     public static Boolean qualifiersMatchFromToInject(final QualifiedType qp, final QualifiedType qi) {
         final Set<Annotation> qiqualifiers = qi.getQualifiers();
         final Set<Annotation> qpqualifiers = qp.getQualifiers();
-        return injectableIn(qpqualifiers, qiqualifiers);
+        return qualifiersInjectableIn(qpqualifiers, qiqualifiers);
     }
 
     @Override

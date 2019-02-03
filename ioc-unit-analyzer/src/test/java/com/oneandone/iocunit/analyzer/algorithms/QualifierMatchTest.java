@@ -18,10 +18,11 @@ import javax.enterprise.inject.New;
 import javax.inject.Named;
 import javax.inject.Qualifier;
 
-import com.oneandone.iocunit.analyzer.QualifiedType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+
+import com.oneandone.iocunit.analyzer.QualifiedType;
 
 /**
  * @author aschoerk
@@ -86,8 +87,8 @@ public class QualifierMatchTest {
     }
 
     static boolean match(Set<Annotation> produced, Set<Annotation> to) {
-        return QualifiedType.injectableIn(produced, to)
-                && QualifiedType.injectableIn(produced, cloneAdd(to, getAnnotation("nw", QualifierMatchTest.class)));
+        return QualifiedType.qualifiersInjectableIn(produced, to)
+                && QualifiedType.qualifiersInjectableIn(produced, cloneAdd(to, getAnnotation("nw", QualifierMatchTest.class)));
     }
 
     Set<Annotation> create(String... annNames) {
