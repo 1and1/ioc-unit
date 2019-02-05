@@ -1,9 +1,9 @@
 package com.oneandone.iocunit.analyzer;
 
+import java.util.List;
+
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
-import java.util.List;
 
 @RunWith(JUnit4.class)
 abstract public class BaseTest {
@@ -13,7 +13,7 @@ abstract public class BaseTest {
     protected void createTest(Class<?> clazz) {
         InitialConfiguration initialConfiguration
                 = new InitialConfiguration()
-                .testClass(clazz);
+                .theTestClass(clazz);
 
         ConfigCreator cdiConfigCreator = new ConfigCreator();
         cdiConfigCreator.create(initialConfiguration);

@@ -62,4 +62,23 @@ public class ClasspathHandler {
         return clazz.getProtectionDomain().getCodeSource().getLocation();
     }
 
+    public static void addPackageDeep(final Class<?> packageClass, final Set<Class<?>> tmpClasses) {
+        final String packageName = packageClass.getPackage().getName();
+        Reflections reflections = new Reflections(new ConfigurationBuilder()
+                .setScanners(new TypesScanner())
+                .setUrls(packageClass.getProtectionDomain().getCodeSource().getLocation())
+                .filterInputsBy(new Predicate<String>() {
+                    @Override
+                    public boolean test(String input) {
+                        final String inputR = input.replace('/', '.').replace('\\', '.');
+                        if (inputR.startsWith(packageName)) {
+                            return inputR.substring(packageName.length(),packageName.length() + 1).equals(".");
+                        }
+                        return false;
+                    }
+                }));
+        tmpClasses.addAll(ReflectionUtils.forNames(
+                reflections.getStore().get(TypesScanner.class.getSimpleName()).keySet(),
+                new ClassLoader[] { ClasspathHandler.class.getClassLoader() }));
+    }
 }

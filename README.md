@@ -23,7 +23,7 @@ in their function to the CDI-Unit-Annotations
 # Concepts
 
 ## Leveled Builder
-The algorith trying to create a configuration for the standalone engine works in several levels
+The algorithm trying to create a configuration for the standalone engine works in several levels
 
 Initially: the testclass, all defined classes and some initial classes defined by the -tester-jars are input to the 
 first level.

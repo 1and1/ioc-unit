@@ -26,9 +26,11 @@ import com.oneandone.iocunit.analyzer.annotations.ExcludedClasses;
 import com.oneandone.iocunit.analyzer.annotations.SutClasses;
 import com.oneandone.iocunit.analyzer.annotations.SutClasspaths;
 import com.oneandone.iocunit.analyzer.annotations.SutPackages;
+import com.oneandone.iocunit.analyzer.annotations.SutPackagesDeep;
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 import com.oneandone.iocunit.analyzer.annotations.TestClasspaths;
 import com.oneandone.iocunit.analyzer.annotations.TestPackages;
+import com.oneandone.iocunit.analyzer.annotations.TestPackagesDeep;
 
 /**
  * Analyzes the candidates. Works until no new candidates are found.
@@ -133,6 +135,14 @@ class Phase1Analyzer extends PhasesBase {
         }
     }
 
+    private void addPackagesDeep(Class<?>[] packages, boolean isSut) throws MalformedURLException {
+        for (Class<?> packageClass : packages) {
+            Set<Class<?>> tmpClasses = new HashSet<>();
+            ClasspathHandler.addPackageDeep(packageClass, tmpClasses);
+            addAvailables(isSut, tmpClasses);
+        }
+    }
+
     private void addClasspaths(Class<?>[] classpaths, boolean isSut) throws MalformedURLException {
         for (Class<?> classpathClass : classpaths) {
             Set<Class<?>> tmpClasses = new HashSet<>();
@@ -200,6 +210,14 @@ class Phase1Analyzer extends PhasesBase {
                 TestPackages testPackages = c1.getAnnotation(TestPackages.class);
                 if(testPackages != null) {
                     addPackages(testPackages.value(), false);
+                }
+                SutPackagesDeep sutPackagesDeep = c1.getAnnotation(SutPackagesDeep.class);
+                if(sutPackagesDeep != null) {
+                    addPackagesDeep(sutPackagesDeep.value(), true);
+                }
+                TestPackagesDeep testPackagesDeep = c1.getAnnotation(TestPackagesDeep.class);
+                if(testPackagesDeep != null) {
+                    addPackagesDeep(testPackagesDeep.value(), false);
                 }
             } catch (MalformedURLException e) {
                 throw new RuntimeException(e);

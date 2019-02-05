@@ -70,6 +70,11 @@ public class InitialConfiguration {
         return this;
     }
 
+    public InitialConfiguration theTestClass(Class<?> clazz) {
+        setTestClass(clazz);
+        return testClass(clazz);
+    }
+
     public InitialConfiguration testClass(Class<?> clazz) {
         testClasses.add(clazz);
         return this;
