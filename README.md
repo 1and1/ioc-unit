@@ -1,5 +1,6 @@
 ioc-unit (formerly ejb-cdi-unit)
 ================================
+![Build Status](https://travis-ci.org/1and1/ioc-unit.svg?branch=master)
 
 # What should this project achieve
 
@@ -30,71 +31,28 @@ in their function to the CDI-Unit-Annotations
 * analyzes the injection points during adding of Classes to the system-configuration. 
 * finds according to so called available classes the best fitting candidate as producer for the injections.
 
-# Usecases
-
-* Test a selection of java classes comprising a service based on CDI and/or Ejb later possibly also on a jBPM-Engine
-* Replace parts of the code to be tested by mocks
-
 # Concepts
 
-## Leveled Builder
-The algorithm trying to create a configuration for the standalone engine works in several levels
 
-Initially: the testclass, all defined classes and some initial classes defined by the -tester-jars are input to the 
-first level.
-
-Each level the builder handles contains 3 phases:
-* Analyzing and Collecting Phase: Input classes are analyzed collections of injects and producers are built up.   
-   * configuring annotations of testclasses are interpreted. new defined classes are added to the level and 
-analyzed during this level as well.  
-   * the classes are searched for producers
-   * the classes are searched for injects (fields, constructors and injects)
-   * the classes are searched for static inner classes. these are added as "available" classes.
-* Matching Phase Found injects
-   * all encountered injects will be matched with producers and defined classes
-   * if an inject matches, it is denoted as handled
-   * if there are more than one matches for one inject and one of it originates from a Testclass.
-      * exclude the Sut-Classes comprising the other match. 
-      * Write warning. 
-      * This might lead to dangling other injects! It is an easy decision if the inject is the only match, otherwise search for
-        injects.
-* Fixing Phase builds probably up new input for the next level  
-   * injects not yet matched are tried to be matched using available testclasses and their contained producers
-   * injects not yet matched are tried to be matched using available sutclasses and their contained producers
-   * classes found during the extensionphase are new input to the next level. If more than one classes is found 
-   then the priority is:
-      * enabled Alternatives
-      * testclasses
-      * sutclasses   
-
-## Configuring Annotations
-By using Annotations at the Testclass itself or other classes denoted as Testclasses the configuration information
-provided to Weld-Se is defined.
-These Annotations are _@TestClasses, @SutClasses, @TestPackages, @SutPackages, @TestClasspaths, @SutClasspaths, 
-@EnablesAlternatives, @ExcludedClasses_ 
-Since the building process works in several levels during which "available" classes might be added which themselves 
-might be annotated by configuring annotations, annotations encountered in a later level might contradict decisions made 
-earlier. 
-* An enabled Alternative might have already been excluded as candidate for an inject
-* An inner class denoted as testclass or sutclass because of the containing class, might be changed at a later level by
-a configuring annotation. This will lead to an error if this class already has been used to satisfy an inject in an 
-earlier level.                       
-                 
 
 ## Defined and Available classes
 
 **Defined classes** are: 
 * The Testclass
 * Classes added by Annotations @TestClasses, @SutClasses
-* Will be added to the configuration to be started when weld starts in any event.
+
+They will be added to the configuration to be started when weld starts in any event.
 
 **Available classes** are:
-* Classes added by Annotations @TestPackages, @SutPackages, @TestClasspaths, @SutClasspaths
+* Classes added by Annotations @TestPackages, @SutPackages, @TestPackagesDeep, @SutPackagesDeep, @TestClasspaths, @SutClasspaths
 * Static inner classes found when adding Defined Classes to the set of available classes.
-* Will be added to the configuration
+
+They will be added to the configuration
    * if an instance of themselves can be used as inject
    * if they provide a producer that can be used as inject
    * only if ambiguity heuristics decide their priority against other classes
+
+## Candidates
 
 **Available Candidates** are:
 * no defined class
@@ -114,12 +72,12 @@ rejected candidates.
 
 **Testclasses** are
 * The Testclass itself
-* All classes added using @TestClasses,@TestPackages,@TestClasspaths
+* All classes added using @TestClasses, @TestPackages, @TestPackagesDeep, @TestClasspaths
 * Static inner classes of Testclasses, if these are not denoted otherwise as Sutclasses
 * Can hold Configuring Annotations 
 
 **Sutclasses** are
-* All classes added using @SutClasses,@SutPackages,@SutClasspaths
+* All classes added using @SutClasses, @SutPackages, @SutPackagesDeep, @SutClasspaths
 * May not hold Configuring Annotations. If a Sutclass does, a Warning is produced.
 
 In case of ambiguities, Testclasses and Producers in Testclasses get priority over Sutclasses and their producers.
@@ -131,6 +89,60 @@ other productions usable for injects. Alternative-Stereotypes must be added to t
 using @SutClasses or @TestClasses. @ProducesAlternative is defined by default. Alternative-Classes can be added using 
 @EnabledAlternatives.
 
+## Configuring Annotations
+By using Annotations at the Testclass itself or other classes denoted as Testclasses the configuration information
+provided to Weld-Se is defined.
+These Annotations are _@TestClasses, @SutClasses, @TestPackages, @SutPackages, @TestPackagesDeep, @SutPackagesDeep, 
+@TestClasspaths, @SutClasspaths, 
+@EnablesAlternatives, @ExcludedClasses_ 
+Since the building process works in several levels during which "available" classes might be added which themselves 
+might be annotated by configuring annotations, annotations encountered in a later level might contradict decisions made 
+earlier. 
+* An enabled Alternative might have already been excluded as candidate for an inject
+* An inner class denoted as testclass or sutclass because of the containing class, might be changed at a later level by
+a configuring annotation. This will lead to an error if this class already has been used to satisfy an inject in an 
+earlier level.                       
+                 
+
+
+
+## ConfigCreator
+The algorithm trying to create a configuration for the standalone engine works in several levels
+
+Initially: the testclass, all defined classes and some initial classes defined by the -tester-jars are input to the 
+first level.
+
+Each level the builder handles contains 4 phases:
+* **Analyzing and Collecting** Phase: Input classes are analyzed collections of injects and producers are built up.   
+   * configuring annotations of testclasses are interpreted. new defined classes are added to the level and 
+analyzed during this level as well.  
+   * the classes are searched for producers
+   * the classes are searched for injects (fields, constructors and injects)
+   * the classes are searched for static inner classes. these are added as "available" classes.
+* **Matching** Phase Found injects
+   * all encountered injects will be matched with producers and defined classes
+   * if an inject matches, it is denoted as handled
+   * if there are more than one matches for one inject and one of it originates from a Testclass.
+      * exclude the Sut-Classes comprising the other match. 
+      * Write warning. 
+      * This might lead to dangling other injects! It is an easy decision if the inject is the only match, otherwise search for
+        injects.
+* **Fixing** Phase builds probably up new input for the next level  
+   * injects not yet matched are tried to be matched using available testclasses and their contained producers
+   * injects not yet matched are tried to be matched using available sutclasses and their contained producers
+   * classes found during the extensionphase are new input to the next level. If more than one classes is found 
+   then the priority is:
+      * enabled Alternatives
+      * testclasses
+      * sutclasses   
+* **Guessing** if there are injects to matched, but the Fixing-Phase has not produced any new candidates this phase is started.
+It works similar to cdi-unit.
+All injects not yet matched are handled if they
+   * are allowed to be beans according to CDI-Spec: They are added as candidates for the next analyzing and collecting phase
+   * cannot be beans because they are abstract or interfaces: This leads to adding the class as if @SutClasspath or @TestClasspath 
+        was found. 
+The decision if the guessed classes are Sut or Test is made by looking at their classpath. If the classpath is already 
+found as testclasspath, the added candidates are handled as tests, otherwise as sut.
 
 
 Make test driven development of ejb-3.x services and processes easy.
@@ -144,7 +156,7 @@ Supports:
 * Processengine: Camunda 7.x
 
 
-![Build Status](https://travis-ci.org/1and1/ioc-unit.svg?branch=master)
+
 
 
 
