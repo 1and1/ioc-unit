@@ -1,6 +1,21 @@
 ioc-unit (formerly ejb-cdi-unit)
 ================================
-Yet a "Work in Progress", if you are looking for ejb-cdi-unit please checkout the branch https://github.com/1and1/ioc-unit/tree/ejb-cdi-unit
+
+# What should this project achieve
+
+Support the development of tests inside non-trivial CDI/EJB-service-modules containing several hundred classes, entities, transactions, queues without starting the destination environment.
+
+Current environments either are full fledged integration tests which create the deployment structures and deploy those inside arquillian together with some testclasses. The problem here often is, that the server start is complicated to configure inside a developmentenvironment and the tests sometimes are not easily developed in a deterministic manor(because of multithreading, timers, asynchronous,...).
+
+The other possibility is to take a few classes to be tested out of the service and mock everything else using frameworks like mockito. The problem here can be, that the tests know very much about the internal structure of the services which makes refactoring often not so easy as agile development demands it.
+
+Then there is a way in between, which starts parts of the service inside a lightweight CDI-Environment (weld-se), mocks serviceinterfaces which are consumed and simulates responses or callbacks from outside. In this category weld-junit, cdi-unit, ejb-cdi-unit can be found. This works quite well with simple services, but makes the creation of automatic tests which possibly need hundreds of classes to run, quite difficult. 
+
+ioc-Unit also falls into that category but:
+
+* it helps to easily define the set of classes necessary to be included into the testconfiguration
+* it supports some extensions to the standalone environment which help to simulate databases, queues, asynchronous situations, requestcontexts. 
+
 
 # Currently 
 
