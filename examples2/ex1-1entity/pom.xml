@@ -59,6 +59,12 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.eclipse.persistence</groupId>
+            <artifactId>eclipselink</artifactId>
+            <version>2.7.4</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>net.oneandone.ioc-unit</groupId>
             <artifactId>ioc-unit-ejb</artifactId>
             <version>${project.version}</version>

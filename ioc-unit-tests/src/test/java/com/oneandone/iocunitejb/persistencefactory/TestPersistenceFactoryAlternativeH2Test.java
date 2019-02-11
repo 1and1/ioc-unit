@@ -13,9 +13,9 @@ import javax.transaction.SystemException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.oneandone.iocunit.IocUnitRunner;
 import com.oneandone.iocunit.analyzer.annotations.ExcludedClasses;
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.iocunit.IocUnitRunner;
 import com.oneandone.iocunit.ejb.SessionContextFactory;
 import com.oneandone.iocunit.ejb.persistence.TestPersistenceFactory;
 
@@ -53,10 +53,8 @@ public class TestPersistenceFactoryAlternativeH2Test extends PersistenceFactoryT
 
     @Test
     public void canExecuteStatementsUsingDataSource() {
-        if(isHibernate5()) {
-            return;
-        }
         try {
+            userTransaction.begin();
             try (Connection connection = dataSource.getConnection()) {
                 connection.setAutoCommit(true);
                 String[] lines = new String[]{

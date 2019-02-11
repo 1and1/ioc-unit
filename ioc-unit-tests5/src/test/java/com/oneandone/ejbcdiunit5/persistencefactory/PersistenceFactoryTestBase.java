@@ -38,10 +38,10 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.oneandone.iocunitejb.entities.TestEntity1;
 import com.oneandone.iocunit.ejb.persistence.PersistenceFactory;
 import com.oneandone.iocunit.ejb.persistence.TestClosure;
 import com.oneandone.iocunit.ejb.persistence.TestTransaction;
+import com.oneandone.iocunitejb.entities.TestEntity1;
 
 
 /**
@@ -401,10 +401,8 @@ public abstract class PersistenceFactoryTestBase {
 
     @Test
     public void checkUserTransactionAndDataSource() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException, SQLException {
+        userTransaction.begin();
         try (Connection dummyconn = dataSource.getConnection()) {
-            userTransaction.begin();
-            userTransaction.rollback();
-            userTransaction.begin();
             TestEntity1 testEntity1 = new TestEntity1();
             testEntity1.setIntAttribute(111);
             testEntity1.setStringAttribute("string");
@@ -435,7 +433,7 @@ public abstract class PersistenceFactoryTestBase {
             res = em.createQuery("select count(e) from TestEntity1 e", Long.class).getSingleResult();
             assertThat(res, is(3L));
         }
-
+        userTransaction.commit();
     }
 
 

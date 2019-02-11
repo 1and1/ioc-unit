@@ -8,7 +8,6 @@ import java.sql.SQLTimeoutException;
 import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
-import javax.persistence.TransactionRequiredException;
 import javax.sql.DataSource;
 
 import org.hibernate.Session;
@@ -47,11 +46,19 @@ public class DataSourceDelegate implements DataSource {
     @Override
     public Connection getConnection() throws SQLException {
         try {
-            EntityManager tmp = entityManagerStore.getTransactional(false);
-            Session session = tmp.unwrap(Session.class);
-            SessionImplementor sessionImplementor = (SessionImplementor) session;
-            return new ConnectionDelegate(sessionImplementor);
-        } catch (TransactionRequiredException e) {
+            EntityManager tmp = null;
+            try {
+                tmp = entityManagerStore.getTransactional(true);
+                Connection connection = tmp.unwrap(Connection.class);
+                return new ConnectionDelegate(connection);
+            } catch (Throwable thw) {
+               if (tmp == null)
+                   tmp = entityManagerStore.getTransactional(false);
+                Session session = tmp.unwrap(Session.class);
+                SessionImplementor sessionImplementor = (SessionImplementor) session;
+                return new ConnectionDelegate(sessionImplementor);
+            }
+        } catch (Throwable e) {
             throw new RuntimeException("not expected exception: ", e);
         }
     }

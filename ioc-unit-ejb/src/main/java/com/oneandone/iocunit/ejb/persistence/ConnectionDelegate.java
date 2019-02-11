@@ -52,11 +52,21 @@ public class ConnectionDelegate implements Connection {
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
+        } catch (IllegalAccessException|InvocationTargetException e) {
+            throw new RuntimeException(e);
         }
+    }
+
+    public ConnectionDelegate(final Connection connection) {
+        this.connection = connection;
+        try {
+            connection.setAutoCommit(false);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        this.jdbcConnectionAccess = null;
+
     }
 
     @Override

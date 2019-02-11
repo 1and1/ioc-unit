@@ -74,11 +74,13 @@
             <groupId>net.oneandone.ioc-unit</groupId>
             <artifactId>ioc-unit-ejb</artifactId>
             <version>${project.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>net.oneandone.ioc-unit</groupId>
             <artifactId>weld2-starter</artifactId>
             <version>${project.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

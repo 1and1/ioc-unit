@@ -268,7 +268,7 @@
                 <weld.version>2.4.2.Final</weld.version>
                 <weld-spi.version>2.4.Final</weld-spi.version>
                 <version.org.hibernate.api>1.0.0.Final</version.org.hibernate.api>
-                <version.org.hibernate>5.0.10.Final</version.org.hibernate>
+                <version.org.hibernate>5.3.6.Final</version.org.hibernate>
                 <version.org.hibernate.validator>5.2.4.Final</version.org.hibernate.validator>
                 <version.cdi-api>1.2</version.cdi-api>
             </properties>
@@ -299,7 +299,7 @@
                 <weld.version>3.0.5.Final</weld.version>
                 <weld-spi.version>3.0.SP4</weld-spi.version>
                 <version.org.hibernate.api>1.0.0.Final</version.org.hibernate.api>
-                <version.org.hibernate>5.0.10.Final</version.org.hibernate>
+                <version.org.hibernate>5.3.6.Final</version.org.hibernate>
                 <version.org.hibernate.validator>5.2.4.Final</version.org.hibernate.validator>
                 <version.cdi-api>2.0.SP1</version.cdi-api>
             </properties>
@@ -432,6 +432,11 @@
             <dependency>
                 <groupId>com.mockrunner</groupId>
                 <artifactId>mockrunner-jms</artifactId>
+                <version>${mockrunner.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.mockrunner</groupId>
+                <artifactId>mockrunner-core</artifactId>
                 <version>${mockrunner.version}</version>
             </dependency>
             <dependency>

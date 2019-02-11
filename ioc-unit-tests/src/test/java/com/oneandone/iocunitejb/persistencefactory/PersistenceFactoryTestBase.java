@@ -38,6 +38,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.oneandone.iocunit.analyzer.annotations.SutClasses;
 import com.oneandone.iocunit.ejb.persistence.PersistenceFactory;
 import com.oneandone.iocunit.ejb.persistence.TestClosure;
 import com.oneandone.iocunit.ejb.persistence.TestTransaction;
@@ -47,6 +48,7 @@ import com.oneandone.iocunitejb.entities.TestEntity1;
 /**
  * @author aschoerk
  */
+@SutClasses(TestEntity1.class)
 public abstract class PersistenceFactoryTestBase {
 
     private static Logger logger = LoggerFactory.getLogger("logger");
@@ -395,8 +397,8 @@ public abstract class PersistenceFactoryTestBase {
 
     @Test
     public void checkUserTransactionAndDataSource() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException, SQLException {
+        userTransaction.begin();
         try (Connection dummyconn = dataSource.getConnection()) {
-            userTransaction.begin();
             userTransaction.rollback();
             userTransaction.begin();
             TestEntity1 testEntity1 = new TestEntity1();
@@ -429,7 +431,7 @@ public abstract class PersistenceFactoryTestBase {
             res = em.createQuery("select count(e) from TestEntity1 e", Long.class).getSingleResult();
             Assert.assertThat(res, is(3L));
         }
-
+        userTransaction.rollback();
     }
 
 

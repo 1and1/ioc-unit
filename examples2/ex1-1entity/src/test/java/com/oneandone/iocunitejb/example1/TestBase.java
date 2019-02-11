@@ -19,19 +19,19 @@ import javax.transaction.UserTransaction;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 import com.oneandone.iocunit.IocUnitRunner;
+import com.oneandone.iocunit.analyzer.annotations.SutPackages;
 import com.oneandone.iocunit.ejb.persistence.PersistenceFactory;
 import com.oneandone.iocunit.ejb.persistence.TestClosure;
-import com.oneandone.iocunit.ejb.persistence.TestPersistenceFactory;
 import com.oneandone.iocunit.ejb.persistence.TestTransactionException;
 
 /**
  * @author aschoerk
  */
 @RunWith(IocUnitRunner.class)
-@TestClasses({ Service.class, TestPersistenceFactory.class })
-public class ServiceTest {
+
+@SutPackages(Service.class)
+public abstract class TestBase {
     @Inject
     ServiceIntf sut;
 

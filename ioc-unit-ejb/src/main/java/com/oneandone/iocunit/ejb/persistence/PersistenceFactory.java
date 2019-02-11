@@ -1,6 +1,8 @@
 package com.oneandone.iocunit.ejb.persistence;
 
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -11,8 +13,9 @@ import javax.ejb.TransactionAttributeType;
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.persistence.TransactionRequiredException;
+import javax.persistence.spi.PersistenceProvider;
+import javax.persistence.spi.PersistenceProviderResolverHolder;
 import javax.sql.DataSource;
 import javax.transaction.Status;
 import javax.transaction.SystemException;
@@ -35,12 +38,21 @@ import com.oneandone.iocunit.ejb.SupportEjbExtended;
 @ApplicationScoped
 public abstract class PersistenceFactory {
 
+    public enum Provider {
+        HIBERNATE,
+        ECLIPSELINK
+    }
+
     private static final HashSet<String> PERSISTENCE_UNIT_NAMES = new HashSet<>();
     private final Logger logger = LoggerFactory.getLogger(PersistenceFactory.class);
     private final ThreadLocal<Stack<EntityManager>> emStackThreadLocal = new ThreadLocal<>();
     private EntityManagerFactory emf = null;
     private SimulatedTransactionManager transactionManager = new SimulatedTransactionManager();
     private ConcurrentLinkedQueue<Stack<EntityManager>> threadlocalStacks = new ConcurrentLinkedQueue<>();
+
+    protected Provider getRecommendedProvider() {
+        return Provider.HIBERNATE;
+    }
 
     /**
      * allow to reset between Tests.
@@ -73,7 +85,10 @@ public abstract class PersistenceFactory {
             if (PERSISTENCE_UNIT_NAMES.contains(getPersistenceUnitName())) {
                 throw new RuntimeException("Repeated construction of currently existing PersistenceFactory for " + getPersistenceUnitName());
             } else {
-                setEmf(createEntityManagerFactory());
+                EntityManagerFactory res = createEntityManagerFactory();
+                if (res == null)
+                    throw new RuntimeException("Could not create EntityManagerFactory for persistence unit: "+ getPersistenceUnitName());
+                setEmf(res);
                 PERSISTENCE_UNIT_NAMES.add(getPersistenceUnitName());
             }
         }
@@ -255,7 +270,24 @@ public abstract class PersistenceFactory {
     }
 
     protected EntityManagerFactory createEntityManagerFactory() {
-        return Persistence.createEntityManagerFactory(getPersistenceUnitName());
+        PersistenceProvider actProvider = getPersistenceProvider();
+        return actProvider.createEntityManagerFactory(getPersistenceUnitName(), Collections.EMPTY_MAP);
+    }
+
+    protected PersistenceProvider getPersistenceProvider() {
+        List<PersistenceProvider> pProviders = PersistenceProviderResolverHolder.getPersistenceProviderResolver().getPersistenceProviders();
+        PersistenceProvider actProvider = null;
+        for (PersistenceProvider pp: pProviders) {
+            if (actProvider == null)
+                actProvider = pp;
+            if (pp.getClass().getName().contains("hibernate") && getRecommendedProvider().equals(Provider.HIBERNATE)) {
+                actProvider = pp;
+            }
+            if (pp.getClass().getName().contains("eclipse") && getRecommendedProvider().equals(Provider.ECLIPSELINK)) {
+                actProvider = pp;
+            }
+        }
+        return actProvider;
     }
 
     @Override
