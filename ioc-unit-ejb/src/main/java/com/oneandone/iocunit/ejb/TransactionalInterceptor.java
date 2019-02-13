@@ -40,7 +40,7 @@ public class TransactionalInterceptor {
     static ThreadLocal<TransactionAttributeType> lastTransactionAttributeType = new ThreadLocal<>();
     static ThreadLocal<Integer> level = new ThreadLocal<>();
 
-    int getLevel() {
+    static public int getLevel() {
         Integer actLevel = level.get();
         if (actLevel == null) {
             level.set(0);
@@ -49,11 +49,11 @@ public class TransactionalInterceptor {
         return actLevel;
     }
 
-    void incLevel() {
+    static public void incLevel() {
         level.set(getLevel() + 1);
     }
 
-    void decLevel() {
+    static public void decLevel() {
         level.set(getLevel() - 1);
     }
 
