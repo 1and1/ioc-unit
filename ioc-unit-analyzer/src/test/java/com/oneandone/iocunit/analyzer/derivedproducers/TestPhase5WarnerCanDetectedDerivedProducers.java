@@ -38,8 +38,8 @@ public class TestPhase5WarnerCanDetectedDerivedProducers extends BaseTest {
         creator.create(initialConfiguration);
 
         assertTrue(LogbackFilter.getMessages().contains("Phase5Warner"));
-        assertTrue(LogbackFilter.getMessages().contains("Producer Field b in Superclass:"));
-        assertTrue(LogbackFilter.getMessages().contains("BeanContainer"));
+        assertTrue(LogbackFilter.getMessages().contains("Producers in Superclass:"));
+        assertTrue(LogbackFilter.getMessages().contains("BeanContainer: b"));
     }
 
     @Test

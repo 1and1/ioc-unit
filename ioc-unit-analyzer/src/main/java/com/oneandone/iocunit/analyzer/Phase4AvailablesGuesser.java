@@ -28,10 +28,15 @@ public class Phase4AvailablesGuesser extends PhasesBase {
             Set<Class<?>> newClasses = new HashSet<>();
             Set<Class<?>> newTestClasses = new HashSet<>();
             for (QualifiedType q : configuration.getInjects()) {
+                if (q.isInstance())
+                    continue;
                 final Class rawtype = q.getRawtype();
+                final String rawtypeName = rawtype.getName();
                 if(!(rawtype.isPrimitive()
                      || newClasses.contains(rawtype)
-                     || rawtype.getName().startsWith("java.lang")
+                     || rawtypeName.startsWith("java.lang.")
+                     || rawtypeName.startsWith("javax.")
+                     || rawtypeName.startsWith("org.jboss.")
                      || handledPhase4Classes.contains(rawtype)
                 )) {
                     try {
@@ -41,11 +46,11 @@ public class Phase4AvailablesGuesser extends PhasesBase {
                             configuration.candidate(rawtype);
                         }
                         else if(configuration.getTestClassPaths().contains(rawtypePath)) {
-                            logger.warn("Added classpath of testclass: {} even if not found as available", rawtype);
+                            logger.warn("Added classpath of testclass: {} even if not found as available for inject: {}", rawtype,q);
                             ClasspathHandler.addClassPath(rawtype, newTestClasses);
                         }
                         else {
-                            logger.warn("Added classpath of sutclass: {} even if not found as available", rawtype);
+                            logger.warn("Added classpath of sutclass: {} even if not found as available for inject: {}", rawtype,q);
                             ClasspathHandler.addClassPath(rawtype, newClasses);
                         }
                     } catch (MalformedURLException | NullPointerException e) {

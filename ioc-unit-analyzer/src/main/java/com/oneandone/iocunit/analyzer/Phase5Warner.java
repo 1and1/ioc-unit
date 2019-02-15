@@ -3,6 +3,9 @@ package com.oneandone.iocunit.analyzer;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Alternative;
@@ -43,21 +46,44 @@ public class Phase5Warner extends PhasesBase {
         }
     }
 
-    private void checkProducersInSuperClass(Class<?> c) {
+
+    private Set<Type> collectProducedClasses(Class<?> c) {
+        Set<Type> res = new HashSet<>();
+        for (Field f: c.getDeclaredFields()) {
+            if (f.getAnnotation(Produces.class) != null)  {
+                res.add(f.getGenericType());
+            }
+        }
+        for (Method m: c.getDeclaredMethods()) {
+            if (m.getAnnotation(Produces.class) != null)  {
+                res.add(m.getGenericReturnType());
+            }
+        }
+        return res;
+
+    }
+
+    private void checkProducersInSuperClass(Class<?> c, Set<Type> producedInSubClass) {
         if (c.equals(Object.class)) {
             return;
         } else {
+            StringBuffer producers = new StringBuffer();
             for (Field f: c.getDeclaredFields()) {
-                if (f.getAnnotation(Produces.class) != null)  {
-                    logger.warn("Producer Field {} in Superclass: {}.",f.getName(), c.getName());
+                if (f.getAnnotation(Produces.class) != null && !producedInSubClass.contains(f.getGenericType()))  {
+                    if (producers.length() > 0) producers.append(",");
+                    producers.append(f.getName());
                 }
             }
             for (Method m: c.getDeclaredMethods()) {
-                if (m.getAnnotation(Produces.class) != null)  {
-                    logger.warn("Producer Method {} in Superclass: {}.",m.getName(), c.getName());
+                if (m.getAnnotation(Produces.class) != null && !producedInSubClass.contains(m.getGenericReturnType()))  {
+                    if (producers.length() > 0) producers.append(",");
+                    producers.append(m.getName());
                 }
             }
-            checkProducersInSuperClass(c.getSuperclass());
+            if (producers.length() > 0) {
+                logger.warn("Producers in Superclass: {}: {}",c.getSimpleName(), producers);
+            }
+            checkProducersInSuperClass(c.getSuperclass(), producedInSubClass);
         }
     }
 
@@ -67,7 +93,7 @@ public class Phase5Warner extends PhasesBase {
                 if (c.getAnnotation(Alternative.class) != null || c.equals(configuration.getTheTestClass())){
                     continue;
                 } else {
-                    checkProducersInSuperClass(c.getSuperclass());
+                    checkProducersInSuperClass(c.getSuperclass(), collectProducedClasses(c));
                 }
             }
         }
