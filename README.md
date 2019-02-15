@@ -35,7 +35,7 @@ in their function to the CDI-Unit-Annotations
 
 
 
-## Defined and Available classes
+## Defined, Available and Excluded classes
 
 **Defined classes** are: 
 * The Testclass
@@ -51,6 +51,10 @@ They will be added to the configuration
    * if an instance of themselves can be used as inject
    * if they provide a producer that can be used as inject
    * only if ambiguity heuristics decide their priority against other classes
+   
+**Excluded classes** are:
+* Classes added by the annotations @ExcludedClasses
+Every time a class is selected as candidate and @ExcludedClasses has been encountered before, this candidate is not used for resolution. If @ExcludedClasses gets encountered for a class already selected it has no effect for that class.
 
 ## Candidates
 
