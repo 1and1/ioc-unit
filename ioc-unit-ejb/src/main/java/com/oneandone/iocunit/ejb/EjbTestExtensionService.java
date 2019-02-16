@@ -3,7 +3,6 @@ package com.oneandone.iocunit.ejb;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.net.URL;
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -24,6 +23,10 @@ import org.jboss.weld.transaction.spi.TransactionServices;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.oneandone.cdi.weldstarter.CreationalContexts;
+import com.oneandone.cdi.weldstarter.WeldSetup;
+import com.oneandone.cdi.weldstarter.WeldSetupClass;
+import com.oneandone.cdi.weldstarter.spi.TestExtensionService;
 import com.oneandone.cdi.weldstarter.spi.WeldStarter;
 import com.oneandone.iocunit.ejb.jms.JmsMocksFactory;
 import com.oneandone.iocunit.ejb.jms.JmsProducers;
@@ -31,10 +34,6 @@ import com.oneandone.iocunit.ejb.jms.JmsSingletons;
 import com.oneandone.iocunit.ejb.persistence.SimulatedEntityTransaction;
 import com.oneandone.iocunit.ejb.persistence.SimulatedTransactionManager;
 import com.oneandone.iocunit.ejb.resourcesimulators.SimulatedUserTransaction;
-import com.oneandone.cdi.weldstarter.CreationalContexts;
-import com.oneandone.cdi.weldstarter.WeldSetup;
-import com.oneandone.cdi.weldstarter.WeldSetupClass;
-import com.oneandone.cdi.weldstarter.spi.TestExtensionService;
 
 /**
  * @author aschoerk
@@ -135,7 +134,8 @@ public class EjbTestExtensionService implements TestExtensionService {
         for (Class<?> c : ejbTestExtensionServiceData.get().candidatesToStart) {
             if (!ejbTestExtensionServiceData.get().excludedClasses.contains(c))
                 if (!weldSetup.getBeanClasses().contains(c.getName())) {
-                    logger.warn("Entity, Mdb or Startup Candidate: {} not started", c.getSimpleName());
+                    logger.warn("Entity, Mdb or Startup candidate: {} found "
+                                + " while scanning availables, but not in testconfiguration included.", c.getSimpleName());
                 }
         }
         ejbTestExtensionServiceData.get().candidatesToStart.clear(); // show only once

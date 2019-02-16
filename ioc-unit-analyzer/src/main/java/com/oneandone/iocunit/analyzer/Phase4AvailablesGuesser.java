@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 public class Phase4AvailablesGuesser extends PhasesBase {
     private final Phase1Analyzer phase1Analyzer;
     Logger logger = LoggerFactory.getLogger(Phase4AvailablesGuesser.class);
+    Set<Class<?>> alreadyLogged = new HashSet<>();
 
     public Phase4AvailablesGuesser(final Configuration configuration, Phase1Analyzer phase1Analyzer) {
         super(configuration);
@@ -27,9 +28,10 @@ public class Phase4AvailablesGuesser extends PhasesBase {
 
             Set<Class<?>> newClasses = new HashSet<>();
             Set<Class<?>> newTestClasses = new HashSet<>();
+
             for (QualifiedType q : configuration.getInjects()) {
-                if (q.isInstance())
-                    continue;
+                // if (q.isInstance())
+                //   continue;
                 final Class rawtype = q.getRawtype();
                 final String rawtypeName = rawtype.getName();
                 if(!(rawtype.isPrimitive()
@@ -42,17 +44,21 @@ public class Phase4AvailablesGuesser extends PhasesBase {
                     try {
                         URL rawtypePath = ClasspathHandler.getPath(rawtype);
                         if(ConfigStatics.mightBeBean(rawtype)) {
-                            logger.warn("Added candidate {} in cdi-unit manner, even if not found as available", rawtype);
+                            if (!alreadyLogged.contains(rawtype))
+                                logger.warn("Added candidate {} in cdi-unit manner, even if not found as available", rawtype);
                             configuration.candidate(rawtype);
                         }
                         else if(configuration.getTestClassPaths().contains(rawtypePath)) {
-                            logger.warn("Added classpath of testclass: {} even if not found as available for inject: {}", rawtype,q);
+                            if (!alreadyLogged.contains(rawtype))
+                                logger.warn("Added classpath of testclass: {} even if not found as available for inject: {}", rawtype,q);
                             ClasspathHandler.addClassPath(rawtype, newTestClasses);
                         }
                         else {
-                            logger.warn("Added classpath of sutclass: {} even if not found as available for inject: {}", rawtype,q);
+                            if (!alreadyLogged.contains(rawtype))
+                                logger.warn("Added classpath of sutclass: {} even if not found as available for inject: {}", rawtype,q);
                             ClasspathHandler.addClassPath(rawtype, newClasses);
                         }
+                        alreadyLogged.add(rawtype);
                     } catch (MalformedURLException | NullPointerException e) {
                         ;
                     }

@@ -85,6 +85,8 @@
         <delta-spike.version>1.0.1</delta-spike.version>
         <weld.compile.version>3.0.4.Final</weld.compile.version>
         <version.cdi-api>2.0</version.cdi-api>
+        <additionalparam>-Xdoclint:none</additionalparam>
+
     </properties>
 
     <profiles>
@@ -562,21 +564,6 @@
                     <scmBranch>gh-pages</scmBranch>
                 </configuration>
             </plugin>
-            <!--plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <configuration>
-                    <notimestamp>true</notimestamp>
-                    <quiet>true</quiet>
-                    <detectLinks>false</detectLinks>
-                    <detectOfflineLinks>false</detectOfflineLinks>
-                    <links>
-                        <link>http://docs.oracle.com/javase/8/docs/api/</link>
-                        <link>http://junit-team.github.com/junit/javadoc/latest/</link>
-                        <link>http://www.slf4j.org/apidocs/</link>
-                    </links>
-                </configuration>
-            </plugin-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
@@ -588,6 +575,9 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <detectOfflineLinks>false</detectOfflineLinks>
+                </configuration>
             </plugin>
 
         </plugins>
