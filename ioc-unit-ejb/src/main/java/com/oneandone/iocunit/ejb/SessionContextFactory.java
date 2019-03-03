@@ -17,6 +17,7 @@ public class SessionContextFactory {
     BeanManager beanManager;
 
     @Produces
+    @ResourceQualifier(name = "javax.ejb.SessionContext")
     SessionContextSimulation createSessionContext(InjectionPoint ip) {
         SessionContextSimulation injectedBean = new SessionContextSimulation("dummy");
         injectedBean.setContainer(ip.getBean(), beanManager);

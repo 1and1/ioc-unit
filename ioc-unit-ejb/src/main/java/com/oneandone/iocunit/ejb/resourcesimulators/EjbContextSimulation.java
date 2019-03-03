@@ -11,11 +11,13 @@ import javax.ejb.EJBLocalHome;
 import javax.ejb.TimerService;
 import javax.transaction.UserTransaction;
 
+import com.oneandone.iocunit.ejb.ResourceQualifier;
 import com.oneandone.iocunit.ejb.persistence.SimulatedTransactionManager;
 
 /**
  * @author aschoerk
  */
+@ResourceQualifier(name = "javax.ejb.EJBContext")
 public abstract class EjbContextSimulation implements EJBContext {
     /**
      * Obtain the enterprise bean's remote home interface.

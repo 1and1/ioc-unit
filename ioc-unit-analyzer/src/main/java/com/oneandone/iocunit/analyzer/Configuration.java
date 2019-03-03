@@ -4,6 +4,7 @@ import java.lang.annotation.Annotation;
 import java.net.URL;
 import java.security.CodeSource;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.Set;
 
 import javax.enterprise.inject.Alternative;
 import javax.enterprise.inject.Stereotype;
+import javax.enterprise.inject.spi.Extension;
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
@@ -22,6 +24,7 @@ import com.oneandone.iocunit.analyzer.annotations.AnalyzerFlags;
  * @author aschoerk
  */
 public class Configuration {
+
 
 
     enum Phase {
@@ -36,6 +39,7 @@ public class Configuration {
     public boolean produceInstanceInjectsByAvailables = false;
     public boolean addAllStartableBeans = false;
     public boolean addAvailableInterceptorsAndDecorators = false;
+    public List<Class<? extends Extension>> excludedExtensions;
 
     Set<Class<? extends Annotation>> injectAnnotations = new HashSet<>();
 
@@ -61,6 +65,7 @@ public class Configuration {
             this.produceInstanceInjectsByAvailables = analyzerFlags.produceInstanceInjectsByAvailables();
             this.addAllStartableBeans = analyzerFlags.addAllStartableBeans();
             this.addAvailableInterceptorsAndDecorators = analyzerFlags.addAvailableInterceptorsAndDecorators();
+            this.excludedExtensions = Arrays.asList(analyzerFlags.excludedExtensions());
         }
     }
 

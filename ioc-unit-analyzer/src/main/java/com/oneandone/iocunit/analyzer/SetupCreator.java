@@ -1,16 +1,18 @@
 package com.oneandone.iocunit.analyzer;
 
-import com.oneandone.cdi.weldstarter.WeldSetupClass;
-import com.oneandone.cdi.weldstarter.spi.TestExtensionService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.enterprise.inject.spi.Extension;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import javax.enterprise.inject.spi.Extension;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.oneandone.cdi.weldstarter.WeldSetupClass;
+import com.oneandone.cdi.weldstarter.spi.TestExtensionService;
 
 public class SetupCreator {
     static Logger logger = LoggerFactory.getLogger(SetupCreator.class);
@@ -31,6 +33,9 @@ public class SetupCreator {
     private void handleWeldExtensions(final Method method, final WeldSetupClass weldSetup) {
         try {
             for (Class<? extends Extension> extensionClass : configuration.getElseClasses().extensionClasses) {
+                if (configuration.excludedExtensions != null && configuration.excludedExtensions.contains(extensionClass)) {
+                    continue;
+                }
                 if (extensionClass.getName().contains(".ProducerConfigExtension")) {
                     Constructor<? extends Extension> constructor =
                             extensionClass.getConstructor(Method.class);

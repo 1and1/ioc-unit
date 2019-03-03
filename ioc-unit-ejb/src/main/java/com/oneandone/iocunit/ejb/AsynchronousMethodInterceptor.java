@@ -85,15 +85,7 @@ public class AsynchronousMethodInterceptor {
         @Override
         public boolean isDone() {
             if (!asynchronousManager.doesEnqueAsynchronousCalls()) {
-                try {
-                    asynchronousManager.oneShotOnly();
-                } catch (Throwable thw) {
-                    if (thw instanceof ExecutionException) {
-                        this.exception = thw.getCause();
-                    } else {
-                        this.exception = thw;
-                    }
-                }
+                doit();
             }
             return done || result != null || exception != null;
         }
@@ -101,7 +93,21 @@ public class AsynchronousMethodInterceptor {
 
         @Override
         public Object get() throws InterruptedException, ExecutionException {
+            doit();
             return innerGet();
+        }
+
+        private void doit() {
+            try {
+                asynchronousManager.oneShotOnly();
+            } catch (Throwable thw) {
+                if(thw instanceof ExecutionException) {
+                    this.exception = thw.getCause();
+                }
+                else {
+                    this.exception = thw;
+                }
+            }
         }
 
         private Object innerGet() throws ExecutionException {
@@ -117,6 +123,7 @@ public class AsynchronousMethodInterceptor {
 
         @Override
         public Object get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+            doit();  // timeout handling not yet implemented
             return innerGet();
         }
 

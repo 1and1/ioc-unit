@@ -16,6 +16,7 @@ import javax.ejb.SessionContext;
 import javax.ejb.Startup;
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.Entity;
+import javax.persistence.MappedSuperclass;
 import javax.persistence.PersistenceContext;
 import javax.transaction.UserTransaction;
 
@@ -84,6 +85,7 @@ public class EjbTestExtensionService implements TestExtensionService {
     @Override
     public boolean candidateToStart(Class<?> c) {
         if (c.getAnnotation(Entity.class) != null
+                || c.getAnnotation(MappedSuperclass.class) != null
                 || c.getAnnotation(MessageDriven.class) != null
                 || c.getAnnotation(Startup.class) != null) {
             ejbTestExtensionServiceData.get().candidatesToStart.add(c);
