@@ -1,5 +1,16 @@
 **Changelog By Versions in Mavencentral**
 
+**ioc-unit**:
+
+|Version|Changes|
+|-------|-------|
+|2.0.4|TestPersistenceFactory can set inital schema|
+|2.0.3|fixed Reflections8, changed warnings of analyzer|
+|2.0.2|RequestScoped does not need ioc-unit-contexts anymore|
+|2.0.1|first ioc-unit-version|
+
+**ejb-cdi-unit**:
+
 |Version|Changes|
 |-------|-------|
 |1.1.16|Junit5.3.0 use TestInstanceFactory, get rid of restrictions on Testclasses concerning CDI|

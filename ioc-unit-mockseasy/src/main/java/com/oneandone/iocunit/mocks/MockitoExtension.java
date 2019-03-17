@@ -50,14 +50,4 @@ public class MockitoExtension implements Extension {
         });
     }
 
-    /*
-     * public <T> void processAnnotatedType(@Observes ProcessAnnotatedType<T> pat) { AnnotatedType<T> annotatedType = pat.getAnnotatedType();
-     * AnnotatedTypeBuilder<T> builder = new AnnotatedTypeBuilder<T>().readFromType(annotatedType); boolean modified = false; for (AnnotatedMethod<?
-     * super T> method : annotatedType.getMethods()) { Mock mock = method.getAnnotation(Mock.class); if (mock != null) { Produces produces =
-     * method.getAnnotation(Produces.class); if (produces == null) { modified = true; builder.addToMethod(method, new AnnotationLiteral<Produces>() {
-     * private static final long serialVersionUID = 1L; }); } } } for (AnnotatedField<? super T> field : annotatedType.getFields()) { Mock mock =
-     * field.getAnnotation(Mock.class); if (mock != null) { Produces produces = field.getAnnotation(Produces.class); if (produces == null) { modified
-     * = true; builder.addToField(field, new AnnotationLiteral<Produces>() { private static final long serialVersionUID = 2L; }); } } } if (modified)
-     * { pat.setAnnotatedType(builder.create()); } }
-     */
 }

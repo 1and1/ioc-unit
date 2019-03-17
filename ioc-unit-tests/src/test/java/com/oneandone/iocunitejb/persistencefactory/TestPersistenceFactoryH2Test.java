@@ -4,8 +4,8 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 
-import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 import com.oneandone.iocunit.IocUnitRunner;
+import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 import com.oneandone.iocunit.ejb.persistence.TestPersistenceFactory;
 import com.oneandone.iocunitejb.entities.TestEntity1;
 
@@ -24,7 +24,6 @@ public class TestPersistenceFactoryH2Test extends PersistenceFactoryTestBase {
         System.setProperty("hibernate.default_schema", "testschema");
         System.setProperty("hibernate.ejb.naming_strategy", "org.hibernate.cfg.ImprovedNamingStrategy");
     }
-
 
     @AfterClass
     public static void afterTestPersistenceFactoryH2Test() {
