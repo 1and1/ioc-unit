@@ -9,13 +9,13 @@
    </parent>
 
 
-   <artifactId>ejb-cdi-unit-arq</artifactId>
+   <artifactId>ioc-unit-arq</artifactId>
    <packaging>war</packaging>
 
-   <name>net.oneandone.ioc-unit:ejb-cdi-unit arquillian tests</name>
+   <name>net.oneandone.ioc-unit:ioc-unit arquillian tests</name>
    <description>Some arquillian tests using the same code as ejb-cdi-unit, to prove that the test-container works
       in the same way as wildfly 10.</description>
-   <url>https://github.com/1and1/ejb-cdi-unit</url>
+   <url>https://github.com/1and1/ioc-unit</url>
 
    <licenses>
       <license>

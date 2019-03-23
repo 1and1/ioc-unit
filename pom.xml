@@ -113,10 +113,52 @@
         </profile>
         <profile>
             <id>arquillian</id>
+            <properties>
+                <version.org.hibernate.api>1.0.0.Final</version.org.hibernate.api>
+                <version.org.hibernate>5.0.10.Final</version.org.hibernate>
+                <version.org.hibernate.validator>5.2.4.Final</version.org.hibernate.validator>
+                <version.cdi-api>1.2</version.cdi-api>
+            </properties>
             <modules>
                 <module>ioc-unit-test-war</module>
                 <module>ioc-unit-arq</module>
             </modules>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>${maven-surefire-plugin.version}</version>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.apache.maven.surefire</groupId>
+                                <artifactId>surefire-junit47</artifactId>
+                                <version>${maven-surefire-plugin.version}</version>
+                            </dependency>
+                        </dependencies>
+                        <configuration>
+                            <systemPropertyVariables>
+                                <javax.xml.parsers.DocumentBuilderFactory>
+                                    com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl
+                                </javax.xml.parsers.DocumentBuilderFactory>
+                            </systemPropertyVariables>
+
+                            <reportFormat>plain</reportFormat>
+                            <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                            <!-- Sets the VM argument line used when unit tests are run. -->
+                            <!--argLine> - -add-modules java.xml,java.sql -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5006</argLine-->
+                            <argLine>
+                                -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5006
+                            </argLine>
+                            <forkCount>1</forkCount>
+                            <reuseForks>false</reuseForks>
+                            <classpathDependencyExcludes>
+                                <classpathDependencyExclude>net.oneandone:purecdi-tests</classpathDependencyExclude>
+                            </classpathDependencyExcludes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
         <profile>
             <id>junit4</id>

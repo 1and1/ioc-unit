@@ -9,26 +9,16 @@ jdk:
 cache:
   directories:
   - $HOME/.m2/repository
-#  - $HOME/.m2/wrapper
+
 before_cache:
   - rm -rf $HOME/.m2/repository/net/oneandone/ioc-unit/
 
 env:
-- WELD_PROFILE=weld3.0
-  JUNIT_PROFILE=junit4
-- WELD_PROFILE=weld2.3
-  JUNIT_PROFILE=junit4
-- WELD_PROFILE=weld2.3
-  JUNIT_PROFILE=arquillian
-- WELD_PROFILE=weld1.1
-  JUNIT_PROFILE=junit4
-- WELD_PROFILE=weld2.3
-  JUNIT_PROFILE=junit5
+- PROFILES=base,weld3.0,junit4
+- PROFILES=base,weld2.3,junit4
+- PROFILES=base,weld1.1,junit4
+- PROFILES=arquillian
+- PROFILES=base,weld2.3,junit5
 
-
-# We don't want to overtax travis (or get throttled), so we try to limit the number of combinations.
-# Current strategy is, for each supported minor version of Weld, to test one early point release plus
-# the most recent point release, plus some point releases which caused problems.s
-
-script: "mvn clean install -Pbase,${WELD_PROFILE},${JUNIT_PROFILE}"
+script: "mvn clean install -P${PROFILES}"
 
