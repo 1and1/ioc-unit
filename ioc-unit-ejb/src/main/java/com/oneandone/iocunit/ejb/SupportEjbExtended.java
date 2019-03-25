@@ -21,7 +21,6 @@ import java.lang.annotation.RetentionPolicy;
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 import com.oneandone.iocunit.ejb.jms.JmsMocksFactory;
 import com.oneandone.iocunit.ejb.jms.JmsProducers;
-import com.oneandone.iocunit.ejb.resourcesimulators.MessageContextSimulation;
 import com.oneandone.iocunit.ejb.resourcesimulators.TimerServiceSimulator;
 import com.oneandone.iocunit.ejb.resourcesimulators.WebServiceContextSimulation;
 
@@ -33,8 +32,7 @@ import com.oneandone.iocunit.ejb.resourcesimulators.WebServiceContextSimulation;
  */
 @TestClasses({JmsProducers.class, EjbExtensionExtended.class, TransactionalInterceptor.class,
         AsynchronousMethodInterceptor.class, JmsMocksFactory.class, SessionContextFactory.class,
-        MessageContextSimulation.class, WebServiceContextSimulation.class,
-        TimerServiceSimulator.class, EjbUnitBeanInitializerClass.class})
+        WebServiceContextSimulation.class,TimerServiceSimulator.class, EjbUnitBeanInitializerClass.class})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface SupportEjbExtended {
 

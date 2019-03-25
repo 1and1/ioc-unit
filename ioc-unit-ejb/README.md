@@ -10,11 +10,9 @@ Adapts the CDI-Container to
 to CDI-Injects so that simple producers can replace those in a testenvironment.
 * qualify ResourceInjects
    * java.lang.String: ResourceQualifier with name, mappedName and lookup if set
-   * java.sql.DataSource
-   * javax.ejb.EJBContext,javax.ejb.SessionContext: ResourceQualifier("javax.ejb.SessionContext")
-   * javax.ejb.MessageDrivenContext: ResourceQualifier("javax.ejb.MessageDrivenContext")
-   * javax.ejb.EntityContext: ResourceQualifier("javax.ejb.EntityContext")
-   * other Resources with name, mappedName or lookup set: ResourceQualifier accordingly.
+   * javax.ejb.EJBContext: ResourceQualifier("javax.ejb.EJBContext")
+   * javax.ejb.SessionContext,javax.ejb.MessageDrivenContext,javax.ejb.EntityContext: no Qualifier
+   * other Resources(e.g. java.sql.DataSource): if name, mappedName or lookup set: ResourceQualifier accordingly.
 * recognize timers and asynchronous to allow to handle them deterministicly
 * recognize startup-beans to make tester aware if they are to be included 
 in the testconfiguration

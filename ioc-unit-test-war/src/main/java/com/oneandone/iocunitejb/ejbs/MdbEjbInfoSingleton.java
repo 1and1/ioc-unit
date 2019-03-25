@@ -2,8 +2,10 @@ package com.oneandone.iocunitejb.ejbs;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.annotation.Resource;
 import javax.ejb.ConcurrencyManagement;
 import javax.ejb.ConcurrencyManagementType;
+import javax.ejb.EJBContext;
 import javax.ejb.Singleton;
 
 /**
@@ -39,5 +41,12 @@ public class MdbEjbInfoSingleton {
 
     public void incrementNumberOfTCalls() {
         numberOfTCalls.incrementAndGet();
+    }
+
+    @Resource
+    private EJBContext ejbContext;
+
+    public EJBContext getEjbContext() {
+        return ejbContext;
     }
 }

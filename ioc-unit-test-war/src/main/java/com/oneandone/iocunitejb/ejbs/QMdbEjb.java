@@ -4,6 +4,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.annotation.Resource;
 import javax.ejb.ActivationConfigProperty;
+import javax.ejb.EJBContext;
 import javax.ejb.MessageDriven;
 import javax.ejb.MessageDrivenContext;
 import javax.enterprise.context.ApplicationScoped;
@@ -31,13 +32,28 @@ public class QMdbEjb implements MessageListener  {
     private MdbEjbInfoSingleton mdbEjbInfoSingleton;
 
     @Resource
-    MessageDrivenContext mdbContext;
+    private EJBContext ejbContext;
+
+    @Resource
+    private MessageDrivenContext messageDrivenContext;
+
+    public EJBContext getEjbContext() {
+        return ejbContext;
+    }
+
+    public MessageDrivenContext getMessageDrivenContext() {
+        return messageDrivenContext;
+    }
 
     static private AtomicInteger called = new AtomicInteger();
 
     @Override
     public void onMessage(Message message) {
-        logger.info("Message in QMdbEjb: {} this is the {}. received message", message, called.addAndGet(1));
+        logger.info("QMdbEjb: Message in QMdbEjb: {} this is the {}. received message", message, called.addAndGet(1));
         mdbEjbInfoSingleton.incrementNumberOfQCalls();
+        logger.info("QMdbEjb: context is not null: {}", getEjbContext() != null);
+        logger.info("QMdbEjb: context is of type EJBContext: {}", getEjbContext() instanceof MessageDrivenContext);
+        logger.info("QMdbEjb: context is not null: {}", getMessageDrivenContext() != null);
+        logger.info("QMdbEjb: context is of type MessageDrivenContext: {}", getMessageDrivenContext() instanceof MessageDrivenContext);
     }
 }

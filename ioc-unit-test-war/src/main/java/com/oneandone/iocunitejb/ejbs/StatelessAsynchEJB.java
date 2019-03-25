@@ -2,8 +2,10 @@ package com.oneandone.iocunitejb.ejbs;
 
 import java.util.concurrent.Future;
 
+import javax.annotation.Resource;
 import javax.ejb.AsyncResult;
 import javax.ejb.Asynchronous;
+import javax.ejb.EJBContext;
 import javax.ejb.Stateless;
 
 /**
@@ -11,6 +13,13 @@ import javax.ejb.Stateless;
  */
 @Stateless
 public class StatelessAsynchEJB extends CountingBean  {
+
+    @Resource
+    private EJBContext ejbContext;
+
+    public EJBContext getEjbContext() {
+        return ejbContext;
+    }
 
     @Asynchronous
     public Future<Boolean> callAsynch(boolean result) {

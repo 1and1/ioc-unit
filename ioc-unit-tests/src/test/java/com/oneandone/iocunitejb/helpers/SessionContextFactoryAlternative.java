@@ -10,7 +10,6 @@ import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
 
 import com.oneandone.iocunit.analyzer.annotations.ProducesAlternative;
-import com.oneandone.iocunit.ejb.ResourceQualifier;
 import com.oneandone.iocunit.ejb.resourcesimulators.SessionContextSimulation;
 
 /**
@@ -53,7 +52,6 @@ public class SessionContextFactoryAlternative {
 
     @Produces
     @ProducesAlternative
-    @ResourceQualifier(name = "javax.ejb.SessionContext")
     SessionContextSimulation createSessionContext(InjectionPoint ip) {
         SessionContextSimulationAlternative injectedBean = new SessionContextSimulationAlternative("dummy");
         injectedBean.setContainer(ip.getBean(), beanManager);

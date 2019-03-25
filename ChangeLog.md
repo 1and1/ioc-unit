@@ -4,8 +4,9 @@
 
 |Version|Changes|
 |-------|-------|
-|2.0.4|TestPersistenceFactory can set inital schema|
-|2.0.3|fixed Reflections8, changed warnings of analyzer|
+|2.0.5|Reverted Qualifiers generated on SessionContext and MessageDrivenContext|
+|2.0.4|TestPersistenceFactory can set inital schema, don't use if using Resource SessionContext and MessageDrivenContext|
+|2.0.3|fixed Reflections8, changed warnings of analyzer, don't use if using Resource SessionContext and MessageDrivenContext|
 |2.0.2|RequestScoped does not need ioc-unit-contexts anymore|
 |2.0.1|first ioc-unit-version|
 

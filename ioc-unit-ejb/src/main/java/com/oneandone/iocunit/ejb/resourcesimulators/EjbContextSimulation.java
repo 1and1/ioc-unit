@@ -17,7 +17,7 @@ import com.oneandone.iocunit.ejb.persistence.SimulatedTransactionManager;
 /**
  * @author aschoerk
  */
-@ResourceQualifier(name = "javax.ejb.EJBContext")
+@ResourceQualifier(name = "javax.ejb.EJBContextx")
 public abstract class EjbContextSimulation implements EJBContext {
     /**
      * Obtain the enterprise bean's remote home interface.

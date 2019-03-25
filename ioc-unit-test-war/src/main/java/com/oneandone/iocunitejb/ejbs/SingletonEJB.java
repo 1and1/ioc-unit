@@ -5,6 +5,7 @@ import java.security.Principal;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
+import javax.ejb.EJBContext;
 import javax.ejb.SessionContext;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
@@ -43,6 +44,13 @@ public class SingletonEJB {
     EntityManager entityManager;
 
     private int publicInteger = 100;
+
+    @Resource
+    private EJBContext ejbContext;
+
+    public EJBContext getEjbContext() {
+        return ejbContext;
+    }
 
     @PostConstruct
     public void postConstruct() {

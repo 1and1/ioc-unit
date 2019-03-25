@@ -284,14 +284,14 @@ public class EjbExtensionExtended implements Extension {
                             }
                             break;
                         case "javax.ejb.EJBContext":
-                        case "javax.ejb.SessionContext":
-                            builder.addToField(field, new ResourceQualifier.ResourceQualifierLiteral("javax.ejb.SessionContext", "", ""));
+                            builder.addToField(field, new ResourceQualifier.ResourceQualifierLiteral("javax.ejb.EJBContext", "", ""));
                             break;
+                        case "javax.transaction.UserTransaction":
+                        case "javax.ejb.SessionContext":
                         case "javax.ejb.MessageDrivenContext":
                         case "javax.ejb.EntityContext":
-                            builder.addToField(field, new ResourceQualifier.ResourceQualifierLiteral(typeName, "", ""));
+                            // no resource-qualifier necessary, type specifies enough
                             break;
-
                         default:
                             if(resource != null && !(resource.name().isEmpty() && resource.mappedName().isEmpty() && resource.lookup().isEmpty())) {
                                 builder.addToField(field, new ResourceQualifier.ResourceQualifierLiteral(resource.name(), resource.lookup(), resource.mappedName()));

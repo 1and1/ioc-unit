@@ -3,6 +3,7 @@ package com.oneandone.iocunitejb.ejbs;
 import java.io.IOException;
 
 import javax.annotation.Resource;
+import javax.ejb.EJBContext;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -26,6 +27,13 @@ public class StatelessEJB {
 
     @Resource
     SessionContext sessionContext;
+
+    @Resource
+    private EJBContext ejbContext;
+
+    public EJBContext getEjbContext() {
+        return ejbContext;
+    }
 
     @Inject
     EntityManager entityManager;

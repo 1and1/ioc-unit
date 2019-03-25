@@ -1,5 +1,9 @@
 package ejbcdiunit;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import javax.ejb.SessionContext;
 import javax.inject.Inject;
 
 import org.hamcrest.Matchers;
@@ -30,6 +34,13 @@ public class WildflyArquillianMdbTest {
     public static Archive<?> createTestArchive() {
         return WildflyArquillianTransactionTest.createTestArchive();
     }
+
+    @Test
+    public void ejbContextResourceNotValidInTest() {
+        assertNotNull(mdbEjbInfoSingleton.getEjbContext());
+        assertTrue(mdbEjbInfoSingleton.getEjbContext() instanceof SessionContext);
+    }
+
 
     @Test
     public void testQueue() {
@@ -63,7 +74,7 @@ public class WildflyArquillianMdbTest {
         long currentTime = System.currentTimeMillis();
         while (((mdbEjbInfoSingleton.getNumberOfTCalls() < calls && isTopic)
                 || (mdbEjbInfoSingleton.getNumberOfQCalls() < calls && !isTopic))
-                && System.currentTimeMillis() < currentTime + 60000) {
+               && System.currentTimeMillis() < currentTime + 60000) {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
