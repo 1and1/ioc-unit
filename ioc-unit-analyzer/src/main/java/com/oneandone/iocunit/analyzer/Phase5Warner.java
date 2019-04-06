@@ -38,11 +38,7 @@ public class Phase5Warner extends PhasesBase {
     private void outputUnresolvedInjects() {
 
         for (QualifiedType i: configuration.getInjects()) {
-            if (ConfigStatics.mightBeBean(i.getRawtype())) {
-                // TODO: exclude configuration of primitives by Injects
-                // perhaps better would be to better interpret InjectionPoint - parameter
-                logger.error("Unresolved Inject: {}", i);
-            }
+            logger.error("Unresolved Inject: {}", i);
         }
     }
 

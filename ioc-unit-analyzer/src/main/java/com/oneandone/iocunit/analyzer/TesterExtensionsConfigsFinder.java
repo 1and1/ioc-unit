@@ -1,6 +1,7 @@
 package com.oneandone.iocunit.analyzer;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -48,6 +49,12 @@ public class TesterExtensionsConfigsFinder {
                 fakeClasses.addAll(testExtensionService.fakeClasses());
                 excludeAsInjects.addAll(testExtensionService.excludeAsInjects());
             }
+        }
+    }
+
+    public void addQualifiers(Field f, QualifiedType q) {
+        for (TestExtensionService testExtensionService: testExtensionServices) {
+            testExtensionService.addQualifiers(f, q.getQualifiers());
         }
     }
 

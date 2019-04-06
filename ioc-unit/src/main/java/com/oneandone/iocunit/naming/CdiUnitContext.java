@@ -152,14 +152,13 @@ public class CdiUnitContext implements Context {
 
     @Override
     public void rebind(Name name, Object obj) throws NamingException {
-
+        bindings.put(name.toString(), obj);
 
     }
 
     @Override
     public void rebind(String name, Object obj) throws NamingException {
-
-
+        bindings.put(name, obj);
     }
 
     @Override

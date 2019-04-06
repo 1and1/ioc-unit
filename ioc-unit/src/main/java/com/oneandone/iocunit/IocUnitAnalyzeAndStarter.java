@@ -92,7 +92,7 @@ public class IocUnitAnalyzeAndStarter {
         System.setProperty("java.naming.factory.initial", "com.oneandone.iocunit.naming.CdiTesterContextFactory");
         initialContext = new InitialContext();
         final BeanManager beanManager = get(BeanManager.class);
-        initialContext.bind("java:comp/BeanManager", beanManager);
+        initialContext.rebind("java:comp/BeanManager", beanManager);
 
         this.creationalContexts = new CreationalContexts(beanManager);
         postStartupActions();

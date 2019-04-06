@@ -77,8 +77,11 @@ public class InjectFinder {
                             .map(annotation -> f.getAnnotation(annotation))
                             .filter(Objects::nonNull)
                             .collect(Collectors.toSet());
-                    if(!annotations.isEmpty())
-                        injectedTypes.add(new QualifiedType(f, annotations));
+                    if(!annotations.isEmpty()) {
+                        final QualifiedType qualifiedType = new QualifiedType(f, annotations);
+                        testerExtensionsConfigsFinder.addQualifiers(f, qualifiedType);
+                        injectedTypes.add(qualifiedType);
+                    }
                 }
             }
             if(!isSuperclass) {

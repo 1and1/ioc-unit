@@ -1,7 +1,10 @@
 package com.oneandone.iocunit;
 
-import com.oneandone.cdi.weldstarter.CreationalContexts;
-import com.oneandone.cdi.weldstarter.spi.TestExtensionService;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.enterprise.inject.spi.BeanManager;
+import javax.naming.InitialContext;
 
 import org.junit.Test;
 import org.junit.runners.BlockJUnit4ClassRunner;
@@ -11,10 +14,8 @@ import org.junit.runners.model.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.enterprise.inject.spi.BeanManager;
-import javax.naming.InitialContext;
-import java.util.ArrayList;
-import java.util.List;
+import com.oneandone.cdi.weldstarter.CreationalContexts;
+import com.oneandone.cdi.weldstarter.spi.TestExtensionService;
 
 /**
  * @author aschoerk
@@ -52,7 +53,7 @@ public class IocUnitRunner extends BlockJUnit4ClassRunner {
                 System.setProperty("java.naming.factory.initial", "com.oneandone.iocunit.naming.CdiTesterContextFactory");
                 InitialContext initialContext = new InitialContext();
                 final BeanManager beanManager = analyzeAndStarter.get(BeanManager.class);
-                initialContext.bind("java:comp/BeanManager", beanManager);
+                initialContext.rebind("java:comp/BeanManager", beanManager);
                 try (CreationalContexts creationalContexts = new CreationalContexts(beanManager)) {
                     defaultStatement.evaluate();
                 } finally {

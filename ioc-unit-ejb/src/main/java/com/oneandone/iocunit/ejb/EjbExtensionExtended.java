@@ -279,9 +279,7 @@ public class EjbExtensionExtended implements Extension {
                             builder.addToField(field, new ResourceQualifier.ResourceQualifierLiteral(resource.name(), resource.lookup(), resource.mappedName()));
                             break;
                         case "java.sql.DataSource":
-                            if(!(resource.name().isEmpty() && resource.mappedName().isEmpty() && resource.lookup().isEmpty())) {
-                                builder.addToField(field, new ResourceQualifier.ResourceQualifierLiteral(resource.name(), resource.lookup(), resource.mappedName()));
-                            }
+                            doResourceQualifyIfNecessary(builder, field, resource);
                             break;
                         case "javax.ejb.EJBContext":
                             builder.addToField(field, new ResourceQualifier.ResourceQualifierLiteral("javax.ejb.EJBContext", "", ""));
@@ -293,9 +291,7 @@ public class EjbExtensionExtended implements Extension {
                             // no resource-qualifier necessary, type specifies enough
                             break;
                         default:
-                            if(resource != null && !(resource.name().isEmpty() && resource.mappedName().isEmpty() && resource.lookup().isEmpty())) {
-                                builder.addToField(field, new ResourceQualifier.ResourceQualifierLiteral(resource.name(), resource.lookup(), resource.mappedName()));
-                            }
+                            doResourceQualifyIfNecessary(builder, field, resource);
                             break;
                     }
                 }
@@ -330,6 +326,14 @@ public class EjbExtensionExtended implements Extension {
         }
         if (modified) {
             pat.setAnnotatedType(builder.create());
+        }
+    }
+
+    private <T> void doResourceQualifyIfNecessary(final AnnotatedTypeBuilder<T> builder, final AnnotatedField<? super T> field, final Resource resource) {
+        if (field.getAnnotation(Produces.class) == null) {
+            if(resource != null && !(resource.name().isEmpty() && resource.mappedName().isEmpty() && resource.lookup().isEmpty())) {
+                builder.addToField(field, new ResourceQualifier.ResourceQualifierLiteral(resource.name(), resource.lookup(), resource.mappedName()));
+            }
         }
     }
 

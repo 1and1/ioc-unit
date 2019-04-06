@@ -2,6 +2,8 @@ package com.oneandone.iocunit.ejb;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,6 +17,7 @@ import javax.ejb.MessageDriven;
 import javax.ejb.SessionContext;
 import javax.ejb.Startup;
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Produces;
 import javax.persistence.Entity;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PersistenceContext;
@@ -174,5 +177,51 @@ public class EjbTestExtensionService implements TestExtensionService {
         return Arrays.asList(
                 SessionContext.class,
                 UserTransaction.class);
+    }
+
+    @Override
+    public void addQualifiers(Field f, Collection<Annotation> qualifiers)   {
+        Resource resource = f.getAnnotation(Resource.class);
+        if (resource != null) {
+            ArrayList<Annotation> annotations = new ArrayList<Annotation>();
+            String typeName = f.getType().getName();
+            try {
+                Class literal = Class.forName("com.oneandone.iocunit.ejb.ResourceQualifier$ResourceQualifierLiteral");
+                Constructor[] cs = literal.getConstructors();
+
+                if(f.getAnnotation(Resource.class) != null) {
+                    switch (typeName) {
+                        case "java.lang.String":
+                            qualifiers.add((Annotation) (cs[0].newInstance(resource.name(), resource.lookup(), resource.mappedName())));
+                            break;
+                        case "java.sql.DataSource":
+                            doesResourceQualifyIfNecessary(f, qualifiers, resource, cs);
+                            break;
+                        case "javax.ejb.EJBContext":
+                            qualifiers.add((Annotation) (cs[0].newInstance("javax.ejb.EJBContext", "", "")));
+                            break;
+                        case "javax.transaction.UserTransaction":
+                        case "javax.ejb.SessionContext":
+                        case "javax.ejb.MessageDrivenContext":
+                        case "javax.ejb.EntityContext":
+                            // no resource-qualifier necessary, type specifies enough
+                            break;
+                        default:
+                            doesResourceQualifyIfNecessary(f, qualifiers, resource, cs);
+                            break;
+                    }
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    private void doesResourceQualifyIfNecessary(final Field f, final Collection<Annotation> qualifiers, final Resource resource, final Constructor[] cs) throws InstantiationException, IllegalAccessException, java.lang.reflect.InvocationTargetException {
+        if (f.getAnnotation(Produces.class) == null) {
+            if(resource != null && !(resource.name().isEmpty() && resource.mappedName().isEmpty() && resource.lookup().isEmpty())) {
+                qualifiers.add((Annotation) (cs[0].newInstance(resource.name(), resource.lookup(), resource.mappedName())));
+            }
+        }
     }
 }

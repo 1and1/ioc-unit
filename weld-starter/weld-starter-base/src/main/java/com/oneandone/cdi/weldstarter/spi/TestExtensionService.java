@@ -1,6 +1,7 @@
 package com.oneandone.cdi.weldstarter.spi;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -84,4 +85,9 @@ public interface TestExtensionService {
     default Collection<? extends Class<?>> excludeAsInjects()  {
         return Collections.EMPTY_LIST;
     }
+
+    default void addQualifiers(Field f, Collection<Annotation> qualifiers)   {
+
+    }
+
 }
