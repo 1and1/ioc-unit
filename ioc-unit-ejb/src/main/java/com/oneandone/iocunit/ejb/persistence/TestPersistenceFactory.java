@@ -2,6 +2,7 @@ package com.oneandone.iocunit.ejb.persistence;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.management.ManagementFactory;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -324,7 +325,7 @@ public class TestPersistenceFactory extends PersistenceFactory {
         properties.put("javax.persistence.jdbc.driver","org.h2.Driver");
         String db = getDbNameOrMem();
         properties.put("javax.persistence.jdbc.url",
-                "jdbc:h2:" + db + ":test;DB_CLOSE_ON_EXIT=TRUE;DB_CLOSE_DELAY=0;LOCK_MODE=0;LOCK_TIMEOUT=10000");
+                "jdbc:h2:" + db + ";DB_CLOSE_ON_EXIT=TRUE;DB_CLOSE_DELAY=0;LOCK_MODE=0;LOCK_TIMEOUT=10000");
         properties.put("javax.persistence.jdbc.user" , "sa");
         properties.put("javax.persistence.jdbc.password", "");
         properties.put("eclipselink.disableXmlSecurity","true");
@@ -348,10 +349,11 @@ public class TestPersistenceFactory extends PersistenceFactory {
     }
 
     private String getDbNameOrMem() {
-        return getFilenamePrefix() == null ? "mem" : "file:" + System.getProperty("java.io.tmpdir")
+        return getFilenamePrefix() == null ? "mem:test" : "file:" + System.getProperty("java.io.tmpdir")
                                                      + File.separatorChar
                                                      + getFilenamePrefix()
-                                                    + count.incrementAndGet();
+                                                     + ManagementFactory.getRuntimeMXBean().getName()
+                                                     + count.incrementAndGet();
     }
 
     protected String getFilenamePrefix() {
@@ -364,7 +366,7 @@ public class TestPersistenceFactory extends PersistenceFactory {
         if (System.getProperty("hibernate.connection.url") == null) {
             String db = getDbNameOrMem();
             properties.put("javax.persistence.jdbc.url",
-                    "jdbc:h2:" + db + ":test;DB_CLOSE_ON_EXIT=TRUE;DB_CLOSE_DELAY=0;LOCK_MODE=0;LOCK_TIMEOUT=10000");
+                    "jdbc:h2:" + db + ";DB_CLOSE_ON_EXIT=TRUE;DB_CLOSE_DELAY=0;LOCK_MODE=0;LOCK_TIMEOUT=10000");
         }
         if (System.getProperty("hibernate.connection.username") == null)
             properties.put("javax.persistence.jdbc.user" , "sa");
