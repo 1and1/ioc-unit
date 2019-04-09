@@ -18,7 +18,6 @@ import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 
-import org.hibernate.exception.GenericJDBCException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,9 +25,9 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.oneandone.iocunit.IocUnitRunner;
 import com.oneandone.iocunit.analyzer.annotations.EnabledAlternatives;
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.iocunit.IocUnitRunner;
 import com.oneandone.iocunit.ejb.persistence.TestTransaction;
 import com.oneandone.iocunitejb.ClassWithTwoDifferentEntityManagers;
 import com.oneandone.iocunitejb.cdiunit.Pu1Em;
@@ -181,7 +180,7 @@ public class Jpa2PUTest {
                 fail("expected PersistenceException because of two updates");
             } catch (PersistenceException e) {
 
-                assert (e.getCause().getClass().equals(GenericJDBCException.class));
+                assert (e.getCause().getClass().getName().contains("GenericJDBCException"));
             }
         }
     }

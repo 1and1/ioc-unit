@@ -65,6 +65,7 @@ public class TestPersistenceFactory extends PersistenceFactory {
     static Logger logger = LoggerFactory.getLogger("TestPersistenceFactory");
     @Inject
     private EjbExtensionExtended ejbExtensionExtended;
+    HashMap<String, Object> properties = new HashMap<>();
 
     @Override
     protected String getPersistenceUnitName() {
@@ -144,13 +145,7 @@ public class TestPersistenceFactory extends PersistenceFactory {
 
             @Override
             public DataSource getNonJtaDataSource() {
-                BasicDataSource bds = new BasicDataSource();
-                bds.setDriverClassName(getProperty(properties,"javax.persistence.jdbc.driver", "hibernate.connection.driverclass", "org.h2.Driver"));
-                bds.setUrl(getProperty(properties,"javax.persistence.jdbc.url","hibernate.connection.url","jdbc:h2:mem:test;MODE=MySQL;DB_CLOSE_ON_EXIT=TRUE;DB_CLOSE_DELAY=0;LOCK_MODE=0;LOCK_TIMEOUT=10000"));
-                bds.setUsername(getProperty(properties,"javax.persistence.jdbc.user", "hibernate.connection.username", "sa"));
-                bds.setPassword(getProperty(properties,"javax.persistence.jdbc.password", "hibernate.connection.password", ""));
-                handleJustConstructed(bds);
-                return bds;
+                return createDataSource();
             }
 
             @Override
@@ -165,7 +160,7 @@ public class TestPersistenceFactory extends PersistenceFactory {
 
             @Override
             public URL getPersistenceUnitRootUrl() {
-                return TestPersistenceFactory.this.getPersistenceUnitRootUrl("META-INF/persistence.xml");
+                return null; // TestPersistenceFactory.this.getPersistenceUnitRootUrl("META-INF/persistence.xml");
             }
 
             @Override
@@ -174,13 +169,8 @@ public class TestPersistenceFactory extends PersistenceFactory {
             }
 
             @Override
-            public boolean excludeUnlistedClasses() {
-                return false;
-            }
-
-            @Override
             public SharedCacheMode getSharedCacheMode() {
-                return null;
+                return SharedCacheMode.NONE;
             }
 
             @Override
@@ -206,6 +196,11 @@ public class TestPersistenceFactory extends PersistenceFactory {
             @Override
             public void addTransformer(ClassTransformer transformer) {
 
+            }
+
+            @Override
+            public boolean excludeUnlistedClasses() {
+                return TestPersistenceFactory.this.getEntityBeanRegex() != null;
             }
 
             @Override
@@ -242,30 +237,30 @@ public class TestPersistenceFactory extends PersistenceFactory {
 
     private EntityManagerFactory createEntityManagerFactoryWOPersistenceXml() {
         PersistenceProvider persistenceProvider = getPersistenceProvider();
-        HashMap<String, Object> propertiesL = new HashMap<>();
+
         EntityManagerFactory result;
         initStatements.add("drop all objects");
         if (getSchema() != null)
             initStatements.add("create schema " + getSchema());
         if(getRecommendedProvider().equals(Provider.HIBERNATE)) {
-            initHibernateProperties(propertiesL);
+            initHibernateProperties(properties);
             // possibly override properties using system properties
             for (Map.Entry<Object, Object> p : System.getProperties().entrySet()) {
-                propertiesL.put((String) p.getKey(), p.getValue());
+                properties.put((String) p.getKey(), p.getValue());
             }
-            final PersistenceUnitInfo persistenceUnitInfo = getHibernatePersistenceUnitInfo(propertiesL);
+            final PersistenceUnitInfo persistenceUnitInfo = getHibernatePersistenceUnitInfo(properties);
             try {
-                result = new EntityManagerFactoryBuilderImpl(new PersistenceUnitInfoDescriptor(persistenceUnitInfo), propertiesL).build();
+                result = new EntityManagerFactoryBuilderImpl(new PersistenceUnitInfoDescriptor(persistenceUnitInfo), properties).build();
             } catch (Throwable thw) {
                 throw new RuntimeException(thw);
             }
 
         } else {
-            initEclipseLinkProperties(propertiesL);
+            initEclipseLinkProperties(properties);
             for (Map.Entry<Object, Object> p : System.getProperties().entrySet()) {
-                propertiesL.put((String) p.getKey(), p.getValue());
+                properties.put((String) p.getKey(), p.getValue());
             }
-            propertiesL.put("eclipselink.se-puinfo", new SEPersistenceUnitInfo() {
+            properties.put("eclipselink.se-puinfo", new SEPersistenceUnitInfo() {
                 @Override
                 public String getPersistenceUnitName() {
                     return "TestPersistenceUnit";
@@ -301,18 +296,7 @@ public class TestPersistenceFactory extends PersistenceFactory {
                 public DataSource getNonJtaDataSource() {
                     DataSource ds = this.nonJtaDataSource;
                     if (ds == null) {
-                        BasicDataSource bds = new BasicDataSource() {
-                            @Override
-                            public Connection getConnection(final String user, final String pass) throws SQLException {
-                                return super.getConnection();
-                            }
-                        };
-                        bds.setDriverClassName(getProperty(propertiesL,"javax.persistence.jdbc.driver", "hibernate.connection.driverclass", "org.h2.Driver"));
-                        bds.setUrl(getProperty(propertiesL,"javax.persistence.jdbc.url","hibernate.connection.url","jdbc:h2:mem:test;MODE=MySQL;DB_CLOSE_ON_EXIT=TRUE;DB_CLOSE_DELAY=0;LOCK_MODE=0;LOCK_TIMEOUT=10000"));
-                        bds.setUsername(getProperty(propertiesL,"javax.persistence.jdbc.user", "hibernate.connection.username", "sa"));
-                        bds.setPassword(getProperty(propertiesL,"javax.persistence.jdbc.password", "hibernate.connection.password", ""));
-                        handleJustConstructed(bds);
-                        return bds;
+                        return createDataSource();
                     }
                     handleJustConstructed(ds);
                     return ds;
@@ -320,7 +304,7 @@ public class TestPersistenceFactory extends PersistenceFactory {
 
                 @Override
                 public boolean excludeUnlistedClasses() {
-                    return false;
+                    return TestPersistenceFactory.this.getEntityBeanRegex() != null;
                 }
                 @Override
                 public ClassLoader getClassLoader() {
@@ -328,7 +312,7 @@ public class TestPersistenceFactory extends PersistenceFactory {
                 }
 
             });
-            result = persistenceProvider.createEntityManagerFactory(getPersistenceUnitName(), propertiesL);
+            result = persistenceProvider.createEntityManagerFactory(getPersistenceUnitName(), properties);
         }
 
         return result;
@@ -452,5 +436,34 @@ public class TestPersistenceFactory extends PersistenceFactory {
             return null;
         }
     }
+
+    @Override
+    public DataSource createDataSource() {
+        if (properties.size() > 0) {
+            BasicDataSource bds = new BasicDataSource() {
+                @Override
+                public Connection getConnection(final String user, final String pass) throws SQLException {
+                    return super.getConnection();
+                }
+            };
+            bds.setDriverClassName(getProperty(properties, "javax.persistence.jdbc.driver", "hibernate.connection.driverclass", "org.h2.Driver"));
+            bds.setUrl(getProperty(properties, "javax.persistence.jdbc.url", "hibernate.connection.url", "jdbc:h2:mem:test;MODE=MySQL;DB_CLOSE_ON_EXIT=TRUE;DB_CLOSE_DELAY=0;LOCK_MODE=0;LOCK_TIMEOUT=10000"));
+            bds.setUsername(getProperty(properties, "javax.persistence.jdbc.user", "hibernate.connection.username", "sa"));
+            bds.setPassword(getProperty(properties, "javax.persistence.jdbc.password", "hibernate.connection.password", ""));
+            handleJustConstructed(bds);
+            return bds;
+        } else {
+            return super.createDataSource();
+        }
+    }
+
+    public Properties getProperties() {
+        Properties result = new Properties();
+        for (Map.Entry<String, Object> e: properties.entrySet()) {
+            result.setProperty(e.getKey(), e.getValue().toString());
+        }
+        return result;
+    }
+
 
 }
