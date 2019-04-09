@@ -151,6 +151,7 @@ public class SessionContextSimulation extends EjbContextSimulation implements Se
             public Object invoke(Object o, Method method, Object[] objects) throws Throwable {
                 WeldSetupClass.getWeldStarter().startInterceptionDecorationContext();
                 try {
+                    method.setAccessible(true);
                     return method.invoke(testBean1, objects);
                 } catch (Throwable thw) {
                     if (thw instanceof InvocationTargetException) {

@@ -249,6 +249,7 @@ public class EjbExtensionExtended implements Extension {
                 }
             }
             Resource resource = field.getAnnotation(Resource.class);
+            PersistenceContext persistenceContext = field.getAnnotation(PersistenceContext.class);
             if (resource != null) {  // all Resources will be set injected. The Tester must provide anything for them.
                 // this means that MessageDrivenContexts, SessionContext and JMS-Resources will be expected to be injected.
                 addInject = true;
@@ -267,9 +268,6 @@ public class EjbExtensionExtended implements Extension {
                     private static final long serialVersionUID = 1L;
                 });
                 Produces produces = field.getAnnotation(Produces.class);
-                if (produces != null) {
-                    builder.removeFromField(field, Produces.class);
-                }
 
 
                 final String typeName = field.getBaseType().getTypeName();
@@ -290,11 +288,23 @@ public class EjbExtensionExtended implements Extension {
                         case "javax.ejb.EntityContext":
                             // no resource-qualifier necessary, type specifies enough
                             break;
+                        case "javax.persistence.EntityManager":
+                            if (produces == null && persistenceContext != null &&
+                                (persistenceContext.name() != null && !persistenceContext.name().isEmpty()
+                                || persistenceContext.unitName() != null && !persistenceContext.unitName().isEmpty())) {
+                                builder.addToField(field, new PersistenceContextQualifier.PersistenceContextQualifierLiteral(persistenceContext.name(), persistenceContext.unitName()));
+                            }
+                            break;
                         default:
                             doResourceQualifyIfNecessary(builder, field, resource);
                             break;
                     }
                 }
+                // cannot produce, since the container is not there. Must be injected by test-code
+                if (produces != null) {
+                    builder.removeFromField(field, Produces.class);
+                }
+
             }
         }
         Stateless stateless = findAnnotation(annotatedType.getJavaClass(), Stateless.class);

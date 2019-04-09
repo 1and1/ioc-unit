@@ -290,6 +290,7 @@ public abstract class PersistenceFactory {
         return actProvider;
     }
 
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {

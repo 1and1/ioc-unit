@@ -8,13 +8,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import com.oneandone.iocunit.analyzer.InitialConfiguration;
 import com.oneandone.iocunit.IocUnitRule;
 import com.oneandone.iocunit.IocUnitRunner;
+import com.oneandone.iocunit.analyzer.InitialConfiguration;
 import com.oneandone.iocunitejb.ejbs.SingletonTimerEJB;
 
 /**
- * Test if initializations of EjbUnitRunner work.
+ * Test if initializations of EjbUnitRunner workNative.
  *
  * @author aschoerk
  */
