@@ -97,6 +97,7 @@
                 <module>ioc-unit-analyzer</module>
                 <module>ioc-unit</module>
                 <module>ioc-unit-mockseasy</module>
+                <module>ioc-unit-resteasy</module>
                 <module>ioc-unit-ejb</module>
                 <module>ioc-unit-contexts</module>
                 <module>ioc-unit-simulators</module>
