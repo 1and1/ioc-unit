@@ -4,6 +4,7 @@
 
 |Version|Changes|
 |-------|-------|
+|2.0.7|ioc-unit-resteasy identifies JaxRS-Restresources and JaxRs-Exception in sutclasses and registers them with Resteasy MockDispatcherFactory. Example, see Test in ioc-unit-resteasy|
 |2.0.6|Show Qualifierdiffs at Resource-Injects, if there are; extended TestPersistenceFactory; Improved support of multiple different DataSources and PersistenceContexts so: @PersistenceContext might be necessary to produce it with qualifier similar to @Resource |
 |2.0.5|Reverted Qualifiers generated on SessionContext and MessageDrivenContext|
 |2.0.4|TestPersistenceFactory can set inital schema, don't use if using Resource SessionContext and MessageDrivenContext|
