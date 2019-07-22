@@ -1,4 +1,4 @@
-package com.oneandone.cdi.resteasytester;
+package com.oneandone.iocunit.resteasytester;
 
 import static org.junit.Assert.assertEquals;
 

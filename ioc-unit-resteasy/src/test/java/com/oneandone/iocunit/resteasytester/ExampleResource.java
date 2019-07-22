@@ -1,4 +1,4 @@
-package com.oneandone.cdi.resteasytester;
+package com.oneandone.iocunit.resteasytester;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -20,5 +20,4 @@ public class ExampleResource {
     public Response error() {
         throw new RuntimeException();
     }
-
 }

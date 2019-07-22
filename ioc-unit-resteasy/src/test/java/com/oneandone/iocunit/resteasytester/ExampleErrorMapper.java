@@ -1,4 +1,4 @@
-package com.oneandone.cdi.resteasytester;
+package com.oneandone.iocunit.resteasytester;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;

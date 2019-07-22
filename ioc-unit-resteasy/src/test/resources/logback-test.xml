@@ -7,14 +7,11 @@
         </encoder>
     </appender>
 
-    <logger name="com.oneandone.cdi.testanalyzer" level="info">
+    <logger name="com.oneandone.iocunit.resteasy" level="info">
         <appender-ref ref="STDOUT"/>
     </logger>
-    <!--logger name="org.jboss.weld" level="info">
-        <appender-ref ref="STDOUT"/>
-    </logger-->
 
-    <root level="error">
+    <root level="info">
         <appender-ref ref="STDOUT"/>
     </root>
 
