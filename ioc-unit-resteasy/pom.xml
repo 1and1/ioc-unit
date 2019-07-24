@@ -41,6 +41,12 @@
             <version>3.0.14.Final</version>
             <scope>provided</scope>
 	    </dependency>
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <version>4.0.0</version>
+            <scope>provided</scope>
+        </dependency>
         <!-- logging -->
         <dependency>
             <groupId>org.slf4j</groupId>

@@ -1,5 +1,6 @@
 package com.oneandone.iocunit.resteasy;
 
+import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Map;
@@ -47,30 +48,32 @@ public class RestEasyMockInit {
         boolean setupDone = false;
 
         public void setUp() {
-            if (setupDone)
+            if(setupDone) {
                 return;
+            }
             setupDone = true;
             delegate = MockDispatcherFactory.createDispatcher();
             try {
                 creationalContexts = new CreationalContexts();
-                for (Class<?> clazz: jaxRsTestExtension.getResourceClasses()) {
+                for (Class<?> clazz : jaxRsTestExtension.getResourceClasses()) {
                     logger.info("Creating restresource {}", clazz.getName());
                     Object res = creationalContexts.create(clazz, ApplicationScoped.class);
                     dispatcher.getRegistry().addSingletonResource(res);
                 }
+
             } catch (NamingException e) {
                 throw new RuntimeException(e);
             }
             ResteasyProviderFactory provfactory = dispatcher.getProviderFactory();
-            for (Class<?> clazz: jaxRsTestExtension.getExceptionMappers()) {
+            for (Class<?> clazz : jaxRsTestExtension.getExceptionMappers()) {
                 Type[] genInterfaces = clazz.getGenericInterfaces();
-                for (Type t: genInterfaces) {
-                    if (t instanceof ParameterizedType) {
+                for (Type t : genInterfaces) {
+                    if(t instanceof ParameterizedType) {
                         ParameterizedType pt = (ParameterizedType) t;
-                        if (pt.getRawType().equals(ExceptionMapper.class)) {
-                            logger.info("Adding exceptionmapper restresource {} for {}", clazz.getName(), (Class)(pt.getActualTypeArguments()[0]));
+                        if(pt.getRawType().equals(ExceptionMapper.class)) {
+                            logger.info("Adding exceptionmapper restresource {} for {}", clazz.getName(), (Class) (pt.getActualTypeArguments()[0]));
                             provfactory.getExceptionMappers().put(
-                                    (Class)(pt.getActualTypeArguments()[0]),
+                                    (Class) (pt.getActualTypeArguments()[0]),
                                     new ExceptionMapperInterceptor(
                                             (ExceptionMapper) provfactory.createProviderInstance(clazz)));
                         }
@@ -120,6 +123,20 @@ public class RestEasyMockInit {
 
     @PostConstruct
     public void setUp() {
+
         dispatcher = new DispatcherDelegate();
+        try {
+            Class initClass = Class.forName("com.oneandone.iocunit.resteasy.restassured.Initializer");
+            Method initmethod = initClass.getMethod("init", Dispatcher.class);
+            initmethod.invoke(null, dispatcher);
+        } catch (Throwable e) {
+            if(e.getClass().equals(NoClassDefFoundError.class) && e.getMessage().equals("io/restassured/config/HttpClientConfig$HttpClientFactory")) {
+                ;
+            }
+            else {
+                logger.warn("Restassured not initialized", e);
+            }
+        }
+
     }
 }
