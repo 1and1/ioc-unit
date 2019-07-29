@@ -22,8 +22,13 @@ import com.oneandone.iocunit.restassuredtest.http.PostResource;
 @RunWith(IocUnitRunner.class)
 @SutClasses({PostResource.class, GreetingResource.class})
 public class RequestMethodTest {
+
+    private ExpectedException exception = ExpectedException.none();
+
     @Rule
-    public ExpectedException exception = ExpectedException.none();
+    public ExpectedException getExceptionRule() {
+        return exception;
+    }
 
     @Test
     public void

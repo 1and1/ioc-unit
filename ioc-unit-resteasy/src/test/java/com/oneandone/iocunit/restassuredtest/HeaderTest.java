@@ -29,8 +29,12 @@ import io.restassured.http.Headers;
 @SutClasses({RedirectResource.class, HeaderResource.class})
 public class HeaderTest {
 
+    private ExpectedException exception = ExpectedException.none();
+
     @Rule
-    public ExpectedException exception = ExpectedException.none();
+    public ExpectedException getExceptionRule() {
+        return exception;
+    }
 
     @Test
     public void
