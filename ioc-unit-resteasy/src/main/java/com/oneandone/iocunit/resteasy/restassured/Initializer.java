@@ -13,6 +13,7 @@ import io.restassured.config.RestAssuredConfig;
 public class Initializer {
 
     public static void init(Dispatcher dispatcher) {
+        RestAssured.reset();
         RestAssured.config = new RestAssuredConfig()
                 .httpClient(new HttpClientConfig()
                         .httpClientFactory(new HttpClientConfig.HttpClientFactory() {

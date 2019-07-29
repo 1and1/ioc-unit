@@ -10,6 +10,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.NewCookie;
 
 import org.apache.http.Header;
 import org.apache.http.HeaderElement;
@@ -32,6 +33,15 @@ public class CloseableMockResponse implements CloseableHttpResponse {
 
     public CloseableMockResponse(final MockHttpResponse mockHttpResponse) {
         this.mockHttpResponse = mockHttpResponse;
+        MultivaluedMap<String, Object> headers = mockHttpResponse.getOutputHeaders();
+
+        for (NewCookie cookie: mockHttpResponse.getNewCookies()) {
+            if (!headers.containsKey("Set-Cookie")) {
+                headers.add("Set-Cookie", cookie.getName() + "=" + cookie.getValue());
+            } else {
+                headers.get("Set-Cookie").add(cookie.getName() + "=" + cookie.getValue());
+            }
+        }
     }
 
     public int getStatus() {
@@ -49,6 +59,7 @@ public class CloseableMockResponse implements CloseableHttpResponse {
 
     @Override
     public StatusLine getStatusLine() {
+
         return new StatusLine() {
             @Override
             public ProtocolVersion getProtocolVersion() {
@@ -63,6 +74,11 @@ public class CloseableMockResponse implements CloseableHttpResponse {
             @Override
             public String getReasonPhrase() {
                 return "No Reason given";
+            }
+
+            @Override
+            public String toString() {
+                return Integer.toString(getStatusCode());
             }
         };
     }
@@ -238,6 +254,7 @@ public class CloseableMockResponse implements CloseableHttpResponse {
         int i = 0;
         for (Object o : tmpres) {
             res[i] = headerFromOutputHeader(s, o);
+            i++;
         }
         return res;
     }
@@ -366,5 +383,10 @@ public class CloseableMockResponse implements CloseableHttpResponse {
     @Override
     public void setParams(final HttpParams httpParams) {
         throw new RuntimeException("not implemented");
+    }
+
+    @Override
+    public String toString() {
+        return mockHttpResponse.toString();
     }
 }
