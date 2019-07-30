@@ -35,6 +35,12 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
+            <groupId>javax.enterprise</groupId>
+            <artifactId>cdi-api</artifactId>
+            <version>${compile.version.cdi-api}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>net.oneandone.ioc-unit</groupId>
             <artifactId>ioc-unit-analyzer</artifactId>
             <version>${project.version}</version>
@@ -42,7 +48,7 @@
         <dependency>
             <groupId>org.jboss.weld</groupId>
             <artifactId>weld-api</artifactId>
-            <version>3.0.SP4</version>
+            <version>${compile.version.weld-api}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

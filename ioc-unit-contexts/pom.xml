@@ -38,13 +38,32 @@
         </dependency>
         <dependency>
             <groupId>net.oneandone.ioc-unit</groupId>
-            <artifactId>ioc-unit</artifactId>
+            <artifactId>ioc-unit-mockseasy</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>net.oneandone.ioc-unit</groupId>
-            <artifactId>ioc-unit-mockseasy</artifactId>
-            <version>${project.version}</version>
+            <groupId>javax.enterprise</groupId>
+            <artifactId>cdi-api</artifactId>
+            <version>${compile.version.cdi-api}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.ejb</groupId>
+            <artifactId>javax.ejb-api</artifactId>
+            <version>${compile.version.ejb}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.faces</groupId>
+            <artifactId>javax.faces-api</artifactId>
+            <version>${compile.version.faces}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>${compile.version.servlet}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
@@ -55,13 +74,13 @@
         <dependency>
             <groupId>org.jboss.weld</groupId>
             <artifactId>weld-api</artifactId>
-            <version>3.0.SP4</version>
+            <version>${compile.version.cdi-api}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.jboss.weld</groupId>
             <artifactId>weld-spi</artifactId>
-            <version>3.0.SP4</version>
+            <version>${compile.version.weld-spi}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

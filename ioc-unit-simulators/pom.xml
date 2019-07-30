@@ -42,11 +42,10 @@
             <artifactId>commons-io</artifactId>
             <version>2.5</version>
         </dependency>
-
-        <!-- J2EE 6 -->
         <dependency>
-            <groupId>javax</groupId>
-            <artifactId>javaee-api</artifactId>
+            <groupId>javax.enterprise</groupId>
+            <artifactId>cdi-api</artifactId>
+            <version>${compile.version.cdi-api}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -62,7 +61,7 @@
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-all</artifactId>
+            <artifactId>hamcrest-core</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

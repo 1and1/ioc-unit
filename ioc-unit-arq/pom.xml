@@ -28,8 +28,6 @@
       <java.min.version>1.8</java.min.version>
 
       <version.junit>4.11</version.junit>
-       <version.javaee_api>8.0</version.javaee_api>
-
       <version.arquillian_core>1.1.11.Final</version.arquillian_core>
 
       <version.wildfly>10.1.0.Final</version.wildfly>
@@ -49,12 +47,6 @@
    </dependencyManagement>
 
    <dependencies>
-      <dependency>
-         <groupId>javax</groupId>
-         <artifactId>javaee-api</artifactId>
-         <version>${version.javaee_api}</version>
-         <scope>provided</scope>
-      </dependency>
       <dependency>
          <groupId>${project.groupId}</groupId>
          <artifactId>ioc-unit-test-war</artifactId>
