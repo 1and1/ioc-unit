@@ -437,10 +437,6 @@
                             <groupId>javax.inject</groupId>
                             <artifactId>javax.inject</artifactId>
                         </exclusion>
-                        <!--exclusion>
-                            <groupId>org.jboss.logging</groupId>
-                            <artifactId>jboss-logging</artifactId>
-                        </exclusion-->
                         <exclusion>
                             <groupId>org.jboss.weld</groupId>
                             <artifactId>weld-spi</artifactId>
