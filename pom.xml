@@ -110,7 +110,6 @@
                 <module>ioc-unit-contexts</module>
                 <module>ioc-unit-simulators</module>
                 <module>examples2</module>
-                <module>purecdi-tests</module>
             </modules>
             <dependencies>
                 <dependency>
@@ -172,7 +171,6 @@
         <profile>
             <id>junit4</id>
             <modules>
-                <module>purecdi-tests</module>
                 <module>ioc-unit-test-war</module>
                 <module>ioc-unit-tests</module>
                 <!--module>ioc-unit-camunda</module-->
@@ -305,14 +303,6 @@
                             <groupId>org.jboss.logging</groupId>
                             <artifactId>jboss-logging</artifactId>
                         </exclusion>
-                        <exclusion>
-                            <groupId>org.jboss.weld</groupId>
-                            <artifactId>weld-spi</artifactId>
-                        </exclusion>
-                        <exclusion>
-                            <groupId>org.jboss.weld</groupId>
-                            <artifactId>weld-api</artifactId>
-                        </exclusion>
                     </exclusions>
 
                 </dependency>
@@ -347,14 +337,6 @@
                         <exclusion>
                             <groupId>org.jboss.logging</groupId>
                             <artifactId>jboss-logging</artifactId>
-                        </exclusion>
-                        <exclusion>
-                            <groupId>org.jboss.weld</groupId>
-                            <artifactId>weld-spi</artifactId>
-                        </exclusion>
-                        <exclusion>
-                            <groupId>org.jboss.weld</groupId>
-                            <artifactId>weld-api</artifactId>
                         </exclusion>
                     </exclusions>
                 </dependency>
@@ -400,20 +382,15 @@
                             <groupId>org.jboss.logging</groupId>
                             <artifactId>jboss-logging</artifactId>
                         </exclusion>
-                        <exclusion>
-                            <groupId>org.jboss.weld</groupId>
-                            <artifactId>weld-spi</artifactId>
-                        </exclusion>
-                        <exclusion>
-                            <groupId>org.jboss.weld</groupId>
-                            <artifactId>weld-api</artifactId>
-                        </exclusion>
                     </exclusions>
                 </dependency>
             </dependencies>
         </profile>
         <profile>
             <id>weld3.0</id>
+            <modules>
+                <module>purecdi-tests</module>
+            </modules>
             <properties>
                 <weld.version>3.0.5.Final</weld.version>
                 <weld-spi.version>3.0.SP4</weld-spi.version>
@@ -436,14 +413,6 @@
                         <exclusion>
                             <groupId>javax.inject</groupId>
                             <artifactId>javax.inject</artifactId>
-                        </exclusion>
-                        <exclusion>
-                            <groupId>org.jboss.weld</groupId>
-                            <artifactId>weld-spi</artifactId>
-                        </exclusion>
-                        <exclusion>
-                            <groupId>org.jboss.weld</groupId>
-                            <artifactId>weld-api</artifactId>
                         </exclusion>
                     </exclusions>
                 </dependency>

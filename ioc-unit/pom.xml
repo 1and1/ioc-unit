@@ -49,13 +49,7 @@
             <groupId>org.jboss.weld</groupId>
             <artifactId>weld-api</artifactId>
             <version>${compile.version.weld-api}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.weld</groupId>
-            <artifactId>weld-spi</artifactId>
-            <version>${compile.version.weld-spi}</version>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>

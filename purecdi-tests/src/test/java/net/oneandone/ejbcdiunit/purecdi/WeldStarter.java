@@ -1,21 +1,28 @@
 package net.oneandone.ejbcdiunit.purecdi;
 
-import org.jboss.weld.bootstrap.api.CDI11Bootstrap;
-import org.jboss.weld.bootstrap.api.ServiceRegistry;
-import org.jboss.weld.bootstrap.api.helpers.SimpleServiceRegistry;
-import org.jboss.weld.bootstrap.spi.*;
-import org.jboss.weld.ejb.spi.EjbDescriptor;
-import org.jboss.weld.environment.se.Weld;
-import org.jboss.weld.environment.se.WeldContainer;
-import org.jboss.weld.resources.spi.ResourceLoader;
-
-import javax.enterprise.inject.spi.DeploymentException;
-import javax.enterprise.inject.spi.Extension;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+
+import javax.enterprise.inject.spi.DeploymentException;
+import javax.enterprise.inject.spi.Extension;
+
+import org.jboss.weld.bootstrap.api.CDI11Bootstrap;
+import org.jboss.weld.bootstrap.api.ServiceRegistry;
+import org.jboss.weld.bootstrap.api.helpers.SimpleServiceRegistry;
+import org.jboss.weld.bootstrap.spi.BeanDeploymentArchive;
+import org.jboss.weld.bootstrap.spi.BeanDiscoveryMode;
+import org.jboss.weld.bootstrap.spi.BeansXml;
+import org.jboss.weld.bootstrap.spi.CDI11Deployment;
+import org.jboss.weld.bootstrap.spi.Deployment;
+import org.jboss.weld.bootstrap.spi.Metadata;
+import org.jboss.weld.bootstrap.spi.Scanning;
+import org.jboss.weld.ejb.spi.EjbDescriptor;
+import org.jboss.weld.environment.se.Weld;
+import org.jboss.weld.environment.se.WeldContainer;
+import org.jboss.weld.resources.spi.ResourceLoader;
 
 public class WeldStarter {
 
@@ -165,8 +172,9 @@ public class WeldStarter {
     }
 
     public void tearDown() {
-        if (container != null)
-            container .close();
+        if(container != null) {
+            container.close();
+        }
         container = null;
     }
 }

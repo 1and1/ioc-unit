@@ -47,7 +47,6 @@
             <groupId>org.jboss.weld</groupId>
             <artifactId>weld-spi</artifactId>
             <version>3.0.SP4</version>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.jboss.weld.se</groupId>
