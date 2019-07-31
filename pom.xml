@@ -109,6 +109,7 @@
                 <module>ioc-unit-ejb</module>
                 <module>ioc-unit-contexts</module>
                 <module>ioc-unit-simulators</module>
+
                 <module>examples2</module>
             </modules>
             <dependencies>
@@ -310,6 +311,9 @@
         </profile>
         <profile>
             <id>weld2.3</id>
+            <modules>
+                <module>purecdi-tests</module>
+            </modules>
             <properties>
                 <weld.version>2.3.5.Final</weld.version>
                 <weld-spi.version>2.3.Final</weld-spi.version>
@@ -345,6 +349,9 @@
         </profile>
         <profile>
             <id>weld2.4</id>
+            <modules>
+                <module>purecdi-tests</module>
+            </modules>
             <properties>
                 <weld.version>2.4.2.Final</weld.version>
                 <weld-spi.version>2.4.Final</weld-spi.version>

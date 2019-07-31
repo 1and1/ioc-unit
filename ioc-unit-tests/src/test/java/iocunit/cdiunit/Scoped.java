@@ -1,9 +1,5 @@
 package iocunit.cdiunit;
 
-import javax.enterprise.inject.Vetoed;
-
-
-@Vetoed
 public class Scoped {
 
     private Runnable disposeListener;
