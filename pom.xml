@@ -77,7 +77,6 @@
         <site-url>${site.deploy.base.url}/${project.groupId}/${project.version}</site-url>
         <javassist.version>3.20.0-GA</javassist.version>
 
-        <version.javaee_api>8.0</version.javaee_api>
         <reflections8.version>0.11.3</reflections8.version>
         <jaxrpc.version>1.1</jaxrpc.version>
 
@@ -284,6 +283,7 @@
                 <version.org.hibernate>4.3.6.Final</version.org.hibernate>
                 <version.org.hibernate.validator>4.3.1.Final</version.org.hibernate.validator>
                 <version.cdi-api>1.0</version.cdi-api>
+                <version.javaee-api>7.0</version.javaee-api>
             </properties>
             <dependencies>
                 <dependency>
@@ -322,6 +322,7 @@
                 <version.org.hibernate>5.0.10.Final</version.org.hibernate>
                 <version.org.hibernate.validator>5.2.4.Final</version.org.hibernate.validator>
                 <version.cdi-api>1.2</version.cdi-api>
+                <version.javaee-api>8.0</version.javaee-api>
             </properties>
             <dependencies>
                 <dependency>
@@ -359,6 +360,7 @@
                 <version.org.hibernate>5.3.6.Final</version.org.hibernate>
                 <version.org.hibernate.validator>5.2.4.Final</version.org.hibernate.validator>
                 <version.cdi-api>1.2</version.cdi-api>
+                <version.javaee-api>8.0</version.javaee-api>
             </properties>
             <dependencies>
                 <dependency>
@@ -405,6 +407,7 @@
                 <version.org.hibernate>5.3.6.Final</version.org.hibernate>
                 <version.org.hibernate.validator>5.2.4.Final</version.org.hibernate.validator>
                 <version.cdi-api>2.0.SP1</version.cdi-api>
+                <version.javaee-api>8.0</version.javaee-api>
             </properties>
             <dependencies>
                 <dependency>
