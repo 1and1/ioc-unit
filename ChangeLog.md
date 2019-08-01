@@ -4,6 +4,7 @@
 
 |Version|Changes|
 |-------|-------|
+|2.0.10|reorganized poms, starters depend on the correct javaee-api compiled. If users don't like this, they must exclude it. ioc-unit-xxxx modules depend on the api-modules they need provided, so they don't transitively depend on any javax-api.|
 |2.0.9|added javax.json provider from glassfish, include io.rest-assured, if existing allow fluent test of rest-resources using MockDispatcherFactory |
 |2.0.8|fix handling of default initial context, transporting the beanmanager|
 |2.0.7|ioc-unit-resteasy identifies JaxRS-Restresources and JaxRs-Exception in sutclasses and registers them with Resteasy MockDispatcherFactory. Example, see Test in ioc-unit-resteasy|
