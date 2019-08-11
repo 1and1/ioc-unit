@@ -20,6 +20,8 @@ public class JaxRsRestEasyTestExtension implements Extension {
 
     HashSet<Class> resourceClasses = new HashSet<>();
     HashSet<Class> exceptionMappers = new HashSet<>();
+    HashSet<Class> providers = new HashSet<>();
+
 
     public HashSet<Class> getResourceClasses() {
         return resourceClasses;
@@ -27,6 +29,10 @@ public class JaxRsRestEasyTestExtension implements Extension {
 
     public HashSet<Class> getExceptionMappers() {
         return exceptionMappers;
+    }
+
+    public HashSet<Class> getProviders() {
+        return providers;
     }
 
     public <T> void processAnnotatedType(@Observes
@@ -42,6 +48,8 @@ public class JaxRsRestEasyTestExtension implements Extension {
         if(annotatedType.isAnnotationPresent(Provider.class)) {
             if (ExceptionMapper.class.isAssignableFrom(aClass)) {
                 exceptionMappers.add(aClass);
+            } else {
+                providers.add(aClass);
             }
         }
     }

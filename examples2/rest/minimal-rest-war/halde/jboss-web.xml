@@ -1,0 +1,3 @@
+<jboss-web>
+    <context-root>restassured-test-1</context-root>
+</jboss-web>

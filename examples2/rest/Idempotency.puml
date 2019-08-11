@@ -1,0 +1,48 @@
+@startuml
+title: Garanteed Idempotency Using CorrelationIds
+actor "Client-Service" as c #aqua
+participant "Client Persistence" as cdb #aqua
+participant "Callback" as cb #aqua
+participant "Service" as s #magenta
+participant "Service Persistence" as sdb #magenta
+c -> cdb: create and store correlationId
+cdb --> c: cId1
+c -> s: callService(cId1)
+s -> sdb: find(cId1)
+sdb -> s: yes/no
+alt found
+note right of s
+already done
+end note
+s --> c: accepted
+else not found
+s -> sdb: store cId1
+s ->> s: handle service
+activate s
+s -> c: accepted
+end
+|||
+...
+|||
+s --> cb: async answer(cId1)
+deactivate s
+cb -> cdb: find(cId1)
+cdb --> cb: return state
+alt state not yet answered
+cb -> cdb: set(cId1, answered)
+cb -> c: done
+else already handled
+note right of cb
+no action
+necessary
+end note
+
+else cId1 is unknown
+cb -> s: unkown correlationId
+note right of cb
+no action
+possible
+end note
+end
+
+@enduml

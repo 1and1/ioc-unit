@@ -70,6 +70,35 @@ public class DispatcherDelegate implements Dispatcher {
                 }
             }
         }
+        for (Class<?> clazz : jaxRsTestExtension.getProviders()) {
+            provfactory.register(clazz);
+        }
+
+        checkJackson(provfactory);
+    }
+
+    private void checkJackson(final ResteasyProviderFactory provfactory) {
+
+        boolean jackson1Found = false;
+        boolean jackson2Found = false;
+        for (Class c: provfactory.getClasses()) {
+            if(c.getName().equals("org.jboss.resteasy.plugins.providers.jackson.ResteasyJackson2Provider")) {
+                jackson2Found = true;
+            }
+            else if(c.getName().equals("org.jboss.resteasy.plugins.providers.jackson.ResteasyJacksonProvider")) {
+                jackson1Found = true;
+            }
+        }
+        if(jackson1Found) {
+            logger.info("ResteasyJacksonProvider found");
+        }
+        if(jackson2Found) {
+            logger.info("ResteasyJackson2Provider found");
+        }
+        if(jackson1Found && jackson2Found) {
+            logger.warn("Both ResteasyJacksonProvider and ResteasyJackson2Provider found!");
+        }
+
     }
 
     Dispatcher delegate;
