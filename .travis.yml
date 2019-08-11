@@ -2,7 +2,7 @@ sudo: false
 language: java
 
 jdk:
-- oraclejdk8
+- openjdk8
 # - openjdk10
 
 # cache local Maven repo: https://docs.travis-ci.com/user/caching/
