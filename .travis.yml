@@ -20,5 +20,5 @@ env:
 - PROFILES=arquillian
 - PROFILES=base,weld2.3,junit5
 
-script: "mvn clean install -P${PROFILES}"
+script: "mvn -B clean install -P${PROFILES}"
 
