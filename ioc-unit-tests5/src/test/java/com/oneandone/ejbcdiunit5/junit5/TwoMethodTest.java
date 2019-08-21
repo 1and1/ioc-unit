@@ -8,12 +8,13 @@ import javax.inject.Inject;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import com.oneandone.iocunit.analyzer.annotations.SutPackages;
-import com.oneandone.iocunit.IocJUnit5Extension;
 import com.oneandone.ejbcdiunit5.junit5.beans.AppScopedBean1;
+import com.oneandone.iocunit.IocJUnit5Extension;
+import com.oneandone.iocunit.analyzer.annotations.SutPackages;
 
 /**
  * @author aschoerk
@@ -54,6 +55,11 @@ public class TwoMethodTest {
     @Test
     public void test2() {
         sameSituationInBothMethods();
+    }
+
+    @BeforeAll
+    public static void beforeAll() {
+        testCalled = 0;
     }
 
     @AfterAll
