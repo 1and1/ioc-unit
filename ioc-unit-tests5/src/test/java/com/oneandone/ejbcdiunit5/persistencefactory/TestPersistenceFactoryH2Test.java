@@ -1,11 +1,15 @@
 package com.oneandone.ejbcdiunit5.persistencefactory;
 
+import java.lang.reflect.Field;
+import java.util.Properties;
+
+import org.hibernate.cfg.Environment;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 import com.oneandone.iocunit.IocJUnit5Extension;
+import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 import com.oneandone.iocunit.ejb.persistence.TestPersistenceFactory;
 import com.oneandone.iocunitejb.entities.TestEntity1;
 
@@ -30,6 +34,16 @@ public class TestPersistenceFactoryH2Test extends PersistenceFactoryTestBase {
         System.clearProperty("hibernate.connection.url");
         System.clearProperty("hibernate.default_schema");
         System.clearProperty("hibernate.ejb.naming_strategy");
+        try {
+            Field propField = Environment.class.getDeclaredField("GLOBAL_PROPERTIES");
+            propField.setAccessible(true);
+            Properties props = (Properties) propField.get(null);
+            props.remove("hibernate.connection.url");
+            props.remove("hibernate.default_schema");
+            props.remove("hibernate.ejb.naming_strategy");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     protected String getSchema() {
