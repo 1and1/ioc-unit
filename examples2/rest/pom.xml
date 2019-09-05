@@ -12,6 +12,7 @@
     <modules>
         <module>minimal-rest-war</module>
         <module>minimal-rest-dto-jackson</module>
+        <module>rest-dto-polymorphy</module>
     </modules>
 
 </project>
