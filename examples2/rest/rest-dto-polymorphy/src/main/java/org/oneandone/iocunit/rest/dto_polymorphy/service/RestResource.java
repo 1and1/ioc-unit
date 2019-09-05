@@ -9,6 +9,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.oneandone.iocunit.rest.dto_polymorphy.dto.ComplexDto;
+import org.oneandone.iocunit.rest.dto_polymorphy.dto.ComplexDtoWithSetters;
+import org.oneandone.iocunit.rest.dto_polymorphy.dto.abstractsuper.DtoSuper;
 import org.oneandone.iocunit.rest.dto_polymorphy.dto.second.DtoInterface2;
 import org.oneandone.iocunit.rest.dto_polymorphy.dto.typename.Dto1;
 import org.oneandone.iocunit.rest.dto_polymorphy.dto.typename.Dto2;
@@ -52,5 +55,38 @@ public class RestResource {
                 .entity(dto)
                 .build();
     }
+    @POST
+    @Path("/complexdto")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response mirror(ComplexDto dto) {
+
+        return Response.ok()
+                .entity(dto)
+                .build();
+    }
+    @POST
+    @Path("/complexdtowithsetters")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response mirror(ComplexDtoWithSetters dto) {
+
+        return Response.ok()
+                .entity(dto)
+                .build();
+    }
+
+    @POST
+    @Path("/dtosuper")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response mirror(DtoSuper dto) {
+
+        return Response.ok()
+                .entity(dto)
+                .build();
+    }
+
+
 
 }

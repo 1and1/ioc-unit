@@ -7,6 +7,11 @@ import static io.restassured.config.ObjectMapperConfig.objectMapperConfig;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.oneandone.iocunit.rest.dto_polymorphy.dto.ComplexDto;
+import org.oneandone.iocunit.rest.dto_polymorphy.dto.ComplexDtoWithSetters;
+import org.oneandone.iocunit.rest.dto_polymorphy.dto.abstractsuper.CDto1;
+import org.oneandone.iocunit.rest.dto_polymorphy.dto.abstractsuper.CDto2;
+import org.oneandone.iocunit.rest.dto_polymorphy.dto.abstractsuper.DtoSuper;
 import org.oneandone.iocunit.rest.dto_polymorphy.dto.second.BDto1;
 import org.oneandone.iocunit.rest.dto_polymorphy.dto.second.DtoInterface2;
 import org.oneandone.iocunit.rest.dto_polymorphy.dto.typename.Dto1;
@@ -86,4 +91,44 @@ public class ObjectMapperTest {
         ;
 
     }
+
+    @Test
+    public void canSendComplexPolymorph() {
+        final ComplexDto complexDto = new ComplexDto(new Dto2(1, "dto2"), new BDto1(0, "dto1"));
+        given()
+                .spec(spec)
+                .body(complexDto)
+                .when().post("/rest/complexdto")
+                .as(ComplexDto.class).equals(complexDto);
+        ;
+
+    }
+    @Test
+    public void canSendComplexPolymorph2() {
+        final ComplexDtoWithSetters complexDtoWithSetters = new ComplexDtoWithSetters(new Dto2(1, "dto2"), new BDto1(0, "dto1"));
+        given()
+                .spec(spec)
+                .body(complexDtoWithSetters)
+                .when().post("/rest/complexdtowithsetters")
+                .as(ComplexDto.class).equals(complexDtoWithSetters);
+        ;
+
+    }
+
+    @Test
+    public void canSendPolymorphWithSuperClass() {
+        given()
+                .spec(spec)
+                .body(new CDto1(0,"dto1"))
+                .when().post("/rest/dtosuper")
+                .as(DtoSuper.class).equals(new CDto1(0,"dto1"));;
+
+        given()
+                .spec(spec)
+                .body(new CDto2(0,"dto2"))
+                .when().post("/rest/dtosuper")
+                .as(DtoSuper.class).equals(new CDto2(0,"dto2"));;
+
+    }
+
 }
