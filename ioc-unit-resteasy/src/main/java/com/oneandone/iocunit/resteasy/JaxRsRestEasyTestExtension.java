@@ -9,7 +9,6 @@ import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
 import javax.enterprise.inject.spi.WithAnnotations;
 import javax.ws.rs.Path;
-import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 /**
@@ -19,16 +18,11 @@ import javax.ws.rs.ext.Provider;
 public class JaxRsRestEasyTestExtension implements Extension {
 
     HashSet<Class> resourceClasses = new HashSet<>();
-    HashSet<Class> exceptionMappers = new HashSet<>();
     HashSet<Class> providers = new HashSet<>();
 
 
     public HashSet<Class> getResourceClasses() {
         return resourceClasses;
-    }
-
-    public HashSet<Class> getExceptionMappers() {
-        return exceptionMappers;
     }
 
     public HashSet<Class> getProviders() {
@@ -46,11 +40,7 @@ public class JaxRsRestEasyTestExtension implements Extension {
             resourceClasses.add(aClass);
         }
         if(annotatedType.isAnnotationPresent(Provider.class)) {
-            if (ExceptionMapper.class.isAssignableFrom(aClass)) {
-                exceptionMappers.add(aClass);
-            } else {
-                providers.add(aClass);
-            }
+            providers.add(aClass);
         }
     }
 }

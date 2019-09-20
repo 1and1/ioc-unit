@@ -1,13 +1,10 @@
 package com.oneandone.iocunit.resteasy;
 
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.Map;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.naming.NamingException;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.ExceptionMapper;
 
 import org.jboss.resteasy.core.Dispatcher;
 import org.jboss.resteasy.mock.MockDispatcherFactory;
@@ -55,21 +52,6 @@ public class DispatcherDelegate implements Dispatcher {
             throw new RuntimeException(e);
         }
         ResteasyProviderFactory provfactory = delegate.getProviderFactory();
-        for (Class<?> clazz : jaxRsTestExtension.getExceptionMappers()) {
-            Type[] genInterfaces = clazz.getGenericInterfaces();
-            for (Type t : genInterfaces) {
-                if(t instanceof ParameterizedType) {
-                    ParameterizedType pt = (ParameterizedType) t;
-                    if(pt.getRawType().equals(ExceptionMapper.class)) {
-                        logger.info("Adding exceptionmapper restresource {} for {}", clazz.getName(), (Class) (pt.getActualTypeArguments()[0]));
-                        provfactory.getExceptionMappers().put(
-                                (Class) (pt.getActualTypeArguments()[0]),
-                                new ExceptionMapperInterceptor(
-                                        (ExceptionMapper) provfactory.createProviderInstance(clazz)));
-                    }
-                }
-            }
-        }
         for (Class<?> clazz : jaxRsTestExtension.getProviders()) {
             provfactory.register(clazz);
         }
