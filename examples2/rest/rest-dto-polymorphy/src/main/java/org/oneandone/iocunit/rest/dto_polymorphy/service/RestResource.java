@@ -43,7 +43,7 @@ public class RestResource {
     public Response mirror(DtoInterface dto, @Context UriInfo uriInfo) {
         assert uriInfo != null;
         return Response.ok()
-                .entity(uriInfo)
+                .entity(dto)
                 .build();
     }
 
