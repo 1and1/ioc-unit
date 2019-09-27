@@ -1,4 +1,4 @@
-package org.oneandone.iocunit.rest.minimal_rest_war.restassured_1;
+package org.oneandone.iocunit.rest.dto_polymorphy.service;
 
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -16,11 +16,8 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 @Provider
 @Produces(MediaType.APPLICATION_JSON)
 public class Jackson2Config implements ContextResolver<ObjectMapper> {
-    private ObjectMapper objectMapper;
-
-    public Jackson2Config() {
-
-        objectMapper =  new ObjectMapper()
+    public static ObjectMapper produceObjectMapper() {
+        return new ObjectMapper()
                 // use ISO 8601 as for date and time
                 .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
                 // allow properties to be added or removed (like in JAVA serialization)
@@ -38,7 +35,15 @@ public class Jackson2Config implements ContextResolver<ObjectMapper> {
 
                 // but accept clients who do
                 .enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
-                .enable(DeserializationFeature.UNWRAP_SINGLE_VALUE_ARRAYS);
+                .enable(DeserializationFeature.UNWRAP_SINGLE_VALUE_ARRAYS)
+                .enableDefaultTyping();
+    }
+
+    private ObjectMapper objectMapper;
+
+    public Jackson2Config() {
+
+        objectMapper =  produceObjectMapper();
     }
 
     @Override
