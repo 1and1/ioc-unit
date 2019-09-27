@@ -6,8 +6,10 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 import org.oneandone.iocunit.rest.dto_polymorphy.dto.ComplexDto;
 import org.oneandone.iocunit.rest.dto_polymorphy.dto.ComplexDtoWithSetters;
@@ -38,10 +40,10 @@ public class RestResource {
     @Path("/dto")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response mirror(DtoInterface dto) {
-
+    public Response mirror(DtoInterface dto, @Context UriInfo uriInfo) {
+        assert uriInfo != null;
         return Response.ok()
-                .entity(dto)
+                .entity(uriInfo)
                 .build();
     }
 
