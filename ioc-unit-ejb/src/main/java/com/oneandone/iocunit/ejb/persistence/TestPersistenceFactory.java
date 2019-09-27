@@ -56,6 +56,8 @@ import com.oneandone.iocunit.ejb.SessionContextFactory;
  * If PersistenceProvider is Hibernate and hibernate.default_schema is set --> that Schema is created in H2 at start.
  * Uses also eclipseLink if only that PersistenceProvider is found.
  *
+ * Only works with Hibernate 5
+ *
  * @author aschoerk
  */
 @ApplicationScoped
@@ -240,15 +242,14 @@ public class TestPersistenceFactory extends PersistenceFactory {
         PersistenceProvider persistenceProvider = getPersistenceProvider();
 
         EntityManagerFactory result;
-        initStatements.add("drop all objects");
+        if (dropAllObjects())
+            initStatements.add("drop all objects");
         if (getSchema() != null)
             initStatements.add("create schema " + getSchema());
         if(getRecommendedProvider().equals(Provider.HIBERNATE)) {
             initHibernateProperties(properties);
             // possibly override properties using system properties
-            for (Map.Entry<Object, Object> p : System.getProperties().entrySet()) {
-                properties.put((String) p.getKey(), p.getValue());
-            }
+            overwritePersistenceProperties(System.getProperties());
             final PersistenceUnitInfo persistenceUnitInfo = getHibernatePersistenceUnitInfo(properties);
             try {
                 result = new EntityManagerFactoryBuilderImpl(new PersistenceUnitInfoDescriptor(persistenceUnitInfo), properties).build();
@@ -258,9 +259,7 @@ public class TestPersistenceFactory extends PersistenceFactory {
 
         } else {
             initEclipseLinkProperties(properties);
-            for (Map.Entry<Object, Object> p : System.getProperties().entrySet()) {
-                properties.put((String) p.getKey(), p.getValue());
-            }
+            overwritePersistenceProperties(System.getProperties());
             properties.put("eclipselink.se-puinfo", new SEPersistenceUnitInfo() {
                 @Override
                 public String getPersistenceUnitName() {
@@ -319,6 +318,26 @@ public class TestPersistenceFactory extends PersistenceFactory {
         return result;
     }
 
+    /**
+     * Before the start of the first dataconnection a statement to drop all objects is executed.
+     * This can be prevented by returning false here. This can prevent the usage of RUNSCRIPT with H2.
+     * @return false if no "drop all objects" should be executed when the first connection is created.
+     */
+    public boolean dropAllObjects() {
+        return true;
+    }
+
+    /**
+     * Possibility to set certain properties as they are normally defined by persistence.xml
+     *
+     * @param properties to be used to overwrite the property which are used as defaults.
+     */
+    public void overwritePersistenceProperties(Properties properties) {
+        for (Map.Entry<Object, Object> p : properties.entrySet()) {
+            this.properties.put((String) p.getKey(), p.getValue());
+        }
+    }
+
     AtomicInteger count = new AtomicInteger(0);
 
     private void initEclipseLinkProperties(final HashMap<String, Object> properties) {
@@ -361,17 +380,12 @@ public class TestPersistenceFactory extends PersistenceFactory {
     }
 
     private void initHibernateProperties(final HashMap<String, Object> properties) {
-        if (System.getProperty("hibernate.connection.driverclass") == null)
-            properties.put("javax.persistence.jdbc.driver","org.h2.Driver");
-        if (System.getProperty("hibernate.connection.url") == null) {
-            String db = getDbNameOrMem();
-            properties.put("javax.persistence.jdbc.url",
-                    "jdbc:h2:" + db + ";DB_CLOSE_ON_EXIT=TRUE;DB_CLOSE_DELAY=0;LOCK_MODE=0;LOCK_TIMEOUT=10000");
-        }
-        if (System.getProperty("hibernate.connection.username") == null)
-            properties.put("javax.persistence.jdbc.user" , "sa");
-        if (System.getProperty("hibernate.connection.password") == null)
-            properties.put("javax.persistence.jdbc.password", "");
+        properties.put("javax.persistence.jdbc.driver","org.h2.Driver");
+        String db = getDbNameOrMem();
+        properties.put("javax.persistence.jdbc.url",
+                "jdbc:h2:" + db + ";DB_CLOSE_ON_EXIT=TRUE;DB_CLOSE_DELAY=0;LOCK_MODE=0;LOCK_TIMEOUT=10000");
+        properties.put("javax.persistence.jdbc.user" , "sa");
+        properties.put("javax.persistence.jdbc.password", "");
         properties.put("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
         properties.put("hibernate.show_sql", true);
         properties.put("hibernate.hbm2ddl.auto", "create-drop");
