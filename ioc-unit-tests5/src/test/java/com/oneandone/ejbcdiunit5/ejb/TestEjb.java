@@ -24,8 +24,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import com.oneandone.iocunit.analyzer.annotations.TestClasses;
+import com.oneandone.ejbcdiunit5.helpers.LoggerGenerator;
 import com.oneandone.iocunit.IocJUnit5Extension;
+import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 import com.oneandone.iocunit.ejb.EjbJarClasspath;
 import com.oneandone.iocunit.ejb.SessionContextFactory;
 import com.oneandone.iocunit.ejb.persistence.SinglePersistenceFactory;
@@ -42,7 +43,6 @@ import com.oneandone.iocunitejb.ejbs.appexc.TestBaseClass;
 import com.oneandone.iocunitejb.entities.TestEntity1;
 import com.oneandone.iocunitejb.testbases.EJBTransactionTestBase;
 import com.oneandone.iocunitejb.testbases.TestEntity1Saver;
-import com.oneandone.ejbcdiunit5.helpers.LoggerGenerator;
 
 /**
  * @author aschoerk
@@ -128,6 +128,31 @@ public class TestEjb extends EJBTransactionTestBase {
                     resource1.begin();
                 }
             }
+            MatcherAssert.assertThat(exceptionHappened, is(exceptionExpected));
+            entityManager.persist(new TestEntity1());
+            entityManager.flush();
+            Number res = entityManager.createQuery("select count(e) from TestEntity1 e", Number.class).getSingleResult();
+            MatcherAssert.assertThat(res.intValue(), is(num));
+            resource1.setRollbackOnly();
+        } catch (RollbackException rbe) {
+            // ignore, wanted to roll it back!!!
+        }
+    }
+
+    @Override
+    public void runTestWithoutTransaction(TestEntity1Saver saver, int num, boolean exceptionExpected) throws Exception {
+        try (TestTransaction resource1 = persistenceFactory.transaction(TransactionAttributeType.NOT_SUPPORTED)) {
+            TestEntity1 testEntity1 = new TestEntity1();
+            boolean exceptionHappened = false;
+            try {
+                saver.save(testEntity1);
+            } catch (RuntimeException r) {
+                exceptionHappened = true;
+                if (resource1.getStatus() == Status.STATUS_MARKED_ROLLBACK) {
+                    resource1.rollback();
+                }
+            }
+            resource1.begin();
             MatcherAssert.assertThat(exceptionHappened, is(exceptionExpected));
             entityManager.persist(new TestEntity1());
             entityManager.flush();
