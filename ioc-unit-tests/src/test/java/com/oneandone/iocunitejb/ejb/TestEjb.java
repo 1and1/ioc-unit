@@ -25,9 +25,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import com.oneandone.iocunit.IocUnitRule;
 import com.oneandone.iocunit.analyzer.InitialConfiguration;
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.iocunit.IocUnitRule;
 import com.oneandone.iocunit.ejb.EjbJarClasspath;
 import com.oneandone.iocunit.ejb.SessionContextFactory;
 import com.oneandone.iocunit.ejb.persistence.SinglePersistenceFactory;
@@ -41,6 +41,7 @@ import com.oneandone.iocunitejb.ejbs.SingletonTimerEJB;
 import com.oneandone.iocunitejb.ejbs.StatelessBeanManagedTrasEJB;
 import com.oneandone.iocunitejb.ejbs.StatelessChildEJB;
 import com.oneandone.iocunitejb.ejbs.StatelessEJB;
+import com.oneandone.iocunitejb.ejbs.TransactionalApplicationScoped;
 import com.oneandone.iocunitejb.ejbs.appexc.TestBaseClass;
 import com.oneandone.iocunitejb.entities.TestEntity1;
 import com.oneandone.iocunitejb.helpers.LoggerGenerator;
@@ -52,6 +53,7 @@ import com.oneandone.iocunitejb.testbases.TestEntity1Saver;
  */
 @RunWith(JUnit4.class)
 @TestClasses({ StatelessEJB.class, SingletonEJB.class,
+        TransactionalApplicationScoped.class,
         TestEjb.TestDbPersistenceFactory.class, SessionContextFactory.class,
         StatelessBeanManagedTrasEJB.class, StatelessChildEJB.class,
         QMdbEjb.class, MdbEjbInfoSingleton.class, LoggerGenerator.class, CDIClass.class, OuterClass.class })
@@ -148,9 +150,40 @@ public class TestEjb extends EJBTransactionTestBase {
     }
 
     @Override
+    public void runTestWithoutTransaction(TestEntity1Saver saver, int num, boolean exceptionExpected) throws Exception {
+        try (TestTransaction resource1 = persistenceFactory.transaction(TransactionAttributeType.NOT_SUPPORTED)) {
+            TestEntity1 testEntity1 = new TestEntity1();
+            boolean exceptionHappened = false;
+            try {
+                saver.save(testEntity1);
+            } catch (RuntimeException r) {
+                exceptionHappened = true;
+                if (resource1.getStatus() == Status.STATUS_MARKED_ROLLBACK) {
+                    resource1.rollback();
+                }
+            }
+            resource1.begin();
+            Assert.assertThat(exceptionHappened, is(exceptionExpected));
+            entityManager.persist(new TestEntity1());
+            entityManager.flush();
+            Number res = entityManager.createQuery("select count(e) from TestEntity1 e", Number.class).getSingleResult();
+            Assert.assertThat(res.intValue(), is(num));
+            resource1.setRollbackOnly();
+        } catch (RollbackException rbe) {
+            // ignore, wanted to roll it back!!!
+        }
+    }
+
+    @Override
     @Test
     public void requiresNewMethodWorks() throws Exception {
         super.requiresNewMethodWorks();
+    }
+
+    @Override
+    @Test
+    public void requiresNewMethodWorksNonEjb() throws Exception {
+        super.requiresNewMethodWorksNonEjb();
     }
 
     @Override
@@ -161,8 +194,20 @@ public class TestEjb extends EJBTransactionTestBase {
 
     @Override
     @Test
+    public void defaultMethodWorksNonEjb() throws Exception {
+        super.defaultMethodWorksNonEjb();
+    }
+
+    @Override
+    @Test
     public void requiredMethodWorks() throws Exception {
         super.requiredMethodWorks();
+    }
+
+    @Override
+    @Test
+    public void requiredMethodWorksNonEjb() throws Exception {
+        super.requiredMethodWorksNonEjb();
     }
 
     @Override
@@ -171,6 +216,11 @@ public class TestEjb extends EJBTransactionTestBase {
         super.indirectSaveNewInRequired();
     }
 
+    @Override
+    @Test
+    public void indirectSaveNewInRequiredNonEjb() throws Exception {
+        super.indirectSaveNewInRequiredNonEjb();
+    }
     @Override
     @Test
     public void indirectSaveNewInRequiredThrowException() throws Exception {
