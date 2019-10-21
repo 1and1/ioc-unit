@@ -305,7 +305,7 @@ public abstract class EJBTransactionTestBase {
      * check if Required nested in Requires_New-Annotation works
      * @throws Exception don_t care
      */
-    public void indirectSaveRequiredInNewTranonEjb() throws Exception {
+    public void indirectSaveRequiredInNewTraNonEjb() throws Exception {
         runTestInRolledBackTransaction(e -> outerClassUsingNonEjbTransactional.saveRequiredInNewTra(e), 2, false);
         Number res = getNumberOfTestEntity();
         assertThat(res.intValue(), is(1));

@@ -128,6 +128,7 @@ public class WildflyArquillianTransactionTest extends EJBTransactionTestBase {
         Assert.assertThat(res.intValue(), is(expected));
     }
 
+    @Override
     @Test
     public void requiresNewMethodWorks() throws Exception {
         super.requiresNewMethodWorks();
@@ -139,6 +140,7 @@ public class WildflyArquillianTransactionTest extends EJBTransactionTestBase {
         super.requiresNewMethodWorksNonEjb();
     }
 
+    @Override
     @Test
     public void defaultMethodWorks() throws Exception {
         super.defaultMethodWorks();
@@ -150,6 +152,7 @@ public class WildflyArquillianTransactionTest extends EJBTransactionTestBase {
         super.defaultMethodWorksNonEjb();
     }
 
+    @Override
     @Test
     public void requiredMethodWorks() throws Exception {
         super.requiredMethodWorks();
@@ -163,77 +166,154 @@ public class WildflyArquillianTransactionTest extends EJBTransactionTestBase {
 
     @Override
     @Test
-    public void indirectSaveNewInRequiredNonEjb() throws Exception {
-        super.indirectSaveNewInRequiredNonEjb();
-    }
-
-
-
-    @Test
     public void indirectSaveNewInRequired() throws Exception {
         super.indirectSaveNewInRequired();
     }
 
+    @Override
+    @Test
+    public void indirectSaveNewInRequiredNonEjb() throws Exception {
+        super.indirectSaveNewInRequiredNonEjb();
+    }
+
+    @Override
     @Test
     public void indirectSaveNewInRequiredThrowException() throws Exception {
         super.indirectSaveNewInRequiredThrowException();
     }
 
+    @Override
+    @Test
+    public void indirectSaveNewInRequiredThrowExceptionNonEjb() throws Exception {
+        super.indirectSaveNewInRequiredThrowExceptionNonEjb();
+    }
+
+    @Override
     @Test
     public void indirectSaveRequiredInRequired() throws Exception {
         super.indirectSaveRequiredInRequired();
     }
 
+    @Override
+    @Test
+    public void indirectSaveRequiredInRequiredNonEjb() throws Exception {
+        super.indirectSaveRequiredInRequiredNonEjb();
+    }
+
+    @Override
     @Test
     public void indirectSaveRequiredInRequiredThrowException() throws Exception {
         super.indirectSaveRequiredInRequiredThrowException();
     }
 
+    @Override
+    @Test
+    public void indirectSaveRequiredInRequiredThrowExceptionNonEjb() throws Exception {
+        super.indirectSaveRequiredInRequiredThrowExceptionNonEjb();
+    }
+
+    @Override
     @Test
     public void indirectSaveNewInNewTra() throws Exception {
         super.indirectSaveNewInNewTra();
     }
 
+    @Override
+    @Test
+    public void indirectSaveNewInNewTraNonEjb() throws Exception {
+        super.indirectSaveNewInNewTraNonEjb();
+    }
+
+    @Override
     @Test
     public void indirectSaveRequiredInNewTraThrow() throws Exception {
         super.indirectSaveRequiredInNewTraThrow();
     }
 
+    @Override
+    @Test
+    public void indirectSaveRequiredInNewTraThrowNonEjb() throws Exception {
+        super.indirectSaveRequiredInNewTraThrowNonEjb();
+    }
+
+    @Override
     @Test
     public void indirectSaveNewInNewTraThrow() throws Exception {
         super.indirectSaveNewInNewTraThrow();
     }
 
+    @Override
+    @Test
+    public void indirectSaveNewInNewTraThrowNonEjb() throws Exception {
+        super.indirectSaveNewInNewTraThrowNonEjb();
+    }
+
+    @Override
     @Test
     public void indirectSaveRequiredInNewTra() throws Exception {
         super.indirectSaveRequiredInNewTra();
     }
 
+    @Override
+    @Test
+    public void indirectSaveRequiredInNewTraNonEjb() throws Exception {
+        super.indirectSaveRequiredInNewTraNonEjb();
+    }
+
+    @Override
     @Test
     public void indirectSaveRequiredPlusNewInNewTra() throws Exception {
         super.indirectSaveRequiredPlusNewInNewTra();
     }
 
+    @Override
+    @Test
+    public void indirectSaveRequiredPlusNewInNewTraNonEjb() throws Exception {
+        super.indirectSaveRequiredPlusNewInNewTraNonEjb();
+    }
+
+    @Override
     @Test
     public void indirectSaveRequiredPlusNewInNewTraButDirectCallAndThrow() throws Exception {
         super.indirectSaveRequiredPlusNewInNewTraButDirectCallAndThrow();
     }
+    @Override
+    @Test
+    public void indirectSaveRequiredPlusNewInNewTraButDirectCallAndThrowNonEjb() throws Exception {
+        super.indirectSaveRequiredPlusNewInNewTraButDirectCallAndThrowNonEjb();
+    }
 
+    @Override
     @Test
     public void indirectSaveRequiresNewLocalAsBusinessObject() throws Exception {
         super.indirectSaveRequiresNewLocalAsBusinessObject();
     }
 
+    @Override
+    @Test
+    public void indirectSaveRequiresNewLocalAsBusinessObjectNonEjb() throws Exception {
+        super.indirectSaveRequiresNewLocalAsBusinessObjectNonEjb();
+    }
+
+    @Override
     @Test
     public void indirectSaveRequiresNewLocalAsBusinessObjectAndThrow() throws Exception {
         super.indirectSaveRequiresNewLocalAsBusinessObjectAndThrow();
     }
 
+    @Override
+    @Test
+    public void indirectSaveRequiresNewLocalAsBusinessObjectAndThrowNonEjb() throws Exception {
+        super.indirectSaveRequiresNewLocalAsBusinessObjectAndThrowNonEjb();
+    }
+
+    @Override
     @Test
     public void indirectSaveRequiresNewLocalUsingSelfAndThrow() throws Exception {
         super.indirectSaveRequiresNewLocalUsingSelfAndThrow();
     }
 
+    @Override
     @Test
     public void testBeanManagedTransactionsInTra() throws Exception {
         super.testBeanManagedTransactionsInTra();

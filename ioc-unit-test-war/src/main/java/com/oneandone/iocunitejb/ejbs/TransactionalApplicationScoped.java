@@ -8,6 +8,7 @@ import static javax.transaction.Transactional.TxType.SUPPORTS;
 import java.io.IOException;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
@@ -25,6 +26,9 @@ public class TransactionalApplicationScoped {
 
     @Inject
     Logger logger;
+
+    @Inject
+    private Instance<TransactionalApplicationScoped> self;
 
     @Inject
     EntityManager entityManager;
@@ -76,7 +80,7 @@ public class TransactionalApplicationScoped {
     public TestEntity1 saveRequiresNewLocalAsBusinessObject(TestEntity1 testEntity1) {
         entityManager.persist(testEntity1);
         // no local call anymore so really saved in new Transaction!!
-        saveInNewTransaction(new TestEntity1());
+        self.get().saveInNewTransaction(new TestEntity1());
         return testEntity1;
     }
 
@@ -107,13 +111,13 @@ public class TransactionalApplicationScoped {
 
     @Transactional(REQUIRED)
     public void persistRequiredIndirectAndRTException(TestEntity1 testEntity1) {
-        saveInCurrentTransaction(testEntity1);
+        self.get().saveInCurrentTransaction(testEntity1);
         throw new RuntimeException("rt exception after persist in required 3");
     }
 
     @Transactional(REQUIRED)
     public void persistRequiredIndirectAndRTExceptionIndirect(TestEntity1 testEntity1) {
-        persistRequiredAndRTException(testEntity1);
+        self.get().persistRequiredAndRTException(testEntity1);
         throw new RuntimeException("rt exception after persist in required 4");
     }
 
@@ -125,7 +129,7 @@ public class TransactionalApplicationScoped {
 
     @Transactional(REQUIRED)
     public void persistRequiresNewIndirectAndRTExceptionIndirect(TestEntity1 testEntity1) {
-        persistRequiresNewAndRTException(testEntity1);
+        self.get().persistRequiresNewAndRTException(testEntity1);
         throw new RuntimeException("rt exception after persist in required 6");
     }
 
