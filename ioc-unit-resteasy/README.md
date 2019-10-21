@@ -63,12 +63,15 @@ To support jaxrs to gether with json-marshalling:
 
 if restassured can be found by ioc-unit-resteasy in the test-classpath, it can be used in the testcode.
 
-**But**: Make sure not to override the RestAssuredConfig. 
+* **But**: Make sure not to override the RestAssuredConfig. 
 The Initial Configuration will make sure that the RestResources and Providers
  will be registered in the Resteasy-Mockdispatcher! To change the RestassuredConfig always use
  `Restassured.config`
+ 
+* Always have a resteasy...provider available in your pom, otherwise in returning a response, a perfect OK-Status
+ will become a 500.
 
-### example
+### Example
 
     @RunWith(IocUnitRunner.class)
     @SutClasses({ExampleErrorMapper.class, ExampleResource.class})
