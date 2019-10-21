@@ -242,10 +242,10 @@ public class TestPersistenceFactory extends PersistenceFactory {
         PersistenceProvider persistenceProvider = getPersistenceProvider();
 
         EntityManagerFactory result;
-        if (dropAllObjects())
-            initStatements.add("drop all objects");
-        if (getSchema() != null)
-            initStatements.add("create schema " + getSchema());
+        // if (dropAllObjects())
+        //    initStatements.add("drop all objects");
+        // if (getSchema() != null)
+        //     initStatements.add("create schema " + getSchema());
         if(getRecommendedProvider().equals(Provider.HIBERNATE)) {
             initHibernateProperties(properties);
             // possibly override properties using system properties
@@ -382,8 +382,20 @@ public class TestPersistenceFactory extends PersistenceFactory {
     private void initHibernateProperties(final HashMap<String, Object> properties) {
         properties.put("javax.persistence.jdbc.driver","org.h2.Driver");
         String db = getDbNameOrMem();
+        String initString = "";
+        if (dropAllObjects()) {
+            initString = ";INIT=drop all objects";
+        }
+        if (getSchema() != null) {
+            properties.put("hibernate.default_schema", getSchema());
+            if (dropAllObjects()) {
+                initString = ";INIT=drop all objects\\;create schema if not exists " + getSchema() + "\\;set schema " + getSchema() + ";";
+            } else {
+                initString = ";INIT=create schema if not exists " + getSchema() + ";";
+            }
+        }
         properties.put("javax.persistence.jdbc.url",
-                "jdbc:h2:" + db + ";DB_CLOSE_ON_EXIT=TRUE;DB_CLOSE_DELAY=0;LOCK_MODE=0;LOCK_TIMEOUT=10000");
+                "jdbc:h2:" + db + ";DB_CLOSE_ON_EXIT=TRUE;DB_CLOSE_DELAY=0;LOCK_MODE=0;LOCK_TIMEOUT=10000" + initString);
         properties.put("javax.persistence.jdbc.user" , "sa");
         properties.put("javax.persistence.jdbc.password", "");
         properties.put("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
@@ -391,6 +403,9 @@ public class TestPersistenceFactory extends PersistenceFactory {
         properties.put("hibernate.hbm2ddl.auto", "create-drop");
         properties.put("hibernate.id.new_generator_mappings", false);
         properties.put("hibernate.archive.autodetection", "class");
+        if (getSchema() != null) {
+            properties.put("hibernate.default_schema", getSchema());
+        }
     }
 
     /**
