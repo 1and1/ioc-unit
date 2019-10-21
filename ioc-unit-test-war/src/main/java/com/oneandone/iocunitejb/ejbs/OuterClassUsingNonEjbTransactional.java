@@ -1,5 +1,6 @@
 package com.oneandone.iocunitejb.ejbs;
 
+import static javax.transaction.Transactional.TxType.REQUIRED;
 import static javax.transaction.Transactional.TxType.REQUIRES_NEW;
 
 import javax.inject.Inject;
@@ -10,25 +11,28 @@ import com.oneandone.iocunitejb.entities.TestEntity1;
 /**
  * @author aschoerk
  */
-@Transactional
 public class OuterClassUsingNonEjbTransactional {
 
     @Inject
     TransactionalApplicationScoped statelessCdiBean;
 
+    @Transactional
     public void saveNewInRequired(TestEntity1 testEntity1) {
         statelessCdiBean.saveInNewTransaction(testEntity1);
     }
 
+    @Transactional(REQUIRED)
     public void saveNewInRequiredThrowRTException(TestEntity1 testEntity1) {
         statelessCdiBean.saveInNewTransaction(testEntity1);
         throw new RuntimeException("exception to rollback transaction");
     }
 
+    @Transactional(REQUIRED)
     public void saveRequiredInRequired(TestEntity1 testEntity1) {
         statelessCdiBean.saveInCurrentTransaction(testEntity1);
     }
 
+    @Transactional(REQUIRED)
     public void saveRequiredInRequiredThrowException(TestEntity1 testEntity1) {
         statelessCdiBean.saveInCurrentTransaction(testEntity1);
         throw new RuntimeException("exception to rollback transaction");
