@@ -164,7 +164,8 @@
                   <configuration>
                      <environmentVariables>
                         <JBOSS_HOME>${project.build.directory}/wildfly-${version.wildfly}</JBOSS_HOME>
-                     </environmentVariables>
+		</environmentVariables>
+		      <!-- the following line allows the debugging of the deployment -->
                       <!--argLine>-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005</argLine-->
                   </configuration>
                </plugin>

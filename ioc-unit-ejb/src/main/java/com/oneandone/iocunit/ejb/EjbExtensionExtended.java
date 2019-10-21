@@ -54,6 +54,7 @@ import javax.jms.JMSConnectionFactory;
 import javax.persistence.Entity;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 
 import org.apache.deltaspike.core.util.metadata.AnnotationInstanceProvider;
 import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
@@ -353,16 +354,12 @@ public class EjbExtensionExtended implements Extension {
      * @param pat the description of the type
      * @param <X> the type
      */
-    public <X> void processInjectionTarget(
-            @Observes  @WithAnnotations({
-                    Stateless.class,
-                    Stateful.class,
-                    Singleton.class,
-                    MessageDriven.class,
-            }) ProcessAnnotatedType<X> pat) {
+    public <X> void processEjbWrapperTarget(
+            @Observes  ProcessAnnotatedType<X> pat) {
         if (isAnnotationPresent(pat, Stateless.class) || isAnnotationPresent(pat, Stateful.class)
                 || isAnnotationPresent(pat, Singleton.class)
-                || isAnnotationPresent(pat, MessageDriven.class)) {
+                || isAnnotationPresent(pat, MessageDriven.class)
+            || possiblyTransactional(pat.getAnnotatedType())) {
             createEJBWrapper(pat, pat.getAnnotatedType());
         } else {
             if (possiblyAsynchronous(pat.getAnnotatedType())) {
@@ -479,6 +476,21 @@ public class EjbExtensionExtended implements Extension {
             pit.setInjectionTarget(wrapped);
         }
     }
+
+    private <X> boolean possiblyTransactional(final AnnotatedType<X> at) {
+
+        if (at.isAnnotationPresent(Transactional.class)) {
+            return true;
+        }
+
+        for (AnnotatedMethod<? super X> m: at.getMethods()) {
+            if ( m.isAnnotationPresent(Transactional.class)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
 
     private <X> boolean possiblyAsynchronous(final AnnotatedType<X> at) {

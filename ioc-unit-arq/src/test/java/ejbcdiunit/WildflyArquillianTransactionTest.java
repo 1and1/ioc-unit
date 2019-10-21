@@ -60,36 +60,46 @@ public class WildflyArquillianTransactionTest extends EJBTransactionTestBase {
         logger.info("runTestInRolledBackTransaction for arquillian: num: {} exceptionExpected {}",num, exceptionExpected);
         userTransaction.begin();
         try {
-            TestEntity1 testEntity1 = new TestEntity1();
-            boolean exceptionHappened = false;
-            try {
-                saver.save(testEntity1);
+           runTestWithoutTransaction(saver,num,exceptionExpected);
+        }
+        finally {
+            if(userTransaction.getStatus() == Status.STATUS_ACTIVE) {
+                userTransaction.rollback();
             }
-            catch (RuntimeException r) {
-                exceptionHappened = true;
-                if (exceptionExpected != exceptionHappened) {
-                    logger.error("Exception not expected",r);
-                }
-                logger.info("TransactionStatus: {}", userTransaction.getStatus());
-                if (userTransaction.getStatus() == Status.STATUS_MARKED_ROLLBACK) {
-                    userTransaction.rollback();
-                }
-                if (userTransaction.getStatus() != Status.STATUS_ACTIVE) {
-                    userTransaction.begin();
-                }
+        }
+    }
 
+    @Override
+    public void runTestWithoutTransaction(TestEntity1Saver saver, int num, boolean exceptionExpected) throws Exception {
+        TestEntity1 testEntity1 = new TestEntity1();
+        boolean exceptionHappened = false;
+        try {
+            saver.save(testEntity1);
+        }
+        catch (RuntimeException r) {
+            exceptionHappened = true;
+            if (exceptionExpected != exceptionHappened) {
+                logger.error("Exception not expected",r);
+            }
+            logger.info("TransactionStatus: {}", userTransaction.getStatus());
+            if (userTransaction.getStatus() == Status.STATUS_MARKED_ROLLBACK) {
+                userTransaction.rollback();
+            }
+        }
+        try {
+            if(userTransaction.getStatus() != Status.STATUS_ACTIVE) {
+                userTransaction.begin();
             }
             Assert.assertThat(exceptionHappened, is(exceptionExpected));
             TestEntity1 entity = new TestEntity1();
             entityManager.persist(entity);
             checkEntityNumber(num);
-        }
-        finally {
+        } finally {
             userTransaction.rollback();
         }
     }
 
-    @Before
+        @Before
     public void setup() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
         userTransaction.begin();
         entityManager.createQuery("delete from TestEntity1 e").executeUpdate();
@@ -123,16 +133,41 @@ public class WildflyArquillianTransactionTest extends EJBTransactionTestBase {
         super.requiresNewMethodWorks();
     }
 
+    @Override
+    @Test
+    public void requiresNewMethodWorksNonEjb() throws Exception {
+        super.requiresNewMethodWorksNonEjb();
+    }
 
     @Test
     public void defaultMethodWorks() throws Exception {
         super.defaultMethodWorks();
     }
 
+    @Override
+    @Test
+    public void defaultMethodWorksNonEjb() throws Exception {
+        super.defaultMethodWorksNonEjb();
+    }
+
     @Test
     public void requiredMethodWorks() throws Exception {
         super.requiredMethodWorks();
     }
+
+    @Override
+    @Test
+    public void requiredMethodWorksNonEjb() throws Exception {
+        super.requiredMethodWorksNonEjb();
+    }
+
+    @Override
+    @Test
+    public void indirectSaveNewInRequiredNonEjb() throws Exception {
+        super.indirectSaveNewInRequiredNonEjb();
+    }
+
+
 
     @Test
     public void indirectSaveNewInRequired() throws Exception {

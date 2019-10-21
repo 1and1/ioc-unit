@@ -19,6 +19,7 @@ import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
 import javax.transaction.RollbackException;
+import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -119,9 +120,11 @@ public class TransactionalInterceptor {
             final Class<?> declaringClass = ctx.getMethod().getDeclaringClass();
             Class<?> targetClass = getTargetClass(ctx);
             boolean beanManaged = isBeanManaged(declaringClass) || isBeanManaged(targetClass);
-            if (isNotEjbClass(declaringClass) && isNotEjbClass(targetClass)
-                    && ctx.getMethod().getAnnotation(EJB.class) == null
-                    ) {
+            if (isNotTransactionalClass(declaringClass) && isNotTransactionalClass(targetClass)
+                && ctx.getMethod().getAnnotation(EJB.class) == null
+                && ctx.getMethod().getAnnotation(Transactional.class) == null
+
+            ) {
                 return ctx.proceed();
             } else {
                 incLevel();
@@ -130,13 +133,19 @@ public class TransactionalInterceptor {
                 if (beanManaged) {
                     toPush = TransactionAttributeType.NOT_SUPPORTED;
                 } else {
-                    TransactionAttribute transaction = findAnnotation(declaringClass, TransactionAttribute.class);
-                    TransactionAttribute transactionMethod = ctx.getMethod().getAnnotation(TransactionAttribute.class);
+                    TransactionAttribute ejbTransaction = findAnnotation(declaringClass, TransactionAttribute.class);
+                    TransactionAttribute ejbTransactionMethod = ctx.getMethod().getAnnotation(TransactionAttribute.class);
+                    Transactional jtaTransactional = findAnnotation(declaringClass, Transactional.class);
+                    Transactional jtaTransactionalMethod = ctx.getMethod().getAnnotation(Transactional.class);
 
-                    if (transactionMethod != null) {
-                        toPush = transactionMethod.value();
-                    } else if (transaction != null) {
-                        toPush = transaction.value();
+                    if (ejbTransactionMethod != null) {
+                        toPush = ejbTransactionMethod.value();
+                    } else if (jtaTransactionalMethod != null) {
+                        toPush = mapJTA2Ejb(jtaTransactionalMethod.value());
+                    } else if (ejbTransaction != null) {
+                        toPush = ejbTransaction.value();
+                    } else if (jtaTransactional != null) {
+                        toPush = mapJTA2Ejb(jtaTransactional.value());
                     } else {
                         toPush = TransactionAttributeType.REQUIRED;
                     }
@@ -204,6 +213,21 @@ public class TransactionalInterceptor {
 
     }
 
+    private TransactionAttributeType mapJTA2Ejb(final Transactional.TxType value) {
+        if (value == null)
+            return TransactionAttributeType.REQUIRED;
+
+        switch (value) {
+            case MANDATORY: return TransactionAttributeType.MANDATORY;
+            case NEVER: return TransactionAttributeType.NEVER;
+            case NOT_SUPPORTED: return TransactionAttributeType.NOT_SUPPORTED;
+            case SUPPORTS: return TransactionAttributeType.SUPPORTS;
+            case REQUIRED: return TransactionAttributeType.REQUIRED;
+            case REQUIRES_NEW: return TransactionAttributeType.REQUIRES_NEW;
+            default: throw new RuntimeException("Invalid Transactional.TxType value: " + value);
+        }
+    }
+
     private Class<?> getTargetClass(InvocationContext ctx) {
         final Object target = ctx.getTarget();
         if (target == null)
@@ -235,7 +259,7 @@ public class TransactionalInterceptor {
             return annotation.value() == TransactionManagementType.BEAN;
     }
 
-    private boolean isNotEjbClass(Class<?> declaringClass) {
+    private boolean isNotTransactionalClass(Class<?> declaringClass) {
         if (declaringClass.equals(Object.class))
             return true;
         TransactionAttribute tmAnnotation = findAnnotation(declaringClass, TransactionAttribute.class);
@@ -244,6 +268,7 @@ public class TransactionalInterceptor {
         else {
             boolean result = declaringClass != null
                              && declaringClass.getAnnotation(TransactionManagement.class) == null // allow transactionmanagement to
+                             && declaringClass.getAnnotation(Transactional.class) == null // allow transactionmanagement to
                              // be defined for non ejb-classes
                              && declaringClass.getAnnotation(MessageDriven.class) == null
                              && declaringClass.getAnnotation(Stateless.class) == null
