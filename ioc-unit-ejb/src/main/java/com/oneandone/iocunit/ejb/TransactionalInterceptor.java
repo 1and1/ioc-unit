@@ -129,7 +129,7 @@ public class TransactionalInterceptor {
             } else {
                 incLevel();
                 TransactionAttributeType savedLastTransactionAttributeType = lastTransactionAttributeType.get();
-                TransactionAttributeType toPush;
+                TransactionAttributeType toPush = null;
                 if (beanManaged) {
                     toPush = TransactionAttributeType.NOT_SUPPORTED;
                 } else {
@@ -139,16 +139,31 @@ public class TransactionalInterceptor {
                     Transactional jtaTransactionalMethod = ctx.getMethod().getAnnotation(Transactional.class);
 
                     if (ejbTransactionMethod != null) {
-                        toPush = ejbTransactionMethod.value();
+                        if (!isEjb(declaringClass)  && !isEjb(targetClass)) {
+                            logger.error("Trying @TransactionAttribute on non Ejb-Class {}", declaringClass.getName(), targetClass.getName());
+                        } else {
+                            toPush = ejbTransactionMethod.value();
+                        }
                     } else if (jtaTransactionalMethod != null) {
+                        if (isEjb(declaringClass)  || isEjb(targetClass))
+                            logger.error("Trying @Transactional on Ejb-Class {}",declaringClass.getName(), targetClass.getName());
                         toPush = mapJTA2Ejb(jtaTransactionalMethod.value());
                     } else if (ejbTransaction != null) {
-                        toPush = ejbTransaction.value();
+                        if (!isEjb(declaringClass)  && !isEjb(targetClass)) {
+                            logger.error("Trying TransactionAttribute on non Ejb-Class {}", declaringClass.getName(), targetClass.getName());
+                        } else {
+                            toPush = ejbTransaction.value();
+                        }
                     } else if (jtaTransactional != null) {
+                        if (isEjb(declaringClass)  || isEjb(targetClass))
+                            logger.error("Trying @Transactional on Ejb-Class {}",declaringClass.getName(), targetClass.getName());
                         toPush = mapJTA2Ejb(jtaTransactional.value());
                     } else {
                         toPush = TransactionAttributeType.REQUIRED;
                     }
+                }
+                if (toPush == null) {
+                    return ctx.proceed();
                 }
                 transactionManager.push(toPush);
                 lastTransactionAttributeType.set(toPush);
@@ -276,5 +291,14 @@ public class TransactionalInterceptor {
                              && declaringClass.getAnnotation(Singleton.class) == null;
             return result;
         }
+    }
+
+    private boolean isEjb(Class<?> declaringClass) {
+        return declaringClass != null
+                         // be defined for non ejb-classes
+                         || declaringClass.getAnnotation(MessageDriven.class) != null
+                         || declaringClass.getAnnotation(Stateless.class) != null
+                         || declaringClass.getAnnotation(Stateful.class) != null
+                         || declaringClass.getAnnotation(Singleton.class) != null;
     }
 }
