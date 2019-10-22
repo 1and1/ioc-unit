@@ -35,6 +35,7 @@ import com.oneandone.cdi.weldstarter.spi.WeldStarter;
 import com.oneandone.iocunit.ejb.jms.JmsMocksFactory;
 import com.oneandone.iocunit.ejb.jms.JmsProducers;
 import com.oneandone.iocunit.ejb.jms.JmsSingletons;
+import com.oneandone.iocunit.ejb.persistence.PersistenceFactory;
 import com.oneandone.iocunit.ejb.persistence.SimulatedEntityTransaction;
 import com.oneandone.iocunit.ejb.persistence.SimulatedTransactionManager;
 import com.oneandone.iocunit.ejb.resourcesimulators.SimulatedUserTransaction;
@@ -43,6 +44,8 @@ import com.oneandone.iocunit.ejb.resourcesimulators.SimulatedUserTransaction;
  * @author aschoerk
  */
 public class EjbTestExtensionService implements TestExtensionService {
+
+    private boolean foundPersistenceFactory = false;
 
     static class EjbTestExtensionServiceData {
         List<ApplicationExceptionDescription> applicationExceptions = new ArrayList<>();
@@ -94,6 +97,9 @@ public class EjbTestExtensionService implements TestExtensionService {
             ejbTestExtensionServiceData.get().candidatesToStart.add(c);
         }
 
+        if (PersistenceFactory.class.isAssignableFrom(c)) {
+            this.foundPersistenceFactory = true;
+        }
         return c.getAnnotation(Entity.class) != null;
     }
 
@@ -148,6 +154,12 @@ public class EjbTestExtensionService implements TestExtensionService {
             if (!weldSetup.getBeanClasses().contains(SimulatedUserTransaction.class.getName())) {
                 weldSetup.getBeanClasses().add(SimulatedUserTransaction.class.getName());
             }
+        }
+        if (!foundPersistenceFactory) {
+            logger.error("Using ioc-unit-ejb without IOC-Unit-PersistenceFactory: "
+                         + "no simulation of EntityManager and Transactions supported");
+            throw new RuntimeException("Cannot Start ioc-unit-ejb without PersistenceFactory, "
+                                       + "perhaps include XmlLessPersistenceFactory in @TestClasses.");
         }
         weldSetup.addService(new WeldSetup.ServiceConfig(TransactionServices.class, new EjbUnitTransactionServices()));
     }

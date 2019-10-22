@@ -4,7 +4,7 @@ ioc-unit-ejb
 Adapts the CDI-Container to 
 
 * recognize EJ-Beans: Entity, Stateless, Singleton, Stateful
-* recognize and handle transactionality according to ejb-spec (without distributes transcations)
+* recognize and handle transactionality according to ejb-spec (without distributes transactions)
 * Offers Simulations for PersistenceContexts by default in memory.
 * recognize @Resource,@EJB,@PersistenceContext-Injects and map them 
 to CDI-Injects so that simple producers can replace those in a testenvironment.

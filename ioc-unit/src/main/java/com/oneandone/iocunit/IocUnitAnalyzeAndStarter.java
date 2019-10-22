@@ -34,8 +34,9 @@ public class IocUnitAnalyzeAndStarter {
     InitialContext initialContext;
 
     public WeldStarter getWeldStarter() {
-        if (weldStarter == null)
+        if(weldStarter == null) {
             weldStarter = WeldSetupClass.getWeldStarter();
+        }
         return weldStarter;
     }
 
@@ -64,7 +65,7 @@ public class IocUnitAnalyzeAndStarter {
         this(new InitialConfiguration());
     }
 
-        public void analyzeAndStart(final Class<?> clazz, Method testMethod) {
+    public void analyzeAndStart(final Class<?> clazz, Method testMethod) {
         if(cdiConfigCreator == null) {
             InitialConfiguration cfg = initialConfiguration;
             cfg.testClass = clazz;
@@ -83,6 +84,9 @@ public class IocUnitAnalyzeAndStarter {
     public void preStartupActions() {
         if(testExtensionServices != null) {
             for (TestExtensionService te : testExtensionServices) {
+                for (Class c: cdiConfigCreator.getConfiguration().getObligatory()) {
+                    te.candidateToStart(c);
+                }
                 te.preStartupAction(weldSetup);
             }
         }
@@ -99,17 +103,16 @@ public class IocUnitAnalyzeAndStarter {
     }
 
 
-
     public void shutdownWeldIfRunning(boolean ignoreException) throws NamingException {
         if(weldStarter != null) {
             logger.trace("----> shutting down Weld");
             if(ignoreException) {
                 try {
-                    if (creationalContexts != null) {
+                    if(creationalContexts != null) {
                         creationalContexts.close();
                         creationalContexts = null;
                     }
-                    if (initialContext != null) {
+                    if(initialContext != null) {
                         initialContext.close();
                         initialContext = null;
                     }
@@ -140,9 +143,10 @@ public class IocUnitAnalyzeAndStarter {
 
     public Throwable checkVersion() {
         String version = getWeldStarter().getVersion();
-        if ("2.2.8 (Final)".equals(version) || "2.2.7 (Final)".equals(version)) {
+        if("2.2.8 (Final)".equals(version) || "2.2.7 (Final)".equals(version)) {
             return new Exception("Weld 2.2.8 and 2.2.7 are not supported. Suggest upgrading to 2.2.9");
-        } else {
+        }
+        else {
             return null;
         }
     }
