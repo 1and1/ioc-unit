@@ -1,4 +1,4 @@
-package com.oneandone.iocunit.ejb.persistence;
+package com.oneandone.iocunit.ejb;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,16 +6,13 @@ import java.lang.management.ManagementFactory;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 
@@ -41,8 +38,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.iocunit.ejb.EjbExtensionExtended;
-import com.oneandone.iocunit.ejb.SessionContextFactory;
+import com.oneandone.iocunit.ejb.persistence.PersistenceFactory;
 
 /**
  * This Persistencefactory should allow to create tests with in an h2 database very fast.
@@ -62,13 +58,18 @@ import com.oneandone.iocunit.ejb.SessionContextFactory;
  */
 @ApplicationScoped
 @TestClasses({ SessionContextFactory.class })
-public class TestPersistenceFactory extends PersistenceFactory {
+public class XmlLessPersistenceFactory extends PersistenceFactory {
 
-    public static Set<String> notFoundPersistenceUnits = new HashSet<>();
-    static Logger logger = LoggerFactory.getLogger("TestPersistenceFactory");
+    static Logger logger = LoggerFactory.getLogger("XmlLessPersistenceFactory");
     @Inject
     private EjbExtensionExtended ejbExtensionExtended;
     HashMap<String, Object> properties = new HashMap<>();
+
+    HashMap<String, Object> childProperties = new HashMap<>();
+
+    public void addProperty(String name, Object property) {
+        childProperties.put(name, property);
+    }
 
     @Override
     protected String getPersistenceUnitName() {
@@ -76,15 +77,6 @@ public class TestPersistenceFactory extends PersistenceFactory {
             return "test";
         else
             return getFilenamePrefix();
-    }
-
-    /**
-     * Schema to be created when starting this PersistenceFactory
-     * @return Name of the schema to be created
-     */
-    protected String getSchema()  {
-        String hibernateSchema = System.getProperty("hibernate.default_schema");
-        return hibernateSchema;
     }
 
     /**
@@ -113,9 +105,6 @@ public class TestPersistenceFactory extends PersistenceFactory {
     public DataSource produceDataSource() {
         return super.produceDataSource();
     }
-
-    boolean justConstructed = true;
-    List<String> initStatements = new ArrayList<>();
 
     public EjbExtensionExtended getEjbExtensionExtended() {
         return ejbExtensionExtended;
@@ -158,7 +147,7 @@ public class TestPersistenceFactory extends PersistenceFactory {
 
             @Override
             public List<URL> getJarFileUrls() {
-                return TestPersistenceFactory.this.getJarFileUrls();
+                return XmlLessPersistenceFactory.this.getJarFileUrls();
             }
 
             @Override
@@ -168,7 +157,7 @@ public class TestPersistenceFactory extends PersistenceFactory {
 
             @Override
             public List<String> getManagedClassNames() {
-                return TestPersistenceFactory.this.getManagedClassNames();
+                return XmlLessPersistenceFactory.this.getManagedClassNames();
             }
 
             @Override
@@ -203,7 +192,7 @@ public class TestPersistenceFactory extends PersistenceFactory {
 
             @Override
             public boolean excludeUnlistedClasses() {
-                return TestPersistenceFactory.this.getEntityBeanRegex() != null;
+                return XmlLessPersistenceFactory.this.getEntityBeanRegex() != null;
             }
 
             @Override
@@ -221,19 +210,6 @@ public class TestPersistenceFactory extends PersistenceFactory {
      */
     @Override
     protected EntityManagerFactory createEntityManagerFactory() {
-        Throwable possiblyToThrow = null;
-        if(!notFoundPersistenceUnits.contains(getPersistenceUnitName())) {
-            try {
-                EntityManagerFactory result = super.createEntityManagerFactory();
-                if (result != null)
-                    return result;
-                notFoundPersistenceUnits.add(getPersistenceUnitName());
-            } catch (Throwable e) {
-                possiblyToThrow = e;
-                notFoundPersistenceUnits.add(getPersistenceUnitName());
-            }
-        }
-
         EntityManagerFactory res = createEntityManagerFactoryWOPersistenceXml();
         return res;
     }
@@ -242,10 +218,6 @@ public class TestPersistenceFactory extends PersistenceFactory {
         PersistenceProvider persistenceProvider = getPersistenceProvider();
 
         EntityManagerFactory result;
-        if (dropAllObjects())
-            initStatements.add("drop all objects");
-        if (getSchema() != null)
-            initStatements.add("create schema " + getSchema());
         if(getRecommendedProvider().equals(Provider.HIBERNATE)) {
             initHibernateProperties(properties);
             // possibly override properties using system properties
@@ -276,7 +248,7 @@ public class TestPersistenceFactory extends PersistenceFactory {
                  */
                 @Override
                 public URL getPersistenceUnitRootUrl() {
-                    return TestPersistenceFactory.this.getPersistenceUnitRootUrl(".");
+                    return XmlLessPersistenceFactory.this.getPersistenceUnitRootUrl(".");
                 }
 
                 /**
@@ -284,12 +256,12 @@ public class TestPersistenceFactory extends PersistenceFactory {
                  */
                 @Override
                 public List<URL> getJarFileUrls() {
-                    return TestPersistenceFactory.this.getJarFileUrls();
+                    return XmlLessPersistenceFactory.this.getJarFileUrls();
                 }
 
                 @Override
                 public List<String> getManagedClassNames() {
-                    return TestPersistenceFactory.this.getManagedClassNames();
+                    return XmlLessPersistenceFactory.this.getManagedClassNames();
                 }
 
                 @Override
@@ -298,13 +270,12 @@ public class TestPersistenceFactory extends PersistenceFactory {
                     if (ds == null) {
                         return createDataSource();
                     }
-                    handleJustConstructed(ds);
                     return ds;
                 }
 
                 @Override
                 public boolean excludeUnlistedClasses() {
-                    return TestPersistenceFactory.this.getEntityBeanRegex() != null;
+                    return XmlLessPersistenceFactory.this.getEntityBeanRegex() != null;
                 }
                 @Override
                 public ClassLoader getClassLoader() {
@@ -316,15 +287,6 @@ public class TestPersistenceFactory extends PersistenceFactory {
         }
 
         return result;
-    }
-
-    /**
-     * Before the start of the first dataconnection a statement to drop all objects is executed.
-     * This can be prevented by returning false here. This can prevent the usage of RUNSCRIPT with H2.
-     * @return false if no "drop all objects" should be executed when the first connection is created.
-     */
-    public boolean dropAllObjects() {
-        return true;
     }
 
     /**
@@ -350,6 +312,9 @@ public class TestPersistenceFactory extends PersistenceFactory {
         properties.put("eclipselink.disableXmlSecurity","true");
         properties.put("eclipselink.ddl-generation", "drop-and-create-tables");
         properties.put("eclipselink.target-database", "MYSQL");
+        for (String name: childProperties.keySet()) {
+            properties.put(name, childProperties.get(name));
+        }
         System.clearProperty("hibernate.default_schema");
     }
     private String getProperty(final HashMap<String, Object> properties, String name, String hibernateName, String defaultValue) {
@@ -391,30 +356,16 @@ public class TestPersistenceFactory extends PersistenceFactory {
         properties.put("hibernate.hbm2ddl.auto", "create-drop");
         properties.put("hibernate.id.new_generator_mappings", false);
         properties.put("hibernate.archive.autodetection", "class");
-    }
-
-    /**
-     * Called before the creation if the first connection.
-     * Use super.createDataSource() if you want to do further inits
-     */
-    protected void handleJustConstructed(DataSource ds ) {
-        if (ds != null && justConstructed) {
-            justConstructed = false;
-            if(initStatements.size() > 0) {
-                try (Connection conn = ds.getConnection()) {
-                    try (Statement stmt = conn.createStatement()) {
-                        for (String s : initStatements) {
-                            stmt.execute(s);
-                        }
-                        stmt.execute("commit");
-                    }
-
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            }
+        for (String name: childProperties.keySet()) {
+            properties.put(name, childProperties.get(name));
         }
+        if (properties.containsKey("hibernate.connection.url")) {
+            properties.put("javax.persistence.jdbc.url",properties.get("hibernate.connection.url"));
+        }
+
     }
+
+
     private List<String> getManagedClassNames() {
         final String entityBeanRegex = getEntityBeanRegex();
         List<String> result = new ArrayList<>();
@@ -422,7 +373,7 @@ public class TestPersistenceFactory extends PersistenceFactory {
             if (entityBeanRegex == null || Pattern.matches(entityBeanRegex, c.getName()))
                 result.add(c.getName());
         }
-        logger.info("PUName: {} getManagedClassNames: {}", TestPersistenceFactory.this.getPersistenceUnitName(), result);
+        logger.info("PUName: {} getManagedClassNames: {}", XmlLessPersistenceFactory.this.getPersistenceUnitName(), result);
         return result;
     }
     private List<URL> getJarFileUrls() {
@@ -431,7 +382,7 @@ public class TestPersistenceFactory extends PersistenceFactory {
                 final ArrayList<URL> jarFiles = Collections.list(this.getClass()
                         .getClassLoader()
                         .getResources(""));
-                logger.info("PUName: {} getJarFileUrls: {}", TestPersistenceFactory.this.getPersistenceUnitName(), jarFiles);
+                logger.info("PUName: {} getJarFileUrls: {}", XmlLessPersistenceFactory.this.getPersistenceUnitName(), jarFiles);
                 return jarFiles;
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -466,7 +417,6 @@ public class TestPersistenceFactory extends PersistenceFactory {
             bds.setUrl(getProperty(properties, "javax.persistence.jdbc.url", "hibernate.connection.url", "jdbc:h2:mem:test;MODE=MySQL;DB_CLOSE_ON_EXIT=TRUE;DB_CLOSE_DELAY=0;LOCK_MODE=0;LOCK_TIMEOUT=10000"));
             bds.setUsername(getProperty(properties, "javax.persistence.jdbc.user", "hibernate.connection.username", "sa"));
             bds.setPassword(getProperty(properties, "javax.persistence.jdbc.password", "hibernate.connection.password", ""));
-            handleJustConstructed(bds);
             return bds;
         } else {
             return super.createDataSource();

@@ -10,17 +10,17 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import com.oneandone.iocunit.analyzer.annotations.SutClasses;
 import com.oneandone.iocunit.IocJUnit5Extension;
+import com.oneandone.iocunit.analyzer.annotations.SutClasses;
 import com.oneandone.iocunit.ejb.EjbTransactional;
-import com.oneandone.iocunit.ejb.persistence.TestPersistenceFactory;
+import com.oneandone.iocunit.ejb.XmlLessPersistenceFactory;
 import com.oneandone.iocunitejb.entities.TestEntity1;
 
 /**
  * @author aschoerk
  */
 @ExtendWith(IocJUnit5Extension.class)
-@SutClasses({ TestPersistenceFactory.class, TestEntity1.class })
+@SutClasses({ XmlLessPersistenceFactory.class, TestEntity1.class })
 public class NonEjbTransactionTest {
 
     @Inject

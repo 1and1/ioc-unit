@@ -1,21 +1,22 @@
 package com.oneandone.ejbcdiunit5.ejb;
 
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import com.oneandone.iocunit.IocJUnit5Extension;
 import com.oneandone.iocunit.analyzer.annotations.SutPackages;
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 import com.oneandone.iocunit.analyzer.annotations.TestPackages;
-import com.oneandone.iocunit.IocJUnit5Extension;
 import com.oneandone.iocunit.ejb.EjbJarClasspath;
-import com.oneandone.iocunit.ejb.persistence.TestPersistenceFactory;
+import com.oneandone.iocunit.ejb.XmlLessPersistenceFactory;
 import com.oneandone.iocunitejb.ejbs.appexc.TestBaseClass;
 import com.oneandone.iocunitejb.entities.TestEntity1;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
  * @author aschoerk
  */
 @ExtendWith(IocJUnit5Extension.class)
-@TestClasses({ TestPersistenceFactory.class })
+@TestClasses({ XmlLessPersistenceFactory.class })
 @TestPackages(TestBaseClass.class)
 @SutPackages({ TestEntity1.class })
 @EjbJarClasspath(TestBaseClass.class)

@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.TransactionAttributeType;
-import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.HeuristicMixedException;
@@ -27,13 +26,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import com.oneandone.iocunit.analyzer.annotations.SutClasses;
 import com.oneandone.iocunit.IocJUnit5Extension;
+import com.oneandone.iocunit.analyzer.annotations.SutClasses;
+import com.oneandone.iocunit.ejb.XmlLessPersistenceFactory;
 import com.oneandone.iocunit.ejb.persistence.PersistenceFactory;
 import com.oneandone.iocunit.ejb.persistence.TestClosure;
-import com.oneandone.iocunit.ejb.persistence.TestPersistenceFactory;
 import com.oneandone.iocunit.ejb.persistence.TestTransactionException;
-import com.oneandone.iocunit.ejb.resourcesimulators.SimulatedUserTransaction;
 
 
 /**
@@ -41,7 +39,7 @@ import com.oneandone.iocunit.ejb.resourcesimulators.SimulatedUserTransaction;
  */
 @ExtendWith(IocJUnit5Extension.class)
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
-@SutClasses({Service.class, TestPersistenceFactory.class})
+@SutClasses({Service.class, XmlLessPersistenceFactory.class})
 public class ServiceTest5 {
     @Inject
     ServiceIntf sut;

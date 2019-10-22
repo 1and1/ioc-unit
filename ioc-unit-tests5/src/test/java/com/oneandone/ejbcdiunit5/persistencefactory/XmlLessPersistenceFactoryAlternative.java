@@ -1,18 +1,18 @@
 package com.oneandone.ejbcdiunit5.persistencefactory;
 
-import com.oneandone.iocunit.ejb.persistence.TestPersistenceFactory;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Default;
 import javax.enterprise.inject.Produces;
 import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 
+import com.oneandone.iocunit.ejb.XmlLessPersistenceFactory;
+
 /**
  * @author aschoerk
  */
 @ApplicationScoped
-public class TestPersistenceFactoryAlternative extends TestPersistenceFactory {
+public class XmlLessPersistenceFactoryAlternative extends XmlLessPersistenceFactory {
     @Override
     protected String getPersistenceUnitName() {
         return "testalternative";

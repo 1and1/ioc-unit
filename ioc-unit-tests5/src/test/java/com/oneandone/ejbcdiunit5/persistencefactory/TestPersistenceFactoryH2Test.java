@@ -9,28 +9,25 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.oneandone.iocunit.IocJUnit5Extension;
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.iocunit.ejb.persistence.TestPersistenceFactory;
+import com.oneandone.iocunit.ejb.XmlLessPersistenceFactory;
 import com.oneandone.iocunitejb.entities.TestEntity1;
 
 /**
  * @author aschoerk
  */
 @ExtendWith(IocJUnit5Extension.class)
-@TestClasses({ TestPersistenceFactoryH2Test.TestDbSinglePersistenceFactory.class, TestEntity1.class })
+@TestClasses({ TestPersistenceFactoryH2Test.PersistenceFactory.class, TestEntity1.class })
 public class TestPersistenceFactoryH2Test extends PersistenceFactoryTestBase {
 
     @ApplicationScoped
-    public static class TestDbSinglePersistenceFactory extends TestPersistenceFactory {
+    public static class PersistenceFactory extends XmlLessPersistenceFactory {
 
-
-        @Override
-        protected String getSchema() {
-            return "testschema";
-        }
-
-        @Override
-        public boolean dropAllObjects() {
-            return false;
+        public PersistenceFactory() {
+            addProperty("hibernate.connection.url",
+                    "jdbc:h2:mem:testIntercepted;MODE=MySQL;DB_CLOSE_ON_EXIT=TRUE;MVCC=TRUE;" +
+                    "INIT=create schema if not exists testschema;DB_CLOSE_DELAY=0;LOCK_MODE=0;LOCK_TIMEOUT=10000");
+            addProperty("hibernate.default_schema", "testschema");
+            addProperty("hibernate.ejb.naming_strategy", "org.hibernate.cfg.ImprovedNamingStrategy");
         }
 
         @Produces

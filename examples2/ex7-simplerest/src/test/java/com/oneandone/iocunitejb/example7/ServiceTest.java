@@ -21,16 +21,16 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.oneandone.iocunit.IocUnitRunner;
 import com.oneandone.iocunit.analyzer.annotations.SutClasses;
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.iocunit.IocUnitRunner;
-import com.oneandone.iocunit.ejb.persistence.TestPersistenceFactory;
+import com.oneandone.iocunit.ejb.XmlLessPersistenceFactory;
 
 /**
  * @author aschoerk
  */
 @RunWith(IocUnitRunner.class)
-@TestClasses(TestPersistenceFactory.class)
+@TestClasses(XmlLessPersistenceFactory.class)
 @SutClasses({ Service.class })
 public class ServiceTest {
 

@@ -14,18 +14,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.oneandone.iocunit.IocUnitRunner;
-import com.oneandone.iocunit.analyzer.annotations.ExcludedClasses;
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 import com.oneandone.iocunit.ejb.SessionContextFactory;
-import com.oneandone.iocunit.ejb.persistence.TestPersistenceFactory;
 
 /**
  * @author aschoerk
  */
 @RunWith(IocUnitRunner.class)
-@TestClasses({TestPersistenceFactoryAlternative.class, SessionContextFactory.class})
-@ExcludedClasses({TestPersistenceFactory.class})
-public class TestPersistenceFactoryAlternativeH2Test extends PersistenceFactoryTestBase {
+@TestClasses({XmlLessPersistenceFactoryAlternative.class, SessionContextFactory.class})
+public class TestPersistenceFactoryAlternativeH2XmlLess extends PersistenceFactoryTestBase {
 
     @Override
     protected String getStringAttributeNativeName() {

@@ -17,6 +17,7 @@ public class ACC4220bService {
     EntityManager entityManager;
 
     public List intermediateQuery() {
+        entityManager.createNativeQuery("drop table if exists sv1 ").executeUpdate();
         Query q = entityManager.createNativeQuery("create table sv1 "
                                                   + "as "
                                                   + "select distinct "
@@ -35,6 +36,7 @@ public class ACC4220bService {
     }
 
     public List resultQuery() {
+        entityManager.createNativeQuery("drop table if exists tmp_result ").executeUpdate();
         Query q;
         q = entityManager.createNativeQuery("create table tmp_result "
                                             + "as select distinct "

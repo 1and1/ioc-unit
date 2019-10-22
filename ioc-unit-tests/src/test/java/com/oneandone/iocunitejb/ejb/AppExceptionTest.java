@@ -3,12 +3,12 @@ package com.oneandone.iocunitejb.ejb;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.oneandone.iocunit.IocUnitRunner;
 import com.oneandone.iocunit.analyzer.annotations.SutPackages;
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 import com.oneandone.iocunit.analyzer.annotations.TestPackages;
-import com.oneandone.iocunit.IocUnitRunner;
 import com.oneandone.iocunit.ejb.EjbJarClasspath;
-import com.oneandone.iocunit.ejb.persistence.TestPersistenceFactory;
+import com.oneandone.iocunit.ejb.XmlLessPersistenceFactory;
 import com.oneandone.iocunitejb.ejbs.appexc.TestBaseClass;
 import com.oneandone.iocunitejb.entities.TestEntity1;
 
@@ -16,7 +16,7 @@ import com.oneandone.iocunitejb.entities.TestEntity1;
  * @author aschoerk
  */
 @RunWith(IocUnitRunner.class)
-@TestClasses({ TestPersistenceFactory.class })
+@TestClasses({ XmlLessPersistenceFactory.class })
 @TestPackages(TestBaseClass.class)
 @SutPackages({ TestEntity1.class })
 @EjbJarClasspath(TestBaseClass.class)

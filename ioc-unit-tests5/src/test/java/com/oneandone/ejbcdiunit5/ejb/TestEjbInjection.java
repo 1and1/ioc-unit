@@ -12,17 +12,17 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import com.oneandone.iocunit.analyzer.annotations.SutClasses;
-import com.oneandone.iocunit.IocJUnit5Extension;
-import com.oneandone.iocunit.ejb.persistence.TestPersistenceFactory;
-import com.oneandone.iocunitejb.ejbs.StatelessEJB;
 import com.oneandone.ejbcdiunit5.helpers.LoggerGenerator;
+import com.oneandone.iocunit.IocJUnit5Extension;
+import com.oneandone.iocunit.analyzer.annotations.SutClasses;
+import com.oneandone.iocunit.ejb.XmlLessPersistenceFactory;
+import com.oneandone.iocunitejb.ejbs.StatelessEJB;
 
 /**
  * @author aschoerk
  */
 @ExtendWith(IocJUnit5Extension.class)
-@SutClasses({ StatelessEJB.class, LoggerGenerator.class, TestPersistenceFactory.class })
+@SutClasses({ StatelessEJB.class, LoggerGenerator.class, XmlLessPersistenceFactory.class })
 public class TestEjbInjection {
 
     @EJB(name = "StatelessEJB")

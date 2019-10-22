@@ -5,10 +5,12 @@ import javax.enterprise.inject.Produces;
 import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 
+import com.oneandone.iocunit.ejb.XmlLessPersistenceFactory;
+
 /**
  * @author aschoerk
  */
-public class EclipseLinkPersistenceFactory extends TestPersistenceFactory {
+public class EclipseLinkPersistenceFactory extends XmlLessPersistenceFactory {
 
     @Override
     protected Provider getRecommendedProvider() {

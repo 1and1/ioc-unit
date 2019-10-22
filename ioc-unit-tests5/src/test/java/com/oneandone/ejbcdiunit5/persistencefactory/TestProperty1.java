@@ -23,7 +23,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import com.oneandone.iocunit.IocJUnit5Extension;
 import com.oneandone.iocunit.analyzer.annotations.SutClasses;
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.iocunit.ejb.persistence.TestPersistenceFactory;
+import com.oneandone.iocunit.ejb.XmlLessPersistenceFactory;
 import com.oneandone.iocunitejb.entities.TestEntity1;
 
 /**
@@ -32,7 +32,7 @@ import com.oneandone.iocunitejb.entities.TestEntity1;
  * @author aschoerk
  */
 @ExtendWith(IocJUnit5Extension.class)
-@TestClasses(TestProperty1.H2PersistenceFactory.class)
+@TestClasses(TestProperty1.PersistenceFactory.class)
 @SutClasses(TestEntity1.class)
 public class TestProperty1 extends PersistenceFactoryTestBase {
 
@@ -40,16 +40,11 @@ public class TestProperty1 extends PersistenceFactoryTestBase {
     EntityManager entityManager;
 
     @ApplicationScoped
-    public static class H2PersistenceFactory extends TestPersistenceFactory {
-
-        @Override
-        protected String getSchema() {
-            return "schema";
-        }
-
-        @Override
-        public boolean dropAllObjects() {
-            return false;
+    public static class PersistenceFactory extends XmlLessPersistenceFactory {
+        public PersistenceFactory() {
+            addProperty("hibernate.default_schema", "schema");
+            addProperty("hibernate.connection.url",
+                    "jdbc:h2:mem:testIntercepted;MODE=MySQL;DB_CLOSE_DELAY=0;INIT=create schema if not exists schema;LOCK_MODE=0");
         }
 
         @Produces
