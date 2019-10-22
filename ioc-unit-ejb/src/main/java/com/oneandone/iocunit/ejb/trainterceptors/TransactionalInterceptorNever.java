@@ -11,7 +11,7 @@ import javax.transaction.Transactional;
  */
 @Interceptor
 @Transactional(NEVER)
-@Priority(Interceptor.Priority.PLATFORM_BEFORE + 500)
-public class TransactionalInterceptorNever extends TransactionalInterceptorBase {
+@Priority(Interceptor.Priority.PLATFORM_BEFORE + 200)
+public class TransactionalInterceptorNever extends TransactionalInterceptorJtaBase {
 
 }

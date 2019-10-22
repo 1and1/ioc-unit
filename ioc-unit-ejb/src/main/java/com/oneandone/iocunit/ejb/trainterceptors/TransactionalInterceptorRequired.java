@@ -11,7 +11,7 @@ import javax.transaction.Transactional;
  */
 @Interceptor
 @Transactional(REQUIRED)
-@Priority(Interceptor.Priority.PLATFORM_BEFORE + 500)
-public class TransactionalInterceptorRequired extends TransactionalInterceptorBase {
+@Priority(Interceptor.Priority.PLATFORM_BEFORE + 200)
+public class TransactionalInterceptorRequired extends TransactionalInterceptorJtaBase {
 
 }

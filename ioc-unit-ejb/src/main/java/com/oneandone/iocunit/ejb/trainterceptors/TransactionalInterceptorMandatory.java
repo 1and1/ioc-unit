@@ -10,8 +10,8 @@ import javax.transaction.Transactional;
  * @author aschoerk
  */
 @Interceptor
-@Priority(Interceptor.Priority.PLATFORM_BEFORE + 500)
+@Priority(Interceptor.Priority.PLATFORM_BEFORE + 200)
 @Transactional(MANDATORY)
-public class TransactionalInterceptorMandatory extends TransactionalInterceptorBase {
+public class TransactionalInterceptorMandatory extends TransactionalInterceptorJtaBase {
 
 }
