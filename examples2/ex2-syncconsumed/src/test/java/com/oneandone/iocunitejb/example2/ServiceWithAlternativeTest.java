@@ -1,33 +1,44 @@
 package com.oneandone.iocunitejb.example2;
 
-import com.oneandone.iocunit.analyzer.annotations.SutPackages;
-import com.oneandone.iocunit.IocUnitRunner;
-import com.oneandone.iocunit.analyzer.annotations.ProducesAlternative;
-import com.oneandone.iocunitejb.example2.uselookup.Resources;
-import com.oneandone.iocunitejb.example2.uselookup.ServiceWithLookup;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.when;
+import com.oneandone.iocunit.IocUnitRunner;
+import com.oneandone.iocunit.analyzer.annotations.AnalyzerFlags;
+import com.oneandone.iocunit.analyzer.annotations.ProducesAlternative;
+import com.oneandone.iocunit.analyzer.annotations.SutPackages;
+import com.oneandone.iocunit.ejb.EjbExtensionExtended;
+import com.oneandone.iocunitejb.example2.uselookup.Resources;
+import com.oneandone.iocunitejb.example2.uselookup.ServiceWithLookup;
 
 /**
  * @author aschoerk
  */
 @RunWith(IocUnitRunner.class)
 @SutPackages({ServiceWithLookup.class})
+@AnalyzerFlags(excludedExtensions = {EjbExtensionExtended.class})
 public class ServiceWithAlternativeTest {
     @Inject
     ServiceIntf sut;
+
+    @Mock
+    @Produces
+    EjbExtensionExtended ejbExtensionExtended;
 
     @Mock
     RemoteServiceIntf remoteService;
