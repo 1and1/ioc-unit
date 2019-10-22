@@ -79,6 +79,12 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+            <version>${compile.version.annotation-api}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
             <version>5.3.6.Final</version>

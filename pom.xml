@@ -92,6 +92,7 @@
         <compile.version.weld-spi>3.0.SP4</compile.version.weld-spi>
         <compile.version.weld-api>3.0.SP4</compile.version.weld-api>
         <compile.version.persistence-api>2.2</compile.version.persistence-api>
+        <compile.version.annotation-api>1.3</compile.version.annotation-api>
         <compile.version.faces>2.3</compile.version.faces>
 
     </properties>

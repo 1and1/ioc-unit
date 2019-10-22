@@ -2,6 +2,7 @@ package com.oneandone.iocunit.ejb.trainterceptors;
 
 import static javax.transaction.Transactional.TxType.REQUIRED;
 
+import javax.annotation.Priority;
 import javax.interceptor.Interceptor;
 import javax.transaction.Transactional;
 
@@ -10,6 +11,7 @@ import javax.transaction.Transactional;
  */
 @Interceptor
 @Transactional(REQUIRED)
+@Priority(Interceptor.Priority.PLATFORM_BEFORE + 500)
 public class TransactionalInterceptorRequired extends TransactionalInterceptorBase {
 
 }
