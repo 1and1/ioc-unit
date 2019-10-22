@@ -23,6 +23,7 @@ import com.oneandone.iocunit.ejb.jms.JmsMocksFactory;
 import com.oneandone.iocunit.ejb.jms.JmsProducers;
 import com.oneandone.iocunit.ejb.resourcesimulators.TimerServiceSimulator;
 import com.oneandone.iocunit.ejb.resourcesimulators.WebServiceContextSimulation;
+import com.oneandone.iocunit.ejb.trainterceptors.TransactionalInterceptorBase;
 
 
 /**
@@ -30,7 +31,7 @@ import com.oneandone.iocunit.ejb.resourcesimulators.WebServiceContextSimulation;
  *
  * @author aschoerk
  */
-@TestClasses({JmsProducers.class, EjbExtensionExtended.class, TransactionalInterceptor.class,
+@TestClasses({JmsProducers.class, EjbExtensionExtended.class, TransactionalInterceptorBase.class,
         AsynchronousMethodInterceptor.class, JmsMocksFactory.class, SessionContextFactory.class,
         WebServiceContextSimulation.class,TimerServiceSimulator.class, EjbUnitBeanInitializerClass.class})
 @Retention(RetentionPolicy.RUNTIME)

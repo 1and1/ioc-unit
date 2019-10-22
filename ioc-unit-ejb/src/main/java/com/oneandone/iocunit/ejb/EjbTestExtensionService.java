@@ -41,6 +41,14 @@ import com.oneandone.iocunit.ejb.persistence.PersistenceFactory;
 import com.oneandone.iocunit.ejb.persistence.SimulatedEntityTransaction;
 import com.oneandone.iocunit.ejb.persistence.SimulatedTransactionManager;
 import com.oneandone.iocunit.ejb.resourcesimulators.SimulatedUserTransaction;
+import com.oneandone.iocunit.ejb.trainterceptors.TransactionalInterceptorBase;
+import com.oneandone.iocunit.ejb.trainterceptors.TransactionalInterceptorEjb;
+import com.oneandone.iocunit.ejb.trainterceptors.TransactionalInterceptorMandatory;
+import com.oneandone.iocunit.ejb.trainterceptors.TransactionalInterceptorNever;
+import com.oneandone.iocunit.ejb.trainterceptors.TransactionalInterceptorNotSupported;
+import com.oneandone.iocunit.ejb.trainterceptors.TransactionalInterceptorRequired;
+import com.oneandone.iocunit.ejb.trainterceptors.TransactionalInterceptorRequiresNew;
+import com.oneandone.iocunit.ejb.trainterceptors.TransactionalInterceptorSupports;
 
 /**
  * @author aschoerk
@@ -125,7 +133,13 @@ public class EjbTestExtensionService implements TestExtensionService {
                 add(EjbExtensionExtended.class);
                 add(EjbInformationBean.class);
                 // add(WeldSEBeanRegistrant.class);
-                add(TransactionalInterceptor.class);
+                add(TransactionalInterceptorEjb.class);
+                add(TransactionalInterceptorRequired.class);
+                add(TransactionalInterceptorRequiresNew.class);
+                add(TransactionalInterceptorMandatory.class);
+                add(TransactionalInterceptorNever.class);
+                add(TransactionalInterceptorNotSupported.class);
+                add(TransactionalInterceptorSupports.class);
                 add(SimulatedTransactionManager.class);
                 add(SimulatedEntityTransaction.class);
                 add(EjbUnitBeanInitializerClass.class);
@@ -185,7 +199,7 @@ public class EjbTestExtensionService implements TestExtensionService {
                 EjbUnitBeanInitializerClass.class,
                 AsynchronousManager.class,
                 SessionContextFactory.class,
-                TransactionalInterceptor.class);
+                TransactionalInterceptorBase.class);
     }
 
     @Override

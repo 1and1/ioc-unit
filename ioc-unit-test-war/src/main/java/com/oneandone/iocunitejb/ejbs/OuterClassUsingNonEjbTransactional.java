@@ -16,7 +16,7 @@ public class OuterClassUsingNonEjbTransactional {
     @Inject
     TransactionalApplicationScoped statelessCdiBean;
 
-    @Transactional
+    @Transactional(REQUIRED)
     public void saveNewInRequired(TestEntity1 testEntity1) {
         statelessCdiBean.saveInNewTransaction(testEntity1);
     }

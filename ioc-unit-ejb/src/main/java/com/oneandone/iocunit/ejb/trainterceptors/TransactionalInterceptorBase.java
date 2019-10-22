@@ -1,4 +1,4 @@
-package com.oneandone.iocunit.ejb;
+package com.oneandone.iocunit.ejb.trainterceptors;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
@@ -16,7 +16,6 @@ import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
-import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
 import javax.transaction.RollbackException;
 import javax.transaction.Transactional;
@@ -25,17 +24,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
+import com.oneandone.iocunit.ejb.ApplicationExceptionDescription;
+import com.oneandone.iocunit.ejb.EjbInformationBean;
 import com.oneandone.iocunit.ejb.persistence.SimulatedTransactionManager;
 
 /**
  * @author aschoerk
  */
-@Interceptor
-@EjbTransactional
-public class TransactionalInterceptor {
+public class TransactionalInterceptorBase {
 
     private final Logger logger =
-            LoggerFactory.getLogger(TransactionalInterceptor.class);
+            LoggerFactory.getLogger(TransactionalInterceptorBase.class);
     private SimulatedTransactionManager transactionManager = new SimulatedTransactionManager();
 
     static ThreadLocal<TransactionAttributeType> lastTransactionAttributeType = new ThreadLocal<>();

@@ -37,6 +37,7 @@ import javax.enterprise.event.Observes;
 import javax.enterprise.inject.Default;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.AnnotatedField;
+import javax.enterprise.inject.spi.AnnotatedMember;
 import javax.enterprise.inject.spi.AnnotatedMethod;
 import javax.enterprise.inject.spi.AnnotatedType;
 import javax.enterprise.inject.spi.Bean;
@@ -54,7 +55,6 @@ import javax.jms.JMSConnectionFactory;
 import javax.persistence.Entity;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
 
 import org.apache.deltaspike.core.util.metadata.AnnotationInstanceProvider;
 import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
@@ -63,6 +63,7 @@ import org.slf4j.LoggerFactory;
 
 import com.oneandone.cdi.weldstarter.WeldSetupClass;
 import com.oneandone.iocunit.ejb.persistence.SimulatedTransactionManager;
+import com.oneandone.iocunit.ejb.trainterceptors.EjbTransactional;
 
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.InvocationHandler;
@@ -348,6 +349,12 @@ public class EjbExtensionExtended implements Extension {
         }
     }
 
+    public <X> void processTransactionalMember(
+            @Observes
+                    AnnotatedMember annotatedMethod) {
+        logger.info("Member: " + annotatedMethod.toString());
+    }
+
     /**
      * create EJB-Wrapper, Interceptors to specific annotated types if necessary.
      *
@@ -355,14 +362,22 @@ public class EjbExtensionExtended implements Extension {
      * @param <X> the type
      */
     public <X> void processEjbWrapperTarget(
-            @Observes  ProcessAnnotatedType<X> pat) {
+            @Observes
+            @WithAnnotations({
+                    Stateless.class,
+                    Stateful.class,
+                    Singleton.class,
+                    MessageDriven.class
+            })
+                    ProcessAnnotatedType<X> pat) {
+        final AnnotatedType<X> annotatedType = pat.getAnnotatedType();
         if (isAnnotationPresent(pat, Stateless.class) || isAnnotationPresent(pat, Stateful.class)
-                || isAnnotationPresent(pat, Singleton.class)
-                || isAnnotationPresent(pat, MessageDriven.class)
-            || possiblyTransactional(pat.getAnnotatedType())) {
-            createEJBWrapper(pat, pat.getAnnotatedType());
+            || isAnnotationPresent(pat, Singleton.class)
+            || isAnnotationPresent(pat, MessageDriven.class)
+            ) {
+            createEJBWrapper(pat, annotatedType);
         } else {
-            if (possiblyAsynchronous(pat.getAnnotatedType())) {
+            if (possiblyAsynchronous(annotatedType)) {
                 logger.error("Non Ejb with Asynchronous-Annotation {}", pat);
             }
 
@@ -476,22 +491,6 @@ public class EjbExtensionExtended implements Extension {
             pit.setInjectionTarget(wrapped);
         }
     }
-
-    private <X> boolean possiblyTransactional(final AnnotatedType<X> at) {
-
-        if (at.isAnnotationPresent(Transactional.class)) {
-            return true;
-        }
-
-        for (AnnotatedMethod<? super X> m: at.getMethods()) {
-            if ( m.isAnnotationPresent(Transactional.class)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-
 
     private <X> boolean possiblyAsynchronous(final AnnotatedType<X> at) {
 
