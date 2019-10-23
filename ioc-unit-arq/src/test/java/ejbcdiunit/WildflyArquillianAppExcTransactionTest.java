@@ -1,14 +1,8 @@
 package ejbcdiunit;
 
-import java.io.File;
-import java.io.FilenameFilter;
-import java.util.Arrays;
-
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -17,26 +11,9 @@ import com.oneandone.iocunitejb.ejbs.appexc.TestBaseClass;
 @RunWith(Arquillian.class)
 public class WildflyArquillianAppExcTransactionTest extends TestBaseClass {
 
-    public static WebArchive getWarFromTargetFolder() {
-        File folder = new File("../ioc-unit-test-war/target/");
-        File[] files = folder.listFiles(new FilenameFilter() {
-            public boolean accept(File dir, String name) {
-                return name.toLowerCase().endsWith(".war");
-            }
-        });
-        if (files == null) {
-            throw new IllegalArgumentException("Could not find directory " + folder.toString());
-        } else if (files.length != 1) {
-            throw new IllegalArgumentException("Exactly 1 war file expected, but found " + Arrays.toString(files));
-        } else {
-            WebArchive war = (WebArchive) ShrinkWrap.createFromZipFile(WebArchive.class, files[0]);
-            return war;
-        }
-    }
-
     @Deployment
     public static Archive<?> createTestArchive() {
-        return getWarFromTargetFolder();
+        return WildflyArquillianEjbTransactionTest.getWarFromTargetFolder();
     }
 
     @Test
