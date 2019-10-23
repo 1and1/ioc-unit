@@ -42,7 +42,7 @@ public class TransactionalInterceptorJtaBase extends TransactionalInterceptorBas
                         savedLastTransactionAttributeType == null ? "undefined" : savedLastTransactionAttributeType,
                         toPush, MDC.get("XID"), declaringClass.getSimpleName(), ctx.getMethod().getName());
                 return ctx.proceed();
-            } catch (Throwable ex) {
+            } catch (Exception ex) {
                 logger.debug("Thread {} L{} Exception {} in {} xid: {} in {}.{}",
                         Thread.currentThread().getId(), getLevel(),
                         ex.getClass().getSimpleName(), toPush, MDC.get("XID"), declaringClass.getSimpleName(),

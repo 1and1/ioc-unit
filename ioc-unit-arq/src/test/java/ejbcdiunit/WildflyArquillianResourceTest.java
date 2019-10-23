@@ -35,7 +35,7 @@ public class WildflyArquillianResourceTest {
 
     @Deployment
     public static Archive<?> createTestArchive() {
-        return WildflyArquillianTransactionTest.getWarFromTargetFolder();
+        return WildflyArquillianEjbTransactionTest.getWarFromTargetFolder();
     }
 
     Logger log = LoggerFactory.getLogger("WildflyArquillianResourceTest");

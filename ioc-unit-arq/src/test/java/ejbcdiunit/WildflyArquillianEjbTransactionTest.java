@@ -7,12 +7,12 @@ import java.io.FilenameFilter;
 import java.util.Arrays;
 
 import javax.ejb.EJBException;
+import javax.inject.Inject;
 import javax.persistence.TransactionRequiredException;
 import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
 import javax.transaction.NotSupportedException;
 import javax.transaction.RollbackException;
-import javax.transaction.Status;
 import javax.transaction.SystemException;
 
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -25,12 +25,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.oneandone.iocunitejb.ejbs.TestRunnerIntf;
 import com.oneandone.iocunitejb.entities.TestEntity1;
 import com.oneandone.iocunitejb.testbases.EJBTransactionTestBase;
 import com.oneandone.iocunitejb.testbases.TestEntity1Saver;
 
 @RunWith(Arquillian.class)
-public class WildflyArquillianTransactionTest extends EJBTransactionTestBase {
+public class WildflyArquillianEjbTransactionTest extends EJBTransactionTestBase {
 
     public static WebArchive getWarFromTargetFolder() {
         File folder = new File("../ioc-unit-test-war/target/");
@@ -45,6 +46,7 @@ public class WildflyArquillianTransactionTest extends EJBTransactionTestBase {
             throw new IllegalArgumentException("Exactly 1 war file expected, but found " + Arrays.toString(files));
         } else {
             WebArchive war = (WebArchive)ShrinkWrap.createFromZipFile(WebArchive.class, files[0]);
+            war.addClass(TestRunnerArq.class);
             return war;
         }
     }
@@ -54,56 +56,23 @@ public class WildflyArquillianTransactionTest extends EJBTransactionTestBase {
         return getWarFromTargetFolder();
     }
 
+    @Inject
+    TestRunnerIntf testRunner;
+
     @Override
     public void runTestInRolledBackTransaction(TestEntity1Saver saver, int num, boolean exceptionExpected) throws Exception {
 
-        logger.info("runTestInRolledBackTransaction for arquillian: num: {} exceptionExpected {}",num, exceptionExpected);
-        userTransaction.begin();
-        try {
-           runTestWithoutTransaction(saver,num,exceptionExpected);
-        }
-        finally {
-            if(userTransaction.getStatus() == Status.STATUS_ACTIVE) {
-                userTransaction.rollback();
-            }
-        }
+        testRunner.runTestInRolledBackTransaction(saver, num, exceptionExpected);
     }
 
     @Override
     public void runTestWithoutTransaction(TestEntity1Saver saver, int num, boolean exceptionExpected) throws Exception {
-        TestEntity1 testEntity1 = new TestEntity1();
-        boolean exceptionHappened = false;
-        try {
-            saver.save(testEntity1);
-        }
-        catch (RuntimeException r) {
-            exceptionHappened = true;
-            if (exceptionExpected != exceptionHappened) {
-                logger.error("Exception not expected",r);
-            }
-            logger.info("TransactionStatus: {}", userTransaction.getStatus());
-            if (userTransaction.getStatus() == Status.STATUS_MARKED_ROLLBACK) {
-                userTransaction.rollback();
-            }
-        }
-        try {
-            if(userTransaction.getStatus() != Status.STATUS_ACTIVE) {
-                userTransaction.begin();
-            }
-            Assert.assertThat(exceptionHappened, is(exceptionExpected));
-            TestEntity1 entity = new TestEntity1();
-            entityManager.persist(entity);
-            checkEntityNumber(num);
-        } finally {
-            userTransaction.rollback();
-        }
+        testRunner.runTestWithoutTransaction(saver, num, exceptionExpected);
     }
 
-        @Before
-    public void setup() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
-        userTransaction.begin();
-        entityManager.createQuery("delete from TestEntity1 e").executeUpdate();
-        userTransaction.commit();
+    @Before
+    public void setup() throws Exception {
+        testRunner.setUp();
     }
 
     @Test

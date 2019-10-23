@@ -34,7 +34,7 @@ public class WildflyArquillianAsynchTest {
 
     @Deployment
     public static Archive<?> createTestArchive() {
-        return WildflyArquillianTransactionTest.createTestArchive();
+        return WildflyArquillianEjbTransactionTest.createTestArchive();
     }
 
     @Test

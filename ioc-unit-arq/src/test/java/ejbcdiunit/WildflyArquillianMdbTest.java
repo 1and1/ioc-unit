@@ -32,7 +32,7 @@ public class WildflyArquillianMdbTest {
 
     @Deployment
     public static Archive<?> createTestArchive() {
-        return WildflyArquillianTransactionTest.createTestArchive();
+        return WildflyArquillianEjbTransactionTest.createTestArchive();
     }
 
     @Test

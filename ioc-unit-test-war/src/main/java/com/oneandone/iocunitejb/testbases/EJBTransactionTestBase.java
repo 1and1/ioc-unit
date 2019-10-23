@@ -65,8 +65,6 @@ public abstract class EJBTransactionTestBase {
     @Inject
     protected UserTransaction userTransaction;
 
-
-
     protected void runTestInRolledBackTransaction(TestEntity1Saver saver, int num, boolean exceptionExpected) throws Exception {
         throw new RuntimeException("Should never be called in BaseClass.");
     }

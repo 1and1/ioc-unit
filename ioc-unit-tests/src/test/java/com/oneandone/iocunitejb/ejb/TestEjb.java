@@ -14,7 +14,6 @@ import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
 import javax.transaction.NotSupportedException;
 import javax.transaction.RollbackException;
-import javax.transaction.Status;
 import javax.transaction.SystemException;
 
 import org.junit.AfterClass;
@@ -32,6 +31,7 @@ import com.oneandone.iocunit.ejb.EjbJarClasspath;
 import com.oneandone.iocunit.ejb.SessionContextFactory;
 import com.oneandone.iocunit.ejb.persistence.SinglePersistenceFactory;
 import com.oneandone.iocunit.ejb.persistence.TestTransaction;
+import com.oneandone.iocunitejb.TestRunnerIocUnit;
 import com.oneandone.iocunitejb.ejbs.CDIClass;
 import com.oneandone.iocunitejb.ejbs.MdbEjbInfoSingleton;
 import com.oneandone.iocunitejb.ejbs.OuterClass;
@@ -41,6 +41,7 @@ import com.oneandone.iocunitejb.ejbs.SingletonTimerEJB;
 import com.oneandone.iocunitejb.ejbs.StatelessBeanManagedTrasEJB;
 import com.oneandone.iocunitejb.ejbs.StatelessChildEJB;
 import com.oneandone.iocunitejb.ejbs.StatelessEJB;
+import com.oneandone.iocunitejb.ejbs.TestRunnerIntf;
 import com.oneandone.iocunitejb.ejbs.TransactionalApplicationScoped;
 import com.oneandone.iocunitejb.ejbs.appexc.TestBaseClass;
 import com.oneandone.iocunitejb.entities.TestEntity1;
@@ -52,7 +53,7 @@ import com.oneandone.iocunitejb.testbases.TestEntity1Saver;
  * @author aschoerk
  */
 @RunWith(JUnit4.class)
-@TestClasses({ StatelessEJB.class, SingletonEJB.class,
+@TestClasses({ StatelessEJB.class, SingletonEJB.class, TestRunnerIocUnit.class,
         TransactionalApplicationScoped.class,
         TestEjb.TestDbPersistenceFactory.class, SessionContextFactory.class,
         StatelessBeanManagedTrasEJB.class, StatelessChildEJB.class,
@@ -61,7 +62,7 @@ import com.oneandone.iocunitejb.testbases.TestEntity1Saver;
 public class TestEjb extends EJBTransactionTestBase {
 
     @Inject
-    SinglePersistenceFactory persistenceFactory;
+    TestRunnerIntf testRunner;
 
     @AfterClass
     public static void tearDownProfiler() throws InterruptedException {
@@ -124,54 +125,12 @@ public class TestEjb extends EJBTransactionTestBase {
 
     @Override
     public void runTestInRolledBackTransaction(TestEntity1Saver saver, int num, boolean exceptionExpected) throws Exception {
-        try (TestTransaction resource1 = persistenceFactory.transaction(TransactionAttributeType.REQUIRES_NEW)) {
-            TestEntity1 testEntity1 = new TestEntity1();
-            boolean exceptionHappened = false;
-            try {
-                saver.save(testEntity1);
-            } catch (RuntimeException r) {
-                exceptionHappened = true;
-                if (resource1.getStatus() == Status.STATUS_MARKED_ROLLBACK) {
-                    resource1.rollback();
-                }
-                if (resource1.getStatus() == Status.STATUS_NO_TRANSACTION) {
-                    resource1.begin();
-                }
-            }
-            Assert.assertThat(exceptionHappened, is(exceptionExpected));
-            entityManager.persist(new TestEntity1());
-            entityManager.flush();
-            Number res = entityManager.createQuery("select count(e) from TestEntity1 e", Number.class).getSingleResult();
-            Assert.assertThat(res.intValue(), is(num));
-            resource1.setRollbackOnly();
-        } catch (RollbackException rbe) {
-            // ignore, wanted to roll it back!!!
-        }
+        testRunner.runTestInRolledBackTransaction(saver, num, exceptionExpected);
     }
 
     @Override
     public void runTestWithoutTransaction(TestEntity1Saver saver, int num, boolean exceptionExpected) throws Exception {
-        try (TestTransaction resource1 = persistenceFactory.transaction(TransactionAttributeType.NOT_SUPPORTED)) {
-            TestEntity1 testEntity1 = new TestEntity1();
-            boolean exceptionHappened = false;
-            try {
-                saver.save(testEntity1);
-            } catch (RuntimeException r) {
-                exceptionHappened = true;
-                if (resource1.getStatus() == Status.STATUS_MARKED_ROLLBACK) {
-                    resource1.rollback();
-                }
-            }
-            resource1.begin();
-            Assert.assertThat(exceptionHappened, is(exceptionExpected));
-            entityManager.persist(new TestEntity1());
-            entityManager.flush();
-            Number res = entityManager.createQuery("select count(e) from TestEntity1 e", Number.class).getSingleResult();
-            Assert.assertThat(res.intValue(), is(num));
-            resource1.setRollbackOnly();
-        } catch (RollbackException rbe) {
-            // ignore, wanted to roll it back!!!
-        }
+        testRunner.runTestWithoutTransaction(saver, num, exceptionExpected);
     }
 
     @Override
