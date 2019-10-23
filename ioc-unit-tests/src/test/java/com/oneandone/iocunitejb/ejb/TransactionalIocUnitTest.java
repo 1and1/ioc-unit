@@ -8,6 +8,7 @@ import com.oneandone.iocunit.analyzer.annotations.SutClasses;
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 import com.oneandone.iocunit.ejb.XmlLessPersistenceFactory;
 import com.oneandone.iocunitejb.TestRunnerIocUnit;
+import com.oneandone.iocunitejb.entities.TestEntity1;
 import com.oneandone.iocunitejb.helpers.LoggerGenerator;
 import com.oneandone.iocunitejb.transactional.TransactionalTestBase;
 
@@ -16,7 +17,7 @@ import com.oneandone.iocunitejb.transactional.TransactionalTestBase;
  */
 @RunWith(IocUnitRunner.class)
 @TestClasses({XmlLessPersistenceFactory.class})
-@SutClasses({LoggerGenerator.class, TestRunnerIocUnit.class}) // , RequiresNewStereotypeIllegalStateRollsback.class})
+@SutClasses({LoggerGenerator.class, TestRunnerIocUnit.class, TestEntity1.class})
 public class TransactionalIocUnitTest extends TransactionalTestBase {
     @Test
     @Override
