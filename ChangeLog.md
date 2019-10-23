@@ -4,6 +4,7 @@
 
 |Version|Changes|
 |-------|-------|
+|2.0.12|@Transactional, XmlLessPersistenceFactory |
 |2.0.11|Add generally @Provider-classes defined as Sut or Test to MockDispatcher. --> possible to define ObjectMapper, does also handle @Context in Provider especially: ExceptionMapper |
 |2.0.10|reorganized poms, starters depend on the correct javaee-api compiled. If users don't like this, they must exclude it. ioc-unit-xxxx modules depend on the api-modules they need provided, so they don't transitively depend on any javax-api.|
 |2.0.9|added javax.json provider from glassfish, include io.rest-assured, if existing allow fluent test of rest-resources using MockDispatcherFactory |
