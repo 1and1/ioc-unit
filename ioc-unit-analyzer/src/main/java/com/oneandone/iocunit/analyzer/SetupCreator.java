@@ -77,9 +77,13 @@ public class SetupCreator {
         }
         weldSetup.setEnabledDecorators(configuration.getElseClasses().decorators);
 
-        weldSetup.setEnabledInterceptors(configuration.getElseClasses().interceptors.stream()
-                .filter(c -> c.getAnnotation(javax.annotation.Priority.class) == null)
-                .collect(Collectors.toList()));
+        try {
+            weldSetup.setEnabledInterceptors(configuration.getElseClasses().interceptors.stream()
+                    .filter(c -> c.getAnnotation(javax.annotation.Priority.class) == null)
+                    .collect(Collectors.toList()));
+        } catch (Exception e) {
+            weldSetup.setEnabledInterceptors(configuration.getElseClasses().interceptors);
+        }
         handleWeldExtensions(method, weldSetup);
         for (Extension e : findExtensions()) {
             weldSetup.addExtensionObject(e);
