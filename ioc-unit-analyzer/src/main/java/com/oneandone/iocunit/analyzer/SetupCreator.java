@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.annotation.Priority;
 import javax.enterprise.inject.spi.Extension;
 
 import org.slf4j.Logger;
@@ -76,14 +77,17 @@ public class SetupCreator {
             }
         }
         weldSetup.setEnabledDecorators(configuration.getElseClasses().decorators);
-
-        try {
-            weldSetup.setEnabledInterceptors(configuration.getElseClasses().interceptors.stream()
-                    .filter(c -> c.getAnnotation(javax.annotation.Priority.class) == null)
-                    .collect(Collectors.toList()));
-        } catch (Throwable e) {
-            weldSetup.setEnabledInterceptors(configuration.getElseClasses().interceptors);
+        List<Class<?>> interceptorsToEnable = configuration.getElseClasses().interceptors;
+        if (!WeldSetupClass.isWeld1()) {
+            try {
+                interceptorsToEnable = configuration.getElseClasses().interceptors.stream()
+                        .filter(c -> c.getAnnotation(Priority.class) == null)
+                        .collect(Collectors.toList());
+            } catch (NoClassDefFoundError e) {
+                ;
+            }
         }
+        weldSetup.setEnabledInterceptors(interceptorsToEnable);
         handleWeldExtensions(method, weldSetup);
         for (Extension e : findExtensions()) {
             weldSetup.addExtensionObject(e);
