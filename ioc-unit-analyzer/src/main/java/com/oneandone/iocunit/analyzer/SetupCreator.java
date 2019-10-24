@@ -81,7 +81,7 @@ public class SetupCreator {
             weldSetup.setEnabledInterceptors(configuration.getElseClasses().interceptors.stream()
                     .filter(c -> c.getAnnotation(javax.annotation.Priority.class) == null)
                     .collect(Collectors.toList()));
-        } catch (Exception e) {
+        } catch (Throwable e) {
             weldSetup.setEnabledInterceptors(configuration.getElseClasses().interceptors);
         }
         handleWeldExtensions(method, weldSetup);
