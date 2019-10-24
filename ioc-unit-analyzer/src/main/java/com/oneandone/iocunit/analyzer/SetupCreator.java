@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.enterprise.inject.spi.Extension;
 
@@ -33,24 +34,26 @@ public class SetupCreator {
     private void handleWeldExtensions(final Method method, final WeldSetupClass weldSetup) {
         try {
             for (Class<? extends Extension> extensionClass : configuration.getElseClasses().extensionClasses) {
-                if (configuration.excludedExtensions != null && configuration.excludedExtensions.contains(extensionClass)) {
+                if(configuration.excludedExtensions != null && configuration.excludedExtensions.contains(extensionClass)) {
                     continue;
                 }
-                if (extensionClass.getName().contains(".ProducerConfigExtension")) {
+                if(extensionClass.getName().contains(".ProducerConfigExtension")) {
                     Constructor<? extends Extension> constructor =
                             extensionClass.getConstructor(Method.class);
                     Extension producerConfig = constructor.newInstance(method);
                     weldSetup.addExtensionObject(producerConfig);
-                } else {
+                }
+                else {
                     weldSetup.addExtensionObject(extensionClass.newInstance());
                 }
             }
             for (Extension e : configuration.getElseClasses().extensionObjects) {
                 Class<? extends Extension> extensionClass = e.getClass();
                 final Constructor<?>[] declaredConstructors = extensionClass.getDeclaredConstructors();
-                if (declaredConstructors.length == 1 && declaredConstructors[0].getParameters().length == 0) {
+                if(declaredConstructors.length == 1 && declaredConstructors[0].getParameters().length == 0) {
                     weldSetup.addExtensionObject(extensionClass.newInstance());
-                } else {
+                }
+                else {
                     weldSetup.addExtensionObject(e);
                 }
             }
@@ -64,7 +67,7 @@ public class SetupCreator {
         weldSetup.setBeanClasses(configuration.getObligatory());
         weldSetup.setAlternativeClasses(configuration.getEnabledAlternatives());
         weldSetup.setEnabledAlternativeStereotypes(configuration.getElseClasses().foundAlternativeStereotypes);
-        if (logger.isTraceEnabled()) {
+        if(logger.isTraceEnabled()) {
             for (Class<?> i : configuration.getElseClasses().decorators) {
                 logger.trace("buildWeldSetup Decorator:   {}", i);
             }
@@ -73,7 +76,10 @@ public class SetupCreator {
             }
         }
         weldSetup.setEnabledDecorators(configuration.getElseClasses().decorators);
-        weldSetup.setEnabledInterceptors(configuration.getElseClasses().interceptors);
+
+        weldSetup.setEnabledInterceptors(configuration.getElseClasses().interceptors.stream()
+                .filter(c -> c.getAnnotation(javax.annotation.Priority.class) == null)
+                .collect(Collectors.toList()));
         handleWeldExtensions(method, weldSetup);
         for (Extension e : findExtensions()) {
             weldSetup.addExtensionObject(e);

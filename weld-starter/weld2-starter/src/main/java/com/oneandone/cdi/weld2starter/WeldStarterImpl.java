@@ -146,7 +146,7 @@ public class WeldStarterImpl implements WeldStarter {
         };
     }
 
-    private static Object annotatedDiscoveryMode() {
+    private static Object beanDiscoveryMode() {
         try {
             return BeanDiscoveryMode.ANNOTATED;
         } catch (NoClassDefFoundError e) {
@@ -165,7 +165,7 @@ public class WeldStarterImpl implements WeldStarter {
                     Scanning.EMPTY_SCANNING,
                     // These were added in Weld 2.0:
                     new URL("file:weld2-starter"),
-                    annotatedDiscoveryMode(),
+                    beanDiscoveryMode(),
                     "1.0",
                     // isTrimmed: added in Weld 2.4.2 [WELD-2314]:
                     false);

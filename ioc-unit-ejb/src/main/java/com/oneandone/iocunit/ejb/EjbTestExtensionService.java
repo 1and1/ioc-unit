@@ -71,8 +71,9 @@ public class EjbTestExtensionService implements TestExtensionService {
 
     @Override
     public void initAnalyze() {
-        if (ejbTestExtensionServiceData.get() == null)
+        if(ejbTestExtensionServiceData.get() == null) {
             ejbTestExtensionServiceData.set(new EjbTestExtensionServiceData());
+        }
     }
 
     @Override
@@ -82,16 +83,17 @@ public class EjbTestExtensionService implements TestExtensionService {
 
     @Override
     public void handleExtraClassAnnotation(final Annotation annotation, Class<?> c) {
-        if (annotation.annotationType().equals(EjbJarClasspath.class)) {
+        if(annotation.annotationType().equals(EjbJarClasspath.class)) {
             Class<?> ejbJarClasspathExample = ((EjbJarClasspath) annotation).value();
-            if (ejbJarClasspathExample != null) {
+            if(ejbJarClasspathExample != null) {
                 final URL path = ejbJarClasspathExample.getProtectionDomain().getCodeSource().getLocation();
                 try {
                     ejbTestExtensionServiceData.get().applicationExceptions = new EjbJarParser(path).invoke();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
-            } else {
+            }
+            else {
                 ejbTestExtensionServiceData.get().applicationExceptions.clear();
             }
         }
@@ -100,14 +102,14 @@ public class EjbTestExtensionService implements TestExtensionService {
 
     @Override
     public boolean candidateToStart(Class<?> c) {
-        if (c.getAnnotation(Entity.class) != null
-                || c.getAnnotation(MappedSuperclass.class) != null
-                || c.getAnnotation(MessageDriven.class) != null
-                || c.getAnnotation(Startup.class) != null) {
+        if(c.getAnnotation(Entity.class) != null
+           || c.getAnnotation(MappedSuperclass.class) != null
+           || c.getAnnotation(MessageDriven.class) != null
+           || c.getAnnotation(Startup.class) != null) {
             ejbTestExtensionServiceData.get().candidatesToStart.add(c);
         }
 
-        if (PersistenceFactory.class.isAssignableFrom(c)) {
+        if(PersistenceFactory.class.isAssignableFrom(c)) {
             this.foundPersistenceFactory = true;
         }
         return c.getAnnotation(Entity.class) != null;
@@ -159,21 +161,22 @@ public class EjbTestExtensionService implements TestExtensionService {
     @Override
     public void preStartupAction(WeldSetupClass weldSetup) {
         for (Class<?> c : ejbTestExtensionServiceData.get().candidatesToStart) {
-            if (!ejbTestExtensionServiceData.get().excludedClasses.contains(c))
-                if (!weldSetup.getBeanClasses().contains(c.getName())) {
+            if(!ejbTestExtensionServiceData.get().excludedClasses.contains(c)) {
+                if(!weldSetup.getBeanClasses().contains(c.getName())) {
                     logger.warn("Entity, Mdb or Startup candidate: {} found "
                                 + " while scanning availables, but not in testconfiguration included.", c.getSimpleName());
                 }
+            }
         }
         ejbTestExtensionServiceData.get().candidatesToStart.clear(); // show only once
-        if (weldSetup.isWeld3()) {
-            if (!weldSetup.getBeanClasses().contains(SimulatedUserTransaction.class.getName())) {
+        if(weldSetup.isWeld3()) {
+            if(!weldSetup.getBeanClasses().contains(SimulatedUserTransaction.class.getName())) {
                 weldSetup.getBeanClasses().add(SimulatedUserTransaction.class.getName());
             }
         }
-        if (!foundPersistenceFactory) {
-            for (Metadata<Extension> x: weldSetup.getExtensions()) {
-                if (EjbExtensionExtended.class.isAssignableFrom(x.getValue().getClass())) {
+        if(!foundPersistenceFactory) {
+            for (Metadata<Extension> x : weldSetup.getExtensions()) {
+                if(EjbExtensionExtended.class.isAssignableFrom(x.getValue().getClass())) {
                     logger.error("Using ioc-unit-ejb-Extension without IOC-Unit-PersistenceFactory: "
                                  + "no simulation of EntityManager and Transactions supported");
                 }
@@ -185,7 +188,7 @@ public class EjbTestExtensionService implements TestExtensionService {
     @Override
     public void postStartupAction(CreationalContexts creationalContexts, WeldStarter weldStarter) {
         creationalContexts.create(EjbUnitBeanInitializerClass.class, ApplicationScoped.class);
-        if (ejbTestExtensionServiceData.get().applicationExceptions.size() > 0) {
+        if(ejbTestExtensionServiceData.get().applicationExceptions.size() > 0) {
             EjbInformationBean ejbInformationBean =
                     (EjbInformationBean) creationalContexts.create(EjbInformationBean.class, ApplicationScoped.class);
             ejbInformationBean.setApplicationExceptionDescriptions(ejbTestExtensionServiceData.get().applicationExceptions);
@@ -210,9 +213,9 @@ public class EjbTestExtensionService implements TestExtensionService {
     }
 
     @Override
-    public void addQualifiers(Field f, Collection<Annotation> qualifiers)   {
+    public void addQualifiers(Field f, Collection<Annotation> qualifiers) {
         Resource resource = f.getAnnotation(Resource.class);
-        if (resource != null) {
+        if(resource != null) {
             ArrayList<Annotation> annotations = new ArrayList<Annotation>();
             String typeName = f.getType().getName();
             try {
@@ -248,7 +251,7 @@ public class EjbTestExtensionService implements TestExtensionService {
     }
 
     private void doesResourceQualifyIfNecessary(final Field f, final Collection<Annotation> qualifiers, final Resource resource, final Constructor[] cs) throws InstantiationException, IllegalAccessException, java.lang.reflect.InvocationTargetException {
-        if (f.getAnnotation(Produces.class) == null) {
+        if(f.getAnnotation(Produces.class) == null) {
             if(resource != null && !(resource.name().isEmpty() && resource.mappedName().isEmpty() && resource.lookup().isEmpty())) {
                 qualifiers.add((Annotation) (cs[0].newInstance(resource.name(), resource.lookup(), resource.mappedName())));
             }
