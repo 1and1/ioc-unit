@@ -20,9 +20,12 @@ public class DataSourceDelegate implements DataSource {
 
     private final PersistenceFactory entityManagerStore;
     private final DataSource dataSource;
+    private final JdbcSqlConverter jdbcSqlConverter;
 
-    DataSourceDelegate(PersistenceFactory entityManagerStore) {
+
+    DataSourceDelegate(PersistenceFactory entityManagerStore, JdbcSqlConverter jdbcSqlConverter) {
         this.entityManagerStore = entityManagerStore;
+        this.jdbcSqlConverter = jdbcSqlConverter;
         this.dataSource = entityManagerStore.createDataSource();
     }
 
@@ -50,13 +53,13 @@ public class DataSourceDelegate implements DataSource {
             try {
                 tmp = entityManagerStore.getTransactional(true);
                 Connection connection = tmp.unwrap(Connection.class);
-                return new ConnectionDelegate(connection);
+                return new ConnectionDelegate(connection, jdbcSqlConverter);
             } catch (Throwable thw) {
                if (tmp == null)
                    tmp = entityManagerStore.getTransactional(false);
                 Session session = tmp.unwrap(Session.class);
                 SessionImplementor sessionImplementor = (SessionImplementor) session;
-                return new ConnectionDelegate(sessionImplementor);
+                return new ConnectionDelegate(sessionImplementor, jdbcSqlConverter);
             }
         } catch (Throwable e) {
             throw new RuntimeException("not expected exception: ", e);

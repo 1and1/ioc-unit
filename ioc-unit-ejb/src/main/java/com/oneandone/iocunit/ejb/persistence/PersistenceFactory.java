@@ -11,6 +11,8 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.ejb.TransactionAttributeType;
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Instance;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.TransactionRequiredException;
@@ -74,6 +76,9 @@ public abstract class PersistenceFactory {
     private void setEmf(EntityManagerFactory emfP) {
         this.emf = emfP;
     }
+
+    @Inject
+    Instance<JdbcSqlConverter> jdbcSqlConverter;
 
     /**
      * prepare EntityManagerFactory
@@ -266,7 +271,7 @@ public abstract class PersistenceFactory {
     }
 
     public DataSource produceDataSource() {
-        return new DataSourceDelegate(this);
+        return new DataSourceDelegate(this, jdbcSqlConverter.get());
     }
 
     protected EntityManagerFactory createEntityManagerFactory() {
