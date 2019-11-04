@@ -271,7 +271,8 @@ public abstract class PersistenceFactory {
     }
 
     public DataSource produceDataSource() {
-        return new DataSourceDelegate(this, jdbcSqlConverter.get());
+        return new DataSourceDelegate(this,
+                jdbcSqlConverter.isResolvable() ? jdbcSqlConverter.get() : null);
     }
 
     protected EntityManagerFactory createEntityManagerFactory() {
