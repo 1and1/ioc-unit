@@ -4,6 +4,7 @@
 
 |Version|Changes|
 |-------|-------|
+|2.0.14|jdbcSqlConverter-interface allows the replacement of native-statements |
 |2.0.13|commons-lang3:3.8.1,enable only Interceptors without Priority automatically|
 |2.0.12|@Transactional, XmlLessPersistenceFactory |
 |2.0.11|Add generally @Provider-classes defined as Sut or Test to MockDispatcher. --> possible to define ObjectMapper, does also handle @Context in Provider especially: ExceptionMapper |

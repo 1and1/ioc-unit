@@ -1,5 +1,6 @@
 package com.oneandone.iocunit.ejb.persistence;
 
+import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -78,7 +79,7 @@ public abstract class PersistenceFactory {
     }
 
     @Inject
-    Instance<JdbcSqlConverter> jdbcSqlConverter;
+    Instance<JdbcSqlConverter> jdbcSqlConverterInstance;
 
     /**
      * prepare EntityManagerFactory
@@ -271,8 +272,20 @@ public abstract class PersistenceFactory {
     }
 
     public DataSource produceDataSource() {
-        return new DataSourceDelegate(this,
-                jdbcSqlConverter.isResolvable() ? jdbcSqlConverter.get() : null);
+        JdbcSqlConverter jdbcSqlConverter = null;
+        try {
+            Method m = Instance.class.getMethod("isResolvable");
+            if ((boolean)m.invoke(jdbcSqlConverterInstance)) {
+                jdbcSqlConverter = jdbcSqlConverterInstance.get();
+            }
+        } catch (NoSuchMethodException e) {
+            if (!jdbcSqlConverterInstance.isUnsatisfied()) {
+                jdbcSqlConverter = jdbcSqlConverterInstance.get();
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Unexpected", e);
+        }
+        return new DataSourceDelegate(this, jdbcSqlConverter);
     }
 
     protected EntityManagerFactory createEntityManagerFactory() {
