@@ -295,7 +295,8 @@ public abstract class PersistenceFactory {
                 }
             }
         };
-        result.setMaxIdle(0);
+        result.setMaxIdle(10);
+        result.setMinIdle(2);
         result.setMaxTotal(100);
         return result;
     }

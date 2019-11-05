@@ -60,7 +60,7 @@ public class DataSourceDelegate implements DataSource {
             try {
                 tmp = entityManagerStore.getTransactional(true);
                 Connection connection = tmp.unwrap(Connection.class);
-                return new ConnectionDelegate(connection, jdbcSqlConverter);
+                return new ConnectionDelegate(connection, jdbcSqlConverter, false);
             } catch (Throwable thw) {
                if (tmp == null)
                    tmp = entityManagerStore.getTransactional(false);
