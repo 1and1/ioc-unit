@@ -277,7 +277,7 @@ public abstract class PersistenceFactory {
         BasicDataSource result = new BasicDataSource() {
             @Override
             public Connection getConnection(final String user, final String pass) throws SQLException {
-                return new ConnectionDelegate(super.getConnection(user, pass), getJdbcSqlConverterIfThereIsOne());
+                return new ConnectionDelegate(super.getConnection(), getJdbcSqlConverterIfThereIsOne());
             }
 
             @Override
