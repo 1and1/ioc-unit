@@ -36,16 +36,13 @@ public class ConnectionDelegate implements Connection {
 
 
     public ConnectionDelegate(SessionImplementor sessionImplementor, JdbcSqlConverter jdbcSqlConverter) {
+        this.jdbcSqlConverter = jdbcSqlConverter;
         try {
             try {
                 Method method = SessionImplementor.class.getMethod("connection");
-
                 this.connection = (Connection) method.invoke(sessionImplementor);
                 connection.setAutoCommit(false);
-
                 this.jdbcConnectionAccess = null;
-                this.jdbcSqlConverter = jdbcSqlConverter;
-
             } catch (NoSuchMethodException e) {
                 try {
                     Method method = SessionImplementor.class.getMethod("getJdbcConnectionAccess");
@@ -139,7 +136,7 @@ public class ConnectionDelegate implements Connection {
                 throw new RuntimeException(e);
             }
         } else {
-            ; // don't close necessary for other operations in this session.
+            connection.close();
         }
     }
 

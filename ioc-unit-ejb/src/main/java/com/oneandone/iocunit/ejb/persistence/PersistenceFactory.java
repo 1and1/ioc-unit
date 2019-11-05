@@ -274,17 +274,20 @@ public abstract class PersistenceFactory {
     }
 
     protected BasicDataSource createBasicDataSource() {
-        return new BasicDataSource() {
-                    @Override
-                    public Connection getConnection(final String user, final String pass) throws SQLException {
-                        return new ConnectionDelegate(super.getConnection(user,pass), getJdbcSqlConverterIfThereIsOne());
-                    }
+        BasicDataSource result = new BasicDataSource() {
+            @Override
+            public Connection getConnection(final String user, final String pass) throws SQLException {
+                return new ConnectionDelegate(super.getConnection(user, pass), getJdbcSqlConverterIfThereIsOne());
+            }
 
-                    @Override
-                    public Connection getConnection() throws SQLException {
-                        return new ConnectionDelegate(super.getConnection(), getJdbcSqlConverterIfThereIsOne());
-                    }
-                };
+            @Override
+            public Connection getConnection() throws SQLException {
+                return new ConnectionDelegate(super.getConnection(), getJdbcSqlConverterIfThereIsOne());
+            }
+        };
+        result.setMaxIdle(5);
+        result.setMaxTotal(100);
+        return result;
     }
 
     public DataSource produceDataSource() {
