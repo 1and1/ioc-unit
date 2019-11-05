@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
+import org.hibernate.engine.jdbc.connections.spi.JdbcConnectionAccess;
 import org.hibernate.engine.spi.SessionImplementor;
 
 /**
@@ -49,7 +50,8 @@ public class ConnectionDelegate implements Connection {
                 try {
                     Method method = SessionImplementor.class.getMethod("getJdbcConnectionAccess");
                     jdbcConnectionAccess = method.invoke(sessionImplementor);
-                } catch (NoSuchMethodException e1) {
+                    this.connection = ((JdbcConnectionAccess)jdbcConnectionAccess).obtainConnection();
+                } catch (NoSuchMethodException | SQLException e1) {
                     throw new RuntimeException(e1);
                 }
             } catch (SQLException e) {
@@ -61,7 +63,7 @@ public class ConnectionDelegate implements Connection {
     }
 
     public ConnectionDelegate(final Connection connection, JdbcSqlConverter jdbcSqlConverter) {
-        this.doClose = true;
+        this.doClose = false;
         this.connection = connection;
         this.jdbcSqlConverter = jdbcSqlConverter;
         try {
@@ -162,14 +164,7 @@ public class ConnectionDelegate implements Connection {
         return connection.isReadOnly();
     }
 
-    /**
-     * Puts this connection in read-only mode as a hint to the driver to enable database optimizations.
-     * <p>
-     * <B>Note:</B> This method cannot be called during a transaction.
-     *
-     * @param readOnly <code>true</code> enables read-only mode; <code>false</code> disables it
-     * @throws SQLException if a database access error occurs, this method is called on a closed connection or this method is called during a transaction
-     */
+
     @Override
     public void setReadOnly(boolean readOnly) throws SQLException {
         connection.setReadOnly(readOnly);
@@ -187,101 +182,37 @@ public class ConnectionDelegate implements Connection {
         return connection.getCatalog();
     }
 
-    /**
-     * Sets the given catalog name in order to select a subspace of this <code>Connection</code> object's database in which to work.
-     * <p>
-     * If the driver does not support catalogs, it will silently ignore this request.
-     * <p>
-     * Calling {@code setCatalog} has no effect on previously created or prepared {@code Statement} objects. It is implementation defined whether a
-     * DBMS prepare operation takes place immediately when the {@code Connection} method {@code prepareStatement} or {@code prepareCall} is invoked.
-     * For maximum portability, {@code setCatalog} should be called before a {@code Statement} is created or prepared.
-     *
-     * @param catalog the name of a catalog (subspace in this <code>Connection</code> object's database) in which to work
-     * @throws SQLException if a database access error occurs or this method is called on a closed connection
-     * @see #getCatalog
-     */
+
     @Override
     public void setCatalog(String catalog) throws SQLException {
         connection.setCatalog(catalog);
     }
 
-    /**
-     * Retrieves this <code>Connection</code> object's current transaction isolation level.
-     *
-     * @return the current transaction isolation level, which will be one of the following constants:
-     * <code>Connection.TRANSACTION_READ_UNCOMMITTED</code>, <code>Connection.TRANSACTION_READ_COMMITTED</code>,
-     * <code>Connection.TRANSACTION_REPEATABLE_READ</code>, <code>Connection.TRANSACTION_SERIALIZABLE</code>, or
-     * <code>Connection.TRANSACTION_NONE</code>.
-     * @throws SQLException if a database access error occurs or this method is called on a closed connection
-     * @see #setTransactionIsolation
-     */
+
     @Override
     public int getTransactionIsolation() throws SQLException {
         return connection.getTransactionIsolation();
     }
 
-    /**
-     * Attempts to change the transaction isolation level for this <code>Connection</code> object to the one given. The constants defined in the
-     * interface <code>Connection</code> are the possible transaction isolation levels.
-     * <p>
-     * <B>Note:</B> If this method is called during a transaction, the result is implementation-defined.
-     *
-     * @param level one of the following <code>Connection</code> constants: <code>Connection.TRANSACTION_READ_UNCOMMITTED</code>,
-     *              <code>Connection.TRANSACTION_READ_COMMITTED</code>, <code>Connection.TRANSACTION_REPEATABLE_READ</code>, or
-     *              <code>Connection.TRANSACTION_SERIALIZABLE</code>. (Note that <code>Connection.TRANSACTION_NONE</code> cannot be used because it
-     *              specifies that transactions are not supported.)
-     * @throws SQLException if a database access error occurs, this method is called on a closed connection or the given parameter is not one of the
-     *                      <code>Connection</code> constants
-     * @see DatabaseMetaData#supportsTransactionIsolationLevel
-     * @see #getTransactionIsolation
-     */
+
     @Override
     public void setTransactionIsolation(int level) throws SQLException {
         connection.setTransactionIsolation(level);
     }
 
-    /**
-     * Retrieves the first warning reported by calls on this <code>Connection</code> object. If there is more than one warning, subsequent warnings
-     * will be chained to the first one and can be retrieved by calling the method <code>SQLWarning.getNextWarning</code> on the warning that was
-     * retrieved previously.
-     * <p>
-     * This method may not be called on a closed connection; doing so will cause an <code>SQLException</code> to be thrown.
-     * <p>
-     * <B>Note:</B> Subsequent warnings will be chained to this SQLWarning.
-     *
-     * @return the first <code>SQLWarning</code> object or <code>null</code> if there are none
-     * @throws SQLException if a database access error occurs or this method is called on a closed connection
-     * @see SQLWarning
-     */
+
     @Override
     public SQLWarning getWarnings() throws SQLException {
         return connection.getWarnings();
     }
 
-    /**
-     * Clears all warnings reported for this <code>Connection</code> object. After a call to this method, the method <code>getWarnings</code> returns
-     * <code>null</code> until a new warning is reported for this <code>Connection</code> object.
-     *
-     * @throws SQLException SQLException if a database access error occurs or this method is called on a closed connection
-     */
+
     @Override
     public void clearWarnings() throws SQLException {
         connection.clearWarnings();
     }
 
-    /**
-     * Creates a <code>Statement</code> object that will generate <code>ResultSet</code> objects with the given type and concurrency. This method is
-     * the same as the <code>createStatement</code> method above, but it allows the default result set type and concurrency to be overridden. The
-     * holdability of the created result sets can be determined by calling {@link #getHoldability}.
-     *
-     * @param resultSetType        a result set type; one of <code>ResultSet.TYPE_FORWARD_ONLY</code>, <code>ResultSet.TYPE_SCROLL_INSENSITIVE</code>, or
-     *                             <code>ResultSet.TYPE_SCROLL_SENSITIVE</code>
-     * @param resultSetConcurrency a concurrency type; one of <code>ResultSet.CONCUR_READ_ONLY</code> or <code>ResultSet.CONCUR_UPDATABLE</code>
-     * @return a new <code>Statement</code> object that will generate <code>ResultSet</code> objects with the given type and concurrency
-     * @throws SQLException if a database access error occurs, this method is called on a closed connection or the given parameters are not
-     *                      <code>ResultSet</code> constants indicating type and concurrency
-     * @since 1.2
-     */
+
     @Override
     public Statement createStatement(int resultSetType, int resultSetConcurrency) throws SQLException {
         return connection.createStatement(resultSetType, resultSetConcurrency);
