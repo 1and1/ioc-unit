@@ -28,20 +28,22 @@ import org.hibernate.engine.spi.SessionImplementor;
  */
 public class ConnectionDelegate implements Connection {
 
+    private final boolean doClose;
     Connection connection;
     private Object jdbcConnectionAccess;
     private boolean inAutocommit = false;
     private JdbcSqlConverter jdbcSqlConverter;
 
 
-
     public ConnectionDelegate(SessionImplementor sessionImplementor, JdbcSqlConverter jdbcSqlConverter) {
+        this.doClose = false;
         this.jdbcSqlConverter = jdbcSqlConverter;
         try {
             try {
                 Method method = SessionImplementor.class.getMethod("connection");
                 this.connection = (Connection) method.invoke(sessionImplementor);
                 connection.setAutoCommit(false);
+
                 this.jdbcConnectionAccess = null;
             } catch (NoSuchMethodException e) {
                 try {
@@ -53,12 +55,13 @@ public class ConnectionDelegate implements Connection {
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
-        } catch (IllegalAccessException|InvocationTargetException e) {
+        } catch (IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
     }
 
     public ConnectionDelegate(final Connection connection, JdbcSqlConverter jdbcSqlConverter) {
+        this.doClose = true;
         this.connection = connection;
         this.jdbcSqlConverter = jdbcSqlConverter;
         try {
@@ -78,13 +81,14 @@ public class ConnectionDelegate implements Connection {
 
     @Override
     public PreparedStatement prepareStatement(String sql) throws SQLException {
-        return connection.prepareStatement( convert(sql));
+        return connection.prepareStatement(convert(sql));
     }
 
     private String convert(final String sql) {
-        if (jdbcSqlConverter != null) {
+        if(jdbcSqlConverter != null) {
             return jdbcSqlConverter.convert(sql);
-        } else {
+        }
+        else {
             return sql;
         }
     }
@@ -107,7 +111,6 @@ public class ConnectionDelegate implements Connection {
     @Override
     public void setAutoCommit(boolean autoCommit) throws SQLException {
         connection.setAutoCommit(autoCommit);
-        inAutocommit = autoCommit;
     }
 
     @Override
@@ -123,20 +126,24 @@ public class ConnectionDelegate implements Connection {
     @Override
     public void close() throws SQLException {
         try {
-            if (!inAutocommit)
+            if(!inAutocommit) {
                 connection.commit();
+            }
         } catch (Exception e) {
             ;
         }
-        if (jdbcConnectionAccess != null) {
+        if(jdbcConnectionAccess != null) {
             try {
                 Method method = jdbcConnectionAccess.getClass().getMethod("releaseConnection", Connection.class);
                 method.invoke(jdbcConnectionAccess, connection);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-        } else {
-            connection.close();
+        }
+        else {
+            if(doClose) {
+                connection.close();
+            }
         }
     }
 
@@ -157,13 +164,11 @@ public class ConnectionDelegate implements Connection {
 
     /**
      * Puts this connection in read-only mode as a hint to the driver to enable database optimizations.
-     * <P>
+     * <p>
      * <B>Note:</B> This method cannot be called during a transaction.
      *
-     * @param readOnly
-     *            <code>true</code> enables read-only mode; <code>false</code> disables it
-     * @exception SQLException
-     *                if a database access error occurs, this method is called on a closed connection or this method is called during a transaction
+     * @param readOnly <code>true</code> enables read-only mode; <code>false</code> disables it
+     * @throws SQLException if a database access error occurs, this method is called on a closed connection or this method is called during a transaction
      */
     @Override
     public void setReadOnly(boolean readOnly) throws SQLException {
@@ -174,8 +179,7 @@ public class ConnectionDelegate implements Connection {
      * Retrieves this <code>Connection</code> object's current catalog name.
      *
      * @return the current catalog name or <code>null</code> if there is none
-     * @exception SQLException
-     *                if a database access error occurs or this method is called on a closed connection
+     * @throws SQLException if a database access error occurs or this method is called on a closed connection
      * @see #setCatalog
      */
     @Override
@@ -185,17 +189,15 @@ public class ConnectionDelegate implements Connection {
 
     /**
      * Sets the given catalog name in order to select a subspace of this <code>Connection</code> object's database in which to work.
-     * <P>
+     * <p>
      * If the driver does not support catalogs, it will silently ignore this request.
      * <p>
      * Calling {@code setCatalog} has no effect on previously created or prepared {@code Statement} objects. It is implementation defined whether a
      * DBMS prepare operation takes place immediately when the {@code Connection} method {@code prepareStatement} or {@code prepareCall} is invoked.
      * For maximum portability, {@code setCatalog} should be called before a {@code Statement} is created or prepared.
      *
-     * @param catalog
-     *            the name of a catalog (subspace in this <code>Connection</code> object's database) in which to work
-     * @exception SQLException
-     *                if a database access error occurs or this method is called on a closed connection
+     * @param catalog the name of a catalog (subspace in this <code>Connection</code> object's database) in which to work
+     * @throws SQLException if a database access error occurs or this method is called on a closed connection
      * @see #getCatalog
      */
     @Override
@@ -207,11 +209,10 @@ public class ConnectionDelegate implements Connection {
      * Retrieves this <code>Connection</code> object's current transaction isolation level.
      *
      * @return the current transaction isolation level, which will be one of the following constants:
-     *         <code>Connection.TRANSACTION_READ_UNCOMMITTED</code>, <code>Connection.TRANSACTION_READ_COMMITTED</code>,
-     *         <code>Connection.TRANSACTION_REPEATABLE_READ</code>, <code>Connection.TRANSACTION_SERIALIZABLE</code>, or
-     *         <code>Connection.TRANSACTION_NONE</code>.
-     * @exception SQLException
-     *                if a database access error occurs or this method is called on a closed connection
+     * <code>Connection.TRANSACTION_READ_UNCOMMITTED</code>, <code>Connection.TRANSACTION_READ_COMMITTED</code>,
+     * <code>Connection.TRANSACTION_REPEATABLE_READ</code>, <code>Connection.TRANSACTION_SERIALIZABLE</code>, or
+     * <code>Connection.TRANSACTION_NONE</code>.
+     * @throws SQLException if a database access error occurs or this method is called on a closed connection
      * @see #setTransactionIsolation
      */
     @Override
@@ -222,17 +223,15 @@ public class ConnectionDelegate implements Connection {
     /**
      * Attempts to change the transaction isolation level for this <code>Connection</code> object to the one given. The constants defined in the
      * interface <code>Connection</code> are the possible transaction isolation levels.
-     * <P>
+     * <p>
      * <B>Note:</B> If this method is called during a transaction, the result is implementation-defined.
      *
-     * @param level
-     *            one of the following <code>Connection</code> constants: <code>Connection.TRANSACTION_READ_UNCOMMITTED</code>,
-     *            <code>Connection.TRANSACTION_READ_COMMITTED</code>, <code>Connection.TRANSACTION_REPEATABLE_READ</code>, or
-     *            <code>Connection.TRANSACTION_SERIALIZABLE</code>. (Note that <code>Connection.TRANSACTION_NONE</code> cannot be used because it
-     *            specifies that transactions are not supported.)
-     * @exception SQLException
-     *                if a database access error occurs, this method is called on a closed connection or the given parameter is not one of the
-     *                <code>Connection</code> constants
+     * @param level one of the following <code>Connection</code> constants: <code>Connection.TRANSACTION_READ_UNCOMMITTED</code>,
+     *              <code>Connection.TRANSACTION_READ_COMMITTED</code>, <code>Connection.TRANSACTION_REPEATABLE_READ</code>, or
+     *              <code>Connection.TRANSACTION_SERIALIZABLE</code>. (Note that <code>Connection.TRANSACTION_NONE</code> cannot be used because it
+     *              specifies that transactions are not supported.)
+     * @throws SQLException if a database access error occurs, this method is called on a closed connection or the given parameter is not one of the
+     *                      <code>Connection</code> constants
      * @see DatabaseMetaData#supportsTransactionIsolationLevel
      * @see #getTransactionIsolation
      */
@@ -245,14 +244,13 @@ public class ConnectionDelegate implements Connection {
      * Retrieves the first warning reported by calls on this <code>Connection</code> object. If there is more than one warning, subsequent warnings
      * will be chained to the first one and can be retrieved by calling the method <code>SQLWarning.getNextWarning</code> on the warning that was
      * retrieved previously.
-     * <P>
+     * <p>
      * This method may not be called on a closed connection; doing so will cause an <code>SQLException</code> to be thrown.
-     * <P>
+     * <p>
      * <B>Note:</B> Subsequent warnings will be chained to this SQLWarning.
      *
      * @return the first <code>SQLWarning</code> object or <code>null</code> if there are none
-     * @exception SQLException
-     *                if a database access error occurs or this method is called on a closed connection
+     * @throws SQLException if a database access error occurs or this method is called on a closed connection
      * @see SQLWarning
      */
     @Override
@@ -264,8 +262,7 @@ public class ConnectionDelegate implements Connection {
      * Clears all warnings reported for this <code>Connection</code> object. After a call to this method, the method <code>getWarnings</code> returns
      * <code>null</code> until a new warning is reported for this <code>Connection</code> object.
      *
-     * @exception SQLException
-     *                SQLException if a database access error occurs or this method is called on a closed connection
+     * @throws SQLException SQLException if a database access error occurs or this method is called on a closed connection
      */
     @Override
     public void clearWarnings() throws SQLException {
@@ -277,15 +274,12 @@ public class ConnectionDelegate implements Connection {
      * the same as the <code>createStatement</code> method above, but it allows the default result set type and concurrency to be overridden. The
      * holdability of the created result sets can be determined by calling {@link #getHoldability}.
      *
-     * @param resultSetType
-     *            a result set type; one of <code>ResultSet.TYPE_FORWARD_ONLY</code>, <code>ResultSet.TYPE_SCROLL_INSENSITIVE</code>, or
-     *            <code>ResultSet.TYPE_SCROLL_SENSITIVE</code>
-     * @param resultSetConcurrency
-     *            a concurrency type; one of <code>ResultSet.CONCUR_READ_ONLY</code> or <code>ResultSet.CONCUR_UPDATABLE</code>
+     * @param resultSetType        a result set type; one of <code>ResultSet.TYPE_FORWARD_ONLY</code>, <code>ResultSet.TYPE_SCROLL_INSENSITIVE</code>, or
+     *                             <code>ResultSet.TYPE_SCROLL_SENSITIVE</code>
+     * @param resultSetConcurrency a concurrency type; one of <code>ResultSet.CONCUR_READ_ONLY</code> or <code>ResultSet.CONCUR_UPDATABLE</code>
      * @return a new <code>Statement</code> object that will generate <code>ResultSet</code> objects with the given type and concurrency
-     * @exception SQLException
-     *                if a database access error occurs, this method is called on a closed connection or the given parameters are not
-     *                <code>ResultSet</code> constants indicating type and concurrency
+     * @throws SQLException if a database access error occurs, this method is called on a closed connection or the given parameters are not
+     *                      <code>ResultSet</code> constants indicating type and concurrency
      * @since 1.2
      */
     @Override
