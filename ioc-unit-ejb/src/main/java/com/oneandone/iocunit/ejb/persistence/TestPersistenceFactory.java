@@ -456,12 +456,7 @@ public class TestPersistenceFactory extends PersistenceFactory {
     @Override
     public DataSource createDataSource() {
         if (properties.size() > 0) {
-            BasicDataSource bds = new BasicDataSource() {
-                @Override
-                public Connection getConnection(final String user, final String pass) throws SQLException {
-                    return super.getConnection();
-                }
-            };
+            BasicDataSource bds = createBasicDataSource();
             bds.setDriverClassName(getProperty(properties, "javax.persistence.jdbc.driver", "hibernate.connection.driverclass", "org.h2.Driver"));
             bds.setUrl(getProperty(properties, "javax.persistence.jdbc.url", "hibernate.connection.url", "jdbc:h2:mem:test;MODE=MySQL;DB_CLOSE_ON_EXIT=TRUE;DB_CLOSE_DELAY=0;LOCK_MODE=0;LOCK_TIMEOUT=10000"));
             bds.setUsername(getProperty(properties, "javax.persistence.jdbc.user", "hibernate.connection.username", "sa"));

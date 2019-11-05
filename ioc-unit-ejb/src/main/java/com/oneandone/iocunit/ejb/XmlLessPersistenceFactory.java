@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -113,6 +111,8 @@ public class XmlLessPersistenceFactory extends PersistenceFactory {
     protected PersistenceUnitInfo getHibernatePersistenceUnitInfo(final HashMap<String, Object> properties) {
 
         return new PersistenceUnitInfo() {
+            DataSource datasource;
+
             @Override
             public String getPersistenceUnitName() {
                 return "TestPersistenceUnit";
@@ -137,7 +137,9 @@ public class XmlLessPersistenceFactory extends PersistenceFactory {
 
             @Override
             public DataSource getNonJtaDataSource() {
-                return createDataSource();
+                if (datasource == null)
+                    datasource = createDataSource();
+                return datasource;
             }
 
             @Override
@@ -406,21 +408,12 @@ public class XmlLessPersistenceFactory extends PersistenceFactory {
 
     @Override
     public DataSource createDataSource() {
-        if (properties.size() > 0) {
-            BasicDataSource bds = new BasicDataSource() {
-                @Override
-                public Connection getConnection(final String user, final String pass) throws SQLException {
-                    return super.getConnection();
-                }
-            };
-            bds.setDriverClassName(getProperty(properties, "javax.persistence.jdbc.driver", "hibernate.connection.driverclass", "org.h2.Driver"));
-            bds.setUrl(getProperty(properties, "javax.persistence.jdbc.url", "hibernate.connection.url", "jdbc:h2:mem:test;MODE=MySQL;DB_CLOSE_ON_EXIT=TRUE;DB_CLOSE_DELAY=0;LOCK_MODE=0;LOCK_TIMEOUT=10000"));
-            bds.setUsername(getProperty(properties, "javax.persistence.jdbc.user", "hibernate.connection.username", "sa"));
-            bds.setPassword(getProperty(properties, "javax.persistence.jdbc.password", "hibernate.connection.password", ""));
-            return bds;
-        } else {
-            return super.createDataSource();
-        }
+        BasicDataSource bds = createBasicDataSource();
+        bds.setDriverClassName(getProperty(properties, "javax.persistence.jdbc.driver", "hibernate.connection.driverclass", "org.h2.Driver"));
+        bds.setUrl(getProperty(properties, "javax.persistence.jdbc.url", "hibernate.connection.url", "jdbc:h2:mem:test;MODE=MySQL;DB_CLOSE_ON_EXIT=TRUE;DB_CLOSE_DELAY=0;LOCK_MODE=0;LOCK_TIMEOUT=10000"));
+        bds.setUsername(getProperty(properties, "javax.persistence.jdbc.user", "hibernate.connection.username", "sa"));
+        bds.setPassword(getProperty(properties, "javax.persistence.jdbc.password", "hibernate.connection.password", ""));
+        return bds;
     }
 
     public Properties getProperties() {

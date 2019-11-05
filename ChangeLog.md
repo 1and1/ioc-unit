@@ -4,6 +4,7 @@
 
 |Version|Changes|
 |-------|-------|
+|2.0.15|jdbcSqlConverter-interface also supported for JPA (hibernate, eclipselink) |
 |2.0.14|jdbcSqlConverter-interface allows the replacement of native-statements |
 |2.0.13|commons-lang3:3.8.1,enable only Interceptors without Priority automatically|
 |2.0.12|@Transactional, XmlLessPersistenceFactory |

@@ -1,6 +1,8 @@
 package com.oneandone.iocunit.ejb.persistence;
 
 import java.lang.reflect.Method;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -264,14 +266,33 @@ public abstract class PersistenceFactory {
         if (emfDatasource != null) {
             return emfDatasource;
         } else {
-            BasicDataSource newDataSource = new BasicDataSource();
+            BasicDataSource newDataSource = createBasicDataSource();
             newDataSource.setDriverClassName((String) props.get("javax.persistence.jdbc.driver"));
             newDataSource.setUrl((String) props.get("javax.persistence.jdbc.url"));
             return newDataSource;
         }
     }
 
+    protected BasicDataSource createBasicDataSource() {
+        return new BasicDataSource() {
+                    @Override
+                    public Connection getConnection(final String user, final String pass) throws SQLException {
+                        return new ConnectionDelegate(super.getConnection(user,pass), getJdbcSqlConverterIfThereIsOne());
+                    }
+
+                    @Override
+                    public Connection getConnection() throws SQLException {
+                        return new ConnectionDelegate(super.getConnection(), getJdbcSqlConverterIfThereIsOne());
+                    }
+                };
+    }
+
     public DataSource produceDataSource() {
+        JdbcSqlConverter jdbcSqlConverter = getJdbcSqlConverterIfThereIsOne();
+        return new DataSourceDelegate(this, jdbcSqlConverter);
+    }
+
+    protected JdbcSqlConverter getJdbcSqlConverterIfThereIsOne() {
         JdbcSqlConverter jdbcSqlConverter = null;
         try {
             Method m = Instance.class.getMethod("isResolvable");
@@ -285,7 +306,7 @@ public abstract class PersistenceFactory {
         } catch (Exception e) {
             throw new RuntimeException("Unexpected", e);
         }
-        return new DataSourceDelegate(this, jdbcSqlConverter);
+        return jdbcSqlConverter;
     }
 
     protected EntityManagerFactory createEntityManagerFactory() {

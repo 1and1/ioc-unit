@@ -30,6 +30,13 @@ public class DataSourceDelegate implements DataSource {
     }
 
 
+    DataSourceDelegate(DataSource dataSource, JdbcSqlConverter jdbcSqlConverter) {
+        this.entityManagerStore = null;
+        this.jdbcSqlConverter = jdbcSqlConverter;
+        this.dataSource = dataSource;
+    }
+
+
     private DataSource getDatasource() {
         return dataSource;
     }

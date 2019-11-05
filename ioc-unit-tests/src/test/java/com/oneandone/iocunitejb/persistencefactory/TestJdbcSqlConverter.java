@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 
 import org.junit.Test;
@@ -40,7 +41,7 @@ public class TestJdbcSqlConverter {
     DataSource dataSource;
 
     @Test
-    public void test() throws SQLException {
+    public void canReplaceForDatasource() throws SQLException {
         try(Connection connection = dataSource.getConnection()) {
             try (Statement s = connection.createStatement()) {
                 s.execute("Insert into test_entity_1 (id, string_attribute, int_attribute) values (1, '1', 1)");
@@ -50,4 +51,20 @@ public class TestJdbcSqlConverter {
             }
         }
     }
+
+    @Inject
+    EntityManager entityManager;
+
+    @Test
+    public void canReplaceInEntityManager() throws SQLException {
+        entityManager.getTransaction().begin();
+        entityManager
+                .createNativeQuery("Insert into test_entity_1 (id, string_attribute, int_attribute) values (1, '1', 1)")
+                .executeUpdate();
+        entityManager.getTransaction().commit();
+        entityManager
+                .createNativeQuery("elect * from test_entity_1")
+                .getResultList();
+    }
+
 }
