@@ -6,9 +6,9 @@
  */
 package com.oneandone.iocunit.naming;
 
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.naming.Binding;
 import javax.naming.Context;
@@ -19,9 +19,12 @@ import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 
 public class CdiUnitContext implements Context {
-    private Map<String, Object> properties = new HashMap<String, Object>();
-    private Map<String, Object> bindings = new HashMap<String, Object>();
+    private static Map<String, Object> properties = new ConcurrentHashMap<String, Object>();
+    private static Map<String, Object> bindings = new ConcurrentHashMap<String, Object>();
 
+    public CdiUnitContext() {
+        System.out.println("Initialising CDIUNITContext");
+    }
 
     @Override
     public Object addToEnvironment(String propName, Object propVal) throws NamingException {
