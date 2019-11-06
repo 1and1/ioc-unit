@@ -10,7 +10,7 @@ import org.junit.runner.RunWith;
 import com.oneandone.iocunit.IocUnitRunner;
 import com.oneandone.iocunit.analyzer.annotations.SutClasses;
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.iocunit.ejb.persistence.TestPersistenceFactory;
+import com.oneandone.iocunit.ejb.XmlLessPersistenceFactory;
 
 import iocunit.ejbresource.simple.SutClass;
 import iocunit.ejbresource.simple.SutClassWithQualifiedDatasource;
@@ -20,7 +20,7 @@ import iocunit.ejbresource.simple.SutProducesResources;
  * @author aschoerk
  */
 @RunWith(IocUnitRunner.class)
-@TestClasses({TestPersistenceFactory.class, Test1DataSource2References.class})
+@TestClasses({XmlLessPersistenceFactory.class, Test1DataSource2References.class})
 @SutClasses({SutProducesResources.class, SutClass.class, SutClassWithQualifiedDatasource.class})
 public class ProducesOneDatasourceTest {
     @Inject
@@ -45,7 +45,7 @@ public class ProducesOneDatasourceTest {
         try {
             sutClass.createTableT();
         } catch (SQLException e) {
-            assert(e.getMessage().contains("already exists"));
+            assert (e.getMessage().contains("already exists"));
         }
         sutClass.createTableS();
     }

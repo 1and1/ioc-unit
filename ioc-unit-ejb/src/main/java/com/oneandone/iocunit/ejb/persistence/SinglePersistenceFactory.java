@@ -8,7 +8,7 @@ import javax.persistence.EntityManager;
  *
  * @author aschoerk
  */
-public abstract class SinglePersistenceFactory extends PersistenceFactory {
+public abstract class SinglePersistenceFactory extends XmlAwarePersistenceFactory {
 
     @Override
     protected String getPersistenceUnitName() {

@@ -53,7 +53,7 @@ import com.oneandone.iocunitejb.testbases.TestEntity1Saver;
  * @author aschoerk
  */
 @RunWith(JUnit4.class)
-@TestClasses({ StatelessEJB.class, SingletonEJB.class, TestRunnerIocUnit.class,
+@TestClasses({StatelessEJB.class, SingletonEJB.class, TestRunnerIocUnit.class,
         TransactionalApplicationScoped.class,
         TestEjb.TestDbPersistenceFactory.class, SessionContextFactory.class,
         StatelessBeanManagedTrasEJB.class, StatelessChildEJB.class,

@@ -4,7 +4,7 @@ import javax.enterprise.inject.Produces;
 import javax.persistence.EntityManager;
 
 import com.oneandone.iocunit.ejb.PersistenceContextQualifier;
-import com.oneandone.iocunit.ejb.persistence.TestPersistenceFactory;
+import com.oneandone.iocunit.ejb.XmlLessPersistenceFactory;
 
 import iocunit.ejbresource.em.PUQual1;
 import iocunit.ejbresource.em.PUQual2;
@@ -13,7 +13,7 @@ import iocunit.ejbresource.em.PUQual2;
  * @author aschoerk
  */
 public class EmTestResources {
-    public static class Datasource1PersistenceFactory extends TestPersistenceFactory {
+    public static class Datasource1PersistenceFactory extends XmlLessPersistenceFactory {
 
         @Override
         protected String getFilenamePrefix() {
@@ -39,7 +39,7 @@ public class EmTestResources {
         }
     }
 
-    public static class Datasource2PersistenceFactory extends TestPersistenceFactory {
+    public static class Datasource2PersistenceFactory extends XmlLessPersistenceFactory {
 
         @Override
         protected String getFilenamePrefix() {
@@ -65,7 +65,7 @@ public class EmTestResources {
         }
     }
 
-    public static class Datasource3PersistenceFactory extends TestPersistenceFactory {
+    public static class Datasource3PersistenceFactory extends XmlLessPersistenceFactory {
 
         @Override
         protected String getFilenamePrefix() {

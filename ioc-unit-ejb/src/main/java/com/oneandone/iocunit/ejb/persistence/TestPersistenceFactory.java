@@ -62,7 +62,7 @@ import com.oneandone.iocunit.ejb.SessionContextFactory;
  */
 @ApplicationScoped
 @TestClasses({ SessionContextFactory.class })
-public class TestPersistenceFactory extends PersistenceFactory {
+final public class TestPersistenceFactory extends XmlAwarePersistenceFactory {
 
     public static Set<String> notFoundPersistenceUnits = new HashSet<>();
     static Logger logger = LoggerFactory.getLogger("TestPersistenceFactory");

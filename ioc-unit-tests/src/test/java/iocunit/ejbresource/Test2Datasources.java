@@ -4,17 +4,17 @@ import javax.enterprise.inject.Produces;
 import javax.sql.DataSource;
 
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.iocunit.ejb.persistence.TestPersistenceFactory;
+import com.oneandone.iocunit.ejb.XmlLessPersistenceFactory;
 
 import iocunit.ejbresource.two_different_resources.DSQual;
 
 /**
  * @author aschoerk
  */
-@TestClasses({TestPersistenceFactory.class})
+@TestClasses({XmlLessPersistenceFactory.class})
 public class Test2Datasources {
 
-    public static class Datasource2PersistenceFactory extends TestPersistenceFactory {
+    public static class Datasource2PersistenceFactory extends XmlLessPersistenceFactory {
 
         @Override
         protected String getFilenamePrefix() {

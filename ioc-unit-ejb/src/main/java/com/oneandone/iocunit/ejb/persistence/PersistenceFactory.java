@@ -1,9 +1,7 @@
 package com.oneandone.iocunit.ejb.persistence;
 
-import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +12,6 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.ejb.TransactionAttributeType;
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -80,8 +77,11 @@ public abstract class PersistenceFactory {
         this.emf = emfP;
     }
 
+
     @Inject
-    Instance<JdbcSqlConverter> jdbcSqlConverterInstance;
+    PersistenceFactoryResources persistenceFactoryResources;
+
+    abstract protected EntityManagerFactory createEntityManagerFactory();
 
     /**
      * prepare EntityManagerFactory
@@ -260,7 +260,7 @@ public abstract class PersistenceFactory {
      *
      * @return a jdbc-Datasource using the same driver url user and password as the entityManager
      */
-    public DataSource createDataSource() {
+    DataSource createDataSource() {
         Map props = emf.getProperties();
         DataSource emfDatasource = (DataSource) props.get("hibernate.connection.datasource");
         if (emfDatasource != null) {
@@ -273,7 +273,7 @@ public abstract class PersistenceFactory {
         }
     }
 
-    protected BasicDataSource createBasicDataSource() {
+    BasicDataSource createBasicDataSource() {
         BasicDataSource result = new BasicDataSource() {
 
             @Override
@@ -306,27 +306,10 @@ public abstract class PersistenceFactory {
         return new DataSourceDelegate(this, jdbcSqlConverter);
     }
 
-    protected JdbcSqlConverter getJdbcSqlConverterIfThereIsOne() {
-        JdbcSqlConverter jdbcSqlConverter = null;
-        try {
-            Method m = Instance.class.getMethod("isResolvable");
-            if ((boolean)m.invoke(jdbcSqlConverterInstance)) {
-                jdbcSqlConverter = jdbcSqlConverterInstance.get();
-            }
-        } catch (NoSuchMethodException e) {
-            if (!jdbcSqlConverterInstance.isUnsatisfied()) {
-                jdbcSqlConverter = jdbcSqlConverterInstance.get();
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Unexpected", e);
-        }
-        return jdbcSqlConverter;
+    JdbcSqlConverter getJdbcSqlConverterIfThereIsOne() {
+        return persistenceFactoryResources.getJdbcSqlConverterIfThereIsOne();
     }
 
-    protected EntityManagerFactory createEntityManagerFactory() {
-        PersistenceProvider actProvider = getPersistenceProvider();
-        return actProvider.createEntityManagerFactory(getPersistenceUnitName(), Collections.EMPTY_MAP);
-    }
 
     protected PersistenceProvider getPersistenceProvider() {
         List<PersistenceProvider> pProviders = PersistenceProviderResolverHolder.getPersistenceProviderResolver().getPersistenceProviders();

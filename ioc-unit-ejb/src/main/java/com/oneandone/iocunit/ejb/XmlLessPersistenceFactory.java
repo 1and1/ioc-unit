@@ -36,7 +36,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.iocunit.ejb.persistence.PersistenceFactory;
+import com.oneandone.iocunit.ejb.persistence.XmlLessPersistenceFactoryBase;
 
 /**
  * This Persistencefactory should allow to create tests with in an h2 database very fast.
@@ -56,7 +56,7 @@ import com.oneandone.iocunit.ejb.persistence.PersistenceFactory;
  */
 @ApplicationScoped
 @TestClasses({ SessionContextFactory.class })
-public class XmlLessPersistenceFactory extends PersistenceFactory {
+public class XmlLessPersistenceFactory extends XmlLessPersistenceFactoryBase {
 
     static Logger logger = LoggerFactory.getLogger("XmlLessPersistenceFactory");
     @Inject
@@ -406,7 +406,7 @@ public class XmlLessPersistenceFactory extends PersistenceFactory {
         }
     }
 
-    @Override
+
     public DataSource createDataSource() {
         BasicDataSource bds = createBasicDataSource();
         bds.setDriverClassName(getProperty(properties, "javax.persistence.jdbc.driver", "hibernate.connection.driverclass", "org.h2.Driver"));

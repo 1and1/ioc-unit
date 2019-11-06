@@ -4,14 +4,14 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Alternative;
 import javax.inject.Inject;
 
-import com.oneandone.iocunit.ejb.persistence.PersistenceFactory;
+import com.oneandone.iocunit.ejb.persistence.XmlAwarePersistenceFactory;
 
 /**
  * @author aschoerk
  */
 @ApplicationScoped
 @Alternative
-public class J2eeSimMySqlFactory extends PersistenceFactory {
+public class J2eeSimMySqlFactory extends XmlAwarePersistenceFactory {
     @Inject
     MySqlStarter mySqlStarter; // make sure mySql is initialzed before PersistenceFactory
 
