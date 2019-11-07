@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import com.oneandone.cdi.weldstarter.CreationalContexts;
 import com.oneandone.cdi.weldstarter.spi.TestExtensionService;
+import com.oneandone.iocunit.naming.CdiUnitContext;
 
 /**
  * @author aschoerk
@@ -59,6 +60,7 @@ public class IocUnitRunner extends BlockJUnit4ClassRunner {
                 } finally {
                     initialContext.close();
                     analyzeAndStarter.tearDown();
+                    CdiUnitContext.init();
                 }
 
             }

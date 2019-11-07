@@ -22,6 +22,11 @@ public class CdiUnitContext implements Context {
     private static Map<String, Object> properties = new ConcurrentHashMap<String, Object>();
     private static Map<String, Object> bindings = new ConcurrentHashMap<String, Object>();
 
+    public static void init() {
+        properties.clear();
+        bindings.clear();
+    }
+
     public CdiUnitContext() {
         System.out.println("Initialising CDIUNITContext");
     }
