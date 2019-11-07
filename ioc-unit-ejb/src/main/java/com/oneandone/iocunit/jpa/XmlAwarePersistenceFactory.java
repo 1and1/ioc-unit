@@ -7,7 +7,6 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.spi.PersistenceProvider;
 
 import com.oneandone.iocunit.ejb.persistence.PersistenceFactory;
-import com.oneandone.iocunit.ejb.persistence.ProviderFactoryConnectionProvider;
 
 /**
  * @author aschoerk
@@ -16,7 +15,7 @@ abstract public class XmlAwarePersistenceFactory extends PersistenceFactory {
 
     Map<String, Object> getPropertiesMap() {
         HashMap<String, Object> res = new HashMap<>();
-        res.put("hibernate.connection.provider_class", ProviderFactoryConnectionProvider.class.getName());
+        res.put("hibernate.connection.provider_class", "com.oneandone.iocunit.ejb.persistence.ProviderFactoryConnectionProvider");
         return res;
     }
 

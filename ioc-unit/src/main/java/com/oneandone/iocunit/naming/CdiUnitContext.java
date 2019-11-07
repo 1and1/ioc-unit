@@ -28,7 +28,7 @@ public class CdiUnitContext implements Context {
     }
 
     public CdiUnitContext() {
-        System.out.println("Initialising CDIUNITContext");
+
     }
 
     @Override

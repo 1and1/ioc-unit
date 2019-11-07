@@ -337,7 +337,7 @@ public abstract class PersistenceFactory {
         }
     }
 
-    protected DataSource doInFirstConnection(DataSource ds) {
+    public DataSource doInFirstConnection(DataSource ds) {
         return ds;
     }
 

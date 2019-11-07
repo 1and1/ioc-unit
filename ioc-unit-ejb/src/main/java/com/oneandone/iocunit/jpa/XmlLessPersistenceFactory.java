@@ -29,15 +29,14 @@ import javax.persistence.spi.PersistenceUnitTransactionType;
 import javax.sql.DataSource;
 
 import org.apache.commons.dbcp2.BasicDataSource;
-import org.eclipse.persistence.internal.jpa.deployment.SEPersistenceUnitInfo;
-import org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl;
-import org.hibernate.jpa.boot.internal.PersistenceUnitInfoDescriptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 import com.oneandone.iocunit.ejb.EjbExtensionExtended;
 import com.oneandone.iocunit.ejb.SessionContextFactory;
+import com.oneandone.iocunit.ejb.persistence.EclipseLinkDependent;
+import com.oneandone.iocunit.ejb.persistence.HibernateDependent;
 
 /**
  * This Persistencefactory should allow to create tests with in an h2 database very fast.
@@ -226,16 +225,13 @@ public class XmlLessPersistenceFactory extends XmlLessPersistenceFactoryBase {
             // possibly override properties using system properties
             overwritePersistenceProperties(System.getProperties());
             final PersistenceUnitInfo persistenceUnitInfo = getHibernatePersistenceUnitInfo(properties);
-            try {
-                result = new EntityManagerFactoryBuilderImpl(new PersistenceUnitInfoDescriptor(persistenceUnitInfo), properties).build();
-            } catch (Throwable thw) {
-                throw new RuntimeException(thw);
-            }
-
+            result = HibernateDependent.createFromPersistenceUnit(persistenceUnitInfo, properties);
         } else {
             initEclipseLinkProperties(properties);
             overwritePersistenceProperties(System.getProperties());
-            properties.put("eclipselink.se-puinfo", new SEPersistenceUnitInfo() {
+            EclipseLinkDependent.addPersistenceUnitInfoToProperties(properties, new PersistenceUnitInfo() {
+                DataSource nonJtaDataSource = null;
+
                 @Override
                 public String getPersistenceUnitName() {
                     return "TestPersistenceUnit";
@@ -285,6 +281,51 @@ public class XmlLessPersistenceFactory extends XmlLessPersistenceFactoryBase {
                     return Thread.currentThread().getContextClassLoader();
                 }
 
+
+                @Override
+                public String getPersistenceProviderClassName() {
+                    throw new RuntimeException("not implemented");
+                }
+
+                @Override
+                public PersistenceUnitTransactionType getTransactionType() {
+                    throw new RuntimeException("not implemented");
+                }
+
+                @Override
+                public List<String> getMappingFileNames() {
+                    throw new RuntimeException("not implemented");
+                }
+
+                @Override
+                public SharedCacheMode getSharedCacheMode() {
+                    throw new RuntimeException("not implemented");
+                }
+
+                @Override
+                public ValidationMode getValidationMode() {
+                    throw new RuntimeException("not implemented");
+                }
+
+                @Override
+                public Properties getProperties() {
+                    throw new RuntimeException("not implemented");
+                }
+
+                @Override
+                public String getPersistenceXMLSchemaVersion() {
+                    throw new RuntimeException("not implemented");
+                }
+
+                @Override
+                public void addTransformer(final ClassTransformer transformer) {
+                    throw new RuntimeException("not implemented");
+                }
+
+                @Override
+                public ClassLoader getNewTempClassLoader() {
+                    throw new RuntimeException("not implemented");
+                }
             });
             result = persistenceProvider.createEntityManagerFactory(getPersistenceUnitName(), properties);
         }

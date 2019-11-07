@@ -8,6 +8,8 @@
 
     <modules>
         <module>ex1-1entity</module>
+        <module>ex1-1entity-el</module>
+        <module>ex1-1entity-hb</module>
         <module>ex1-1entity5</module>
         <module>ex1-2entity4220b_5</module>
         <module>ex2-syncconsumed</module>
