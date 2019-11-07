@@ -12,8 +12,6 @@ import javax.sql.DataSource;
 public class XmlLessInitializingPersistenceFactory
         extends XmlLessPersistenceFactory implements DataSourceInitializing {
 
-
-
     @Produces
     @Override
     public DataSource produceDataSource() {
@@ -26,4 +24,8 @@ public class XmlLessInitializingPersistenceFactory
         return super.produceEntityManager();
     }
 
+    @Override
+    public DataSource doInFirstConnection(final DataSource ds) {
+        return doInFirstConnectionH2(ds);
+    }
 }

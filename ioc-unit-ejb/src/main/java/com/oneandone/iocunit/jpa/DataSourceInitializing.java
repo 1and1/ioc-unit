@@ -16,7 +16,7 @@ public interface DataSourceInitializing {
      * if true, first removes all objects from the Db before first connection
      * @return true if db is to be cleared in the beginning.
      */
-    default boolean clearDb() {
+    public default boolean clearDb() {
         return true;
     }
 
@@ -26,7 +26,7 @@ public interface DataSourceInitializing {
      * @return Name of a schema to be created before first connection. null,
      * if no schema needs to be created.
      */
-    default String initialSchemaName() {
+    public default String initialSchemaName() {
         return null;
     }
 
@@ -36,11 +36,11 @@ public interface DataSourceInitializing {
      * @return statements to be executed before first connection,
      * after potential clearing and schema-creation.
      */
-    default List<String> initStatements() {
+    public default List<String> initStatements() {
         return Collections.EMPTY_LIST;
     }
 
-    default DataSource doInFirstConnection(DataSource ds) {
+    public default DataSource doInFirstConnectionH2(DataSource ds) {
         try (Connection conn = ds.getConnection()) {
             try(Statement stmt = conn.createStatement()) {
                 if (clearDb())
