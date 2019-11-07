@@ -13,13 +13,8 @@ import javax.sql.DataSource;
  * @author aschoerk
  */
 @ApplicationScoped
-public class XmlLessInitializingPersistenceFactory extends XmlLessPersistenceFactory {
-    protected boolean clearDb() {
-        return true;
-    }
-    protected String initialSchemaName() {
-        return "dbo";
-    }
+public class XmlLessInitializingPersistenceFactory
+        extends XmlLessPersistenceFactory implements DataSourceInitializing {
 
     @Override
     protected DataSource doInFirstConnection(DataSource ds) {
@@ -30,6 +25,9 @@ public class XmlLessInitializingPersistenceFactory extends XmlLessPersistenceFac
                 String initialSchemaName = initialSchemaName();
                 if (initialSchemaName != null) {
                     stmt.execute("create schema if not exists " + initialSchemaName);
+                }
+                for (String s: initStatements()) {
+                    stmt.execute(s);
                 }
             }
         } catch (SQLException e) {

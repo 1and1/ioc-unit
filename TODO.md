@@ -6,6 +6,7 @@
 
 # doing
 * XmlLessPersistenceFactory ease usage!!!
+* SourceInterceptor zo manipulated sql before jdbc-execution
 
 
 # done
