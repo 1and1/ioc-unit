@@ -1,10 +1,10 @@
-package com.oneandone.iocunit.ejb.persistence;
+package com.oneandone.iocunit.jpa;
 
 import java.util.UUID;
 
 import javax.persistence.EntityManagerFactory;
 
-import org.apache.commons.dbcp2.BasicDataSource;
+import com.oneandone.iocunit.ejb.persistence.PersistenceFactory;
 
 /**
  * @author aschoerk
@@ -17,10 +17,5 @@ abstract public class XmlLessPersistenceFactoryBase extends PersistenceFactory {
     @Override
     protected String getPersistenceUnitName() {
         return name;
-    }
-
-    @Override
-    protected BasicDataSource createBasicDataSource() {
-        return super.createBasicDataSource();
     }
 }

@@ -1,7 +1,7 @@
 package com.oneandone.iocunitejb.example1;
 
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.iocunit.ejb.persistence.EclipseLinkPersistenceFactory;
+import com.oneandone.iocunit.jpa.EclipseLinkPersistenceFactory;
 
 /**
  * @author aschoerk

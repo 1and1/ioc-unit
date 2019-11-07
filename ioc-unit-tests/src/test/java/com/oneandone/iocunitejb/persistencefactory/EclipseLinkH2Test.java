@@ -4,7 +4,7 @@ import org.junit.runner.RunWith;
 
 import com.oneandone.iocunit.IocUnitRunner;
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.iocunit.ejb.persistence.EclipseLinkPersistenceFactory;
+import com.oneandone.iocunit.jpa.EclipseLinkPersistenceFactory;
 
 /**
  * @author aschoerk

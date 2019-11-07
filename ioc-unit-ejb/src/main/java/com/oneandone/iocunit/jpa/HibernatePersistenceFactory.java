@@ -1,11 +1,9 @@
-package com.oneandone.iocunit.ejb.persistence;
+package com.oneandone.iocunit.jpa;
 
 import javax.enterprise.inject.Default;
 import javax.enterprise.inject.Produces;
 import javax.persistence.EntityManager;
 import javax.sql.DataSource;
-
-import com.oneandone.iocunit.ejb.XmlLessPersistenceFactory;
 
 /**
  * @author aschoerk

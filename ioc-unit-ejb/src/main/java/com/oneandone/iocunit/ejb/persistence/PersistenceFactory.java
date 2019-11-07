@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -51,6 +52,7 @@ public abstract class PersistenceFactory {
     private EntityManagerFactory emf = null;
     private SimulatedTransactionManager transactionManager = new SimulatedTransactionManager();
     private ConcurrentLinkedQueue<Stack<EntityManager>> threadlocalStacks = new ConcurrentLinkedQueue<>();
+    private AtomicBoolean firstDatasourceCreated = new AtomicBoolean(false);
 
     protected Provider getRecommendedProvider() {
         return Provider.HIBERNATE;
@@ -260,20 +262,20 @@ public abstract class PersistenceFactory {
      *
      * @return a jdbc-Datasource using the same driver url user and password as the entityManager
      */
-    DataSource createDataSource() {
+    protected DataSource createDataSource() {
         Map props = emf.getProperties();
         DataSource emfDatasource = (DataSource) props.get("hibernate.connection.datasource");
         if (emfDatasource != null) {
-            return emfDatasource;
+            return checkAndDoInFirstConnection(emfDatasource);
         } else {
             BasicDataSource newDataSource = createBasicDataSource();
             newDataSource.setDriverClassName((String) props.get("javax.persistence.jdbc.driver"));
             newDataSource.setUrl((String) props.get("javax.persistence.jdbc.url"));
-            return newDataSource;
+            return checkAndDoInFirstConnection(newDataSource);
         }
     }
 
-    BasicDataSource createBasicDataSource() {
+    protected BasicDataSource createBasicDataSource() {
         BasicDataSource result = new BasicDataSource() {
 
             @Override
@@ -303,7 +305,7 @@ public abstract class PersistenceFactory {
 
     public DataSource produceDataSource() {
         JdbcSqlConverter jdbcSqlConverter = getJdbcSqlConverterIfThereIsOne();
-        return new DataSourceDelegate(this, jdbcSqlConverter);
+        return checkAndDoInFirstConnection(new DataSourceDelegate(this, jdbcSqlConverter));
     }
 
     JdbcSqlConverter getJdbcSqlConverterIfThereIsOne() {
@@ -325,6 +327,18 @@ public abstract class PersistenceFactory {
             }
         }
         return actProvider;
+    }
+
+    protected DataSource checkAndDoInFirstConnection(DataSource ds) {
+        if (this.firstDatasourceCreated.compareAndSet(false, true)) {
+            return doInFirstConnection(ds);
+        } else {
+            return ds;
+        }
+    }
+
+    protected DataSource doInFirstConnection(DataSource ds) {
+        return ds;
     }
 
 

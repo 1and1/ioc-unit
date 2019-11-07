@@ -2,14 +2,7 @@ package iocunit.ejbresource;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.transaction.HeuristicMixedException;
-import javax.transaction.HeuristicRollbackException;
-import javax.transaction.NotSupportedException;
-import javax.transaction.RollbackException;
-import javax.transaction.SystemException;
-import javax.transaction.UserTransaction;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -42,18 +35,6 @@ public class TestEm3Pus {
 
     @Inject
     EntityManager em3;
-
-    @Inject
-    UserTransaction userTransaction;
-
-    @Before
-    public void before() throws HeuristicRollbackException, RollbackException, HeuristicMixedException, SystemException, NotSupportedException {
-        userTransaction.begin();
-        em1.createNativeQuery("drop all objects").executeUpdate();
-        em2.createNativeQuery("drop all objects").executeUpdate();
-        em3.createNativeQuery("drop all objects").executeUpdate();
-        userTransaction.commit();
-    }
 
     @Test
     public void canWorkNativeInParallelWith3PersistenceContexts()  {

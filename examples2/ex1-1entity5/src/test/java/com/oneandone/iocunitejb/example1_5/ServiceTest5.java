@@ -28,10 +28,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.oneandone.iocunit.IocJUnit5Extension;
 import com.oneandone.iocunit.analyzer.annotations.SutClasses;
-import com.oneandone.iocunit.ejb.XmlLessPersistenceFactory;
 import com.oneandone.iocunit.ejb.persistence.PersistenceFactory;
 import com.oneandone.iocunit.ejb.persistence.TestClosure;
 import com.oneandone.iocunit.ejb.persistence.TestTransactionException;
+import com.oneandone.iocunit.jpa.XmlLessPersistenceFactory;
 
 
 /**

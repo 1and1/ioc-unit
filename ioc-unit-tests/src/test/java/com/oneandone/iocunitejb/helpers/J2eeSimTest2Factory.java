@@ -2,7 +2,7 @@ package com.oneandone.iocunitejb.helpers;
 
 import javax.enterprise.context.ApplicationScoped;
 
-import com.oneandone.iocunit.ejb.persistence.XmlAwarePersistenceFactory;
+import com.oneandone.iocunit.jpa.XmlAwarePersistenceFactory;
 
 /**
  * @author aschoerk

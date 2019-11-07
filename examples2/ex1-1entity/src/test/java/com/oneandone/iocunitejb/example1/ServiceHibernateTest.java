@@ -1,7 +1,7 @@
 package com.oneandone.iocunitejb.example1;
 
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.iocunit.ejb.persistence.HibernatePersistenceFactory;
+import com.oneandone.iocunit.jpa.HibernatePersistenceFactory;
 
 /**
  * @author aschoerk

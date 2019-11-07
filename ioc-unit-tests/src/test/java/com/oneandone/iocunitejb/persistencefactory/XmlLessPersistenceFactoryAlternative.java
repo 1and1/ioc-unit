@@ -6,7 +6,7 @@ import javax.enterprise.inject.Produces;
 import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 
-import com.oneandone.iocunit.ejb.XmlLessPersistenceFactory;
+import com.oneandone.iocunit.jpa.XmlLessPersistenceFactory;
 
 /**
  * @author aschoerk

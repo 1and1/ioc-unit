@@ -4,7 +4,7 @@ import javax.enterprise.inject.Produces;
 import javax.sql.DataSource;
 
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.iocunit.ejb.XmlLessPersistenceFactory;
+import com.oneandone.iocunit.jpa.XmlLessPersistenceFactory;
 
 import iocunit.ejbresource.two_different_resources.DSQual;
 

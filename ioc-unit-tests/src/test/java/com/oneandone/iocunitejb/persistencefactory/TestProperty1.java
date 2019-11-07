@@ -21,7 +21,7 @@ import org.junit.runner.RunWith;
 
 import com.oneandone.iocunit.IocUnitRunner;
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.iocunit.ejb.XmlLessPersistenceFactory;
+import com.oneandone.iocunit.jpa.XmlLessPersistenceFactory;
 import com.oneandone.iocunitejb.entities.TestEntity1;
 
 /**

@@ -3,6 +3,8 @@ package com.oneandone.iocunit.ejb.persistence;
 import javax.enterprise.inject.Produces;
 import javax.persistence.EntityManager;
 
+import com.oneandone.iocunit.jpa.XmlAwarePersistenceFactory;
+
 /**
  * Convenience class for tests using only one persistence context in tests named: "testdb".
  *

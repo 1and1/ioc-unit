@@ -43,6 +43,7 @@ import org.slf4j.LoggerFactory;
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 import com.oneandone.iocunit.ejb.EjbExtensionExtended;
 import com.oneandone.iocunit.ejb.SessionContextFactory;
+import com.oneandone.iocunit.jpa.XmlAwarePersistenceFactory;
 
 /**
  * This Persistencefactory should allow to create tests with in an h2 database very fast.
@@ -62,7 +63,7 @@ import com.oneandone.iocunit.ejb.SessionContextFactory;
  */
 @ApplicationScoped
 @TestClasses({ SessionContextFactory.class })
-final public class TestPersistenceFactory extends XmlAwarePersistenceFactory {
+public class TestPersistenceFactory extends XmlAwarePersistenceFactory {
 
     public static Set<String> notFoundPersistenceUnits = new HashSet<>();
     static Logger logger = LoggerFactory.getLogger("TestPersistenceFactory");

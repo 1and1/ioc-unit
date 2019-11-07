@@ -1,10 +1,13 @@
-package com.oneandone.iocunit.ejb.persistence;
+package com.oneandone.iocunit.jpa;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.spi.PersistenceProvider;
+
+import com.oneandone.iocunit.ejb.persistence.PersistenceFactory;
+import com.oneandone.iocunit.ejb.persistence.ProviderFactoryConnectionProvider;
 
 /**
  * @author aschoerk

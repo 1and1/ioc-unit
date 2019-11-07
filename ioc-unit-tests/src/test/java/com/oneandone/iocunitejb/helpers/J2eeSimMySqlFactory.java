@@ -4,7 +4,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Alternative;
 import javax.inject.Inject;
 
-import com.oneandone.iocunit.ejb.persistence.XmlAwarePersistenceFactory;
+import com.oneandone.iocunit.jpa.XmlAwarePersistenceFactory;
 
 /**
  * @author aschoerk

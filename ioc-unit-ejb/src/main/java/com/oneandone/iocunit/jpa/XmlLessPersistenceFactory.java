@@ -1,4 +1,4 @@
-package com.oneandone.iocunit.ejb;
+package com.oneandone.iocunit.jpa;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,7 +36,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.iocunit.ejb.persistence.XmlLessPersistenceFactoryBase;
+import com.oneandone.iocunit.ejb.EjbExtensionExtended;
+import com.oneandone.iocunit.ejb.SessionContextFactory;
 
 /**
  * This Persistencefactory should allow to create tests with in an h2 database very fast.
@@ -139,7 +140,7 @@ public class XmlLessPersistenceFactory extends XmlLessPersistenceFactoryBase {
             public DataSource getNonJtaDataSource() {
                 if (datasource == null)
                     datasource = createDataSource();
-                return datasource;
+                return checkAndDoInFirstConnection(datasource);
             }
 
             @Override
@@ -270,9 +271,9 @@ public class XmlLessPersistenceFactory extends XmlLessPersistenceFactoryBase {
                 public DataSource getNonJtaDataSource() {
                     DataSource ds = this.nonJtaDataSource;
                     if (ds == null) {
-                        return createDataSource();
+                        ds = createDataSource();
                     }
-                    return ds;
+                    return checkAndDoInFirstConnection(ds);
                 }
 
                 @Override
@@ -413,7 +414,7 @@ public class XmlLessPersistenceFactory extends XmlLessPersistenceFactoryBase {
         bds.setUrl(getProperty(properties, "javax.persistence.jdbc.url", "hibernate.connection.url", "jdbc:h2:mem:test;MODE=MySQL;DB_CLOSE_ON_EXIT=TRUE;DB_CLOSE_DELAY=0;LOCK_MODE=0;LOCK_TIMEOUT=10000"));
         bds.setUsername(getProperty(properties, "javax.persistence.jdbc.user", "hibernate.connection.username", "sa"));
         bds.setPassword(getProperty(properties, "javax.persistence.jdbc.password", "hibernate.connection.password", ""));
-        return bds;
+        return checkAndDoInFirstConnection(bds);
     }
 
     public Properties getProperties() {
@@ -423,6 +424,7 @@ public class XmlLessPersistenceFactory extends XmlLessPersistenceFactoryBase {
         }
         return result;
     }
+
 
 
 }

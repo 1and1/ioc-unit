@@ -23,7 +23,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import com.oneandone.iocunit.IocJUnit5Extension;
 import com.oneandone.iocunit.analyzer.annotations.SutClasses;
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.iocunit.ejb.XmlLessPersistenceFactory;
+import com.oneandone.iocunit.jpa.XmlLessPersistenceFactory;
 import com.oneandone.iocunitejb.entities.TestEntity1;
 
 /**
