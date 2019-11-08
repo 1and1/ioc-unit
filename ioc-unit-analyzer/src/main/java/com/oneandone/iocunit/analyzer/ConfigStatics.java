@@ -61,6 +61,7 @@ public class ConfigStatics {
                 return false;
             }
         } catch (NoClassDefFoundError|IncompatibleClassChangeError e) {
+            logger.warn("NoClassDefFoundError analyzing {}",c.getName());
             return false;
         }
         return true;
