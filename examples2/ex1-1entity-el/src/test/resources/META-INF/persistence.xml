@@ -7,6 +7,8 @@
         <properties>
             <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
             <property name="javax.persistence.jdbc.url" value="jdbc:h2:mem:test;MODE=PostgreSQL;DB_CLOSE_DELAY=0"/>
+            <property name="javax.persistence.jdbc.user" value="sa"/>
+            <property name="javax.persistence.jdbc.password" value=""/>
             <property name="show_sql" value="true"/>
             <property name="eclipselink.disableXmlSecurity" value="true"/>
             <property name="eclipselink.ddl-generation" value="drop-and-create-tables"/>
