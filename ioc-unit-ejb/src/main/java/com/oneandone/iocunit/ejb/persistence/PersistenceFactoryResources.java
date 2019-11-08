@@ -12,7 +12,7 @@ import javax.inject.Inject;
 @ApplicationScoped
 public class PersistenceFactoryResources {
     @Inject
-    Instance<JdbcSqlConverter> jdbcSqlConverterInstance;
+    private Instance<JdbcSqlConverter> jdbcSqlConverterInstance;
 
     protected JdbcSqlConverter getJdbcSqlConverterIfThereIsOne() {
         JdbcSqlConverter jdbcSqlConverter = null;

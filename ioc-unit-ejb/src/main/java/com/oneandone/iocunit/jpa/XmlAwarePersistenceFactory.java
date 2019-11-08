@@ -15,7 +15,8 @@ abstract public class XmlAwarePersistenceFactory extends PersistenceFactory {
 
     Map<String, Object> getPropertiesMap() {
         HashMap<String, Object> res = new HashMap<>();
-        res.put("hibernate.connection.provider_class", "com.oneandone.iocunit.ejb.persistence.ProviderFactoryConnectionProvider");
+        res.put("hibernate.connection.provider_class", "com.oneandone.iocunit.ejb.persistence.HibernateConnectionProvider");
+        res.put("eclipselink.jdbc.connector", "com.oneandone.iocunit.ejb.persistence.EclipselinkConnectionProvider");
         return res;
     }
 

@@ -40,6 +40,7 @@ public class Phase4AvailablesGuesser extends PhasesBase {
                      || rawtypeName.startsWith("javax.")
                      || rawtypeName.startsWith("org.jboss.")
                      || handledPhase4Classes.contains(rawtype)
+                     || q.isInstance()
                 )) {
                     try {
                         URL rawtypePath = ClasspathHandler.getPath(rawtype);

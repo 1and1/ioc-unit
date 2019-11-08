@@ -1,25 +1,27 @@
 package com.oneandone.iocunit.ejb.persistence;
 
 import java.sql.Connection;
-import java.sql.SQLException;
+import java.util.Properties;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.naming.InitialContext;
 
-import org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl;
+import org.eclipse.persistence.exceptions.DatabaseException;
+import org.eclipse.persistence.sessions.DefaultConnector;
+import org.eclipse.persistence.sessions.Session;
 
 import com.oneandone.cdi.weldstarter.CreationalContexts;
 
 /**
  * @author aschoerk
  */
-public class ProviderFactoryConnectionProvider extends DriverManagerConnectionProviderImpl {
+public class EclipselinkConnectionProvider extends DefaultConnector {
     private static final long serialVersionUID = -3538987211261126789L;
 
     @Override
-    public Connection getConnection() throws SQLException {
+    public Connection connect(final Properties properties, final Session session) throws DatabaseException {
         InitialContext initialContext = null;
         try {
             initialContext = new InitialContext();
@@ -28,14 +30,15 @@ public class ProviderFactoryConnectionProvider extends DriverManagerConnectionPr
             if(bean != null) {
                 try (CreationalContexts creationalContexts = new CreationalContexts(beanManager)) {
                     JdbcSqlConverter jdbcSqlConverter = (JdbcSqlConverter) creationalContexts.create(bean, ApplicationScoped.class);
-                    return new ConnectionDelegate(super.getConnection(), jdbcSqlConverter, true);
+                    return new ConnectionDelegate(super.connect(properties, session), jdbcSqlConverter, true);
                 }
             }
             else {
-                return super.getConnection();
+                return super.connect(properties, session);
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
+
 }

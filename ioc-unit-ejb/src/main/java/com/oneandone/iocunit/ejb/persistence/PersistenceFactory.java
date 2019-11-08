@@ -58,6 +58,9 @@ public abstract class PersistenceFactory {
         return Provider.HIBERNATE;
     }
 
+    @Inject
+    private PersistenceFactoryResources persistenceFactoryResources;
+
     /**
      * allow to reset between Tests.
      */
@@ -79,9 +82,6 @@ public abstract class PersistenceFactory {
         this.emf = emfP;
     }
 
-
-    @Inject
-    PersistenceFactoryResources persistenceFactoryResources;
 
     abstract protected EntityManagerFactory createEntityManagerFactory();
 

@@ -38,6 +38,7 @@ import com.oneandone.iocunit.ejb.jms.JmsMocksFactory;
 import com.oneandone.iocunit.ejb.jms.JmsProducers;
 import com.oneandone.iocunit.ejb.jms.JmsSingletons;
 import com.oneandone.iocunit.ejb.persistence.PersistenceFactory;
+import com.oneandone.iocunit.ejb.persistence.PersistenceFactoryResources;
 import com.oneandone.iocunit.ejb.persistence.SimulatedEntityTransaction;
 import com.oneandone.iocunit.ejb.persistence.SimulatedTransactionManager;
 import com.oneandone.iocunit.ejb.resourcesimulators.SimulatedUserTransaction;
@@ -153,6 +154,7 @@ public class EjbTestExtensionService implements TestExtensionService {
                 add(AsynchronousManager.class);
                 add(AsynchronousMethodInterceptor.class);
                 add(AsynchronousMessageListenerProxy.class);
+                add(PersistenceFactoryResources.class);
             }
         };
         return result;
