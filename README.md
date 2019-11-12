@@ -2,6 +2,37 @@ ioc-unit (formerly ejb-cdi-unit)
 ================================
 ![Build Status](https://travis-ci.org/1and1/ioc-unit.svg?branch=master)
 
+# Where can ioc-unit-ejb help
+
+## My Testcode needs 
+* To be developed and started directly in my IDE (intellij, eclipse, netbeans)
+* A real DBMS (even if probably simulated in memory) executing real Statements generated or provided by Productive and Testcode
+* To test situations where multiple Transactionattributes like SUPPORTS, NOT_SUPPORTED, REQUIRED and REQUIRES_NEW have to be kept in mind. 
+* an Entitymanager in my Testcode to work with the entities defined in the productiv code.
+* to test the flow of jms-messages throw an arbitrary number of Messagedriven beans in a deterministic manner.
+* to use multiple threads to simulate productive situations and handle database connection and transactions correctly.  
+* To avoid server-deployment during the development cycle, to speed up the check/test of the newly developed code, as required in TDD. 
+* to start a testdbms (H2) in an easy way without having to fumble with extra persistence-units in test-persistence.xml-files 
+
+# Where can ioc-unit-resteasy help
+## My Testcode needs 
+* to check if the code, as it works from the incoming HTTP(S)-Call to the applicationcode, does the right conversions, filters, mappings...
+* to check resteasy resources
+* to check jax-rs resources even if the productive environment does not use resteasy, the standard can be tested.
+* to work with ExceptionMappers, ObjectMappers, everything annotated by @Provider
+* not if you want to check the authentication and authorization support.
+
+# Where can ioc-unit help
+## My Testcode needs to
+* Inject Testalternatives in an easy way, without having to do big configurations in extra beans.xml 
+* define easily and deterministicly which parts of the system under test should be started or should be replaced by mocks.
+* get hints during the starting of the testcontainer, what parts should be added to the testconfiguration, and where there might be problems.
+
+
+# Where can ioc-unit-mockseasy help
+## My Testcode
+* needs more than @InjectMocks provides, to replace @Injects in productiv-code by Mockito or Easymock-Mocks.
+
 # What should this project achieve
 
 Support the development of tests inside non-trivial CDI/EJB-service-modules containing several hundred classes, entities, transactions, queues without starting the destination environment.
