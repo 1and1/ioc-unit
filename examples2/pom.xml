@@ -3,7 +3,7 @@
 
     <groupId>net.oneandone.ioc-unit</groupId>
     <artifactId>ioc-unit-examples2-parent</artifactId>
-    <version>2.0.17</version>
+    <version>2.0.18-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -48,7 +48,7 @@
         <url>https://github.com/1and1/ioc-unit</url>
         <connection>scm:git:ssh://git@github.com/1and1/ioc-unit.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/1and1/ioc-unit.git</developerConnection>
-        <tag>v2.0.17</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <licenses>
