@@ -19,7 +19,7 @@ import com.oneandone.iocunit.analyzer.annotations.SutClasses;
  * @author aschoerk
  */
 @RunWith(IocUnitRunner.class)
-@SutClasses({ExampleErrorMapper.class, ExampleResource.class})
+@SutClasses({ExampleErrorMapper.class, ExampleResource.class, InjectTest.class})
 public class PureResteasyTest {
     @Inject
     Dispatcher dispatcher;
@@ -41,5 +41,14 @@ public class PureResteasyTest {
         MockHttpResponse response = new MockHttpResponse();
         dispatcher.invoke(request, response);
         assertEquals(400, response.getStatus());
+    }
+
+    @Test
+    public void testInjectsInResource() throws URISyntaxException {
+        MockHttpRequest request =
+                MockHttpRequest.get("/restpath/injecttest");
+        MockHttpResponse response = new MockHttpResponse();
+        dispatcher.invoke(request, response);
+        assertEquals(200, response.getStatus());
     }
 }

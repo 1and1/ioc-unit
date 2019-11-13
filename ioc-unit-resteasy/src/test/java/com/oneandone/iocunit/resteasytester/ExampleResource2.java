@@ -8,6 +8,7 @@ import javax.ws.rs.core.Response;
  * @author aschoerk
  */
 public class ExampleResource2 implements ExampleResource2Intf {
+
     @GET
     @Path("/method1")
     public Response method1() {

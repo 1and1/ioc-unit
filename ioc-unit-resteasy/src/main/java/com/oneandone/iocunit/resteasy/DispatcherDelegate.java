@@ -53,7 +53,9 @@ public class DispatcherDelegate implements Dispatcher {
         }
         ResteasyProviderFactory provfactory = delegate.getProviderFactory();
         for (Class<?> clazz : jaxRsTestExtension.getProviders()) {
-            provfactory.register(clazz);
+            logger.info("Creating rest-provider {}", clazz.getName());
+            Object res = creationalContexts.create(clazz, ApplicationScoped.class);
+            provfactory.register(res);
         }
 
         checkJackson(provfactory);
