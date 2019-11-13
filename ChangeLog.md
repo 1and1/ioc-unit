@@ -4,7 +4,7 @@
 
 |Version|Changes|
 |-------|-------|
-|2.0.17|make jdbcSqlConverter work with XmlAwarePersistenceFactories Eclipselink, Phase4Guesser may not try to resolve Instance-Injects|
+|2.0.17|Recognize Restresources even by @Path in interfaces, make jdbcSqlConverter work with XmlAwarePersistenceFactories Eclipselink, Phase4Guesser may not try to resolve Instance-Injects, weld(x)-starter will not bring javaee-api as dependency anymore|
 |2.0.16|make jdbcSqlConverter work with XmlAwarePersistenceFactories (persistence.xml) make TestPersistenceFactory final replace it by XmlLess- or XmlAwarePersistenceFactory| 
 |2.0.15|jdbcSqlConverter-interface also supported for JPA (hibernate, eclipselink) |
 |2.0.14|jdbcSqlConverter-interface allows the replacement of native-statements |

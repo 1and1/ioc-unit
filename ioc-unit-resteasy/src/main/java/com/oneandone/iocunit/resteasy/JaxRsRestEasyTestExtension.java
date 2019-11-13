@@ -29,6 +29,22 @@ public class JaxRsRestEasyTestExtension implements Extension {
         return providers;
     }
 
+    private <T> boolean annotationPresent(Class aClass, Class annotation) {
+        if (aClass == null || aClass.equals(Object.class))
+            return false;
+
+        if(aClass.isAnnotationPresent(annotation)) {
+            return true;
+        }
+        if (!annotationPresent(aClass.getSuperclass(), annotation)) {
+            for (Class c: aClass.getInterfaces()) {
+                if (annotationPresent(c, annotation))
+                    return true;
+            }
+        }
+        return false;
+    }
+
     public <T> void processAnnotatedType(@Observes
                                          @WithAnnotations({
                                                  Path.class,
@@ -36,7 +52,7 @@ public class JaxRsRestEasyTestExtension implements Extension {
                                          }) ProcessAnnotatedType<T> pat) {
         AnnotatedType<T> annotatedType = pat.getAnnotatedType();
         final Class aClass = annotatedType.getJavaClass();
-        if(annotatedType.isAnnotationPresent(Path.class)) {
+        if (annotationPresent(aClass, Path.class)) {
             resourceClasses.add(aClass);
         }
         if(annotatedType.isAnnotationPresent(Provider.class)) {
