@@ -7,10 +7,12 @@ import javax.ws.rs.core.Response;
 /**
  * @author aschoerk
  */
-@Path("/restpath2")
-public interface ExampleResource2Intf {
+public class ResourceDefinedByInterface implements ResourceDefinedByInterfaceIntf {
+
     @GET
     @Path("/method1")
-    public Response method1();
+    public Response method1() {
+        return Response.ok().build();
+    }
 
 }

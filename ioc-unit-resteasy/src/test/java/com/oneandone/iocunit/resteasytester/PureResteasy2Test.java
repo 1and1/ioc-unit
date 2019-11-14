@@ -19,7 +19,7 @@ import com.oneandone.iocunit.analyzer.annotations.SutClasses;
  * @author aschoerk
  */
 @RunWith(IocUnitRunner.class)
-@SutClasses({ExampleErrorMapper.class, ExampleResource2.class})
+@SutClasses({ExampleErrorMapper.class, ResourceDefinedByInterface.class})
 public class PureResteasy2Test {
     @Inject
     Dispatcher dispatcher;
