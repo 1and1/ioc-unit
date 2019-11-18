@@ -36,7 +36,7 @@ public class ValidationTest {
 In case of javaee-7.x necessary dependencies in pom when using hibernate-validater:
 ```XML
         <dependency>
-           <groupId>net.oneandone</groupId>
+           <groupId>net.oneandone.ioc-unit</groupId>
            <artifactId>ioc-unit-validate</artifactId>
            <version>2.0.18</version>
            <scope>test</scope>
