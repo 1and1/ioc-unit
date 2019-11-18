@@ -1,4 +1,4 @@
-package com.oneandone.iocunit.resteasytester;
+package com.oneandone.iocunit.resteasytester.resources;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

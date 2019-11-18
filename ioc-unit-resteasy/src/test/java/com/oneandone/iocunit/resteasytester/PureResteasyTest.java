@@ -14,6 +14,7 @@ import org.junit.runner.RunWith;
 
 import com.oneandone.iocunit.IocUnitRunner;
 import com.oneandone.iocunit.analyzer.annotations.SutClasses;
+import com.oneandone.iocunit.resteasytester.resources.ExampleResource;
 
 /**
  * @author aschoerk

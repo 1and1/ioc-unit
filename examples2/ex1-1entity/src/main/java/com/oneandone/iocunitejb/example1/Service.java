@@ -4,10 +4,13 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.hibernate.validator.internal.cdi.interceptor.MethodValidated;
+
 /**
  * Created by aschoerk on 28.06.17.
  */
 @Stateless
+@MethodValidated
 public class Service implements ServiceIntf {
 
     @PersistenceContext

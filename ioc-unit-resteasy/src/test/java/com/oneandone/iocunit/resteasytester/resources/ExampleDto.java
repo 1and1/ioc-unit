@@ -1,4 +1,4 @@
-package com.oneandone.iocunit.resteasytester;
+package com.oneandone.iocunit.resteasytester.resources;
 
 /**
  * @author aschoerk

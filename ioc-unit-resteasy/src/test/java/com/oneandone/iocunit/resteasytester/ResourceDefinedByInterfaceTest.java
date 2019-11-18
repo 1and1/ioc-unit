@@ -14,13 +14,14 @@ import org.junit.runner.RunWith;
 
 import com.oneandone.iocunit.IocUnitRunner;
 import com.oneandone.iocunit.analyzer.annotations.SutClasses;
+import com.oneandone.iocunit.resteasytester.resources.ResourceDefinedByInterface;
 
 /**
  * @author aschoerk
  */
 @RunWith(IocUnitRunner.class)
 @SutClasses({ExampleErrorMapper.class, ResourceDefinedByInterface.class})
-public class PureResteasy2Test {
+public class ResourceDefinedByInterfaceTest {
     @Inject
     Dispatcher dispatcher;
 

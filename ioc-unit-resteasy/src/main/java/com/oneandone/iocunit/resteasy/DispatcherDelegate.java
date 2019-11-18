@@ -3,8 +3,11 @@ package com.oneandone.iocunit.resteasy;
 import java.util.Map;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Instance;
+import javax.inject.Inject;
 import javax.naming.NamingException;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 
 import org.jboss.resteasy.core.Dispatcher;
 import org.jboss.resteasy.mock.MockDispatcherFactory;
@@ -34,6 +37,9 @@ public class DispatcherDelegate implements Dispatcher {
     Logger logger = LoggerFactory.getLogger("RestEasy MockDispatcher Delegate");
     boolean setupDone = false;
 
+    @Inject
+    Instance<SecurityContext> securityContextInstance;
+
     public void setUp() {
         if(setupDone) {
             return;
@@ -56,6 +62,12 @@ public class DispatcherDelegate implements Dispatcher {
             logger.info("Creating rest-provider {}", clazz.getName());
             Object res = creationalContexts.create(clazz, ApplicationScoped.class);
             provfactory.register(res);
+        }
+        try {
+            SecurityContext securityContext = securityContextInstance.get();
+            ResteasyProviderFactory.getContextDataMap().put(SecurityContext.class, securityContext);
+        } catch (Exception e) {
+
         }
 
         checkJackson(provfactory);
