@@ -6,6 +6,7 @@ import static org.junit.Assert.assertThat;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ejb.EJBException;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -32,7 +33,6 @@ import com.oneandone.iocunit.ejb.persistence.TestTransactionException;
  * @author aschoerk
  */
 @RunWith(IocUnitRunner.class)
-
 @SutPackages(Service.class)
 @TestClasses({TestResources.class})
 @SutClasses({ValidationInterceptor.class})
@@ -127,7 +127,7 @@ public abstract class TestBase {
     }
 
 
-    @Test
+    @Test(expected = EJBException.class)
     public void doesCheckUsingBeanValidation() {
         sut.newEntity1(1, null);
     }
