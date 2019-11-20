@@ -38,7 +38,8 @@ public class Phase5Warner extends PhasesBase {
     private void outputUnresolvedInjects() {
 
         for (QualifiedType i: configuration.getInjects()) {
-            logger.error("Probably unresolved Inject: {}", i);
+            if (!i.isInstance() && !i.isProvider())
+                logger.error("Probably unresolved Inject: {}", i);
         }
     }
 

@@ -504,5 +504,4 @@ public abstract class EJBTransactionTestBase {
         userTransaction.commit();
     }
 
-
 }

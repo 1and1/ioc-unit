@@ -179,7 +179,7 @@ public class EjbTestExtensionService implements TestExtensionService {
         if(!foundPersistenceFactory) {
             for (Metadata<Extension> x : weldSetup.getExtensions()) {
                 if(EjbExtensionExtended.class.isAssignableFrom(x.getValue().getClass())) {
-                    logger.error("Using ioc-unit-ejb-Extension without IOC-Unit-PersistenceFactory: "
+                    logger.warn("Using ioc-unit-ejb-Extension without IOC-Unit-PersistenceFactory: "
                                  + "no simulation of EntityManager and Transactions supported");
                 }
             }

@@ -11,7 +11,7 @@ public class ValidationClassFinder {
             try {
                 return Class.forName("org.hibernate.validator.cdi.internal.interceptor.ValidationInterceptor");
             } catch (ClassNotFoundException ex) {
-                return null;
+                throw new RuntimeException("No Hibernate Validater available");
             }
         }
     }
@@ -23,7 +23,7 @@ public class ValidationClassFinder {
             try {
                 return Class.forName("org.hibernate.validator.cdi.internal.interceptor.MethodValidated");
             } catch (ClassNotFoundException ex) {
-                return null;
+                throw new RuntimeException("No Hibernate Validater available");
             }
         }
 
