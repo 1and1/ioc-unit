@@ -26,7 +26,7 @@
         <dependency>
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>
-            <version>1.1.0.Final</version>
+            <version>${version.validation-api}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -69,7 +69,9 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator-cdi</artifactId>
+            <version>5.2.4.Final</version>
             <scope>test</scope>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.glassfish</groupId>
