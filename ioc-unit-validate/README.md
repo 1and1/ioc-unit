@@ -7,7 +7,7 @@ activated at testclasses.
 
 Usage example in Junit-Test:
 
-Class to be tested:
+Example-Class to be tested:
 ```Java
 public class Sut1 {
     public Integer method1(@NotNull Integer notnull) {
@@ -33,7 +33,7 @@ public class ValidationTest {
 }
 ```
 
-Necessary dependencies in pom (javaee-api:7.0):
+In case of javaee-7.x necessary dependencies in pom when using hibernate-validater:
 ```XML
         <dependency>
            <groupId>net.oneandone.ioc-unit</groupId>
@@ -61,7 +61,8 @@ Necessary dependencies in pom (javaee-api:7.0):
         </dependency>
 ``` 
 
-Necessary dependencies in pom (javaee-api:8.0):
+
+In case of javaee-8.x necessary dependencies in pom when using hibernate-validater:
 ```XML
         <dependency>
            <groupId>net.oneandone</groupId>
