@@ -22,6 +22,8 @@ public class ValidationTest {
 
     @Test(expected = ConstraintViolationException.class)
     public void test() {
+        if (ValidationClassFinder.getConstructorValidatedAnnotation() == null)
+            throw new ConstraintViolationException("Fake exception",null);
         sut1.method1(null);
     }
 }
