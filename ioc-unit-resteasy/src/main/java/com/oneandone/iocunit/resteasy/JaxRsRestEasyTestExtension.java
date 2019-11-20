@@ -8,6 +8,10 @@ import javax.enterprise.inject.spi.AnnotatedType;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
 import javax.enterprise.inject.spi.WithAnnotations;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.ext.Provider;
 
@@ -29,7 +33,7 @@ public class JaxRsRestEasyTestExtension implements Extension {
         return providers;
     }
 
-    private <T> boolean annotationPresent(Class aClass, Class annotation) {
+    public static <T> boolean annotationPresent(Class aClass, Class annotation) {
         if (aClass == null || aClass.equals(Object.class))
             return false;
 
@@ -46,10 +50,10 @@ public class JaxRsRestEasyTestExtension implements Extension {
     }
 
     public <T> void processAnnotatedType(@Observes
-                                         @WithAnnotations({
-                                                 Path.class,
-                                                 Provider.class
-                                         }) ProcessAnnotatedType<T> pat) {
+                                         @WithAnnotations({Path.class,
+                                                 GET.class, POST.class, PUT.class, DELETE.class,
+                                                 Provider.class})
+                ProcessAnnotatedType<T> pat) {
         AnnotatedType<T> annotatedType = pat.getAnnotatedType();
         final Class aClass = annotatedType.getJavaClass();
         if (annotationPresent(aClass, Path.class)) {

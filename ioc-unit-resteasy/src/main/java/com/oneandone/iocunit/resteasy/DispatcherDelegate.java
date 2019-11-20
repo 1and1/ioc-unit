@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import javax.naming.NamingException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.ext.Provider;
 
 import org.jboss.resteasy.core.Dispatcher;
 import org.jboss.resteasy.mock.MockDispatcherFactory;
@@ -40,12 +41,28 @@ public class DispatcherDelegate implements Dispatcher {
     @Inject
     Instance<SecurityContext> securityContextInstance;
 
+    private void addAnnotationDefinedJaxRSClasses() {
+        Boolean onlyAnnotationDefined = RestEasyTestExtensionServices.onlyAnnotationDefined.get();
+        if (onlyAnnotationDefined != null && onlyAnnotationDefined) {
+            jaxRsTestExtension.getProviders().clear();
+            jaxRsTestExtension.getResourceClasses().clear();
+        }
+        for (Class c: RestEasyTestExtensionServices.perAnnotationDefinedJaxRSClasses.get()) {
+            if (JaxRsRestEasyTestExtension.annotationPresent(c, Provider.class))
+                jaxRsTestExtension.getProviders().add(c);
+            else {
+                jaxRsTestExtension.getResourceClasses().add(c);
+            }
+        }
+    }
+
     public void setUp() {
         if(setupDone) {
             return;
         }
         setupDone = true;
         delegate = MockDispatcherFactory.createDispatcher();
+        addAnnotationDefinedJaxRSClasses();
         try {
             creationalContexts = new CreationalContexts();
             for (Class<?> clazz : jaxRsTestExtension.getResourceClasses()) {

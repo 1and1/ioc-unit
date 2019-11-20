@@ -1,7 +1,6 @@
 package com.oneandone.iocunit.validate;
 
 import java.lang.annotation.Annotation;
-import java.util.HashSet;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
@@ -17,9 +16,6 @@ import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
  */
 @ApplicationScoped
 public class ValidateTestExtension implements Extension {
-
-    HashSet<Class> resourceClasses = new HashSet<>();
-    HashSet<Class> providers = new HashSet<>();
 
     private static AnnotationLiteral<ApplicationScoped> createApplicationScopedAnnotation() {
         return new AnnotationLiteral<ApplicationScoped>() {
@@ -42,8 +38,8 @@ public class ValidateTestExtension implements Extension {
                         return ValidationClassFinder.getMethodValidatedAnnotation();
                     }
                 });
+                pat.setAnnotatedType(builder.create());
             }
         }
-        pat.setAnnotatedType(builder.create());
     }
 }

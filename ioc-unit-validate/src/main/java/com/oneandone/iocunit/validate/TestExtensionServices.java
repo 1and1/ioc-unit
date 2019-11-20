@@ -26,8 +26,6 @@ public class TestExtensionServices implements TestExtensionService {
 
     private static Logger logger = LoggerFactory.getLogger(TestExtensionServices.class);
 
-    List<Class<?>> classesToValidate = new ArrayList<>();
-
     @Override
     public void initAnalyze() {
         if(testExtensionServiceData.get() == null) {
