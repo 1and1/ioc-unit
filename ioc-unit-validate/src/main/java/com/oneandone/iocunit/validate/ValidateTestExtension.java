@@ -33,14 +33,16 @@ public class ValidateTestExtension implements Extension {
 
         final Class aClass = annotatedType.getJavaClass();
         if(TestExtensionServices.testExtensionServiceData.get().contains(aClass)) {
-            builder.addToClass(new AnnotationLiteral() {
-                private static final long serialVersionUID = 4280858811908223334L;
+            if (ValidationClassFinder.getMethodValidatedAnnotation() != null) {
+                builder.addToClass(new AnnotationLiteral() {
+                    private static final long serialVersionUID = 4280858811908223334L;
 
-                @Override
-                public Class<? extends Annotation> annotationType() {
-                    return ValidationClassFinder.getMethodValidatedAnnotation();
-                }
-            });
+                    @Override
+                    public Class<? extends Annotation> annotationType() {
+                        return ValidationClassFinder.getMethodValidatedAnnotation();
+                    }
+                });
+            }
         }
         pat.setAnnotatedType(builder.create());
     }
