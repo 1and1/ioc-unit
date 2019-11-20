@@ -5,6 +5,7 @@ import static io.restassured.RestAssured.given;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.oneandone.cdi.weldstarter.WeldSetupClass;
 import com.oneandone.iocunit.IocUnitRunner;
 import com.oneandone.iocunit.analyzer.annotations.SutClasses;
 import com.oneandone.iocunit.restassuredtest.http.SimpleResourceByInterface;
@@ -19,6 +20,7 @@ public class SimpleResourceByInterfaceTest {
     @Test
     public void test() {
         // can't be found since @Path, @GET, ... not in Class-Definition to be found.
-        given().get("/check").then().statusCode(404);
+        // Weld1 does not filter by Annotations
+        given().get("/check").then().statusCode(WeldSetupClass.isWeld1() ? 200 : 404);
     }
 }
