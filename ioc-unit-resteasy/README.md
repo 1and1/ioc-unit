@@ -3,7 +3,7 @@
 ## Pure Resteasy
 
 Inclusion of this module as test-dependency allows it to include **jaxrs** RestResources and ExceptionMappers in JUnit-Tests.
-To do so the must get included as SutClasses so that they are explicitly recognized by the resteasy MockDispatcherFactory.
+To do so the JaxRS-Classes must either get included as SutClasses or explicitly using the Annotation JaxRSClasses (version >= 20.0.19) so that they are explicitly recognized by the resteasy MockDispatcherFactory.
 
 ### example
 
@@ -11,7 +11,7 @@ To do so the must get included as SutClasses so that they are explicitly recogni
      * @author aschoerk
      */
     @RunWith(IocUnitRunner.class)
-    @SutClasses({ExampleErrorMapper.class, ExampleResource.class})
+    @JaxRSResources({ExampleErrorMapper.class,ExampleResource.class})
     public class PureResteasyTest {
         @Inject
         Dispatcher dispatcher;
