@@ -14,8 +14,6 @@ import java.lang.annotation.Target;
 @Inherited
 @Documented
 @Target({ElementType.METHOD, ElementType.TYPE})
-public @interface DbUnitDataset {
-    String[] value() default {};
-
-    boolean inherit() default false;
+public @interface IocUnitDataSets {
+    IocUnitDataSet[] value() default {};
 }

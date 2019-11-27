@@ -68,7 +68,7 @@ public abstract class PersistenceFactory {
         PERSISTENCE_UNIT_NAMES.clear();
     }
 
-    protected abstract String getPersistenceUnitName();
+    public abstract String getPersistenceUnitName();
 
     private ThreadLocal<Stack<EntityManager>> getEmStackThreadLocal() {
         return emStackThreadLocal;

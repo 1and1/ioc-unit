@@ -13,19 +13,6 @@
       "name": "data3"
     }
   ],
-  "A": [
-    {
-      "id": 1,
-      "name": "a1",
-      "description": "a1 description"
-    },
-    {
-      "id": 2,
-      "name": "a2",
-      "description": "a2 description"
-    }
-  ],
-
   "Aa": [
     {
       "id": 1,
@@ -44,6 +31,17 @@
       "a_id": 1,
       "name": "Aa3",
       "description": "Aa3 Description relate to A(1)"
+    }],
+  "A": [
+    {
+      "id": 1,
+      "name": "a1",
+      "description": "a1 description"
+    },
+    {
+      "id": 2,
+      "name": "a2",
+      "description": "a2 description"
     }
   ]
 }

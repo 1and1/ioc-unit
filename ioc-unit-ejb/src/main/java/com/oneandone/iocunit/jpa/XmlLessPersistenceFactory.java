@@ -70,7 +70,7 @@ public class XmlLessPersistenceFactory extends XmlLessPersistenceFactoryBase {
     }
 
     @Override
-    protected String getPersistenceUnitName() {
+    public String getPersistenceUnitName() {
         if (getFilenamePrefix() == null)
             return "test";
         else
@@ -410,7 +410,7 @@ public class XmlLessPersistenceFactory extends XmlLessPersistenceFactoryBase {
     }
 
 
-    private List<String> getManagedClassNames() {
+    protected List<String> getManagedClassNames() {
         final String entityBeanRegex = getEntityBeanRegex();
         List<String> result = new ArrayList<>();
         for (Class<?> c : getEjbExtensionExtended().getEntityClasses()) {

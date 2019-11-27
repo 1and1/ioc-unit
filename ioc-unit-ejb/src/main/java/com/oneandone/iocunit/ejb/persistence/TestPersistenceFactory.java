@@ -70,7 +70,7 @@ public class TestPersistenceFactory extends XmlAwarePersistenceFactory {
     HashMap<String, Object> properties = new HashMap<>();
 
     @Override
-    protected String getPersistenceUnitName() {
+    public String getPersistenceUnitName() {
         if (getFilenamePrefix() == null)
             return "test";
         else

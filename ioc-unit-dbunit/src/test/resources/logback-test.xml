@@ -7,11 +7,16 @@
         </encoder>
     </appender>
 
-    <logger name="com.oneandone.iocunit" level="trace">
+    <logger name="com.oneandone.iocunit" level="info">
         <appender-ref ref="STDOUT"/>
     </logger>
-
-    <root level="info">
+    <logger name="com.h2database" level="debug">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+    <logger name="org.dbunit" level="warn">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+    <root level="warn">
         <appender-ref ref="STDOUT"/>
     </root>
 

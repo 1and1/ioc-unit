@@ -1,23 +1,23 @@
 package com.oneandone.iocunit.dbunit;
 
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 
 import org.dbunit.DefaultDatabaseTester;
 import org.dbunit.IDatabaseTester;
 import org.dbunit.database.DatabaseConnection;
+import org.dbunit.database.DatabaseSequenceFilter;
+import org.dbunit.dataset.FilteredDataSet;
 import org.dbunit.dataset.IDataSet;
+import org.dbunit.dataset.filter.ITableFilter;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 import com.github.mjeanroy.dbunit.core.dataset.DataSetFactory;
 import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
 import com.oneandone.iocunit.IocUnitRunner;
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 import com.oneandone.iocunit.analyzer.annotations.TestPackages;
-import com.oneandone.iocunit.entities.Aa;
 import com.oneandone.iocunit.entities.TestData;
 import com.oneandone.iocunit.jpa.XmlLessPersistenceFactory;
 
@@ -27,13 +27,10 @@ import com.oneandone.iocunit.jpa.XmlLessPersistenceFactory;
 @RunWith(IocUnitRunner.class)
 @TestClasses({XmlLessPersistenceFactory.class})
 @TestPackages({TestData.class})
-public class TestIt {
+public class TestPureDbUnit {
 
     @Inject
     DataSource datasource;
-
-    @Inject
-    EntityManager em;
 
     @Test
     public void test() throws Exception {
@@ -43,18 +40,16 @@ public class TestIt {
         // Resource r = l.load("testdata.json");
         String[] resources = {};
         IDataSet dataSet = DataSetFactory.createDataSet(resources);
+
         DatabaseConnection dbConnection = new DatabaseConnection(datasource.getConnection());
+        ITableFilter filter = new DatabaseSequenceFilter(dbConnection);
+        IDataSet filteredDataset = new FilteredDataSet(filter, dataSet);
         IDatabaseTester dbTester = new DefaultDatabaseTester(dbConnection);
-        dbTester.setDataSet(dataSet);
+        dbTester.setDataSet(filteredDataset);
         dbTester.setSetUpOperation(DbUnitOperation.CLEAN_INSERT.getOperation());
         dbTester.onSetup();
         dbConnection.close();
     }
 
-    @Test
-    @DbUnitDataSet("classpath:/testdata.json")
-    public void canAnnotationTestData() {
-        Aa aa = em.find(Aa.class, 1);
 
-    }
 }

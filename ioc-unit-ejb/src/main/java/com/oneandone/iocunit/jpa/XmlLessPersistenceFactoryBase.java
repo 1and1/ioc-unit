@@ -15,7 +15,7 @@ abstract public class XmlLessPersistenceFactoryBase extends PersistenceFactory {
     String name = "PU" + UUID.randomUUID().toString();
 
     @Override
-    protected String getPersistenceUnitName() {
+    public String getPersistenceUnitName() {
         return name;
     }
 }

@@ -13,7 +13,7 @@ import com.oneandone.iocunit.jpa.XmlAwarePersistenceFactory;
 public abstract class SinglePersistenceFactory extends XmlAwarePersistenceFactory {
 
     @Override
-    protected String getPersistenceUnitName() {
+    public String getPersistenceUnitName() {
         return "testdb";
     }
 

@@ -33,14 +33,21 @@ public class CreationalContexts<T> implements AutoCloseable {
      * @throws NamingException thrown when problems with InitialContext
      */
     public CreationalContexts() throws NamingException {
+        BeanManager tmpBm = getBeanManager();
+        this.bm = tmpBm;
+    }
+
+    public static BeanManager getBeanManager() throws NamingException {
+        BeanManager tmpBm = null;
         InitialContext initialContext = null;
         try {
             initialContext = new InitialContext();
-            this.bm = (BeanManager) initialContext.lookup("java:comp/BeanManager");
+            tmpBm = (BeanManager) initialContext.lookup("java:comp/BeanManager");
         } finally {
             if (initialContext != null)
                 initialContext.close();
         }
+        return tmpBm;
     }
 
     /**

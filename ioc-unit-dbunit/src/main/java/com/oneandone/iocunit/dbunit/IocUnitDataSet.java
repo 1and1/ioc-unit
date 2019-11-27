@@ -13,9 +13,11 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Documented
-@Target({ElementType.TYPE})
-public @interface DbUnitInit {
-    String[] sql() default {};
+@Target({ElementType.METHOD, ElementType.TYPE})
+public @interface IocUnitDataSet {
+    String[] value() default {};
 
-    char delimiter() default ';';
+    boolean order() default true;
+
+    String unitName() default "";
 }
