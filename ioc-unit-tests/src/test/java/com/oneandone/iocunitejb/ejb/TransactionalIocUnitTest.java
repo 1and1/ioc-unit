@@ -60,6 +60,13 @@ public class TransactionalIocUnitTest extends TransactionalTestBase {
     public void canNotInsertWithRollbackonDerived() throws Exception {
         super.canNotInsertWithRollbackonDerived();
     }
+
+    @Test
+    @Override
+    public void doesNotInsertIfSetRollbackOnly() throws Exception {
+        super.doesNotInsertIfSetRollbackOnly();
+    }
+
 }
 
 

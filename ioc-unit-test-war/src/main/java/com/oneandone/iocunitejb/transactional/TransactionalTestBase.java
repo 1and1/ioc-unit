@@ -56,4 +56,8 @@ public class TransactionalTestBase {
         testRunner.runTestInRolledBackTransaction(e -> sut.insertDerivedCheckedException(new TestEntity1()), 1, true);
     }
 
+    protected void doesNotInsertIfSetRollbackOnly() throws Exception {
+        testRunner.runTestInRolledBackTransaction(e -> sut.insertButSetRollbackOnly(new TestEntity1()), 1, false);
+    }
+
 }

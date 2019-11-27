@@ -2,9 +2,11 @@ package com.oneandone.iocunitejb.transactional;
 
 import java.nio.InvalidMarkException;
 
+import javax.annotation.Resource;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.transaction.TransactionSynchronizationRegistry;
 
 import com.oneandone.iocunitejb.entities.TestEntity1;
 
@@ -16,6 +18,12 @@ import com.oneandone.iocunitejb.entities.TestEntity1;
 public class ApplicationScopedTransactionalAllRequiresNew {
     @Inject
     EntityManager em;
+
+    @Inject
+    protected ApplicationScopedTransactionalAllRequiresNew sut;
+
+    @Resource
+    TransactionSynchronizationRegistry transactionSynchronizationRegistry;
 
     public void insertOnly(TestEntity1 e) {
         em.persist(e);
@@ -52,4 +60,10 @@ public class ApplicationScopedTransactionalAllRequiresNew {
             private static final long serialVersionUID = -8316740839334218452L;
         };
     }
+
+    public void insertButSetRollbackOnly(TestEntity1 e) {
+        em.persist(e);
+        transactionSynchronizationRegistry.setRollbackOnly();
+    }
+
 }
