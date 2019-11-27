@@ -56,7 +56,7 @@ public class ServiceHibernateXmlAwareTest extends TestBase {
 
     public static class LocalHibernatePersistenceFactory extends XmlAwarePersistenceFactory {
         @Override
-        protected String getPersistenceUnitName() {
+        public String getPersistenceUnitName() {
             return "test";
         }
 

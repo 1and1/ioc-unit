@@ -16,7 +16,7 @@ public class J2eeSimMySqlFactory extends XmlAwarePersistenceFactory {
     MySqlStarter mySqlStarter; // make sure mySql is initialzed before PersistenceFactory
 
     @Override
-    protected String getPersistenceUnitName() {
+    public String getPersistenceUnitName() {
         return "mysqldb";
     }
 

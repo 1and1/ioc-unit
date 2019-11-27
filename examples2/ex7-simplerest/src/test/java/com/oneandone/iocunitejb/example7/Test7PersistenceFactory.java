@@ -10,7 +10,7 @@ import com.oneandone.iocunit.jpa.XmlAwarePersistenceFactory;
  */
 class Test7PersistenceFactory extends XmlAwarePersistenceFactory {
     @Override
-    protected String getPersistenceUnitName() {
+    public String getPersistenceUnitName() {
         return "test";
     }
 

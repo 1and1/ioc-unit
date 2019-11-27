@@ -14,7 +14,7 @@ import com.oneandone.iocunit.jpa.XmlLessPersistenceFactory;
 @ApplicationScoped
 public class XmlLessPersistenceFactoryAlternative extends XmlLessPersistenceFactory {
     @Override
-    protected String getPersistenceUnitName() {
+    public String getPersistenceUnitName() {
         return "testalternative";
     }
 

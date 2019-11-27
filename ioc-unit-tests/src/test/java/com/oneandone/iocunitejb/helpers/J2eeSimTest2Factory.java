@@ -10,7 +10,7 @@ import com.oneandone.iocunit.jpa.XmlAwarePersistenceFactory;
 @ApplicationScoped
 public class J2eeSimTest2Factory extends XmlAwarePersistenceFactory {
     @Override
-    protected String getPersistenceUnitName() {
+    public String getPersistenceUnitName() {
         return "j2eeSimDS2Test";
     }
 }

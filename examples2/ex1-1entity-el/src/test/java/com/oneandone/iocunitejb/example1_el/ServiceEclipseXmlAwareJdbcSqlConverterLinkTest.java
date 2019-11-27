@@ -57,7 +57,7 @@ public class ServiceEclipseXmlAwareJdbcSqlConverterLinkTest extends TestBase {
 
     public static class EclipselinkPersistenceFactory extends XmlAwarePersistenceFactory {
         @Override
-        protected String getPersistenceUnitName() {
+        public String getPersistenceUnitName() {
             return "test";
         }
 
