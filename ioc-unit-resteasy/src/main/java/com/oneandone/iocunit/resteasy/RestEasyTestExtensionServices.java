@@ -1,6 +1,7 @@
 package com.oneandone.iocunit.resteasy;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -104,7 +105,7 @@ public class RestEasyTestExtensionServices implements TestExtensionService {
     }
 
     @Override
-    public void preStartupAction(WeldSetupClass weldSetup) {
+    public void preStartupAction(WeldSetupClass weldSetup, Class clazz, Method method) {
         for (Class<?> c : perAnnotationDefinedJaxRSClasses.get()) {
             if (!weldSetup.getBeanClasses().contains(c.getName())) {
                 logger.info("Restresource or ExceptionMapper candidate: {} found "

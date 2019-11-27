@@ -2,6 +2,7 @@ package com.oneandone.cdi.weldstarter.spi;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -57,7 +58,7 @@ public interface TestExtensionService {
         return Collections.EMPTY_LIST;
     }
 
-    default void preStartupAction(WeldSetupClass weldSetup) {}
+    default void preStartupAction(WeldSetupClass weldSetup, Class clazz, Method method) {}
 
     default void postStartupAction(CreationalContexts creationalContexts, WeldStarter weldStarter) {}
 

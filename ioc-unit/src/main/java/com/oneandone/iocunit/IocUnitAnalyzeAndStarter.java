@@ -76,18 +76,18 @@ public class IocUnitAnalyzeAndStarter {
         }
 
         weldSetup = cdiConfigCreator.buildWeldSetup(testMethod);
-        preStartupActions();
+        preStartupActions(clazz, testMethod);
 
         getWeldStarter().start(weldSetup);
     }
 
-    public void preStartupActions() {
+    public void preStartupActions(Class clazz, Method method) {
         if(testExtensionServices != null) {
             for (TestExtensionService te : testExtensionServices) {
                 for (Class c: cdiConfigCreator.getConfiguration().getObligatory()) {
                     te.candidateToStart(c);
                 }
-                te.preStartupAction(weldSetup);
+                te.preStartupAction(weldSetup, clazz, method);
             }
         }
     }

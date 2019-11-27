@@ -1,20 +1,18 @@
 package com.oneandone.iocunit.contexts;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.ejb.SessionContext;
-import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Conversation;
 import javax.enterprise.context.spi.Contextual;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.Default;
 import javax.servlet.ServletContext;
-import javax.transaction.UserTransaction;
 
 import org.jboss.weld.context.ConversationContext;
 import org.jboss.weld.context.ManagedConversation;
@@ -23,6 +21,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.oneandone.cdi.weldstarter.CreationalContexts;
+import com.oneandone.cdi.weldstarter.WeldSetupClass;
+import com.oneandone.cdi.weldstarter.spi.TestExtensionService;
 import com.oneandone.cdi.weldstarter.spi.WeldStarter;
 import com.oneandone.iocunit.contexts.internal.InConversationInterceptor;
 import com.oneandone.iocunit.contexts.internal.InRequestInterceptor;
@@ -33,8 +33,6 @@ import com.oneandone.iocunit.contexts.servlet.MockHttpServletRequestImpl;
 import com.oneandone.iocunit.contexts.servlet.MockHttpServletResponseImpl;
 import com.oneandone.iocunit.contexts.servlet.MockHttpSessionImpl;
 import com.oneandone.iocunit.contexts.servlet.MockServletContextImpl;
-import com.oneandone.cdi.weldstarter.WeldSetupClass;
-import com.oneandone.cdi.weldstarter.spi.TestExtensionService;
 
 /**
  * @author aschoerk
@@ -218,7 +216,7 @@ public class ContextsTestExtensionService implements TestExtensionService {
     }
 
     @Override
-    public void preStartupAction(final WeldSetupClass weldSetup) {
+    public void preStartupAction(final WeldSetupClass weldSetup, Class clazz, Method method) {
         List<String> seq = new ArrayList<String>() {
             private static final long serialVersionUID = -1661631254833065243L;
 

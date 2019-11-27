@@ -104,6 +104,7 @@
                 <module>weld-starter</module>
                 <module>ioc-unit-analyzer</module>
                 <module>ioc-unit</module>
+                <module>ioc-unit-dbunit</module>
                 <module>ioc-unit-mockseasy</module>
                 <module>ioc-unit-validate</module>
                 <module>ioc-unit-resteasy</module>
