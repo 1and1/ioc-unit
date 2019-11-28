@@ -35,9 +35,6 @@ public class TestPureDbUnit {
     @Test
     public void test() throws Exception {
 
-        // URL testdata = this.getClass().getResource("testdata.json");
-        // ResourceLoader l = ResourceLoader.find("testdata.json");
-        // Resource r = l.load("testdata.json");
         String[] resources = {};
         IDataSet dataSet = DataSetFactory.createDataSet(resources);
 
