@@ -81,8 +81,10 @@ public class DispatcherDelegate implements Dispatcher {
             provfactory.register(res);
         }
         try {
-            SecurityContext securityContext = securityContextInstance.get();
-            ResteasyProviderFactory.getContextDataMap().put(SecurityContext.class, securityContext);
+            Object securityContext = creationalContexts.create(SecurityContext.class, ApplicationScoped.class);
+            if (securityContext != null) {
+                ResteasyProviderFactory.getContextDataMap().put(SecurityContext.class, securityContext);
+            }
         } catch (Exception e) {
 
         }

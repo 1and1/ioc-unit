@@ -5,13 +5,13 @@ import static org.junit.Assert.assertEquals;
 import java.net.URISyntaxException;
 import java.security.Principal;
 
+import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.ws.rs.core.SecurityContext;
 
 import org.jboss.resteasy.core.Dispatcher;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
-import org.jboss.resteasy.spi.ResteasyProviderFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -28,9 +28,9 @@ public class UsingSecurityContextTest {
     @Inject
     Dispatcher dispatcher;
 
-    @Test
-    public void callMethod1() throws URISyntaxException {
-        ResteasyProviderFactory.getContextDataMap().put(SecurityContext.class, new SecurityContext() {
+    @Produces
+    SecurityContext createSecurityContext() {
+        return new SecurityContext() {
             @Override
             public Principal getUserPrincipal() {
                 return null;
@@ -50,7 +50,13 @@ public class UsingSecurityContextTest {
             public String getAuthenticationScheme() {
                 return null;
             }
-        });
+        };
+    }
+
+    @Test
+    public void callMethod1() throws URISyntaxException {
+        // ResteasyProviderFactory.getContextDataMap().put(SecurityContext.class, );
+
         MockHttpRequest request =
                 MockHttpRequest.get("/restpathsecure/method1");
         MockHttpResponse response = new MockHttpResponse();
