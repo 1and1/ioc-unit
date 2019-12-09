@@ -86,7 +86,7 @@ public class DispatcherDelegate implements Dispatcher {
             ResteasyProviderFactory.getContextDataMap().put(SecurityContext.class, securityContext);
             securityContextThreadLocal.set(securityContext);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            logger.info("No Test SecurityContext found");
         }
 
         checkJackson(provfactory);
