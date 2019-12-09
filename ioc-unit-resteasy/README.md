@@ -4,8 +4,15 @@ Using MockDispatcherFactory started in a weldcontainer makes it possible to test
 of a jaxrs-application.
 
 * Resource
-* all Provider-Types
+* all Types of Providers
 * Authorization aspects (roles)
+
+## Principle
+
+* By using @JaxRsClasses at the Testclass, Resources can be made explicite. They might also be recognized by @Path but that does not work if the annotation
+is set at an interface or superclass. Provider classes are recognized by @Provider.
+* Use @TestAuth at the method to define the username and the roles the user might have. If that annotation is set, the
+authorization constraints are enforced.
 
 ## Pure Resteasy
 
