@@ -1,8 +1,7 @@
 package com.oneandone.iocunit.resteasy;
 
-import com.oneandone.iocunit.resteasy.auth.RestEasyAuthorized;
-import org.apache.deltaspike.core.util.metadata.AnnotationInstanceProvider;
-import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
+import java.lang.reflect.Method;
+import java.util.HashSet;
 
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.PermitAll;
@@ -14,9 +13,18 @@ import javax.enterprise.inject.spi.AnnotatedType;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
 import javax.enterprise.inject.spi.WithAnnotations;
-import javax.ws.rs.*;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
 import javax.ws.rs.ext.Provider;
-import java.util.HashSet;
+
+import org.apache.deltaspike.core.util.metadata.AnnotationInstanceProvider;
+import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
+
+import com.oneandone.cdi.weldstarter.WeldSetupClass;
+import com.oneandone.iocunit.resteasy.auth.RestEasyAuthorized;
 
 /**
  * @author aschoerk
@@ -37,16 +45,18 @@ public class JaxRsRestEasyTestExtension implements Extension {
     }
 
     public static <T> boolean annotationPresent(Class aClass, Class annotation) {
-        if (aClass == null || aClass.equals(Object.class))
+        if(aClass == null || aClass.equals(Object.class)) {
             return false;
+        }
 
-        if (aClass.isAnnotationPresent(annotation)) {
+        if(aClass.isAnnotationPresent(annotation)) {
             return true;
         }
-        if (!annotationPresent(aClass.getSuperclass(), annotation)) {
+        if(!annotationPresent(aClass.getSuperclass(), annotation)) {
             for (Class c : aClass.getInterfaces()) {
-                if (annotationPresent(c, annotation))
+                if(annotationPresent(c, annotation)) {
                     return true;
+                }
             }
         }
         return false;
@@ -59,12 +69,25 @@ public class JaxRsRestEasyTestExtension implements Extension {
                                                  ProcessAnnotatedType<T> pat) {
         AnnotatedType<T> annotatedType = pat.getAnnotatedType();
         final Class aClass = annotatedType.getJavaClass();
-        if (annotationPresent(aClass, Path.class)) {
+        if(annotationPresent(aClass, Path.class)) {
             resourceClasses.add(aClass);
         }
-        if (annotatedType.isAnnotationPresent(Provider.class)) {
+        if(annotatedType.isAnnotationPresent(Provider.class)) {
             providers.add(aClass);
         }
+    }
+
+    private boolean hasAuthAnnotation(Method m) {
+        return m.isAnnotationPresent(RunAs.class) ||
+               m.isAnnotationPresent(RolesAllowed.class) ||
+               m.isAnnotationPresent(PermitAll.class) ||
+               m.isAnnotationPresent(DenyAll.class);
+    }
+    private boolean hasAuthAnnotation(Class c) {
+        return c.isAnnotationPresent(RunAs.class) ||
+               c.isAnnotationPresent(RolesAllowed.class) ||
+               c.isAnnotationPresent(PermitAll.class) ||
+               c.isAnnotationPresent(DenyAll.class);
     }
 
     public <T> void processSecureType(@Observes
@@ -72,6 +95,23 @@ public class JaxRsRestEasyTestExtension implements Extension {
                                               RolesAllowed.class, PermitAll.class, DenyAll.class})
                                               ProcessAnnotatedType<T> pat) {
         AnnotatedType<T> annotatedType = pat.getAnnotatedType();
+
+        if(WeldSetupClass.isWeld1()) {
+            if(annotatedType.isAnnotationPresent(Provider.class)) {
+                return;
+            }
+            final Class<T> javaClass = annotatedType.getJavaClass();
+            if (!hasAuthAnnotation(javaClass)) {
+                boolean doProcess = false;
+                for (Method m: javaClass.getDeclaredMethods()) {
+                    if (hasAuthAnnotation(m)) {
+                        doProcess = true;
+                    }
+                }
+                if (!doProcess)
+                    return;
+            }
+        }
         RestEasyAuthorized toAdd = AnnotationInstanceProvider.of(RestEasyAuthorized.class);
         AnnotatedTypeBuilder<T> builder =
                 new AnnotatedTypeBuilder<T>().readFromType(annotatedType);
