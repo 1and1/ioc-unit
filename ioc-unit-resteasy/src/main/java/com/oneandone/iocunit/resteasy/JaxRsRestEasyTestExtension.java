@@ -83,6 +83,7 @@ public class JaxRsRestEasyTestExtension implements Extension {
                m.isAnnotationPresent(PermitAll.class) ||
                m.isAnnotationPresent(DenyAll.class);
     }
+
     private boolean hasAuthAnnotation(Class c) {
         return c.isAnnotationPresent(RunAs.class) ||
                c.isAnnotationPresent(RolesAllowed.class) ||
@@ -101,21 +102,62 @@ public class JaxRsRestEasyTestExtension implements Extension {
                 return;
             }
             final Class<T> javaClass = annotatedType.getJavaClass();
-            if (!hasAuthAnnotation(javaClass)) {
-                boolean doProcess = false;
-                for (Method m: javaClass.getDeclaredMethods()) {
-                    if (hasAuthAnnotation(m)) {
-                        doProcess = true;
-                    }
-                }
-                if (!doProcess)
-                    return;
+            if(!needsAuthInterceptorClassDeep(javaClass)) {
+                return;
             }
         }
+        makeInterceptedForAuth(pat, annotatedType);
+    }
+
+    private <T> void makeInterceptedForAuth(final ProcessAnnotatedType<T> pat, final AnnotatedType<T> annotatedType) {
         RestEasyAuthorized toAdd = AnnotationInstanceProvider.of(RestEasyAuthorized.class);
         AnnotatedTypeBuilder<T> builder =
                 new AnnotatedTypeBuilder<T>().readFromType(annotatedType);
         builder.addToClass(toAdd);
         pat.setAnnotatedType(builder.create());
+    }
+
+    public <T> void processSecureJaxRSTypes(@Observes
+                                                 ProcessAnnotatedType<T> pat) {
+        AnnotatedType<T> annotatedType = pat.getAnnotatedType();
+        final Class aClass = annotatedType.getJavaClass();
+        if (RestEasyTestExtensionServices.perAnnotationDefinedJaxRSClasses.get().contains(aClass)) {
+            makeInterceptedForAuth(pat, annotatedType);
+        }
+    }
+
+
+    private <T> boolean needsAuthInterceptorClassDeep(final Class<T> javaClass) {
+        if (javaClass == null)
+            return false;
+        if(needsAuthInterceptorClass(javaClass)) {
+            return true;
+        }
+        if(needsAuthInterceptorClassDeep(javaClass.getSuperclass())) {
+            return true;
+        }
+        for (Class i : javaClass.getInterfaces()) {
+            if(needsAuthInterceptorClass(i)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    private <T> boolean needsAuthInterceptorClass(final Class<T> javaClass) {
+        if (javaClass == null || javaClass.equals(Object.class))
+            return false;
+        if(!hasAuthAnnotation(javaClass)) {
+            for (Method m : javaClass.getDeclaredMethods()) {
+                if(hasAuthAnnotation(m)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        else {
+            return true;
+        }
     }
 }

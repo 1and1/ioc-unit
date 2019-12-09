@@ -1,4 +1,4 @@
-package com.oneandone.iocunit.resteasytester.resources;
+package com.oneandone.iocunit.resteasytester.auth.resources;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.GET;
@@ -10,7 +10,7 @@ import javax.ws.rs.core.Response;
  */
 @RolesAllowed("MayUseResourceIfNotOtherwiseDefinedByMethod")
 @Path("/restpath2")
-public class SecuredResourceDefinedByInterface {
+public class SecuredResource {
 
     @GET
     @Path("/method1")

@@ -1,8 +1,8 @@
 package com.oneandone.iocunit.resteasy.auth;
 
-import com.oneandone.iocunit.InterceptorBase;
-import com.oneandone.iocunit.resteasy.IocUnitSecurityContext;
-import com.oneandone.iocunit.util.Annotations;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
 
 import javax.annotation.Priority;
 import javax.annotation.security.DenyAll;
@@ -15,9 +15,10 @@ import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
 import javax.ws.rs.NotAuthorizedException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
+
+import com.oneandone.iocunit.InterceptorBase;
+import com.oneandone.iocunit.resteasy.IocUnitSecurityContext;
+import com.oneandone.iocunit.util.Annotations;
 
 @Interceptor
 @RestEasyAuthorized
@@ -34,10 +35,10 @@ public class AuthInterceptor extends InterceptorBase {
         boolean didPush = false;
         try {
             final Class<?> declaringClass = ctx.getMethod().getDeclaringClass();
-            if (Annotations.findAnnotations(ctx.getMethod(), PermitAll.class).isEmpty()) {
+            if (Annotations.getMethodAnnotation(declaringClass, ctx.getMethod(), PermitAll.class) == null) {
                 if (securityContext != null && securityContext.isResolvable()) {
                     boolean foundOnMethodLevel = false;
-                    if (!Annotations.findAnnotations(ctx.getMethod(), DenyAll.class).isEmpty()) {
+                    if (Annotations.getMethodAnnotation(declaringClass, ctx.getMethod(), DenyAll.class) != null) {
                         throw new NotAuthorizedException("DenyAll on " + ctx.getMethod().getName());
                     }
                     List<RunAs> runAs = Annotations.findAnnotations(declaringClass, RunAs.class);
@@ -55,23 +56,21 @@ public class AuthInterceptor extends InterceptorBase {
                         runAsRoleList.add(runAsRole);
                         securityContext.get().setRoles(runAsRoleList);
                     }
-                    List<RolesAllowed> rolesAllowedList = Annotations.findAnnotations(ctx.getMethod(), RolesAllowed.class);
-                    if (!rolesAllowedList.isEmpty()) {
-                        for (RolesAllowed rolesAllowed : rolesAllowedList) {
-                            for (String role : rolesAllowed.value()) {
-                                if (securityContext.get().isUserInRole(role)) {
-                                    return ctx.proceed();
-                                }
+                    RolesAllowed rolesAllowedOnMethod = Annotations.getMethodAnnotation(declaringClass, ctx.getMethod(), RolesAllowed.class);
+                    if (rolesAllowedOnMethod != null) {
+                        for (String role : rolesAllowedOnMethod.value()) {
+                            if (securityContext.get().isUserInRole(role)) {
+                                return ctx.proceed();
                             }
                         }
-                        throw new NotAuthorizedException("User not in roles " + rolesAllowedList);
+                        throw new NotAuthorizedException("User not in roles " + rolesAllowedOnMethod);
                     } else {
                         Class<?> targetClass = getTargetClass(ctx);
                         if (!Annotations.findAnnotations(targetClass, PermitAll.class).isEmpty())
                             return ctx.proceed();
                         if (!Annotations.findAnnotations(targetClass, DenyAll.class).isEmpty())
                             throw new NotAuthorizedException("DenyAll on " + targetClass.getName());
-                        rolesAllowedList = Annotations.findAnnotations(targetClass, RolesAllowed.class);
+                        List<RolesAllowed> rolesAllowedList = Annotations.findAnnotations(targetClass, RolesAllowed.class);
                         if (!rolesAllowedList.isEmpty()) {
                             for (RolesAllowed rolesAllowed : rolesAllowedList) {
                                 for (String role : rolesAllowed.value()) {
