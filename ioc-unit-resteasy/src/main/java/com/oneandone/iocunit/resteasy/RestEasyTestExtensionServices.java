@@ -11,8 +11,12 @@ import java.util.Set;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.spi.Extension;
 import javax.ws.rs.Path;
+import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.ext.Provider;
 
+import com.oneandone.iocunit.resteasy.auth.AuthInterceptor;
+import com.oneandone.iocunit.resteasy.auth.TestAuth;
+import com.oneandone.iocunit.util.Annotations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,6 +33,8 @@ public class RestEasyTestExtensionServices implements TestExtensionService {
     static ThreadLocal<Set<Class>> perAnnotationDefinedJaxRSClasses = new ThreadLocal<>();
     static ThreadLocal<Set<Class>> asCandidatesDefinedJaxRSClasses = new ThreadLocal<>();
     static ThreadLocal<Boolean> onlyAnnotationDefined = new ThreadLocal<>();
+
+    public static ThreadLocal<TestAuth> testSecurityThreadLocal = new ThreadLocal<>();
 
     private static Logger logger = LoggerFactory.getLogger(RestEasyTestExtensionServices.class);
 
@@ -57,6 +63,7 @@ public class RestEasyTestExtensionServices implements TestExtensionService {
     public List<Class<?>> testClasses() {
         List<Class<?>> result = new ArrayList<>();
         result.add(RestEasyMockInit.class);
+        result.add(AuthInterceptor.class);
         return result;
     }
 
@@ -95,6 +102,9 @@ public class RestEasyTestExtensionServices implements TestExtensionService {
      */
     @Override
     public boolean candidateToStart(final Class<?> c) {
+        if (c.isInstance(SecurityContext.class)) {
+            logger.trace("Found SecurityContext in class: {}",c.getName());
+        }
         if (c.isAnnotationPresent(Provider.class) || JaxRsRestEasyTestExtension.annotationPresent(c, Path.class)) {
             asCandidatesDefinedJaxRSClasses.get().add(c);
         }
@@ -120,5 +130,12 @@ public class RestEasyTestExtensionServices implements TestExtensionService {
             }
         }
         asCandidatesDefinedJaxRSClasses.get().clear(); // show only once
+        TestAuth testAuth = Annotations.findAnnotation(clazz, method, TestAuth.class);
+        if (testAuth != null) {
+            testSecurityThreadLocal.set(testAuth);
+            weldSetup.getBeanClasses().add(IocUnitSecurityContext.class.getName());
+        } else {
+            testSecurityThreadLocal.set(null);
+        }
     }
 }

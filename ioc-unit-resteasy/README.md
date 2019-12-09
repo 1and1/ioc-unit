@@ -1,5 +1,12 @@
 # ioc-unit-resteasy
 
+Using MockDispatcherFactory started in a weldcontainer makes it possible to test almost all details 
+of a jaxrs-application.
+
+* Resource
+* all Provider-Types
+* Authorization aspects (roles)
+
 ## Pure Resteasy
 
 Inclusion of this module as test-dependency allows it to include **jaxrs** RestResources and ExceptionMappers in JUnit-Tests.

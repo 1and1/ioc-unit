@@ -17,6 +17,7 @@ import javax.enterprise.util.AnnotationLiteral;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import com.oneandone.iocunit.util.Annotations;
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.DefaultDatabaseTester;
 import org.dbunit.IDatabaseTester;
@@ -28,7 +29,6 @@ import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.filter.ITableFilter;
 import org.dbunit.ext.h2.H2DataTypeFactory;
 
-import com.github.mjeanroy.dbunit.commons.reflection.Annotations;
 import com.github.mjeanroy.dbunit.core.dataset.DataSetFactory;
 import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
 import com.oneandone.cdi.weldstarter.CreationalContexts;

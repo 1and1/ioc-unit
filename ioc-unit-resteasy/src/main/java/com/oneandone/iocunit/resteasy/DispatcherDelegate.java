@@ -38,8 +38,7 @@ public class DispatcherDelegate implements Dispatcher {
     Logger logger = LoggerFactory.getLogger("RestEasy MockDispatcher Delegate");
     boolean setupDone = false;
 
-    @Inject
-    Instance<SecurityContext> securityContextInstance;
+    static ThreadLocal<Object> securityContextThreadLocal = new ThreadLocal<>();
 
     private void addAnnotationDefinedJaxRSClasses() {
         Boolean onlyAnnotationDefined = RestEasyTestExtensionServices.onlyAnnotationDefined.get();
@@ -55,6 +54,8 @@ public class DispatcherDelegate implements Dispatcher {
             }
         }
     }
+
+
 
     public void setUp() {
         if(setupDone) {
@@ -82,11 +83,10 @@ public class DispatcherDelegate implements Dispatcher {
         }
         try {
             Object securityContext = creationalContexts.create(SecurityContext.class, ApplicationScoped.class);
-            if (securityContext != null) {
-                ResteasyProviderFactory.getContextDataMap().put(SecurityContext.class, securityContext);
-            }
+            ResteasyProviderFactory.getContextDataMap().put(SecurityContext.class, securityContext);
+            securityContextThreadLocal.set(securityContext);
         } catch (Exception e) {
-
+            throw new RuntimeException(e);
         }
 
         checkJackson(provfactory);
