@@ -122,7 +122,8 @@ public class JaxRsRestEasyTestExtension implements Extension {
         AnnotatedType<T> annotatedType = pat.getAnnotatedType();
         final Class aClass = annotatedType.getJavaClass();
         if (RestEasyTestExtensionServices.perAnnotationDefinedJaxRSClasses.get().contains(aClass)) {
-            makeInterceptedForAuth(pat, annotatedType);
+            if (!aClass.isAnnotationPresent(Provider.class))
+                makeInterceptedForAuth(pat, annotatedType);
         }
     }
 

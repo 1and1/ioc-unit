@@ -36,7 +36,7 @@ public class AuthInterceptor extends InterceptorBase {
         try {
             final Class<?> declaringClass = ctx.getMethod().getDeclaringClass();
             if (Annotations.getMethodAnnotation(declaringClass, ctx.getMethod(), PermitAll.class) == null) {
-                if (securityContext != null && securityContext.isResolvable()) {
+                if (securityContext != null && !securityContext.isUnsatisfied() && !securityContext.isAmbiguous()) {
                     boolean foundOnMethodLevel = false;
                     if (Annotations.getMethodAnnotation(declaringClass, ctx.getMethod(), DenyAll.class) != null) {
                         throw new NotAuthorizedException("DenyAll on " + ctx.getMethod().getName());

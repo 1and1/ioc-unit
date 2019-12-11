@@ -4,6 +4,7 @@
 
 |Version|Changes|
 |-------|-------|
+|2.0.22|fix handling problems and bugs with Resteasy-Auth-Testing|
 |2.0.21|added test of authorization to resteasy toolbox|
 |2.0.20|integrate dbunit-way to init dbms, TransactionSynchronisationRegistry|
 |2.0.19|fixes and tests for validator,  introduced JaxRSClasses to be able to define Rest-Resoirces and Providers explicitly|

@@ -3,8 +3,6 @@ package com.oneandone.iocunit.resteasy;
 import java.util.Map;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Instance;
-import javax.inject.Inject;
 import javax.naming.NamingException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
@@ -42,19 +40,19 @@ public class DispatcherDelegate implements Dispatcher {
 
     private void addAnnotationDefinedJaxRSClasses() {
         Boolean onlyAnnotationDefined = RestEasyTestExtensionServices.onlyAnnotationDefined.get();
-        if (onlyAnnotationDefined != null && onlyAnnotationDefined) {
+        if(onlyAnnotationDefined != null && onlyAnnotationDefined) {
             jaxRsTestExtension.getProviders().clear();
             jaxRsTestExtension.getResourceClasses().clear();
         }
-        for (Class c: RestEasyTestExtensionServices.perAnnotationDefinedJaxRSClasses.get()) {
-            if (JaxRsRestEasyTestExtension.annotationPresent(c, Provider.class))
+        for (Class c : RestEasyTestExtensionServices.perAnnotationDefinedJaxRSClasses.get()) {
+            if(JaxRsRestEasyTestExtension.annotationPresent(c, Provider.class)) {
                 jaxRsTestExtension.getProviders().add(c);
+            }
             else {
                 jaxRsTestExtension.getResourceClasses().add(c);
             }
         }
     }
-
 
 
     public void setUp() {
@@ -86,7 +84,12 @@ public class DispatcherDelegate implements Dispatcher {
             ResteasyProviderFactory.getContextDataMap().put(SecurityContext.class, securityContext);
             securityContextThreadLocal.set(securityContext);
         } catch (Exception e) {
-            logger.info("No Test SecurityContext found");
+            if(e.getClass().getName().contains("AmbiguousResolutionException")) {
+                throw new RuntimeException(e);
+            }
+            else {
+                logger.info("No Test SecurityContext found");
+            }
         }
 
         checkJackson(provfactory);
@@ -96,7 +99,7 @@ public class DispatcherDelegate implements Dispatcher {
 
         boolean jackson1Found = false;
         boolean jackson2Found = false;
-        for (Class c: provfactory.getClasses()) {
+        for (Class c : provfactory.getClasses()) {
             if(c.getName().equals("org.jboss.resteasy.plugins.providers.jackson.ResteasyJackson2Provider")) {
                 jackson2Found = true;
             }
