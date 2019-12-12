@@ -24,7 +24,7 @@ public class SecureResourcesTest {
                 .get("/restpath2/method1");
         given()
                 .expect()
-                .statusCode(401)
+                .statusCode(403)
                 .when()
                 .get("/restpath2/method2");
     }

@@ -14,7 +14,7 @@ import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
-import javax.ws.rs.NotAuthorizedException;
+import javax.ws.rs.ForbiddenException;
 
 import com.oneandone.iocunit.InterceptorBase;
 import com.oneandone.iocunit.resteasy.IocUnitSecurityContext;
@@ -39,7 +39,7 @@ public class AuthInterceptor extends InterceptorBase {
                 if (securityContext != null && !securityContext.isUnsatisfied() && !securityContext.isAmbiguous()) {
                     boolean foundOnMethodLevel = false;
                     if (Annotations.getMethodAnnotation(declaringClass, ctx.getMethod(), DenyAll.class) != null) {
-                        throw new NotAuthorizedException("DenyAll on " + ctx.getMethod().getName());
+                        throw new ForbiddenException("DenyAll on " + ctx.getMethod().getName());
                     }
                     List<RunAs> runAs = Annotations.findAnnotations(declaringClass, RunAs.class);
                     if (!runAs.isEmpty()) {
@@ -48,7 +48,7 @@ public class AuthInterceptor extends InterceptorBase {
                         }
                         String runAsRole = runAs.get(0).value();
                         if (!securityContext.get().isUserInRole(runAsRole)) {
-                            throw new NotAuthorizedException("RunAs and user not in role " + runAsRole);
+                            throw new ForbiddenException("RunAs and user not in role " + runAsRole);
                         }
                         runAsStack.get().push(securityContext.get().getRoles());
                         didPush = true;
@@ -63,13 +63,13 @@ public class AuthInterceptor extends InterceptorBase {
                                 return ctx.proceed();
                             }
                         }
-                        throw new NotAuthorizedException("User not in roles " + rolesAllowedOnMethod);
+                        throw new ForbiddenException("User not in roles " + rolesAllowedOnMethod);
                     } else {
                         Class<?> targetClass = getTargetClass(ctx);
                         if (!Annotations.findAnnotations(targetClass, PermitAll.class).isEmpty())
                             return ctx.proceed();
                         if (!Annotations.findAnnotations(targetClass, DenyAll.class).isEmpty())
-                            throw new NotAuthorizedException("DenyAll on " + targetClass.getName());
+                            throw new ForbiddenException("DenyAll on " + targetClass.getName());
                         List<RolesAllowed> rolesAllowedList = Annotations.findAnnotations(targetClass, RolesAllowed.class);
                         if (!rolesAllowedList.isEmpty()) {
                             for (RolesAllowed rolesAllowed : rolesAllowedList) {
@@ -79,7 +79,7 @@ public class AuthInterceptor extends InterceptorBase {
                                     }
                                 }
                             }
-                            throw new NotAuthorizedException("User not in roles " + rolesAllowedList);
+                            throw new ForbiddenException("User not in roles " + rolesAllowedList);
                         } else {
                             return ctx.proceed();
                         }

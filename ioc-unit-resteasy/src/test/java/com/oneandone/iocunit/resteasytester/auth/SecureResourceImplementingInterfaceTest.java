@@ -24,7 +24,7 @@ public class SecureResourceImplementingInterfaceTest {
                 .get("/restpath3/method1");
         given()
                 .expect()
-                .statusCode(401)
+                .statusCode(403)
                 .when()
                 .get("/restpath3/method2");
     }
@@ -54,17 +54,17 @@ public class SecureResourceImplementingInterfaceTest {
     public void doesTestMultipleRoles() {
         given()
                 .expect()
-                .statusCode(401)
+                .statusCode(403)
                 .when()
                 .get("/restpath3/method1");
         given()
                 .expect()
-                .statusCode(401)
+                .statusCode(403)
                 .when()
                 .get("/restpath3/method2");
         given()
                 .expect()
-                .statusCode(401)
+                .statusCode(403)
                 .when()
                 .get("/restpath3/method3");
     }
