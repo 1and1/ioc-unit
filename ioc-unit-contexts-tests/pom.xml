@@ -8,7 +8,7 @@
     </parent>
 
 
-    <artifactId>ioc-unit-tests</artifactId>
+    <artifactId>ioc-unit-contexts-tests</artifactId>
     <packaging>war</packaging>
 
     <licenses>
@@ -135,13 +135,7 @@
         </dependency>
         <dependency>
             <groupId>net.oneandone.ioc-unit</groupId>
-            <artifactId>ioc-unit-ejb</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.oneandone.ioc-unit</groupId>
-            <artifactId>ioc-unit-validate</artifactId>
+            <artifactId>ioc-unit-contexts</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>

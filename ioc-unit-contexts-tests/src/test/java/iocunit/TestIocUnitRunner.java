@@ -25,17 +25,16 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
-import com.oneandone.iocunit.analyzer.annotations.ExcludedClasses;
-import com.oneandone.iocunit.analyzer.annotations.SutPackages;
 import com.oneandone.iocunit.IocUnitRunner;
+import com.oneandone.iocunit.analyzer.annotations.ExcludedClasses;
 import com.oneandone.iocunit.analyzer.annotations.ProducesAlternative;
+import com.oneandone.iocunit.analyzer.annotations.SutPackages;
 import com.oneandone.iocunit.contexts.ContextController;
 import com.oneandone.iocunit.contexts.InConversationScope;
 import com.oneandone.iocunit.contexts.InRequestScope;
 import com.oneandone.iocunit.contexts.InSessionScope;
 import com.oneandone.iocunit.contexts.internal.InitialListenerProducer;
 
-import iocunit.cdiunit.Scoped;
 import iocunit.cdiunit.AImplementation1;
 import iocunit.cdiunit.AInterface;
 import iocunit.cdiunit.BRequestScoped;
@@ -45,6 +44,7 @@ import iocunit.cdiunit.DConversationScoped;
 import iocunit.cdiunit.FApplicationScoped;
 import iocunit.cdiunit.ProducedViaField;
 import iocunit.cdiunit.ProducedViaMethod;
+import iocunit.cdiunit.Scoped;
 
 @RunWith(IocUnitRunner.class)
 @SutPackages({ AImplementation1.class })

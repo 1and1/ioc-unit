@@ -25,10 +25,10 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
-import com.oneandone.iocunit.analyzer.annotations.ExcludedClasses;
-import com.oneandone.iocunit.analyzer.annotations.SutPackages;
 import com.oneandone.iocunit.IocUnitRunner;
+import com.oneandone.iocunit.analyzer.annotations.ExcludedClasses;
 import com.oneandone.iocunit.analyzer.annotations.ProducesAlternative;
+import com.oneandone.iocunit.analyzer.annotations.SutPackages;
 import com.oneandone.iocunit.contexts.ContextController;
 import com.oneandone.iocunit.contexts.InConversationScope;
 import com.oneandone.iocunit.contexts.InRequestScope;
