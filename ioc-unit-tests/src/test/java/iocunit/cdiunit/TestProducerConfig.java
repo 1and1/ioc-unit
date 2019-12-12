@@ -17,10 +17,10 @@ import javax.inject.Named;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 import com.oneandone.iocunit.IocUnitRunner;
 import com.oneandone.iocunit.ProducerConfig;
 import com.oneandone.iocunit.ProducerConfigExtension;
+import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 
 @RunWith(IocUnitRunner.class)
 @TestClasses({TestProducerConfig.Producers.class, ProducerConfigExtension.class})
@@ -28,7 +28,7 @@ import com.oneandone.iocunit.ProducerConfigExtension;
 @TestProducerConfig.ProducerConfigNum(0)
 public class TestProducerConfig {
 
-    @Inject
+     @Inject
     @Named("a")
     private String valueNamedA;
 
