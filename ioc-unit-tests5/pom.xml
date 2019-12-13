@@ -26,7 +26,7 @@
             <groupId>javax</groupId>
             <artifactId>javaee-api</artifactId>
             <version>${version.javaee-api}</version>
-            <scope>provided</scope>
+            <scope>test</scope>
             <exclusions>
                 <exclusion>
                     <groupId>com.sun.mail</groupId>
@@ -49,6 +49,12 @@
         <dependency>
             <groupId>net.oneandone.ioc-unit</groupId>
             <artifactId>ioc-unit-contexts</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.oneandone.ioc-unit</groupId>
+            <artifactId>ioc-unit-mockseasy</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
