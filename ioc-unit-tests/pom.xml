@@ -41,7 +41,7 @@
             <groupId>javax</groupId>
             <artifactId>javaee-api</artifactId>
             <version>${version.javaee-api}</version>
-            <scope>provided</scope>
+            <scope>test</scope>
             <exclusions>
                 <exclusion>
                     <groupId>com.sun.mail</groupId>
@@ -49,7 +49,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
@@ -97,6 +96,10 @@
                 <exclusion>
                     <groupId>javax.persistence</groupId>
                     <artifactId>javax.persistence-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.enterprise</groupId>
+                    <artifactId>cdi-api</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -190,6 +193,24 @@
                     <artifactId>jcip-annotations</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <version>4.0.0</version>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.xml.bind</groupId>
+                    <artifactId>jaxb-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>3.12.2</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

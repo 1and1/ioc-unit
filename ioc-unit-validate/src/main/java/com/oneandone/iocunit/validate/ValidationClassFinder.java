@@ -11,7 +11,7 @@ public class ValidationClassFinder {
     public static Class getInterceptor() {
         try {
             return Class.forName("org.hibernate.validator.internal.cdi.interceptor.ValidationInterceptor");
-        } catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException|ClassFormatError e) {
             try {
                 return Class.forName("org.hibernate.validator.cdi.internal.interceptor.ValidationInterceptor");
             } catch (ClassNotFoundException ex) {
