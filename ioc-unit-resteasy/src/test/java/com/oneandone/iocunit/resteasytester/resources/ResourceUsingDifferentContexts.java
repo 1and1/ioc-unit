@@ -4,6 +4,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Request;
@@ -43,6 +44,7 @@ public class ResourceUsingDifferentContexts {
     @Context
     Providers provider;
 
+    @GET
     @Path("/method1")
     public Response method1() {
         return Response.ok().build();
