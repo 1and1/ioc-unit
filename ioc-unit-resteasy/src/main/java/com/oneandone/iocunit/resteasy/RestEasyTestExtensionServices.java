@@ -14,9 +14,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.ext.Provider;
 
-import com.oneandone.iocunit.resteasy.auth.AuthInterceptor;
-import com.oneandone.iocunit.resteasy.auth.TestAuth;
-import com.oneandone.iocunit.util.Annotations;
+import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,6 +22,9 @@ import com.oneandone.cdi.weldstarter.CreationalContexts;
 import com.oneandone.cdi.weldstarter.WeldSetupClass;
 import com.oneandone.cdi.weldstarter.spi.TestExtensionService;
 import com.oneandone.cdi.weldstarter.spi.WeldStarter;
+import com.oneandone.iocunit.resteasy.auth.AuthInterceptor;
+import com.oneandone.iocunit.resteasy.auth.TestAuth;
+import com.oneandone.iocunit.util.Annotations;
 
 /**
  * @author aschoerk
@@ -64,6 +65,12 @@ public class RestEasyTestExtensionServices implements TestExtensionService {
         List<Class<?>> result = new ArrayList<>();
         result.add(RestEasyMockInit.class);
         result.add(AuthInterceptor.class);
+        try {
+            Method[] m = ResteasyClientBuilder.class.getMethods();
+            result.add(TestClientBuilder.class);
+        } catch (NoClassDefFoundError e) {
+            ; // no resteasy client module available
+        }
         return result;
     }
 
