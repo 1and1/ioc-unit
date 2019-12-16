@@ -18,7 +18,7 @@
         <module>ex5-asyncconsumedjms1</module>
         <module>ex6-asyncconsumedjms2</module>
         <module>ex7-simplerest</module>
-        <module>ex8-simpleservlet</module>
+        <module>ex8-jettyservlet_jpa</module>
         <module>mockito-example</module>
         <module>rest</module>
     </modules>
