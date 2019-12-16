@@ -3,7 +3,6 @@ package com.oneandone.iocunit.resteasy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
-import javax.ws.rs.client.ClientBuilder;
 
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.client.jaxrs.engines.ApacheHttpClient4Engine;
@@ -20,7 +19,7 @@ public class TestClientBuilder {
     private Dispatcher dispatcher;
 
     @Produces
-    public ClientBuilder createClientBuilder() {
+    public ResteasyClientBuilder createClientBuilder() {
         return new ResteasyClientBuilder()
                 .httpEngine(new ApacheHttpClient4Engine(new TestHttpClient(dispatcher)));
     }

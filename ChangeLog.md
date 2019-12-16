@@ -4,6 +4,8 @@
 
 |Version|Changes|
 |-------|-------|
+|2.0.25|recognize Testclass in TestScopeExtension also by @Produces, Provide ResteasyClientBuilder|
+|2.0.24|ioc-unit-Resteasy: Provide ClientBuilder and WebTarget as availables |
 |2.0.23|return Forbidden(403) if not authorized by role|
 |2.0.22|fix handling problems and bugs with Resteasy-Auth-Testing|
 |2.0.21|added test of authorization to resteasy toolbox|
