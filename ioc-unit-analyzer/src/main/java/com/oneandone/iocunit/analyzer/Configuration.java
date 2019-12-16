@@ -40,6 +40,7 @@ public class Configuration {
     public boolean addAllStartableBeans = false;
     public boolean addAvailableInterceptorsAndDecorators = false;
     public List<Class<? extends Extension>> excludedExtensions;
+    public List<Class<?>> initialAvailables = new ArrayList<>();
 
     Set<Class<? extends Annotation>> injectAnnotations = new HashSet<>();
 
@@ -47,6 +48,7 @@ public class Configuration {
         this.testerExtensionsConfigsFinder = a;
         injectAnnotations.add(Inject.class);
         injectAnnotations.addAll(a.injectAnnotations);
+        initialAvailables.addAll(a.initialAvailableClasses);
     }
 
     private Class<?> theTestClass;

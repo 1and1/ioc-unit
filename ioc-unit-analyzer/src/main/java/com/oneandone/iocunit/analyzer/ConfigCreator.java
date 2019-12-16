@@ -34,6 +34,7 @@ public class ConfigCreator extends ConfigCreatorBase {
         configuration.testClassCandidates(testerExtensionsConfigsFinder.initialClasses)
                 .testClassCandidates(initial.initialClasses)
                 .testClassCandidates(initial.testClasses);
+
         for (Class<?> c : initial.sutClasses) {
             configuration
                     .candidate(c);

@@ -47,6 +47,7 @@ class Phase1Analyzer extends PhasesBase {
 
     public Phase1Analyzer(Configuration configuration) {
         super(configuration);
+        newAvailables.addAll(configuration.initialAvailables);
     }
 
 

@@ -24,6 +24,7 @@ public class TesterExtensionsConfigsFinder {
     List<Class<? extends Annotation>> injectAnnotations = new ArrayList<>();
     Map<Class<? extends Annotation>, TestExtensionService> extraClassAnnotations = new HashMap<>();
     List<Class<?>> initialClasses = new ArrayList<>();
+    List<Class<?>> initialAvailableClasses = new ArrayList<>();
     List<Class<?>> fakeClasses = new ArrayList<>();
     List<Class<?>> excludeFromInjectScan = new ArrayList<>();
     List<Class<?>> excludeAsInjects = new ArrayList<>();
@@ -46,6 +47,7 @@ public class TesterExtensionsConfigsFinder {
                     extraClassAnnotations.put(annotation, testExtensionService);
                 }
                 initialClasses.addAll(testExtensionService.testClasses());
+                initialAvailableClasses.addAll(testExtensionService.testAvailableClasses());
                 fakeClasses.addAll(testExtensionService.fakeClasses());
                 excludeAsInjects.addAll(testExtensionService.excludeAsInjects());
             }

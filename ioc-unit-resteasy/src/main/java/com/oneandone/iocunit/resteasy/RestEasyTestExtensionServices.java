@@ -65,14 +65,23 @@ public class RestEasyTestExtensionServices implements TestExtensionService {
         List<Class<?>> result = new ArrayList<>();
         result.add(RestEasyMockInit.class);
         result.add(AuthInterceptor.class);
+        return result;
+    }
+
+
+    @Override
+    public List<Class<?>> testAvailableClasses() {
+        List<Class<?>> result = new ArrayList<>();
         try {
             Method[] m = ResteasyClientBuilder.class.getMethods();
             result.add(TestClientBuilder.class);
+            result.add(TestWebTarget.class);
         } catch (NoClassDefFoundError e) {
             ; // no resteasy client module available
         }
         return result;
     }
+
 
     @Override
     public List<Class<? extends Annotation>> extraClassAnnotations() {

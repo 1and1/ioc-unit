@@ -58,6 +58,10 @@ public interface TestExtensionService {
         return Collections.EMPTY_LIST;
     }
 
+    default List<Class<?>> testAvailableClasses() {
+        return Collections.EMPTY_LIST;
+    }
+
     default void preStartupAction(WeldSetupClass weldSetup, Class clazz, Method method) {}
 
     default void postStartupAction(CreationalContexts creationalContexts, WeldStarter weldStarter) {}
