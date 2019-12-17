@@ -5,19 +5,13 @@ import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.Map;
 
-import javax.ws.rs.HttpMethod;
-
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPatch;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.AbstractHttpClient;
 import org.apache.http.params.AbstractHttpParams;
@@ -32,14 +26,12 @@ import org.jboss.resteasy.spi.ResteasyProviderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.restassured.internal.http.CustomHttpMethod;
-
 /**
  * @author aschoerk
  */
 public class TestHttpClient extends AbstractHttpClient {
 
-    public static final String LOCALHOST_8080 = "//localhost:8080";
+    public static final String LOCALHOST = "//localhost";
 
     Dispatcher dispatcher;
 
@@ -93,8 +85,6 @@ public class TestHttpClient extends AbstractHttpClient {
             Map<Class<?>, Object> map = ResteasyProviderFactory.getContextDataMap();
             dispatcher.invoke(mockRequest, response);
             return new CloseableMockResponse(response);
-
-
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
@@ -119,51 +109,26 @@ public class TestHttpClient extends AbstractHttpClient {
     }
 
     private MockHttpRequest createMockHttpRequestFromRequest(final HttpRequest request) throws URISyntaxException, IOException {
-        String method = null;
+        String method = request.getRequestLine().getMethod();
         HttpEntity entity = null;
-        if(request instanceof CustomHttpMethod) {
-            method = ((CustomHttpMethod) request).getMethod();
-            entity = ((CustomHttpMethod) request).getEntity();
+        if (request instanceof HttpEntityEnclosingRequestBase) {
+            entity = ((HttpEntityEnclosingRequestBase) request).getEntity();
         }
+
         String uri = request.getRequestLine().getUri();
-        int localhostPos = uri.indexOf(LOCALHOST_8080);
+        int localhostPos = uri.indexOf(LOCALHOST);
         if(localhostPos >= 0) {
-            uri = uri.substring(localhostPos + LOCALHOST_8080.length());
+            int slashpos = uri.indexOf("/",localhostPos + LOCALHOST.length());
+            uri = uri.substring(slashpos);
         }
         MockHttpRequest mockRequest = null;
 
-        if(request instanceof HttpPut || method != null && method.equals("PUT")) {
-            if(request instanceof HttpPut) {
-                entity = ((HttpPut) request).getEntity();
-            }
-            mockRequest = buildMockHttpRequest(entity, uri, HttpMethod.PUT);
+        if (entity != null)  {
+            mockRequest = buildMockHttpRequest(entity, uri, method);
+        } else {
+            mockRequest = MockHttpRequest.create(method, uri);
         }
-        else if(request instanceof HttpGet || method != null && method.equals("GET")) {
-            mockRequest = MockHttpRequest.create(HttpMethod.GET, uri);
-        }
-        else if(request instanceof HttpPost || method != null && method.equals("POST")) {
-            HttpPost post = (HttpPost) request;
-            String methodString = post.getMethod();
-            if(methodString.startsWith("DELETE")) {
-                mockRequest = MockHttpRequest.create(HttpMethod.DELETE, uri);
-            } else if(methodString.startsWith("PUT")) {
-                entity = post.getEntity();
-                mockRequest = buildMockHttpRequest(entity, uri, HttpMethod.PUT);
-            }
-            else {
-                entity = post.getEntity();
-                mockRequest = buildMockHttpRequest(entity, uri, HttpMethod.POST);
-            }
-        }
-        else if(request instanceof HttpDelete || method != null && method.equals("DELETE")) {
-            mockRequest = MockHttpRequest.create(HttpMethod.DELETE, uri);
-        }
-        else if(request instanceof HttpPatch || method != null && method.equals("PATCH")) {
-            mockRequest = MockHttpRequest.create("PATCH", uri);
-        }
-        else if(request instanceof CustomHttpMethod) {
-            throw new IllegalArgumentException("HTTP method '" + ((CustomHttpMethod) request).getMethod() + "' is not supported");
-        }
+
         return mockRequest;
     }
 
