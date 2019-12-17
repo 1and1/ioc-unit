@@ -42,7 +42,8 @@ public class RequestMethodTest {
                 body("content", equalTo("Hello, Johan!"));
     }
 
-    @Test public void
+    @Test
+    public void
     request_method_accepts_enum_verb_and_unnamed_path_params() {
         given().
                 queryParam("name", "John").
@@ -53,7 +54,8 @@ public class RequestMethodTest {
                 body("content", equalTo("Hello, John!"));
     }
 
-    @Test public void
+    @Test
+    public void
     request_method_accepts_string_verb() {
         given().
                 param("name", "Johan").
@@ -64,7 +66,8 @@ public class RequestMethodTest {
                 body("content", equalTo("Hello, Johan!"));
     }
 
-    @Test public void
+    @Test
+    public void
     request_method_accepts_string_verb_and_unnamed_path_params() {
         given().
                 queryParam("name", "John").
@@ -75,25 +78,28 @@ public class RequestMethodTest {
                 body("content", equalTo("Hello, John!"));
     }
 
-    @Test public void
+    @Test
+    public void
     static_request_method_accepts_string_verb() {
 
         request("  gEt ", "/greeting").then().body("id", equalTo(1)).body("content", equalTo("Hello, World!"));
 
     }
 
-    @Test public void
+    @Test
+    public void
     static_request_method_accepts_enum_verb_and_path_params() {
 
         request(GET, "/{greeting}", "greeting").then().body("id", equalTo(1)).body("content", equalTo("Hello, World!"));
 
     }
 
-    @Test public void
+    @Test
+    public void
     throws_iae_when_http_verb_is_not_supported_by_mock_mvc() {
-        exception.expect(IllegalArgumentException.class);
-        exception.expectMessage("HTTP method 'CONNECT' is not supported");
+        // exception.expect(NotAllowedException.class);
+        // exception.expectMessage("No resource method found for CONNECT");
 
-        given().request("connect", "/greeting");
+        given().request("connect", "/greeting").then().statusCode(405);
     }
 }
