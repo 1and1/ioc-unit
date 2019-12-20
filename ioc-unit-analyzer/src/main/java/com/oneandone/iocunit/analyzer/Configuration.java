@@ -26,7 +26,6 @@ import com.oneandone.iocunit.analyzer.annotations.AnalyzerFlags;
 public class Configuration {
 
 
-
     enum Phase {
         UNKNOWN,
         ANALYZING,
@@ -139,6 +138,9 @@ public class Configuration {
 
     // classes available to be added to configuration
     private Set<Class<?>> available = new HashSet<>();
+
+    // abstract sut-classes or sut-interfaces making availables to candidates
+    private Set<Class<?>> candidateSigns = new HashSet<>();
 
     private boolean availablesChanged = false;
 
@@ -379,4 +381,13 @@ public class Configuration {
     public void setAvailablesChanged(final boolean availablesChanged) {
         this.availablesChanged = availablesChanged;
     }
+
+    public Set<Class<?>> getCandidateSigns() {
+        return candidateSigns;
+    }
+
+    public Set<Class<?>> getAvailable() {
+        return available;
+    }
+
 }

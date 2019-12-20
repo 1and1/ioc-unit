@@ -8,8 +8,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.decorator.Decorator;
 import javax.enterprise.inject.Produces;
@@ -172,7 +174,7 @@ class Phase1Analyzer extends PhasesBase {
             else {
                 configuration.sutClass(c);
             }
-            if(isObligatoryAccordingToServices(c)) {
+            if(isObligatoryAccordingToServices(c) || isObligatoryAccordingToCandidateSigns(c)) {
                 configuration.candidate(c);
             }
             else {
@@ -180,6 +182,11 @@ class Phase1Analyzer extends PhasesBase {
                 newAvailables.add(c);
             }
         }
+    }
+
+    private boolean isObligatoryAccordingToCandidateSigns(final Class<?> c) {
+        return  !configuration.isExcluded(c) && !configuration.isCandidate(c) && configuration.isSuTClass(c) &&
+                configuration.getCandidateSigns().stream().anyMatch(cs -> cs.isAssignableFrom(c) || cs.isAnnotation() && c.isAnnotationPresent((Class<Annotation>)cs));
     }
 
     public void extend(final Set<Class<?>> tmpClasses, boolean isSut) {
@@ -426,6 +433,21 @@ class Phase1Analyzer extends PhasesBase {
                         QualifiedType q = addToProducerMap(c, producerMap);
                         if (c.equals(configuration.getTheTestClass()) || q.isAlternative()) {
                             abstractSuperClasses(c);
+                        }
+                    } else if (ConfigStatics.mightSignCandidate(c)) {
+                        if (!configuration.getCandidateSigns().contains(c)) {
+                            configuration.getCandidateSigns().add(c);
+                            List<Class<?>> toAdd = configuration.getAvailable()
+                                    .stream()
+                                    .filter(availableClass -> isObligatoryAccordingToCandidateSigns(availableClass))
+                                    .collect(Collectors.toList());
+                            toAdd.stream().forEach(added -> {
+                                newAvailables.remove(added);
+                                configuration.candidate(added);
+                            });
+                            configuration
+                                    .tobeStarted(c)
+                                    .elseClass(c);
                         }
                     }
                     else {

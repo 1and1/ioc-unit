@@ -8,6 +8,8 @@ import java.lang.annotation.Target;
 /**
  * Signifies classes from the "system under test" which must be instantiated when CDI gets started.
  * May not clash with alternatives.
+ * If the class is abstract, interface or annotation it signifies which made available classes (@SutClassPath,  @SutPackages, @SutPackagesDeep)
+ * must be instantiated, when CDI gets started.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

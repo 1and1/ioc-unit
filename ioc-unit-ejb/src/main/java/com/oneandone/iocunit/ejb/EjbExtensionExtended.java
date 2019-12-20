@@ -389,8 +389,11 @@ public class EjbExtensionExtended implements Extension {
         boolean needToWrap = false;
         for (AnnotatedField<? super T> f : pit.getAnnotatedType().getFields()) {
             if (f.getJavaMember().getType().equals(pit.getAnnotatedType().getJavaClass())) {
-                needToWrap = true;
-                break;
+                if (f.getJavaMember().isAnnotationPresent(Inject.class)
+                    || f.getJavaMember().isAnnotationPresent(EJB.class)) {
+                    needToWrap = true;
+                    break;
+                }
             }
         }
 

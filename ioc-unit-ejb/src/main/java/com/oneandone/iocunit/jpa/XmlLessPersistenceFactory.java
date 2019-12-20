@@ -397,6 +397,7 @@ public class XmlLessPersistenceFactory extends XmlLessPersistenceFactoryBase {
         properties.put("javax.persistence.jdbc.password", "");
         properties.put("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
         properties.put("hibernate.show_sql", true);
+        properties.put("hibernate.transaction.jta.platform", "org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform");
         properties.put("hibernate.hbm2ddl.auto", "create-drop");
         properties.put("hibernate.id.new_generator_mappings", false);
         properties.put("hibernate.archive.autodetection", "class");

@@ -1,15 +1,22 @@
 package com.oneandone.iocunit.analyzer;
 
-import com.oneandone.iocunit.analyzer.annotations.SutClasses;
-import com.oneandone.iocunit.analyzer.annotations.TestClasses;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.net.MalformedURLException;
+
+import javax.inject.Inject;
 
 import org.junit.Test;
 
-import javax.inject.Inject;
-import java.net.MalformedURLException;
-
-import static org.junit.Assert.*;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import com.oneandone.iocunit.analyzer.annotations.SutClasses;
+import com.oneandone.iocunit.analyzer.annotations.SutPackages;
+import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 
 /**
  * @author aschoerk
@@ -135,6 +142,106 @@ public class AnalyzeTest extends BaseTest {
         static class InnerInnerSutTestClass implements InnerSutClass.InnerInnerSutInterface {
 
         }
+    }
+
+    static interface SutClass2Intf {
+
+    }
+
+    static class SutClass21 implements  SutClass2Intf {
+
+    }
+
+    static class SutClass22 implements  SutClass2Intf {
+
+    }
+
+    @SutClasses(SutClass2Intf.class)
+    @SutPackages(SutClass21.class)
+    static class TestClass2 {
+
+    }
+
+    @Test
+    public void doesStartAvailableAssignablesClass() {
+        createTest(TestClass2.class);
+        assertEquals(4, toBeStarted.size());
+        assertTrue(toBeStarted.contains(SutClass21.class));
+        assertTrue(toBeStarted.contains(SutClass22.class));
+        assertTrue(toBeStarted.contains(SutClass2Intf.class));
+        assertTrue(toBeStarted.contains(TestClass2.class));
+    }
+
+    @SutPackages(SutClass21.class)
+    static class TestClass2NoIntf {
+
+    }
+
+    @Test
+    public void doesStartOnlyAvailableAssignablesClass() {
+        createTest(TestClass2NoIntf.class);
+        assertEquals(1, toBeStarted.size());
+        assertTrue(toBeStarted.contains(TestClass2NoIntf.class));
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.TYPE)
+    @interface Annotation {
+
+    }
+
+    @Annotation
+    static class SutClass31 {
+
+    }
+
+    @Annotation
+    static class SutClass32 {
+
+    }
+
+    @SutClasses(Annotation.class)
+    @SutPackages(SutClass31.class)
+    static class TestClass3 {
+
+    }
+
+    @Test
+    public void doesStartAvailableAnnotatedClass() {
+        createTest(TestClass3.class);
+        assertEquals(4, toBeStarted.size());
+        assertTrue(toBeStarted.contains(SutClass31.class));
+        assertTrue(toBeStarted.contains(SutClass32.class));
+        assertTrue(toBeStarted.contains(Annotation.class));
+        assertTrue(toBeStarted.contains(TestClass3.class));
+    }
+
+    static abstract class SutClass4Abstract {
+
+    }
+
+    static class SutClass41 extends SutClass4Abstract {
+
+    }
+
+    static class SutClass42 extends SutClass4Abstract {
+
+    }
+
+    @SutClasses(SutClass4Abstract.class)
+    @SutPackages(SutClass41.class)
+    static class TestClass4 {
+
+    }
+
+    @Test
+    public void doesStartAvailableExtendingClass() {
+        createTest(TestClass4.class);
+        assertEquals(4, toBeStarted.size());
+        assertTrue(toBeStarted.contains(SutClass41.class));
+        assertTrue(toBeStarted.contains(SutClass42.class));
+        assertTrue(toBeStarted.contains(SutClass4Abstract.class));
+        assertTrue(toBeStarted.contains(TestClass4.class));
     }
 
 

@@ -30,6 +30,10 @@ public class ConfigStatics {
         }
     }
 
+    public static boolean mightSignCandidate(Class<?> c) {
+        return c.isAnnotation() || c.isInterface() || Modifier.isAbstract(c.getModifiers());
+    }
+
     public static boolean mightBeBean(Class<?> c) {
 
         try {

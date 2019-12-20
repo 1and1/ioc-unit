@@ -4,6 +4,8 @@
 
 |Version|Changes|
 |-------|-------|
+|2.0.27|wrap self-fields only if @Inject or @Ejb, SutClasses also defined by interface, abstract or annotation|
+|2.0.26|fix TestHttpClient to work with WebTarget|
 |2.0.25|recognize Testclass in TestScopeExtension also by @Produces, Provide ResteasyClientBuilder|
 |2.0.24|ioc-unit-Resteasy: Provide ClientBuilder and WebTarget as availables |
 |2.0.23|return Forbidden(403) if not authorized by role|
