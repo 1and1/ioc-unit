@@ -55,13 +55,7 @@ public class Phase3Fixer extends PhasesBase {
                 }
                 injectsDone.put(inject, producer);
             } else {
-                if (inject.isInstance()) {
-                    // add everything fitting if Instance-Inject
-                    for (QualifiedType q: matching) {
-                        addToCandidates(newCandidates, q.getDeclaringClass());
-                        // TODO: add to classes2injects
-                    }
-                } else {  // Search for specializing and make them higher prior
+                if (!inject.isInstance()) {  // Search for specializing and make them higher prior
                     List<Class<?>> specializingCandidates  = new ArrayList<>();
                     QualifiedType firstQ = null;
                     for (QualifiedType q: matching) {
