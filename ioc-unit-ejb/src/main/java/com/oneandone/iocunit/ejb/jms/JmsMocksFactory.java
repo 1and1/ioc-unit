@@ -24,7 +24,6 @@ import javax.jms.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.melowe.jms2.compat.Jms2MessageListener;
 import com.oneandone.iocunit.ejb.AsynchronousManager;
 import com.oneandone.iocunit.ejb.AsynchronousMessageListenerProxy;
 
@@ -115,7 +114,7 @@ public class JmsMocksFactory {
                     }
                     final MessageConsumer messageConsumer = messageSelector == null ? session.createConsumer(dest) : session.createConsumer(dest, messageSelector);
                     messageConsumers.add(messageConsumer);
-                    messageConsumer.setMessageListener(new AsynchronousMessageListenerProxy(new Jms2MessageListener(messageListener), asynchronousManager));
+                    messageConsumer.setMessageListener(new AsynchronousMessageListenerProxy(messageListener, asynchronousManager));
                 }
             }
             logger.info("JmsMdbConnector.postConstruct initMessageListeners done");

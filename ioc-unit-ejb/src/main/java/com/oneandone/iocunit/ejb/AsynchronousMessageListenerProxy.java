@@ -3,6 +3,9 @@ package com.oneandone.iocunit.ejb;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 
+import com.melowe.jms2.compat.Jms2Message;
+import com.melowe.jms2.compat.Jms2MessageListener;
+
 /**
  * Registered for each MessageListener, onMessage is used to register asynchronous calls in the Asynchronous Manager.
  *
@@ -34,7 +37,10 @@ public class AsynchronousMessageListenerProxy implements MessageListener {
         asynchronousManager.addOneTimeHandler(new Runnable() {
             @Override
             public void run() {
-                listener.onMessage(message);
+                if (message instanceof Jms2Message)
+                    listener.onMessage(message);
+                else
+                    new Jms2MessageListener(listener).onMessage(message);
             }
         });
     }
