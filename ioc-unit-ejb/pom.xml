@@ -109,65 +109,10 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>com.github.melowe</groupId>
-            <artifactId>jms2-compat</artifactId>
-            <version>1.0.3.7</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>javax.jms</groupId>
-                    <artifactId>javax.jms-api</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
             <groupId>javax.jms</groupId>
             <artifactId>javax.jms-api</artifactId>
             <version>2.0.1</version>
             <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.mockrunner</groupId>
-            <artifactId>mockrunner-jms</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>ant</groupId>
-                    <artifactId>ant</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>xerces</groupId>
-                    <artifactId>xercesImpl</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>regexp</groupId>
-                    <artifactId>regexp</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>oro</groupId>
-                    <artifactId>oro</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>jakarta-regexp</groupId>
-                    <artifactId>jakarta-regexp</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>nekohtml</groupId>
-                    <artifactId>nekohtml</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>bcel</groupId>
-                    <artifactId>bcel</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.kirkk</groupId>
-                    <artifactId>jaranalyzer</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>jdom</groupId>
-                    <artifactId>jdom</artifactId>
-                </exclusion>
-            </exclusions>
-
         </dependency>
     </dependencies>
 </project>

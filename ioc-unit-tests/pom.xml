@@ -144,6 +144,12 @@
         </dependency>
         <dependency>
             <groupId>net.oneandone.ioc-unit</groupId>
+            <artifactId>ioc-unit-jms-mockrunner</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.oneandone.ioc-unit</groupId>
             <artifactId>ioc-unit-validate</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>

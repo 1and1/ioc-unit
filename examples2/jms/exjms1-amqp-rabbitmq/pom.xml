@@ -2,12 +2,12 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>net.oneandone.ioc-unit</groupId>
-        <artifactId>ioc-unit-examples2-parent</artifactId>
+        <artifactId>ioc-unit-rest-examples2-jms-parent</artifactId>
         <version>2.0.27-SNAPSHOT</version>
     </parent>
 
 
-    <artifactId>ex5-asyncconsumedjms1</artifactId>
+    <artifactId>exjms1-amqp-rabbitmq</artifactId>
     <packaging>war</packaging>
 
     <licenses>
@@ -17,9 +17,8 @@
         </license>
     </licenses>
 
-    <name>ex5-asyncconsumedjms1: service asyncconsumed with callback use jms</name>
-    <description>Test one service consuming one remote service asynchronously return the result using
-        callback internally use jms</description>
+    <name>exjms1-amqp-rabbitmq</name>
+    <description></description>
     <url>https://github.com/1and1/ioc-unit</url>
     <dependencies>
         <dependency>
@@ -63,9 +62,14 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>net.oneandone.ioc-unit</groupId>
-            <artifactId>ioc-unit-jms-mockrunner</artifactId>
-            <version>${project.version}</version>
+            <groupId>com.rabbitmq</groupId>
+            <artifactId>amqp-client</artifactId>
+            <version>5.8.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.rabbitmq.jms</groupId>
+            <artifactId>rabbitmq-jms</artifactId>
+            <version>1.14.0</version>
         </dependency>
     </dependencies>
 

@@ -56,6 +56,11 @@
             <artifactId>weld2-starter</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>net.oneandone.ioc-unit</groupId>
+            <artifactId>ioc-unit-jms-mockrunner</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

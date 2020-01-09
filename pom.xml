@@ -109,6 +109,7 @@
                 <module>ioc-unit-validate</module>
                 <module>ioc-unit-resteasy</module>
                 <module>ioc-unit-ejb</module>
+                <module>ioc-unit-dep-impls</module>
                 <module>ioc-unit-contexts</module>
                 <module>ioc-unit-simulators</module>
 

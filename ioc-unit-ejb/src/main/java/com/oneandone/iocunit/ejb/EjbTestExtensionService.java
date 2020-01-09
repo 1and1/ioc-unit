@@ -37,7 +37,6 @@ import com.oneandone.cdi.weldstarter.spi.TestExtensionService;
 import com.oneandone.cdi.weldstarter.spi.WeldStarter;
 import com.oneandone.iocunit.ejb.jms.JmsMocksFactory;
 import com.oneandone.iocunit.ejb.jms.JmsProducers;
-import com.oneandone.iocunit.ejb.jms.JmsSingletons;
 import com.oneandone.iocunit.ejb.persistence.IocUnitTransactionSynchronizationRegistry;
 import com.oneandone.iocunit.ejb.persistence.PersistenceFactory;
 import com.oneandone.iocunit.ejb.persistence.PersistenceFactoryResources;
@@ -148,7 +147,6 @@ public class EjbTestExtensionService implements TestExtensionService {
                 add(SimulatedTransactionManager.class);
                 add(EjbUnitBeanInitializerClass.class);
                 add(EjbUnitTransactionServices.class);
-                add(JmsSingletons.class);
                 add(JmsMocksFactory.class);
                 add(JmsProducers.class);
                 add(SessionContextFactory.class);

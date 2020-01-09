@@ -37,7 +37,7 @@ import com.oneandone.iocunit.ejb.AsynchronousMessageListenerProxy;
 public class JmsMocksFactory {
 
     @Inject
-    private JmsSingletons jmsSingletons;
+    private JmsSingletonsIntf jmsSingletons;
 
     private AtomicBoolean initedMessageListeners = new AtomicBoolean(false);
 
@@ -108,13 +108,13 @@ public class JmsMocksFactory {
                     Session session = acknowledgeMode == null ? connection.createSession(false, Session.AUTO_ACKNOWLEDGE) : connection.createSession(false, acknowledgeMode);
                     Destination dest = null;
                     if ("javax.jms.Queue".equals(destinationType)) {
-                        dest = jmsSingletons.getDestinationManager().createQueue(destination);
+                        dest = jmsSingletons.createQueue(destination);
                     } else if ("javax.jms.Topic".equals(destinationType)) {
-                        dest = jmsSingletons.getDestinationManager().createTopic(destination);
+                        dest = jmsSingletons.createTopic(destination);
                     }
                     final MessageConsumer messageConsumer = messageSelector == null ? session.createConsumer(dest) : session.createConsumer(dest, messageSelector);
                     messageConsumers.add(messageConsumer);
-                    messageConsumer.setMessageListener(new AsynchronousMessageListenerProxy(messageListener, asynchronousManager));
+                    messageConsumer.setMessageListener(new AsynchronousMessageListenerProxy(messageListener, asynchronousManager, jmsSingletons));
                 }
             }
             logger.info("JmsMdbConnector.postConstruct initMessageListeners done");

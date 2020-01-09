@@ -2,26 +2,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>net.oneandone.ioc-unit</groupId>
-    <artifactId>ioc-unit-examples2-parent</artifactId>
+    <artifactId>ioc-unit-dep-impls-parent</artifactId>
     <version>2.0.27-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
-        <module>ex1-1entity</module>
-        <module>ex1-1entity-el</module>
-        <module>ex1-1entity-hb</module>
-        <module>ex1-1entity5</module>
-        <module>ex1-2entity4220b_5</module>
-        <module>ex2-syncconsumed</module>
-        <module>ex3-asyncconsumedpoll</module>
-        <module>ex4-asyncconsumedpush</module>
-        <module>ex5-asyncconsumedjms1</module>
-        <module>ex6-asyncconsumedjms2</module>
-        <module>ex7-simplerest</module>
-        <module>ex8-jettyservlet_jpa</module>
-        <module>mockito-example</module>
-        <module>rest</module>
-        <module>jms</module>
+        <module>ioc-unit-jms-mockrunner</module>
+        <module>ioc-unit-jms-rabbitmq</module>
     </modules>
     <build>
         <plugins>
