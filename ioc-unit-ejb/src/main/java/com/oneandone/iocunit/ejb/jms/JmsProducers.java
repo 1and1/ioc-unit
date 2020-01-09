@@ -3,6 +3,7 @@ package com.oneandone.iocunit.ejb.jms;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import javax.jms.Queue;
 import javax.jms.Topic;
@@ -13,7 +14,7 @@ import javax.jms.Topic;
 @Singleton
 public class JmsProducers {
     @Inject
-    private JmsSingletonsIntf jmsSingletons;
+    private Provider<JmsSingletonsIntf> jmsSingletons;
 
 
     /**
@@ -24,7 +25,7 @@ public class JmsProducers {
     @Produces
     public Queue createQueue(InjectionPoint ip) {
         String name = JmsMocksFactory.getResourceName(ip);
-        return jmsSingletons.createQueue(JmsMocksFactory.calculateCommonName(name));
+        return jmsSingletons.get().createQueue(JmsMocksFactory.calculateCommonName(name));
     }
 
     /**
@@ -35,7 +36,7 @@ public class JmsProducers {
     @Produces
     public Topic createTopic(InjectionPoint ip) {
         String name = JmsMocksFactory.getResourceName(ip);
-        return jmsSingletons.createTopic(JmsMocksFactory.calculateCommonName(name));
+        return jmsSingletons.get().createTopic(JmsMocksFactory.calculateCommonName(name));
     }
 
 
