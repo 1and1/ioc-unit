@@ -1,4 +1,4 @@
-package com.oneandone.iocunit.jms.mockrunner;
+package com.oneandone.iocunit.jms.rabbitmq;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.oneandone.cdi.weldstarter.spi.TestExtensionService;
+
 
 /**
  * @author aschoerk
@@ -26,7 +27,7 @@ public class TestExtensionServices implements TestExtensionService {
             private static final long serialVersionUID = -519466824492284375L;
 
             {
-                add(MockRunnerSingletons.class);
+                add(RabbitMQSingletons.class);
             }
 
         };

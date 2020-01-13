@@ -27,6 +27,12 @@
             <version>1.7.21</version>
         </dependency>
         <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.0.9</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-api</artifactId>
             <version>7.0</version>
@@ -70,6 +76,17 @@
             <groupId>com.rabbitmq.jms</groupId>
             <artifactId>rabbitmq-jms</artifactId>
             <version>1.14.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.melowe</groupId>
+            <artifactId>jms2-compat</artifactId>
+            <version>1.0.3.7</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.jms</groupId>
+                    <artifactId>javax.jms-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 

@@ -7,11 +7,11 @@
         <version>2.0.27-SNAPSHOT</version>
     </parent>
 
-    <artifactId>ioc-unit-jms-rabbitmq</artifactId>
+    <artifactId>ioc-unit-jms-activemq</artifactId>
     <packaging>jar</packaging>
 
-    <name>net.oneandone.ioc-unit:ioc-unit-jms-rabbitmq</name>
-    <description>Adds mockrunner jms-implementation</description>
+    <name>net.oneandone.ioc-unit:ioc-unit-jms-activemq</name>
+    <description>Adds activemq jms-implementation</description>
     <url>https://github.com/1and1/ioc-unit-dep-impls/ioc-unit-jms-mockrunner</url>
 
     <licenses>
@@ -31,25 +31,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>io.arivera.oss</groupId>
-            <artifactId>embedded-rabbitmq</artifactId>
-            <version>1.4.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.rabbitmq</groupId>
-            <artifactId>amqp-client</artifactId>
-            <version>5.8.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.rabbitmq.jms</groupId>
-            <artifactId>rabbitmq-jms</artifactId>
-            <version>1.14.0</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.geronimo.specs</groupId>
-                    <artifactId>geronimo-jms_1.1_spec</artifactId>
-                </exclusion>
-            </exclusions>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-all</artifactId>
+            <version>5.15.11</version>
         </dependency>
         <dependency>
             <groupId>com.github.melowe</groupId>

@@ -37,10 +37,10 @@ public class JmsDispatcher {
              Session session = connection.createSession();
              MessageProducer mp = session.createProducer(destination)) {
             MapMessage mapMessage = session.createMapMessage();
-           for (Map.Entry<String, ?> e: message.entrySet()) {
-               mapMessage.setObject(e.getKey(), e.getValue());
-           }
-           mp.send(mapMessage);
+            for (Map.Entry<String, ?> e : message.entrySet()) {
+                mapMessage.setObject(e.getKey(), e.getValue());
+            }
+            mp.send(mapMessage);
         }
     }
 
@@ -61,7 +61,7 @@ public class JmsDispatcher {
         } catch (JMSException e) {
             throw new RuntimeException(e);
         }
-        return new AsynchronousServiceIntf.CorrelationId((Long)message.get("correlationId"));
+        return new AsynchronousServiceIntf.CorrelationId((Long) message.get("correlationId"));
     }
 
     public HashMap<String, Object> initializeMessage(MapMessage original) throws JMSException {

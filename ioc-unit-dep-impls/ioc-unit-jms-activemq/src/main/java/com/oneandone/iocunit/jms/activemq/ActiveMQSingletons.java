@@ -1,5 +1,7 @@
-package com.oneandone.iocunit.jms.mockrunner;
+package com.oneandone.iocunit.jms.activemq;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.annotation.PreDestroy;
@@ -7,45 +9,47 @@ import javax.enterprise.inject.Produces;
 import javax.inject.Singleton;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
+import javax.jms.Destination;
 import javax.jms.JMSContext;
+import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.Queue;
+import javax.jms.Session;
 import javax.jms.Topic;
 
+import org.apache.activemq.ActiveMQConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.melowe.jms2.compat.Jms2ConnectionFactory;
 import com.melowe.jms2.compat.Jms2Message;
 import com.melowe.jms2.compat.Jms2MessageListener;
-import com.mockrunner.jms.ConfigurationManager;
-import com.mockrunner.jms.DestinationManager;
-import com.mockrunner.mock.jms.MockConnectionFactory;
 import com.oneandone.iocunit.ejb.jms.JmsSingletonsIntf;
 
+
 /**
- * Manages the singleton used to mock JMS in CDI-Unit using mockrunner.
+ * Manages the singleton used to mock JMS in CDI-Unit using rabbitmq.
  *
  * @author aschoerk
  */
 @Singleton
-public class MockRunnerSingletons implements JmsSingletonsIntf {
-
-    private AtomicReference<DestinationManager> destinationManagerAtomicReference = new AtomicReference<>();
+public class ActiveMQSingletons implements JmsSingletonsIntf {
 
     private AtomicReference<Jms2ConnectionFactory> connectionFactoryAtomicReference = new AtomicReference<>();
 
-    private AtomicReference<MockConnectionFactory> mockConnectionFactoryAtomicReference = new AtomicReference<>();
-
-    private AtomicReference<Connection> mdbConnection = new AtomicReference<>();
+    private AtomicReference<Connection> mdbConnection = new AtomicReference<Connection>();
 
     private Logger logger = LoggerFactory.getLogger("JmsFactory");
+
+    private AtomicReference<Map<String, Destination>> destinations = new AtomicReference<>();
+
 
     @Override
     public Connection getConnection() {
         try {
             getConnectionFactory();
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -69,31 +73,36 @@ public class MockRunnerSingletons implements JmsSingletonsIntf {
     @PreDestroy
     @Override
     public void destroy() {
-        if(connectionFactoryAtomicReference.get() != null) {
-            mockConnectionFactoryAtomicReference.get().clearConnections();
-            mockConnectionFactoryAtomicReference = new AtomicReference<>();
-            connectionFactoryAtomicReference = new AtomicReference<>();
+        try {
+            mdbConnection.get().close();
+        } catch (JMSException e) {
+            throw new RuntimeException(e);
         }
-        destinationManagerAtomicReference = new AtomicReference<>();
-        mdbConnection = new AtomicReference<>();
     }
 
-    private DestinationManager getDestinationManager() {
-        if(destinationManagerAtomicReference.get() == null) {
-            DestinationManager tmp = new DestinationManager();
-            destinationManagerAtomicReference.compareAndSet(null, tmp);
-        }
-        return destinationManagerAtomicReference.get();
-    }
 
     @Override
     public Queue createQueue(String name) {
-        return getDestinationManager().createQueue(name);
+        if(!destinations.get().containsKey(name)) {
+            try (Session session = mdbConnection.get().createSession()) {
+                destinations.get().put(name, session.createQueue(name));
+            } catch (JMSException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return (Queue) destinations.get().get(name);
     }
 
     @Override
     public Topic createTopic(String name) {
-        return getDestinationManager().createTopic(name);
+        if(!destinations.get().containsKey(name)) {
+            try (Session session = mdbConnection.get().createSession()) {
+                destinations.get().put(name, session.createTopic(name));
+            } catch (JMSException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return (Topic) destinations.get().get(name);
     }
 
     /**
@@ -105,13 +114,13 @@ public class MockRunnerSingletons implements JmsSingletonsIntf {
     @Override
     public ConnectionFactory getConnectionFactory() throws Exception {
         if(connectionFactoryAtomicReference.get() == null) {
-            final ConfigurationManager configurationManager = new ConfigurationManager();
-            configurationManager.setDoCloneOnSend(true);
-            final MockConnectionFactory mockConnectionFactory = new MockConnectionFactory(getDestinationManager(), configurationManager);
-            Jms2ConnectionFactory tmp = new Jms2ConnectionFactory(mockConnectionFactory);
-            if(connectionFactoryAtomicReference.compareAndSet(null, tmp)) {
-                mockConnectionFactoryAtomicReference.compareAndSet(null, mockConnectionFactory);
-                mdbConnection.set(tmp.createConnection());
+            Jms2ConnectionFactory cf = new Jms2ConnectionFactory(new ActiveMQConnectionFactory("vm://localhost?broker.persistent=false"));
+
+            if(connectionFactoryAtomicReference.compareAndSet(null, cf)) {
+                final Connection connection = cf.createConnection();
+                connection.start();
+                destinations.set(new ConcurrentHashMap<>());
+                mdbConnection.set(connection);
             }
         }
         return connectionFactoryAtomicReference.get();
