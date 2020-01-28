@@ -300,7 +300,7 @@ The usage does not differ very much from cdi-unit:
 * You need to include additionally:    
 
         <dependency>
-            <groupId>net.oneandone</groupId>
+            <groupId>net.oneandone.ioc-unit</groupId>
             <artifactId>ioc-unit</artifactId>
             <version>${ioc-unit.version}</version>
             <scope>test</scope>
