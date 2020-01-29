@@ -14,6 +14,7 @@ import javax.ws.rs.core.UriInfo;
 import org.oneandone.iocunit.rest.dto_polymorphy.dto.ComplexDto;
 import org.oneandone.iocunit.rest.dto_polymorphy.dto.ComplexDtoWithSetters;
 import org.oneandone.iocunit.rest.dto_polymorphy.dto.abstractsuper.DtoSuper;
+import org.oneandone.iocunit.rest.dto_polymorphy.dto.notpolymorph.NpDTo;
 import org.oneandone.iocunit.rest.dto_polymorphy.dto.second.DtoInterface2;
 import org.oneandone.iocunit.rest.dto_polymorphy.dto.typename.Dto1;
 import org.oneandone.iocunit.rest.dto_polymorphy.dto.typename.Dto2;
@@ -83,6 +84,17 @@ public class RestResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response mirror(DtoSuper dto) {
+
+        return Response.ok()
+                .entity(dto)
+                .build();
+    }
+
+    @POST
+    @Path("/dtoalt")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response mirror(NpDTo dto) {
 
         return Response.ok()
                 .entity(dto)

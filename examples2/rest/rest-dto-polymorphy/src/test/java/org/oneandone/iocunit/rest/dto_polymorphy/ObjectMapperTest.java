@@ -12,6 +12,9 @@ import org.oneandone.iocunit.rest.dto_polymorphy.dto.ComplexDtoWithSetters;
 import org.oneandone.iocunit.rest.dto_polymorphy.dto.abstractsuper.CDto1;
 import org.oneandone.iocunit.rest.dto_polymorphy.dto.abstractsuper.CDto2;
 import org.oneandone.iocunit.rest.dto_polymorphy.dto.abstractsuper.DtoSuper;
+import org.oneandone.iocunit.rest.dto_polymorphy.dto.notpolymorph.NpDTo;
+import org.oneandone.iocunit.rest.dto_polymorphy.dto.notpolymorph.NpDto1;
+import org.oneandone.iocunit.rest.dto_polymorphy.dto.notpolymorph.NpDto2;
 import org.oneandone.iocunit.rest.dto_polymorphy.dto.second.BDto1;
 import org.oneandone.iocunit.rest.dto_polymorphy.dto.second.DtoInterface2;
 import org.oneandone.iocunit.rest.dto_polymorphy.dto.typename.Dto1;
@@ -129,6 +132,21 @@ public class ObjectMapperTest {
                 .when().post("/rest/dtosuper")
                 .as(DtoSuper.class).equals(new CDto2(0,"dto2"));;
 
+    }
+
+    @Test
+    public void canSendPolymorphWithContainerClass() {
+        given()
+                .spec(spec)
+                .body(new NpDTo(new NpDto1("dto1")))
+                .when().post("/rest/dtoalt")
+                .equals(new NpDTo(new NpDto1("dto1")));;
+
+        given()
+                .spec(spec)
+                .body(new NpDTo(new NpDto2("dto2")))
+                .when().post("/rest/dtoalt")
+                .equals(new NpDTo(new NpDto2("dto2")));;
     }
 
 }
