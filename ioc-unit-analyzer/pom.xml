@@ -31,8 +31,8 @@
             <artifactId>slf4j-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>net.oneandone.reflections8</groupId>
-            <artifactId>reflections8</artifactId>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
             <scope>compile</scope>
         </dependency>
         <dependency>

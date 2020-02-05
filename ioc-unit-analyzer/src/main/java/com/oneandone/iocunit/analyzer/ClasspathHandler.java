@@ -5,14 +5,17 @@ import java.net.URL;
 import java.util.Set;
 import java.util.function.Predicate;
 
-import org.reflections8.ReflectionUtils;
-import org.reflections8.Reflections;
-import org.reflections8.util.ConfigurationBuilder;
+import org.reflections.ReflectionUtils;
+import org.reflections.Reflections;
+import org.reflections.util.ConfigurationBuilder;
 
 /**
  * @author aschoerk
  */
 public class ClasspathHandler {
+
+    private final static String TYPES_SCANNER_NAME = TypesScanner.class.getSimpleName();
+    private final static String SUPERTYPE_NAME = Object.class.getSimpleName();
 
     public static void addPackage(Class<?> additionalPackage, Set<Class<?>> classesToProcess) throws MalformedURLException {
         final String packageName = additionalPackage.getPackage().getName();
@@ -31,8 +34,7 @@ public class ClasspathHandler {
                         return false;
                     }
                 }));
-        classesToProcess.addAll(ReflectionUtils.forNames(
-                reflections.getStore().get(TypesScanner.class.getSimpleName()).keySet(),
+        classesToProcess.addAll(ReflectionUtils.forNames(reflections.getStore().get(TYPES_SCANNER_NAME, SUPERTYPE_NAME),
                 new ClassLoader[] { ClasspathHandler.class.getClassLoader() }));
     }
 
@@ -50,8 +52,7 @@ public class ClasspathHandler {
         Reflections reflections = new Reflections(new ConfigurationBuilder().setScanners(new TypesScanner())
                 .setUrls(path));
 
-        classesToProcess.addAll(ReflectionUtils.forNames(
-                reflections.getStore().get(TypesScanner.class.getSimpleName()).keySet(),
+        classesToProcess.addAll(ReflectionUtils.forNames(reflections.getStore().get(TYPES_SCANNER_NAME, SUPERTYPE_NAME),
                 new ClassLoader[] { ClasspathHandler.class.getClassLoader() }));
 
         if (classpathEntries != null)
@@ -77,8 +78,7 @@ public class ClasspathHandler {
                         return false;
                     }
                 }));
-        tmpClasses.addAll(ReflectionUtils.forNames(
-                reflections.getStore().get(TypesScanner.class.getSimpleName()).keySet(),
+        tmpClasses.addAll(ReflectionUtils.forNames(reflections.getStore().get(TYPES_SCANNER_NAME, SUPERTYPE_NAME),
                 new ClassLoader[] { ClasspathHandler.class.getClassLoader() }));
     }
 }

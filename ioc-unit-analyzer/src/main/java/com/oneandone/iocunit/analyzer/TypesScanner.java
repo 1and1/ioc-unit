@@ -7,18 +7,20 @@ package com.oneandone.iocunit.analyzer;
  * implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
-import org.reflections8.scanners.AbstractScanner;
+import org.reflections.Store;
+import org.reflections.scanners.AbstractScanner;
+import org.reflections.util.Utils;
 
 public class TypesScanner extends AbstractScanner {
 
-
     @Override
-    public void scan(Object cls) {
+    public void scan(final Object cls, final Store store) {
         String className = getMetadataAdapter().getClassName(cls);
 
 
         if (acceptResult(className)) {
-            getStore().putSingle(className, className);
+            store.put(Utils.index(getClass()), Object.class.getSimpleName(), className);
         }
     }
+
 }

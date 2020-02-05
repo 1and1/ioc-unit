@@ -77,7 +77,7 @@
         <site-url>${site.deploy.base.url}/${project.groupId}/${project.version}</site-url>
         <javassist.version>3.20.0-GA</javassist.version>
 
-        <reflections8.version>0.11.3</reflections8.version>
+        <reflections.version>0.9.12</reflections.version>
         <jaxrpc.version>1.1</jaxrpc.version>
 
         <camunda-engine.version>7.5.0</camunda-engine.version>
@@ -692,9 +692,9 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>net.oneandone.reflections8</groupId>
-                <artifactId>reflections8</artifactId>
-                <version>${reflections8.version}</version>
+                <groupId>org.reflections</groupId>
+                <artifactId>reflections</artifactId>
+                <version>${reflections.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.jboss.weld.se</groupId>
