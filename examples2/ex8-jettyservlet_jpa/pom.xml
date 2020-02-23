@@ -7,7 +7,7 @@
     </parent>
 
 
-    <artifactId>ex8-simpleservlet</artifactId>
+    <artifactId>ex8-jettyservlet_jpa</artifactId>
     <packaging>war</packaging>
 
     <licenses>
@@ -17,7 +17,7 @@
         </license>
     </licenses>
 
-    <name>ex8-simplerest: servlet-example</name>
+    <name>ex8-jettyservlet_jpa: servlet-example</name>
     <description>Test one rest-service</description>
     <url>https://github.com/1and1/ejb-cdi-unit</url>
     <dependencies>
@@ -48,24 +48,35 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.eclipse.jetty.websocket</groupId>
+            <artifactId>websocket-servlet</artifactId>
+            <version>9.4.25.v20191220</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty.websocket</groupId>
+            <artifactId>websocket-server</artifactId>
+            <version>9.4.25.v20191220</version>
+        </dependency>
+        <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-server</artifactId>
-            <version>9.4.3.v20170317</version>
+            <version>9.4.25.v20191220</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-servlet</artifactId>
-            <version>9.4.3.v20170317</version>
+            <version>9.4.25.v20191220</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-webapp</artifactId>
-            <version>9.4.3.v20170317</version>
+            <version>9.4.25.v20191220</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-jndi</artifactId>
-            <version>9.4.3.v20170317</version>
+            <version>9.4.25.v20191220</version>
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>

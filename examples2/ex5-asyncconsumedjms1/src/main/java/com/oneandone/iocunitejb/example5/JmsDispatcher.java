@@ -34,18 +34,20 @@ public class JmsDispatcher {
 
     void send(Map<String, ?> message, Queue destination) throws JMSException {
         try (Connection connection = cf.createConnection();
-             Session session = connection.createSession();
+             Session session = connection.createSession(false, Session.CLIENT_ACKNOWLEDGE);
              MessageProducer mp = session.createProducer(destination)) {
             MapMessage mapMessage = session.createMapMessage();
             for (Map.Entry<String, ?> e : message.entrySet()) {
                 mapMessage.setObject(e.getKey(), e.getValue());
             }
             mp.send(mapMessage);
+            mapMessage.acknowledge();
         }
     }
 
     HashMap<String, Object> initializeMessage(String operationName) {
-        return initializeMessage(operationName, atomicLong.incrementAndGet());
+        final long correlationIdLong = atomicLong.incrementAndGet();
+        return initializeMessage(operationName, correlationIdLong);
     }
 
     static HashMap<String, Object> initializeMessage(String operationName, long correlationIdLong) {

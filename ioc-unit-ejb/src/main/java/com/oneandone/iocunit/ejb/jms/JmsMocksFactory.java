@@ -106,7 +106,7 @@ public class JmsMocksFactory {
                 if (destinationType != null && destination != null) {
                     logger.info("JmsMdbConnector initMessageListeners destination: {}", destination);
                     final Connection connection = jmsSingletons.get().getConnection();
-                    Session session = acknowledgeMode == null ? connection.createSession(false, Session.AUTO_ACKNOWLEDGE) : connection.createSession(false, acknowledgeMode);
+                    Session session = acknowledgeMode == null ? connection.createSession(true, Session.AUTO_ACKNOWLEDGE) : connection.createSession(false, acknowledgeMode);
                     Destination dest = null;
                     if ("javax.jms.Queue".equals(destinationType)) {
                         dest = jmsSingletons.get().createQueue(destination);

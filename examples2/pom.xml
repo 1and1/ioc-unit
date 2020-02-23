@@ -8,6 +8,7 @@
 
     <modules>
         <module>ex1-1entity</module>
+        <module>ex1-jpatra</module>
         <module>ex1-1entity-el</module>
         <module>ex1-1entity-hb</module>
         <module>ex1-1entity5</module>

@@ -135,7 +135,7 @@ public class ObjectMapperTest {
     }
 
     @Test
-    public void canSendPolymorphWithContainerClass() {
+    public void canSendNonPolymorphUsingContainerClass() {
         given()
                 .spec(spec)
                 .body(new NpDTo(new NpDto1("dto1")))

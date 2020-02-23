@@ -3,6 +3,7 @@ package com.oneandone.iocunit.dbunit;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -36,6 +37,16 @@ public class TestWithAnnotation {
     @IocUnitDataSets({@IocUnitDataSet(value = "classpath:/testdata.json", unitName = "test")})
     public void canAnnotateMultipleTestData() {
         Aa aa = em.find(Aa.class, 1);
+        Assert.assertTrue(aa != null);
 
     }
+
+    @Test
+    @IocUnitDataSets({@IocUnitDataSet(value = "classpath:/testdata.json")})
+    public void canAnnotateMultipleTestDataWithoutUnitName() {
+        Aa aa = em.find(Aa.class, 1);
+        Assert.assertTrue(aa != null);
+
+    }
+
 }

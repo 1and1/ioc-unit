@@ -40,16 +40,9 @@ import com.oneandone.iocunit.ejb.jms.JmsProducers;
 import com.oneandone.iocunit.ejb.persistence.IocUnitTransactionSynchronizationRegistry;
 import com.oneandone.iocunit.ejb.persistence.PersistenceFactory;
 import com.oneandone.iocunit.ejb.persistence.PersistenceFactoryResources;
-import com.oneandone.iocunit.ejb.persistence.SimulatedTransactionManager;
 import com.oneandone.iocunit.ejb.resourcesimulators.SimulatedUserTransaction;
 import com.oneandone.iocunit.ejb.trainterceptors.TransactionalInterceptorBase;
 import com.oneandone.iocunit.ejb.trainterceptors.TransactionalInterceptorEjb;
-import com.oneandone.iocunit.ejb.trainterceptors.TransactionalInterceptorMandatory;
-import com.oneandone.iocunit.ejb.trainterceptors.TransactionalInterceptorNever;
-import com.oneandone.iocunit.ejb.trainterceptors.TransactionalInterceptorNotSupported;
-import com.oneandone.iocunit.ejb.trainterceptors.TransactionalInterceptorRequired;
-import com.oneandone.iocunit.ejb.trainterceptors.TransactionalInterceptorRequiresNew;
-import com.oneandone.iocunit.ejb.trainterceptors.TransactionalInterceptorSupports;
 
 /**
  * @author aschoerk
@@ -137,14 +130,7 @@ public class EjbTestExtensionService implements TestExtensionService {
                 add(EjbInformationBean.class);
                 // add(WeldSEBeanRegistrant.class);
                 add(TransactionalInterceptorEjb.class);
-                add(TransactionalInterceptorRequired.class);
-                add(TransactionalInterceptorRequiresNew.class);
-                add(TransactionalInterceptorMandatory.class);
-                add(TransactionalInterceptorNever.class);
-                add(TransactionalInterceptorNotSupported.class);
-                add(TransactionalInterceptorSupports.class);
                 add(IocUnitTransactionSynchronizationRegistry.class);
-                add(SimulatedTransactionManager.class);
                 add(EjbUnitBeanInitializerClass.class);
                 add(EjbUnitTransactionServices.class);
                 add(JmsMocksFactory.class);
@@ -220,7 +206,7 @@ public class EjbTestExtensionService implements TestExtensionService {
             ArrayList<Annotation> annotations = new ArrayList<Annotation>();
             String typeName = f.getType().getName();
             try {
-                Class literal = Class.forName("com.oneandone.iocunit.ejb.ResourceQualifier$ResourceQualifierLiteral");
+                Class literal = Class.forName("com.oneandone.iocunit.jpa.jpa.ResourceQualifier$ResourceQualifierLiteral");
                 Constructor[] cs = literal.getConstructors();
 
                 if(f.getAnnotation(Resource.class) != null) {

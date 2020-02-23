@@ -1,5 +1,6 @@
 package com.oneandone.iocunit.ejb;
 
+import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 
@@ -20,7 +21,6 @@ public class AsynchronousMessageListenerProxy implements MessageListener {
      *
      * @param listener            the listener to be called asynchronously. Normally the Mdb should be behind this.
      * @param asynchronousManager The asynchronous Managed where the calls are registered so that they can be called by the
-     *                            test code at a specific time.
      */
     public AsynchronousMessageListenerProxy(MessageListener listener, AsynchronousManager asynchronousManager, JmsSingletonsIntf jmsSingletons) {
         this.listener = listener;
@@ -39,6 +39,11 @@ public class AsynchronousMessageListenerProxy implements MessageListener {
             @Override
             public void run() {
                 jmsSingletons.jms2OnMessage(listener, message);
+                try {
+                    message.acknowledge();
+                } catch (JMSException e) {
+                    throw new RuntimeException(e);
+                }
 
             }
         });

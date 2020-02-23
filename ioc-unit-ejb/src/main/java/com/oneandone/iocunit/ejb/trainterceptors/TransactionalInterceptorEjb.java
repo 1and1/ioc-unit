@@ -1,5 +1,12 @@
 package com.oneandone.iocunit.ejb.trainterceptors;
 
+import static javax.transaction.Transactional.TxType.MANDATORY;
+import static javax.transaction.Transactional.TxType.NEVER;
+import static javax.transaction.Transactional.TxType.NOT_SUPPORTED;
+import static javax.transaction.Transactional.TxType.REQUIRED;
+import static javax.transaction.Transactional.TxType.REQUIRES_NEW;
+import static javax.transaction.Transactional.TxType.SUPPORTS;
+
 import java.lang.annotation.Annotation;
 import java.util.List;
 
@@ -13,6 +20,7 @@ import javax.ejb.Stateful;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
@@ -195,5 +203,59 @@ public class TransactionalInterceptorEjb extends TransactionalInterceptorBase {
                || declaringClass.getAnnotation(Stateful.class) != null
                || declaringClass.getAnnotation(Singleton.class) != null;
     }
+    @Inject
+    protected EjbInformationBean ejbInformationBean;
+
+
+    protected boolean isBeanManaged(Class<?> declaringClass) {
+        TransactionManagement annotation = findAnnotation(declaringClass, TransactionManagement.class);
+        if (annotation == null)
+            return false;
+        else
+            return annotation.value() == TransactionManagementType.BEAN;
+    }
+
+    protected boolean isNotTransactionalClass(Class<?> declaringClass) {
+        if (declaringClass.equals(Object.class))
+            return true;
+        TransactionAttribute tmAnnotation = findAnnotation(declaringClass, TransactionAttribute.class);
+        if (tmAnnotation != null)
+            return false;
+        else {
+            boolean result = declaringClass != null
+                             && declaringClass.getAnnotation(TransactionManagement.class) == null // allow transactionmanagement to
+                             && declaringClass.getAnnotation(Transactional.class) == null // allow transactionmanagement to
+                             // be defined for non ejb-classes
+                             && declaringClass.getAnnotation(MessageDriven.class) == null
+                             && declaringClass.getAnnotation(Stateless.class) == null
+                             && declaringClass.getAnnotation(Stateful.class) == null
+                             && declaringClass.getAnnotation(Singleton.class) == null;
+            return result;
+        }
+    }
+
+    public static Transactional.TxType mapJTA2Ejb(final TransactionAttributeType value) {
+        if(value == null) {
+            return REQUIRED;
+        }
+
+        switch (value) {
+            case MANDATORY:
+                return MANDATORY;
+            case NEVER:
+                return NEVER;
+            case NOT_SUPPORTED:
+                return NOT_SUPPORTED;
+            case SUPPORTS:
+                return SUPPORTS;
+            case REQUIRED:
+                return REQUIRED;
+            case REQUIRES_NEW:
+                return REQUIRES_NEW;
+            default:
+                throw new RuntimeException("Invalid Transactional.TxType value: " + value);
+        }
+    }
+
 
 }

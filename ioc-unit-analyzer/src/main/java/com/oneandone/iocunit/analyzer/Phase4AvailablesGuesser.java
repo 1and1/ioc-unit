@@ -39,6 +39,7 @@ public class Phase4AvailablesGuesser extends PhasesBase {
                      || rawtypeName.startsWith("java.lang.")
                      || rawtypeName.startsWith("javax.")
                      || rawtypeName.startsWith("org.jboss.")
+                     || rawtypeName.startsWith("com.oneandone.iocunit.")
                      || handledPhase4Classes.contains(rawtype)
                      || q.isInstance()
                 )) {

@@ -22,12 +22,12 @@ public class TestServlet extends HttpServlet {
 
     @Override
     protected void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
-        super.doGet(req, resp);
+        resp.setStatus(200);
     }
 
 
     @Override
     protected void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
-        super.doPost(req, resp);
+        resp.setStatus(201);
     }
 }
