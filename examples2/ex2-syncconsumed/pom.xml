@@ -43,28 +43,22 @@
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest</artifactId>
-            <version>2.1</version>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>2.21.0</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>net.oneandone.ioc-unit</groupId>
             <artifactId>ioc-unit-ejb</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>net.oneandone.ioc-unit</groupId>
             <artifactId>ioc-unit-mockseasy</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>net.oneandone.ioc-unit</groupId>
             <artifactId>weld2-starter</artifactId>
-            <version>${project.version}</version>
         </dependency>
     </dependencies>
 

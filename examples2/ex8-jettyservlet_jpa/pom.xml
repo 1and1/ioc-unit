@@ -70,19 +70,14 @@
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest</artifactId>
-            <version>2.1</version>
         </dependency>
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>1.4.193</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
-            <version>5.0.10.Final</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.jboss.logging</groupId>
@@ -93,12 +88,10 @@
         <dependency>
             <groupId>net.oneandone.ioc-unit</groupId>
             <artifactId>ioc-unit-ejb</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>net.oneandone.ioc-unit</groupId>
             <artifactId>weld2-starter</artifactId>
-            <version>${project.version}</version>
         </dependency>
     </dependencies>
 

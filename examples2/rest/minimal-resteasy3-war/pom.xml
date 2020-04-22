@@ -24,8 +24,6 @@
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-jaxrs</artifactId>
-            <version>3.0.14.Final</version>
-            <scope>provided</scope>
         </dependency>
 
 
@@ -49,22 +47,16 @@
         <dependency>
             <groupId>net.oneandone.ioc-unit</groupId>
             <artifactId>ioc-unit-resteasy</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>net.oneandone.ioc-unit</groupId>
             <artifactId>weld2-starter</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>io.rest-assured</groupId>
             <artifactId>rest-assured</artifactId>
-            <version>4.0.0</version>
-            <scope>test</scope>
         </dependency>
 
     </dependencies>

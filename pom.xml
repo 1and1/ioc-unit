@@ -28,7 +28,6 @@
     </developers>
 
     <modules>
-
     </modules>
 
 
@@ -101,6 +100,7 @@
         <profile>
             <id>base</id>
             <modules>
+                <module>ioc-unit-bom</module>
                 <module>weld-starter</module>
                 <module>ioc-unit-analyzer</module>
                 <module>ioc-unit</module>
@@ -335,7 +335,7 @@
                 <weld-spi.version>2.3.Final</weld-spi.version>
                 <weld-api.version>2.3.Final</weld-api.version>
                 <version.org.hibernate.api>1.0.0.Final</version.org.hibernate.api>
-                <version.org.hibernate>5.0.10.Final</version.org.hibernate>
+                <version.org.hibernate>5.3.6.Final</version.org.hibernate>
                 <version.org.hibernate.validator>5.2.4.Final</version.org.hibernate.validator>
                 <version.org.hibernate.validator-cdi>5.2.4.Final</version.org.hibernate.validator-cdi>
                 <version.validation-api>1.1.0.Final</version.validation-api>

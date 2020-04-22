@@ -6,6 +6,9 @@
 * Speedup using H2PersistenceFactory with two property combinations and copy of H2-File-db in between.
 * abstract classes or interfaces as TestClasses or SutClasses should lead to making available instances of them obligatory. 
 * add name="hibernate.transaction.jta.platform" value="org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform" to XmllessPersistenceFactory
+* dbunit only works with Javaee 8.0 - check that
+* add new dependency modules for validator and Persistence-versions to bom as done with jms
+* avoid necessity of jms if using ejb.
 
 # doing
 * XmlLessPersistenceFactory ease usage!!!
