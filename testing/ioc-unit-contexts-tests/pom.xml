@@ -11,14 +11,7 @@
     <artifactId>ioc-unit-contexts-tests</artifactId>
     <packaging>war</packaging>
 
-    <licenses>
-        <license>
-            <name>The Apache License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-        </license>
-    </licenses>
-
-    <name>net.oneandone.ioc-unit:ioc-unit-contexts-tests</name>
+    <name>testing:net.oneandone.ioc-unit:ioc-unit-contexts-tests</name>
     <description>Regression tests for ioc-unit, they mostly use ioc-unit-test-war as module to be tested.</description>
     <url>https://github.com/1and1/ioc-unit</url>
     <dependencies>

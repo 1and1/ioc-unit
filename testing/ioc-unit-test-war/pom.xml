@@ -12,7 +12,7 @@
     <packaging>war</packaging>
 
 
-    <name>net.oneandone.ioc-unit:ioc-unit-test-war</name>
+    <name>testing:net.oneandone.ioc-unit:ioc-unit-test-war</name>
     <description>An ejb3.x deployable war used to test ioc-unit.
         Also can contain base classes for tests used in both ioc-unit-tests and ioc-unit-arq.
     </description>

@@ -68,8 +68,8 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>javax.el-impl</artifactId>
+            <groupId>jakarta.el</groupId>
+            <artifactId>jakarta.el-api</artifactId>
         </dependency>
     </dependencies>
 

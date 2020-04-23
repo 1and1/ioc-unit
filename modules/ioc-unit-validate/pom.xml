@@ -61,9 +61,9 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>javax.el-impl</artifactId>
-            <version>3.0.1-b08-jbossorg-1</version>
+            <groupId>jakarta.el</groupId>
+            <artifactId>jakarta.el-api</artifactId>
+            <version>3.0.3</version>
             <scope>provided</scope>
         </dependency>
 

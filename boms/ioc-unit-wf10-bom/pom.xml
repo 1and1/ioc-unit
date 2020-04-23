@@ -1,84 +1,16 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <!--parent>
+    <parent>
         <groupId>net.oneandone.ioc-unit</groupId>
-        <artifactId>ioc-unit-parent</artifactId>
+        <artifactId>ioc-unit-bom-parent</artifactId>
         <version>2.0.27-SNAPSHOT</version>
-    </parent-->
-
-    <groupId>net.oneandone.ioc-unit</groupId>
+    </parent>
     <artifactId>ioc-unit-wf10-bom</artifactId>
-    <version>2.0.27-SNAPSHOT</version>
+    <name>boms:ioc-unit-wf10-bom</name>
     <packaging>pom</packaging>
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>net.oneandone.ioc-unit</groupId>
-                <artifactId>ioc-unit-analyzer</artifactId>
-                <version>${project.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>net.oneandone.ioc-unit</groupId>
-                <artifactId>ioc-unit</artifactId>
-                <version>${project.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>net.oneandone.ioc-unit</groupId>
-                <artifactId>ioc-unit-jms-activemq</artifactId>
-                <version>${project.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>net.oneandone.ioc-unit</groupId>
-                <artifactId>ioc-unit-jms-mockrunner</artifactId>
-                <version>${project.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>net.oneandone.ioc-unit</groupId>
-                <artifactId>ioc-unit-jms-rabbitmq</artifactId>
-                <version>${project.version}</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>net.oneandone.ioc-unit</groupId>
-                <artifactId>ioc-unit-contexts</artifactId>
-                <version>${project.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>net.oneandone.ioc-unit</groupId>
-                <artifactId>ioc-unit-dbunit</artifactId>
-                <version>${project.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>net.oneandone.ioc-unit</groupId>
-                <artifactId>ioc-unit-ejb</artifactId>
-                <version>${project.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.hamcrest</groupId>
-                <artifactId>hamcrest</artifactId>
-                <version>2.1</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.mockito</groupId>
-                <artifactId>mockito-core</artifactId>
-                <version>2.21.0</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>net.oneandone.ioc-unit</groupId>
-                <artifactId>ioc-unit-mockseasy</artifactId>
-                <version>${project.version}</version>
-                <scope>test</scope>
-            </dependency>
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpclient</artifactId>
@@ -115,42 +47,6 @@
                 <version>3.0.19.Final</version>
                 <scope>provided</scope>
             </dependency>
-            <dependency>
-                <groupId>net.oneandone.ioc-unit</groupId>
-                <artifactId>ioc-unit-resteasy</artifactId>
-                <version>${project.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>net.oneandone.ioc-unit</groupId>
-                <artifactId>ioc-unit-simulators</artifactId>
-                <version>${project.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>net.oneandone.ioc-unit</groupId>
-                <artifactId>ioc-unit-validate</artifactId>
-                <version>${project.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>net.oneandone.ioc-unit</groupId>
-                <artifactId>weld1-starter</artifactId>
-                <version>${project.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>net.oneandone.ioc-unit</groupId>
-                <artifactId>weld2-starter</artifactId>
-                <version>${project.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>net.oneandone.ioc-unit</groupId>
-                <artifactId>weld3-starter</artifactId>
-                <version>${project.version}</version>
-                <scope>test</scope>
-            </dependency>
 
             <dependency>
                 <groupId>org.hibernate</groupId>
@@ -185,11 +81,17 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
+                <groupId>jakarta.el</groupId>
+                <artifactId>jakarta.el-api</artifactId>
+                <version>3.0.3</version>
+                <scope>provided</scope>
+            </dependency>
+            <!-- spp2 - eigentlich: dependency>
                 <groupId>org.glassfish</groupId>
                 <artifactId>javax.el-impl</artifactId>
                 <version>3.0.1-b08-jbossorg-1</version>
                 <scope>test</scope>
-            </dependency>
+            </dependency-->
         </dependencies>
     </dependencyManagement>
 </project>

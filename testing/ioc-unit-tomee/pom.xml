@@ -12,17 +12,11 @@
    <artifactId>ejb-cdi-unit-tomee</artifactId>
    <packaging>war</packaging>
 
-   <name>net.oneandone.ioc-unit:ejb-cdi-unit tomee tests</name>
+   <name>testing:net.oneandone.ioc-unit:ejb-cdi-unit tomee tests</name>
    <description>Some tomee tests using the same code as ejb-cdi-unit, to prove that the test-container works
       in the same way as tomee.</description>
    <url>https://github.com/1and1/ejb-cdi-unit</url>
 
-   <licenses>
-      <license>
-         <name>The Apache License, Version 2.0</name>
-         <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-      </license>
-   </licenses>
 
    <properties>
       <java.min.version>1.8</java.min.version>
