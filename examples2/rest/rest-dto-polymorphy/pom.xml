@@ -11,7 +11,7 @@
     <artifactId>rest-dto-polymorphy</artifactId>
     <packaging>war</packaging>
 
-    <name>rest-dto-polymorphy</name>
+    <name>examples:rest:rest-dto-polymorphy</name>
     <description>Testing polymorphy of dtos using jackson2</description>
     <url>https://github.com/1and1/ioc-unit</url>
 

@@ -10,14 +10,7 @@
     <artifactId>ex3-asyncconsumedpoll</artifactId>
     <packaging>war</packaging>
 
-    <licenses>
-        <license>
-            <name>The Apache License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-        </license>
-    </licenses>
-
-    <name>ex3-asyncconsumedpoll: service asyncconsumed with polling</name>
+    <name>examples:ex3-asyncconsumedpoll: service asyncconsumed with polling</name>
     <description>Test one service consuming one remote service asynchronously, client polls for result.</description>
     <url>https://github.com/1and1/ioc-unit</url>
     <dependencies>

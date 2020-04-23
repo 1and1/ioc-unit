@@ -11,14 +11,7 @@
     <artifactId>ex1-1entity-hb</artifactId>
     <packaging>war</packaging>
 
-    <licenses>
-        <license>
-            <name>The Apache License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-        </license>
-    </licenses>
-
-    <name>ex1-1entity-hibernate: example1 service with one entity using hibernate, eclipselink dependency removed</name>
+    <name>examples:ex1-1entity-hibernate: example1 service with one entity using hibernate, eclipselink dependency removed</name>
     <description>example of testing a ejb-service handling one entity</description>
     <url>https://github.com/1and1/ioc-unit</url>
     <dependencies>
@@ -53,16 +46,16 @@
             <artifactId>hamcrest</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-entitymanager</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
         </dependency>
         <dependency>
             <groupId>net.oneandone.ioc-unit</groupId>
             <artifactId>ioc-unit-ejb</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
         </dependency>
         <dependency>
             <groupId>net.oneandone.ioc-unit</groupId>
@@ -88,6 +81,7 @@
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
             </plugin>
+
         </plugins>
     </build>
 

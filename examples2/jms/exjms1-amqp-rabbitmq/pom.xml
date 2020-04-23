@@ -10,14 +10,7 @@
     <artifactId>exjms1-amqp-rabbitmq</artifactId>
     <packaging>war</packaging>
 
-    <licenses>
-        <license>
-            <name>The Apache License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-        </license>
-    </licenses>
-
-    <name>exjms1-amqp-rabbitmq</name>
+    <name>examples:jms:exjms1-amqp-rabbitmq</name>
     <description></description>
     <url>https://github.com/1and1/ioc-unit</url>
     <dependencies>

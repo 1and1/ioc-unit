@@ -11,7 +11,7 @@
     <artifactId>ex-rest-auth</artifactId>
     <packaging>war</packaging>
 
-    <name>minimal-rest-war</name>
+    <name>examples:minimal-rest-war</name>
     <description>Testing Restassured + ioc-unit-resteasy in minimal war</description>
     <url>https://github.com/1and1/ioc-unit</url>
 

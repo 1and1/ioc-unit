@@ -2,16 +2,17 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>net.oneandone.ioc-unit</groupId>
-        <artifactId>ioc-unit-examples2-parent</artifactId>
+        <artifactId>ioc-unit-rest-examples2-jms-parent</artifactId>
         <version>2.0.27-SNAPSHOT</version>
     </parent>
 
 
-    <artifactId>ex2-syncconsumed</artifactId>
+    <artifactId>ex6-asyncconsumedjms2</artifactId>
     <packaging>war</packaging>
 
-    <name>examples:ex2-syncconsumed: service syncconsumed</name>
-    <description>Test one service consuming one remote service synchronously</description>
+    <name>examples:jms:ex6-asyncconsumedjms2: service asyncconsumed with callback use jms</name>
+    <description>Test one service consuming one remote service asynchronously return the result using
+        callback internally use jms only one queue</description>
     <url>https://github.com/1and1/ioc-unit</url>
     <dependencies>
         <dependency>
@@ -38,20 +39,16 @@
             <artifactId>hamcrest</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-        </dependency>
-        <dependency>
             <groupId>net.oneandone.ioc-unit</groupId>
             <artifactId>ioc-unit-ejb</artifactId>
         </dependency>
         <dependency>
             <groupId>net.oneandone.ioc-unit</groupId>
-            <artifactId>ioc-unit-mockseasy</artifactId>
+            <artifactId>weld2-starter</artifactId>
         </dependency>
         <dependency>
             <groupId>net.oneandone.ioc-unit</groupId>
-            <artifactId>weld2-starter</artifactId>
+            <artifactId>ioc-unit-jms-mockrunner</artifactId>
         </dependency>
     </dependencies>
 

@@ -9,6 +9,7 @@
 * dbunit only works with Javaee 8.0 - check that
 * add new dependency modules for validator and Persistence-versions to bom as done with jms
 * avoid necessity of jms if using ejb.
+* activemq-version needs to wait for Async-Manager after sending message because of extra thread in activemq
 
 # doing
 * XmlLessPersistenceFactory ease usage!!!

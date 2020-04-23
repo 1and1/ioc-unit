@@ -2,22 +2,29 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>net.oneandone.ioc-unit</groupId>
-        <artifactId>ioc-unit-examples2-parent</artifactId>
+        <artifactId>ioc-unit-rest-examples2-jms-parent</artifactId>
         <version>2.0.27-SNAPSHOT</version>
     </parent>
 
 
-    <artifactId>ex2-syncconsumed</artifactId>
+    <artifactId>ex5-asyncconsumedjms1</artifactId>
     <packaging>war</packaging>
 
-    <name>examples:ex2-syncconsumed: service syncconsumed</name>
-    <description>Test one service consuming one remote service synchronously</description>
+    <name>examples:jms:ex5-asyncconsumedjms1: service asyncconsumed with callback use jms</name>
+    <description>Test one service consuming one remote service asynchronously return the result using
+        callback internally use jms</description>
     <url>https://github.com/1and1/ioc-unit</url>
     <dependencies>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>1.7.21</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.2.3</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>javax</groupId>
@@ -38,8 +45,8 @@
             <artifactId>hamcrest</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
         </dependency>
         <dependency>
             <groupId>net.oneandone.ioc-unit</groupId>
@@ -47,11 +54,11 @@
         </dependency>
         <dependency>
             <groupId>net.oneandone.ioc-unit</groupId>
-            <artifactId>ioc-unit-mockseasy</artifactId>
+            <artifactId>weld2-starter</artifactId>
         </dependency>
         <dependency>
             <groupId>net.oneandone.ioc-unit</groupId>
-            <artifactId>weld2-starter</artifactId>
+            <artifactId>ioc-unit-jms-activemq</artifactId>
         </dependency>
     </dependencies>
 

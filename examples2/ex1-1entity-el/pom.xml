@@ -11,14 +11,7 @@
     <artifactId>ex1-1entity-el</artifactId>
     <packaging>war</packaging>
 
-    <licenses>
-        <license>
-            <name>The Apache License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-        </license>
-    </licenses>
-
-    <name>ex1-1entity-eclipselink: example1 service with one entity using eclipselink, hibernate dependency removed</name>
+    <name>examples:ex1-1entity-eclipselink example1 service with one entity using eclipselink, hibernate dependency removed</name>
     <description>example of testing a ejb-service handling one entity</description>
     <url>https://github.com/1and1/ioc-unit</url>
     <dependencies>

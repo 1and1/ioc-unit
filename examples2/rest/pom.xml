@@ -8,8 +8,11 @@
 
     <artifactId>ioc-unit-rest-examples2-parent</artifactId>
     <packaging>pom</packaging>
+    <name>examples:rest-examples</name>
 
     <modules>
+        <module>ex7-simplerest</module>
+        <module>ex8-jettyservlet_jpa</module>
         <module>minimal-resteasy3-webtarget-war</module>
         <module>minimal-resteasy3-war</module>
         <module>minimal-resteasy2-war</module>

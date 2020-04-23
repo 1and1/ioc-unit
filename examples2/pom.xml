@@ -4,7 +4,7 @@
     <groupId>net.oneandone.ioc-unit</groupId>
     <artifactId>ioc-unit-examples2-parent</artifactId>
     <version>2.0.27-SNAPSHOT</version>
-    <name>ex0-parent: parent for examples</name>
+    <name>examples:parent</name>
     <packaging>pom</packaging>
 
     <modules>
@@ -16,10 +16,6 @@
         <module>ex2-syncconsumed</module>
         <module>ex3-asyncconsumedpoll</module>
         <module>ex4-asyncconsumedpush</module>
-        <module>ex5-asyncconsumedjms1</module>
-        <module>ex6-asyncconsumedjms2</module>
-        <module>ex7-simplerest</module>
-        <module>ex8-jettyservlet_jpa</module>
         <module>mockito-example</module>
         <module>rest</module>
         <module>jms</module>
@@ -29,7 +25,7 @@
         <dependencies>
             <dependency>
                 <groupId>net.oneandone.ioc-unit</groupId>
-                <artifactId>ioc-unit-bom</artifactId>
+                <artifactId>ioc-unit-wf10-bom</artifactId>
                 <version>${project.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
@@ -53,6 +49,26 @@
                 <version>2.8.2</version>
                 <configuration>
                     <skip>true</skip>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M3</version>
+                <configuration>
+                    <systemPropertyVariables>
+                        <javax.xml.parsers.DocumentBuilderFactory>
+                            com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl
+                        </javax.xml.parsers.DocumentBuilderFactory>
+                    </systemPropertyVariables>
+
+                    <reportFormat>plain</reportFormat>
+                    <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                    <!-- Sets the VM argument line used when unit tests are run. -->
+                    <!--argLine> - -add-modules java.xml,java.sql -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5006</argLine-->
+                    <argLine>
+                        -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5006
+                    </argLine>
                 </configuration>
             </plugin>
         </plugins>

@@ -10,14 +10,7 @@
     <artifactId>ex4-asyncconsumedpush</artifactId>
     <packaging>war</packaging>
 
-    <licenses>
-        <license>
-            <name>The Apache License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-        </license>
-    </licenses>
-
-    <name>ex4-asyncconsumedpush: service asyncconsumed with callback</name>
+    <name>examples:ex4-asyncconsumedpush: service asyncconsumed with callback</name>
     <description>Test one service consuming one remote service asynchronously return the result using callback</description>
     <url>https://github.com/1and1/ioc-unit</url>
     <dependencies>

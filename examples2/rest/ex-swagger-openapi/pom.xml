@@ -11,7 +11,7 @@
     <artifactId>ex-swagger-openapi</artifactId>
     <packaging>war</packaging>
 
-    <name>ex-swagger-openapi</name>
+    <name>examples:ex-swagger-openapi</name>
     <description>Testing of usage of swagger - openapi</description>
     <url>https://github.com/1and1/ioc-unit</url>
 
