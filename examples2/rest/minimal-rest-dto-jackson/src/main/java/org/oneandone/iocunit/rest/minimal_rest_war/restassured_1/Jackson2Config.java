@@ -22,7 +22,7 @@ public class Jackson2Config implements ContextResolver<ObjectMapper> {
 
         objectMapper =  new ObjectMapper()
                 // use ISO 8601 as for date and time
-                .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+                // .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
                 // allow properties to be added or removed (like in JAVA serialization)
                 .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
                 .disable(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES)

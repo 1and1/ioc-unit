@@ -8,6 +8,8 @@
 
     <modules>
         <module>ioc-unit-wf10-bom</module>
+        <module>ioc-unit-javaee70-bom</module>
+        <module>ioc-unit-javaee80-bom</module>
     </modules>
 
     <dependencyManagement>

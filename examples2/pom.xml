@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>net.oneandone.ioc-unit</groupId>
@@ -21,17 +22,42 @@
         <module>jms</module>
     </modules>
 
+    <profiles>
+        <profile>
+            <id>bomwf10</id>
+            <properties>
+                <bom.artifactId>ioc-unit-wf10-bom</bom.artifactId>
+            </properties>
+        </profile>
+        <profile>
+            <id>bomjavaee70</id>
+            <properties>
+                <bom.artifactId>ioc-unit-javaee70-bom</bom.artifactId>
+            </properties>
+        </profile>
+        <profile>
+            <id>bomjavaee80</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <bom.artifactId>ioc-unit-javaee80-bom</bom.artifactId>
+            </properties>
+        </profile>
+    </profiles>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>net.oneandone.ioc-unit</groupId>
-                <artifactId>ioc-unit-wf10-bom</artifactId>
+                <artifactId>${bom.artifactId}</artifactId>
                 <version>${project.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
+
     <build>
         <plugins>
             <plugin>

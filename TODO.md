@@ -10,6 +10,9 @@
 * add new dependency modules for validator and Persistence-versions to bom as done with jms
 * avoid necessity of jms if using ejb.
 * activemq-version needs to wait for Async-Manager after sending message because of extra thread in activemq
+* bom for javaee 7.0
+* bom for javaee 8.0
+* bom for microprofile 3.3
 
 # doing
 * XmlLessPersistenceFactory ease usage!!!
