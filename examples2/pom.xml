@@ -8,32 +8,24 @@
     <name>examples:parent</name>
     <packaging>pom</packaging>
 
-    <modules>
-        <module>ex1-1entity</module>
-        <module>ex1-1entity-el</module>
-        <module>ex1-1entity-hb</module>
-        <module>ex1-1entity5</module>
-        <module>ex1-2entity4220b_5</module>
-        <module>ex2-syncconsumed</module>
-        <module>ex3-asyncconsumedpoll</module>
-        <module>ex4-asyncconsumedpush</module>
-        <module>mockito-example</module>
-        <module>rest</module>
-        <module>jms</module>
-    </modules>
-
     <profiles>
         <profile>
             <id>bomwf10</id>
             <properties>
                 <bom.artifactId>ioc-unit-wf10-bom</bom.artifactId>
             </properties>
+            <modules>
+                <module>rest</module>
+            </modules>
         </profile>
         <profile>
             <id>bomjavaee70</id>
             <properties>
                 <bom.artifactId>ioc-unit-javaee70-bom</bom.artifactId>
             </properties>
+            <modules>
+                <module>rest</module>
+            </modules>
         </profile>
         <profile>
             <id>bomjavaee80</id>
@@ -45,6 +37,20 @@
             </properties>
         </profile>
     </profiles>
+
+s    <modules>
+        <module>ex1-1entity</module>
+        <module>ex1-1entity-el</module>
+        <module>ex1-1entity-hb</module>
+        <module>ex1-1entity5</module>
+        <module>ex1-2entity4220b_5</module>
+        <module>ex2-syncconsumed</module>
+        <module>ex3-asyncconsumedpoll</module>
+        <module>ex4-asyncconsumedpush</module>
+        <module>mockito-example</module>
+        <module>jms</module>
+    </modules>
+
 
     <dependencyManagement>
         <dependencies>
