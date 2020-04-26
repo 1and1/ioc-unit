@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>net.oneandone.ioc-unit</groupId>
@@ -110,7 +109,7 @@
         <url>https://github.com/1and1/ioc-unit</url>
         <connection>scm:git:ssh://git@github.com/1and1/ioc-unit.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/1and1/ioc-unit.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>v2.0.27</tag>
     </scm>
 
     <licenses>

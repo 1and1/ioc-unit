@@ -11,7 +11,7 @@
     <packaging>war</packaging>
 
     <name>examples:jms:exjms1-amqp-rabbitmq</name>
-    <description></description>
+    <description />
     <url>https://github.com/1and1/ioc-unit</url>
     <dependencies>
         <dependency>
