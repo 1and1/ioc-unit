@@ -3,7 +3,7 @@
 
     <groupId>net.oneandone.ioc-unit</groupId>
     <artifactId>weld-starter-parent</artifactId>
-    <version>2.0.27-SNAPSHOT</version>
+    <version>2.0.27</version>
     <packaging>pom</packaging>
     <name>net.oneandone.ioc-unit:weld-starter-parent</name>
     <description>Parentclass for weldstarter. For tests define the profile weld1.1, weld2.3 or weld3.0.</description>
