@@ -32,14 +32,14 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>javax.enterprise</groupId>
-            <artifactId>cdi-api</artifactId>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.cdi-api</artifactId>
             <version>${compile.version.cdi-api}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>javax.ejb</groupId>
-            <artifactId>javax.ejb-api</artifactId>
+            <groupId>jakarta.ejb</groupId>
+            <artifactId>jakarta.ejb-api</artifactId>
             <version>${compile.version.ejb}</version>
             <scope>provided</scope>
         </dependency>
@@ -64,7 +64,7 @@
         <dependency>
             <groupId>org.jboss.weld</groupId>
             <artifactId>weld-api</artifactId>
-            <version>${compile.version.cdi-api}</version>
+            <version>${compile.version.weld-api}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

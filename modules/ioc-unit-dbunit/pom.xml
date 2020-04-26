@@ -32,8 +32,8 @@
     <dependencies>
 
         <dependency>
-            <groupId>javax.enterprise</groupId>
-            <artifactId>cdi-api</artifactId>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.cdi-api</artifactId>
             <version>${compile.version.cdi-api}</version>
             <scope>provided</scope>
         </dependency>

@@ -4,7 +4,8 @@
 
 |Version|Changes|
 |-------|-------|
-|2.0.27|SutClasses also definable by interface, abstract or annotation, Instance<> will not be resolved, was insconsistent anyway, use SutClass with interface or abstract class, wrapping self-fields only if @Inject or @Ejb|
+|2.0.28|compile modules with weld-3.1-SP1, depend on jakarta-apis|
+|2.0.27|Introduced BOMs, reorganized Dirs, SutClasses also definable by interface, abstract or annotation, Instance<> will not be resolved, was insconsistent anyway, use SutClass with interface or abstract class, wrapping self-fields only if @Inject or @Ejb|
 |2.0.26|fix TestHttpClient to work with WebTarget|
 |2.0.25|recognize Testclass in TestScopeExtension also by @Produces, Provide ResteasyClientBuilder|
 |2.0.24|ioc-unit-Resteasy: Provide ClientBuilder and WebTarget as availables |

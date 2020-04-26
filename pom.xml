@@ -85,13 +85,14 @@
         <version.cdi-api>2.0</version.cdi-api>
         <additionalparam>-Xdoclint:none</additionalparam>
 
-        <compile.version.cdi-api>2.0.SP1</compile.version.cdi-api>
-        <compile.version.ejb>3.2.2</compile.version.ejb>
+        <compile.version.cdi-api>2.0.2</compile.version.cdi-api>
+        <compile.version.transaction-api>1.3.2</compile.version.transaction-api>
+        <compile.version.ejb>3.2.6</compile.version.ejb>
+        <compile.version.interceptor-api>1.2.5</compile.version.interceptor-api>
         <compile.version.servlet>4.0.1</compile.version.servlet>
-        <compile.version.weld-spi>3.0.SP4</compile.version.weld-spi>
-        <compile.version.weld-api>3.0.SP4</compile.version.weld-api>
+        <compile.version.weld-spi>3.1.SP2</compile.version.weld-spi>
+        <compile.version.weld-api>3.1.SP2</compile.version.weld-api>
         <compile.version.persistence-api>2.2</compile.version.persistence-api>
-        <compile.version.annotation-api>1.3</compile.version.annotation-api>
         <compile.version.faces>2.3</compile.version.faces>
 
     </properties>

@@ -49,15 +49,9 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>javax.enterprise</groupId>
-            <artifactId>cdi-api</artifactId>
-            <version>${compile.version.cdi-api}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>javax.annotation</groupId>
-            <artifactId>javax.annotation-api</artifactId>
-            <version>${compile.version.annotation-api}</version>
+            <groupId>jakarta.interceptor</groupId>
+            <artifactId>jakarta.interceptor-api</artifactId>
+            <version>${compile.version.interceptor-api}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

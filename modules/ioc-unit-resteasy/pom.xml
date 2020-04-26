@@ -21,15 +21,15 @@
         </license>
     </licenses>
     <properties>
-        <resteasy.version>3.0.14.Final</resteasy.version>
+        <resteasy.version>3.11.0.Final</resteasy.version>
         <javax.json.version>1.1</javax.json.version>
         <rest-assured.version>4.0.0</rest-assured.version>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>javax.enterprise</groupId>
-            <artifactId>cdi-api</artifactId>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.cdi-api</artifactId>
             <version>${compile.version.cdi-api}</version>
             <scope>provided</scope>
         </dependency>
@@ -49,6 +49,16 @@
             <artifactId>resteasy-jaxrs</artifactId>
             <version>${resteasy.version}</version>
             <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.sun.activation</groupId>
+                    <artifactId>jakarta.activation</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.jboss.spec.javax.annotation</groupId>
+                    <artifactId>jboss-annotations-api_1.3_spec</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
@@ -67,6 +77,12 @@
             <artifactId>rest-assured</artifactId>
             <version>${rest-assured.version}</version>
             <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.xml.bind</groupId>
+                    <artifactId>jaxb-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.assertj</groupId>
