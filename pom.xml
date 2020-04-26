@@ -100,20 +100,20 @@
         <profile>
             <id>base</id>
             <modules>
-                <module>../boms</module>
-                <module>../weld-starter</module>
-                <module>../modules/ioc-unit-analyzer</module>
-                <module>../modules/ioc-unit</module>
-                <module>../modules/ioc-unit-dbunit</module>
-                <module>../modules/ioc-unit-mockseasy</module>
-                <module>../modules/ioc-unit-validate</module>
-                <module>../modules/ioc-unit-resteasy</module>
-                <module>../modules/ioc-unit-ejb</module>
-                <module>../modules/ioc-unit-dep-impls</module>
-                <module>../modules/ioc-unit-contexts</module>
-                <module>../modules/ioc-unit-simulators</module>
+                <module>boms</module>
+                <module>weld-starter</module>
+                <module>modules/ioc-unit-analyzer</module>
+                <module>modules/ioc-unit</module>
+                <module>modules/ioc-unit-dbunit</module>
+                <module>modules/ioc-unit-mockseasy</module>
+                <module>modules/ioc-unit-validate</module>
+                <module>modules/ioc-unit-resteasy</module>
+                <module>modules/ioc-unit-ejb</module>
+                <module>modules/ioc-unit-dep-impls</module>
+                <module>modules/ioc-unit-contexts</module>
+                <module>modules/ioc-unit-simulators</module>
 
-                <module>../examples2</module>
+                <module>examples2</module>
             </modules>
             <dependencies>
                 <dependency>
@@ -135,8 +135,8 @@
                 <version.javaee-api>8.0</version.javaee-api>
             </properties>
             <modules>
-                <module>../testing/ioc-unit-test-war</module>
-                <module>../testing/ioc-unit-arq</module>
+                <module>testing/ioc-unit-test-war</module>
+                <module>testing/ioc-unit-arq</module>
             </modules>
             <build>
                 <plugins>
@@ -178,10 +178,10 @@
         <profile>
             <id>junit4</id>
             <modules>
-                <module>../testing/ioc-unit-test-war</module>
-                <module>../testing/ioc-unit-tests</module>
+                <module>testing/ioc-unit-test-war</module>
+                <module>testing/ioc-unit-tests</module>
                 <!--module>ioc-unit-tests-7plus</module-->
-                <module>../testing/ioc-unit-contexts-tests</module>
+                <module>testing/ioc-unit-contexts-tests</module>
                 <!--module>ioc-unit-camunda</module-->
 
             </modules>
@@ -225,8 +225,8 @@
         <profile>
             <id>junit5</id>
             <modules>
-                <module>../testing/ioc-unit-test-war</module>
-                <module>../testing/ioc-unit-tests5</module>
+                <module>testing/ioc-unit-test-war</module>
+                <module>testing/ioc-unit-tests5</module>
             </modules>
             <build>
                 <plugins>
@@ -328,7 +328,7 @@
         <profile>
             <id>weld2.3</id>
             <modules>
-                <module>../testing/purecdi-tests</module>
+                <module>testing/purecdi-tests</module>
             </modules>
             <properties>
                 <weld.version>2.3.5.Final</weld.version>
@@ -374,7 +374,7 @@
         <profile>
             <id>weld2.4</id>
             <modules>
-                <module>../testing/purecdi-tests</module>
+                <module>testing/purecdi-tests</module>
             </modules>
             <properties>
                 <weld.version>2.4.2.Final</weld.version>
@@ -429,7 +429,7 @@
         <profile>
             <id>weld3.0</id>
             <modules>
-                <module>../testing/purecdi-tests</module>
+                <module>testing/purecdi-tests</module>
             </modules>
             <properties>
                 <weld.version>3.0.5.Final</weld.version>
