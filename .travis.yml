@@ -20,5 +20,5 @@ env:
 - PROFILES=arquillian
 - PROFILES=base,weld2.3,junit5,bomjavaee70
 
-script: "cd parent && mvn -B clean install -P${PROFILES} && cd .."
+script: "mvn -B clean install -P${PROFILES}"
 
