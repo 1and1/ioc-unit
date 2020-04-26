@@ -122,5 +122,28 @@
         </dependencies>
     </dependencyManagement>
 
+    <scm>
+        <url>https://github.com/1and1/ioc-unit</url>
+        <connection>scm:git:ssh://git@github.com/1and1/ioc-unit.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/1and1/ioc-unit.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/1and1/ioc-unit/issues/</url>
+    </issueManagement>
+    <inceptionYear>2017</inceptionYear>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>sonatype-nexus-snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </snapshotRepository>
+        <repository>
+            <id>sonatype-nexus-staging</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+
 </project>
 
