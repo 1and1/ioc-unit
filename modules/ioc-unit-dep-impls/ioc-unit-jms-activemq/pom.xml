@@ -5,6 +5,7 @@
         <groupId>net.oneandone.ioc-unit</groupId>
         <artifactId>ioc-unit-parent</artifactId>
         <version>2.0.27-SNAPSHOT</version>
+        <relativePath>../../../parent/pom.xml</relativePath>
     </parent>
 
     <artifactId>ioc-unit-jms-activemq</artifactId>
