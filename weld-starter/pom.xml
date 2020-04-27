@@ -30,6 +30,7 @@
         <module>weld1-starter</module>
         <module>weld2-starter</module>
         <module>weld3-starter</module>
+        <module>weld31-starter</module>
         <module>weld-starter-test</module>
     </modules>
 

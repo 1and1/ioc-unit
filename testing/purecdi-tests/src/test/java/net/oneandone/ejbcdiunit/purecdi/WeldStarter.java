@@ -13,6 +13,7 @@ import javax.enterprise.inject.spi.Extension;
 
 import org.jboss.weld.bootstrap.WeldBootstrap;
 import org.jboss.weld.bootstrap.api.CDI11Bootstrap;
+import org.jboss.weld.bootstrap.api.Service;
 import org.jboss.weld.bootstrap.api.ServiceRegistry;
 import org.jboss.weld.bootstrap.api.helpers.SimpleServiceRegistry;
 import org.jboss.weld.bootstrap.spi.BeanDeploymentArchive;
@@ -26,7 +27,6 @@ import org.jboss.weld.ejb.spi.EjbDescriptor;
 import org.jboss.weld.environment.se.Weld;
 import org.jboss.weld.environment.se.WeldContainer;
 import org.jboss.weld.resources.spi.ResourceLoader;
-import org.jboss.weld.resources.spi.ScheduledExecutorServiceFactory;
 import org.jboss.weld.util.reflection.Formats;
 
 public class WeldStarter {
@@ -40,6 +40,10 @@ public class WeldStarter {
         } catch (DeploymentException ex) {
             weldSetup.setDeploymentException(ex);
         }
+    }
+
+    public interface ScheduledExecutorServiceFactory extends Service {
+        ScheduledExecutorService get();
     }
 
     public void start(WeldSetup weldSetup) {

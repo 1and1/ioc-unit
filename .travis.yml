@@ -14,7 +14,7 @@ before_cache:
   - rm -rf $HOME/.m2/repository/net/oneandone/ioc-unit/
 
 env:
-- PROFILES=base,weld3.0,junit4,bomjavaee80
+- PROFILES=base,weld3.1,junit4,bomjavaee80
 - PROFILES=base,weld2.3,junit4,bomwf10
 - PROFILES=base,weld1.1,junit4
 - PROFILES=arquillian
