@@ -10,29 +10,34 @@ import java.lang.annotation.Target;
 import javax.enterprise.inject.Any;
 import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.Produces;
-import javax.enterprise.inject.spi.DeploymentException;
 import javax.inject.Inject;
 import javax.inject.Qualifier;
 
 import org.junit.Test;
+
+import com.oneandone.cdi.weldstarter.StarterDeploymentException;
+import com.oneandone.cdi.weldstarter.WeldStarterTestBase;
 
 /**
  * @author aschoerk
  */
 public class QualifierTest extends WeldStarterTestBase {
 
-    @Qualifier
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target({ ElementType.TYPE, ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER })
-    public @interface Q1 {
-
+    @Test
+    public void testNoQualifier() {
+        setBeanClasses(Bean2.class, ToInject.class);
+        start();
+        Bean2 bean2 = selectGet(Bean2.class);
+        assertEquals(0, bean2.toInject.signifyClass());
+        assertEquals(0, bean2.toInject_2.signifyClass());
     }
 
-    @Qualifier
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target({ ElementType.TYPE, ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER })
-    public @interface Q2 {
-
+    @Test
+    public void testAny() {
+        setBeanClasses(Bean3.class, ToInject.class);
+        start();
+        Bean3 bean3 = selectGet(Bean3.class);
+        assertEquals(0, bean3.toInject_2.signifyClass());
     }
 
 
@@ -102,27 +107,9 @@ public class QualifierTest extends WeldStarterTestBase {
         ToInjectIntf toInject_2;
     }
 
-
-    @Test
-    public void testNoQualifier() {
-        weldSetup.setBeanClasses(Bean2.class, ToInject.class);
-        start();
-        Bean2 bean2 = selectGet(Bean2.class);
-        assertEquals(0, bean2.toInject.signifyClass());
-        assertEquals(0, bean2.toInject_2.signifyClass());
-    }
-
-    @Test
-    public void testAny() {
-        weldSetup.setBeanClasses(Bean3.class, ToInject.class);
-        start();
-        Bean3 bean3 = selectGet(Bean3.class);
-        assertEquals(0, bean3.toInject_2.signifyClass());
-    }
-
     @Test
     public void testAnyQ1() {
-        weldSetup.setBeanClasses(Bean3.class, ToInjectQ1.class);
+        setBeanClasses(Bean3.class, ToInjectQ1.class);
         start();
         Bean3 bean3 = selectGet(Bean3.class);
         assertEquals(1, bean3.toInject_2.signifyClass());
@@ -130,10 +117,28 @@ public class QualifierTest extends WeldStarterTestBase {
 
     @Test
     public void testAnyQ2() {
-        weldSetup.setBeanClasses(Bean3.class, ToInjectQ2.class);
+        setBeanClasses(Bean3.class, ToInjectQ2.class);
         start();
         Bean3 bean3 = selectGet(Bean3.class);
         assertEquals(2, bean3.toInject_2.signifyClass());
+    }
+
+    @Test
+    public void testInstanceSingleProvided() {
+        setBeanClasses(Bean4.class, ToInjectQ2.class);
+        start();
+        Bean4 bean4 = selectGet(Bean4.class);
+        assertEquals(2, bean4.toInjectIstances.select(ToInjectQ2.class).get().signifyClass());
+    }
+
+    @Test
+    public void testInstanceAllProvided() {
+        setBeanClasses(Bean4.class, ToInjectQ2.class, ToInjectQ1.class, ToInject.class);
+        start();
+        Bean4 bean4 = selectGet(Bean4.class);
+        assertEquals(2, bean4.toInjectIstances.select(ToInjectQ2.class).get().signifyClass());
+        assertEquals(1, bean4.toInjectIstances.select(ToInjectQ1.class).get().signifyClass());
+        assertEquals(0, bean4.toInjectIstances.select(ToInject.class).get().signifyClass());
     }
 
     static class Bean4 {
@@ -143,21 +148,19 @@ public class QualifierTest extends WeldStarterTestBase {
     }
 
     @Test
-    public void testInstanceSingleProvided() {
-        weldSetup.setBeanClasses(Bean4.class, ToInjectQ2.class);
+    public void testProducers() {
+        setBeanClasses(Bean5.class, Producing.class, ToInjectQ2.class, ToInject.class);
         start();
-        Bean4 bean4 = selectGet(Bean4.class);
-        assertEquals(2, bean4.toInjectIstances.select(ToInjectQ2.class).get().signifyClass());
+        Bean5 bean5 = selectGet(Bean5.class);
+        assertEquals(2, bean5.toInjectQ1.signifyClass());
     }
 
-    @Test
-    public void testInstanceAllProvided() {
-        weldSetup.setBeanClasses(Bean4.class, ToInjectQ2.class, ToInjectQ1.class, ToInject.class);
+    @Test(expected = StarterDeploymentException.class)
+    public void testProducersAmbiguus() {
+        setBeanClasses(Bean5.class, Producing.class, ToInjectQ2.class, ToInjectQ1.class, ToInject.class);
         start();
-        Bean4 bean4 = selectGet(Bean4.class);
-        assertEquals(2, bean4.toInjectIstances.select(ToInjectQ2.class).get().signifyClass());
-        assertEquals(1, bean4.toInjectIstances.select(ToInjectQ1.class).get().signifyClass());
-        assertEquals(0, bean4.toInjectIstances.select(ToInject.class).get().signifyClass());
+        Bean5 bean5 = selectGet(Bean5.class);
+        assertEquals(2, bean5.toInjectQ1.signifyClass());
     }
 
     static class Bean5 {
@@ -167,40 +170,39 @@ public class QualifierTest extends WeldStarterTestBase {
         ToInjectIntf toInjectQ1;
     }
 
-
-    static class Producing {
-        @Q1
-        @Produces
-        ToInjectIntf q1(@Q2 ToInjectIntf q) {
-            return q;
-        };
-    }
-
-    @Test
-    public void testProducers() {
-        weldSetup.setBeanClasses(Bean5.class, Producing.class, ToInjectQ2.class, ToInject.class);
-        start();
-        Bean5 bean5 = selectGet(Bean5.class);
-        assertEquals(2, bean5.toInjectQ1.signifyClass());
-    }
-
-    @Test(expected = DeploymentException.class)
-    public void testProducersAmbiguus() {
-        weldSetup.setBeanClasses(Bean5.class, Producing.class, ToInjectQ2.class, ToInjectQ1.class, ToInject.class);
-        start();
-        Bean5 bean5 = selectGet(Bean5.class);
-        assertEquals(2, bean5.toInjectQ1.signifyClass());
-    }
-
     @Test
     public void testQ1() {
-        weldSetup.setBeanClasses(Bean.class, ToInject.class, ToInjectQ1.class, ToInjectQ2.class);
+        setBeanClasses(Bean.class, ToInject.class, ToInjectQ1.class, ToInjectQ2.class);
         start();
         Bean bean = selectGet(Bean.class);
         assertEquals(0, bean.toInject.signifyClass());
         assertEquals(1, bean.toInjectQ1.signifyClass());
         assertEquals(1, bean.toInjectQ1_2.signifyClass());
         assertEquals(2, bean.toInjectQ2.signifyClass());
+    }
+
+    @Qualifier
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target({ElementType.TYPE, ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER})
+    public @interface Q1 {
+
+    }
+
+    @Qualifier
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target({ElementType.TYPE, ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER})
+    public @interface Q2 {
+
+    }
+
+    static class Producing {
+        @Q1
+        @Produces
+        ToInjectIntf q1(@Q2 ToInjectIntf q) {
+            return q;
+        }
+
+        ;
     }
 
 

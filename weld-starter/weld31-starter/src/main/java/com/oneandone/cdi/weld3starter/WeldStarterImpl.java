@@ -252,4 +252,5 @@ public class WeldStarterImpl implements WeldStarter {
     public String getContainerId() {
         return container.getId();
     }
+
 }

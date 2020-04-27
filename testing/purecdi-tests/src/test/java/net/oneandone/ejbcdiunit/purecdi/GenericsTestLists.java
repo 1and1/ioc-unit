@@ -15,6 +15,8 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.reflect.TypeUtils;
 import org.junit.Test;
 
+import com.oneandone.cdi.weldstarter.WeldStarterTestBase;
+
 /**
  * @author aschoerk
  */

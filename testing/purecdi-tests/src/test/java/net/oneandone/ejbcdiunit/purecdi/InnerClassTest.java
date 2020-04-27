@@ -2,10 +2,12 @@ package net.oneandone.ejbcdiunit.purecdi;
 
 import static org.junit.Assert.assertNotNull;
 
-import javax.enterprise.inject.spi.DeploymentException;
 import javax.inject.Inject;
 
 import org.junit.Test;
+
+import com.oneandone.cdi.weldstarter.StarterDeploymentException;
+import com.oneandone.cdi.weldstarter.WeldStarterTestBase;
 
 /**
  * @author aschoerk
@@ -56,7 +58,7 @@ public class InnerClassTest extends WeldStarterTestBase {
 
     }
 
-    @Test(expected = DeploymentException.class)
+    @Test(expected = StarterDeploymentException.class)
     public void testInnerInnerUnfilled() {
         setBeanClasses(Bean.InnerBean.InnerInnerBean.class);
         start();

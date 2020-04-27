@@ -251,5 +251,4 @@ public class WeldStarterImpl implements WeldStarter {
         }
     }
 
-
 }

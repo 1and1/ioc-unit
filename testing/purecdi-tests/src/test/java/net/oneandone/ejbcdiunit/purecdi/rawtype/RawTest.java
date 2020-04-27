@@ -1,9 +1,9 @@
 package net.oneandone.ejbcdiunit.purecdi.rawtype;
 
-import org.jboss.weld.exceptions.DeploymentException;
 import org.junit.Test;
 
-import net.oneandone.ejbcdiunit.purecdi.WeldStarterTestBase;
+import com.oneandone.cdi.weldstarter.StarterDeploymentException;
+import com.oneandone.cdi.weldstarter.WeldStarterTestBase;
 
 /**
  * @author aschoerk
@@ -15,7 +15,7 @@ public class RawTest extends WeldStarterTestBase {
         start();
     }
 
-    @Test(expected = DeploymentException.class)
+    @Test(expected = StarterDeploymentException.class)
     public void testRawSuperWithSubContainer() {
         setBeanClasses(RawListProducer.class, RawListSubContainer.class, ParameterizedProducer.class);
         start();
@@ -33,13 +33,13 @@ public class RawTest extends WeldStarterTestBase {
         start();
     }
 
-    @Test(expected = DeploymentException.class)
+    @Test(expected = StarterDeploymentException.class)
     public void cannotInjectSubclassOfRawIntoRawByProducerIfRawProducerIncluded() {
         setBeanClasses(RawListSubProducer.class, RawListProducer.class, RawListContainer.class, ParameterizedProducer.class);
         start();
     }
 
-    @Test(expected = DeploymentException.class)
+    @Test(expected = StarterDeploymentException.class)
     public void cannotInjectSubclassOfRawIntoRawByItselfIfRawProducerIncluded() {
         setBeanClasses(RawListSub.class, RawListProducer.class, RawListContainer.class, ParameterizedProducer.class);
         start();
@@ -69,7 +69,7 @@ public class RawTest extends WeldStarterTestBase {
         start();
     }
 
-    @Test(expected = DeploymentException.class)
+    @Test(expected = StarterDeploymentException.class)
     public void testSubParameterizedAmbiguus() {
         setBeanClasses(RawListProducer.class, ParameterizedListContainer.class, StringListProducer.class, ParameterizedProducer.class);
         start();

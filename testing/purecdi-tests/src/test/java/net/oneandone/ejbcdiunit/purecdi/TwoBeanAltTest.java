@@ -5,11 +5,13 @@ import static org.junit.Assert.assertTrue;
 
 import javax.enterprise.inject.Alternative;
 import javax.enterprise.inject.Produces;
-import javax.enterprise.inject.spi.DeploymentException;
 import javax.inject.Inject;
 
 import org.junit.Test;
 import org.mockito.Mockito;
+
+import com.oneandone.cdi.weldstarter.StarterDeploymentException;
+import com.oneandone.cdi.weldstarter.WeldStarterTestBase;
 
 /**
  * @author aschoerk
@@ -74,7 +76,7 @@ public class TwoBeanAltTest extends WeldStarterTestBase {
 
 
 
-    @Test(expected = DeploymentException.class)
+    @Test(expected = StarterDeploymentException.class)
     public void testDeploymentException() {
         setBeanClasses(CdiBean1.class,
                 CdiHelperBean.class,
@@ -82,7 +84,7 @@ public class TwoBeanAltTest extends WeldStarterTestBase {
         start();
     }
 
-    @Test(expected = DeploymentException.class)
+    @Test(expected = StarterDeploymentException.class)
     public void testDeploymentExceptionWithAltSet() {
         setBeanClasses(CdiBean1.class,
                 CdiHelperBean.class,
@@ -94,36 +96,36 @@ public class TwoBeanAltTest extends WeldStarterTestBase {
 
     @Test
     public void testWithAlternative() {
-        weldSetup.setBeanClasses(CdiBean1.class,
+        setBeanClasses(CdiBean1.class,
                 DummyClass.class,
                 Dummy2Class.class,
                 CdiBean1.class,
                 CdiHelperBean.class,
                 CdiHelperBeanAlt.class);
-        weldSetup.setAlternativeClasses(CdiHelperBeanAlt.class);
+        setAlternativeClasses(CdiHelperBeanAlt.class);
         start();
         assertFalse(selectGet(CdiBean1.class).cdiHelperBean.callHelper());
     }
 
     @Test
     public void testWithAlternativeWithoutOrgClassAvailable() {
-        weldSetup.setBeanClasses(CdiBean1.class,
+        setBeanClasses(CdiBean1.class,
                 DummyClass.class,
                 Dummy2Class.class,
                 CdiBean1.class,
                 CdiHelperBeanAlt.class);
-        weldSetup.setAlternativeClasses(CdiHelperBeanAlt.class);
+        setAlternativeClasses(CdiHelperBeanAlt.class);
         start();
         assertFalse(selectGet(CdiBean1.class).cdiHelperBean.callHelper());
     }
 
-    @Test(expected = DeploymentException.class) // Alternative must be in beanClasses
+    @Test(expected = StarterDeploymentException.class) // Alternative must be in beanClasses
     public void testWithAlternativeWithoutAltClassAvailable() {
-        weldSetup.setBeanClasses(
+        setBeanClasses(
                 DummyClass.class,
                 Dummy2Class.class,
                 CdiBean1.class);
-        weldSetup.setAlternativeClasses(CdiHelperBeanAlt.class);
+        setAlternativeClasses(CdiHelperBeanAlt.class);
         start();
     }
 

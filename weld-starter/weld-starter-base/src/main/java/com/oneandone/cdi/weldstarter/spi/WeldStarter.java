@@ -1,7 +1,6 @@
 package com.oneandone.cdi.weldstarter.spi;
 
 import java.lang.annotation.Annotation;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.enterprise.inject.spi.Extension;
 
@@ -26,4 +25,5 @@ public interface WeldStarter {
     Extension createExtension(String className);
 
     String getContainerId();
+
 }

@@ -7,6 +7,8 @@ import javax.inject.Inject;
 
 import org.junit.Test;
 
+import com.oneandone.cdi.weldstarter.WeldStarterTestBase;
+
 /**
  * @author aschoerk
  */

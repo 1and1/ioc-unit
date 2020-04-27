@@ -25,14 +25,16 @@ public class WeldStarterTestBase {
     public void initWeldStarter() {
         ServiceLoader<WeldStarter> loader = ServiceLoader.load(WeldStarter.class);
         List<WeldStarter> starters = new ArrayList<>();
-        for (Iterator<WeldStarter> it = loader.iterator(); it.hasNext();) {
+        for (Iterator<WeldStarter> it = loader.iterator(); it.hasNext(); ) {
             WeldStarter s = it.next();
             starters.add(s);
         }
-        if (starters.size() == 0)
+        if(starters.size() == 0) {
             throw new RuntimeException("No WeldStarter found");
-        if (starters.size() > 1)
+        }
+        if(starters.size() > 1) {
             throw new RuntimeException("More than one WeldStarter found");
+        }
         setWeldStarter(starters.get(0));
     }
 
@@ -79,6 +81,7 @@ public class WeldStarterTestBase {
     public void setBeanClasses(Collection<Class<?>> classes) {
         weldSetup.setBeanClasses(classes.toArray(new Class<?>[classes.size()]));
     }
+
     public void setAlternativeClasses(Collection<Class<?>> classes) {
         weldSetup.setAlternativeClasses(classes.toArray(new Class<?>[classes.size()]));
     }
@@ -105,7 +108,8 @@ public class WeldStarterTestBase {
 
     @After
     public void tearDown() {
-        if (weldStarter != null)
+        if(weldStarter != null) {
             weldStarter.tearDown();
+        }
     }
 }

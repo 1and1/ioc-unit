@@ -11,11 +11,13 @@ import java.lang.annotation.Target;
 import javax.enterprise.inject.Alternative;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.Stereotype;
-import javax.enterprise.inject.spi.DeploymentException;
 import javax.inject.Inject;
 
 import org.junit.Test;
 import org.mockito.Mockito;
+
+import com.oneandone.cdi.weldstarter.StarterDeploymentException;
+import com.oneandone.cdi.weldstarter.WeldStarterTestBase;
 
 /**
  * @author aschoerk
@@ -72,7 +74,7 @@ public class StereotypeAlternativeProdTest extends WeldStarterTestBase {
     }
 
     // DeploymentException is produced in spite of CdiHelperBean is replaced by a Producer.
-    @Test(expected = DeploymentException.class)
+    @Test(expected = StarterDeploymentException.class)
     public void test() {
         setBeanClasses(CdiBean1.class,
                 CdiHelperBean.class,

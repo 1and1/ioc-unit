@@ -2,10 +2,12 @@ package net.oneandone.ejbcdiunit.purecdi;
 
 import static org.junit.Assert.assertEquals;
 
-import javax.enterprise.inject.spi.DeploymentException;
 import javax.inject.Inject;
 
 import org.junit.Test;
+
+import com.oneandone.cdi.weldstarter.StarterDeploymentException;
+import com.oneandone.cdi.weldstarter.WeldStarterTestBase;
 
 /**
  * @author aschoerk
@@ -48,13 +50,13 @@ public class InitMethodTest extends WeldStarterTestBase {
         assertEquals(1, selectGet(BeanWithPrivateInitMethod.class).i);
     }
 
-    @Test(expected = DeploymentException.class)
+    @Test(expected = StarterDeploymentException.class)
     public void testInitMethodNotFilledParam() {
         setBeanClasses(Bean.class);
         start();
     }
 
-    @Test(expected = DeploymentException.class)
+    @Test(expected = StarterDeploymentException.class)
     public void testInitMethodNotFilledParamInPrivate() {
         setBeanClasses(BeanWithPrivateInitMethod.class);
         start();

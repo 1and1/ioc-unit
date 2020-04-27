@@ -90,6 +90,23 @@ public class WeldStarterImpl implements WeldStarter {
         return Formats.version(WeldBootstrap.class.getPackage());
     }
 
+    private static boolean startInterceptionDecorationContextInner() {
+        Method[] methods = InterceptionDecorationContext.class.getMethods();
+        for (Method m : methods) {
+            if(m.getParameterTypes().length == 0) {
+                if(m.getName().equals("startInterceptorContext")) {
+                    callMethodThrowRTEIfNecessary(m);
+                    return true;
+                }
+                if(m.getName().equals("startIfNotEmpty") || m.getName().equals("startIfNotOnTop")) {
+                    Object result = callMethodThrowRTEIfNecessary(m);
+                    return result != null;
+                }
+            }
+        }
+        return false;
+    }
+
     private BeanDeploymentArchive createOneDeploymentArchive(WeldSetup weldSetup, final ServiceRegistry services) {
         return new BeanDeploymentArchive() {
             private Set<String> beanClasses = null;
@@ -101,7 +118,7 @@ public class WeldStarterImpl implements WeldStarter {
 
             @Override
             public Collection<String> getBeanClasses() {
-                if (beanClasses == null) {
+                if(beanClasses == null) {
                     beanClasses = new HashSet<>();
                     beanClasses.addAll(weldSetup.getBeanClasses());
                 }
@@ -130,6 +147,19 @@ public class WeldStarterImpl implements WeldStarter {
         };
     }
 
+    public WeldContainer getContainer() {
+        return container;
+    }
+
+    public Instance<Object> getContainerInstance() {
+        return getContainer().instance();
+    }
+
+
+    public <T> T selectGet(Class<T> clazz) {
+        return getContainerInstance().select(clazz).get();
+    }
+
     private BeansXml createBeansXml(WeldSetup weldSetup) {
         try {
             InvocationHandler beansXmlImpl = new BeansXmlImpl(
@@ -144,53 +174,23 @@ public class WeldStarterImpl implements WeldStarter {
                     "1.0",
                     // isTrimmed: added in Weld 2.4.2 [WELD-2314]:
                     false);
-            return (BeansXml) Proxy.newProxyInstance(BeansXml.class.getClassLoader(), new Class<?>[] { BeansXml.class }, beansXmlImpl);
+            return (BeansXml) Proxy.newProxyInstance(BeansXml.class.getClassLoader(), new Class<?>[]{BeansXml.class}, beansXmlImpl);
 
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public WeldContainer getContainer() {
-        return container;
-    }
-
-    public Instance<Object> getContainerInstance() {
-        return getContainer().instance();
-    }
-
-
-    public <T> T selectGet(Class<T> clazz) {
-        return getContainerInstance().select(clazz).get();
-    }
-
-
     public void tearDown() {
         try {
-            if (weld != null)
+            if(weld != null) {
                 weld.shutdown();
+            }
         } catch (NullPointerException ex) {
 
         }
         container = null;
         weld = null;
-    }
-
-    private static boolean startInterceptionDecorationContextInner() {
-        Method[] methods = InterceptionDecorationContext.class.getMethods();
-        for (Method m : methods) {
-            if (m.getParameterTypes().length == 0) {
-                if (m.getName().equals("startInterceptorContext")) {
-                    callMethodThrowRTEIfNecessary(m);
-                    return true;
-                }
-                if (m.getName().equals("startIfNotEmpty") || m.getName().equals("startIfNotOnTop")) {
-                    Object result = callMethodThrowRTEIfNecessary(m);
-                    return result != null;
-                }
-            }
-        }
-        return false;
     }
 
     private static Object callMethodThrowRTEIfNecessary(Method m) {

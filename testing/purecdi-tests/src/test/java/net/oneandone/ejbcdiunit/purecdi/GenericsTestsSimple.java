@@ -5,10 +5,12 @@ import static org.junit.Assert.assertNull;
 
 import java.lang.reflect.ParameterizedType;
 
-import javax.enterprise.inject.spi.DeploymentException;
 import javax.inject.Inject;
 
 import org.junit.Test;
+
+import com.oneandone.cdi.weldstarter.StarterDeploymentException;
+import com.oneandone.cdi.weldstarter.WeldStarterTestBase;
 
 /**
  * @author aschoerk
@@ -63,7 +65,7 @@ public class GenericsTestsSimple extends WeldStarterTestBase {
         assertEquals(Object.class, ((GenericTSub) (bean.genericT)).getClass().getDeclaredField("uvalue").getType());
     }
 
-    @Test(expected = DeploymentException.class)
+    @Test(expected = StarterDeploymentException.class)
     public void testBeanAmbiguus() throws NoSuchFieldException {
         setBeanClasses(Bean.class, GenericTSub.class, GenericT.class);
         start();
@@ -104,7 +106,7 @@ public class GenericsTestsSimple extends WeldStarterTestBase {
         bean.genericTSub.setUValue(1002);
     }
 
-    @Test(expected = DeploymentException.class)
+    @Test(expected = StarterDeploymentException.class)
     public void testGenericBeanAmbiguus() {
         setBeanClasses(GenericBean.class, GenericTSub.class, GenericT.class);
         start();

@@ -11,7 +11,7 @@ import org.junit.Test;
 /**
  * @author aschoerk
  */
-public class TwoBeanWithGenericsTest extends WeldStarterTestBase {
+public class TwoBeanWithGenericsTest extends com.oneandone.cdi.weldstarter.WeldStarterTestBase {
 
     static class CdiHelperBean<T> {
         T field = null;
@@ -57,10 +57,10 @@ public class TwoBeanWithGenericsTest extends WeldStarterTestBase {
     public void test() {
         setBeanClasses(CdiBean1.class, CdiHelperBean.class, CdiParamInjectHelperBean.class);
         start();
-        assertTrue(getContainer().select(CdiBean1.class).get().callThis());
-        assertTrue(getContainer().select(CdiBean1.class).get().getCdiHelperBean().callHelper());
-        assertNull(getContainer().select(CdiBean1.class).get().getCdiHelperBean().field);
-        assertNotNull(getContainer().select(CdiBean1.class).get().getCdiHelperBeanCdiParamInjectHelperBean().field);
+        assertTrue(selectGet(CdiBean1.class).callThis());
+        assertTrue(selectGet(CdiBean1.class).getCdiHelperBean().callHelper());
+        assertNull(selectGet(CdiBean1.class).getCdiHelperBean().field);
+        assertNotNull(selectGet(CdiBean1.class).getCdiHelperBeanCdiParamInjectHelperBean().field);
     }
 
 }

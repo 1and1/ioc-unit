@@ -1,10 +1,12 @@
 package net.oneandone.ejbcdiunit.purecdi;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.spi.DeploymentException;
 import javax.inject.Inject;
 
 import org.junit.Test;
+
+import com.oneandone.cdi.weldstarter.StarterDeploymentException;
+import com.oneandone.cdi.weldstarter.WeldStarterTestBase;
 
 /**
  * @author aschoerk
@@ -42,7 +44,7 @@ public class AmbiguousBeanTest extends WeldStarterTestBase {
     }
 
 
-    @Test(expected = DeploymentException.class)
+    @Test(expected = StarterDeploymentException.class)
     public void test() {
         setBeanClasses(CdiBean1.class,
                 CdiHelperBean.class, CdiHelperBean2.class);
