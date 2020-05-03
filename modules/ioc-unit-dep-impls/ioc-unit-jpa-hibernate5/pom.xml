@@ -7,12 +7,12 @@
         <relativePath>../../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>ioc-unit-hibernate5</artifactId>
+    <artifactId>ioc-unit-jpa-hibernate5</artifactId>
     <packaging>jar</packaging>
 
-    <name>net.oneandone.ioc-unit:ioc-unit-hibernate5</name>
+    <name>net.oneandone.ioc-unit:ioc-unit-jpa-hibernate5</name>
     <description>Adds wildfly10 hibernate dependencies</description>
-    <url>https://github.com/1and1/ioc-unit-dep-impls/ioc-unit-jms-mockrunner</url>
+    <url>https://github.com/1and1/ioc-unit-dep-impls/ioc-unit-jpa-hibernate5</url>
 
     <licenses>
         <license>

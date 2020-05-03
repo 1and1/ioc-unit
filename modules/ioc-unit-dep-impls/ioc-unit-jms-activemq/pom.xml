@@ -12,7 +12,7 @@
 
     <name>net.oneandone.ioc-unit:ioc-unit-jms-activemq</name>
     <description>Adds activemq jms-implementation</description>
-    <url>https://github.com/1and1/ioc-unit-dep-impls/ioc-unit-jms-mockrunner</url>
+    <url>https://github.com/1and1/ioc-unit-dep-impls/ioc-unit-jms-activemq</url>
 
     <licenses>
         <license>

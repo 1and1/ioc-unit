@@ -9,10 +9,11 @@
     <description>used to create dependency modules, not used as parent pom</description>
 
     <modules>
-        <module>ioc-unit-hibernate5</module>
+        <module>ioc-unit-jpa-hibernate5</module>
         <module>ioc-unit-jms-mockrunner</module>
         <module>ioc-unit-jms-rabbitmq</module>
         <module>ioc-unit-jms-activemq</module>
+        <module>ioc-unit-jta-narayana</module>
     </modules>
     <build>
         <plugins>
