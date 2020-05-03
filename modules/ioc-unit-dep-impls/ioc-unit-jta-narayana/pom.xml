@@ -40,23 +40,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!--dependency>
-            <groupId>org.jboss.spec.javax.transaction</groupId>
-            <artifactId>jboss-transaction-api_1.2_spec</artifactId>
-            <version>${version.jboss-transaction-api}</version>
-        </dependency-->
-        <!-- Standalone JNDI server -->
-        <dependency>
-            <groupId>org.jboss.naming</groupId>
-            <artifactId>jnpserver</artifactId>
-            <version>${version.jnpserver}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.jboss.logging</groupId>
-                    <artifactId>jboss-logging-spi</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
         <dependency>
             <groupId>jakarta.enterprise</groupId>
             <artifactId>jakarta.enterprise.cdi-api</artifactId>
