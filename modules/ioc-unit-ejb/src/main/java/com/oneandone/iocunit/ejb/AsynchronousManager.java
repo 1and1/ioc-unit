@@ -22,9 +22,10 @@ import javax.jms.JMSException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.oneandone.iocunit.ejb.jms.JmsMocksFactory;
-import com.oneandone.iocunit.ejb.persistence.SimulatedTransactionManager;
 import com.oneandone.cdi.weldstarter.CreationalContexts;
+import com.oneandone.iocunit.ejb.jms.JmsMocksFactory;
+import com.oneandone.iocunit.ejb.jms.JmsProducersException;
+import com.oneandone.iocunit.ejb.persistence.SimulatedTransactionManager;
 
 /**
  * Singleton used to store asynchronous calls which can be done later at specific times as fitting to the test.
@@ -58,7 +59,9 @@ public class AsynchronousManager {
         try {
             jmsMocksFactory.initMessageListeners();
         } catch (JMSException e) {
-            throw new RuntimeException(e);
+            logger.error(e.getMessage());
+        } catch (JmsProducersException e) {
+            logger.error(e.getMessage());
         }
     }
 

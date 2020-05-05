@@ -20,12 +20,6 @@ public class NarayanaTestExtensionService implements TestExtensionService {
             private static final long serialVersionUID = -1661631254833065243L;
 
             {
-//                add(TransactionalInterceptorRequired.class);
-//                add(TransactionalInterceptorRequiresNew.class);
-//                add(TransactionalInterceptorMandatory.class);
-//                add(TransactionalInterceptorNever.class);
-//                add(TransactionalInterceptorNotSupported.class);
-//                add(TransactionalInterceptorSupports.class);
                 add(TransactionExtension.class);
             }
         };

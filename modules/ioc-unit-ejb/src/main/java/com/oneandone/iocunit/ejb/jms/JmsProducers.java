@@ -1,6 +1,7 @@
 package com.oneandone.iocunit.ejb.jms;
 
 import javax.enterprise.inject.Produces;
+import javax.enterprise.inject.UnsatisfiedResolutionException;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -25,7 +26,15 @@ public class JmsProducers {
     @Produces
     public Queue createQueue(InjectionPoint ip) {
         String name = JmsMocksFactory.getResourceName(ip);
-        return jmsSingletons.get().createQueue(JmsMocksFactory.calculateCommonName(name));
+        return getJmsSingletonsIntf().createQueue(JmsMocksFactory.calculateCommonName(name));
+    }
+
+    private JmsSingletonsIntf getJmsSingletonsIntf() {
+        try {
+            return jmsSingletons.get();
+        } catch (UnsatisfiedResolutionException e) {
+            throw new JmsProducersException("No Jms Provider found, add one of ioc-unit-jms-(activemq|rabbitmq|mockrunner) to pom.xml");
+        }
     }
 
     /**
@@ -36,7 +45,7 @@ public class JmsProducers {
     @Produces
     public Topic createTopic(InjectionPoint ip) {
         String name = JmsMocksFactory.getResourceName(ip);
-        return jmsSingletons.get().createTopic(JmsMocksFactory.calculateCommonName(name));
+        return getJmsSingletonsIntf().createTopic(JmsMocksFactory.calculateCommonName(name));
     }
 
 
