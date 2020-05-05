@@ -83,7 +83,6 @@ public class ActiveMQSingletons implements JmsSingletonsIntf {
 
     @Override
     public Queue createQueue(String name) {
-        getConnection();
         if(!destinations.get().containsKey(name)) {
             try (Session session = mdbConnection.get().createSession()) {
                 destinations.get().put(name, session.createQueue(name));
@@ -96,7 +95,6 @@ public class ActiveMQSingletons implements JmsSingletonsIntf {
 
     @Override
     public Topic createTopic(String name) {
-        getConnection();
         if(!destinations.get().containsKey(name)) {
             try (Session session = mdbConnection.get().createSession()) {
                 destinations.get().put(name, session.createTopic(name));
