@@ -34,7 +34,6 @@ import javax.enterprise.context.RequestScoped;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.event.Observes;
-import javax.enterprise.inject.Default;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.AnnotatedField;
 import javax.enterprise.inject.spi.AnnotatedMember;
@@ -51,7 +50,6 @@ import javax.enterprise.inject.spi.ProcessManagedBean;
 import javax.enterprise.inject.spi.WithAnnotations;
 import javax.enterprise.util.AnnotationLiteral;
 import javax.inject.Inject;
-import javax.jms.JMSConnectionFactory;
 import javax.persistence.Entity;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PersistenceContext;
@@ -75,7 +73,7 @@ import net.sf.cglib.proxy.InvocationHandler;
  */
 @SupportEjbExtended
 @ApplicationScoped
-public class EjbExtensionExtended implements Extension {
+public class EjbExtensionExtended extends EjbExtensionBase implements Extension {
 
     Logger logger = LoggerFactory.getLogger("CDI-Unit EJB-ExtensionExtended");
 
@@ -84,23 +82,6 @@ public class EjbExtensionExtended implements Extension {
     private List<Class<?>> entityClasses = new ArrayList<>();
     private List<Class<?>> startupSingletons = new ArrayList<>();
 
-    private static AnnotationLiteral<Default> createDefaultAnnotation() {
-        return new AnnotationLiteral<Default>() {
-            private static final long serialVersionUID = 1L;
-        };
-    }
-
-    private static AnnotationLiteral<Dependent> createDependentAnnotation() {
-        return new AnnotationLiteral<Dependent>() {
-            private static final long serialVersionUID = 1L;
-        };
-    }
-
-    private static AnnotationLiteral<ApplicationScoped> createApplicationScopedAnnotation() {
-        return new AnnotationLiteral<ApplicationScoped>() {
-            private static final long serialVersionUID = 1L;
-        };
-    }
 
     public List<Class<?>> getEntityClasses() {
         return entityClasses;
@@ -151,23 +132,6 @@ public class EjbExtensionExtended implements Extension {
         }
     }
 
-    <T extends Annotation> T findAnnotation(Class<?> annotatedType,  Class<T> annotation) {
-        if (annotatedType.equals(Object.class)) {
-            return null;
-        }
-        return annotatedType.getAnnotation(annotation);
-    }
-
-    <T extends Annotation> boolean isAnnotationPresent(Class<?> annotatedType,  Class<T> annotation) {
-        if (annotatedType.equals(Object.class)) {
-            return false;
-        }
-        return annotatedType.isAnnotationPresent(annotation);
-    }
-
-    <T extends Annotation, X> boolean isAnnotationPresent(ProcessAnnotatedType<X> pat,  Class<T> annotation) {
-        return isAnnotationPresent(pat.getAnnotatedType().getJavaClass(), annotation);
-    }
 
     /**
      * Handle Bean classes, if EJB-Annotations are recognized change, add, remove as fitting.
@@ -184,8 +148,7 @@ public class EjbExtensionExtended implements Extension {
                                                  Entity.class, MappedSuperclass.class,
                                                  EJB.class,
                                                  Resource.class,
-                                                 PersistenceContext.class,
-                                                 JMSConnectionFactory.class,
+                                                 PersistenceContext.class
                                          })
                                                  ProcessAnnotatedType<T> pat) {
         logger.trace("processing annotated Type: " + pat.getAnnotatedType().getJavaClass().getName());
@@ -259,10 +222,6 @@ public class EjbExtensionExtended implements Extension {
             if (field.getAnnotation(PersistenceContext.class) != null) {
                 addInject = true;
                 builder.removeFromField(field, PersistenceContext.class);
-            }
-            if (field.getAnnotation(JMSConnectionFactory.class) != null) {
-                addInject = true;
-                builder.removeFromField(field, JMSConnectionFactory.class);
             }
             if (addInject) {
                 modified = true;
@@ -495,47 +454,7 @@ public class EjbExtensionExtended implements Extension {
         }
     }
 
-    private <X> boolean possiblyAsynchronous(final AnnotatedType<X> at) {
 
-        boolean isTimer = false;
-        boolean isAsynch = false;
-        if (at.isAnnotationPresent(Asynchronous.class)) {
-            return true;
-        }
-
-        for (AnnotatedMethod<? super X> m: at.getMethods()) {
-            if (!isTimer && (m.isAnnotationPresent(Timeout.class)
-                    || m.isAnnotationPresent(Schedule.class)
-                    || m.isAnnotationPresent(Schedules.class)
-                    )) {
-                timerClasses.add(m.getJavaMember().getDeclaringClass());
-                isTimer = true;
-            }
-            if (!isAsynch && m.isAnnotationPresent(Asynchronous.class)) {
-                isAsynch = true;
-            }
-        }
-
-        return isAsynch;
-    }
-
-    private <X> void createEJBWrapper(ProcessAnnotatedType<X> pat,
-            final AnnotatedType<X> at) {
-        EjbAsynchronous ejbAsynchronous = AnnotationInstanceProvider.of(EjbAsynchronous.class);
-
-        EjbTransactional transactionalAnnotation =
-                AnnotationInstanceProvider.of(EjbTransactional.class);
-
-        AnnotatedTypeBuilder<X> builder =
-                new AnnotatedTypeBuilder<X>().readFromType(at);
-        builder.addToClass(transactionalAnnotation);
-        if (possiblyAsynchronous(at)) {
-            builder.addToClass(ejbAsynchronous);
-        }
-
-        // by annotating let CDI set Wrapper to this Bean
-        pat.setAnnotatedType(builder.create());
-    }
 
     void processManagedBean(@Observes ProcessManagedBean<?> event) {
         // LOGGER.fine("Handling ProcessManagedBean event for " + event.getBean().getBeanClass().getName());
@@ -559,5 +478,48 @@ public class EjbExtensionExtended implements Extension {
             }
             logger.trace(sb.toString());
         }
+    }
+
+
+    private <X> void createEJBWrapper(ProcessAnnotatedType<X> pat,
+                                      final AnnotatedType<X> at) {
+        EjbAsynchronous ejbAsynchronous = AnnotationInstanceProvider.of(EjbAsynchronous.class);
+
+        EjbTransactional transactionalAnnotation =
+                AnnotationInstanceProvider.of(EjbTransactional.class);
+
+        AnnotatedTypeBuilder<X> builder =
+                new AnnotatedTypeBuilder<X>().readFromType(at);
+        builder.addToClass(transactionalAnnotation);
+        if (possiblyAsynchronous(at)) {
+            builder.addToClass(ejbAsynchronous);
+        }
+
+        // by annotating let CDI set Wrapper to this Bean
+        pat.setAnnotatedType(builder.create());
+    }
+
+    private <X> boolean possiblyAsynchronous(final AnnotatedType<X> at) {
+
+        boolean isTimer = false;
+        boolean isAsynch = false;
+        if (at.isAnnotationPresent(Asynchronous.class)) {
+            return true;
+        }
+
+        for (AnnotatedMethod<? super X> m: at.getMethods()) {
+            if (!isTimer && (m.isAnnotationPresent(Timeout.class)
+                             || m.isAnnotationPresent(Schedule.class)
+                             || m.isAnnotationPresent(Schedules.class)
+            )) {
+                timerClasses.add(m.getJavaMember().getDeclaringClass());
+                isTimer = true;
+            }
+            if (!isAsynch && m.isAnnotationPresent(Asynchronous.class)) {
+                isAsynch = true;
+            }
+        }
+
+        return isAsynch;
     }
 }

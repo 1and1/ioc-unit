@@ -5,8 +5,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.annotation.PreDestroy;
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
-import javax.inject.Singleton;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
@@ -33,7 +33,7 @@ import com.oneandone.iocunit.ejb.jms.JmsSingletonsIntf;
  *
  * @author aschoerk
  */
-@Singleton
+@ApplicationScoped
 public class ActiveMQSingletons implements JmsSingletonsIntf {
 
     private AtomicReference<Jms2ConnectionFactory> connectionFactoryAtomicReference = new AtomicReference<>();
@@ -83,6 +83,7 @@ public class ActiveMQSingletons implements JmsSingletonsIntf {
 
     @Override
     public Queue createQueue(String name) {
+        getConnection();
         if(!destinations.get().containsKey(name)) {
             try (Session session = mdbConnection.get().createSession()) {
                 destinations.get().put(name, session.createQueue(name));
@@ -95,6 +96,7 @@ public class ActiveMQSingletons implements JmsSingletonsIntf {
 
     @Override
     public Topic createTopic(String name) {
+        getConnection();
         if(!destinations.get().containsKey(name)) {
             try (Session session = mdbConnection.get().createSession()) {
                 destinations.get().put(name, session.createTopic(name));

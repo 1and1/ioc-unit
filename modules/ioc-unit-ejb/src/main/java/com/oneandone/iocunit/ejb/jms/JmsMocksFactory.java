@@ -26,7 +26,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.oneandone.iocunit.ejb.AsynchronousManager;
-import com.oneandone.iocunit.ejb.AsynchronousMessageListenerProxy;
 
 /**
  * Used to do the CDI-Part of JMS-Simulation.

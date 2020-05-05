@@ -1,9 +1,9 @@
-package com.oneandone.iocunit.ejb;
+package com.oneandone.iocunit.ejb.jms;
 
 import javax.jms.Message;
 import javax.jms.MessageListener;
 
-import com.oneandone.iocunit.ejb.jms.JmsSingletonsIntf;
+import com.oneandone.iocunit.ejb.AsynchronousManager;
 
 /**
  * Registered for each MessageListener, onMessage is used to register asynchronous calls in the Asynchronous Manager.

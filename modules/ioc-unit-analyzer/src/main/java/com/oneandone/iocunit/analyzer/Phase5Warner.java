@@ -99,7 +99,11 @@ public class Phase5Warner extends PhasesBase {
                 if (c.getAnnotation(Alternative.class) != null || c.equals(configuration.getTheTestClass())){
                     continue;
                 } else {
-                    checkProducersInSuperClass(c.getSuperclass(), collectProducedClasses(c));
+                    try {
+                        checkProducersInSuperClass(c.getSuperclass(), collectProducedClasses(c));
+                    } catch (NoClassDefFoundError e) {
+                        logger.warn("NoClassDefFoundError: {}",e);
+                    }
                 }
             }
         }

@@ -17,14 +17,13 @@ import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
-import javax.jms.JMSException;
+import javax.inject.Provider;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.oneandone.cdi.weldstarter.CreationalContexts;
-import com.oneandone.iocunit.ejb.jms.JmsMocksFactory;
-import com.oneandone.iocunit.ejb.jms.JmsProducersException;
+import com.oneandone.iocunit.ejb.jms.JmsInitializer;
 import com.oneandone.iocunit.ejb.persistence.SimulatedTransactionManager;
 
 /**
@@ -44,8 +43,10 @@ public class AsynchronousManager {
     private EjbExtensionExtended ejbExtensionExtended;
     @Inject
     private BeanManager bm;
+
     @Inject
-    JmsMocksFactory jmsMocksFactory;
+    Provider<JmsInitializer> jmsInitializer;
+
     private Logger logger = LoggerFactory.getLogger("AsynchronousManager");
     private CreationalContexts creationalContexts = null;
 
@@ -54,16 +55,16 @@ public class AsynchronousManager {
     private boolean enqueAsynchronousCalls = false;
     private Thread asyncHandler = null;
 
+
     @PostConstruct
     public void postConstruct() {
         try {
-            jmsMocksFactory.initMessageListeners();
-        } catch (JMSException e) {
-            logger.error(e.getMessage());
-        } catch (JmsProducersException e) {
-            logger.error(e.getMessage());
+            jmsInitializer.get();
+        } catch (Exception e) {
+            logger.warn(e.getMessage());
         }
     }
+
 
     /**
      * check if Asynchronous Methods may be dispatched

@@ -35,6 +35,8 @@ import com.oneandone.cdi.weldstarter.WeldSetup;
 import com.oneandone.cdi.weldstarter.WeldSetupClass;
 import com.oneandone.cdi.weldstarter.spi.TestExtensionService;
 import com.oneandone.cdi.weldstarter.spi.WeldStarter;
+import com.oneandone.iocunit.ejb.jms.AsynchronousMessageListenerProxy;
+import com.oneandone.iocunit.ejb.jms.JmsInitializer;
 import com.oneandone.iocunit.ejb.jms.JmsMocksFactory;
 import com.oneandone.iocunit.ejb.jms.JmsProducers;
 import com.oneandone.iocunit.ejb.persistence.IocUnitTransactionSynchronizationRegistry;
@@ -147,12 +149,18 @@ public class EjbTestExtensionService implements TestExtensionService {
                 add(SimulatedTransactionManager.class);
                 add(EjbUnitBeanInitializerClass.class);
                 add(EjbUnitTransactionServices.class);
-                add(JmsMocksFactory.class);
-                add(JmsProducers.class);
                 add(SessionContextFactory.class);
                 add(AsynchronousManager.class);
                 add(AsynchronousMethodInterceptor.class);
-                add(AsynchronousMessageListenerProxy.class);
+                try {
+                    add(AsynchronousMessageListenerProxy.class);
+                    add(JmsInitializer.class);
+                    add(JmsExtension.class);
+                    add(JmsMocksFactory.class);
+                    add(JmsProducers.class);
+                } catch (NoClassDefFoundError e) {
+                    ; // make sure to work without jms
+                }
                 add(PersistenceFactoryResources.class);
             }
         };
