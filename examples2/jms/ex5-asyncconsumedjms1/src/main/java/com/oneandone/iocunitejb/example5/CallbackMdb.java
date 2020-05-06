@@ -2,9 +2,11 @@ package com.oneandone.iocunitejb.example5;
 
 import java.util.HashMap;
 
+import javax.annotation.Resource;
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.EJB;
 import javax.ejb.MessageDriven;
+import javax.ejb.MessageDrivenContext;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -32,6 +34,9 @@ public class CallbackMdb implements MessageListener {
     @EJB(name = "Callback")
     Callbacks callbacks;
 
+    @Resource
+    protected MessageDrivenContext mdbContext;
+
     /**
      * Passes a message to the listener.
      *
@@ -53,6 +58,7 @@ public class CallbackMdb implements MessageListener {
                     break;
             }
         } catch (JMSException e) {
+            mdbContext.setRollbackOnly();
             throw new RuntimeException(e);
         }
     }

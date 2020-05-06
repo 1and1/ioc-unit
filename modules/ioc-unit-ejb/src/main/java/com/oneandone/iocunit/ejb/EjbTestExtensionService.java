@@ -1,5 +1,10 @@
 package com.oneandone.iocunit.ejb;
 
+import static org.objectweb.asm.Opcodes.ACC_ABSTRACT;
+import static org.objectweb.asm.Opcodes.ACC_INTERFACE;
+import static org.objectweb.asm.Opcodes.ACC_PUBLIC;
+import static org.objectweb.asm.Opcodes.V1_5;
+
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
@@ -24,10 +29,10 @@ import javax.persistence.Entity;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PersistenceContext;
 import javax.transaction.UserTransaction;
-import javax.xml.rpc.handler.MessageContext;
 
 import org.jboss.weld.bootstrap.spi.Metadata;
 import org.jboss.weld.transaction.spi.TransactionServices;
+import org.objectweb.asm.ClassWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -129,6 +134,41 @@ public class EjbTestExtensionService implements TestExtensionService {
         return Arrays.asList(Resource.class, EJB.class, PersistenceContext.class);
     }
 
+    public void checkCreateMessageContextInterface() {
+        try {
+            Class.forName("javax.xml.rpc.handler.MessageContext").getDeclaredMethods();
+            return;
+        } catch (ClassNotFoundException ncdfe) {
+            ClassWriter cw = new ClassWriter(0);
+            cw.visit(V1_5,ACC_PUBLIC + ACC_ABSTRACT + ACC_INTERFACE,"javax/xml/rpc/handler/MessageContext",
+                    null,"java/lang/Object", new String[] {});
+            cw.visitMethod(ACC_PUBLIC + ACC_ABSTRACT,"setProperty","(Ljava/lang/String;Ljava/lang/Object;)V",null,null);
+            cw.visitMethod(ACC_PUBLIC + ACC_ABSTRACT,"getProperty","(Ljava/lang/String;)Ljava/lang/Object;",null,null);
+            cw.visitMethod(ACC_PUBLIC + ACC_ABSTRACT,"removeProperty","(Ljava/lang/String;)V",null,null);
+            cw.visitMethod(ACC_PUBLIC + ACC_ABSTRACT,"containsProperty","(Ljava/lang/String;)B",null,null);
+            cw.visitMethod(ACC_PUBLIC + ACC_ABSTRACT,"getPropertyNames","()Ljava/util/Iterator;",null,null);
+            cw.visitEnd();
+            byte[] ba = cw.toByteArray();
+            Object o = this.getClass().getClassLoader();
+            Class c = o.getClass();
+            Method m = null;
+            while (!c.equals(Object.class)) {
+                try {
+                    m = c.getDeclaredMethod("defineClass",String.class, ba.getClass(), Integer.TYPE, Integer.TYPE);
+                    break;
+                } catch (NoSuchMethodException nsme) {
+                    c = c.getSuperclass();
+                }
+            }
+            m.setAccessible(true);
+            try {
+                m.invoke(o,"javax.xml.rpc.handler.MessageContext", ba, 0, ba.length);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
     @Override
     public List<Class<?>> testClasses() {
         List<Class<?>> result = new ArrayList<Class<?>>() {
@@ -150,12 +190,13 @@ public class EjbTestExtensionService implements TestExtensionService {
                 add(SimulatedTransactionManager.class);
                 add(EjbUnitBeanInitializerClass.class);
                 add(EjbUnitTransactionServices.class);
+                checkCreateMessageContextInterface();
                 try {
-                    MessageContext.class.getMethods();
-                    add(SessionContextFactory.class);
-                } catch (NoClassDefFoundError e) {
-                    logger.info("no SessionContextSimulation without javax.xml.rpc.handler.MessageContext");
+                    Class.forName("javax.xml.rpc.handler.MessageContext").getDeclaredMethods();
+                } catch (ClassNotFoundException e) {
+                    throw new RuntimeException(e);
                 }
+                add(SessionContextFactory.class);
                 add(AsynchronousManager.class);
                 add(AsynchronousMethodInterceptor.class);
                 try {
@@ -217,13 +258,7 @@ public class EjbTestExtensionService implements TestExtensionService {
             private static final long serialVersionUID = -2079977943206299793L;
 
             {
-                try {
-                    MessageContext.class.getMethods();
-                    add(SessionContextFactory.class);
-                } catch (
-                        NoClassDefFoundError e) {
-                    logger.info("no SessionContextSimulation without javax.xml.rpc.handler.MessageContext");
-                }
+                add(SessionContextFactory.class);
                 add(EjbUnitBeanInitializerClass.class);
                 add(AsynchronousManager.class);
                 add(TransactionalInterceptorBase.class);

@@ -18,7 +18,6 @@ import com.oneandone.iocunit.IocUnitRunner;
 import com.oneandone.iocunit.analyzer.annotations.SutClasses;
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 import com.oneandone.iocunit.ejb.AsynchronousManager;
-import com.oneandone.iocunit.ejb.resourcesimulators.EjbContextSimulation;
 import com.oneandone.iocunitejb.ejbs.CdiAsynchronousBean;
 import com.oneandone.iocunitejb.ejbs.CountingBean;
 import com.oneandone.iocunitejb.ejbs.SingletonTimerEJB;
@@ -30,8 +29,8 @@ import com.oneandone.iocunitejb.helpers.LoggerGenerator;
  * @author aschoerk
  */
 @RunWith(IocUnitRunner.class)
-@TestClasses({ LoggerGenerator.class, EjbContextSimulation.class})
-@SutClasses({ StatelessAsynchEJB.class, SingletonTimerEJB.class, StatelessTimerEJB.class, CdiAsynchronousBean.class })
+@TestClasses({LoggerGenerator.class})
+@SutClasses({StatelessAsynchEJB.class, SingletonTimerEJB.class, StatelessTimerEJB.class, CdiAsynchronousBean.class})
 public class TestAsynch {
 
     @Inject
