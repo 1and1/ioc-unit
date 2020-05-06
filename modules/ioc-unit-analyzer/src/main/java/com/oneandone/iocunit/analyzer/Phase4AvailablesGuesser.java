@@ -23,6 +23,10 @@ public class Phase4AvailablesGuesser extends PhasesBase {
 
     Set<Class<?>> handledPhase4Classes = new HashSet<>();
 
+    public boolean rawTypeIgnore(String rawTypePath) {
+        return rawTypePath.contains("/net/oneandone/ioc-unit/");
+    }
+
     public void work() {
         if (configuration.emptyCandidates() && configuration.getInjects().size() > 0) {
 
@@ -44,20 +48,22 @@ public class Phase4AvailablesGuesser extends PhasesBase {
                 )) {
                     try {
                         URL rawtypePath = ClasspathHandler.getPath(rawtype);
-                        if(ConfigStatics.mightBeBean(rawtype)) {
-                            if (!alreadyLogged.contains(rawtype))
-                                logger.warn("Added candidate {} in cdi-unit manner, even if not found as available", rawtype);
-                            configuration.candidate(rawtype);
-                        }
-                        else if(configuration.getTestClassPaths().contains(rawtypePath)) {
-                            if (!alreadyLogged.contains(rawtype))
-                                logger.warn("Added classpath of testclass: {} even if not found as available for inject: {}", rawtype,q);
-                            ClasspathHandler.addClassPath(rawtype, newTestClasses);
-                        }
-                        else {
-                            if (!alreadyLogged.contains(rawtype))
-                                logger.warn("Added classpath of sutclass: {} even if not found as available for inject: {}", rawtype,q);
-                            ClasspathHandler.addClassPath(rawtype, newClasses);
+                        if (!rawTypeIgnore(rawtypePath.getPath())) {
+                            if(ConfigStatics.mightBeBean(rawtype)) {
+                                if(!alreadyLogged.contains(rawtype))
+                                    logger.warn("Added candidate {} in cdi-unit manner, even if not found as available", rawtype);
+                                configuration.candidate(rawtype);
+                            }
+                            else if(configuration.getTestClassPaths().contains(rawtypePath)) {
+                                if(!alreadyLogged.contains(rawtype))
+                                    logger.warn("Added classpath of testclass: {} even if not found as available for inject: {}", rawtype, q);
+                                ClasspathHandler.addClassPath(rawtype, newTestClasses);
+                            }
+                            else {
+                                if(!alreadyLogged.contains(rawtype))
+                                    logger.warn("Added classpath of sutclass: {} even if not found as available for inject: {}", rawtype, q);
+                                ClasspathHandler.addClassPath(rawtype, newClasses);
+                            }
                         }
                         alreadyLogged.add(rawtype);
                     } catch (MalformedURLException | NullPointerException e) {
