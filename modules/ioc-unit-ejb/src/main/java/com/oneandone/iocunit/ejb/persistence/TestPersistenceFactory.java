@@ -37,9 +37,7 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 import com.oneandone.iocunit.ejb.EjbExtensionExtended;
-import com.oneandone.iocunit.ejb.SessionContextFactory;
 import com.oneandone.iocunit.jpa.XmlAwarePersistenceFactory;
 
 /**
@@ -60,7 +58,6 @@ import com.oneandone.iocunit.jpa.XmlAwarePersistenceFactory;
  */
 @Deprecated
 @ApplicationScoped
-@TestClasses({ SessionContextFactory.class })
 public class TestPersistenceFactory extends XmlAwarePersistenceFactory {
 
     public static Set<String> notFoundPersistenceUnits = new HashSet<>();

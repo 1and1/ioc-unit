@@ -30,7 +30,7 @@ import com.oneandone.iocunit.ejb.trainterceptors.TransactionalInterceptorBase;
  * @author aschoerk
  */
 @TestClasses({EjbExtensionExtended.class, TransactionalInterceptorBase.class,
-        AsynchronousMethodInterceptor.class, SessionContextFactory.class,
+        AsynchronousMethodInterceptor.class,
         WebServiceContextSimulation.class,TimerServiceSimulator.class, EjbUnitBeanInitializerClass.class})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface SupportEjbExtended {

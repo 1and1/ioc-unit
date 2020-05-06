@@ -32,9 +32,7 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 import com.oneandone.iocunit.ejb.EjbExtensionExtended;
-import com.oneandone.iocunit.ejb.SessionContextFactory;
 import com.oneandone.iocunit.ejb.persistence.EclipseLinkDependent;
 import com.oneandone.iocunit.ejb.persistence.HibernateDependent;
 
@@ -55,7 +53,6 @@ import com.oneandone.iocunit.ejb.persistence.HibernateDependent;
  * @author aschoerk
  */
 @ApplicationScoped
-@TestClasses({ SessionContextFactory.class })
 public class XmlLessPersistenceFactory extends XmlLessPersistenceFactoryBase {
 
     static Logger logger = LoggerFactory.getLogger("XmlLessPersistenceFactory");

@@ -24,6 +24,7 @@ import javax.persistence.Entity;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PersistenceContext;
 import javax.transaction.UserTransaction;
+import javax.xml.rpc.handler.MessageContext;
 
 import org.jboss.weld.bootstrap.spi.Metadata;
 import org.jboss.weld.transaction.spi.TransactionServices;
@@ -149,7 +150,12 @@ public class EjbTestExtensionService implements TestExtensionService {
                 add(SimulatedTransactionManager.class);
                 add(EjbUnitBeanInitializerClass.class);
                 add(EjbUnitTransactionServices.class);
-                add(SessionContextFactory.class);
+                try {
+                    MessageContext.class.getMethods();
+                    add(SessionContextFactory.class);
+                } catch (NoClassDefFoundError e) {
+                    logger.info("no SessionContextSimulation without javax.xml.rpc.handler.MessageContext");
+                }
                 add(AsynchronousManager.class);
                 add(AsynchronousMethodInterceptor.class);
                 try {
@@ -159,7 +165,7 @@ public class EjbTestExtensionService implements TestExtensionService {
                     add(JmsMocksFactory.class);
                     add(JmsProducers.class);
                 } catch (NoClassDefFoundError e) {
-                    ; // make sure to work without jms
+                    logger.info("no Messaging simulated");
                 }
                 add(PersistenceFactoryResources.class);
             }
@@ -187,7 +193,7 @@ public class EjbTestExtensionService implements TestExtensionService {
             for (Metadata<Extension> x : weldSetup.getExtensions()) {
                 if(EjbExtensionExtended.class.isAssignableFrom(x.getValue().getClass())) {
                     logger.warn("Using ioc-unit-ejb-Extension without IOC-Unit-PersistenceFactory: "
-                                 + "no simulation of EntityManager and Transactions supported");
+                                + "no simulation of EntityManager and Transactions supported");
                 }
             }
         }
@@ -206,12 +212,24 @@ public class EjbTestExtensionService implements TestExtensionService {
 
     @Override
     public Collection<? extends Class<?>> excludeFromIndexScan() {
-        return Arrays.asList(
-                JmsMocksFactory.class,
-                EjbUnitBeanInitializerClass.class,
-                AsynchronousManager.class,
-                SessionContextFactory.class,
-                TransactionalInterceptorBase.class);
+
+        List<Class<?>> result = new ArrayList<Class<?>>() {
+            private static final long serialVersionUID = -2079977943206299793L;
+
+            {
+                try {
+                    MessageContext.class.getMethods();
+                    add(SessionContextFactory.class);
+                } catch (
+                        NoClassDefFoundError e) {
+                    logger.info("no SessionContextSimulation without javax.xml.rpc.handler.MessageContext");
+                }
+                add(EjbUnitBeanInitializerClass.class);
+                add(AsynchronousManager.class);
+                add(TransactionalInterceptorBase.class);
+            }
+        };
+        return result;
     }
 
     @Override
