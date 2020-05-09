@@ -38,6 +38,7 @@ public class Configuration {
     public boolean produceInstanceInjectsByAvailables = false;
     public boolean addAllStartableBeans = false;
     public boolean addAvailableInterceptorsAndDecorators = false;
+    public boolean didGuess = false;
     public List<Class<? extends Extension>> excludedExtensions;
     public List<Class<?>> initialAvailables = new ArrayList<>();
 

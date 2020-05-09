@@ -35,14 +35,22 @@ class Phase2Matcher extends PhasesBase {
         }
         else if(matchingProducers.size() > 1) {
             for (QualifiedType x : matchingProducers) {
-                logger.trace("Ambiguus match: {} for inject", x, inject);
+                if (configuration.didGuess) {
+                    logger.warn("Ambiguus match after guess: {} for inject", x, inject);
+                } else {
+                    logger.trace("Ambiguus match: {} for inject", x, inject);
+                }
             }
             ambiguus.put(inject, matchingProducers);
         }
         else {
             final QualifiedType theMatch = matchingProducers.iterator().next();
             matching.put(inject, theMatch);
-            logger.trace("Unambiguus match: {}", theMatch);
+            if (configuration.didGuess) {
+                logger.warn("Unambiguus match after guess: {}", theMatch);
+            } else {
+                logger.trace("Unambiguus match: {}", theMatch);
+            }
         }
     }
 

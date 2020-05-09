@@ -72,6 +72,7 @@ public class Phase4AvailablesGuesser extends PhasesBase {
                 }
             }
             if(configuration.emptyCandidates()) {
+                configuration.didGuess = true;
                 addAvailableClasses(newClasses, true);
                 addAvailableClasses(newTestClasses, false);
                 new Phase3Fixer(configuration).work();

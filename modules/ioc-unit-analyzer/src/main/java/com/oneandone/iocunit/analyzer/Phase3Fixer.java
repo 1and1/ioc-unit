@@ -53,6 +53,11 @@ public class Phase3Fixer extends PhasesBase {
                     configuration.candidate(declaringClass);
                     newCandidates.add(declaringClass);
                 }
+                if (configuration.didGuess && !injectsDone.containsKey(inject)) {
+                    logger.trace("After guessing from Class: {}, producer: {} matches Inject {}.", declaringClass.getSimpleName(),
+                            producer, inject);
+                    logger.warn("To avoid guessing: add {} as SutClass or TestClass.", declaringClass.getName());
+                }
                 injectsDone.put(inject, producer);
             } else {
                 if (!inject.isInstance()) {  // Search for specializing and make them higher prior
