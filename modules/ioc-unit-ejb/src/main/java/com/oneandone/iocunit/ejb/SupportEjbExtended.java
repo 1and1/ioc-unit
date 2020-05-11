@@ -20,7 +20,6 @@ import java.lang.annotation.RetentionPolicy;
 
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 import com.oneandone.iocunit.ejb.resourcesimulators.TimerServiceSimulator;
-import com.oneandone.iocunit.ejb.resourcesimulators.WebServiceContextSimulation;
 import com.oneandone.iocunit.ejb.trainterceptors.TransactionalInterceptorBase;
 
 
@@ -31,7 +30,7 @@ import com.oneandone.iocunit.ejb.trainterceptors.TransactionalInterceptorBase;
  */
 @TestClasses({EjbExtensionExtended.class, TransactionalInterceptorBase.class,
         AsynchronousMethodInterceptor.class,
-        WebServiceContextSimulation.class,TimerServiceSimulator.class, EjbUnitBeanInitializerClass.class})
+        TimerServiceSimulator.class, EjbUnitBeanInitializerClass.class})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface SupportEjbExtended {
 

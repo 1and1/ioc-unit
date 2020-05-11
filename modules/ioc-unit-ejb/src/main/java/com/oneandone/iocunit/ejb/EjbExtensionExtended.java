@@ -268,21 +268,29 @@ public class EjbExtensionExtended extends EjbExtensionBase implements Extension 
 
             }
         }
+
+
         Stateless stateless = findAnnotation(annotatedType.getJavaClass(), Stateless.class);
 
-        // Stateless stateless = annotatedType.getJavaClass().getAnnotation(Stateless.class);
-
         if (stateless != null) {
-            processClass(builder, stateless.name(), makeApplicationScoped || false, scopeIsPresent);
+            processClass(builder, stateless.name(), makeApplicationScoped , scopeIsPresent);
             modified = true;
         }
 
         Stateful stateful = findAnnotation(annotatedType.getJavaClass(),Stateful.class);
 
         if (stateful != null) {
-            processClass(builder, stateful.name(), makeApplicationScoped ||false, scopeIsPresent);
+            processClass(builder, stateful.name(), makeApplicationScoped , scopeIsPresent);
             modified = true;
         }
+
+        MessageDriven messageDriven = findAnnotation(annotatedType.getJavaClass(),MessageDriven.class);
+
+        if (messageDriven != null) {
+            processClass(builder, messageDriven.name(), true , scopeIsPresent);
+            modified = true;
+        }
+
         try {
             Singleton singleton = findAnnotation(annotatedType.getJavaClass(),Singleton.class);
             if (singleton != null) {

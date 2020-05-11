@@ -18,6 +18,8 @@ import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.transaction.Status;
+import javax.transaction.UserTransaction;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +45,9 @@ public class AsynchronousManager {
     private EjbExtensionExtended ejbExtensionExtended;
     @Inject
     private BeanManager bm;
+
+    @Inject
+    UserTransaction userTransaction;
 
     @Inject
     Provider<JmsInitializer> jmsInitializer;
@@ -232,23 +237,31 @@ public class AsynchronousManager {
         runnables.add(new AsynchronousOnetimeRunnable() {
             @Override
             public void run() {
-                try {
-                    transactionManager.push(TransactionAttributeType.NOT_SUPPORTED);
-                    runnable.run();
-                } catch (InterruptThreadException e) {
-                    logger.info("Asynchronous Manager Thread received end signal");
-                    throw e;
-                } catch (Throwable thw) {
-                    logger.error("Error during OneTimeHandler", thw);
-                } finally {
-                    try {
-                        transactionManager.pop();
-                    } catch (Exception e) {
-                        logger.error("AsynchronousManager catched: {} during TransactionManager#pop.", e.getMessage(), " no further handling");
-                    }
-                }
+                callRunnableInNotSupported(runnable, "Error during OneTimeHandler");
             }
         });
+    }
+
+    private void callRunnableInNotSupported(final Runnable runnable, final String s) {
+        try {
+            if ( userTransaction.getStatus() != Status.STATUS_NO_TRANSACTION) {
+                userTransaction.commit();
+                userTransaction.begin();
+            }
+            transactionManager.push(TransactionAttributeType.NOT_SUPPORTED);
+            runnable.run();
+        } catch (InterruptThreadException e) {
+            logger.info("Asynchronous Manager Thread received end signal");
+            throw e;
+        } catch (Throwable thw) {
+            logger.error(s, thw);
+        } finally {
+            try {
+                transactionManager.pop();
+            } catch (Exception e) {
+                logger.error("AsynchronousManager catched: {} during TransactionManager#pop.", e.getMessage(), " no further handling");
+            }
+        }
     }
 
     /**
@@ -261,21 +274,7 @@ public class AsynchronousManager {
         runnables.add(new AsynchronousMultipleRunnable() {
             @Override
             public void run() {
-                try {
-                    transactionManager.push(TransactionAttributeType.NOT_SUPPORTED);
-                    runnable.run();
-                } catch (InterruptThreadException e) {
-                    logger.info("Asynchronous Manager Thread received end signal");
-                    throw e;
-                } catch (Throwable thw) {
-                    logger.error("Error during MultipleHandler", thw);
-                } finally {
-                    try {
-                        transactionManager.pop();
-                    } catch (Exception e) {
-                        logger.error("AsynchronousManager catched: {} during TransactionManager#pop.", e.getMessage(), " no further handling");
-                    }
-                }
+                callRunnableInNotSupported(runnable, "Error during MultipleHandler");
             }
         });
     }

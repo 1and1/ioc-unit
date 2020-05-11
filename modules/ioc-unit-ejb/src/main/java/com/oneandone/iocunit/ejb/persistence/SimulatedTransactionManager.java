@@ -364,6 +364,22 @@ public class SimulatedTransactionManager {
     }
 
     /**
+     * simulate getStatus from UserTransaction
+     * @return the Status according to UserTransaction
+     * @throws SystemException as simulated
+     */
+    public boolean isUserTransaction() throws SystemException {
+        ArrayList<ThreadLocalTransactionInformation> stack = transactionStack.get();
+        if (stack == null || stack.isEmpty()) {
+            return false;
+        }
+        ThreadLocalTransactionInformation element = stack.get(stack.size() - 1);
+
+        return element.userTransaction;
+    }
+
+
+    /**
      * used as thread local information stacked to reflect ejb-transaction-contextes. Persistence-Factories taking part a added on demand.
      */
     static class ThreadLocalTransactionInformation {

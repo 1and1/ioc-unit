@@ -69,7 +69,7 @@ class Phase1Analyzer extends PhasesBase {
                 }
             }
         } catch (NoClassDefFoundError e) {
-            logger.warn("Did not find Class {}", c.getName());
+            logger.warn("{} searching innerclasses of {}",e.getMessage(), c.getName());
         }
     }
 
@@ -326,7 +326,7 @@ class Phase1Analyzer extends PhasesBase {
                 }
             }
         } catch (NoClassDefFoundError e) {
-            logger.warn("Did not find Class {}", c.getName());
+            logger.warn("{} analyzing producer fields of {}",e.getMessage(), c.getName());
         }
     }
 
@@ -338,7 +338,7 @@ class Phase1Analyzer extends PhasesBase {
                 }
             }
         } catch (NoClassDefFoundError e) {
-            logger.warn("Did not find Class {}", c.getName());
+            logger.warn("{} analyzing producer Methods of {}",e.getMessage(),  c.getName());
         }
     }
 

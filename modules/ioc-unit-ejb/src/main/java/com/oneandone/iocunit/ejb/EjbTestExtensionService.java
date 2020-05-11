@@ -28,6 +28,7 @@ import javax.enterprise.inject.spi.Extension;
 import javax.persistence.Entity;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PersistenceContext;
+import javax.servlet.http.HttpServletResponse;
 import javax.transaction.UserTransaction;
 
 import org.jboss.weld.bootstrap.spi.Metadata;
@@ -50,6 +51,7 @@ import com.oneandone.iocunit.ejb.persistence.PersistenceFactory;
 import com.oneandone.iocunit.ejb.persistence.PersistenceFactoryResources;
 import com.oneandone.iocunit.ejb.persistence.SimulatedTransactionManager;
 import com.oneandone.iocunit.ejb.resourcesimulators.SimulatedUserTransaction;
+import com.oneandone.iocunit.ejb.resourcesimulators.WebServiceContextSimulation;
 import com.oneandone.iocunit.ejb.trainterceptors.TransactionalInterceptorBase;
 import com.oneandone.iocunit.ejb.trainterceptors.TransactionalInterceptorEjb;
 import com.oneandone.iocunit.ejb.trainterceptors.TransactionalInterceptorMandatory;
@@ -191,14 +193,16 @@ public class EjbTestExtensionService implements TestExtensionService {
                 add(EjbUnitBeanInitializerClass.class);
                 add(EjbUnitTransactionServices.class);
                 checkCreateMessageContextInterface();
-                try {
-                    Class.forName("javax.xml.rpc.handler.MessageContext").getDeclaredMethods();
-                } catch (ClassNotFoundException e) {
-                    throw new RuntimeException(e);
-                }
                 add(SessionContextFactory.class);
                 add(AsynchronousManager.class);
                 add(AsynchronousMethodInterceptor.class);
+                try {
+                    javax.xml.ws.handler.MessageContext.class.getMethods();
+                    HttpServletResponse.class.getMethods();
+                    add(WebServiceContextSimulation.class);
+                } catch (NoClassDefFoundError e) {
+                    logger.trace("No WebServiceContextSimulation because of {}", e.getMessage());
+                }
                 try {
                     add(AsynchronousMessageListenerProxy.class);
                     add(JmsInitializer.class);
@@ -206,7 +210,7 @@ public class EjbTestExtensionService implements TestExtensionService {
                     add(JmsMocksFactory.class);
                     add(JmsProducers.class);
                 } catch (NoClassDefFoundError e) {
-                    logger.info("no Messaging simulated");
+                    logger.trace("no Jms because of {}", e.getMessage());
                 }
                 add(PersistenceFactoryResources.class);
             }
