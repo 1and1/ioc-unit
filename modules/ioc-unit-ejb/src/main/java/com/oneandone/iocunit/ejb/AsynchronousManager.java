@@ -244,9 +244,13 @@ public class AsynchronousManager {
 
     private void callRunnableInNotSupported(final Runnable runnable, final String s) {
         try {
-            if ( userTransaction.getStatus() != Status.STATUS_NO_TRANSACTION) {
-                userTransaction.commit();
-                userTransaction.begin();
+            try {
+                if(userTransaction.getStatus() != Status.STATUS_NO_TRANSACTION) {
+                    userTransaction.commit();
+                    userTransaction.begin();
+                }
+            } catch (Exception e) {
+                logger.trace("Ignored {} in AsynchronousManager", e.getMessage());
             }
             transactionManager.push(TransactionAttributeType.NOT_SUPPORTED);
             runnable.run();
