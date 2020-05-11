@@ -284,13 +284,6 @@ public class EjbExtensionExtended extends EjbExtensionBase implements Extension 
             modified = true;
         }
 
-        MessageDriven messageDriven = findAnnotation(annotatedType.getJavaClass(),MessageDriven.class);
-
-        if (messageDriven != null) {
-            processClass(builder, messageDriven.name(), true , scopeIsPresent);
-            modified = true;
-        }
-
         try {
             Singleton singleton = findAnnotation(annotatedType.getJavaClass(),Singleton.class);
             if (singleton != null) {
