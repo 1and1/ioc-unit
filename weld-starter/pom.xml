@@ -3,7 +3,7 @@
 
     <groupId>net.oneandone.ioc-unit</groupId>
     <artifactId>weld-starter-parent</artifactId>
-    <version>2.0.28-SNAPSHOT</version>
+    <version>2.0.28</version>
     <packaging>pom</packaging>
     <name>net.oneandone.ioc-unit:weld-starter-parent</name>
     <description>Parentclass for weldstarter. For tests define the profile weld1.1, weld2.3 or weld3.0.</description>
@@ -109,7 +109,7 @@
         <url>https://github.com/1and1/ioc-unit</url>
         <connection>scm:git:ssh://git@github.com/1and1/ioc-unit.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/1and1/ioc-unit.git</developerConnection>
-        <tag>v2.0.27</tag>
+        <tag>v2.0.28</tag>
     </scm>
     <issueManagement>
         <system>GitHub</system>
