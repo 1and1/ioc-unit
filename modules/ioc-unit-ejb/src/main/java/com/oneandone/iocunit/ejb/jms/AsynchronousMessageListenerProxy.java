@@ -21,6 +21,7 @@ public class AsynchronousMessageListenerProxy implements MessageListener {
      * @param listener            the listener to be called asynchronously. Normally the Mdb should be behind this.
      * @param asynchronousManager The asynchronous Managed where the calls are registered so that they can be called by the
      *                            test code at a specific time.
+     * @param jmsSingletons       singletons as found by cdi-extension, Queues and Topics
      */
     public AsynchronousMessageListenerProxy(MessageListener listener, AsynchronousManager asynchronousManager, JmsSingletonsIntf jmsSingletons) {
         this.listener = listener;

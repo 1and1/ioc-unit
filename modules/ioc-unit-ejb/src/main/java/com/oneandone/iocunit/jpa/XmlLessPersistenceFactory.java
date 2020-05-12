@@ -45,7 +45,7 @@ import com.oneandone.iocunit.ejb.persistence.HibernateDependent;
  * and produceDataSource() must be overridden as well.
  * If Entity-Beans are found by the EjbExtension, they are automatically added to the persistence-context.
  * This can be controlled by getEntityBeanRegex();
- * If PersistenceProvider is Hibernate and hibernate.default_schema is set --> that Schema is created in H2 at start.
+ * If PersistenceProvider is Hibernate and hibernate.default_schema is set that Schema is created in H2 at start.
  * Uses also eclipseLink if only that PersistenceProvider is found.
  *
  * Only works with Hibernate 5
@@ -205,7 +205,7 @@ public class XmlLessPersistenceFactory extends XmlLessPersistenceFactoryBase {
     /**
      * should work without needing a persistence.xml create it using
      *
-     * @return
+     * @return a EntityManagerFactory as found by available jars
      */
     @Override
     protected EntityManagerFactory createEntityManagerFactory() {

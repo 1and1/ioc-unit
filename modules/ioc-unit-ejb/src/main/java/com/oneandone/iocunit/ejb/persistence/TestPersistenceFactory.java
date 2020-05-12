@@ -49,7 +49,7 @@ import com.oneandone.iocunit.jpa.XmlAwarePersistenceFactory;
  * and produceDataSource() must be overridden as well.
  * If Entity-Beans are found by the EjbExtension, they are automatically added to the persistence-context.
  * This can be controlled by getEntityBeanRegex();
- * If PersistenceProvider is Hibernate and hibernate.default_schema is set --> that Schema is created in H2 at start.
+ * If PersistenceProvider is Hibernate and hibernate.default_schema is set that Schema is created in H2 at start.
  * Uses also eclipseLink if only that PersistenceProvider is found.
  *
  * Only works with Hibernate 5
@@ -213,7 +213,7 @@ public class TestPersistenceFactory extends XmlAwarePersistenceFactory {
     /**
      * should work without needing a persistence.xml create it using
      *
-     * @return
+     * @return a factory (hibernate or eclipselink) as available by jars
      */
     @Override
     protected EntityManagerFactory createEntityManagerFactory() {
@@ -432,6 +432,7 @@ public class TestPersistenceFactory extends XmlAwarePersistenceFactory {
     /**
      * Called before the creation if the first connection.
      * Use super.createDataSource() if you want to do further inits
+     * @param ds the created Datasource to be initialized
      */
     protected void handleJustConstructed(DataSource ds ) {
         if (ds != null && justConstructed) {
