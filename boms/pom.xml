@@ -35,8 +35,8 @@
     </modules>
 
     <properties>
-        <maven-scm-plugin.version>1.8.1</maven-scm-plugin.version>
-        <maven-scm-publish-plugin.version>1.0-beta-2</maven-scm-publish-plugin.version>
+        <maven-scm-plugin.version>1.9.5</maven-scm-plugin.version>
+        <maven-scm-publish-plugin.version>3.0.0</maven-scm-publish-plugin.version>
     </properties>
     <dependencyManagement>
         <dependencies>
