@@ -132,7 +132,7 @@
                 <version.org.hibernate>5.0.10.Final</version.org.hibernate>
                 <version.org.hibernate.validator>5.2.4.Final</version.org.hibernate.validator>
                 <version.org.hibernate.validator-cdi>5.2.4.Final</version.org.hibernate.validator-cdi>
-                <version.validation-api>1.1.0.Final</version.validation-api>
+                <version.validation-api>2.0.1</version.validation-api>
                 <version.cdi-api>1.2</version.cdi-api>
                 <version.javaee-api>8.0</version.javaee-api>
             </properties>
@@ -294,7 +294,7 @@
                 <version.org.hibernate>5.2.4.Final</version.org.hibernate>
                 <version.org.hibernate.validator>5.2.4.Final</version.org.hibernate.validator>
                 <version.org.hibernate.validator-cdi>5.2.4.Final</version.org.hibernate.validator-cdi>
-                <version.validation-api>1.1.0.Final</version.validation-api>
+                <version.validation-api>2.0.1</version.validation-api>
                 <version.cdi-api>1.0</version.cdi-api>
                 <version.javaee-api>7.0</version.javaee-api>
                 <version.resteasy>3.0.14.Final</version.resteasy>
@@ -385,7 +385,7 @@
                 <version.org.hibernate>5.3.6.Final</version.org.hibernate>
                 <version.org.hibernate.validator>5.2.4.Final</version.org.hibernate.validator>
                 <version.org.hibernate.validator-cdi>5.2.4.Final</version.org.hibernate.validator-cdi>
-                <version.validation-api>1.1.0.Final</version.validation-api>
+                <version.validation-api>2.0.1</version.validation-api>
                 <version.cdi-api>1.2</version.cdi-api>
                 <version.javaee-api>8.0</version.javaee-api>
                 <version.resteasy>3.9.3.Final</version.resteasy>
@@ -440,7 +440,7 @@
                 <version.org.hibernate>5.3.6.Final</version.org.hibernate>
                 <version.org.hibernate.validator>6.0.1.Final</version.org.hibernate.validator>
                 <version.org.hibernate.validator-cdi>6.0.1.Final</version.org.hibernate.validator-cdi>
-                <version.validation-api>2.0.1.Final</version.validation-api>
+                <version.validation-api>2.0.2</version.validation-api>
                 <version.cdi-api>2.0.SP1</version.cdi-api>
                 <version.javaee-api>8.0</version.javaee-api>
                 <version.resteasy>3.9.3.Final</version.resteasy>
@@ -480,7 +480,7 @@
                 <version.org.hibernate>5.3.6.Final</version.org.hibernate>
                 <version.org.hibernate.validator>6.0.1.Final</version.org.hibernate.validator>
                 <version.org.hibernate.validator-cdi>6.0.1.Final</version.org.hibernate.validator-cdi>
-                <version.validation-api>2.0.1.Final</version.validation-api>
+                <version.validation-api>2.0.2</version.validation-api>
                 <version.cdi-api>2.0.SP1</version.cdi-api>
                 <version.javaee-api>8.0</version.javaee-api>
                 <version.resteasy>3.11.0.Final</version.resteasy>
