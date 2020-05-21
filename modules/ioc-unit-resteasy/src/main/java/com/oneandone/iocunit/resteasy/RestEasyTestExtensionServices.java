@@ -15,6 +15,7 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.ext.Provider;
 
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
+import org.jboss.resteasy.spi.ResteasyProviderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -107,6 +108,7 @@ public class RestEasyTestExtensionServices implements TestExtensionService {
     @Override
     public void postStartupAction(final CreationalContexts creationalContexts, final WeldStarter weldStarter) {
         creationalContexts.create(RestEasyMockInit.class, ApplicationScoped.class);
+        ResteasyProviderFactory.setInstance(null);
     }
 
     /**
