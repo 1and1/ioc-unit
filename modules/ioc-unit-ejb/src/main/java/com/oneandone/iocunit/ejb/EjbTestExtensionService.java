@@ -24,14 +24,12 @@ import javax.ejb.SessionContext;
 import javax.ejb.Startup;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
-import javax.enterprise.inject.spi.Extension;
 import javax.persistence.Entity;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.UserTransaction;
 
-import org.jboss.weld.bootstrap.spi.Metadata;
 import org.jboss.weld.transaction.spi.TransactionServices;
 import org.objectweb.asm.ClassWriter;
 import org.slf4j.Logger;
@@ -232,14 +230,6 @@ public class EjbTestExtensionService implements TestExtensionService {
         if(weldSetup.isWeld3()) {
             if(!weldSetup.getBeanClasses().contains(SimulatedUserTransaction.class.getName())) {
                 weldSetup.getBeanClasses().add(SimulatedUserTransaction.class.getName());
-            }
-        }
-        if(!foundPersistenceFactory) {
-            for (Metadata<Extension> x : weldSetup.getExtensions()) {
-                if(EjbExtensionExtended.class.isAssignableFrom(x.getValue().getClass())) {
-                    logger.warn("Using ioc-unit-ejb-Extension without IOC-Unit-PersistenceFactory: "
-                                + "no simulation of EntityManager and Transactions supported");
-                }
             }
         }
         weldSetup.addService(new WeldSetup.ServiceConfig(TransactionServices.class, new EjbUnitTransactionServices()));

@@ -29,5 +29,9 @@ public class JmsInitializer {
         }
     }
 
+    public void dummyCall() {
+        logger.info("DummyCall of JmsInitializer done");
+    }
+
 
 }

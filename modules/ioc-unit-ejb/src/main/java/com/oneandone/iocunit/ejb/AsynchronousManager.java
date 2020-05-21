@@ -14,10 +14,10 @@ import javax.ejb.Timeout;
 import javax.ejb.TransactionAttributeType;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Dependent;
+import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.transaction.Status;
 import javax.transaction.UserTransaction;
 
@@ -50,7 +50,7 @@ public class AsynchronousManager {
     UserTransaction userTransaction;
 
     @Inject
-    Provider<JmsInitializer> jmsInitializer;
+    Instance<JmsInitializer> jmsInitializer;
 
     private Logger logger = LoggerFactory.getLogger("AsynchronousManager");
     private CreationalContexts creationalContexts = null;
@@ -64,7 +64,8 @@ public class AsynchronousManager {
     @PostConstruct
     public void postConstruct() {
         try {
-            jmsInitializer.get();
+            if (!jmsInitializer.isUnsatisfied())
+                jmsInitializer.get().dummyCall();
         } catch (Exception e) {
             logger.warn(e.getMessage());
         }
