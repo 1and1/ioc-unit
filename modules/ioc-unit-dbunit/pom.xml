@@ -79,6 +79,10 @@
                     <groupId>javax.persistence</groupId>
                     <artifactId>javax.persistence-api</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>javax.enterprise</groupId>
+                    <artifactId>cdi-api</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
