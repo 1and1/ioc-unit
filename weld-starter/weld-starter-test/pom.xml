@@ -45,16 +45,6 @@
             </dependencies>
         </profile>
         <profile>
-            <id>weld3.0</id>
-            <dependencies>
-                <dependency>
-                    <groupId>net.oneandone.ioc-unit</groupId>
-                    <artifactId>weld3-starter</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
-            </dependencies>
-        </profile>
-        <profile>
             <id>weld3.1</id>
             <dependencies>
                 <dependency>

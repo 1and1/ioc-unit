@@ -305,25 +305,6 @@
                     <artifactId>weld1-starter</artifactId>
                     <version>${project.version}</version>
                     <scope>test</scope>
-                    <exclusions>
-                        <exclusion>
-                            <groupId>javax.enterprise</groupId>
-                            <artifactId>cdi-api</artifactId>
-                        </exclusion>
-                        <exclusion>
-                            <groupId>javax.inject</groupId>
-                            <artifactId>javax.inject</artifactId>
-                        </exclusion>
-                        <exclusion>
-                            <groupId>org.jboss.logging</groupId>
-                            <artifactId>jboss-logging</artifactId>
-                        </exclusion>
-                        <exclusion>
-                            <groupId>javax</groupId>
-                            <artifactId>javaee-api</artifactId>
-                        </exclusion>
-                    </exclusions>
-
                 </dependency>
             </dependencies>
         </profile>
@@ -351,121 +332,8 @@
                     <artifactId>weld2-starter</artifactId>
                     <version>${project.version}</version>
                     <scope>test</scope>
-                    <exclusions>
-                        <exclusion>
-                            <groupId>javax.enterprise</groupId>
-                            <artifactId>cdi-api</artifactId>
-                        </exclusion>
-                        <exclusion>
-                            <groupId>javax.inject</groupId>
-                            <artifactId>javax.inject</artifactId>
-                        </exclusion>
-                        <exclusion>
-                            <groupId>org.jboss.logging</groupId>
-                            <artifactId>jboss-logging</artifactId>
-                        </exclusion>
-                        <exclusion>
-                            <groupId>javax</groupId>
-                            <artifactId>javaee-api</artifactId>
-                        </exclusion>
-                    </exclusions>
                 </dependency>
 
-            </dependencies>
-        </profile>
-        <profile>
-            <id>weld2.4</id>
-            <modules>
-                <module>testing/purecdi-tests</module>
-            </modules>
-            <properties>
-                <weld.version>2.4.2.Final</weld.version>
-                <weld-spi.version>2.4.Final</weld-spi.version>
-                <version.org.hibernate.api>1.0.0.Final</version.org.hibernate.api>
-                <version.org.hibernate>5.3.6.Final</version.org.hibernate>
-                <version.org.hibernate.validator>5.2.4.Final</version.org.hibernate.validator>
-                <version.org.hibernate.validator-cdi>5.2.4.Final</version.org.hibernate.validator-cdi>
-                <version.validation-api>2.0.1</version.validation-api>
-                <version.cdi-api>1.2</version.cdi-api>
-                <version.javaee-api>8.0</version.javaee-api>
-                <version.resteasy>3.9.3.Final</version.resteasy>
-            </properties>
-            <dependencies>
-                <dependency>
-                    <groupId>org.jboss.weld.se</groupId>
-                    <artifactId>weld-se</artifactId>
-                    <version>2.4.2.Final</version>
-                    <scope>test</scope>
-                </dependency>
-                <dependency>
-                    <groupId>net.oneandone.ioc-unit</groupId>
-                    <artifactId>weld2-starter</artifactId>
-                    <version>${project.version}</version>
-                    <scope>test</scope>
-                    <exclusions>
-                        <exclusion>
-                            <groupId>org.jboss.weld.se</groupId>
-                            <artifactId>weld-se</artifactId>
-                        </exclusion>
-                        <exclusion>
-                            <groupId>javax.enterprise</groupId>
-                            <artifactId>cdi-api</artifactId>
-                        </exclusion>
-                        <exclusion>
-                            <groupId>javax.inject</groupId>
-                            <artifactId>javax.inject</artifactId>
-                        </exclusion>
-                        <exclusion>
-                            <groupId>org.jboss.logging</groupId>
-                            <artifactId>jboss-logging</artifactId>
-                        </exclusion>
-                        <exclusion>
-                            <groupId>javax</groupId>
-                            <artifactId>javaee-api</artifactId>
-                        </exclusion>
-
-                    </exclusions>
-                </dependency>
-            </dependencies>
-        </profile>
-        <profile>
-            <id>weld3.0</id>
-            <modules>
-                <module>testing/purecdi-tests</module>
-            </modules>
-            <properties>
-                <weld.version>3.0.5.Final</weld.version>
-                <weld-spi.version>3.0.SP4</weld-spi.version>
-                <version.org.hibernate.api>1.0.0.Final</version.org.hibernate.api>
-                <version.org.hibernate>5.3.6.Final</version.org.hibernate>
-                <version.org.hibernate.validator>6.0.1.Final</version.org.hibernate.validator>
-                <version.org.hibernate.validator-cdi>6.0.1.Final</version.org.hibernate.validator-cdi>
-                <version.validation-api>2.0.2</version.validation-api>
-                <version.cdi-api>2.0.SP1</version.cdi-api>
-                <version.javaee-api>8.0</version.javaee-api>
-                <version.resteasy>3.9.3.Final</version.resteasy>
-            </properties>
-            <dependencies>
-                <dependency>
-                    <groupId>net.oneandone.ioc-unit</groupId>
-                    <artifactId>weld3-starter</artifactId>
-                    <version>${project.version}</version>
-                    <scope>test</scope>
-                    <exclusions>
-                        <exclusion>
-                            <groupId>javax.enterprise</groupId>
-                            <artifactId>cdi-api</artifactId>
-                        </exclusion>
-                        <exclusion>
-                            <groupId>javax.inject</groupId>
-                            <artifactId>javax.inject</artifactId>
-                        </exclusion>
-                        <exclusion>
-                            <groupId>javax</groupId>
-                            <artifactId>javaee-api</artifactId>
-                        </exclusion>
-                    </exclusions>
-                </dependency>
             </dependencies>
         </profile>
         <profile>
@@ -491,20 +359,6 @@
                     <artifactId>weld31-starter</artifactId>
                     <version>${project.version}</version>
                     <scope>test</scope>
-                    <exclusions>
-                        <exclusion>
-                            <groupId>javax.enterprise</groupId>
-                            <artifactId>cdi-api</artifactId>
-                        </exclusion>
-                        <exclusion>
-                            <groupId>javax.inject</groupId>
-                            <artifactId>javax.inject</artifactId>
-                        </exclusion>
-                        <exclusion>
-                            <groupId>javax</groupId>
-                            <artifactId>javaee-api</artifactId>
-                        </exclusion>
-                    </exclusions>
                 </dependency>
             </dependencies>
         </profile>
@@ -671,17 +525,33 @@
             </dependency>
             <dependency>
                 <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-core</artifactId>
+                <version>${version.org.hibernate}</version>
+                <scope>provided</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>javax.enterprise</groupId>
+                        <artifactId>cdi-api</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.hibernate.javax.persistence</groupId>
+                        <artifactId>hibernate-jpa-2.1-api</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.geronimo.specs</groupId>
+                        <artifactId>geronimo-jta_1.1_spec</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-entitymanager</artifactId>
                 <version>${version.org.hibernate}</version>
                 <scope>provided</scope>
                 <exclusions>
                     <exclusion>
-                        <groupId>org.jboss.spec.javax.transaction</groupId>
-                        <artifactId>jboss-transaction-api_1.2_spec</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.jboss.spec.javax.transaction</groupId>
-                        <artifactId>jboss-transaction-api_1.1_spec</artifactId>
+                        <groupId>org.hibernate.javax.persistence</groupId>
+                        <artifactId>hibernate-jpa-2.1-api</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
@@ -816,7 +686,7 @@
             <plugin>
                 <groupId>org.basepom.maven</groupId>
                 <artifactId>duplicate-finder-maven-plugin</artifactId>
-                <version>1.3.0</version>
+                <version>1.4.0</version>
                 <executions>
                     <execution>
                         <id>duplicate-check</id>
@@ -827,9 +697,9 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <failBuildInCaseOfDifferentContentConflict>true</failBuildInCaseOfDifferentContentConflict>
-                    <failBuildInCaseOfEqualContentConflict>true</failBuildInCaseOfEqualContentConflict>
-                    <failBuildInCaseOfConflict>true</failBuildInCaseOfConflict>
+                    <failBuildInCaseOfDifferentContentConflict>false</failBuildInCaseOfDifferentContentConflict>
+                    <failBuildInCaseOfEqualContentConflict>false</failBuildInCaseOfEqualContentConflict>
+                    <failBuildInCaseOfConflict>false</failBuildInCaseOfConflict>
                     <checkCompileClasspath>true</checkCompileClasspath>
                     <checkRuntimeClasspath>true</checkRuntimeClasspath>
                     <checkTestClasspath>false</checkTestClasspath>
