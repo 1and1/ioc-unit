@@ -35,6 +35,7 @@
     </modules>
 
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit4.version>4.12</junit4.version>
         <slf4j.version>1.7.25</slf4j.version>
         <logback.version>1.0.9</logback.version>

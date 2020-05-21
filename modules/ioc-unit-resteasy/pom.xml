@@ -34,9 +34,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>${compile.version.servlet}</version>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>${compile.version.servlet-api}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

@@ -40,19 +40,19 @@
         <dependency>
             <groupId>jakarta.ejb</groupId>
             <artifactId>jakarta.ejb-api</artifactId>
-            <version>${compile.version.ejb}</version>
+            <version>${compile.version.ejb-api}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>javax.faces</groupId>
-            <artifactId>javax.faces-api</artifactId>
-            <version>${compile.version.faces}</version>
+            <groupId>jakarta.faces</groupId>
+            <artifactId>jakarta.faces-api</artifactId>
+            <version>${compile.version.faces-api}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>${compile.version.servlet}</version>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>${compile.version.servlet-api}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
