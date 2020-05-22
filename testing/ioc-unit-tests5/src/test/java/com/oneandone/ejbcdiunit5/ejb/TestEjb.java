@@ -26,8 +26,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.oneandone.ejbcdiunit5.helpers.LoggerGenerator;
 import com.oneandone.iocunit.IocJUnit5Extension;
+import com.oneandone.iocunit.analyzer.annotations.SutClasspaths;
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.iocunit.ejb.EjbJarClasspath;
 import com.oneandone.iocunit.ejb.SessionContextFactory;
 import com.oneandone.iocunit.ejb.persistence.SinglePersistenceFactory;
 import com.oneandone.iocunit.ejb.persistence.TestTransaction;
@@ -52,7 +52,7 @@ import com.oneandone.iocunitejb.testbases.TestEntity1Saver;
         TestEjb.TestDbPersistenceFactory.class, SessionContextFactory.class,
         StatelessBeanManagedTrasEJB.class, StatelessChildEJB.class,
         QMdbEjb.class, MdbEjbInfoSingleton.class, LoggerGenerator.class, CDIClass.class, OuterClass.class })
-@EjbJarClasspath(TestBaseClass.class)
+@SutClasspaths(TestBaseClass.class)
 public class TestEjb extends EJBTransactionTestBase {
 
     @Inject
