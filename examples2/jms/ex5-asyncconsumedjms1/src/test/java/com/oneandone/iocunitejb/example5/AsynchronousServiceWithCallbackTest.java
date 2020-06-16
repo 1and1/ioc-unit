@@ -88,13 +88,16 @@ public class AsynchronousServiceWithCallbackTest {
         }
         waitForActiveMQ();
         assertThat(asynchronousManager.once(), is(10)); // sends to remote
+        waitForActiveMQ();
         assertThat(asynchronousManager.once(), is(10)); // sends to callback
         // fetch the 6th inserted entity.
         final Long id = idResults.get(correlationIds.get(5));
         final CorrelationId correlationId = sut.getRemoteStringValueFor(id);
         waitForActiveMQ();
         assertThat(asynchronousManager.once(), is(1)); // send to remote
+        waitForActiveMQ();
         assertThat(asynchronousManager.once(), is(1)); // send callback
+        waitForActiveMQ();
         assertThat(stringResults.get(correlationId), is(remoteService.getStringValueFor(id)));
     }
 
