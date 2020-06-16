@@ -97,7 +97,6 @@ public class AsynchronousServiceWithCallbackTest {
         assertThat(asynchronousManager.once(), is(1)); // send to remote
         waitForActiveMQ();
         assertThat(asynchronousManager.once(), is(1)); // send callback
-        waitForActiveMQ();
         assertThat(stringResults.get(correlationId), is(remoteService.getStringValueFor(id)));
     }
 
