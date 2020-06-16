@@ -28,6 +28,7 @@
     </developers>
 
     <modules>
+
     </modules>
 
 
@@ -106,6 +107,7 @@
                 <module>weld-starter</module>
                 <module>modules/ioc-unit-analyzer</module>
                 <module>modules/ioc-unit</module>
+                <!--module>modules/ioc-unit-warcheck-plugin</module-->
                 <module>modules/ioc-unit-dbunit</module>
                 <module>modules/ioc-unit-mockseasy</module>
                 <module>modules/ioc-unit-validate</module>
@@ -676,6 +678,9 @@
                         <goals>
                             <goal>jar</goal>
                         </goals>
+                        <configuration>
+                            <source>8</source>
+                        </configuration>
                     </execution>
                 </executions>
                 <configuration>
