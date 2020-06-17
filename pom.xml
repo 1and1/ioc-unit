@@ -33,7 +33,7 @@
 
 
     <properties>
-        <maven.javadoc.skip>true</maven.javadoc.skip>
+        <!--maven.javadoc.skip>true</maven.javadoc.skip-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- apache plugin versions and configurations, please sort alphabetically -->
@@ -744,6 +744,11 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
                     <version>${maven-source-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>${maven-site-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
