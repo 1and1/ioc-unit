@@ -3,7 +3,7 @@
     <parent>
         <groupId>net.oneandone.ioc-unit</groupId>
         <artifactId>ioc-unit-rest-examples2-parent</artifactId>
-        <version>2.0.29-SNAPSHOT</version>
+        <version>2.0.30-SNAPSHOT</version>
     </parent>
 
 
@@ -13,6 +13,9 @@
     <name>examples:rest:ex8-simplerest: servlet-example</name>
     <description>Test one rest-service</description>
     <url>https://github.com/1and1/ejb-cdi-unit</url>
+    <properties>
+        <jetty.version>9.4.29.v20200521</jetty.version>
+    </properties>
     <dependencies>
 
         <dependency>
@@ -43,22 +46,27 @@
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-server</artifactId>
-            <version>9.4.3.v20170317</version>
+            <version>${jetty.version}</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-servlet</artifactId>
-            <version>9.4.3.v20170317</version>
+            <version>${jetty.version}</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-webapp</artifactId>
-            <version>9.4.3.v20170317</version>
+            <version>${jetty.version}</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-jndi</artifactId>
-            <version>9.4.3.v20170317</version>
+            <version>${jetty.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.weld.servlet</groupId>
+            <artifactId>weld-servlet</artifactId>
+            <version>2.3.5.Final</version>
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
@@ -82,10 +90,10 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
         </dependency>
-        <dependency>
+        <!--dependency>
             <groupId>net.oneandone.ioc-unit</groupId>
             <artifactId>weld2-starter</artifactId>
-        </dependency>
+        </dependency-->
     </dependencies>
 
     <build>

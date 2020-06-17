@@ -7,11 +7,15 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.security.Principal;
 
-import javax.annotation.PostConstruct;
+import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.security.auth.Subject;
+import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.jetty.security.IdentityService;
 import org.eclipse.jetty.security.LoginService;
@@ -26,11 +30,14 @@ import org.eclipse.jetty.server.session.SessionHandler;
 import org.eclipse.jetty.servlet.ErrorPageErrorHandler;
 import org.eclipse.jetty.servlet.ServletHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.webapp.DecoratingListener;
 import org.eclipse.jetty.webapp.WebAppContext;
+import org.jboss.weld.environment.servlet.Listener;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
-import com.oneandone.iocunit.IocUnitRunner;
 import com.oneandone.iocunit.analyzer.annotations.SutClasses;
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 import com.oneandone.iocunit.jpa.XmlLessPersistenceFactory;
@@ -38,7 +45,7 @@ import com.oneandone.iocunit.jpa.XmlLessPersistenceFactory;
 /**
  * @author aschoerk
  */
-@RunWith(IocUnitRunner.class)
+@RunWith(JUnit4.class)
 @TestClasses(XmlLessPersistenceFactory.class)
 @SutClasses({Service.class})
 public class ServiceTest {
@@ -55,8 +62,7 @@ public class ServiceTest {
     @Inject
     private TestServlet servlet;
 
-
-    @PostConstruct
+    @Before
     public void setUp()  {
         Thread thread = new Thread(() -> {
             Server jetty = null;
@@ -90,12 +96,14 @@ public class ServiceTest {
 
                 context.setContextPath("/iocunitex/*");
 
-                context.setResourceBase("src/main/resources");
-
+                context.setResourceBase("src/test/resources");
                 jetty.setHandler(context);
 
                 final ServletHolder servletHolder = new ServletHolder(this.servlet);
                 context.addServlet(servletHolder, "/testservlet/*");
+                context.addServlet(HelloWorldServlet.class, "/helloservlet/*");
+                context.addEventListener(new DecoratingListener());
+                context.addEventListener(new Listener());
 
                 LoginService loginService = new LoginService() {
                     private IdentityService identityService = null;
@@ -175,6 +183,23 @@ public class ServiceTest {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    // @PostConstruct
+
+    public static class HelloWorldServlet extends HttpServlet {
+        private static final long serialVersionUID = 3965190802223473720L;
+        @Inject BeanManager manager;
+
+
+        protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+            resp.setContentType("text/plain");
+
+            resp.getWriter().append("Hello from " + manager);
+
+        }
+
     }
 
     @Test

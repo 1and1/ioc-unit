@@ -16,6 +16,12 @@
     <logger name="org.hibernate.orm.url" level="error">
         <appender-ref ref="STDOUT"/>
     </logger>
+    <logger name="org.jboss" level="trace">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+    <logger name="org.eclipse" level="trace">
+        <appender-ref ref="STDOUT"/>
+    </logger>
 
     <root level="info">
         <appender-ref ref="STDOUT"/>
