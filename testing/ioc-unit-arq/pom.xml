@@ -68,6 +68,24 @@
          <scope>test</scope>
       </dependency>
       <dependency>
+         <groupId>org.wildfly.core</groupId>
+         <artifactId>wildfly-server</artifactId>
+         <version>2.2.0.Final</version>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.wildfly.core</groupId>
+         <artifactId>wildfly-deployment-scanner</artifactId>
+         <version>2.2.0.Final</version>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.wildfly</groupId>
+         <artifactId>wildfly-weld</artifactId>
+         <version>10.1.0.Final</version>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
          <groupId>javax</groupId>
          <artifactId>javaee-api</artifactId>
       </dependency>
