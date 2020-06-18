@@ -6,12 +6,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.oneandone.iocunit.IocUnitRunner;
-import com.oneandone.iocunit.resteasy.JaxRSClasses;
+import com.oneandone.iocunit.resteasy.JaxRSPackagesDeep;
 import com.oneandone.iocunit.resteasy.auth.TestAuth;
 import com.oneandone.iocunit.resteasytester.auth.resources.SecuredResourceImplementingInterface;
 
 @RunWith(IocUnitRunner.class)
-@JaxRSClasses({SecuredResourceImplementingInterface.class})
+@JaxRSPackagesDeep(value = {SecuredResourceImplementingInterface.class}, onlyDefinedByAnnotation = true)
 public class SecureResourceImplementingInterfaceTest {
 
     @Test

@@ -1,6 +1,8 @@
 package com.oneandone.iocunit.ejb;
 
+import javax.transaction.Status;
 import javax.transaction.Synchronization;
+import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 
 import org.jboss.weld.transaction.spi.TransactionServices;
@@ -19,7 +21,11 @@ public class EjbUnitTransactionServices implements TransactionServices {
 
     @Override
     public boolean isTransactionActive() {
-        return false;
+        try {
+            return (new SimulatedTransactionManager()).getStatus() != Status.STATUS_NO_TRANSACTION;
+        } catch (SystemException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

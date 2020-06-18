@@ -336,15 +336,18 @@ public class SimulatedTransactionManager {
         ArrayList<ThreadLocalTransactionInformation> stack = transactionStack.get();
         if (stack.size() > 0) {
             ThreadLocalTransactionInformation element = stack.remove(stack.size() - 1);
+            final boolean rollbackOnly = element.getRollbackOnly() || element.isRolledBack();
+            synchBeforeCompletion();
             ArrayList<Exception> exceptions = new ArrayList<>();
             for (TestTransactionBase testTransactionBase : element.persistenceFactories) {
                 try {
-                    testTransactionBase.close(element.getRollbackOnly() || element.isRolledBack());
+                    testTransactionBase.close(rollbackOnly);
                 } catch (Exception e) {
                     exceptions.add(e);
                 }
             }
             handleExceptions(exceptions);
+            synchAfterCompletion(rollbackOnly ? Status.STATUS_ROLLEDBACK : Status.STATUS_COMMITTED);
         }
     }
 

@@ -23,6 +23,7 @@ import com.oneandone.cdi.weldstarter.CreationalContexts;
 import com.oneandone.cdi.weldstarter.WeldSetupClass;
 import com.oneandone.cdi.weldstarter.spi.TestExtensionService;
 import com.oneandone.cdi.weldstarter.spi.WeldStarter;
+import com.oneandone.iocunit.analyzer.ClasspathHandler;
 import com.oneandone.iocunit.resteasy.auth.AuthInterceptor;
 import com.oneandone.iocunit.resteasy.auth.TestAuth;
 import com.oneandone.iocunit.util.Annotations;
@@ -86,7 +87,7 @@ public class RestEasyTestExtensionServices implements TestExtensionService {
 
     @Override
     public List<Class<? extends Annotation>> extraClassAnnotations() {
-        return Arrays.asList(JaxRSClasses.class);
+        return Arrays.asList(JaxRSClasses.class, JaxRSPackagesDeep.class);
     }
 
     @Override
@@ -102,7 +103,22 @@ public class RestEasyTestExtensionServices implements TestExtensionService {
                     perAnnotationDefinedJaxRSClasses.get().add(clazz);
                 }
             }
-
+        }
+        if(annotation.annotationType().equals(JaxRSPackagesDeep.class)) {
+            final JaxRSPackagesDeep jaxrsAnnotation = (JaxRSPackagesDeep) annotation;
+            Class<?>[] jaxRSClassesForThis = jaxrsAnnotation.value();
+            if (jaxrsAnnotation.onlyDefinedByAnnotation()) {
+                onlyAnnotationDefined.set(true);
+            }
+            if(jaxRSClassesForThis != null) {
+                for (Class<?> clazz : jaxRSClassesForThis) {
+                    Set<Class<?>> classes = new HashSet<>();
+                    ClasspathHandler.addPackageDeep(clazz, classes);
+                    for (Class<?> found: classes) {
+                        perAnnotationDefinedJaxRSClasses.get().add(found);
+                    }
+                }
+            }
         }
     }
     @Override
