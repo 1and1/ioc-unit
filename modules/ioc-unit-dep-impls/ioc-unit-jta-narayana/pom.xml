@@ -12,7 +12,7 @@
 
     <name>net.oneandone.ioc-unit:ioc-unit-jta-narayana</name>
     <description>Adds narayana Transactionmanager to ioc-unit-container</description>
-    <url>https://github.com/1and1/ioc-unit-dep-impls/ioc-unit-jta-narayana</url>
+    <url>https://github.com/1and1/modules/ioc-unit-dep-impls/ioc-unit-jta-narayana</url>
 
     <licenses>
         <license>

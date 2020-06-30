@@ -107,14 +107,15 @@
                 <module>weld-starter</module>
                 <module>modules/ioc-unit-analyzer</module>
                 <module>modules/ioc-unit</module>
-                <!--module>modules/ioc-unit-warcheck-plugin</module-->
-                <module>modules/ioc-unit-dbunit</module>
                 <module>modules/ioc-unit-mockseasy</module>
+                <module>modules/ioc-unit-resource</module>
                 <module>modules/ioc-unit-validate</module>
                 <module>modules/ioc-unit-resteasy</module>
                 <module>modules/ioc-unit-ejb</module>
                 <module>modules/ioc-unit-dep-impls</module>
                 <module>modules/ioc-unit-contexts</module>
+                <!--module>modules/ioc-unit-warcheck-plugin</module-->
+                <module>modules/ioc-unit-dbunit</module>
                 <module>modules/ioc-unit-simulators</module>
 
                 <module>examples2</module>

@@ -12,7 +12,7 @@
 
     <name>net.oneandone.ioc-unit:ioc-unit-resteasy</name>
     <description>Support ioc-unit-tests of restinterfaces using resteasys MockDispatcherFactory</description>
-    <url>https://github.com/1and1/ioc-unit-resteasy</url>
+    <url>https://github.com/1and1/modules/ioc-unit-resteasy</url>
 
     <licenses>
         <license>

@@ -12,7 +12,7 @@
 
     <name>net.oneandone.ioc-unit:ioc-unit-jpa-hibernate5</name>
     <description>Adds wildfly10 hibernate dependencies</description>
-    <url>https://github.com/1and1/ioc-unit-dep-impls/ioc-unit-jpa-hibernate5</url>
+    <url>https://github.com/1and1/modules/ioc-unit-dep-impls/ioc-unit-jpa-hibernate5</url>
 
     <licenses>
         <license>

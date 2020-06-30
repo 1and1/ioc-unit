@@ -12,7 +12,7 @@
 
     <name>net.oneandone.ioc-unit:ioc-unit-simulators</name>
     <description>Some serversimulators used ejbcdiunit to build an ejb-test-environment.</description>
-    <url>https://github.com/1and1/ejb-cdi-unit</url>
+    <url>https://github.com/1and1/modules/ioc-unit-simulators</url>
 
     <licenses>
         <license>

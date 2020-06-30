@@ -12,7 +12,7 @@
 
     <name>net.oneandone.ioc-unit:ioc-unit-jms-mockrunner</name>
     <description>Adds mockrunner jms-implementation</description>
-    <url>https://github.com/1and1/ioc-unit-dep-impls/ioc-unit-jms-mockrunner</url>
+    <url>https://github.com/1and1/modules/ioc-unit-dep-impls/ioc-unit-jms-mockrunner</url>
 
     <licenses>
         <license>

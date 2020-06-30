@@ -12,7 +12,7 @@
 
     <name>net.oneandone.ioc-unit:ioc-unit-validate</name>
     <description>Allow the definition of beans as to be validated in the testcontainer</description>
-    <url>https://github.com/1and1/ioc-unit-validate</url>
+    <url>https://github.com/1and1/modules/ioc-unit-validate</url>
 
     <licenses>
         <license>

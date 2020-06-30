@@ -12,7 +12,7 @@
 
     <name>net.oneandone.ioc-unit:ioc-unit</name>
     <description>Allows tests based on cdi only</description>
-    <url>https://github.com/1and1/ioc-unit</url>
+    <url>https://github.com/1and1/modules/ioc-unit</url>
 
     <licenses>
         <license>

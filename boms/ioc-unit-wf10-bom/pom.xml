@@ -101,6 +101,12 @@
                 <version>2.0.3.Final</version>
                 <scope>provided</scope>
             </dependency>
+            <dependency>
+                <groupId>org.jboss.spec.javax.enterprise.concurrent</groupId>
+                <artifactId>jboss-concurrency-api_1.0_spec</artifactId>
+                <version>1.0.0.Final</version>
+                <scope>provided</scope>
+            </dependency>
             <!-- apache commons -->
             <dependency>
                 <groupId>commons-beanutils</groupId>
