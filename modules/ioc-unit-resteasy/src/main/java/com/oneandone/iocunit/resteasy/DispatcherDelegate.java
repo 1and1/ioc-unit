@@ -67,8 +67,12 @@ public class DispatcherDelegate implements Dispatcher {
             creationalContexts = new CreationalContexts();
             for (Class<?> clazz : jaxRsTestExtension.getResourceClasses()) {
                 logger.info("Creating restresource {}", clazz.getName());
-                Object res = creationalContexts.create(clazz, ApplicationScoped.class);
-                delegate.getRegistry().addSingletonResource(res);
+                try {
+                    Object res = creationalContexts.create(clazz, ApplicationScoped.class);
+                    delegate.getRegistry().addSingletonResource(res);
+                } catch (Throwable thw) {
+                    logger.debug(thw.getMessage(), thw);
+                }
             }
 
         } catch (NamingException e) {

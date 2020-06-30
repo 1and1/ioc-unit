@@ -52,8 +52,9 @@ public class RestEasyTestExtensionServices implements TestExtensionService {
     public List<Extension> getExtensions() {
         List<Extension> result = new ArrayList<>();
         try {
-            if (Path.class.getName() != null)
+            if(Path.class.getName() != null) {
                 result.add(new JaxRsRestEasyTestExtension());
+            }
         } catch (NoClassDefFoundError ex) {
             ;
         }
@@ -95,7 +96,7 @@ public class RestEasyTestExtensionServices implements TestExtensionService {
         if(annotation.annotationType().equals(JaxRSClasses.class)) {
             final JaxRSClasses jaxrsAnnotation = (JaxRSClasses) annotation;
             Class<?>[] jaxRSClassesForThis = jaxrsAnnotation.value();
-            if (jaxrsAnnotation.onlyDefinedByAnnotation()) {
+            if(jaxrsAnnotation.onlyDefinedByAnnotation()) {
                 onlyAnnotationDefined.set(true);
             }
             if(jaxRSClassesForThis != null) {
@@ -107,20 +108,22 @@ public class RestEasyTestExtensionServices implements TestExtensionService {
         if(annotation.annotationType().equals(JaxRSPackagesDeep.class)) {
             final JaxRSPackagesDeep jaxrsAnnotation = (JaxRSPackagesDeep) annotation;
             Class<?>[] jaxRSClassesForThis = jaxrsAnnotation.value();
-            if (jaxrsAnnotation.onlyDefinedByAnnotation()) {
+            if(jaxrsAnnotation.onlyDefinedByAnnotation()) {
                 onlyAnnotationDefined.set(true);
             }
             if(jaxRSClassesForThis != null) {
                 for (Class<?> clazz : jaxRSClassesForThis) {
                     Set<Class<?>> classes = new HashSet<>();
                     ClasspathHandler.addPackageDeep(clazz, classes);
-                    for (Class<?> found: classes) {
-                        perAnnotationDefinedJaxRSClasses.get().add(found);
+                    for (Class<?> found : classes) {
+                        if (found.getCanonicalName() != null)
+                            perAnnotationDefinedJaxRSClasses.get().add(found);
                     }
                 }
             }
         }
     }
+
     @Override
     public void postStartupAction(final CreationalContexts creationalContexts, final WeldStarter weldStarter) {
         creationalContexts.create(RestEasyMockInit.class, ApplicationScoped.class);
@@ -136,39 +139,47 @@ public class RestEasyTestExtensionServices implements TestExtensionService {
      */
     @Override
     public boolean candidateToStart(final Class<?> c) {
-        if (c.isInstance(SecurityContext.class)) {
-            logger.trace("Found SecurityContext in class: {}",c.getName());
+        if(c.isInstance(SecurityContext.class)) {
+            logger.trace("Found SecurityContext in class: {}", c.getName());
         }
-        if (c.isAnnotationPresent(Provider.class) || JaxRsRestEasyTestExtension.annotationPresent(c, Path.class)) {
+        if(c.isAnnotationPresent(Provider.class) || JaxRsRestEasyTestExtension.annotationPresent(c, Path.class)) {
             asCandidatesDefinedJaxRSClasses.get().add(c);
         }
-        if (perAnnotationDefinedJaxRSClasses.get().contains(c))
+        if(onlyAnnotationDefined.get()) {
+            if(perAnnotationDefinedJaxRSClasses.get().contains(c)) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        else {
             return true;
-        else
-            return false;
+        }
     }
 
     @Override
     public void preStartupAction(WeldSetupClass weldSetup, Class clazz, Method method) {
         for (Class<?> c : perAnnotationDefinedJaxRSClasses.get()) {
-            if (!weldSetup.getBeanClasses().contains(c.getName())) {
+            if(!weldSetup.getBeanClasses().contains(c.getName())) {
                 logger.info("Restresource or ExceptionMapper candidate: {} found "
                             + " added to testconfiguration.", c.getSimpleName());
                 weldSetup.getBeanClasses().add(c.getName());
             }
         }
         for (Class<?> c : asCandidatesDefinedJaxRSClasses.get()) {
-            if (!weldSetup.getBeanClasses().contains(c.getName())) {
+            if(!weldSetup.getBeanClasses().contains(c.getName())) {
                 logger.warn("Restresource or ExceptionMapper candidate: {} found "
                             + " while scanning availables, but not in testconfiguration included.", c.getSimpleName());
             }
         }
         asCandidatesDefinedJaxRSClasses.get().clear(); // show only once
         TestAuth testAuth = Annotations.findAnnotation(clazz, method, TestAuth.class);
-        if (testAuth != null) {
+        if(testAuth != null) {
             testSecurityThreadLocal.set(testAuth);
             weldSetup.getBeanClasses().add(IocUnitSecurityContext.class.getName());
-        } else {
+        }
+        else {
             testSecurityThreadLocal.set(null);
         }
     }
