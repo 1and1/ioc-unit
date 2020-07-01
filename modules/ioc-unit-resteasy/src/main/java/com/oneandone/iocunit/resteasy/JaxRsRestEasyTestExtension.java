@@ -24,6 +24,7 @@ import org.apache.deltaspike.core.util.metadata.AnnotationInstanceProvider;
 import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
 
 import com.oneandone.cdi.weldstarter.WeldSetupClass;
+import com.oneandone.iocunit.analyzer.ConfigStatics;
 import com.oneandone.iocunit.resteasy.auth.RestEasyAuthorized;
 
 /**
@@ -122,7 +123,7 @@ public class JaxRsRestEasyTestExtension implements Extension {
         AnnotatedType<T> annotatedType = pat.getAnnotatedType();
         final Class aClass = annotatedType.getJavaClass();
         if (RestEasyTestExtensionServices.perAnnotationDefinedJaxRSClasses.get().contains(aClass)) {
-            if (!aClass.isAnnotationPresent(Provider.class))
+            if (!aClass.isAnnotationPresent(Provider.class) && ConfigStatics.isInterceptable(aClass))
                 makeInterceptedForAuth(pat, annotatedType);
         }
     }

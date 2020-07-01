@@ -30,7 +30,7 @@ public interface TestExtensionService {
         return Collections.EMPTY_LIST;
     }
 
-    default void handleExtraClassAnnotation(final Annotation annotation, Class<?> c) {}
+    default List<Class<?>> handleExtraClassAnnotation(final Annotation annotation, Class<?> c) { return Collections.EMPTY_LIST; }
 
     default void explicitlyExcluded(Class<?> c) {};
 

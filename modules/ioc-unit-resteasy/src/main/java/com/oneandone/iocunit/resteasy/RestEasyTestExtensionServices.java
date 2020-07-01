@@ -24,6 +24,7 @@ import com.oneandone.cdi.weldstarter.WeldSetupClass;
 import com.oneandone.cdi.weldstarter.spi.TestExtensionService;
 import com.oneandone.cdi.weldstarter.spi.WeldStarter;
 import com.oneandone.iocunit.analyzer.ClasspathHandler;
+import com.oneandone.iocunit.analyzer.ConfigStatics;
 import com.oneandone.iocunit.resteasy.auth.AuthInterceptor;
 import com.oneandone.iocunit.resteasy.auth.TestAuth;
 import com.oneandone.iocunit.util.Annotations;
@@ -92,7 +93,8 @@ public class RestEasyTestExtensionServices implements TestExtensionService {
     }
 
     @Override
-    public void handleExtraClassAnnotation(final Annotation annotation, Class<?> c) {
+    public List<Class<?>> handleExtraClassAnnotation(final Annotation annotation, Class<?> c) {
+        List<Class<?>> res = new ArrayList<>();
         if(annotation.annotationType().equals(JaxRSClasses.class)) {
             final JaxRSClasses jaxrsAnnotation = (JaxRSClasses) annotation;
             Class<?>[] jaxRSClassesForThis = jaxrsAnnotation.value();
@@ -102,6 +104,7 @@ public class RestEasyTestExtensionServices implements TestExtensionService {
             if(jaxRSClassesForThis != null) {
                 for (Class<?> clazz : jaxRSClassesForThis) {
                     perAnnotationDefinedJaxRSClasses.get().add(clazz);
+                    res.add(clazz);
                 }
             }
         }
@@ -116,12 +119,15 @@ public class RestEasyTestExtensionServices implements TestExtensionService {
                     Set<Class<?>> classes = new HashSet<>();
                     ClasspathHandler.addPackageDeep(clazz, classes);
                     for (Class<?> found : classes) {
-                        if (found.getCanonicalName() != null)
+                        if (found.getCanonicalName() != null && ConfigStatics.mightBeBean(found)) {
                             perAnnotationDefinedJaxRSClasses.get().add(found);
+                            res.add(found);
+                        }
                     }
                 }
             }
         }
+        return res;
     }
 
     @Override
@@ -144,17 +150,14 @@ public class RestEasyTestExtensionServices implements TestExtensionService {
         }
         if(c.isAnnotationPresent(Provider.class) || JaxRsRestEasyTestExtension.annotationPresent(c, Path.class)) {
             asCandidatesDefinedJaxRSClasses.get().add(c);
-        }
-        if(onlyAnnotationDefined.get()) {
-            if(perAnnotationDefinedJaxRSClasses.get().contains(c)) {
+            if (onlyAnnotationDefined.get())
                 return true;
-            }
-            else {
-                return false;
-            }
+        }
+        if(perAnnotationDefinedJaxRSClasses.get().contains(c)) {
+            return true;
         }
         else {
-            return true;
+            return false;
         }
     }
 

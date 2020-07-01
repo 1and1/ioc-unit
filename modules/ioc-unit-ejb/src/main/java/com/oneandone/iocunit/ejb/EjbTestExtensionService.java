@@ -14,6 +14,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
@@ -91,7 +92,7 @@ public class EjbTestExtensionService implements TestExtensionService {
     }
 
     @Override
-    public void handleExtraClassAnnotation(final Annotation annotation, Class<?> c) {
+    public List<Class<?>> handleExtraClassAnnotation(final Annotation annotation, Class<?> c) {
         if(annotation.annotationType().equals(EjbJarClasspath.class)) {
             Class<?> ejbJarClasspathExample = ((EjbJarClasspath) annotation).value();
             if(ejbJarClasspathExample != null) {
@@ -107,6 +108,7 @@ public class EjbTestExtensionService implements TestExtensionService {
             }
         }
 
+        return Collections.EMPTY_LIST;
     }
 
     @Override

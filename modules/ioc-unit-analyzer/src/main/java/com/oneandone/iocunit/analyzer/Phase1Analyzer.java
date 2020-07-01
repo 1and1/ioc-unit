@@ -125,7 +125,8 @@ class Phase1Analyzer extends PhasesBase {
                         .map(a -> c1.getAnnotation((Class<? extends Annotation>) (a)))
                         .filter(res -> res != null)
                         .forEach(res -> extraClassAnnotations.get(((Annotation) res).annotationType())
-                                .handleExtraClassAnnotation(res, c1));
+                                .handleExtraClassAnnotation(res, c1)
+                                .forEach(extraAnnotated -> configuration.candidate(extraAnnotated)));
             });
         }
     }
@@ -450,11 +451,13 @@ class Phase1Analyzer extends PhasesBase {
                                     .elseClass(c);
                         }
                     }
-                    else {
-                        logger.trace("else but to be started {}", c);
-                        configuration
-                                .tobeStarted(c)
-                                .elseClass(c);
+                    else if (c.isEnum() || c.isInterface() || c.isArray()) {
+                        logger.trace("ignoring {}", c);
+                    } else {
+                            logger.trace("else but to be started {}", c);
+                            configuration
+                                    .tobeStarted(c)
+                                    .elseClass(c);
                     }
                 }
                 handledCandidates.add(c);

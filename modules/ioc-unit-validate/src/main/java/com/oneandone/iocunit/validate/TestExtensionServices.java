@@ -75,15 +75,18 @@ public class TestExtensionServices implements TestExtensionService {
     }
 
     @Override
-    public void handleExtraClassAnnotation(final Annotation annotation, Class<?> c) {
+    public List<Class<?>> handleExtraClassAnnotation(final Annotation annotation, Class<?> c) {
+        List<Class<?>> res = new ArrayList<>();
         if(annotation.annotationType().equals(ValidateClasses.class)) {
             Class<?>[] classesToValidateForThis = ((ValidateClasses) annotation).value();
             if(classesToValidateForThis != null) {
                 for (Class<?> clazz : classesToValidateForThis) {
                     testExtensionServiceData.get().add(clazz);
+                    res.add(clazz);
                 }
             }
         }
+        return res;
     }
 
 
