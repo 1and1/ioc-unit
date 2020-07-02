@@ -131,26 +131,26 @@ class Phase1Analyzer extends PhasesBase {
         }
     }
 
-    private void addPackages(Class<?>[] packages, boolean isSut) throws MalformedURLException {
+    private void addPackages(Class<?>[] packages, boolean isSut, String filterRegex) throws MalformedURLException {
         for (Class<?> packageClass : packages) {
             Set<Class<?>> tmpClasses = new HashSet<>();
-            ClasspathHandler.addPackage(packageClass, tmpClasses);
+            ClasspathHandler.addPackage(packageClass, tmpClasses, filterRegex);
             addAvailables(isSut, tmpClasses);
         }
     }
 
-    private void addPackagesDeep(Class<?>[] packages, boolean isSut) throws MalformedURLException {
+    private void addPackagesDeep(Class<?>[] packages, boolean isSut, String filterRegex) throws MalformedURLException {
         for (Class<?> packageClass : packages) {
             Set<Class<?>> tmpClasses = new HashSet<>();
-            ClasspathHandler.addPackageDeep(packageClass, tmpClasses);
+            ClasspathHandler.addPackageDeep(packageClass, tmpClasses, filterRegex);
             addAvailables(isSut, tmpClasses);
         }
     }
 
-    private void addClasspaths(Class<?>[] classpaths, boolean isSut) throws MalformedURLException {
+    private void addClasspaths(Class<?>[] classpaths, boolean isSut, String filterRegex) throws MalformedURLException {
         for (Class<?> classpathClass : classpaths) {
             Set<Class<?>> tmpClasses = new HashSet<>();
-            ClasspathHandler.addClassPath(classpathClass, tmpClasses);
+            ClasspathHandler.addClassPath(classpathClass, tmpClasses, filterRegex);
             addAvailables(isSut, tmpClasses);
         }
     }
@@ -214,19 +214,19 @@ class Phase1Analyzer extends PhasesBase {
             try {
                 SutPackages sutPackages = c1.getAnnotation(SutPackages.class);
                 if(sutPackages != null) {
-                    addPackages(sutPackages.value(), true);
+                    addPackages(sutPackages.value(), true, sutPackages.filteringRegex());
                 }
                 TestPackages testPackages = c1.getAnnotation(TestPackages.class);
                 if(testPackages != null) {
-                    addPackages(testPackages.value(), false);
+                    addPackages(testPackages.value(), false, sutPackages.filteringRegex());
                 }
                 SutPackagesDeep sutPackagesDeep = c1.getAnnotation(SutPackagesDeep.class);
                 if(sutPackagesDeep != null) {
-                    addPackagesDeep(sutPackagesDeep.value(), true);
+                    addPackagesDeep(sutPackagesDeep.value(), true, sutPackages.filteringRegex());
                 }
                 TestPackagesDeep testPackagesDeep = c1.getAnnotation(TestPackagesDeep.class);
                 if(testPackagesDeep != null) {
-                    addPackagesDeep(testPackagesDeep.value(), false);
+                    addPackagesDeep(testPackagesDeep.value(), false, sutPackages.filteringRegex());
                 }
             } catch (MalformedURLException e) {
                 throw new RuntimeException(e);
@@ -239,11 +239,11 @@ class Phase1Analyzer extends PhasesBase {
             try {
                 SutClasspaths sutClasspaths = c1.getAnnotation(SutClasspaths.class);
                 if(sutClasspaths != null) {
-                    addClasspaths(sutClasspaths.value(), true);
+                    addClasspaths(sutClasspaths.value(), true, sutClasspaths.filteringRegex());
                 }
                 TestClasspaths testClasspaths = c1.getAnnotation(TestClasspaths.class);
                 if(testClasspaths != null) {
-                    addClasspaths(testClasspaths.value(), false);
+                    addClasspaths(testClasspaths.value(), false, sutClasspaths.filteringRegex());
                 }
             } catch (MalformedURLException e) {
                 throw new RuntimeException(e);

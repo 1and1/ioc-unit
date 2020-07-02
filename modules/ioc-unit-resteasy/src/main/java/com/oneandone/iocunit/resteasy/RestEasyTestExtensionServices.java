@@ -117,7 +117,7 @@ public class RestEasyTestExtensionServices implements TestExtensionService {
             if(jaxRSClassesForThis != null) {
                 for (Class<?> clazz : jaxRSClassesForThis) {
                     Set<Class<?>> classes = new HashSet<>();
-                    ClasspathHandler.addPackageDeep(clazz, classes);
+                    ClasspathHandler.addPackageDeep(clazz, classes, jaxrsAnnotation.filteringRegex());
                     for (Class<?> found : classes) {
                         if (found.getCanonicalName() != null && ConfigStatics.mightBeBean(found)) {
                             perAnnotationDefinedJaxRSClasses.get().add(found);

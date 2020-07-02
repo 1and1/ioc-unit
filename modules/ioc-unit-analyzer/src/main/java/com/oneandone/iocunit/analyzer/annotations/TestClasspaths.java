@@ -17,4 +17,9 @@ public @interface TestClasspaths {
      */
     public Class<?>[] value();
 
+    /**
+     * A regular expression can be defined to filter the resulting classes by name.
+     * @return the regular expression that should match the className or "" which matches all
+     */
+    public String filteringRegex() default "";
 }

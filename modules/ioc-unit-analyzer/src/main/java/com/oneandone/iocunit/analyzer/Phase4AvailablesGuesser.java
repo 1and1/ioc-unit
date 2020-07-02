@@ -2,9 +2,12 @@ package com.oneandone.iocunit.analyzer;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,7 +17,7 @@ import org.slf4j.LoggerFactory;
 public class Phase4AvailablesGuesser extends PhasesBase {
     private final Phase1Analyzer phase1Analyzer;
     Logger logger = LoggerFactory.getLogger(Phase4AvailablesGuesser.class);
-    Set<Class<?>> alreadyLogged = new HashSet<>();
+    Map<Class<?>, Pair<Set<Class<?>>, Set<Class<?>>>> alreadyLogged = new HashMap<>();
 
     public Phase4AvailablesGuesser(final Configuration configuration, Phase1Analyzer phase1Analyzer) {
         super(configuration);
@@ -49,23 +52,49 @@ public class Phase4AvailablesGuesser extends PhasesBase {
                     try {
                         URL rawtypePath = ClasspathHandler.getPath(rawtype);
                         if (!rawTypeIgnore(rawtypePath.getPath())) {
+                            Pair<Set<Class<?>>, Set<Class<?>>> history = alreadyLogged.get(rawtype);
                             if(ConfigStatics.mightBeBean(rawtype)) {
-                                if(!alreadyLogged.contains(rawtype))
+                                if(history == null) {
                                     logger.warn("Added candidate {} in cdi-unit manner, even if not found as available", rawtype);
+                                    alreadyLogged.put(rawtype, Pair.of(null, null));
+                                }
                                 configuration.candidate(rawtype);
                             }
                             else if(configuration.getTestClassPaths().contains(rawtypePath)) {
-                                if(!alreadyLogged.contains(rawtype))
+                                Set<Class<?>> tmpTestClasses = new HashSet<>();
+                                if(history == null) {
                                     logger.warn("Added classpath of testclass: {} even if not found as available for inject: {}", rawtype, q);
-                                ClasspathHandler.addClassPath(rawtype, newTestClasses);
+                                    ClasspathHandler.addClassPath(rawtype, tmpTestClasses,"");
+                                    newTestClasses.addAll(tmpTestClasses);
+                                    alreadyLogged.put(rawtype, Pair.of(tmpTestClasses, null));
+                                } else {
+                                    if (history.getLeft() == null) {
+                                        ClasspathHandler.addClassPath(rawtype, tmpTestClasses,"");
+                                        newTestClasses.addAll(tmpTestClasses);
+                                        alreadyLogged.put(rawtype, Pair.of(tmpTestClasses,history.getRight()));
+                                    } else {
+                                        newTestClasses.addAll(history.getLeft());
+                                    }
+                                }
                             }
                             else {
-                                if(!alreadyLogged.contains(rawtype))
+                                Set<Class<?>> tmpClasses = new HashSet<>();
+                                if(history == null) {
                                     logger.warn("Added classpath of sutclass: {} even if not found as available for inject: {}", rawtype, q);
-                                ClasspathHandler.addClassPath(rawtype, newClasses);
+                                    ClasspathHandler.addClassPath(rawtype, tmpClasses, "");
+                                    newClasses.addAll(tmpClasses);
+                                    alreadyLogged.put(rawtype, Pair.of(null, tmpClasses));
+                                } else {
+                                    if (history.getRight() == null) {
+                                        ClasspathHandler.addClassPath(rawtype, tmpClasses,"");
+                                        newTestClasses.addAll(tmpClasses);
+                                        alreadyLogged.put(rawtype, Pair.of(history.getLeft(), tmpClasses));
+                                    } else {
+                                        newTestClasses.addAll(history.getRight());
+                                    }
+                                }
                             }
                         }
-                        alreadyLogged.add(rawtype);
                     } catch (MalformedURLException | NullPointerException e) {
                         ;
                     }

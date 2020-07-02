@@ -5,6 +5,8 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.Set;
 import java.util.function.Predicate;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.reflections.ReflectionUtils;
 import org.reflections.Reflections;
@@ -22,17 +24,24 @@ public class ClasspathHandler {
     /**
      * try to resolve all given string representation of types to a list of java types
      */
-    public static <T> Set<Class<? extends T>> forNames(final Collection<String> classes, ClassLoader... classLoaders) {
+    public static <T> Set<Class<? extends T>> forNames(final Collection<String> classes, String filterRegex, ClassLoader... classLoaders) {
         Logger tmplog = Reflections.log;
         Reflections.log = null;
         try {
-            return ReflectionUtils.forNames(classes, classLoaders);
-        } finally  {
+            Set<Class<? extends T>> tmpRes = ReflectionUtils.forNames(classes, classLoaders);
+            if(filterRegex == null || filterRegex.isEmpty()) {
+                return tmpRes;
+            }
+            else {
+                Pattern pattern = Pattern.compile(filterRegex);
+                return tmpRes.stream().filter(c -> pattern.asPredicate().test(c.getName())).collect(Collectors.toSet());
+            }
+        } finally {
             Reflections.log = tmplog;
         }
     }
 
-    public static void addPackage(Class<?> additionalPackage, Set<Class<?>> classesToProcess) throws MalformedURLException {
+    public static void addPackage(Class<?> additionalPackage, Set<Class<?>> classesToProcess, String filterRegex) throws MalformedURLException {
         final String packageName = additionalPackage.getPackage().getName();
         Reflections reflections = new Reflections(new ConfigurationBuilder()
                 .setScanners(new TypesScanner())
@@ -49,25 +58,25 @@ public class ClasspathHandler {
                         return false;
                     }
                 }));
-        classesToProcess.addAll(forNames(reflections.getStore().get(TYPES_SCANNER_NAME, SUPERTYPE_NAME),
+        classesToProcess.addAll(forNames(reflections.getStore().get(TYPES_SCANNER_NAME, SUPERTYPE_NAME), filterRegex,
                 new ClassLoader[]{ClasspathHandler.class.getClassLoader()}));
     }
 
-    public static void addClassPath(Class<?> additionalClasspath, Set<Class<?>> classesToProcess) throws MalformedURLException {
-        addClassPath(additionalClasspath, classesToProcess, null);
+    public static void addClassPath(Class<?> additionalClasspath, Set<Class<?>> classesToProcess, String filterRegex) throws MalformedURLException {
+        addClassPath(additionalClasspath, classesToProcess, null, filterRegex);
     }
 
 
     public static void addClassPath(Class<?> additionalClasspath,
                                     Set<Class<?>> classesToProcess,
-                                    Set<URL> classpathEntries)
+                                    Set<URL> classpathEntries, String filterRegex)
             throws MalformedURLException {
         final URL path = additionalClasspath.getProtectionDomain().getCodeSource().getLocation();
 
         Reflections reflections = new Reflections(new ConfigurationBuilder().setScanners(new TypesScanner())
                 .setUrls(path));
 
-        classesToProcess.addAll(forNames(reflections.getStore().get(TYPES_SCANNER_NAME, SUPERTYPE_NAME),
+        classesToProcess.addAll(forNames(reflections.getStore().get(TYPES_SCANNER_NAME, SUPERTYPE_NAME), filterRegex,
                 new ClassLoader[]{ClasspathHandler.class.getClassLoader()}));
 
         if(classpathEntries != null) {
@@ -79,7 +88,7 @@ public class ClasspathHandler {
         return clazz.getProtectionDomain().getCodeSource().getLocation();
     }
 
-    public static void addPackageDeep(final Class<?> packageClass, final Set<Class<?>> tmpClasses) {
+    public static void addPackageDeep(final Class<?> packageClass, final Set<Class<?>> tmpClasses, String filterRegex) {
         final String packageName = packageClass.getPackage().getName();
         Reflections reflections = new Reflections(new ConfigurationBuilder()
                 .setScanners(new TypesScanner())
@@ -94,7 +103,7 @@ public class ClasspathHandler {
                         return false;
                     }
                 }));
-        tmpClasses.addAll(forNames(reflections.getStore().get(TYPES_SCANNER_NAME, SUPERTYPE_NAME),
+        tmpClasses.addAll(forNames(reflections.getStore().get(TYPES_SCANNER_NAME, SUPERTYPE_NAME), filterRegex,
                 new ClassLoader[]{ClasspathHandler.class.getClassLoader()}));
     }
 }
