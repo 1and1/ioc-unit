@@ -218,15 +218,15 @@ class Phase1Analyzer extends PhasesBase {
                 }
                 TestPackages testPackages = c1.getAnnotation(TestPackages.class);
                 if(testPackages != null) {
-                    addPackages(testPackages.value(), false, sutPackages.filteringRegex());
+                    addPackages(testPackages.value(), false, testPackages.filteringRegex());
                 }
                 SutPackagesDeep sutPackagesDeep = c1.getAnnotation(SutPackagesDeep.class);
                 if(sutPackagesDeep != null) {
-                    addPackagesDeep(sutPackagesDeep.value(), true, sutPackages.filteringRegex());
+                    addPackagesDeep(sutPackagesDeep.value(), true, sutPackagesDeep.filteringRegex());
                 }
                 TestPackagesDeep testPackagesDeep = c1.getAnnotation(TestPackagesDeep.class);
                 if(testPackagesDeep != null) {
-                    addPackagesDeep(testPackagesDeep.value(), false, sutPackages.filteringRegex());
+                    addPackagesDeep(testPackagesDeep.value(), false, testPackagesDeep.filteringRegex());
                 }
             } catch (MalformedURLException e) {
                 throw new RuntimeException(e);

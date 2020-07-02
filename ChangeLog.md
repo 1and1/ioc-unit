@@ -4,6 +4,7 @@
 
 |Version|Changes|
 |-------|-------|
+|2.0.33|regex filtering in @Sutxxx, @Testxxx, @JaxRs...|
 |2.0.32|fix for JaxRSPackagesDeep|
 |2.0.31|not usable!!! fix for JaxRSPackagesDeep, ioc-unit-resources|
 |2.0.30|JaxRSPackagesDeep, fix TransactionServices for ioc-unit-ejb, to allow transactional observers to be tested|
