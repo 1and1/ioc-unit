@@ -10,7 +10,7 @@
     <artifactId>ex1-1entity</artifactId>
     <packaging>war</packaging>
 
-    <name>examples:ex1-1entity: example1 service with one entity</name>
+    <name>samples:ex1-1entity: example1 service with one entity</name>
     <description>example of testing a ejb-service handling one entity</description>
     <url>https://github.com/1and1/ioc-unit</url>
     <dependencies>

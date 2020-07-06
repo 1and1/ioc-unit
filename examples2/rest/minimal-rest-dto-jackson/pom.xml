@@ -11,7 +11,7 @@
     <artifactId>minimal-rest-dto-jackson</artifactId>
     <packaging>war</packaging>
 
-    <name>examples:rest:minimal-rest-dto-jackson</name>
+    <name>samples:rest:minimal-rest-dto-jackson</name>
     <description>Testing Restassured + ioc-unit-resteasy in minimal war</description>
     <url>https://github.com/1and1/ioc-unit</url>
 

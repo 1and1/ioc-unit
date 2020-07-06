@@ -10,7 +10,7 @@
     <artifactId>exjms1-amqp-rabbitmq</artifactId>
     <packaging>war</packaging>
 
-    <name>examples:jms:exjms1-amqp-rabbitmq</name>
+    <name>samples:jms:exjms1-amqp-rabbitmq</name>
     <description />
     <url>https://github.com/1and1/ioc-unit</url>
     <dependencies>

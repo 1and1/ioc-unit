@@ -8,7 +8,7 @@
 
     <artifactId>ioc-unit-rest-examples2-parent</artifactId>
     <packaging>pom</packaging>
-    <name>examples:rest-examples</name>
+    <name>samples:rest-examples</name>
 
     <modules>
         <module>ex7-simplerest</module>

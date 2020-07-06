@@ -11,7 +11,7 @@
     <artifactId>minimal-resteasy2-war</artifactId>
     <packaging>war</packaging>
 
-    <name>examples:rest:minimal-resteasy2-war</name>
+    <name>samples:rest:minimal-resteasy2-war</name>
     <description>Testing Restassured + ioc-unit-resteasy2 in minimal war</description>
     <url>https://github.com/1and1/ioc-unit</url>
 

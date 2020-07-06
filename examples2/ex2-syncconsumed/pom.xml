@@ -10,7 +10,7 @@
     <artifactId>ex2-syncconsumed</artifactId>
     <packaging>war</packaging>
 
-    <name>examples:ex2-syncconsumed: service syncconsumed</name>
+    <name>samples:ex2-syncconsumed: service syncconsumed</name>
     <description>Test one service consuming one remote service synchronously</description>
     <url>https://github.com/1and1/ioc-unit</url>
     <dependencies>

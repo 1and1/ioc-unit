@@ -10,7 +10,7 @@
     <artifactId>ex8-simpleservlet</artifactId>
     <packaging>war</packaging>
 
-    <name>examples:rest:ex8-simplerest: servlet-example</name>
+    <name>samples:rest:ex8-simplerest: servlet-example</name>
     <description>Test one rest-service</description>
     <url>https://github.com/1and1/ejb-cdi-unit</url>
     <properties>

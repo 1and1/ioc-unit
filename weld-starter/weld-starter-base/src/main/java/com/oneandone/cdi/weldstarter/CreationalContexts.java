@@ -72,8 +72,8 @@ public class CreationalContexts<T> implements AutoCloseable {
      * @param scope either ApplicationScoped or Dependent
      * @return the created bean
      */
-    public Object create(Class<T> clazz, Class<? extends Annotation> scope) {
-        Bean<?> bean = bm.resolve(bm.getBeans(clazz));
+    public Object create(Class<T> clazz, Class<? extends Annotation> scope, Annotation... qualifiers) {
+        Bean<?> bean = bm.resolve(bm.getBeans(clazz, qualifiers));
         if (bean != null) {
             Object result = create((Contextual<T>) bean, scope);
             if (result == null) {

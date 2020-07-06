@@ -8,7 +8,7 @@
 
     <artifactId>ioc-unit-rest-examples2-jms-parent</artifactId>
     <packaging>pom</packaging>
-    <name>examples:jms-examples</name>
+    <name>samples:jms-examples</name>
 
     <modules>
         <module>exjms1-amqp-rabbitmq</module>

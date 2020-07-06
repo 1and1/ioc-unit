@@ -10,7 +10,7 @@
     <artifactId>ex4-asyncconsumedpush</artifactId>
     <packaging>war</packaging>
 
-    <name>examples:ex4-asyncconsumedpush: service asyncconsumed with callback</name>
+    <name>samples:ex4-asyncconsumedpush: service asyncconsumed with callback</name>
     <description>Test one service consuming one remote service asynchronously return the result using callback</description>
     <url>https://github.com/1and1/ioc-unit</url>
     <dependencies>

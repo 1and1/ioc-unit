@@ -109,6 +109,7 @@
                 <module>modules/ioc-unit</module>
                 <module>modules/ioc-unit-mockseasy</module>
                 <module>modules/ioc-unit-resource</module>
+                <module>modules/ioc-unit-jta-jpa</module>
                 <module>modules/ioc-unit-validate</module>
                 <module>modules/ioc-unit-resteasy</module>
                 <module>modules/ioc-unit-ejb</module>

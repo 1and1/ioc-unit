@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0"
+             xmlns="http://java.sun.com/xml/ns/persistence"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence
+http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+    <persistence-unit name="test" transaction-type="JTA">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <properties>
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
+            <property name="hibernate.id.new_generator_mappings" value="false"/>
+            <!-- Set Hibernate to use Narayana as a JTA platform -->
+            <property name="hibernate.transaction.io.narayana.jta.platform" value="JBossTS"/>
+            <!-- We provide our own connection provider, in order to integrate TransactionalDriver with Hibernate -->
+            <property name="hibernate.connection.provider_class" value="com.oneandone.iocunit.jtajpa.PersistenceXmlConnectionProvider" />
+            <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:h2:mem:test;MODE=PostgreSQL;DB_CLOSE_DELAY=0"/>
+            <property name="javax.persistence.jdbc.user" value="sa"/>
+            <property name="javax.persistence.jdbc.password" value=""/>
+        </properties>
+    </persistence-unit>
+    <persistence-unit name="q1" transaction-type="JTA">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <properties>
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
+            <property name="hibernate.id.new_generator_mappings" value="false"/>
+            <!-- Set Hibernate to use Narayana as a JTA platform -->
+            <property name="hibernate.transaction.io.narayana.jta.platform" value="JBossTS"/>
+            <!-- We provide our own connection provider, in order to integrate TransactionalDriver with Hibernate -->
+            <property name="hibernate.connection.provider_class" value="com.oneandone.iocunit.jtajpa.PersistenceXmlConnectionProvider" />
+            <property name="javax.persistence.jdbc.driver" value="com.oneandone.iocunit.jtajpa.TestContainer"/>
+        </properties>
+    </persistence-unit>
+    <persistence-unit name="q2" transaction-type="JTA">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <properties>
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.hbm2ddl.auto" value="validate"/>
+            <property name="hibernate.id.new_generator_mappings" value="false"/>
+            <!-- Set Hibernate to use Narayana as a JTA platform -->
+            <property name="hibernate.transaction.io.narayana.jta.platform" value="JBossTS"/>
+            <!-- We provide our own connection provider, in order to integrate TransactionalDriver with Hibernate -->
+            <property name="hibernate.connection.provider_class" value="com.oneandone.iocunit.jtajpa.PersistenceXmlConnectionProvider" />
+            <property name="javax.persistence.jdbc.driver" value="com.oneandone.iocunit.jtajpa.TestContainer"/>
+        </properties>
+    </persistence-unit>
+</persistence>

@@ -109,7 +109,7 @@
             </dependency>
             <dependency>
                 <groupId>net.oneandone.ioc-unit</groupId>
-                <artifactId>ioc-unit-jta-narayana</artifactId>
+                <artifactId>ioc-unit-jta-jpa</artifactId>
                 <version>${project.version}</version>
                 <scope>test</scope>
             </dependency>

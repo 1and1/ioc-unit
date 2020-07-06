@@ -10,7 +10,7 @@
 
     <artifactId>mockito-example</artifactId>
     <packaging>war</packaging>
-    <name>examples:mockito-example</name>
+    <name>samples:mockito-example</name>
     <description>Testing Junit5 plus mockito 2.17 and later</description>
     <url>https://github.com/1and1/ioc-unit</url>
     <properties>

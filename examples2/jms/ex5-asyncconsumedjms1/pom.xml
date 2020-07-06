@@ -10,7 +10,7 @@
     <artifactId>ex5-asyncconsumedjms1</artifactId>
     <packaging>war</packaging>
 
-    <name>examples:jms:ex5-asyncconsumedjms1: service asyncconsumed with callback use jms</name>
+    <name>samples:jms:ex5-asyncconsumedjms1: service asyncconsumed with callback use jms</name>
     <description>Test one service consuming one remote service asynchronously return the result using
         callback internally use jms</description>
     <url>https://github.com/1and1/ioc-unit</url>

@@ -10,7 +10,7 @@
     <artifactId>ex7-simplerest</artifactId>
     <packaging>war</packaging>
 
-    <name>examples:ex7-simplerest: service as simple rest</name>
+    <name>samples:ex7-simplerest: service as simple rest</name>
     <description>Test one rest-service</description>
     <url>https://github.com/1and1/ejb-cdi-unit</url>
     <dependencies>
