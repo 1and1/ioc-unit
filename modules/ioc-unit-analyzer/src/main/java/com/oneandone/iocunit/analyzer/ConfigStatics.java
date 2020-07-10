@@ -36,12 +36,14 @@ public class ConfigStatics {
     }
 
     public static boolean isInterceptable(Class<?> c) {
-        if (c.equals(Object.class))
+        if(c.equals(Object.class)) {
             return true;
-        if (mightBeBean(c)) {
-            for (Method m: c.getDeclaredMethods()) {
-                if (Modifier.isFinal(m.getModifiers()))
+        }
+        if(mightBeBean(c)) {
+            for (Method m : c.getDeclaredMethods()) {
+                if(Modifier.isFinal(m.getModifiers())) {
                     return false;
+                }
             }
             return isInterceptable(c.getSuperclass());
         }
@@ -63,14 +65,12 @@ public class ConfigStatics {
             }
             boolean constructorOk = false;
             for (Constructor constructor : declaredConstructors) {
-                if(!Modifier.isPrivate(constructor.getModifiers())) {
-                    if(constructor.getParameters().length == 0) {
+                if(constructor.getParameters().length == 0) {
+                    constructorOk = true;
+                }
+                else {
+                    if(constructor.getAnnotation(Inject.class) != null) {
                         constructorOk = true;
-                    }
-                    else {
-                        if(constructor.getAnnotation(Inject.class) != null) {
-                            constructorOk = true;
-                        }
                     }
                 }
             }
