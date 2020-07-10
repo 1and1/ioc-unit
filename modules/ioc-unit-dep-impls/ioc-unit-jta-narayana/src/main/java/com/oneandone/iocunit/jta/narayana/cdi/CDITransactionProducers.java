@@ -8,7 +8,7 @@ import javax.interceptor.Interceptor;
 import javax.naming.InitialContext;
 import javax.transaction.TransactionSynchronizationRegistry;
 
-import com.arjuna.ats.jta.common.jtaPropertyManager;
+import com.arjuna.ats.jta.common.jtaPropertyManager;/prep
 /**
  * <p>
  * This bean produces the {@link TransactionSynchronizationRegistry}.
