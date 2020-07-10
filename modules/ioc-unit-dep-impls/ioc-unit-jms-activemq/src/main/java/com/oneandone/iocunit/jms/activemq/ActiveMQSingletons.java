@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 import com.melowe.jms2.compat.Jms2ConnectionFactory;
 import com.melowe.jms2.compat.Jms2Message;
 import com.melowe.jms2.compat.Jms2MessageListener;
-import com.oneandone.iocunit.ejb.jms.JmsSingletonsIntf;
+import com.oneandone.iocunit.jms.JmsSingletonsIntf;
 
 
 /**

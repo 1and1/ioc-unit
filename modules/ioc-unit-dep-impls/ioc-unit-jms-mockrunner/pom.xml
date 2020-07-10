@@ -38,7 +38,7 @@
         </dependency>
         <dependency>
             <groupId>net.oneandone.ioc-unit</groupId>
-            <artifactId>ioc-unit-ejb</artifactId>
+            <artifactId>ioc-unit-jms</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

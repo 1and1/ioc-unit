@@ -79,6 +79,12 @@
             </dependency>
             <dependency>
                 <groupId>net.oneandone.ioc-unit</groupId>
+                <artifactId>ioc-unit-jms-artemisactivemq</artifactId>
+                <version>${project.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>net.oneandone.ioc-unit</groupId>
                 <artifactId>ioc-unit-jms-mockrunner</artifactId>
                 <version>${project.version}</version>
                 <scope>test</scope>
@@ -98,6 +104,12 @@
             <dependency>
                 <groupId>net.oneandone.ioc-unit</groupId>
                 <artifactId>ioc-unit-dbunit</artifactId>
+                <version>${project.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>net.oneandone.ioc-unit</groupId>
+                <artifactId>ioc-unit-jms</artifactId>
                 <version>${project.version}</version>
                 <scope>test</scope>
             </dependency>

@@ -66,7 +66,7 @@
         <junit4.version>4.12</junit4.version>
         <junit5.version>5.3.2</junit5.version>
         <junit-platform.version>1.3.2</junit-platform.version>
-        <mockrunner.version>2.0.1</mockrunner.version>
+        <mockrunner.version>2.0.4</mockrunner.version>
         <version.cglib>3.2.5</version.cglib>
 
         <deployment.port>10099</deployment.port>
@@ -112,6 +112,7 @@
                 <module>modules/ioc-unit-jta-jpa</module>
                 <module>modules/ioc-unit-validate</module>
                 <module>modules/ioc-unit-resteasy</module>
+                <module>modules/ioc-unit-jms</module>
                 <module>modules/ioc-unit-ejb</module>
                 <module>modules/ioc-unit-dep-impls</module>
                 <module>modules/ioc-unit-contexts</module>

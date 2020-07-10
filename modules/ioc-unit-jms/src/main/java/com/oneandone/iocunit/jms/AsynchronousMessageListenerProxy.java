@@ -1,10 +1,9 @@
-package com.oneandone.iocunit.ejb.jms;
+package com.oneandone.iocunit.jms;
 
 import javax.jms.Message;
 import javax.jms.MessageListener;
 
-import com.oneandone.iocunit.ejb.AsynchronousManager;
-import com.oneandone.iocunit.jms.JmsSingletonsIntf;
+import com.oneandone.iocunit.AsynchronousSimulator;
 
 /**
  * Registered for each MessageListener, onMessage is used to register asynchronous calls in the Asynchronous Manager.
@@ -13,7 +12,7 @@ import com.oneandone.iocunit.jms.JmsSingletonsIntf;
  */
 public class AsynchronousMessageListenerProxy implements MessageListener {
     private final MessageListener listener;
-    private final AsynchronousManager asynchronousManager;
+    private final AsynchronousSimulator asynchronousManager;
     private final JmsSingletonsIntf jmsSingletons;
 
     /**
@@ -24,7 +23,7 @@ public class AsynchronousMessageListenerProxy implements MessageListener {
      *                            test code at a specific time.
      * @param jmsSingletons       singletons as found by cdi-extension, Queues and Topics
      */
-    public AsynchronousMessageListenerProxy(MessageListener listener, AsynchronousManager asynchronousManager, JmsSingletonsIntf jmsSingletons) {
+    public AsynchronousMessageListenerProxy(MessageListener listener, AsynchronousSimulator asynchronousManager, JmsSingletonsIntf jmsSingletons) {
         this.listener = listener;
         this.asynchronousManager = asynchronousManager;
         this.jmsSingletons = jmsSingletons;

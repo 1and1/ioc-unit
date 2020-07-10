@@ -1,4 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>net.oneandone.ioc-unit</groupId>
@@ -7,12 +7,12 @@
         <relativePath>../../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>ioc-unit-jms-rabbitmq</artifactId>
+    <artifactId>ioc-unit-jms-artemisactivemq</artifactId>
     <packaging>jar</packaging>
 
-    <name>net.oneandone.ioc-unit:ioc-unit-jms-rabbitmq</name>
-    <description>Adds mockrunner jms-implementation</description>
-    <url>https://github.com/1and1/modules/ioc-unit-dep-impls/ioc-unit-jms-rabbitmq</url>
+    <name>net.oneandone.ioc-unit:ioc-unit-jms-artemisactivemq</name>
+    <description>Adds activemq jms-implementation</description>
+    <url>https://github.com/1and1/modules/ioc-unit-dep-impls/ioc-unit-jms-artemisactivemq</url>
 
     <licenses>
         <license>
@@ -31,36 +31,14 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>io.arivera.oss</groupId>
-            <artifactId>embedded-rabbitmq</artifactId>
-            <version>1.4.0</version>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>artemis-jms-server</artifactId>
+            <version>2.13.0</version>
         </dependency>
         <dependency>
-            <groupId>com.rabbitmq</groupId>
-            <artifactId>amqp-client</artifactId>
-            <version>5.8.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.rabbitmq.jms</groupId>
-            <artifactId>rabbitmq-jms</artifactId>
-            <version>1.14.0</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.geronimo.specs</groupId>
-                    <artifactId>geronimo-jms_1.1_spec</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>com.github.melowe</groupId>
-            <artifactId>jms2-compat</artifactId>
-            <version>1.0.3.7</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>javax.jms</groupId>
-                    <artifactId>javax.jms-api</artifactId>
-                </exclusion>
-            </exclusions>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>artemis-server</artifactId>
+            <version>2.13.0</version>
         </dependency>
         <dependency>
             <groupId>jakarta.enterprise</groupId>

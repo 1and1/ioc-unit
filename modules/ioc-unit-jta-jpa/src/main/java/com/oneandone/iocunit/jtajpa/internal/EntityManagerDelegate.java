@@ -23,6 +23,7 @@ import javax.transaction.SystemException;
 import javax.transaction.Transaction;
 
 import com.arjuna.ats.internal.jta.transaction.arjunacore.TransactionImple;
+import com.oneandone.iocunit.jtajpa.internal.EntityManagerFactoryFactory.EntityManagerWrapper;
 
 
 /**
@@ -32,8 +33,8 @@ public class EntityManagerDelegate implements EntityManager, Serializable {
     private static final long serialVersionUID = -6614196859383544873L;
     private final EntityManagerFactoryFactory factory;
     private final String puName;
-    EntityManagerFactoryFactory.EntityManagerWrapper entityManager;
-    EntityManager tmpEntityManager;
+    ThreadLocal<EntityManagerWrapper> entityManager = new ThreadLocal<>();
+    ThreadLocal<EntityManager> tmpEntityManager = new ThreadLocal<>();
 
     public EntityManagerDelegate(EntityManagerFactoryFactory factory, String puName) {
         this.factory = factory;
@@ -42,35 +43,35 @@ public class EntityManagerDelegate implements EntityManager, Serializable {
 
     private EntityManager getEntityManager() {
         try {
-            if(entityManager == null || entityManager.getEntityManager() == null) {
+            if(entityManager.get() == null || entityManager.get().getEntityManager() == null) {
                 final Transaction transaction = TransactionImple.getTransaction();
                 if(transaction != null &&
                    transaction.getStatus() == Status.STATUS_ACTIVE) {
-                    entityManager = factory.getEntityManager(puName, true);
-                    return entityManager.getEntityManager();
+                    entityManager.set(factory.getEntityManager(puName, true));
+                    return entityManager.get().getEntityManager();
                 }
                 else {
-                    tmpEntityManager = factory.getEntityManager(puName, false).getEntityManager();
-                    return tmpEntityManager;
+                    tmpEntityManager.set(factory.getEntityManager(puName, false).getEntityManager());
+                    return tmpEntityManager.get();
                 }
             }
             else {
-                entityManager.getEntityManager().isJoinedToTransaction();
+                entityManager.get().getEntityManager().isJoinedToTransaction();
             }
         } catch (SystemException sex) {
             throw new RuntimeException(sex);
         } catch (RuntimeException cex) {
             if(cex.getCause().getClass().getName().contains("ContextNotActiveException")) {
                 if(tmpEntityManager == null) {
-                    tmpEntityManager = factory.getEntityManager(puName, false).getEntityManager();
+                    tmpEntityManager.set(factory.getEntityManager(puName, false).getEntityManager());
                 }
-                return tmpEntityManager;
+                return tmpEntityManager.get();
             }
             else {
                 throw cex;
             }
         }
-        return entityManager.getEntityManager();
+        return entityManager.get().getEntityManager();
     }
 
     @Override
@@ -281,15 +282,15 @@ public class EntityManagerDelegate implements EntityManager, Serializable {
 
     @Override
     public void close() {
-        if(tmpEntityManager != null) tmpEntityManager.close();
-        tmpEntityManager = null;
-        if(entityManager != null) {
-            if(entityManager.getEntityManager() != null) {
-                entityManager.getEntityManager().close();
+        if(tmpEntityManager.get() != null) tmpEntityManager.get().close();
+        tmpEntityManager.set(null);
+        if(entityManager.get() != null) {
+            if(entityManager.get().getEntityManager() != null) {
+                entityManager.get().getEntityManager().close();
             }
-            entityManager.clrEntityManager();
+            entityManager.get().clrEntityManager();
         }
-        entityManager = null;
+        entityManager.set(null);
     }
 
     @Override

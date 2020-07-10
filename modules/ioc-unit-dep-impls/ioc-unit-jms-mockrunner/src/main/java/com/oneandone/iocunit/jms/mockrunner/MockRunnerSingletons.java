@@ -22,7 +22,7 @@ import com.melowe.jms2.compat.Jms2MessageListener;
 import com.mockrunner.jms.ConfigurationManager;
 import com.mockrunner.jms.DestinationManager;
 import com.mockrunner.mock.jms.MockConnectionFactory;
-import com.oneandone.iocunit.ejb.jms.JmsSingletonsIntf;
+import com.oneandone.iocunit.jms.JmsSingletonsIntf;
 
 /**
  * Manages the singleton used to mock JMS in CDI-Unit using mockrunner.

@@ -1,12 +1,12 @@
-package com.oneandone.iocunit.jms.rabbitmq;
+package com.oneandone.iocunit.jms.activemq;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.annotation.PreDestroy;
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
-import javax.inject.Singleton;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
@@ -15,20 +15,20 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.Queue;
+import javax.jms.Session;
 import javax.jms.Topic;
 
+import org.apache.activemq.artemis.api.core.TransportConfiguration;
+import org.apache.activemq.artemis.api.core.client.ActiveMQClient;
+import org.apache.activemq.artemis.api.core.client.ServerLocator;
+import org.apache.activemq.artemis.core.remoting.impl.invm.InVMConnectorFactory;
+import org.apache.activemq.artemis.core.server.embedded.EmbeddedActiveMQ;
+import org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory;
+import org.apache.activemq.artemis.jms.client.ActiveMQJMSConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.melowe.jms2.compat.Jms2ConnectionFactory;
-import com.melowe.jms2.compat.Jms2Message;
-import com.melowe.jms2.compat.Jms2MessageListener;
 import com.oneandone.iocunit.jms.JmsSingletonsIntf;
-import com.rabbitmq.jms.admin.RMQConnectionFactory;
-import com.rabbitmq.jms.admin.RMQDestination;
-
-import io.arivera.oss.embedded.rabbitmq.EmbeddedRabbitMq;
-import io.arivera.oss.embedded.rabbitmq.EmbeddedRabbitMqConfig;
 
 
 /**
@@ -36,19 +36,17 @@ import io.arivera.oss.embedded.rabbitmq.EmbeddedRabbitMqConfig;
  *
  * @author aschoerk
  */
-@Singleton
-public class RabbitMQSingletons implements JmsSingletonsIntf {
+@ApplicationScoped
+public class ArtemisActiveMQSingletons implements JmsSingletonsIntf {
 
-    private AtomicReference<Jms2ConnectionFactory> connectionFactoryAtomicReference = new AtomicReference<>();
+    private AtomicReference<ActiveMQConnectionFactory> connectionFactoryAtomicReference = new AtomicReference<>();
 
     private AtomicReference<Connection> mdbConnection = new AtomicReference<Connection>();
 
     private Logger logger = LoggerFactory.getLogger("JmsFactory");
 
     private AtomicReference<Map<String, Destination>> destinations = new AtomicReference<>();
-
-
-    static EmbeddedRabbitMq rabbitMq;
+    private AtomicReference<EmbeddedActiveMQ> embedded = new AtomicReference<>();
 
     @Override
     public Connection getConnection() {
@@ -56,26 +54,7 @@ public class RabbitMQSingletons implements JmsSingletonsIntf {
             getConnectionFactory();
 
         } catch (Exception e) {
-            if(rabbitMq == null) {
-                EmbeddedRabbitMqConfig config = new EmbeddedRabbitMqConfig.Builder()
-                        .rabbitMqServerInitializationTimeoutInMillis(10000)
-                        .build();
-
-                rabbitMq = new EmbeddedRabbitMq(config);
-                rabbitMq.start();
-                try {
-                    final Connection connection = this.connectionFactoryAtomicReference.get().createConnection();
-                    connection.start();
-                    destinations.set(new ConcurrentHashMap<>());
-                    mdbConnection.set(connection);
-
-                } catch (Exception embedding) {
-                    throw new RuntimeException(embedding);
-                }
-            }
-            else {
-                throw new RuntimeException(e);
-            }
+            throw new RuntimeException(e);
         }
         return mdbConnection.get();
     }
@@ -108,7 +87,11 @@ public class RabbitMQSingletons implements JmsSingletonsIntf {
     @Override
     public Queue createQueue(String name) {
         if(!destinations.get().containsKey(name)) {
-            destinations.get().put(name, new RMQDestination(name, true, true));
+            try (Session session = mdbConnection.get().createSession()) {
+                destinations.get().put(name, session.createQueue(name));
+            } catch (JMSException e) {
+                throw new RuntimeException(e);
+            }
         }
         return (Queue) destinations.get().get(name);
     }
@@ -116,7 +99,11 @@ public class RabbitMQSingletons implements JmsSingletonsIntf {
     @Override
     public Topic createTopic(String name) {
         if(!destinations.get().containsKey(name)) {
-            destinations.get().put(name, new RMQDestination(name, false, true));
+            try (Session session = mdbConnection.get().createSession()) {
+                destinations.get().put(name, session.createTopic(name));
+            } catch (JMSException e) {
+                throw new RuntimeException(e);
+            }
         }
         return (Topic) destinations.get().get(name);
     }
@@ -129,17 +116,19 @@ public class RabbitMQSingletons implements JmsSingletonsIntf {
      */
     @Override
     public ConnectionFactory getConnectionFactory() throws Exception {
+        if(embedded.get() == null) {
+            embedded.set(new EmbeddedActiveMQ());
+
+            embedded.get().start();
+
+        }
         if(connectionFactoryAtomicReference.get() == null) {
-            RMQConnectionFactory cf = new RMQConnectionFactory();
-            cf.setHost("localhost");
-            cf.setUsername("guest");
-            cf.setPassword("guest");
-            cf.setVirtualHost("/");
-            cf.setPort(5672);
-            cf.setCleanUpServerNamedQueuesForNonDurableTopicsOnSessionClose(true);
-            final Jms2ConnectionFactory jms2Cf = new Jms2ConnectionFactory(cf);
-            if(connectionFactoryAtomicReference.compareAndSet(null, jms2Cf)) {
-                final Connection connection = jms2Cf.createConnection();
+            ServerLocator serverLocator = ActiveMQClient.createServerLocatorWithoutHA(new TransportConfiguration(
+                    InVMConnectorFactory.class.getName()));
+            ActiveMQConnectionFactory cf = new ActiveMQJMSConnectionFactory(serverLocator);
+
+            if(connectionFactoryAtomicReference.compareAndSet(null, cf)) {
+                final Connection connection = cf.createConnection();
                 connection.start();
                 destinations.set(new ConcurrentHashMap<>());
                 mdbConnection.set(connection);
@@ -150,12 +139,6 @@ public class RabbitMQSingletons implements JmsSingletonsIntf {
 
     @Override
     public void jms2OnMessage(final MessageListener listener, final Message message) {
-        if(message instanceof Jms2Message) {
-            listener.onMessage(message);
-        }
-        else {
-            new Jms2MessageListener(listener).onMessage(message);
-        }
+        listener.onMessage(message);
     }
-
 }

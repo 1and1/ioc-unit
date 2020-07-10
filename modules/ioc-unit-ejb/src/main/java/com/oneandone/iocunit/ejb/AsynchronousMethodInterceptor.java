@@ -149,7 +149,7 @@ public class AsynchronousMethodInterceptor {
 
     /**
      * in case of an asynchronous method simulate by returning a future which will be filled later by
-     * AsynchronousManager-Call.
+     * AsynchronousSimulator-Call.
      * @param ctx the InvocationContext
      * @return the result of the intercepted function
      * @throws Exception if the intercepted function produces an exception.

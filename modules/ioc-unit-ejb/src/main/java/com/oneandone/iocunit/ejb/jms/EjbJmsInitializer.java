@@ -9,13 +9,15 @@ import javax.jms.JMSException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.oneandone.iocunit.jms.JmsProducersException;
+
 /**
  * @author aschoerk
  */
 @Singleton
-public class JmsInitializer {
+public class EjbJmsInitializer {
     @Inject
-    Provider<JmsMocksFactory> jmsMocksFactory;
+    Provider<EjbJmsMocksFactory> jmsMocksFactory;
     private Logger logger = LoggerFactory.getLogger("JmsInitializer");
 
     @PostConstruct
@@ -32,6 +34,5 @@ public class JmsInitializer {
     public void dummyCall() {
         logger.info("DummyCall of JmsInitializer done");
     }
-
 
 }

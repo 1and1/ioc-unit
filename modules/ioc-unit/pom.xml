@@ -39,6 +39,7 @@
             <groupId>net.oneandone.ioc-unit</groupId>
             <artifactId>ioc-unit-analyzer</artifactId>
             <version>${project.version}</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.jboss.weld</groupId>

@@ -42,6 +42,11 @@
             </exclusions>
         </dependency>
         <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-client</artifactId>
+            <version>5.15.11</version>
+        </dependency>
+        <dependency>
             <groupId>com.github.melowe</groupId>
             <artifactId>jms2-compat</artifactId>
             <version>1.0.3.7</version>
@@ -60,7 +65,7 @@
         </dependency>
         <dependency>
             <groupId>net.oneandone.ioc-unit</groupId>
-            <artifactId>ioc-unit-ejb</artifactId>
+            <artifactId>ioc-unit-jms</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

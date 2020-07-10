@@ -1,4 +1,4 @@
-package com.oneandone.iocunit.ejb.jms;
+package com.oneandone.iocunit.jms;
 
 /**
  * @author aschoerk

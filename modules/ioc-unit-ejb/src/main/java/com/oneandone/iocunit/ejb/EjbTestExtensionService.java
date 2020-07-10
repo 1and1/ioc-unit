@@ -42,9 +42,8 @@ import com.oneandone.cdi.weldstarter.WeldSetupClass;
 import com.oneandone.cdi.weldstarter.spi.TestExtensionService;
 import com.oneandone.cdi.weldstarter.spi.WeldStarter;
 import com.oneandone.iocunit.ejb.jms.AsynchronousMessageListenerProxy;
-import com.oneandone.iocunit.ejb.jms.JmsInitializer;
-import com.oneandone.iocunit.ejb.jms.JmsMocksFactory;
-import com.oneandone.iocunit.ejb.jms.JmsProducers;
+import com.oneandone.iocunit.ejb.jms.EjbJmsInitializer;
+import com.oneandone.iocunit.ejb.jms.EjbJmsMocksFactory;
 import com.oneandone.iocunit.ejb.persistence.IocUnitTransactionSynchronizationRegistry;
 import com.oneandone.iocunit.ejb.persistence.PersistenceFactory;
 import com.oneandone.iocunit.ejb.persistence.PersistenceFactoryResources;
@@ -59,6 +58,7 @@ import com.oneandone.iocunit.ejb.trainterceptors.TransactionalInterceptorNotSupp
 import com.oneandone.iocunit.ejb.trainterceptors.TransactionalInterceptorRequired;
 import com.oneandone.iocunit.ejb.trainterceptors.TransactionalInterceptorRequiresNew;
 import com.oneandone.iocunit.ejb.trainterceptors.TransactionalInterceptorSupports;
+import com.oneandone.iocunit.jms.JmsProducers;
 
 /**
  * @author aschoerk
@@ -142,13 +142,13 @@ public class EjbTestExtensionService implements TestExtensionService {
             return;
         } catch (ClassNotFoundException ncdfe) {
             ClassWriter cw = new ClassWriter(0);
-            cw.visit(V1_5,ACC_PUBLIC + ACC_ABSTRACT + ACC_INTERFACE,"javax/xml/rpc/handler/MessageContext",
-                    null,"java/lang/Object", new String[] {});
-            cw.visitMethod(ACC_PUBLIC + ACC_ABSTRACT,"setProperty","(Ljava/lang/String;Ljava/lang/Object;)V",null,null);
-            cw.visitMethod(ACC_PUBLIC + ACC_ABSTRACT,"getProperty","(Ljava/lang/String;)Ljava/lang/Object;",null,null);
-            cw.visitMethod(ACC_PUBLIC + ACC_ABSTRACT,"removeProperty","(Ljava/lang/String;)V",null,null);
-            cw.visitMethod(ACC_PUBLIC + ACC_ABSTRACT,"containsProperty","(Ljava/lang/String;)B",null,null);
-            cw.visitMethod(ACC_PUBLIC + ACC_ABSTRACT,"getPropertyNames","()Ljava/util/Iterator;",null,null);
+            cw.visit(V1_5, ACC_PUBLIC + ACC_ABSTRACT + ACC_INTERFACE, "javax/xml/rpc/handler/MessageContext",
+                    null, "java/lang/Object", new String[]{});
+            cw.visitMethod(ACC_PUBLIC + ACC_ABSTRACT, "setProperty", "(Ljava/lang/String;Ljava/lang/Object;)V", null, null);
+            cw.visitMethod(ACC_PUBLIC + ACC_ABSTRACT, "getProperty", "(Ljava/lang/String;)Ljava/lang/Object;", null, null);
+            cw.visitMethod(ACC_PUBLIC + ACC_ABSTRACT, "removeProperty", "(Ljava/lang/String;)V", null, null);
+            cw.visitMethod(ACC_PUBLIC + ACC_ABSTRACT, "containsProperty", "(Ljava/lang/String;)B", null, null);
+            cw.visitMethod(ACC_PUBLIC + ACC_ABSTRACT, "getPropertyNames", "()Ljava/util/Iterator;", null, null);
             cw.visitEnd();
             byte[] ba = cw.toByteArray();
             Object o = this.getClass().getClassLoader();
@@ -156,7 +156,7 @@ public class EjbTestExtensionService implements TestExtensionService {
             Method m = null;
             while (!c.equals(Object.class)) {
                 try {
-                    m = c.getDeclaredMethod("defineClass",String.class, ba.getClass(), Integer.TYPE, Integer.TYPE);
+                    m = c.getDeclaredMethod("defineClass", String.class, ba.getClass(), Integer.TYPE, Integer.TYPE);
                     break;
                 } catch (NoSuchMethodException nsme) {
                     c = c.getSuperclass();
@@ -164,7 +164,7 @@ public class EjbTestExtensionService implements TestExtensionService {
             }
             m.setAccessible(true);
             try {
-                m.invoke(o,"javax.xml.rpc.handler.MessageContext", ba, 0, ba.length);
+                m.invoke(o, "javax.xml.rpc.handler.MessageContext", ba, 0, ba.length);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -205,9 +205,9 @@ public class EjbTestExtensionService implements TestExtensionService {
                 }
                 try {
                     add(AsynchronousMessageListenerProxy.class);
-                    add(JmsInitializer.class);
+                    add(EjbJmsInitializer.class);
                     add(JmsExtension.class);
-                    add(JmsMocksFactory.class);
+                    add(EjbJmsMocksFactory.class);
                     add(JmsProducers.class);
                 } catch (NoClassDefFoundError e) {
                     logger.trace("no Jms because of {}", e.getMessage());
