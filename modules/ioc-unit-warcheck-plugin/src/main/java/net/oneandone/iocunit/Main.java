@@ -49,7 +49,7 @@ public class Main {
     };
 
     public static void main(String[] args) {
-        File f = new File("/home/aschoerk/projects/github/ioc-unit-main/testing/ioc-unit-test-war/target/ioc-unit-test-war-2.0.33-SNAPSHOT.war");
+        File f = new File("/home/aschoerk/projects/github/ioc-unit-main/testing/ioc-unit-test-war/target/ioc-unit-test-war-2.0.32-SNAPSHOT.war");
         try {
             WarInfo warInfo = new WarAnalyzer().analyzeWarFile(f);
             final Class<WeldStarter> weldStarterClass = WeldStarter.class;
