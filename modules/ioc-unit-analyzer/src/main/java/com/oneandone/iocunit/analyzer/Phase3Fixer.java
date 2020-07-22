@@ -42,6 +42,7 @@ public class Phase3Fixer extends PhasesBase {
                     .filter(q -> !configuration.isExcluded(q.getDeclaringClass()))
                     .collect(Collectors.toSet());
             if (matching.size() == 1) {
+                logger.trace("Found Fix for Inject {}",inject);
                 QualifiedType producer = matching.iterator().next();
                 Class declaringClass = producer.getDeclaringClass();
                 if (configuration.isToBeStarted(declaringClass)) {
