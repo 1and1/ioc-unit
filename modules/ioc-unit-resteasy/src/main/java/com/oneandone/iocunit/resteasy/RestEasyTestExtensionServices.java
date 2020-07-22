@@ -27,6 +27,8 @@ import com.oneandone.iocunit.analyzer.ClasspathHandler;
 import com.oneandone.iocunit.analyzer.ConfigStatics;
 import com.oneandone.iocunit.resteasy.auth.AuthInterceptor;
 import com.oneandone.iocunit.resteasy.auth.TestAuth;
+import com.oneandone.iocunit.resteasy.servlet.IocUnitHttpServletRequest;
+import com.oneandone.iocunit.resteasy.servlet.IocUnitHttpSession;
 import com.oneandone.iocunit.util.Annotations;
 
 /**
@@ -69,6 +71,9 @@ public class RestEasyTestExtensionServices implements TestExtensionService {
         List<Class<?>> result = new ArrayList<>();
         result.add(RestEasyMockInit.class);
         result.add(AuthInterceptor.class);
+        result.add(IocUnitResteasyHttpClient.class);
+        result.add(IocUnitHttpSession.class);
+        result.add(IocUnitHttpServletRequest.class);
         return result;
     }
 
@@ -78,7 +83,7 @@ public class RestEasyTestExtensionServices implements TestExtensionService {
         List<Class<?>> result = new ArrayList<>();
         try {
             Method[] m = ResteasyClientBuilder.class.getMethods();
-            result.add(TestClientBuilder.class);
+            result.add(IocUnitResteasyClientBuilder.class);
             result.add(TestWebTarget.class);
         } catch (NoClassDefFoundError e) {
             ; // no resteasy client module available
