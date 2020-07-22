@@ -30,6 +30,8 @@ public class PersistenceXmlConnectionProvider extends ConnectionProviderBase {
 
     public PersistenceXmlConnectionProvider() {
         String puName = EntityManagerFactoryFactory.currentPuName.get();
+        if (puName == null)
+            throw new RuntimeException("Expected JtaEntityManagerFactoryBase to be defined with persistence-unit-name and entitymanager-Producer.");
         Map<String, String> tmp = new HashMap<>();
         List<ParsedPersistenceXmlDescriptor> units = PersistenceXmlParser.locatePersistenceUnits(tmp);
         Optional<ParsedPersistenceXmlDescriptor> pu = units.stream().filter(u -> u.getName().equals(puName)).findFirst();
