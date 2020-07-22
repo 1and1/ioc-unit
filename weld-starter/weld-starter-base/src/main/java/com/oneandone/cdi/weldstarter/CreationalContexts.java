@@ -1,6 +1,7 @@
 package com.oneandone.cdi.weldstarter;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,6 +47,18 @@ public class CreationalContexts<T> implements AutoCloseable {
         } finally {
             if (initialContext != null)
                 initialContext.close();
+        }
+        if (tmpBm == null) {
+            try {
+                // the following code simulates: tmpBm = CDI.current().getBeanManager();
+                Class<?> cdiClass = Class.forName("javax.enterprise.inject.spi.CDI");
+                Method currentMethod = cdiClass.getMethod("current");
+                Method getBeanManagerMethod = cdiClass.getMethod("getBeanManager");
+                Object cdi = currentMethod.invoke(null);
+                tmpBm = (BeanManager)getBeanManagerMethod.invoke(cdi);
+            } catch (Exception e) {
+                throw new RuntimeException("Cannot use javax.enterprise.inject.spi.CDI in this weld-version");
+            }
         }
         return tmpBm;
     }
