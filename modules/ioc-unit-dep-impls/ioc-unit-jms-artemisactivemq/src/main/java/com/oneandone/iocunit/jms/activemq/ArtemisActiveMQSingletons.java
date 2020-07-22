@@ -78,7 +78,10 @@ public class ArtemisActiveMQSingletons implements JmsSingletonsIntf {
     public void destroy() {
         try {
             mdbConnection.get().close();
+            embedded.get().stop();
         } catch (JMSException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
