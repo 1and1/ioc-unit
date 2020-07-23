@@ -72,8 +72,13 @@ public class RestEasyTestExtensionServices implements TestExtensionService {
         result.add(RestEasyMockInit.class);
         result.add(AuthInterceptor.class);
         result.add(IocUnitResteasyHttpClient.class);
-        result.add(IocUnitHttpSession.class);
-        result.add(IocUnitHttpServletRequest.class);
+        try {
+            Class<?> tmp = Class.forName("javax.servlet.http.HttpSession.class");
+            result.add(IocUnitHttpSession.class);
+            result.add(IocUnitHttpServletRequest.class);
+        } catch(Exception e) {
+            logger.info("Resteasy usage without HttpSession-Class.");
+        }
         return result;
     }
 
@@ -84,7 +89,7 @@ public class RestEasyTestExtensionServices implements TestExtensionService {
         try {
             Method[] m = ResteasyClientBuilder.class.getMethods();
             result.add(IocUnitResteasyClientBuilder.class);
-            result.add(TestWebTarget.class);
+            result.add(IocUnitResteasyWebTargetBuilder.class);
         } catch (NoClassDefFoundError e) {
             ; // no resteasy client module available
         }

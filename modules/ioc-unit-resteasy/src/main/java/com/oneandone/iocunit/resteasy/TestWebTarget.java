@@ -1,19 +1,16 @@
 package com.oneandone.iocunit.resteasy;
 
 import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
-import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 
 /**
  * @author aschoerk
+ * use {@link IocUnitResteasyWebTargetBuilder instead}
  */
-public class TestWebTarget {
-    @Inject
-    ClientBuilder clientBuilder;
-
+@Deprecated
+public class TestWebTarget extends IocUnitResteasyWebTargetBuilder {
     @Produces
     WebTarget webTarget() {
-        return clientBuilder.build().target("/");
+        return super.webTarget();
     }
 }
