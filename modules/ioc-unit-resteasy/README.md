@@ -9,11 +9,15 @@ of a jaxrs-application.
 
 ## Principle
 
-* By using **@JaxRsClasses** at the Testclass, Resources can be made explicite. They might also be recognized by @Path but that does not work if the annotation
+* By using **@JaxRsClasses** at the Testclass, Resources can be made explicit. They might also be recognized by @Path but that does not work if the annotation
 is set at an interface or superclass. Provider classes are recognized by @Provider. **@JaxRsPackagesDeep** together with a class representing 
-one package leads to inclusion of all classes in that package and all its subpackages as JaxRsClasses.
+one package leads to inclusion of all classes in that package and all its subpackages as JaxRsClasses, if that leads to too many classes added, 
+a regular expression can be provided, to improve the selection.
 * Use **@TestAuth** at the method to define the username and the roles the user might have. If that annotation is set, the
 authorization constraints are enforced.
+* Use **IocUnitResteasyClientBuilder** to create webtargets for mocked resources. The webtargets use a special HttpCLient 
+**IocUnitResteasyHttpClient** which routes all request via the MockDispatcherFactory-generated Mocks. These webtargets are ResteasyWebTargets 
+and therefore can easily proxied to a java-interface. 
 
 ## Pure Resteasy
 
