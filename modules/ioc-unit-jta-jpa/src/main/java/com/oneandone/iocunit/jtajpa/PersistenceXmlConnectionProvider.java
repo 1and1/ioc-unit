@@ -62,6 +62,7 @@ public class PersistenceXmlConnectionProvider extends ConnectionProviderBase {
             dbProps.put(TransactionalDriver.userName, userName);
             dbProps.put(TransactionalDriver.password, password);
             dbProps.put(TransactionalDriver.XADataSource, jdbcDataSource);
+            dbProps.put(TransactionalDriver.poolConnections, "false");
 
             this.arjunaJDBC2Driver = new TransactionalDriver();
         } catch (Exception ex) {
