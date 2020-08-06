@@ -191,4 +191,10 @@ public class IocUnitResteasyHttpClient extends AbstractHttpClient {
     }
 
 
+    @Override
+    public void close() {
+        dispatcher = null;
+        logger = null;
+        super.close();
+    }
 }

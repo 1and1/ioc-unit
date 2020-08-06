@@ -24,14 +24,14 @@ import com.oneandone.cdi.weldstarter.WeldSetupClass;
 /**
  * @author aschoerk
  */
-public class DispatcherDelegate implements Dispatcher {
+public class DispatcherDelegate implements Dispatcher, AutoCloseable {
 
 
     public DispatcherDelegate(final JaxRsRestEasyTestExtension jaxRsTestExtension) {
         this.jaxRsTestExtension = jaxRsTestExtension;
     }
 
-    JaxRsRestEasyTestExtension jaxRsTestExtension;
+    private JaxRsRestEasyTestExtension jaxRsTestExtension;
     private CreationalContexts creationalContexts;
 
     Logger logger = LoggerFactory.getLogger("RestEasy MockDispatcher Delegate");
@@ -165,5 +165,19 @@ public class DispatcherDelegate implements Dispatcher {
     public Map<Class, Object> getDefaultContextObjects() {
         setUp();
         return delegate.getDefaultContextObjects();
+    }
+
+    @Override
+    public void close() {
+        try {
+            if (creationalContexts != null)
+                creationalContexts.close();
+            creationalContexts = null;
+            delegate = null;
+            jaxRsTestExtension = null;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }

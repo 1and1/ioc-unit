@@ -137,6 +137,10 @@ public class IocUnitAnalyzeAndStarter {
     }
 
     public void tearDown() {
+        if (creationalContexts != null) {
+            creationalContexts.closeIt();
+            creationalContexts = null;
+        }
         getWeldStarter().tearDown();
         weldStarter = null;
     }
