@@ -11,9 +11,11 @@ import javax.naming.NamingException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.transaction.Transaction;
 import javax.transaction.TransactionScoped;
 
 import com.arjuna.ats.arjuna.coordinator.TxControl;
+import com.arjuna.ats.internal.jta.transaction.arjunacore.TransactionImple;
 import com.oneandone.cdi.weldstarter.CreationalContexts;
 
 /**
@@ -55,7 +57,8 @@ public class EntityManagerFactoryFactory {
             throw new RuntimeException("expected Factory for pu does not exist");
         }
         else {
-            return new EntityManagerFactoryFactory.EntityManagerWrapper(entityManagerFactory.createEntityManager());
+            return new EntityManagerFactoryFactory.EntityManagerWrapper(entityManagerFactory.createEntityManager(),
+                    TransactionImple.getTransaction());
         }
 
     }
@@ -89,17 +92,26 @@ public class EntityManagerFactoryFactory {
     public static class EntityManagerWrapper implements Serializable {
         private static final long serialVersionUID = -7441007325030843990L;
         private EntityManager entityManager;
+        private Transaction transaction;
 
         public EntityManagerWrapper(final EntityManager entityManager) {
             this.entityManager = entityManager;
+        }
+        public EntityManagerWrapper(final EntityManager entityManager, Transaction transaction) {
+            this.entityManager = entityManager;
+            this.transaction = transaction;
         }
 
         public EntityManager getEntityManager() {
             return entityManager;
         }
 
+        public Transaction getTransaction() {
+            return transaction;
+        }
+
         public void clrEntityManager() {
-            this.entityManager = null;
+            this.entityManager = null; this.transaction = null;
         }
     }
 }
