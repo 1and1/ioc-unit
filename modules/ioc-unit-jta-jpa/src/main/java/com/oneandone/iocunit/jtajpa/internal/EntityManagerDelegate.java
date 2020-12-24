@@ -43,25 +43,29 @@ public class EntityManagerDelegate implements EntityManager, Serializable {
 
     private EntityManager getEntityManager() {
         try {
-            if(entityManager.get() == null || entityManager.get().getEntityManager() == null) {
-                final Transaction transaction = TransactionImple.getTransaction();
-                if(transaction != null &&
-                   transaction.getStatus() == Status.STATUS_ACTIVE) {
-                    entityManager.set(factory.getEntityManager(puName, true));
-                    return entityManager.get().getEntityManager();
+            final Transaction transaction = TransactionImple.getTransaction();
+            if (transaction != null) {
+                return factory.getEntityManager(puName, true).getEntityManager();
+            } else {
+                if(entityManager.get() == null || entityManager.get().getEntityManager() == null) {
+                    if(transaction != null &&
+                       transaction.getStatus() == Status.STATUS_ACTIVE) {
+                        entityManager.set(factory.getEntityManager(puName, true));
+                        return entityManager.get().getEntityManager();
+                    }
+                    else {
+                        tmpEntityManager.set(factory.getEntityManager(puName, false).getEntityManager());
+                        return tmpEntityManager.get();
+                    }
                 }
                 else {
-                    tmpEntityManager.set(factory.getEntityManager(puName, false).getEntityManager());
-                    return tmpEntityManager.get();
+                    entityManager.get().getEntityManager().isJoinedToTransaction();
                 }
-            }
-            else {
-                entityManager.get().getEntityManager().isJoinedToTransaction();
             }
         } catch (SystemException sex) {
             throw new RuntimeException(sex);
         } catch (RuntimeException cex) {
-            if(cex.getCause().getClass().getName().contains("ContextNotActiveException")) {
+            if(cex.getCause() != null && cex.getCause().getClass().getName().contains("ContextNotActiveException")) {
                 if(tmpEntityManager == null) {
                     tmpEntityManager.set(factory.getEntityManager(puName, false).getEntityManager());
                 }
