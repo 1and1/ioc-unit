@@ -12,6 +12,7 @@ import javax.persistence.FlushModeType;
 import javax.persistence.LockModeType;
 import javax.persistence.Query;
 import javax.persistence.StoredProcedureQuery;
+import javax.persistence.TransactionRequiredException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaDelete;
@@ -33,8 +34,6 @@ public class EntityManagerDelegate implements EntityManager, Serializable {
     private static final long serialVersionUID = -6614196859383544873L;
     private final EntityManagerFactoryFactory factory;
     private final String puName;
-    ThreadLocal<EntityManagerWrapper> entityManager = new ThreadLocal<>();
-    ThreadLocal<EntityManager> tmpEntityManager = new ThreadLocal<>();
 
     public EntityManagerDelegate(EntityManagerFactoryFactory factory, String puName) {
         this.factory = factory;
@@ -47,76 +46,73 @@ public class EntityManagerDelegate implements EntityManager, Serializable {
             if (transaction != null) {
                 return factory.getEntityManager(puName, true).getEntityManager();
             } else {
-                if(entityManager.get() == null || entityManager.get().getEntityManager() == null) {
-                    if(transaction != null &&
-                       transaction.getStatus() == Status.STATUS_ACTIVE) {
-                        entityManager.set(factory.getEntityManager(puName, true));
-                        return entityManager.get().getEntityManager();
-                    }
-                    else {
-                        tmpEntityManager.set(factory.getEntityManager(puName, false).getEntityManager());
-                        return tmpEntityManager.get();
-                    }
-                }
-                else {
-                    entityManager.get().getEntityManager().isJoinedToTransaction();
-                }
+                return factory.getTraLessEM(puName);
             }
-        } catch (SystemException sex) {
-            throw new RuntimeException(sex);
         } catch (RuntimeException cex) {
             if(cex.getCause() != null && cex.getCause().getClass().getName().contains("ContextNotActiveException")) {
-                if(tmpEntityManager == null) {
-                    tmpEntityManager.set(factory.getEntityManager(puName, false).getEntityManager());
-                }
-                return tmpEntityManager.get();
+                return factory.getTraLessEM(puName);
             }
             else {
                 throw cex;
             }
         }
-        return entityManager.get().getEntityManager();
+    }
+
+    private void needTransaction() {
+        if (TransactionImple.getTransaction() == null) {
+            throw new TransactionRequiredException("EntityManagerDelegate");
+        }
+    }
+
+    private EntityManager clearIfNoTransaction(EntityManager em) {
+        if (TransactionImple.getTransaction() == null) {
+            em.clear();
+        }
+        return em;
     }
 
     @Override
     public void persist(final Object entity) {
+        needTransaction();
         getEntityManager().persist(entity);
     }
 
 
     @Override
     public <T> T merge(final T entity) {
+        needTransaction();
         return getEntityManager().merge(entity);
     }
 
     @Override
     public void remove(final Object entity) {
+        needTransaction();
         getEntityManager().remove(entity);
     }
 
     @Override
     public <T> T find(final Class<T> entityClass, final Object primaryKey) {
-        return getEntityManager().find(entityClass, primaryKey);
+        return clearIfNoTransaction(getEntityManager()).find(entityClass, primaryKey);
     }
 
     @Override
     public <T> T find(final Class<T> entityClass, final Object primaryKey, final Map<String, Object> properties) {
-        return getEntityManager().find(entityClass, primaryKey, properties);
+        return clearIfNoTransaction(getEntityManager()).find(entityClass, primaryKey, properties);
     }
 
     @Override
     public <T> T find(final Class<T> entityClass, final Object primaryKey, final LockModeType lockMode) {
-        return getEntityManager().find(entityClass, primaryKey, lockMode);
+        return clearIfNoTransaction(getEntityManager()).find(entityClass, primaryKey, lockMode);
     }
 
     @Override
     public <T> T find(final Class<T> entityClass, final Object primaryKey, final LockModeType lockMode, final Map<String, Object> properties) {
-        return getEntityManager().find(entityClass, primaryKey, lockMode, properties);
+        return clearIfNoTransaction(getEntityManager()).find(entityClass, primaryKey, lockMode, properties);
     }
 
     @Override
     public <T> T getReference(final Class<T> entityClass, final Object primaryKey) {
-        return getEntityManager().getReference(entityClass, primaryKey);
+        return clearIfNoTransaction(getEntityManager()).getReference(entityClass, primaryKey);
     }
 
     @Override
@@ -136,31 +132,37 @@ public class EntityManagerDelegate implements EntityManager, Serializable {
 
     @Override
     public void lock(final Object entity, final LockModeType lockMode) {
+        needTransaction();
         getEntityManager().lock(entity, lockMode);
     }
 
     @Override
     public void lock(final Object entity, final LockModeType lockMode, final Map<String, Object> properties) {
+        needTransaction();
         getEntityManager().lock(entity, lockMode, properties);
     }
 
     @Override
     public void refresh(final Object entity) {
+        needTransaction();
         getEntityManager().refresh(entity);
     }
 
     @Override
     public void refresh(final Object entity, final Map<String, Object> properties) {
+        needTransaction();
         getEntityManager().refresh(entity, properties);
     }
 
     @Override
     public void refresh(final Object entity, final LockModeType lockMode) {
+        needTransaction();
         getEntityManager().refresh(entity, lockMode);
     }
 
     @Override
     public void refresh(final Object entity, final LockModeType lockMode, final Map<String, Object> properties) {
+        needTransaction();
         getEntityManager().refresh(entity, lockMode, properties);
     }
 
@@ -181,6 +183,7 @@ public class EntityManagerDelegate implements EntityManager, Serializable {
 
     @Override
     public LockModeType getLockMode(final Object entity) {
+        needTransaction();
         return getEntityManager().getLockMode(entity);
     }
 
@@ -196,76 +199,77 @@ public class EntityManagerDelegate implements EntityManager, Serializable {
 
     @Override
     public Query createQuery(final String qlString) {
-        return getEntityManager().createQuery(qlString);
+        return clearIfNoTransaction(getEntityManager()).createQuery(qlString);
     }
 
     @Override
     public <T> TypedQuery<T> createQuery(final CriteriaQuery<T> criteriaQuery) {
-        return getEntityManager().createQuery(criteriaQuery);
+        return clearIfNoTransaction(getEntityManager()).createQuery(criteriaQuery);
     }
 
     @Override
     public Query createQuery(final CriteriaUpdate updateQuery) {
-        return getEntityManager().createQuery(updateQuery);
+        return clearIfNoTransaction(getEntityManager()).createQuery(updateQuery);
     }
 
     @Override
     public Query createQuery(final CriteriaDelete deleteQuery) {
-        return getEntityManager().createQuery(deleteQuery);
+        return clearIfNoTransaction(getEntityManager()).createQuery(deleteQuery);
     }
 
     @Override
     public <T> TypedQuery<T> createQuery(final String qlString, final Class<T> resultClass) {
-        return getEntityManager().createQuery(qlString, resultClass);
+        return clearIfNoTransaction(getEntityManager()).createQuery(qlString, resultClass);
     }
 
     @Override
     public Query createNamedQuery(final String name) {
-        return getEntityManager().createNamedQuery(name);
+        return clearIfNoTransaction(getEntityManager()).createNamedQuery(name);
     }
 
     @Override
     public <T> TypedQuery<T> createNamedQuery(final String name, final Class<T> resultClass) {
-        return getEntityManager().createNamedQuery(name, resultClass);
+        return clearIfNoTransaction(getEntityManager()).createNamedQuery(name, resultClass);
     }
 
     @Override
     public Query createNativeQuery(final String sqlString) {
-        return getEntityManager().createNativeQuery(sqlString);
+        return clearIfNoTransaction(getEntityManager()).createNativeQuery(sqlString);
     }
 
     @Override
     public Query createNativeQuery(final String sqlString, final Class resultClass) {
-        return getEntityManager().createNativeQuery(sqlString, resultClass);
+        return clearIfNoTransaction(getEntityManager()).createNativeQuery(sqlString, resultClass);
     }
 
     @Override
     public Query createNativeQuery(final String sqlString, final String resultSetMapping) {
-        return getEntityManager().createNativeQuery(sqlString, resultSetMapping);
+        return clearIfNoTransaction(getEntityManager()).createNativeQuery(sqlString, resultSetMapping);
     }
 
     @Override
     public StoredProcedureQuery createNamedStoredProcedureQuery(final String name) {
-        return getEntityManager().createNamedStoredProcedureQuery(name);
+        return clearIfNoTransaction(getEntityManager()).createNamedStoredProcedureQuery(name);
     }
 
     @Override
     public StoredProcedureQuery createStoredProcedureQuery(final String procedureName) {
-        return getEntityManager().createStoredProcedureQuery(procedureName);
+        return clearIfNoTransaction(getEntityManager()).createStoredProcedureQuery(procedureName);
     }
 
     @Override
     public StoredProcedureQuery createStoredProcedureQuery(final String procedureName, final Class... resultClasses) {
-        return getEntityManager().createStoredProcedureQuery(procedureName, resultClasses);
+        return clearIfNoTransaction(getEntityManager()).createStoredProcedureQuery(procedureName, resultClasses);
     }
 
     @Override
     public StoredProcedureQuery createStoredProcedureQuery(final String procedureName, final String... resultSetMappings) {
-        return getEntityManager().createStoredProcedureQuery(procedureName, resultSetMappings);
+        return clearIfNoTransaction(getEntityManager()).createStoredProcedureQuery(procedureName, resultSetMappings);
     }
 
     @Override
     public void joinTransaction() {
+        needTransaction();
         getEntityManager().joinTransaction();
     }
 
@@ -286,15 +290,7 @@ public class EntityManagerDelegate implements EntityManager, Serializable {
 
     @Override
     public void close() {
-        if(tmpEntityManager.get() != null) tmpEntityManager.get().close();
-        tmpEntityManager.set(null);
-        if(entityManager.get() != null) {
-            if(entityManager.get().getEntityManager() != null) {
-                entityManager.get().getEntityManager().close();
-            }
-            entityManager.get().clrEntityManager();
-        }
-        entityManager.set(null);
+      getEntityManager().close();
     }
 
     @Override
@@ -324,21 +320,21 @@ public class EntityManagerDelegate implements EntityManager, Serializable {
 
     @Override
     public <T> EntityGraph<T> createEntityGraph(final Class<T> rootType) {
-        return getEntityManager().createEntityGraph(rootType);
+        return clearIfNoTransaction(getEntityManager()).createEntityGraph(rootType);
     }
 
     @Override
     public EntityGraph<?> createEntityGraph(final String graphName) {
-        return getEntityManager().createEntityGraph(graphName);
+        return clearIfNoTransaction(getEntityManager()).createEntityGraph(graphName);
     }
 
     @Override
     public EntityGraph<?> getEntityGraph(final String graphName) {
-        return getEntityManager().getEntityGraph(graphName);
+        return clearIfNoTransaction(getEntityManager()).getEntityGraph(graphName);
     }
 
     @Override
     public <T> List<EntityGraph<? super T>> getEntityGraphs(final Class<T> entityClass) {
-        return getEntityManager().getEntityGraphs(entityClass);
+        return clearIfNoTransaction(getEntityManager()).getEntityGraphs(entityClass);
     }
 }

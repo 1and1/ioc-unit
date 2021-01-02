@@ -2,11 +2,7 @@ package com.oneandone.iocunit.jtajpa;
 
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
-import javax.persistence.Entity;
 import javax.persistence.EntityManager;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
 import javax.transaction.NotSupportedException;
@@ -131,24 +127,4 @@ public class TestJtaJpa {
         }
     }
 
-    @Entity
-    static class TestEntity {
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        Long id;
-
-        String entityName;
-
-        public Long getId() {
-            return id;
-        }
-
-        public String getEntityName() {
-            return entityName;
-        }
-
-        public void setEntityName(final String entityName) {
-            this.entityName = entityName;
-        }
-    }
 }

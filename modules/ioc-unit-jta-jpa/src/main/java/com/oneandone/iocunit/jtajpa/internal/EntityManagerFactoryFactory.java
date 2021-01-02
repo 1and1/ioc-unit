@@ -4,16 +4,25 @@ import java.io.Serializable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Disposes;
 import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
 import javax.naming.NamingException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.transaction.Status;
+import javax.transaction.SystemException;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionScoped;
+import javax.transaction.UserTransaction;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.arjuna.ats.arjuna.StateManager;
 import com.arjuna.ats.arjuna.coordinator.TxControl;
 import com.arjuna.ats.internal.jta.transaction.arjunacore.TransactionImple;
 import com.oneandone.cdi.weldstarter.CreationalContexts;
@@ -23,13 +32,46 @@ import com.oneandone.cdi.weldstarter.CreationalContexts;
  */
 @ApplicationScoped
 public class EntityManagerFactoryFactory {
+    static Logger logger = LoggerFactory.getLogger(EntityManagerFactoryFactory.class);
     public static ThreadLocal<String> currentPuName = new ThreadLocal<>();
     static ThreadLocal<EntityManagerFactory> currentFactory = new ThreadLocal<>();
     Map<String, EntityManagerFactory> factories = new ConcurrentHashMap<>();
+
+    @Inject
+    UserTransaction userTransaction;
+
     CreationalContexts creationalContexts;
 
     {
         TxControl.setDefaultTimeout(1200);  // after 20 Minutes end transaction, Debugging should be possible
+    }
+    
+    Map<String, EntityManager> traLess = new ConcurrentHashMap<>();
+    
+    EntityManager getTraLessEM(String puName) {
+        long threadId = Thread.currentThread().getId();
+        String key = threadId + "__" + puName;
+        EntityManager res = traLess.get(key);
+        if (res == null || !res.isOpen()) {
+            res = getEntityManager(puName, false).getEntityManager();
+            traLess.put(key, res);
+        }
+        return res;
+    }
+
+    @PreDestroy
+    public void preDestroy() {
+        try {
+            if ( userTransaction.getStatus() != Status.STATUS_NO_TRANSACTION)
+                userTransaction.rollback();
+        } catch (SystemException e) {
+            logger.error("Disposing UserTransaction in preDestroy delivered",e);
+        }
+        currentPuName.set(null);
+        currentFactory.set(null);
+        for (EntityManager em: traLess.values()) {
+            em.close();
+        }
     }
 
     public EntityManagerFactoryFactory() {

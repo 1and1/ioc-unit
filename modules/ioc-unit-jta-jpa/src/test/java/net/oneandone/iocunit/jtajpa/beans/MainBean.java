@@ -1,26 +1,21 @@
-package net.oneandone.iocunit.test;
+package net.oneandone.iocunit.jtajpa.beans;
 
 import static javax.transaction.Transactional.TxType.REQUIRED;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
+
+import net.oneandone.iocunit.jtajpa.TestBeanBase;
 
 /**
  * @author aschoerk
  */
 @ApplicationScoped
 @Transactional(REQUIRED)
-public class MainBean {
-    @Inject
-    EntityManager entityManager;
+public class MainBean extends TestBeanBase {
 
-    @Inject
-    SecondBean secondBean;
-
-    public void call() {
+    public void callReqNew() {
         entityManager.createNativeQuery("Select 1");
-        secondBean.callSecondBean();
+        reqNewBean.callBean();
     }
 }

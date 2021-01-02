@@ -21,11 +21,14 @@ import javax.transaction.RollbackException;
 import javax.transaction.Status;
 import javax.transaction.Synchronization;
 import javax.transaction.SystemException;
+import javax.transaction.TransactionalException;
 import javax.transaction.UserTransaction;
 
 import org.jboss.weld.transaction.spi.TransactionServices;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.oneandone.iocunit.jtajpa.internal.UserTransactionDelegate;
 
 /**
  * SPI extension point of the Weld for integrate with transaction manager.
@@ -40,6 +43,8 @@ import org.slf4j.LoggerFactory;
  */
 public class CDITransactionServices implements TransactionServices {
     private static final Logger LOG = LoggerFactory.getLogger(CDITransactionServices.class);
+
+    private UserTransaction lastUserTransaction;
 
     @Override
     public void registerSynchronization(Synchronization synchronizedObserver) {
@@ -75,11 +80,24 @@ public class CDITransactionServices implements TransactionServices {
 
     @Override
     public UserTransaction getUserTransaction() {
-        return com.arjuna.ats.jta.UserTransaction.userTransaction();
+        try {
+            lastUserTransaction = new UserTransactionDelegate(com.arjuna.ats.jta.UserTransaction.userTransaction());
+            return lastUserTransaction;
+
+        } catch (SystemException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public void cleanup() {
-        // nothing to clean
+        try {
+            if(lastUserTransaction != null && lastUserTransaction.getStatus() != Status.STATUS_NO_TRANSACTION) {
+                lastUserTransaction.rollback();
+            }
+            lastUserTransaction = null;
+        } catch (TransactionalException | SystemException e) {
+            LOG.warn("Cleaning up UserTransaction", e);
+        }
     }
 }
