@@ -1,8 +1,16 @@
 package com.oneandone.iocunit.jtajpa;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+
+import javax.annotation.Resource;
+import javax.ejb.EJB;
+import javax.enterprise.inject.spi.Extension;
+import javax.persistence.PersistenceContext;
 
 import org.jboss.weld.transaction.spi.TransactionServices;
 
@@ -32,6 +40,11 @@ public class JtaJpaTestExtensionService implements TestExtensionService {
     }
 
     @Override
+    public Collection<Class<? extends Annotation>> injectAnnotations() {
+        return Arrays.asList(PersistenceContext.class);
+    }
+
+    @Override
     public List<Class<?>> testClasses() {
         List<Class<?>> result = new ArrayList<Class<?>>() {
             private static final long serialVersionUID = -1661631254833065243L;
@@ -44,5 +57,16 @@ public class JtaJpaTestExtensionService implements TestExtensionService {
         return result;
     }
 
+    @Override
+    public List<Extension> getExtensions() {
+        List<Extension> result = new ArrayList<>();
+        try {
+            result.add(new JPAAnnotationsExtension());
+        } catch (NoClassDefFoundError ex) {
+            ;
+        }
+
+        return result;
+    }
 
 }

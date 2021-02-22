@@ -21,7 +21,6 @@ import com.arjuna.ats.jta.common.jtaPropertyManager;
  * This producer defines a way how the {@link TransactionSynchronizationRegistry}
  * is obtained by the application. The {@link Alternative} is used for enabling
  * the bean only in case when CDI binding test case is run.
- * See {@link CDIBindingTestCase#before()}
  * </p>
  * <p>
  * If this producer is not activated then default Narayana implementation

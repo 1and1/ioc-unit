@@ -1,10 +1,15 @@
 package com.oneandone.iocunit.resource;
 
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.annotation.Resource;
+import javax.ejb.EJB;
 import javax.enterprise.inject.spi.Extension;
 
 import org.slf4j.Logger;
@@ -25,6 +30,11 @@ public class TestExtensionServices implements TestExtensionService {
         if(testExtensionServiceData.get() == null) {
             testExtensionServiceData.set(new HashSet<>());
         }
+    }
+
+    @Override
+    public Collection<Class<? extends Annotation>> injectAnnotations() {
+        return Arrays.asList(Resource.class);
     }
 
     @Override

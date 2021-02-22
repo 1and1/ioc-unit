@@ -19,7 +19,7 @@ public abstract class JtaEntityManagerFactoryBase {
         return "test";
     }
 
-    protected EntityManager produceEntityManager() {
+    public EntityManager produceEntityManager() {
         try {
             return new EntityManagerDelegate(entityManagerFactoryFactory, getPersistenceUnitName());
         } catch (Exception e) {
