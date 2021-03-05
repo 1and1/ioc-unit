@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -87,9 +88,10 @@ public class IocUnitResteasyHttpClient extends AbstractHttpClient {
 
     protected CloseableHttpResponse innerExecute(final HttpHost target, final HttpRequest request, final HttpContext context) throws IOException, ClientProtocolException {
 
+        Set<Map.Entry<Class<?>, Object>> contextData = ResteasyProviderFactory.getContextDataMap().entrySet();
+        ResteasyProviderFactory.clearContextData();
         try {
             MockHttpRequest mockRequest = createMockHttpRequestFromRequest(request);
-
             addHeadersFromRequest(request, mockRequest);
             MockHttpResponse response = new MockHttpResponse();
             Map<Class<?>, Object> map = ResteasyProviderFactory.getContextDataMap();
@@ -97,6 +99,11 @@ public class IocUnitResteasyHttpClient extends AbstractHttpClient {
             return new CloseableMockResponse(response);
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
+        } finally {
+            contextData.forEach(d ->
+                    ResteasyProviderFactory.getContextDataMap().put(
+                            d.getKey(),
+                            d.getValue()));
         }
 
     }
