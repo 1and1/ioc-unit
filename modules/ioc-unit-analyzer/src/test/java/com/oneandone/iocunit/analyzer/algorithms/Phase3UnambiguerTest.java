@@ -1,14 +1,15 @@
 package com.oneandone.iocunit.analyzer.algorithms;
 
-import com.oneandone.iocunit.analyzer.Phase3Fixer;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.Test;
+
+import com.oneandone.iocunit.analyzer.Phase3Fixer;
 
 public class Phase3UnambiguerTest {
 

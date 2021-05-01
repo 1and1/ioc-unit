@@ -350,17 +350,21 @@ public class QualifiedType {
             if (typedAnnotation != null) {
                 boolean oneIsAssignable = false;
                 for (Class<?> aClass: typedAnnotation.value()) {
-                    if (IocUnitTypeUtils.isAssignable(aClass, inject.getType()) && IocUnitTypeUtils.isAssignable(inject.getType(),aClass))
+                    if(IocUnitTypeUtils.isAssignable(aClass, inject.getType()) && IocUnitTypeUtils.isAssignable(inject.getType(), aClass)) {
                         oneIsAssignable = true;
+                    }
                 }
-                if (!oneIsAssignable)
+                if(!oneIsAssignable) {
                     return false;
+                }
             }
 
-            if (inject.isInstance())
+            if(inject.isInstance()) {
                 return true;
+            }
 
-            return isRawType() == inject.isRawType();
+            // my assign to rawtype but not the other way round
+            return inject.isRawType() || !isRawType();
         }
 
     }

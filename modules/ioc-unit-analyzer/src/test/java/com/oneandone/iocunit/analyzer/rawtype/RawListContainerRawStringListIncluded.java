@@ -5,12 +5,14 @@ import java.util.List;
 import javax.inject.Inject;
 
 import com.oneandone.iocunit.analyzer.BaseClass;
+import com.oneandone.iocunit.analyzer.annotations.SutPackages;
 import com.oneandone.iocunit.analyzer.rawtype.types.StringList;
 
 /**
  * @author aschoerk
  */
-public class RawListContainerRawProducerExcluded extends BaseClass {
+@SutPackages({StringList.class})
+public class RawListContainerRawStringListIncluded extends BaseClass {
     @Inject
     List list;
 

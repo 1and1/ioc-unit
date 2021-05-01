@@ -1,20 +1,20 @@
 package com.oneandone.iocunit.analyzer;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import javax.inject.Inject;
+
+import org.junit.jupiter.api.Test;
+
 import com.oneandone.iocunit.analyzer.annotations.SutClasses;
 import com.oneandone.iocunit.analyzer.producing.ProducingClass1;
 import com.oneandone.iocunit.analyzer.test1.Qualifier1A;
 import com.oneandone.iocunit.analyzer.test1.Test1Interface;
 
-import org.junit.Test;
-
-import javax.inject.Inject;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 public class TestQualifiers extends BaseTest {
     @SutClasses(ProducingClass1.class)
-    static class TestClass {
+    static class TestClass extends BaseClass {
         @Inject
         Test1Interface test1Interface;
 

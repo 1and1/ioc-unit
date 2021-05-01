@@ -1,6 +1,8 @@
-package com.oneandone.iocunit.analyzer.rawtype;
+package com.oneandone.iocunit.analyzer.rawtype.producers;
 
 import javax.enterprise.inject.Produces;
+
+import com.oneandone.iocunit.analyzer.rawtype.types.StringList;
 
 /**
  * @author aschoerk

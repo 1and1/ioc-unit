@@ -31,8 +31,6 @@ import java.util.Map;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.mutable.MutableObject;
-import com.oneandone.iocunit.analyzer.reflect.ConstructorUtils;
-import com.oneandone.iocunit.analyzer.reflect.MethodUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -80,7 +78,7 @@ public class ConstructorUtilsTest {
         }
 
         public TestBean(final BaseClass bc, final String... s) {
-            toString = "(BaseClass, String...)";
+            toString = "(SutSamplesBaseClass, String...)";
             varArgs = s;
         }
 
@@ -167,9 +165,9 @@ public class ConstructorUtilsTest {
         ConstructorUtils.invokeConstructor(TestBean.class, "a", "b")
           .verify("(String...)", new String[]{"a", "b"});
         ConstructorUtils.invokeConstructor(TestBean.class, NumberUtils.INTEGER_ONE, "a", "b")
-          .verify("(Integer, String...)", new String[]{"a", "b"});
+                .verify("(Integer, String...)", new String[]{"a", "b"});
         ConstructorUtils.invokeConstructor(TestBean.class, new SubClass(), new String[]{"a", "b"})
-          .verify("(BaseClass, String...)", new String[]{"a", "b"});
+                .verify("(SutSamplesBaseClass, String...)", new String[]{"a", "b"});
     }
 
     @Test

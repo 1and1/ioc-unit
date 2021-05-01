@@ -1,14 +1,12 @@
 package com.oneandone.iocunit.analyzer;
 
+import javax.inject.Inject;
+
+import org.junit.jupiter.api.Test;
+
 import com.oneandone.iocunit.analyzer.annotations.SutPackages;
 import com.oneandone.iocunit.analyzer.test1.Test1A;
 import com.oneandone.iocunit.analyzer.test1.Test1Interface;
-
-import org.junit.Test;
-
-import javax.inject.Inject;
-
-import static org.junit.Assert.assertNotNull;
 
 /**
  * @author aschoerk
@@ -18,7 +16,7 @@ import static org.junit.Assert.assertNotNull;
 public class TestSutPackage extends BaseTest {
 
     @SutPackages({Test1A.class})
-    static class TestClass {
+    static class TestClass extends BaseClass {
         @Inject
         Test1A test1;
 

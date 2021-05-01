@@ -5,15 +5,11 @@ import java.util.List;
 import javax.inject.Inject;
 
 import com.oneandone.iocunit.analyzer.BaseClass;
-import com.oneandone.iocunit.analyzer.rawtype.types.StringList;
 
 /**
  * @author aschoerk
  */
-public class RawListContainerRawProducerExcluded extends BaseClass {
+public class ParameterizedListContainer extends BaseClass {
     @Inject
-    List list;
-
-    @Inject
-    StringList stringList;
+    List<String> list;
 }

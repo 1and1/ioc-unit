@@ -5,6 +5,6 @@ import javax.enterprise.inject.Typed;
 /**
  * @author aschoerk
  */
-@Typed(TypedSubClass.class)
-public class TypedSubClass extends BaseClass {
+@Typed(TypedSubClassTyped.class)
+public class TypedSubClassTyped extends TypedBaseClass {
 }

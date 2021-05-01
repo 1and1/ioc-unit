@@ -1,12 +1,10 @@
 package com.oneandone.iocunit.analyzer.derivedproducers;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.oneandone.iocunit.analyzer.BaseTest;
 import com.oneandone.iocunit.analyzer.ConfigCreator;
@@ -16,14 +14,13 @@ import com.oneandone.iocunit.analyzer.LogbackFilter;
 /**
  * @author aschoerk
  */
-@RunWith(JUnit4.class)
 public class TestPhase5WarnerCanDetectedDerivedProducers extends BaseTest {
     private void initLogbackFilter() {
         LogbackFilter.clear();
         LogbackFilter.doSaveMessages();
     }
 
-    @Before
+    @BeforeEach
     public void setup() {
         initLogbackFilter();
     }

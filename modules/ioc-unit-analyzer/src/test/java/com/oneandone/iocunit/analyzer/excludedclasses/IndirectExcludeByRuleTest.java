@@ -1,11 +1,11 @@
 package com.oneandone.iocunit.analyzer.excludedclasses;
 
+import javax.inject.Inject;
+
 import com.oneandone.iocunit.analyzer.BaseTest;
 import com.oneandone.iocunit.analyzer.annotations.SutClasses;
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 import com.oneandone.iocunit.analyzer.excludedclasses.pcktoinclude.ToExclude;
-
-import javax.inject.Inject;
 
 /**
  * @author aschoerk
@@ -18,7 +18,8 @@ public class IndirectExcludeByRuleTest extends BaseTest {
         @Inject
         ToExclude toExclude;
     }
-    @org.junit.Test
+
+    @org.junit.jupiter.api.Test
     public void test() {
         createTest(SubExcludeTest.Test.class);
     }

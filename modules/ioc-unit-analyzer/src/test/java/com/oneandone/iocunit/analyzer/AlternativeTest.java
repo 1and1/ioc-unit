@@ -1,7 +1,7 @@
 package com.oneandone.iocunit.analyzer;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.net.MalformedURLException;
 
@@ -9,7 +9,7 @@ import javax.enterprise.inject.Alternative;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 import com.oneandone.iocunit.analyzer.annotations.AnalyzerFlags;
@@ -21,7 +21,7 @@ public class AlternativeTest extends BaseTest {
 
     @AnalyzerFlags(allowGuessing = false, produceInstanceInjectsByAvailables = false)
     @EnabledAlternatives(BeanUsingAlternativeAtField.ProducingAlternative.class)
-    static class BeanUsingAlternativeAtField {
+    static class BeanUsingAlternativeAtField extends BaseClass {
 
         @Alternative
         static class ProducingAlternative {
@@ -57,7 +57,7 @@ public class AlternativeTest extends BaseTest {
     }
 
     @TestClasses(ProducesAlternative.class)
-    static class BeanUsingAlternativeStereotype {
+    static class BeanUsingAlternativeStereotype extends BaseClass {
 
         static class ProducingAlternative {
             @ProducesAlternative
@@ -92,7 +92,8 @@ public class AlternativeTest extends BaseTest {
     static class DummyBean {
 
     }
-    static class BeanUsingAlternative {
+
+    static class BeanUsingAlternative extends BaseClass {
 
         @Alternative
         static class InnerAlternative extends DummyBean {
@@ -112,7 +113,7 @@ public class AlternativeTest extends BaseTest {
 
     }
 
-    @org.junit.Test
+    @org.junit.jupiter.api.Test
     public void canInjectAlternativeClass() throws MalformedURLException {
         createTest(BeanUsingAlternative.class);
         assertEquals(3,toBeStarted.size());

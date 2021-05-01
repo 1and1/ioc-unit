@@ -1,8 +1,8 @@
 package com.oneandone.iocunit.analyzer;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -12,7 +12,7 @@ import java.net.MalformedURLException;
 
 import javax.inject.Inject;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.oneandone.iocunit.analyzer.annotations.SutClasses;
 import com.oneandone.iocunit.analyzer.annotations.SutPackages;
@@ -73,8 +73,7 @@ public class AnalyzeTest extends BaseTest {
     }
 
 
-
-    static class DoesStartTestClass {
+    static class DoesStartTestClass extends BaseClass {
 
     }
 
@@ -94,18 +93,18 @@ public class AnalyzeTest extends BaseTest {
 
     @SutClasses(SutClass.class)
     @TestClasses(TestClassOverridingInject.TestSut2Class.class)
-    static class TestClassOverridingInject {
+    static class TestClassOverridingInject extends BaseClass {
         static class TestSut2Class extends SutClass.Sut2 {
 
         }
     }
 
     @SutClasses(SutClass.class)
-    static class TestClassNotOverridingInject {
+    static class TestClassNotOverridingInject extends BaseClass {
     }
 
     @SutClasses({TestClassOverridingInjectByAvailable.InnerSutClass.class})
-    static class TestClassOverridingInjectByAvailable {
+    static class TestClassOverridingInjectByAvailable extends BaseClass {
         static class InnerSutClass {
 
             @Inject
@@ -123,7 +122,7 @@ public class AnalyzeTest extends BaseTest {
     }
 
     @SutClasses({TestClassOverridingInjectByAvailable2.InnerSutClass.class})
-    static class TestClassOverridingInjectByAvailable2 {
+    static class TestClassOverridingInjectByAvailable2 extends BaseClass {
         static class InnerSutClass {
 
             @Inject
@@ -158,7 +157,7 @@ public class AnalyzeTest extends BaseTest {
 
     @SutClasses(SutClass2Intf.class)
     @SutPackages(SutClass21.class)
-    static class TestClass2 {
+    static class TestClass2 extends BaseClass {
 
     }
 
@@ -173,7 +172,7 @@ public class AnalyzeTest extends BaseTest {
     }
 
     @SutPackages(SutClass21.class)
-    static class TestClass2NoIntf {
+    static class TestClass2NoIntf extends BaseClass {
 
     }
 
@@ -202,7 +201,7 @@ public class AnalyzeTest extends BaseTest {
 
     @SutClasses(Annotation.class)
     @SutPackages(SutClass31.class)
-    static class TestClass3 {
+    static class TestClass3 extends BaseClass {
 
     }
 
@@ -230,7 +229,7 @@ public class AnalyzeTest extends BaseTest {
 
     @SutClasses(SutClass4Abstract.class)
     @SutPackages(SutClass41.class)
-    static class TestClass4 {
+    static class TestClass4 extends BaseClass {
 
     }
 

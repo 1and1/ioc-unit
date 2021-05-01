@@ -1,4 +1,4 @@
-package com.oneandone.iocunit.analyzer.rawtype;
+package com.oneandone.iocunit.analyzer.rawtype.producers;
 
 import java.util.ArrayList;
 import java.util.List;

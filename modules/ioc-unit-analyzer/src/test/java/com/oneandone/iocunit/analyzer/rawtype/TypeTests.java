@@ -1,26 +1,25 @@
 package com.oneandone.iocunit.analyzer.rawtype;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.jupiter.api.Test;
 
 import com.oneandone.iocunit.analyzer.QualifiedType;
+import com.oneandone.iocunit.analyzer.rawtype.types.RawListSub;
+import com.oneandone.iocunit.analyzer.rawtype.types.StringList;
 
 /**
  * @author aschoerk
  */
-@RunWith(JUnit4.class)
 public class TypeTests {
-    List<String>      listString;
-    List              rawlist;
-    RawListSub        rawListSub;
-    StringList        stringList;
+    List<String> listString;
+    List rawlist;
+    RawListSub rawListSub;
+    StringList stringList;
     ArrayList<String> arrayListString;
 
     static QualifiedType qtype(String name) {

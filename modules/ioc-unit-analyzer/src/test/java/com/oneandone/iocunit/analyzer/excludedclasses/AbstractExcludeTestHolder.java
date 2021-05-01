@@ -1,14 +1,15 @@
 package com.oneandone.iocunit.analyzer.excludedclasses;
 
+import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
+
+import org.junit.BeforeClass;
+
+import com.oneandone.iocunit.analyzer.BaseClass;
 import com.oneandone.iocunit.analyzer.annotations.ExcludedClasses;
 import com.oneandone.iocunit.analyzer.annotations.SutPackages;
 import com.oneandone.iocunit.analyzer.excludedclasses.pcktoinclude.ToExclude;
 import com.oneandone.iocunit.analyzer.excludedclasses.pcktoinclude.ToInclude;
-
-import org.junit.BeforeClass;
-
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
 
 /**
  * @author aschoerk
@@ -20,9 +21,9 @@ public abstract class AbstractExcludeTestHolder {
         ToInclude.count = 0;
     }
 
-    @SutPackages({ ToInclude.class })
-    @ExcludedClasses({ ToExclude.class })
-    static abstract class AbstractExcludeTest {
+    @SutPackages({ToInclude.class})
+    @ExcludedClasses({ToExclude.class})
+    static abstract class AbstractExcludeTest extends BaseClass {
         @Inject
         ToInclude toInclude;
 

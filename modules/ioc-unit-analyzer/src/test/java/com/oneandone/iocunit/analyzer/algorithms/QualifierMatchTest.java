@@ -1,7 +1,7 @@
 package com.oneandone.iocunit.analyzer.algorithms;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
@@ -18,16 +18,13 @@ import javax.enterprise.inject.New;
 import javax.inject.Named;
 import javax.inject.Qualifier;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.jupiter.api.Test;
 
 import com.oneandone.iocunit.analyzer.QualifiedType;
 
 /**
  * @author aschoerk
  */
-@RunWith(JUnit4.class)
 public class QualifierMatchTest {
 
     @Qualifier

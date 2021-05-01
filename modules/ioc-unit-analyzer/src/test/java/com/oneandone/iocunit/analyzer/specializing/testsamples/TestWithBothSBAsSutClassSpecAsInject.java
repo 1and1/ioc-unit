@@ -2,15 +2,16 @@ package com.oneandone.iocunit.analyzer.specializing.testsamples;
 
 import javax.inject.Inject;
 
+import com.oneandone.iocunit.analyzer.BaseClass;
 import com.oneandone.iocunit.analyzer.annotations.SutClasses;
-import com.oneandone.iocunit.analyzer.specializing.sutsamples.BaseClass;
 import com.oneandone.iocunit.analyzer.specializing.sutsamples.SpecializingClass;
+import com.oneandone.iocunit.analyzer.specializing.sutsamples.SutSamplesBaseClass;
 
 /**
  * @author aschoerk
  */
-@SutClasses({BaseClass.class, SpecializingClass.class})
-public class TestWithBothSBAsSutClassSpecAsInject {
+@SutClasses({SutSamplesBaseClass.class, SpecializingClass.class})
+public class TestWithBothSBAsSutClassSpecAsInject extends BaseClass {
     @Inject
     SpecializingClass specializingClass;
 }

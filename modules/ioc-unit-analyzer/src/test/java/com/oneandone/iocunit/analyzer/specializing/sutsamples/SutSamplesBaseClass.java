@@ -3,5 +3,5 @@ package com.oneandone.iocunit.analyzer.specializing.sutsamples;
 /**
  * @author aschoerk
  */
-public class BaseClass {
+public class SutSamplesBaseClass {
 }

@@ -1,12 +1,14 @@
 package com.oneandone.iocunit.analyzer.excludedclasses;
 
+import javax.inject.Inject;
+
+import org.junit.BeforeClass;
+
+import com.oneandone.iocunit.analyzer.BaseClass;
 import com.oneandone.iocunit.analyzer.BaseTest;
 import com.oneandone.iocunit.analyzer.annotations.TestPackages;
 import com.oneandone.iocunit.analyzer.excludedclasses.pcktoinclude.ToExclude;
 import com.oneandone.iocunit.analyzer.excludedclasses.pcktoinclude.ToInclude;
-import org.junit.BeforeClass;
-
-import javax.inject.Inject;
 
 /**
  * @author aschoerk
@@ -15,7 +17,7 @@ import javax.inject.Inject;
 public class ExcludeNegativeTest extends BaseTest {
 
     @TestPackages({ToInclude.class})
-    static class Test {
+    static class Test extends BaseClass {
         @Inject
         ToInclude toInclude;
         @Inject
@@ -28,7 +30,7 @@ public class ExcludeNegativeTest extends BaseTest {
         ToInclude.count = 0;
     }
 
-    @org.junit.Test
+    @org.junit.jupiter.api.Test
     public void test() {
 
         createTest(Test.class);

@@ -15,7 +15,7 @@ public class SubExcludeTest extends BaseTest {
 
     }
 
-    @org.junit.Test
+    @org.junit.jupiter.api.Test
     public void test() {
         createTest(Test.class);
     }

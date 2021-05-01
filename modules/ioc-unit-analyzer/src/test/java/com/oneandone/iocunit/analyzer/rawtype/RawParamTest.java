@@ -1,47 +1,60 @@
 package com.oneandone.iocunit.analyzer.rawtype;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.oneandone.iocunit.analyzer.BaseTest;
 import com.oneandone.iocunit.analyzer.QualifiedType;
+import com.oneandone.iocunit.analyzer.rawtype.producers.ParameterizedProducer;
+import com.oneandone.iocunit.analyzer.rawtype.producers.RawListSubProducer;
+import com.oneandone.iocunit.analyzer.rawtype.producers.RawProducer;
+import com.oneandone.iocunit.analyzer.rawtype.producers.StringListProducer;
+import com.oneandone.iocunit.analyzer.rawtype.types.RawListSub;
+import com.oneandone.iocunit.analyzer.rawtype.types.StringList;
 
 /**
  * @author aschoerk
  */
 public class RawParamTest extends BaseTest {
 
-    void testAndCheckProducer(Class<?> testClass, Class<?> producerClass) {
-        createTest(testClass);
-        assertTrue(toBeStarted.size() == 2);
-        assertTrue(toBeStarted.contains(producerClass));
-        assertTrue(toBeStarted.contains(testClass));
-
+    void testAndCheckProducer(Class<?> testClass, Class<?> producerClass, Class<?>... elseClasses) {
+        createTest(testClass, producerClass);
+        assertEquals(2 + elseClasses.length, toBeStarted.size());
+        Set<Class<? extends Object>> compareToBeStarted = new HashSet<>();
+        compareToBeStarted.add(testClass);
+        compareToBeStarted.add(producerClass);
+        for (Class<?> c : elseClasses) {
+            compareToBeStarted.add(c);
+        }
+        assertEquals(toBeStarted.stream().collect(Collectors.toSet()), compareToBeStarted);
     }
 
     @Test
     public void analyzeRawListContainerRawListSubExcluded() {
-        testAndCheckProducer(RawListContainerRawListSubExcluded.class, RawProducer.class);
+        testAndCheckProducer(RawListContainerRawStringListIncluded.class, RawProducer.class, StringList.class);
     }
 
     @Test
     public void analyzeRawListContainerRawProducerExcluded() {
-        testAndCheckProducer(RawListContainerRawProducerExcluded.class, RawListSubProducer.class);
+        testAndCheckProducer(RawListContainerRawProducerExcluded.class, RawListSubProducer.class, StringList.class);
     }
 
     @Test
     public void directTest() throws NoSuchFieldException {
         QualifiedType q = new QualifiedType(RawListSub.class, true);
-        QualifiedType i = new QualifiedType(ParameterizedListContainerStringListExcluded.class.getDeclaredField("list"));
+        QualifiedType i = new QualifiedType(ParameterizedListContainer.class.getDeclaredField("list"));
         assertFalse(q.isAssignableTo(i));
     }
 
     @Test
     public void analyzeParameterizedListContainerStringListExcluded() {
-        testAndCheckProducer(ParameterizedListContainerStringListExcluded.class, ParameterizedProducer.class);
+        testAndCheckProducer(ParameterizedListContainer.class, ParameterizedProducer.class);
     }
 
     @Test
