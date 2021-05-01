@@ -22,7 +22,6 @@ import javax.transaction.UserTransaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.arjuna.ats.arjuna.StateManager;
 import com.arjuna.ats.arjuna.coordinator.TxControl;
 import com.arjuna.ats.internal.jta.transaction.arjunacore.TransactionImple;
 import com.oneandone.cdi.weldstarter.CreationalContexts;
@@ -38,7 +37,7 @@ public class EntityManagerFactoryFactory {
     Map<String, EntityManagerFactory> factories = new ConcurrentHashMap<>();
 
     @Inject
-    UserTransaction userTransaction;
+    private UserTransaction userTransaction;
 
     CreationalContexts creationalContexts;
 
