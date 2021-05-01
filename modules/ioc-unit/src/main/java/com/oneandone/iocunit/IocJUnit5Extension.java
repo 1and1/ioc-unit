@@ -5,8 +5,6 @@ import java.lang.reflect.Method;
 import java.net.URL;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.naming.InitialContext;
 
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
@@ -17,8 +15,6 @@ import org.junit.jupiter.api.extension.TestInstanceFactoryContext;
 import org.junit.jupiter.api.extension.TestInstantiationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.oneandone.cdi.weldstarter.CreationalContexts;
 
 public class IocJUnit5Extension implements BeforeEachCallback,
         AfterAllCallback, TestExecutionExceptionHandler, TestInstanceFactory {
@@ -64,7 +60,12 @@ public class IocJUnit5Extension implements BeforeEachCallback,
                 }
             } // store info about explicit param injection, either from global settings or from annotation on the test class
             if(startupException != null) {
-                return clazz.newInstance(); // prepare default, to allow beforeEach to handle exception.
+                try {
+                    return clazz.newInstance(); // prepare default, to allow beforeEach to handle exception.
+                } catch (Exception e) {
+                    logger.error("Exception during Startup: ", startupException);
+                    throw e;
+                }
             }
             analyzeAndStarter.initContexts();
             Object test = analyzeAndStarter.getCreationalContexts().create(clazz, ApplicationScoped.class);
