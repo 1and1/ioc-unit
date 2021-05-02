@@ -1,6 +1,7 @@
 package com.oneandone.iocunit.jtajpa.internal;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -31,46 +32,18 @@ import com.oneandone.cdi.weldstarter.CreationalContexts;
  */
 @ApplicationScoped
 public class EntityManagerFactoryFactory {
-    static Logger logger = LoggerFactory.getLogger(EntityManagerFactoryFactory.class);
+    // used during EntityManagerFactory-Creation to let PersistenceXmlConnectionProvider know what the current PuName is.
     public static ThreadLocal<String> currentPuName = new ThreadLocal<>();
-    static ThreadLocal<EntityManagerFactory> currentFactory = new ThreadLocal<>();
+    public static ThreadLocal<EntityManagerWrapper> traLessEntityManagers = new ThreadLocal<>();
+    static Logger logger = LoggerFactory.getLogger(EntityManagerFactoryFactory.class);
     Map<String, EntityManagerFactory> factories = new ConcurrentHashMap<>();
-
+    CreationalContexts creationalContexts;
+    Map<String, EntityManager> traLess = new ConcurrentHashMap<>();
     @Inject
     private UserTransaction userTransaction;
 
-    CreationalContexts creationalContexts;
-
     {
         TxControl.setDefaultTimeout(1200);  // after 20 Minutes end transaction, Debugging should be possible
-    }
-    
-    Map<String, EntityManager> traLess = new ConcurrentHashMap<>();
-    
-    EntityManager getTraLessEM(String puName) {
-        long threadId = Thread.currentThread().getId();
-        String key = threadId + "__" + puName;
-        EntityManager res = traLess.get(key);
-        if (res == null || !res.isOpen()) {
-            res = getEntityManager(puName, false).getEntityManager();
-            traLess.put(key, res);
-        }
-        return res;
-    }
-
-    @PreDestroy
-    public void preDestroy() {
-        try {
-            if ( userTransaction.getStatus() != Status.STATUS_NO_TRANSACTION)
-                userTransaction.rollback();
-        } catch (SystemException e) {
-            logger.error("Disposing UserTransaction in preDestroy delivered",e);
-        }
-        currentPuName.set(null);
-        currentFactory.set(null);
-        for (EntityManager em: traLess.values()) {
-            em.close();
-        }
     }
 
     public EntityManagerFactoryFactory() {
@@ -81,78 +54,102 @@ public class EntityManagerFactoryFactory {
         }
     }
 
-    public EntityManagerFactory getCurrentFactory() {
-        return currentFactory.get();
+    EntityManager getTraLessEM(String puName) {
+        long threadId = Thread.currentThread().getId();
+        String key = threadId + "__" + puName;
+        EntityManager res = traLess.get(key);
+        if(res == null || !res.isOpen()) {
+            res = getEntityManager(puName, false);
+            traLess.put(key, res);
+        }
+        return res;
+    }
+
+    @PreDestroy
+    public void preDestroy() {
+        try {
+            if(userTransaction.getStatus() != Status.STATUS_NO_TRANSACTION) {
+                userTransaction.rollback();
+            }
+        } catch (SystemException e) {
+            logger.error("Disposing UserTransaction in preDestroy delivered", e);
+        }
+        currentPuName.set(null);
+        for (EntityManager em : traLess.values()) {
+            em.close();
+        }
     }
 
     void dispose(@Disposes EntityManagerFactoryFactory.EntityManagerWrapper emWrapper) {
-        emWrapper.getEntityManager().close();
-        emWrapper.clrEntityManager();
+        emWrapper.clrEntityManagers();
     }
 
     @TransactionScoped
     @Produces
     EntityManagerFactoryFactory.EntityManagerWrapper transactionalEntityManagerWrapper() {
-        final EntityManagerFactory entityManagerFactory = getCurrentFactory();
-        if(entityManagerFactory == null) {
-            throw new RuntimeException("expected Factory for pu does not exist");
-        }
-        else {
-            return new EntityManagerFactoryFactory.EntityManagerWrapper(entityManagerFactory.createEntityManager(),
-                    TransactionImple.getTransaction());
-        }
-
+        return new EntityManagerWrapper();
     }
 
-    public EntityManagerFactory getEMFactory(final String name) {
-        return factories.get(name);
-    }
-
-    public EntityManagerWrapper getEntityManager(final String persistenceUnitName, boolean transactional) {
+    public EntityManager getEntityManager(final String persistenceUnitName, boolean transactional) {
         EntityManagerFactory factory = factories.get(persistenceUnitName);
         if(factory == null) {
             String prevPuName = currentPuName.get();
             try {
                 currentPuName.set(persistenceUnitName);
+                // when JPA uses PersistenceXmlConnectionProvider to create EntityManagerFactory
+                // fetch the persistenceUnitName from ThreadLocal, to know which PersistenceUnit to use.
                 factories.put(persistenceUnitName, Persistence.createEntityManagerFactory(persistenceUnitName));
                 factory = factories.get(persistenceUnitName);
             } finally {
                 currentPuName.set(prevPuName);
             }
         }
+        EntityManagerWrapper entityManagerWrapper = traLessEntityManagers.get();
         if(transactional) {
-            currentFactory.set(factory);
-            return ((EntityManagerWrapper)
-                            creationalContexts.create(EntityManagerWrapper.class, TransactionScoped.class));
+            if(entityManagerWrapper != null) {
+                entityManagerWrapper.clrEntityManagers();
+                traLessEntityManagers.set(null);
+            }
+            EntityManagerWrapper ewrapper = ((EntityManagerWrapper)
+                                                     creationalContexts.create(EntityManagerWrapper.class, TransactionScoped.class));
+            return ewrapper.getEntityManager(factory);
         }
         else {
-            return new EntityManagerWrapper(factory.createEntityManager());
+            if(entityManagerWrapper == null) {
+                entityManagerWrapper = new EntityManagerWrapper();
+                traLessEntityManagers.set(entityManagerWrapper);
+            }
+
+            return entityManagerWrapper.getEntityManager(factory);
         }
     }
 
     public static class EntityManagerWrapper implements Serializable {
         private static final long serialVersionUID = -7441007325030843990L;
-        private EntityManager entityManager;
+        private Map<EntityManagerFactory, EntityManager> entityManagers = new HashMap<>();
         private Transaction transaction;
 
-        public EntityManagerWrapper(final EntityManager entityManager) {
-            this.entityManager = entityManager;
-        }
-        public EntityManagerWrapper(final EntityManager entityManager, Transaction transaction) {
-            this.entityManager = entityManager;
-            this.transaction = transaction;
+        public EntityManagerWrapper() {
+            TransactionImple.getTransaction();
         }
 
-        public EntityManager getEntityManager() {
-            return entityManager;
+        public EntityManager getEntityManager(EntityManagerFactory factory) {
+            EntityManager result = entityManagers.get(factory);
+            if(result == null) {
+                result = factory.createEntityManager();
+                entityManagers.put(factory, result);
+            }
+            return result;
         }
 
         public Transaction getTransaction() {
             return transaction;
         }
 
-        public void clrEntityManager() {
-            this.entityManager = null; this.transaction = null;
+        public void clrEntityManagers() {
+            entityManagers.entrySet().forEach(e -> e.getValue().close());
+            entityManagers.clear();
+            this.transaction = null;
         }
     }
 }

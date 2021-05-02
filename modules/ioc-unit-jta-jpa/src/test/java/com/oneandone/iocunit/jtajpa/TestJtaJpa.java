@@ -3,6 +3,7 @@ package com.oneandone.iocunit.jtajpa;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
 import javax.transaction.NotSupportedException;
@@ -19,6 +20,7 @@ import org.testcontainers.containers.MariaDBContainer;
 import com.arjuna.ats.arjuna.coordinator.TxControl;
 import com.oneandone.iocunit.IocUnitRunner;
 import com.oneandone.iocunit.analyzer.annotations.SutClasses;
+import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 import com.oneandone.iocunit.jtajpa.internal.EntityManagerFactoryFactory;
 
 /**
@@ -26,6 +28,7 @@ import com.oneandone.iocunit.jtajpa.internal.EntityManagerFactoryFactory;
  */
 @RunWith(IocUnitRunner.class)
 @SutClasses({EntityManagerFactoryFactory.class})
+@TestClasses({TestJtaJpa.H2TestFactory.class})
 public class TestJtaJpa {
 
     @Q1
@@ -34,6 +37,10 @@ public class TestJtaJpa {
     @Q2
     @Inject
     EntityManager entityManagerQ2;
+
+    @PersistenceContext(unitName = "test")
+    EntityManager entityManagerH2;
+
     @Inject
     UserTransaction userTransaction;
     private TestContainer container;
@@ -44,7 +51,7 @@ public class TestJtaJpa {
 
     @Before
     public void beforeTestJtaJpa() {
-        container = new TestContainer(new MariaDBContainer<>());
+        container = new TestContainer(new MariaDBContainer());
         container.start();
     }
 
@@ -65,6 +72,17 @@ public class TestJtaJpa {
     }
 
     @Test
+    public void testH2() throws HeuristicRollbackException, RollbackException, HeuristicMixedException, SystemException, NotSupportedException {
+        userTransaction.begin();
+        TestEntityH2 oh2 = new TestEntityH2();
+        oh2.entityName = "testentityh2";
+        entityManagerH2.persist(oh2);
+        Assert.assertNotNull(entityManagerH2.find(TestEntityH2.class, oh2.getId()));
+        userTransaction.commit();
+        Assert.assertNotNull(entityManagerH2.find(TestEntityH2.class, oh2.getId()));
+    }
+
+    @Test
     public void testStartingWithTransaction() throws HeuristicRollbackException, RollbackException, HeuristicMixedException, SystemException, NotSupportedException {
         userTransaction.begin();
         TestEntity o1 = entityManagerQ1.find(TestEntity.class, 0L);
@@ -81,7 +99,7 @@ public class TestJtaJpa {
     }
 
     @Test
-    public void testWithTwoConnections() throws Exception {
+    public void testWithThreeConnections() throws Exception {
         userTransaction.begin();
         TestEntity oq1 = new TestEntity();
         oq1.entityName = "testentityq1";
@@ -89,14 +107,22 @@ public class TestJtaJpa {
         TestEntity oq2 = new TestEntity();
         oq2.entityName = "testentityq2";
         entityManagerQ2.persist(oq2);
+        TestEntityH2 oh2 = new TestEntityH2();
+        oh2.entityName = "testentityh2";
+        entityManagerH2.persist(oh2);
         Assert.assertNotNull(entityManagerQ1.find(TestEntity.class, oq1.getId()));
         Assert.assertNotNull(entityManagerQ2.find(TestEntity.class, oq2.getId()));
-        final TestEntity testEntityQ2 = entityManagerQ2.find(TestEntity.class, oq1.getId());
+        Assert.assertNotNull(entityManagerH2.find(TestEntityH2.class, oh2.getId()));
         // Assert.assertNull(testEntityQ2);
         // Assert.assertNull(entityManagerQ1.find(TestEntity.class, oq2.getId()));
         userTransaction.commit();
+        Assert.assertNotNull(entityManagerH2.find(TestEntityH2.class, oh2.getId()));
+        Assert.assertNull(entityManagerH2.find(TestEntity.class, oq1.getId()));
+        Assert.assertNull(entityManagerH2.find(TestEntity.class, oq2.getId()));
         Assert.assertNotNull(entityManagerQ2.find(TestEntity.class, oq1.getId()));
+        Assert.assertNull(entityManagerQ2.find(TestEntityH2.class, oh2.getId()));
         Assert.assertNotNull(entityManagerQ1.find(TestEntity.class, oq2.getId()));
+        Assert.assertNull(entityManagerQ1.find(TestEntityH2.class, oh2.getId()));
     }
 
     static class Q1Factory extends JtaEntityManagerFactoryBase {
@@ -126,5 +152,21 @@ public class TestJtaJpa {
             return super.produceEntityManager();
         }
     }
+
+
+    static class H2TestFactory extends JtaEntityManagerFactoryBase {
+        @Override
+        public String getPersistenceUnitName() {
+            return "test";
+        }
+
+        @Override
+        @PersistenceContextQualifier(unitName = "test")
+        @Produces
+        public EntityManager produceEntityManager() {
+            return super.produceEntityManager();
+        }
+    }
+
 
 }
