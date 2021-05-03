@@ -38,7 +38,6 @@ public class EntityManagerFactoryFactory {
     static Logger logger = LoggerFactory.getLogger(EntityManagerFactoryFactory.class);
     Map<String, EntityManagerFactory> factories = new ConcurrentHashMap<>();
     CreationalContexts creationalContexts;
-    Map<String, EntityManager> traLess = new ConcurrentHashMap<>();
     @Inject
     private UserTransaction userTransaction;
 
@@ -55,14 +54,7 @@ public class EntityManagerFactoryFactory {
     }
 
     EntityManager getTraLessEM(String puName) {
-        long threadId = Thread.currentThread().getId();
-        String key = threadId + "__" + puName;
-        EntityManager res = traLess.get(key);
-        if(res == null || !res.isOpen()) {
-            res = getEntityManager(puName, false);
-            traLess.put(key, res);
-        }
-        return res;
+        return getEntityManager(puName, false);
     }
 
     @PreDestroy
@@ -75,9 +67,6 @@ public class EntityManagerFactoryFactory {
             logger.error("Disposing UserTransaction in preDestroy delivered", e);
         }
         currentPuName.set(null);
-        for (EntityManager em : traLess.values()) {
-            em.close();
-        }
     }
 
     void dispose(@Disposes EntityManagerFactoryFactory.EntityManagerWrapper emWrapper) {
@@ -112,7 +101,7 @@ public class EntityManagerFactoryFactory {
             }
             EntityManagerWrapper ewrapper = ((EntityManagerWrapper)
                                                      creationalContexts.create(EntityManagerWrapper.class, TransactionScoped.class));
-            return ewrapper.getEntityManager(factory);
+            return ewrapper.getEntityManager(factory, persistenceUnitName);
         }
         else {
             if(entityManagerWrapper == null) {
@@ -120,24 +109,24 @@ public class EntityManagerFactoryFactory {
                 traLessEntityManagers.set(entityManagerWrapper);
             }
 
-            return entityManagerWrapper.getEntityManager(factory);
+            return entityManagerWrapper.getEntityManager(factory, persistenceUnitName);
         }
     }
 
     public static class EntityManagerWrapper implements Serializable {
         private static final long serialVersionUID = -7441007325030843990L;
-        private Map<EntityManagerFactory, EntityManager> entityManagers = new HashMap<>();
+        private Map<String, EntityManager> entityManagers = new HashMap<>();
         private Transaction transaction;
 
         public EntityManagerWrapper() {
-            TransactionImple.getTransaction();
+            transaction = TransactionImple.getTransaction();
         }
 
-        public EntityManager getEntityManager(EntityManagerFactory factory) {
-            EntityManager result = entityManagers.get(factory);
+        public EntityManager getEntityManager(EntityManagerFactory factory, String puName) {
+            EntityManager result = entityManagers.get(puName);
             if(result == null) {
                 result = factory.createEntityManager();
-                entityManagers.put(factory, result);
+                entityManagers.put(puName, result);
             }
             return result;
         }
@@ -147,8 +136,18 @@ public class EntityManagerFactoryFactory {
         }
 
         public void clrEntityManagers() {
-            entityManagers.entrySet().forEach(e -> e.getValue().close());
-            entityManagers.clear();
+            try {
+                entityManagers
+                        .entrySet()
+                        .stream().map(e -> e.getValue())
+                        .filter(e -> e != null && e.isOpen())
+                        .forEach(e -> {
+                            e.clear();
+                            e.close();
+                        });
+            } finally {
+                entityManagers.clear();
+            }
             this.transaction = null;
         }
     }

@@ -30,8 +30,9 @@ public class PersistenceXmlConnectionProvider extends ConnectionProviderBase {
 
     public PersistenceXmlConnectionProvider() {
         String puName = EntityManagerFactoryFactory.currentPuName.get();
-        if (puName == null)
+        if(puName == null) {
             throw new RuntimeException("Expected JtaEntityManagerFactoryBase to be defined with persistence-unit-name and entitymanager-Producer.");
+        }
         Map<String, String> tmp = new HashMap<>();
         List<ParsedPersistenceXmlDescriptor> units = PersistenceXmlParser.locatePersistenceUnits(tmp);
         Optional<ParsedPersistenceXmlDescriptor> pu = units.stream().filter(u -> u.getName().equals(puName)).findFirst();
@@ -97,7 +98,8 @@ public class PersistenceXmlConnectionProvider extends ConnectionProviderBase {
 
     @Override
     public Connection getConnection() throws SQLException {
-        Connection result = arjunaJDBC2Driver.connect("jdbc:arjuna:" + url, dbProps);
+        Connection result;
+        result = arjunaJDBC2Driver.connect("jdbc:arjuna:" + url, dbProps);
         connectionCount.incrementAndGet();
         return result;
     }
