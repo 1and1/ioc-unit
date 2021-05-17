@@ -12,7 +12,7 @@ import com.oneandone.iocunitejb.entities.TestEntity1;
 /**
  * @author aschoerk
  */
-public class TransactionalTestBase {
+public abstract class TransactionalTestBase {
     @Inject
     protected Logger logger;
 

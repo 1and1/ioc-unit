@@ -19,6 +19,9 @@ import javax.enterprise.inject.Specializes;
 import javax.enterprise.inject.Stereotype;
 import javax.interceptor.Interceptor;
 
+import org.reflections.Reflections;
+import org.reflections.scanners.ResourcesScanner;
+import org.reflections.util.ConfigurationBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,7 +72,7 @@ class Phase1Analyzer extends PhasesBase {
                 }
             }
         } catch (NoClassDefFoundError e) {
-            logger.warn("{} searching innerclasses of {}",e.getMessage(), c.getName());
+            logger.warn("{} searching innerclasses of {}", e.getMessage(), c.getName());
         }
     }
 
@@ -147,10 +150,49 @@ class Phase1Analyzer extends PhasesBase {
         }
     }
 
+    private void classpathsCandidatesAnnotations(final Class<?> c) {
+        try {
+            if(c.getProtectionDomain().getCodeSource() == null) {
+                return;
+            }
+            final URL path = c.getProtectionDomain().getCodeSource().getLocation();
+            if(!configuration.classpathEntries.contains(path) && !path.getPath().endsWith("/test-classes/")) {
+                configuration.classpathEntries.add(path);
+                Reflections rReflections = new Reflections(new ConfigurationBuilder().setScanners(new ResourcesScanner() {
+                    @Override
+                    public boolean acceptsInput(final String file) {
+                        return file.contains("beans.xml");
+                    }
+                }).setUrls(path));
+
+                if(rReflections.getStore().keySet().size() > 0) {
+                    Set<Class<?>> tmpClasses = new HashSet<>();
+
+                    Reflections reflections = new Reflections(new ConfigurationBuilder().setScanners(new TypesScanner())
+                            .setUrls(path));
+
+                    tmpClasses.addAll(ClasspathHandler.forNames(reflections.getStore().get(
+                            ClasspathHandler.TYPES_SCANNER_NAME, ClasspathHandler.SUPERTYPE_NAME), null,
+                            new ClassLoader[]{ClasspathHandler.class.getClassLoader()}));
+
+                    ClasspathHandler.addClassPath(c, tmpClasses, configuration, null);
+                    tmpClasses.forEach(clazz -> {
+                                if(!configuration.isToBeStarted(clazz)) {
+                                    configuration.addCandidate(clazz);
+                                }
+                            }
+                    );
+                }
+            }
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private void addClasspaths(Class<?>[] classpaths, boolean isSut, String filterRegex) throws MalformedURLException {
         for (Class<?> classpathClass : classpaths) {
             Set<Class<?>> tmpClasses = new HashSet<>();
-            ClasspathHandler.addClassPath(classpathClass, tmpClasses, filterRegex);
+            ClasspathHandler.addClassPath(classpathClass, tmpClasses, configuration, filterRegex);
             addAvailables(isSut, tmpClasses);
         }
     }
@@ -186,8 +228,8 @@ class Phase1Analyzer extends PhasesBase {
     }
 
     private boolean isObligatoryAccordingToCandidateSigns(final Class<?> c) {
-        return  !configuration.isExcluded(c) && !configuration.isCandidate(c) && configuration.isSuTClass(c) &&
-                configuration.getCandidateSigns().stream().anyMatch(cs -> cs.isAssignableFrom(c) || cs.isAnnotation() && c.isAnnotationPresent((Class<Annotation>)cs));
+        return !configuration.isExcluded(c) && !configuration.isCandidate(c) && configuration.isSuTClass(c) &&
+               configuration.getCandidateSigns().stream().anyMatch(cs -> cs.isAssignableFrom(c) || cs.isAnnotation() && c.isAnnotationPresent((Class<Annotation>) cs));
     }
 
     public void extend(final Set<Class<?>> tmpClasses, boolean isSut) {
@@ -195,10 +237,12 @@ class Phase1Analyzer extends PhasesBase {
             if(c.isInterface() || c.isAnnotation() || Modifier.isAbstract(c.getModifiers())) {
                 continue;
             }
-            if (isSut)
+            if(isSut) {
                 configuration.sutClass(c);
-            else
+            }
+            else {
                 configuration.testClass(c);
+            }
             if(isObligatoryAccordingToServices(c)) {
                 configuration.candidate(c);
             }
@@ -303,7 +347,8 @@ class Phase1Analyzer extends PhasesBase {
         for (Annotation ann : annotations) {
             if(ann.annotationType().equals(Produces.class)) {
                 foundProduces = true;
-            } else if (configuration.injectAnnotations.contains(ann.annotationType())) {
+            }
+            else if(configuration.injectAnnotations.contains(ann.annotationType())) {
                 foundInject = true;
             }
         }
@@ -327,7 +372,7 @@ class Phase1Analyzer extends PhasesBase {
                 }
             }
         } catch (NoClassDefFoundError e) {
-            logger.warn("{} analyzing producer fields of {}",e.getMessage(), c.getName());
+            logger.warn("{} analyzing producer fields of {}", e.getMessage(), c.getName());
         }
     }
 
@@ -339,7 +384,7 @@ class Phase1Analyzer extends PhasesBase {
                 }
             }
         } catch (NoClassDefFoundError e) {
-            logger.warn("{} analyzing producer Methods of {}",e.getMessage(),  c.getName());
+            logger.warn("{} analyzing producer Methods of {}", e.getMessage(), c.getName());
         }
     }
 
@@ -359,14 +404,19 @@ class Phase1Analyzer extends PhasesBase {
             extraAnnotations(c);
             excludes(c);
         }
+        else {
+            if(configuration.addAllStartableBeans) {
+                classpathsCandidatesAnnotations(c);
+            }
+        }
         specializes(c);
     }
 
     private void specializes(final Class<?> c) {
-        if (c != null && c != Object.class && !c.isInterface()) {
+        if(c != null && c != Object.class && !c.isInterface()) {
             Specializes specializesL = c.getAnnotation(Specializes.class);
             final Class<?> superclass = c.getSuperclass();
-            if (!configuration.getObligatory().contains(superclass)) {
+            if(!configuration.getObligatory().contains(superclass)) {
                 if(specializesL != null) {
                     if(configuration.isTestClass(c)) {
                         configuration.testClass(superclass);
@@ -385,8 +435,8 @@ class Phase1Analyzer extends PhasesBase {
 
     private void abstractSuperClasses(final Class<?> c) {
         final Class<?> superclass = c.getSuperclass();
-        if (!(superclass.equals(Object.class)
-              || superclass == null)) {
+        if(!(superclass.equals(Object.class)
+             || superclass == null)) {
             addToProducerMap(superclass, configuration.getProducerMap(), false);
             abstractSuperClasses(superclass);
         }
@@ -398,7 +448,7 @@ class Phase1Analyzer extends PhasesBase {
 
     private QualifiedType addToProducerMap(final Class<?> c, final ProducerMap producerMap, boolean checkAbstract) {
         final QualifiedType result = new QualifiedType(c, checkAbstract);
-        if (!Modifier.isAbstract(c.getModifiers())) {
+        if(!Modifier.isAbstract(c.getModifiers())) {
             producerMap.addToProducerMap(result);
         }
         producerFields(c, producerMap);
@@ -432,11 +482,12 @@ class Phase1Analyzer extends PhasesBase {
                         beanWithoutProducer(c);
                         final ProducerMap producerMap = configuration.getProducerMap();
                         QualifiedType q = addToProducerMap(c, producerMap);
-                        if (c.equals(configuration.getTheTestClass()) || q.isAlternative()) {
+                        if(c.equals(configuration.getTheTestClass()) || q.isAlternative()) {
                             abstractSuperClasses(c);
                         }
-                    } else if (ConfigStatics.mightSignCandidate(c)) {
-                        if (!configuration.getCandidateSigns().contains(c)) {
+                    }
+                    else if(ConfigStatics.mightSignCandidate(c)) {
+                        if(!configuration.getCandidateSigns().contains(c)) {
                             configuration.getCandidateSigns().add(c);
                             List<Class<?>> toAdd = configuration.getAvailable()
                                     .stream()
@@ -451,16 +502,28 @@ class Phase1Analyzer extends PhasesBase {
                                     .elseClass(c);
                         }
                     }
-                    else if (c.isEnum() || c.isInterface() || c.isArray()) {
+                    else if(c.isEnum() || c.isInterface() || c.isArray()) {
                         logger.trace("ignoring {}", c);
-                    } else {
-                            logger.trace("else but to be started {}", c);
-                            configuration
-                                    .tobeStarted(c)
-                                    .elseClass(c);
+                    }
+                    else {
+                        logger.trace("else but to be started {}", c);
+                        configuration
+                                .tobeStarted(c)
+                                .elseClass(c);
                     }
                 }
                 handledCandidates.add(c);
+            }
+            if(configuration.addAllStartableBeans) {
+                newAvailables.stream()
+                        .filter(c -> !configuration.isTestClass(c))
+                        .map(c -> {
+                            configuration.tobeStarted(c);
+                            return c;
+                        })
+                        .collect(Collectors.toList())
+                        .stream().forEach(c -> newAvailables.remove(c));
+
             }
         } while (!configuration.emptyCandidates());
         for (Class<?> c : newAvailables) {
@@ -473,9 +536,9 @@ class Phase1Analyzer extends PhasesBase {
     }
 
     private void makeAvailable(final Class<?> c) {
-        if (configuration.addAvailableInterceptorsAndDecorators) {
-            if (c.getAnnotation(Interceptor.class) != null || c.getAnnotation(Decorator.class) != null) {
-                logger.info("Flag addAvailableInterceptorsAndDecorator: {}",c);
+        if(configuration.addAvailableInterceptorsAndDecorators) {
+            if(c.getAnnotation(Interceptor.class) != null || c.getAnnotation(Decorator.class) != null) {
+                logger.info("Flag addAvailableInterceptorsAndDecorator: {}", c);
                 configuration.candidate(c);
             }
         }

@@ -5,7 +5,7 @@
             <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
-    <logger name="com.oneandone.iocunit.analyzer" level="warn" additivity="false">
+    <logger name="com.oneandone.iocunit.analyzer" level="trace" additivity="false">
         <appender-ref ref="STDOUT"/>
     </logger>
     <logger name="org.hibernate.ejb.packaging" level="error">

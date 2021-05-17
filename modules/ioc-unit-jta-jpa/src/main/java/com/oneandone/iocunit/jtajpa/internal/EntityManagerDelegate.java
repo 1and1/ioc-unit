@@ -19,6 +19,8 @@ import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.CriteriaUpdate;
 import javax.persistence.metamodel.Metamodel;
+import javax.transaction.Status;
+import javax.transaction.SystemException;
 import javax.transaction.Transaction;
 
 import com.arjuna.ats.internal.jta.transaction.arjunacore.TransactionImple;
@@ -65,6 +67,25 @@ public class EntityManagerDelegate implements EntityManager, Serializable {
     public void clearIfNoTransaction() {
         if(TransactionImple.getTransaction() == null) {
             clear();
+        }
+        else {
+            try {
+                int status = TransactionImple.getTransaction().getStatus();
+                switch (status) {
+                    case Status
+                            .STATUS_COMMITTED:
+                    case Status
+                            .STATUS_ROLLEDBACK:
+                    case Status
+                            .STATUS_NO_TRANSACTION:
+                        clear();
+                    default:
+                        ;
+
+                }
+            } catch (SystemException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 

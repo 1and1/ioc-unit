@@ -26,6 +26,8 @@ import com.oneandone.iocunit.analyzer.annotations.AnalyzerFlags;
 public class Configuration {
 
 
+    public Set<URL> classpathEntries = new HashSet<>();
+
     enum Phase {
         UNKNOWN,
         ANALYZING,
@@ -34,6 +36,7 @@ public class Configuration {
         WARNING,
         INITIALIZING;
     }
+
     public boolean allowGuessing = true;
     public boolean produceInstanceInjectsByAvailables = false;
     public boolean addAllStartableBeans = false;
