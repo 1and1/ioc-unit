@@ -7,7 +7,7 @@
         </encoder>
     </appender>
 
-    <logger name="com.oneandone.iocunit" level="info">
+    <logger name="com.oneandone.iocunit" level="trace">
         <appender-ref ref="STDOUT"/>
     </logger>
     <logger name="com.h2database" level="debug">

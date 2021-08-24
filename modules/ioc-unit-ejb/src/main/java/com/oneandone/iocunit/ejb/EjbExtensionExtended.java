@@ -35,11 +35,13 @@ import javax.enterprise.context.SessionScoped;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.Produces;
+import javax.enterprise.inject.spi.AfterBeanDiscovery;
 import javax.enterprise.inject.spi.AnnotatedField;
 import javax.enterprise.inject.spi.AnnotatedMember;
 import javax.enterprise.inject.spi.AnnotatedMethod;
 import javax.enterprise.inject.spi.AnnotatedType;
 import javax.enterprise.inject.spi.Bean;
+import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.BeforeBeanDiscovery;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.InjectionPoint;
@@ -59,6 +61,7 @@ import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.oneandone.cdi.weldstarter.ExtensionSupport;
 import com.oneandone.cdi.weldstarter.WeldSetupClass;
 import com.oneandone.iocunit.ejb.persistence.SimulatedTransactionManager;
 import com.oneandone.iocunit.ejb.trainterceptors.EjbTransactional;
@@ -75,7 +78,7 @@ import net.sf.cglib.proxy.InvocationHandler;
 @ApplicationScoped
 public class EjbExtensionExtended extends EjbExtensionBase implements Extension {
 
-    Logger logger = LoggerFactory.getLogger("CDI-Unit EJB-ExtensionExtended");
+    Logger logger = LoggerFactory.getLogger("IOCUnit EJB-ExtensionExtended");
 
     private Set<Class<?>> timerClasses = new HashSet<>();
 
@@ -101,33 +104,49 @@ public class EjbExtensionExtended extends EjbExtensionBase implements Extension 
      * @param bbd not used
      * @param <T> not used
      */
-    public <T> void processBeforeBeanDiscovery(@Observes BeforeBeanDiscovery bbd) {
+    public <T> void processBeforeBeanDiscovery(@Observes BeforeBeanDiscovery bbd, BeanManager bm) {
+
+
         new SimulatedTransactionManager().init();
+
     }
+
+    private void addType(final BeforeBeanDiscovery bbd, final BeanManager bm, final Class<?> c) {
+        AnnotatedType<? extends Object> at = bm.createAnnotatedType(c);
+        bbd.addAnnotatedType(at, "EjbExtensionExtended_" + c.getName());
+    }
+
+    public <T> void processAfterBeanDiscovery(@Observes final AfterBeanDiscovery abd, final BeanManager bm) {
+        EjbTestExtensionService.testClasses.forEach(c -> ExtensionSupport.addTypeAfterBeanDiscovery(abd, bm, c));
+    }
+
 
     private <T> void processClass(AnnotatedTypeBuilder<T> builder,
                                   String name, boolean makeApplicationScoped, boolean scopeIsPresent) {
         logger.trace("processing class: {} singleton: {} scopeIsPresent: {}", name, makeApplicationScoped, scopeIsPresent);
-        if (!scopeIsPresent) {
-            if (!makeApplicationScoped || builder.getJavaClass().getFields().length > 0) {
+        if(!scopeIsPresent) {
+            if(!makeApplicationScoped || builder.getJavaClass().getFields().length > 0) {
                 builder.addToClass(createDependentAnnotation());
-            } else {
+            }
+            else {
                 builder.addToClass(createApplicationScopedAnnotation());  // For Singleton normally only ApplicationScoped
             }
         }
 
         builder.addToClass(createDefaultAnnotation());
-        if (!name.isEmpty()) {
+        if(!name.isEmpty()) {
             builder.addToClass(new EjbName.EjbNameLiteral(name));
-        } else {
+        }
+        else {
             builder.addToClass(DefaultLiteral.INSTANCE);
         }
     }
 
     String beanNameOrName(EJB ejb) {
-        if (!ejb.name().isEmpty()) {
+        if(!ejb.name().isEmpty()) {
             return ejb.name();
-        } else {
+        }
+        else {
             return ejb.beanName();
         }
     }
@@ -159,29 +178,29 @@ public class EjbExtensionExtended extends EjbExtensionBase implements Extension 
 
         boolean scopeIsPresent =
                 annotatedType.isAnnotationPresent(ApplicationScoped.class)
-                        || annotatedType.isAnnotationPresent(Dependent.class)
-                        || annotatedType.isAnnotationPresent(RequestScoped.class)
-                        || annotatedType.isAnnotationPresent(SessionScoped.class);
+                || annotatedType.isAnnotationPresent(Dependent.class)
+                || annotatedType.isAnnotationPresent(RequestScoped.class)
+                || annotatedType.isAnnotationPresent(SessionScoped.class);
 
         Entity entity = annotatedType.getAnnotation(Entity.class);
-        if (entity != null) {
+        if(entity != null) {
             entityClasses.add(annotatedType.getJavaClass());
         }
         MappedSuperclass mappedSuperclass = annotatedType.getAnnotation(MappedSuperclass.class);
-        if (mappedSuperclass != null) {
+        if(mappedSuperclass != null) {
             entityClasses.add(annotatedType.getJavaClass());
         }
-
 
 
         for (AnnotatedMethod<? super T> method : annotatedType.getMethods()) {
             EJB ejb = method.getAnnotation(EJB.class);
-            if (ejb != null) {
+            if(ejb != null) {
                 builder.removeFromMethod(method, EJB.class);
                 modified = true;
-                if (!beanNameOrName(ejb).isEmpty()) {
+                if(!beanNameOrName(ejb).isEmpty()) {
                     builder.addToMethod(method, new EjbName.EjbNameLiteral(beanNameOrName(ejb)));
-                } else {
+                }
+                else {
                     builder.addToMethod(method, DefaultLiteral.INSTANCE);
                 }
             }
@@ -190,16 +209,17 @@ public class EjbExtensionExtended extends EjbExtensionBase implements Extension 
         for (AnnotatedField<? super T> field : annotatedType.getFields()) {
             boolean addInject = false;
             EJB ejb = field.getAnnotation(EJB.class);
-            if (ejb != null) {
+            if(ejb != null) {
                 modified = true;
                 addInject = true;
-                if (field.getJavaMember().getType().isAssignableFrom(annotatedType.getJavaClass())) {
+                if(field.getJavaMember().getType().isAssignableFrom(annotatedType.getJavaClass())) {
                     makeApplicationScoped = true;
-                    if (!scopeIsPresent || annotatedType.isAnnotationPresent(ApplicationScoped.class)) {
+                    if(!scopeIsPresent || annotatedType.isAnnotationPresent(ApplicationScoped.class)) {
                         logger.warn("Self injection of EJB Type {} in field {} of Class {} simulated by ioc-unit-ejb only as ApplicationScoped",
                                 field.getJavaMember().getType().getName(), field.getJavaMember().getName(),
                                 field.getJavaMember().getDeclaringClass().getName());
-                    } else {
+                    }
+                    else {
                         logger.error("Self injection of EJB Type {} in field {} of Class {} cannot be simulated by ioc-unit-ejb with the current scope",
                                 field.getJavaMember().getType().getName(), field.getJavaMember().getName(),
                                 field.getJavaMember().getDeclaringClass().getName());
@@ -207,23 +227,24 @@ public class EjbExtensionExtended extends EjbExtensionBase implements Extension 
                 }
 
                 builder.removeFromField(field, EJB.class);
-                if (!beanNameOrName(ejb).isEmpty()) {
+                if(!beanNameOrName(ejb).isEmpty()) {
                     builder.addToField(field, new EjbName.EjbNameLiteral(beanNameOrName(ejb)));
-                } else {
+                }
+                else {
                     builder.addToField(field, DefaultLiteral.INSTANCE);
                 }
             }
             Resource resource = field.getAnnotation(Resource.class);
             PersistenceContext persistenceContext = field.getAnnotation(PersistenceContext.class);
-            if (resource != null) {  // all Resources will be set injected. The Tester must provide anything for them.
+            if(resource != null) {  // all Resources will be set injected. The Tester must provide anything for them.
                 // this means that MessageDrivenContexts, SessionContext and JMS-Resources will be expected to be injected.
                 addInject = true;
             }
-            if (field.getAnnotation(PersistenceContext.class) != null) {
+            if(field.getAnnotation(PersistenceContext.class) != null) {
                 addInject = true;
                 builder.removeFromField(field, PersistenceContext.class);
             }
-            if (addInject) {
+            if(addInject) {
                 modified = true;
                 builder.addToField(field, new AnnotationLiteral<Inject>() {
                     private static final long serialVersionUID = 1L;
@@ -232,7 +253,7 @@ public class EjbExtensionExtended extends EjbExtensionBase implements Extension 
 
 
                 final String typeName = field.getBaseType().getTypeName();
-                if (!typeName.startsWith("javax.jms")) {
+                if(!typeName.startsWith("javax.jms")) {
                     switch (typeName) {
                         case "java.lang.String":
                             builder.addToField(field, new ResourceQualifier.ResourceQualifierLiteral(resource.name(), resource.lookup(), resource.mappedName()));
@@ -250,8 +271,8 @@ public class EjbExtensionExtended extends EjbExtensionBase implements Extension 
                             // no resource-qualifier necessary, type specifies enough
                             break;
                         case "javax.persistence.EntityManager":
-                            if (produces == null && persistenceContext != null &&
-                                (persistenceContext.name() != null && !persistenceContext.name().isEmpty()
+                            if(produces == null && persistenceContext != null &&
+                               (persistenceContext.name() != null && !persistenceContext.name().isEmpty()
                                 || persistenceContext.unitName() != null && !persistenceContext.unitName().isEmpty())) {
                                 builder.addToField(field, new PersistenceContextQualifier.PersistenceContextQualifierLiteral(persistenceContext.name(), persistenceContext.unitName()));
                             }
@@ -262,7 +283,7 @@ public class EjbExtensionExtended extends EjbExtensionBase implements Extension 
                     }
                 }
                 // cannot produce, since the container is not there. Must be injected by test-code
-                if (produces != null) {
+                if(produces != null) {
                     builder.removeFromField(field, Produces.class);
                 }
 
@@ -272,37 +293,37 @@ public class EjbExtensionExtended extends EjbExtensionBase implements Extension 
 
         Stateless stateless = findAnnotation(annotatedType.getJavaClass(), Stateless.class);
 
-        if (stateless != null) {
-            processClass(builder, stateless.name(), makeApplicationScoped , scopeIsPresent);
+        if(stateless != null) {
+            processClass(builder, stateless.name(), makeApplicationScoped, scopeIsPresent);
             modified = true;
         }
 
-        Stateful stateful = findAnnotation(annotatedType.getJavaClass(),Stateful.class);
+        Stateful stateful = findAnnotation(annotatedType.getJavaClass(), Stateful.class);
 
-        if (stateful != null) {
-            processClass(builder, stateful.name(), makeApplicationScoped , scopeIsPresent);
+        if(stateful != null) {
+            processClass(builder, stateful.name(), makeApplicationScoped, scopeIsPresent);
             modified = true;
         }
 
         try {
-            Singleton singleton = findAnnotation(annotatedType.getJavaClass(),Singleton.class);
-            if (singleton != null) {
+            Singleton singleton = findAnnotation(annotatedType.getJavaClass(), Singleton.class);
+            if(singleton != null) {
                 processClass(builder, singleton.name(), true, scopeIsPresent);
                 modified = true;
-                if (annotatedType.getAnnotation(Startup.class) != null) {
+                if(annotatedType.getAnnotation(Startup.class) != null) {
                     startupSingletons.add(annotatedType.getJavaClass());
                 }
             }
         } catch (NoClassDefFoundError e) {
             // EJB 3.0
         }
-        if (modified) {
+        if(modified) {
             pat.setAnnotatedType(builder.create());
         }
     }
 
     private <T> void doResourceQualifyIfNecessary(final AnnotatedTypeBuilder<T> builder, final AnnotatedField<? super T> field, final Resource resource) {
-        if (field.getAnnotation(Produces.class) == null) {
+        if(field.getAnnotation(Produces.class) == null) {
             if(resource != null && !(resource.name().isEmpty() && resource.mappedName().isEmpty() && resource.lookup().isEmpty())) {
                 builder.addToField(field, new ResourceQualifier.ResourceQualifierLiteral(resource.name(), resource.lookup(), resource.mappedName()));
             }
@@ -331,13 +352,14 @@ public class EjbExtensionExtended extends EjbExtensionBase implements Extension 
             })
                     ProcessAnnotatedType<X> pat) {
         final AnnotatedType<X> annotatedType = pat.getAnnotatedType();
-        if (isAnnotationPresent(pat, Stateless.class) || isAnnotationPresent(pat, Stateful.class)
-            || isAnnotationPresent(pat, Singleton.class)
-            || isAnnotationPresent(pat, MessageDriven.class)
-            ) {
+        if(isAnnotationPresent(pat, Stateless.class) || isAnnotationPresent(pat, Stateful.class)
+           || isAnnotationPresent(pat, Singleton.class)
+           || isAnnotationPresent(pat, MessageDriven.class)
+        ) {
             createEJBWrapper(pat, annotatedType);
-        } else {
-            if (possiblyAsynchronous(annotatedType)) {
+        }
+        else {
+            if(possiblyAsynchronous(annotatedType)) {
                 logger.error("Non Ejb with Asynchronous-Annotation {}", pat);
             }
 
@@ -348,16 +370,16 @@ public class EjbExtensionExtended extends EjbExtensionBase implements Extension 
 
         boolean needToWrap = false;
         for (AnnotatedField<? super T> f : pit.getAnnotatedType().getFields()) {
-            if (f.getJavaMember().getType().equals(pit.getAnnotatedType().getJavaClass())) {
-                if (f.getJavaMember().isAnnotationPresent(Inject.class)
-                    || f.getJavaMember().isAnnotationPresent(EJB.class)) {
+            if(f.getJavaMember().getType().equals(pit.getAnnotatedType().getJavaClass())) {
+                if(f.getJavaMember().isAnnotationPresent(Inject.class)
+                   || f.getJavaMember().isAnnotationPresent(EJB.class)) {
                     needToWrap = true;
                     break;
                 }
             }
         }
 
-        if (needToWrap) {
+        if(needToWrap) {
             final InjectionTarget<T> it = pit.getInjectionTarget();
             final Set<AnnotatedField<? super T>> annotatedTypeFields = pit.getAnnotatedType().getFields();
             final Class<?> annotatedTypeJavaClass = pit.getAnnotatedType().getJavaClass();
@@ -399,12 +421,12 @@ public class EjbExtensionExtended extends EjbExtensionBase implements Extension 
 
                 private void wrapDifferingValuesOfSelfFields(T instance, HashMap<AnnotatedField<? super T>, Object> orgValues) {
                     for (AnnotatedField<? super T> f : annotatedTypeFields) {
-                        if (f.getJavaMember().getType().equals(annotatedTypeJavaClass)) {
+                        if(f.getJavaMember().getType().equals(annotatedTypeJavaClass)) {
                             try {
                                 final Field javaMember = f.getJavaMember();
                                 javaMember.setAccessible(true);
                                 final Object currentInstance = javaMember.get(instance);
-                                if (currentInstance != null && currentInstance != orgValues.get(f)) {
+                                if(currentInstance != null && currentInstance != orgValues.get(f)) {
                                     Enhancer enhancer = new Enhancer();
                                     enhancer.setSuperclass(currentInstance.getClass());
                                     enhancer.setCallback(new InvocationHandler() {
@@ -414,9 +436,10 @@ public class EjbExtensionExtended extends EjbExtensionBase implements Extension 
                                             try {
                                                 return method.invoke(currentInstance, objects);
                                             } catch (Throwable thw) {
-                                                if (thw instanceof InvocationTargetException) {
+                                                if(thw instanceof InvocationTargetException) {
                                                     throw thw.getCause();
-                                                } else {
+                                                }
+                                                else {
                                                     throw thw;
                                                 }
                                             } finally {
@@ -437,7 +460,7 @@ public class EjbExtensionExtended extends EjbExtensionBase implements Extension 
                 private HashMap<AnnotatedField<? super T>, Object> fetchOriginalValuesOfSelfFields(T instance) {
                     HashMap<AnnotatedField<? super T>, Object> orgValues = new HashMap<>();
                     for (AnnotatedField<? super T> f : annotatedTypeFields) {
-                        if (f.getJavaMember().getType().equals(annotatedTypeJavaClass)) {
+                        if(f.getJavaMember().getType().equals(annotatedTypeJavaClass)) {
                             final Field javaMember = f.getJavaMember();
                             javaMember.setAccessible(true);
                             try {
@@ -456,7 +479,6 @@ public class EjbExtensionExtended extends EjbExtensionBase implements Extension 
     }
 
 
-
     void processManagedBean(@Observes ProcessManagedBean<?> event) {
         // LOGGER.fine("Handling ProcessManagedBean event for " + event.getBean().getBeanClass().getName());
 
@@ -468,7 +490,7 @@ public class EjbExtensionExtended extends EjbExtensionBase implements Extension 
             StringBuilder sb = new StringBuilder();
             sb.append("  Found injection point ");
             sb.append(injectionPoint.getType());
-            if (injectionPoint.getMember() != null && injectionPoint.getMember().getName() != null) {
+            if(injectionPoint.getMember() != null && injectionPoint.getMember().getName() != null) {
 
                 sb.append(": ");
                 sb.append(injectionPoint.getMember().getName());
@@ -492,7 +514,7 @@ public class EjbExtensionExtended extends EjbExtensionBase implements Extension 
         AnnotatedTypeBuilder<X> builder =
                 new AnnotatedTypeBuilder<X>().readFromType(at);
         builder.addToClass(transactionalAnnotation);
-        if (possiblyAsynchronous(at)) {
+        if(possiblyAsynchronous(at)) {
             builder.addToClass(ejbAsynchronous);
         }
 
@@ -504,19 +526,19 @@ public class EjbExtensionExtended extends EjbExtensionBase implements Extension 
 
         boolean isTimer = false;
         boolean isAsynch = false;
-        if (at.isAnnotationPresent(Asynchronous.class)) {
+        if(at.isAnnotationPresent(Asynchronous.class)) {
             return true;
         }
 
-        for (AnnotatedMethod<? super X> m: at.getMethods()) {
-            if (!isTimer && (m.isAnnotationPresent(Timeout.class)
-                             || m.isAnnotationPresent(Schedule.class)
-                             || m.isAnnotationPresent(Schedules.class)
+        for (AnnotatedMethod<? super X> m : at.getMethods()) {
+            if(!isTimer && (m.isAnnotationPresent(Timeout.class)
+                            || m.isAnnotationPresent(Schedule.class)
+                            || m.isAnnotationPresent(Schedules.class)
             )) {
                 timerClasses.add(m.getJavaMember().getDeclaringClass());
                 isTimer = true;
             }
-            if (!isAsynch && m.isAnnotationPresent(Asynchronous.class)) {
+            if(!isAsynch && m.isAnnotationPresent(Asynchronous.class)) {
                 isAsynch = true;
             }
         }

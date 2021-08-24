@@ -1,6 +1,7 @@
 package com.oneandone.iocunit.jpa;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Default;
 import javax.enterprise.inject.Produces;
 import javax.persistence.EntityManager;
 import javax.sql.DataSource;
@@ -20,6 +21,7 @@ public class XmlLessInitializingPersistenceFactory
 
     @Produces
     @Override
+    @Default
     public EntityManager produceEntityManager() {
         return super.produceEntityManager();
     }

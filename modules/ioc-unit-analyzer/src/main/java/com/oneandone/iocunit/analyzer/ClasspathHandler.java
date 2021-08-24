@@ -18,8 +18,8 @@ import org.slf4j.Logger;
  */
 public class ClasspathHandler {
 
-    public final static String TYPES_SCANNER_NAME = TypesScanner.class.getSimpleName();
-    public final static String SUPERTYPE_NAME = Object.class.getSimpleName();
+    private final static String TYPES_SCANNER_NAME = TypesScanner.class.getSimpleName();
+    private final static String SUPERTYPE_NAME = Object.class.getSimpleName();
 
     /**
      * try to resolve all given string representation of types to a list of java types
@@ -62,23 +62,25 @@ public class ClasspathHandler {
                 new ClassLoader[]{ClasspathHandler.class.getClassLoader()}));
     }
 
+    public static void addClassPath(Class<?> additionalClasspath, Set<Class<?>> classesToProcess, String filterRegex) throws MalformedURLException {
+        addClassPath(additionalClasspath, classesToProcess, null, filterRegex);
+    }
+
 
     public static void addClassPath(Class<?> additionalClasspath,
                                     Set<Class<?>> classesToProcess,
-                                    Configuration configuration, String filterRegex)
+                                    Set<URL> classpathEntries, String filterRegex)
             throws MalformedURLException {
         final URL path = additionalClasspath.getProtectionDomain().getCodeSource().getLocation();
-        if(configuration == null || !configuration.classpathEntries.contains(path)) {
 
-            Reflections reflections = new Reflections(new ConfigurationBuilder().setScanners(new TypesScanner())
-                    .setUrls(path));
+        Reflections reflections = new Reflections(new ConfigurationBuilder().setScanners(new TypesScanner())
+                .setUrls(path));
 
-            classesToProcess.addAll(forNames(reflections.getStore().get(TYPES_SCANNER_NAME, SUPERTYPE_NAME), filterRegex,
-                    new ClassLoader[]{ClasspathHandler.class.getClassLoader()}));
+        classesToProcess.addAll(forNames(reflections.getStore().get(TYPES_SCANNER_NAME, SUPERTYPE_NAME), filterRegex,
+                new ClassLoader[]{ClasspathHandler.class.getClassLoader()}));
 
-            if(configuration != null) {
-                configuration.classpathEntries.add(path);
-            }
+        if(classpathEntries != null) {
+            classpathEntries.add(path);
         }
     }
 

@@ -1,8 +1,6 @@
 package com.oneandone.iocunit.analyzer;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
 
@@ -11,10 +9,6 @@ import org.slf4j.LoggerFactory;
 
 import com.oneandone.cdi.weldstarter.WeldSetupClass;
 import com.oneandone.iocunit.analyzer.extensions.TestScopeExtension;
-
-import io.github.classgraph.ClassGraph;
-import io.github.classgraph.Resource;
-import io.github.classgraph.ScanResult;
 
 /**
  * @author aschoerk
@@ -79,26 +73,6 @@ public class ConfigCreator extends ConfigCreatorBase {
         Phase4AvailablesGuesser phase4AvailablesGuesser =
                 configuration.allowGuessing? new Phase4AvailablesGuesser(configuration, phase1Analyzer) : null;
         do {
-            if(configuration.addAllStartableBeans) {
-                List<Resource> paths = new ArrayList<>();
-                try (ScanResult scanResult = new ClassGraph()
-                        .acceptPaths("META-INF/", "WEB-INF/")
-                        .scan()) {
-                    scanResult.getResourcesWithLeafName("beans.xml").forEach(r -> paths.add(r));
-                }
-                paths.stream().forEach(r -> {
-                            logger.info("Resource {}", r.getURL());
-                            try (ScanResult jarScan = new ClassGraph().acceptClasspathElementsContainingResourcePath()Paths(r.getClasspathElementURL())).
-                            scan()){
-                                jarScan.getAllClasses().stream().forEach(c ->
-                                        configuration.tobeStarted(c.loadClass())
-                                );
-
-                            }
-                        }
-
-                );
-            }
             configuration.setAvailablesChanged(false);
             if(phase1Analyzer.work()) {
                 new Phase2Matcher(configuration).work();

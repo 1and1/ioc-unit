@@ -6,6 +6,6 @@ import com.oneandone.iocunit.jpa.HibernatePersistenceFactory;
 /**
  * @author aschoerk
  */
-@TestClasses({ HibernatePersistenceFactory.class})
+@TestClasses({HibernatePersistenceFactory.class})
 public class ServiceHibernateTest extends TestBase {
 }

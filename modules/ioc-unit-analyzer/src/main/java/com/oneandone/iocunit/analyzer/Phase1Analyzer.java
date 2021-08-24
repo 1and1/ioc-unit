@@ -19,9 +19,6 @@ import javax.enterprise.inject.Specializes;
 import javax.enterprise.inject.Stereotype;
 import javax.interceptor.Interceptor;
 
-import org.reflections.Reflections;
-import org.reflections.scanners.ResourcesScanner;
-import org.reflections.util.ConfigurationBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -150,49 +147,10 @@ class Phase1Analyzer extends PhasesBase {
         }
     }
 
-    private void classpathsCandidatesAnnotations(final Class<?> c) {
-        try {
-            if(c.getProtectionDomain().getCodeSource() == null) {
-                return;
-            }
-            final URL path = c.getProtectionDomain().getCodeSource().getLocation();
-            if(!configuration.classpathEntries.contains(path) && !path.getPath().endsWith("/test-classes/")) {
-                configuration.classpathEntries.add(path);
-                Reflections rReflections = new Reflections(new ConfigurationBuilder().setScanners(new ResourcesScanner() {
-                    @Override
-                    public boolean acceptsInput(final String file) {
-                        return file.contains("beans.xml");
-                    }
-                }).setUrls(path));
-
-                if(rReflections.getStore().keySet().size() > 0) {
-                    Set<Class<?>> tmpClasses = new HashSet<>();
-
-                    Reflections reflections = new Reflections(new ConfigurationBuilder().setScanners(new TypesScanner())
-                            .setUrls(path));
-
-                    tmpClasses.addAll(ClasspathHandler.forNames(reflections.getStore().get(
-                            ClasspathHandler.TYPES_SCANNER_NAME, ClasspathHandler.SUPERTYPE_NAME), null,
-                            new ClassLoader[]{ClasspathHandler.class.getClassLoader()}));
-
-                    ClasspathHandler.addClassPath(c, tmpClasses, configuration, null);
-                    tmpClasses.forEach(clazz -> {
-                                if(!configuration.isToBeStarted(clazz)) {
-                                    configuration.addCandidate(clazz);
-                                }
-                            }
-                    );
-                }
-            }
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     private void addClasspaths(Class<?>[] classpaths, boolean isSut, String filterRegex) throws MalformedURLException {
         for (Class<?> classpathClass : classpaths) {
             Set<Class<?>> tmpClasses = new HashSet<>();
-            ClasspathHandler.addClassPath(classpathClass, tmpClasses, configuration, filterRegex);
+            ClasspathHandler.addClassPath(classpathClass, tmpClasses, filterRegex);
             addAvailables(isSut, tmpClasses);
         }
     }
@@ -404,11 +362,6 @@ class Phase1Analyzer extends PhasesBase {
             extraAnnotations(c);
             excludes(c);
         }
-        else {
-            if(configuration.addAllStartableBeans) {
-                classpathsCandidatesAnnotations(c);
-            }
-        }
         specializes(c);
     }
 
@@ -513,17 +466,6 @@ class Phase1Analyzer extends PhasesBase {
                     }
                 }
                 handledCandidates.add(c);
-            }
-            if(configuration.addAllStartableBeans) {
-                newAvailables.stream()
-                        .filter(c -> !configuration.isTestClass(c))
-                        .map(c -> {
-                            configuration.tobeStarted(c);
-                            return c;
-                        })
-                        .collect(Collectors.toList())
-                        .stream().forEach(c -> newAvailables.remove(c));
-
             }
         } while (!configuration.emptyCandidates());
         for (Class<?> c : newAvailables) {

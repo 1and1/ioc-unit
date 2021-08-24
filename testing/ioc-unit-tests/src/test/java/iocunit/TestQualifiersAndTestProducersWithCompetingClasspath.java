@@ -8,9 +8,9 @@ import javax.inject.Inject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.oneandone.iocunit.analyzer.annotations.SutClasspaths;
-import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 import com.oneandone.iocunit.IocUnitRunner;
+import com.oneandone.iocunit.analyzer.annotations.SutPackages;
+import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 
 import iocunit.producing.ProducingClass1;
 import iocunit.test1.Qualifier1A;
@@ -21,8 +21,8 @@ import iocunit.test1.Test1Interface;
  * @author aschoerk
  */
 @RunWith(IocUnitRunner.class)
-@TestClasses({ ProducingClass1.class })
-@SutClasspaths({ Test1B.class })
+@TestClasses({ProducingClass1.class})
+@SutPackages({Test1B.class})
 public class TestQualifiersAndTestProducersWithCompetingClasspath {
     @Inject
     Test1Interface test1Interface;

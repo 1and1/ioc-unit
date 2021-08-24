@@ -19,20 +19,21 @@ public class TestExtensionServices implements TestExtensionService {
 
     private static Logger logger = LoggerFactory.getLogger(TestExtensionServices.class);
 
+    public static List<Class<?>> testClasses = new ArrayList<Class<?>>() {
+
+        private static final long serialVersionUID = -519466824492284375L;
+
+        {
+            add(RabbitMQSingletons.class);
+        }
+
+    };
+
 
     @Override
     public List<Class<?>> testClasses() {
-        List<Class<?>> result = new ArrayList<Class<?>>() {
 
-            private static final long serialVersionUID = -519466824492284375L;
-
-            {
-                add(RabbitMQSingletons.class);
-            }
-
-        };
-
-        return result;
+        return testClasses;
     }
 
 

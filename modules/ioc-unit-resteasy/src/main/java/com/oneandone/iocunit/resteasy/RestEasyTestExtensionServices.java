@@ -27,8 +27,6 @@ import com.oneandone.iocunit.analyzer.ClasspathHandler;
 import com.oneandone.iocunit.analyzer.ConfigStatics;
 import com.oneandone.iocunit.resteasy.auth.AuthInterceptor;
 import com.oneandone.iocunit.resteasy.auth.TestAuth;
-import com.oneandone.iocunit.resteasy.servlet.IocUnitHttpServletRequest;
-import com.oneandone.iocunit.resteasy.servlet.IocUnitHttpSession;
 import com.oneandone.iocunit.util.Annotations;
 
 /**
@@ -56,44 +54,48 @@ public class RestEasyTestExtensionServices implements TestExtensionService {
         List<Extension> result = new ArrayList<>();
         try {
             if(Path.class.getName() != null) {
-                result.add(new JaxRsRestEasyTestExtension());
+                result.add(new JaxRSRestEasyTestExtension());
             }
         } catch (NoClassDefFoundError ex) {
             ;
         }
-
         return result;
     }
+
+    public static List<Class<?>> testClasses = new ArrayList<Class<?>>() {
+
+        private static final long serialVersionUID = -4796654729518427543L;
+
+        {
+            add(RestEasyMockInit.class);
+            add(AuthInterceptor.class);
+        }
+    };
 
 
     @Override
     public List<Class<?>> testClasses() {
-        List<Class<?>> result = new ArrayList<>();
-        result.add(RestEasyMockInit.class);
-        result.add(AuthInterceptor.class);
-        result.add(IocUnitResteasyHttpClient.class);
-        try {
-            Class<?> tmp = Class.forName("javax.servlet.http.HttpSession.class");
-            result.add(IocUnitHttpSession.class);
-            result.add(IocUnitHttpServletRequest.class);
-        } catch(Exception e) {
-            logger.info("Resteasy usage without HttpSession-Class.");
-        }
-        return result;
+        return testClasses;
     }
+
+    public static List<Class<?>> availableTestClasses = new ArrayList<Class<?>>() {
+        private static final long serialVersionUID = -6797963940034752907L;
+
+        {
+            try {
+                Method[] m = ResteasyClientBuilder.class.getMethods();
+                add(IocUnitResteasyClientBuilder.class);
+                add(IocUnitResteasyWebTargetBuilder.class);
+            } catch (NoClassDefFoundError e) {
+                ; // no resteasy client module available
+            }
+        }
+    };
 
 
     @Override
     public List<Class<?>> testAvailableClasses() {
-        List<Class<?>> result = new ArrayList<>();
-        try {
-            Method[] m = ResteasyClientBuilder.class.getMethods();
-            result.add(IocUnitResteasyClientBuilder.class);
-            result.add(IocUnitResteasyWebTargetBuilder.class);
-        } catch (NoClassDefFoundError e) {
-            ; // no resteasy client module available
-        }
-        return result;
+        return availableTestClasses;
     }
 
 
@@ -158,10 +160,11 @@ public class RestEasyTestExtensionServices implements TestExtensionService {
         if(c.isInstance(SecurityContext.class)) {
             logger.trace("Found SecurityContext in class: {}", c.getName());
         }
-        if(c.isAnnotationPresent(Provider.class) || JaxRsRestEasyTestExtension.annotationPresent(c, Path.class)) {
+        if(c.isAnnotationPresent(Provider.class) || JaxRSRestEasyTestExtension.annotationPresent(c, Path.class)) {
             asCandidatesDefinedJaxRSClasses.get().add(c);
-            if (onlyAnnotationDefined.get())
+            if(onlyAnnotationDefined.get()) {
                 return true;
+            }
         }
         if(perAnnotationDefinedJaxRSClasses.get().contains(c)) {
             return true;

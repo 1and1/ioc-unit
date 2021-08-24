@@ -61,7 +61,9 @@ public class IocJUnit5Extension implements BeforeEachCallback,
             } // store info about explicit param injection, either from global settings or from annotation on the test class
             if(startupException != null) {
                 try {
-                    return clazz.newInstance(); // prepare default, to allow beforeEach to handle exception.
+                    Constructor<?> c = clazz.getDeclaredConstructor();
+                    c.setAccessible(true);
+                    return c.newInstance();
                 } catch (Exception e) {
                     logger.error("Exception during Startup: ", startupException);
                     throw e;

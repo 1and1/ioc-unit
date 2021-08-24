@@ -1,0 +1,2 @@
+ com.oneandone.iocunit.contexts.jaxrs.JaxRsExtension
+ com.oneandone.iocunit.contexts.internal.jsf.ViewScopeExtension

@@ -35,37 +35,30 @@ public class TestExtensionServices implements TestExtensionService {
     }
 
     @Override
-    public List<Extension> getExtensions() {
-        List<Extension> result = new ArrayList<>();
-        try {
-            result.add(new ValidateTestExtension());
-        } catch (NoClassDefFoundError ex) {
-            ;
-        }
-
-        return result;
-    }
-
-    @Override
     public void postStartupAction(final CreationalContexts creationalContexts, final WeldStarter weldStarter) {
 
     }
 
-
     @Override
-    public List<Class<?>> testClasses() {
-        List<Class<?>> result = new ArrayList<Class<?>>() {
+    public List<Extension> getExtensions() {
+        List<Extension> result = new ArrayList<>();
+        try {
+            Class<?> c = Class.forName("org.hibernate.validator.cdi.internal.ValidationExtension");
+            result.add((Extension) c.newInstance());
+        } catch (NoClassDefFoundError e) {
 
-            private static final long serialVersionUID = -519466824492284375L;
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
 
-            {
-                add(ValidationInitializer.class);
-            }
-
-        };
-        if(ValidationClassFinder.getInterceptor() != null) {
-            result.add(ValidationClassFinder.getInterceptor());
         }
+        try {
+            Class<?> c = Class.forName("org.hibernate.validator.internal.cdi.ValidationExtension");
+            result.add((Extension) c.newInstance());
+        } catch (NoClassDefFoundError e) {
+
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+
+        }
+
         return result;
     }
 

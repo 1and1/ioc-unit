@@ -64,12 +64,12 @@ public class Phase4AvailablesGuesser extends PhasesBase {
                                 Set<Class<?>> tmpTestClasses = new HashSet<>();
                                 if(history == null) {
                                     logger.warn("Added classpath of testclass: {} even if not found as available for inject: {}", rawtype, q);
-                                    ClasspathHandler.addClassPath(rawtype, tmpTestClasses, configuration, "");
+                                    ClasspathHandler.addClassPath(rawtype, tmpTestClasses, "");
                                     newTestClasses.addAll(tmpTestClasses);
                                     alreadyLogged.put(rawtype, Pair.of(tmpTestClasses, null));
                                 } else {
                                     if (history.getLeft() == null) {
-                                        ClasspathHandler.addClassPath(rawtype, tmpTestClasses, configuration, "");
+                                        ClasspathHandler.addClassPath(rawtype, tmpTestClasses, "");
                                         newTestClasses.addAll(tmpTestClasses);
                                         alreadyLogged.put(rawtype, Pair.of(tmpTestClasses,history.getRight()));
                                     } else {
@@ -81,12 +81,12 @@ public class Phase4AvailablesGuesser extends PhasesBase {
                                 Set<Class<?>> tmpClasses = new HashSet<>();
                                 if(history == null) {
                                     logger.warn("Added classpath of sutclass: {} even if not found as available for inject: {}", rawtype, q);
-                                    ClasspathHandler.addClassPath(rawtype, tmpClasses, configuration, "");
+                                    ClasspathHandler.addClassPath(rawtype, tmpClasses, "");
                                     newClasses.addAll(tmpClasses);
                                     alreadyLogged.put(rawtype, Pair.of(null, tmpClasses));
                                 } else {
                                     if (history.getRight() == null) {
-                                        ClasspathHandler.addClassPath(rawtype, tmpClasses, configuration, "");
+                                        ClasspathHandler.addClassPath(rawtype, tmpClasses, "");
                                         newTestClasses.addAll(tmpClasses);
                                         alreadyLogged.put(rawtype, Pair.of(history.getLeft(), tmpClasses));
                                     } else {

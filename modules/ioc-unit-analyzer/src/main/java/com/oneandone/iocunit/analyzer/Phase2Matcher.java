@@ -38,12 +38,7 @@ class Phase2Matcher extends PhasesBase {
                 if (configuration.didGuess) {
                     logger.warn("Ambiguus match after guess: {} for inject", x, inject);
                 } else {
-                    if(configuration.addAllStartableBeans) {
-                        logger.warn("Adding all Startable Beans but ambiguus match: {} for inject", x, inject);
-                    }
-                    else {
-                        logger.trace("Ambiguus match: {} for inject", x, inject);
-                    }
+                    logger.trace("Ambiguus match: {} for inject", x, inject);
                 }
             }
             ambiguus.put(inject, matchingProducers);

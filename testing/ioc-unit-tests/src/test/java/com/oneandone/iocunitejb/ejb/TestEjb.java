@@ -35,6 +35,7 @@ import com.oneandone.iocunitejb.TestRunnerIocUnit;
 import com.oneandone.iocunitejb.ejbs.CDIClass;
 import com.oneandone.iocunitejb.ejbs.MdbEjbInfoSingleton;
 import com.oneandone.iocunitejb.ejbs.OuterClass;
+import com.oneandone.iocunitejb.ejbs.OuterClassUsingNonEjbTransactional;
 import com.oneandone.iocunitejb.ejbs.QMdbEjb;
 import com.oneandone.iocunitejb.ejbs.SingletonEJB;
 import com.oneandone.iocunitejb.ejbs.SingletonTimerEJB;
@@ -55,9 +56,9 @@ import com.oneandone.iocunitejb.testbases.TestEntity1Saver;
 @RunWith(JUnit4.class)
 @TestClasses({StatelessEJB.class, SingletonEJB.class, TestRunnerIocUnit.class,
         TransactionalApplicationScoped.class,
-        TestEjb.TestDbPersistenceFactory.class, SessionContextFactory.class,
+        TestEjb.TestDbPersistenceFactory.class, SessionContextFactory.class, OuterClassUsingNonEjbTransactional.class,
         StatelessBeanManagedTrasEJB.class, StatelessChildEJB.class,
-        QMdbEjb.class, MdbEjbInfoSingleton.class, LoggerGenerator.class, CDIClass.class, OuterClass.class })
+        QMdbEjb.class, MdbEjbInfoSingleton.class, LoggerGenerator.class, CDIClass.class, OuterClass.class})
 @EjbJarClasspath(TestBaseClass.class)
 public class TestEjb extends EJBTransactionTestBase {
 

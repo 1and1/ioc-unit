@@ -18,17 +18,12 @@ import org.junit.runner.RunWith;
 import org.testcontainers.containers.MariaDBContainer;
 
 import com.arjuna.ats.arjuna.coordinator.TxControl;
-import com.oneandone.iocunit.IocUnitRunner;
-import com.oneandone.iocunit.analyzer.annotations.SutClasses;
-import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.iocunit.jtajpa.internal.EntityManagerFactoryFactory;
+import com.oneandone.cdi.discoveryrunner.WeldDiscoveryRunner;
 
 /**
  * @author aschoerk
  */
-@RunWith(IocUnitRunner.class)
-@SutClasses({EntityManagerFactoryFactory.class})
-@TestClasses({TestJtaJpa.H2TestFactory.class})
+@RunWith(WeldDiscoveryRunner.class)
 public class TestJtaJpa {
 
     @Q1

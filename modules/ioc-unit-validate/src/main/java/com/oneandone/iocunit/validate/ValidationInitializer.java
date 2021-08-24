@@ -4,6 +4,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.Set;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -14,6 +15,7 @@ import javax.validation.metadata.BeanDescriptor;
 /**
  * @author aschoerk
  */
+@ApplicationScoped
 public class ValidationInitializer {
 
     public static class CombinedValidators implements Validator, ExecutableValidator {

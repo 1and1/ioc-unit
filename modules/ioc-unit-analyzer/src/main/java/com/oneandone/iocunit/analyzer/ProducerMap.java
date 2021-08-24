@@ -23,7 +23,7 @@ public class ProducerMap {
     private String mapName = "Unknown";
     private Logger log = null;
     private Map<String, Set<QualifiedType>> map = new HashMap<>();
-    private Configuration configurationx;
+    private Configuration configuration;
 
     public ProducerMap(final Configuration configuration, String mapName) {
         this.configuration = configuration;

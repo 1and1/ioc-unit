@@ -29,7 +29,7 @@ import com.oneandone.iocunit.analyzer.reflect.IocUnitTypeUtils;
  */
 public class InjectFinder {
 
-    private final Configuration configurationx;
+    private final Configuration configuration;
     TesterExtensionsConfigsFinder testerExtensionsConfigsFinder;
 
     public InjectFinder(Configuration configuration) {

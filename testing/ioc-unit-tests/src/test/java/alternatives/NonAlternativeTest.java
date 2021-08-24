@@ -7,14 +7,14 @@ import javax.inject.Inject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.oneandone.iocunit.analyzer.annotations.SutClasspaths;
 import com.oneandone.iocunit.IocUnitRunner;
+import com.oneandone.iocunit.analyzer.annotations.SutClasses;
 
 /**
  * @author aschoerk
  */
 @RunWith(IocUnitRunner.class)
-@SutClasspaths({ CdiBean.class })
+@SutClasses({CdiBean.class, CdiHelperBeanAlt.class})
 public class NonAlternativeTest {
 
     @Inject

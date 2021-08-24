@@ -27,6 +27,7 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 import com.oneandone.iocunit.ejb.SupportEjbExtended;
 
 
@@ -39,6 +40,7 @@ import com.oneandone.iocunit.ejb.SupportEjbExtended;
  */
 @SupportEjbExtended
 @ApplicationScoped
+@TestClasses({PersistenceFactoryResources.class})
 public abstract class PersistenceFactory {
 
     public enum Provider {

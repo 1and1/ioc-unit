@@ -18,6 +18,9 @@ import javax.enterprise.inject.spi.ProcessInjectionTarget;
 import org.mockito.MockitoAnnotations;
 
 public class MockitoExtension implements Extension {
+    public MockitoExtension() {
+    }
+
     public <T> void process(@Observes ProcessInjectionTarget<T> event) {
         final InjectionTarget<T> injectionTarget = event.getInjectionTarget();
         event.setInjectionTarget(new InjectionTarget<T>() {

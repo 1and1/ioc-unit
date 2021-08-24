@@ -48,7 +48,6 @@ import com.oneandone.iocunit.ejb.persistence.IocUnitTransactionSynchronizationRe
 import com.oneandone.iocunit.ejb.persistence.PersistenceFactory;
 import com.oneandone.iocunit.ejb.persistence.PersistenceFactoryResources;
 import com.oneandone.iocunit.ejb.persistence.SimulatedTransactionManager;
-import com.oneandone.iocunit.ejb.resourcesimulators.SimulatedUserTransaction;
 import com.oneandone.iocunit.ejb.resourcesimulators.WebServiceContextSimulation;
 import com.oneandone.iocunit.ejb.trainterceptors.TransactionalInterceptorBase;
 import com.oneandone.iocunit.ejb.trainterceptors.TransactionalInterceptorEjb;
@@ -136,7 +135,7 @@ public class EjbTestExtensionService implements TestExtensionService {
         return Arrays.asList(Resource.class, EJB.class, PersistenceContext.class);
     }
 
-    public void checkCreateMessageContextInterface() {
+    public static void checkCreateMessageContextInterface() {
         try {
             Class.forName("javax.xml.rpc.handler.MessageContext").getDeclaredMethods();
             return;
@@ -151,7 +150,7 @@ public class EjbTestExtensionService implements TestExtensionService {
             cw.visitMethod(ACC_PUBLIC + ACC_ABSTRACT, "getPropertyNames", "()Ljava/util/Iterator;", null, null);
             cw.visitEnd();
             byte[] ba = cw.toByteArray();
-            Object o = this.getClass().getClassLoader();
+            Object o = EjbTestExtensionService.class.getClassLoader();
             Class c = o.getClass();
             Method m = null;
             while (!c.equals(Object.class)) {
@@ -171,51 +170,52 @@ public class EjbTestExtensionService implements TestExtensionService {
         }
     }
 
+    public static List<Class<?>> testClasses = new ArrayList<Class<?>>() {
+        private static final long serialVersionUID = -1661631254833065243L;
+
+        {
+            add(EjbJarClasspath.class);
+            add(EjbExtensionExtended.class);
+            add(EjbInformationBean.class);
+            // add(WeldSEBeanRegistrant.class);
+            add(TransactionalInterceptorEjb.class);
+            add(TransactionalInterceptorRequired.class);
+            add(TransactionalInterceptorRequiresNew.class);
+            add(TransactionalInterceptorMandatory.class);
+            add(TransactionalInterceptorNever.class);
+            add(TransactionalInterceptorNotSupported.class);
+            add(TransactionalInterceptorSupports.class);
+            add(IocUnitTransactionSynchronizationRegistry.class);
+            add(SimulatedTransactionManager.class);
+            add(EjbUnitBeanInitializerClass.class);
+            add(EjbUnitTransactionServices.class);
+            checkCreateMessageContextInterface();
+            add(SessionContextFactory.class);
+            add(AsynchronousManager.class);
+            add(AsynchronousMethodInterceptor.class);
+            try {
+                javax.xml.ws.handler.MessageContext.class.getMethods();
+                HttpServletResponse.class.getMethods();
+                add(WebServiceContextSimulation.class);
+            } catch (NoClassDefFoundError e) {
+                logger.trace("No WebServiceContextSimulation because of {}", e.getMessage());
+            }
+            try {
+                add(AsynchronousMessageListenerProxy.class);
+                add(EjbJmsInitializer.class);
+                add(JmsExtension.class);
+                add(EjbJmsMocksFactory.class);
+                add(JmsProducers.class);
+            } catch (NoClassDefFoundError e) {
+                logger.trace("no Jms because of {}", e.getMessage());
+            }
+            add(PersistenceFactoryResources.class);
+        }
+    };
+
     @Override
     public List<Class<?>> testClasses() {
-        List<Class<?>> result = new ArrayList<Class<?>>() {
-            private static final long serialVersionUID = -1661631254833065243L;
-
-            {
-                add(EjbJarClasspath.class);
-                add(EjbExtensionExtended.class);
-                add(EjbInformationBean.class);
-                // add(WeldSEBeanRegistrant.class);
-                add(TransactionalInterceptorEjb.class);
-                add(TransactionalInterceptorRequired.class);
-                add(TransactionalInterceptorRequiresNew.class);
-                add(TransactionalInterceptorMandatory.class);
-                add(TransactionalInterceptorNever.class);
-                add(TransactionalInterceptorNotSupported.class);
-                add(TransactionalInterceptorSupports.class);
-                add(IocUnitTransactionSynchronizationRegistry.class);
-                add(SimulatedTransactionManager.class);
-                add(EjbUnitBeanInitializerClass.class);
-                add(EjbUnitTransactionServices.class);
-                checkCreateMessageContextInterface();
-                add(SessionContextFactory.class);
-                add(AsynchronousManager.class);
-                add(AsynchronousMethodInterceptor.class);
-                try {
-                    javax.xml.ws.handler.MessageContext.class.getMethods();
-                    HttpServletResponse.class.getMethods();
-                    add(WebServiceContextSimulation.class);
-                } catch (NoClassDefFoundError e) {
-                    logger.trace("No WebServiceContextSimulation because of {}", e.getMessage());
-                }
-                try {
-                    add(AsynchronousMessageListenerProxy.class);
-                    add(EjbJmsInitializer.class);
-                    add(JmsExtension.class);
-                    add(EjbJmsMocksFactory.class);
-                    add(JmsProducers.class);
-                } catch (NoClassDefFoundError e) {
-                    logger.trace("no Jms because of {}", e.getMessage());
-                }
-                add(PersistenceFactoryResources.class);
-            }
-        };
-        return result;
+        return testClasses;
     }
 
     @Override
@@ -229,11 +229,6 @@ public class EjbTestExtensionService implements TestExtensionService {
             }
         }
         ejbTestExtensionServiceData.get().candidatesToStart.clear(); // show only once
-        if(weldSetup.isWeld3()) {
-            if(!weldSetup.getBeanClasses().contains(SimulatedUserTransaction.class.getName())) {
-                weldSetup.getBeanClasses().add(SimulatedUserTransaction.class.getName());
-            }
-        }
         weldSetup.addService(new WeldSetup.ServiceConfig(TransactionServices.class, new EjbUnitTransactionServices()));
     }
 

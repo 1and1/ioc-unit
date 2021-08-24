@@ -14,6 +14,7 @@ import com.oneandone.cdi.weldstarter.spi.TestExtensionService;
  * @author aschoerk
  */
 public class TestExtensionServices implements TestExtensionService {
+
     @Override
     public List<Extension> getExtensions() {
         List<Extension> result = new ArrayList<>();

@@ -7,8 +7,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import javax.annotation.Resource;
-import javax.ejb.EJB;
 import javax.enterprise.inject.spi.Extension;
 import javax.persistence.PersistenceContext;
 
@@ -44,17 +42,18 @@ public class JtaJpaTestExtensionService implements TestExtensionService {
         return Arrays.asList(PersistenceContext.class);
     }
 
+    public static List<Class<?>> testClasses = new ArrayList<Class<?>>() {
+        private static final long serialVersionUID = -1661631254833065243L;
+
+        {
+            add(TransactionExtension.class);
+            add(EntityManagerFactoryFactory.class);
+        }
+    };
+
     @Override
     public List<Class<?>> testClasses() {
-        List<Class<?>> result = new ArrayList<Class<?>>() {
-            private static final long serialVersionUID = -1661631254833065243L;
-
-            {
-                add(TransactionExtension.class);
-                add(EntityManagerFactoryFactory.class);
-            }
-        };
-        return result;
+        return testClasses;
     }
 
     @Override
@@ -65,7 +64,6 @@ public class JtaJpaTestExtensionService implements TestExtensionService {
         } catch (NoClassDefFoundError ex) {
             ;
         }
-
         return result;
     }
 
