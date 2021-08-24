@@ -1,9 +1,5 @@
 package com.oneandone.iocunit.jtajpa.internal;
 
-import static javax.transaction.Status.STATUS_COMMITTED;
-import static javax.transaction.Status.STATUS_NO_TRANSACTION;
-import static javax.transaction.Status.STATUS_ROLLEDBACK;
-
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +19,7 @@ import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.CriteriaUpdate;
 import javax.persistence.metamodel.Metamodel;
+import javax.transaction.Status;
 import javax.transaction.SystemException;
 import javax.transaction.Transaction;
 
@@ -45,7 +42,7 @@ public class EntityManagerDelegate implements EntityManager, Serializable {
     private EntityManager getEntityManager() {
         try {
             final Transaction transaction = TransactionImple.getTransaction();
-            if(!transactionInactive()) {
+            if(transaction != null) {
                 return factory.getEntityManager(puName, true);
             }
             else {
@@ -62,38 +59,35 @@ public class EntityManagerDelegate implements EntityManager, Serializable {
     }
 
     private void needTransaction() {
-        if(transactionInactive()) {
+        if(TransactionImple.getTransaction() == null) {
             throw new TransactionRequiredException("EntityManagerDelegate");
         }
     }
 
     public void clearIfNoTransaction() {
-        if(transactionInactive()) {
+        if(TransactionImple.getTransaction() == null) {
             clear();
-        }
-    }
-
-    private boolean transactionInactive() {
-        final TransactionImple transaction = TransactionImple.getTransaction();
-        if(transaction == null) {
-            return true;
         }
         else {
             try {
-                switch (transaction.getStatus()) {
-                    case STATUS_COMMITTED:
-                    case STATUS_NO_TRANSACTION:
-                    case STATUS_ROLLEDBACK:
-                        return true;
+                int status = TransactionImple.getTransaction().getStatus();
+                switch (status) {
+                    case Status
+                            .STATUS_COMMITTED:
+                    case Status
+                            .STATUS_ROLLEDBACK:
+                    case Status
+                            .STATUS_NO_TRANSACTION:
+                        clear();
                     default:
-                        return false;
+                        ;
+
                 }
             } catch (SystemException e) {
                 throw new RuntimeException(e);
             }
         }
     }
-
 
     @Override
     public void persist(final Object entity) {

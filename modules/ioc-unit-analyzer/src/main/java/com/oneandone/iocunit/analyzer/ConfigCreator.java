@@ -77,8 +77,9 @@ public class ConfigCreator extends ConfigCreatorBase {
             if(phase1Analyzer.work()) {
                 new Phase2Matcher(configuration).work();
                 new Phase3Fixer(configuration).work();
-                if (configuration.allowGuessing)
+                if(configuration.allowGuessing) {
                     phase4AvailablesGuesser.work();
+                }
                 logger.trace("One Level done candidates size: {} injects.size: {}", !configuration.emptyCandidates(), configuration.getInjects().size());
             }
             else {

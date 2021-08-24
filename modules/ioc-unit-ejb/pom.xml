@@ -51,7 +51,7 @@
         </dependency>
         <dependency>
             <groupId>net.oneandone.ioc-unit</groupId>
-            <artifactId>ioc-unit</artifactId>
+            <artifactId>discovery-runner</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>

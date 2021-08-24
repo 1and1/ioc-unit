@@ -1,10 +1,14 @@
 package com.oneandone.iocunit.jtajpa;
 
-import javax.annotation.Resource;
+import java.util.Arrays;
+
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.Produces;
+import javax.enterprise.inject.spi.AfterBeanDiscovery;
 import javax.enterprise.inject.spi.AnnotatedField;
 import javax.enterprise.inject.spi.AnnotatedType;
+import javax.enterprise.inject.spi.BeanManager;
+import javax.enterprise.inject.spi.BeforeBeanDiscovery;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
 import javax.enterprise.inject.spi.WithAnnotations;
@@ -14,10 +18,35 @@ import javax.persistence.PersistenceContext;
 
 import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
 
+import com.oneandone.cdi.weldstarter.ExtensionSupport;
+import com.oneandone.iocunit.jtajpa.internal.EntityManagerFactoryFactory;
+import com.oneandone.iocunit.jtajpa.narayana.cdi.CDITransactionProducers;
+
 /**
  * @author aschoerk
  */
 public class JPAAnnotationsExtension implements Extension {
+
+    public <T> void processBeforeBeanDiscovery(@Observes BeforeBeanDiscovery bbd, BeanManager bm) {
+        Arrays.asList(
+                EntityManagerFactoryFactory.class,
+                CDITransactionProducers.class
+        ).forEach(c -> addType(bbd, bm, c));
+        bbd.addQualifier(PersistenceContextQualifier.class);
+
+    }
+
+    public class ArtemisActiveMQExtension implements Extension {
+        public <T> void processAfterBeanDiscovery(@Observes AfterBeanDiscovery abd, BeanManager bm) {
+            JtaJpaTestExtensionService.testClasses.forEach(c -> ExtensionSupport.addTypeAfterBeanDiscovery(abd, bm, c));
+        }
+    }
+
+    private void addType(final BeforeBeanDiscovery bbd, final BeanManager bm, final Class<?> c) {
+        AnnotatedType<? extends Object> at = bm.createAnnotatedType(c);
+        bbd.addAnnotatedType(at, "EjbExtensionExtended_" + c.getName());
+    }
+
     public <T> void processAnnotatedType(@Observes @WithAnnotations(PersistenceContext.class)
                                                  ProcessAnnotatedType<T> pat) {
         AnnotatedType<T> annotatedType = pat.getAnnotatedType();

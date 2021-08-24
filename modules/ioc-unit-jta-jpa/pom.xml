@@ -51,18 +51,22 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
-        <dependency>
-            <groupId>net.oneandone.ioc-unit</groupId>
-            <artifactId>weld2-starter</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>org.jboss.weld</groupId>
             <artifactId>weld-spi</artifactId>
             <version>${compile.version.weld-spi}</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.deltaspike.core</groupId>
+            <artifactId>deltaspike-core-api</artifactId>
+            <version>${delta-spike.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.oneandone.ioc-unit</groupId>
+            <artifactId>discovery-runner</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -71,11 +75,6 @@
             <scope>provided</scope>
         </dependency>
 
-        <dependency>
-            <groupId>net.oneandone.ioc-unit</groupId>
-            <artifactId>ioc-unit</artifactId>
-            <version>${project.version}</version>
-        </dependency>
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>

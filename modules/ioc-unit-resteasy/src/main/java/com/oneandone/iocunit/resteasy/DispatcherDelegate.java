@@ -27,11 +27,11 @@ import com.oneandone.cdi.weldstarter.WeldSetupClass;
 public class DispatcherDelegate implements Dispatcher, AutoCloseable {
 
 
-    public DispatcherDelegate(final JaxRsRestEasyTestExtension jaxRsTestExtension) {
+    public DispatcherDelegate(final JaxRSRestEasyTestExtension jaxRsTestExtension) {
         this.jaxRsTestExtension = jaxRsTestExtension;
     }
 
-    private JaxRsRestEasyTestExtension jaxRsTestExtension;
+    private JaxRSRestEasyTestExtension jaxRsTestExtension;
     private CreationalContexts creationalContexts;
 
     Logger logger = LoggerFactory.getLogger("RestEasy MockDispatcher Delegate");
@@ -46,7 +46,7 @@ public class DispatcherDelegate implements Dispatcher, AutoCloseable {
             jaxRsTestExtension.getResourceClasses().clear();
         }
         for (Class c : RestEasyTestExtensionServices.perAnnotationDefinedJaxRSClasses.get()) {
-            if(JaxRsRestEasyTestExtension.annotationPresent(c, Provider.class)) {
+            if(JaxRSRestEasyTestExtension.annotationPresent(c, Provider.class)) {
                 jaxRsTestExtension.getProviders().add(c);
             }
             else {

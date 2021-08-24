@@ -65,7 +65,7 @@ public class ClasspathHandlerTest {
 
     private void checkAddClasspathResult(final Class<?> additionalClasspath, String filterRegex) throws MalformedURLException {
         Set<Class<?>> result = new HashSet<>();
-        ClasspathHandler.addClassPath( additionalClasspath, result, filterRegex);
+        ClasspathHandler.addClassPath(additionalClasspath, result, null, filterRegex);
         Predicate<String> patternPred = filterRegex == null || filterRegex.isEmpty()
                 ? null : Pattern.compile(filterRegex).asPredicate();
         if (patternPred == null)

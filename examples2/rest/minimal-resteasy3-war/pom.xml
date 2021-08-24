@@ -48,12 +48,6 @@
             <groupId>net.oneandone.ioc-unit</groupId>
             <artifactId>ioc-unit-resteasy</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>net.oneandone.ioc-unit</groupId>
-            <artifactId>weld2-starter</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>io.rest-assured</groupId>
             <artifactId>rest-assured</artifactId>

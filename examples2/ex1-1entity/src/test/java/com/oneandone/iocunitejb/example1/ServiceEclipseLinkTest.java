@@ -6,6 +6,6 @@ import com.oneandone.iocunit.jpa.EclipseLinkPersistenceFactory;
 /**
  * @author aschoerk
  */
-@TestClasses({ EclipseLinkPersistenceFactory.class})
+@TestClasses({EclipseLinkPersistenceFactory.class})
 public class ServiceEclipseLinkTest extends TestBase {
 }

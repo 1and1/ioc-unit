@@ -64,12 +64,12 @@ public class Phase4AvailablesGuesser extends PhasesBase {
                                 Set<Class<?>> tmpTestClasses = new HashSet<>();
                                 if(history == null) {
                                     logger.warn("Added classpath of testclass: {} even if not found as available for inject: {}", rawtype, q);
-                                    ClasspathHandler.addClassPath(rawtype, tmpTestClasses,"");
+                                    ClasspathHandler.addClassPath(rawtype, tmpTestClasses, "");
                                     newTestClasses.addAll(tmpTestClasses);
                                     alreadyLogged.put(rawtype, Pair.of(tmpTestClasses, null));
                                 } else {
                                     if (history.getLeft() == null) {
-                                        ClasspathHandler.addClassPath(rawtype, tmpTestClasses,"");
+                                        ClasspathHandler.addClassPath(rawtype, tmpTestClasses, "");
                                         newTestClasses.addAll(tmpTestClasses);
                                         alreadyLogged.put(rawtype, Pair.of(tmpTestClasses,history.getRight()));
                                     } else {
@@ -86,7 +86,7 @@ public class Phase4AvailablesGuesser extends PhasesBase {
                                     alreadyLogged.put(rawtype, Pair.of(null, tmpClasses));
                                 } else {
                                     if (history.getRight() == null) {
-                                        ClasspathHandler.addClassPath(rawtype, tmpClasses,"");
+                                        ClasspathHandler.addClassPath(rawtype, tmpClasses, "");
                                         newTestClasses.addAll(tmpClasses);
                                         alreadyLogged.put(rawtype, Pair.of(history.getLeft(), tmpClasses));
                                     } else {

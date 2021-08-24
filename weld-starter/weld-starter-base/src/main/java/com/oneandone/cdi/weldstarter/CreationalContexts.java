@@ -10,7 +10,6 @@ import javax.enterprise.context.spi.Contextual;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
-import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 import org.slf4j.Logger;
@@ -38,42 +37,32 @@ public class CreationalContexts<T> implements AutoCloseable {
         this.bm = tmpBm;
     }
 
-    public static BeanManager getBeanManager() throws NamingException {
-        BeanManager tmpBm = null;
-        InitialContext initialContext = null;
-        try {
-            initialContext = new InitialContext();
-            tmpBm = (BeanManager) initialContext.lookup("java:comp/BeanManager");
-        } finally {
-            if (initialContext != null)
-                initialContext.close();
-        }
-        if (tmpBm == null) {
-            try {
-                // the following code simulates: tmpBm = CDI.current().getBeanManager();
-                Class<?> cdiClass = Class.forName("javax.enterprise.inject.spi.CDI");
-                Method currentMethod = cdiClass.getMethod("current");
-                Method getBeanManagerMethod = cdiClass.getMethod("getBeanManager");
-                Object cdi = currentMethod.invoke(null);
-                tmpBm = (BeanManager)getBeanManagerMethod.invoke(cdi);
-            } catch (Exception e) {
-                throw new RuntimeException("Cannot use javax.enterprise.inject.spi.CDI in this weld-version");
-            }
-        }
-        return tmpBm;
-    }
-
     /**
      * Create it
+     *
      * @param bm the Weld-Beanmanager
      */
     public CreationalContexts(BeanManager bm) {
         this.bm = bm;
     }
 
+    public static BeanManager getBeanManager() throws NamingException {
+        BeanManager tmpBm = null;
+        try {
+            // the following code simulates: tmpBm = CDI.current().getBeanManager();
+            Class<?> cdiClass = Class.forName("javax.enterprise.inject.spi.CDI");
+            Method currentMethod = cdiClass.getMethod("current");
+            Method getBeanManagerMethod = cdiClass.getMethod("getBeanManager");
+            Object cdi = currentMethod.invoke(null);
+            tmpBm = (BeanManager) getBeanManagerMethod.invoke(cdi);
+        } catch (Exception e) {
+            throw new RuntimeException("Cannot use javax.enterprise.inject.spi.CDI in this weld-version");
+        }
+        return tmpBm;
+    }
 
     private Logger getLogger() {
-        if (logger == null) {
+        if(logger == null) {
             logger = LoggerFactory.getLogger("CreationalContexts");
         }
         return logger;
@@ -81,26 +70,29 @@ public class CreationalContexts<T> implements AutoCloseable {
 
     /**
      * create a bean of class clazz in context scope
+     *
      * @param clazz the clazz of the Bean to be created
      * @param scope either ApplicationScoped or Dependent
      * @return the created bean
      */
     public Object create(Class<T> clazz, Class<? extends Annotation> scope, Annotation... qualifiers) {
         Bean<?> bean = bm.resolve(bm.getBeans(clazz, qualifiers));
-        if (bean != null) {
+        if(bean != null) {
             Object result = create((Contextual<T>) bean, scope);
-            if (result == null) {
+            if(result == null) {
                 throw new RuntimeException("Could not create Bean to be initialized of Class: " + clazz);
             }
             return result;
-        } else {
+        }
+        else {
             throw new RuntimeException("Could not resolve Bean to be initialized of Class: " + clazz);
         }
     }
 
     /**
      * create a bean in context
-     * @param b the Bean as described and found by the weld init.
+     *
+     * @param b     the Bean as described and found by the weld init.
      * @param scope either ApplicationScoped or Dependent
      * @return the created bean
      */
@@ -123,7 +115,7 @@ public class CreationalContexts<T> implements AutoCloseable {
      * close without checked exception
      */
     public void closeIt() {
-        for (CreationalContext<?> cc: creationalContexts) {
+        for (CreationalContext<?> cc : creationalContexts) {
             cc.release();
         }
     }

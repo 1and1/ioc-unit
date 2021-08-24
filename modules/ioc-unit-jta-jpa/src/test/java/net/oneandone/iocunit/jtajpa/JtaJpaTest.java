@@ -1,5 +1,7 @@
 package net.oneandone.iocunit.jtajpa;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import javax.inject.Inject;
 import javax.persistence.TransactionRequiredException;
 import javax.transaction.HeuristicMixedException;
@@ -11,24 +13,17 @@ import javax.transaction.Transactional;
 import javax.transaction.TransactionalException;
 import javax.transaction.UserTransaction;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-import com.oneandone.iocunit.IocUnitRunner;
-import com.oneandone.iocunit.analyzer.annotations.SutClasses;
-import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.iocunit.jtajpa.TestEntity;
-import com.oneandone.iocunit.jtajpa.internal.EntityManagerFactoryFactory;
+import com.oneandone.cdi.discoveryrunner.WeldDiscoveryExtension;
 
 import net.oneandone.iocunit.jtajpa.beans.MainBean;
-import net.oneandone.iocunit.jtajpa.beans.ReqNewBean;
 
 /**
  * @author aschoerk
  */
-@RunWith(IocUnitRunner.class)
-@SutClasses({MainBean.class, ReqNewBean.class, TestEntity.class})
-@TestClasses({EntityManagerFactoryFactory.class})
+@ExtendWith(WeldDiscoveryExtension.class)
 @Transactional(Transactional.TxType.NOT_SUPPORTED)
 public class JtaJpaTest extends TestBeanBase {
     @Inject
@@ -49,9 +44,10 @@ public class JtaJpaTest extends TestBeanBase {
         reqNewBean.callMandatoryBean();
     }
 
-    @Test(expected = TransactionalException.class)
+    @Test
     public void reqNewCanNotCallNever() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
-        reqNewBean.callNeverBean();
+        assertThrows(TransactionalException.class, () ->
+                reqNewBean.callNeverBean());
     }
 
     @Test
@@ -79,9 +75,11 @@ public class JtaJpaTest extends TestBeanBase {
         requiredBean.callMandatoryBean();
     }
 
-    @Test(expected = TransactionalException.class)
+    @Test
     public void requiredCanNotCallNever() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
-        requiredBean.callNeverBean();
+        assertThrows(TransactionalException.class, () ->
+                requiredBean.callNeverBean()
+        );
     }
 
     @Test
@@ -104,9 +102,11 @@ public class JtaJpaTest extends TestBeanBase {
         requiredBean.callNotSuppBean();
     }
 
-    @Test(expected = TransactionalException.class)
+    @Test
     public void supportsCanNotCallMandatory() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
-        supportsBean.callMandatoryBean();
+        assertThrows(TransactionalException.class, () ->
+                supportsBean.callMandatoryBean()
+        );
     }
 
     @Test
@@ -135,15 +135,17 @@ public class JtaJpaTest extends TestBeanBase {
     }
 
 
-    @Test(expected = TransactionRequiredException.class)
+    @Test
     public void supportsCanNotWrite() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
-        supportsBean.writing();
+        assertThrows(TransactionRequiredException.class, () ->
+                supportsBean.writing());
     }
 
 
-    @Test(expected = TransactionalException.class)
+    @Test
     public void notSuppCanNotCallMandatory() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
-        notSuppBean.callMandatoryBean();
+        assertThrows(TransactionalException.class, () ->
+                notSuppBean.callMandatoryBean());
     }
 
     @Test
@@ -171,9 +173,10 @@ public class JtaJpaTest extends TestBeanBase {
         notSuppBean.callNotSuppBean();
     }
 
-    @Test(expected = TransactionRequiredException.class)
+    @Test
     public void notSuppCanNotWrite() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
-        notSuppBean.writing();
+        assertThrows(TransactionRequiredException.class, () ->
+                notSuppBean.writing());
     }
 
     @Test
@@ -183,10 +186,12 @@ public class JtaJpaTest extends TestBeanBase {
         // userTransaction.commit();
     }
 
-    @Test(expected = TransactionalException.class)
+    @Test
     public void mandatoryCanNotCallNever() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
-        userTransaction.begin();
-        mandatoryBean.callNeverBean();
+        assertThrows(TransactionalException.class, () -> {
+            userTransaction.begin();
+            mandatoryBean.callNeverBean();
+        });
         // userTransaction.commit();
     }
 
@@ -218,22 +223,26 @@ public class JtaJpaTest extends TestBeanBase {
         // userTransaction.commit();
     }
 
-    @Test(expected = TransactionalException.class)
+    @Test
     public void neverCanBeCalledInTransaction() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
-        userTransaction.begin();
-        neverBean.callSupportsBean();
+        assertThrows(TransactionalException.class, () -> {
+            userTransaction.begin();
+            neverBean.callSupportsBean();
+        });
         // userTransaction.commit();
     }
 
 
-    @Test(expected = TransactionalException.class)
+    @Test
     public void neverCanNotCallMandatory() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
-        neverBean.callMandatoryBean();
+        assertThrows(TransactionalException.class, () ->
+                neverBean.callMandatoryBean());
     }
 
-    @Test(expected = TransactionRequiredException.class)
+    @Test
     public void neverCanNotWrite() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
-        neverBean.writing();
+        assertThrows(TransactionRequiredException.class, () ->
+                neverBean.writing());
     }
 
     @Test

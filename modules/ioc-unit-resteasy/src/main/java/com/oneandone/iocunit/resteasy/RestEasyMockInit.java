@@ -27,7 +27,7 @@ public class RestEasyMockInit {
     DispatcherDelegate dispatcher;
 
     @Inject
-    JaxRsRestEasyTestExtension jaxRsRestEasyTestExtension;
+    JaxRSRestEasyTestExtension jaxRsRestEasyTestExtension;
 
     @Produces
     public Dispatcher getDispatcher() {

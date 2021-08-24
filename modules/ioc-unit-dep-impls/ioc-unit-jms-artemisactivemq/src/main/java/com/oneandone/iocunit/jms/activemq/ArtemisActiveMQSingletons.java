@@ -52,7 +52,6 @@ public class ArtemisActiveMQSingletons implements JmsSingletonsIntf {
     public Connection getConnection() {
         try {
             getConnectionFactory();
-
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
