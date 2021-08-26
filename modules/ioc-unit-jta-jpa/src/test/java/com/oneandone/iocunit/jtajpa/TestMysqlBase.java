@@ -1,6 +1,5 @@
 package com.oneandone.iocunit.jtajpa;
 
-import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -14,17 +13,19 @@ import javax.transaction.UserTransaction;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.testcontainers.containers.MariaDBContainer;
 
 import com.arjuna.ats.arjuna.coordinator.TxControl;
-import com.oneandone.cdi.discoveryrunner.WeldDiscoveryRunner;
+import com.oneandone.iocunit.jtajpa.helpers.Q1;
+import com.oneandone.iocunit.jtajpa.helpers.Q2;
+import com.oneandone.iocunit.jtajpa.helpers.TestEntity;
+import com.oneandone.iocunit.jtajpa.helpers.TestEntityH2;
 
 /**
  * @author aschoerk
  */
-@RunWith(WeldDiscoveryRunner.class)
-public class TestJtaJpa {
+
+abstract class TestJtaJpa {
 
     @Q1
     @Inject
@@ -70,7 +71,7 @@ public class TestJtaJpa {
     public void testH2() throws HeuristicRollbackException, RollbackException, HeuristicMixedException, SystemException, NotSupportedException {
         userTransaction.begin();
         TestEntityH2 oh2 = new TestEntityH2();
-        oh2.entityName = "testentityh2";
+        oh2.setEntityName("testentityh2");
         entityManagerH2.persist(oh2);
         Assert.assertNotNull(entityManagerH2.find(TestEntityH2.class, oh2.getId()));
         userTransaction.commit();
@@ -97,13 +98,13 @@ public class TestJtaJpa {
     public void testWithThreeConnections() throws Exception {
         userTransaction.begin();
         TestEntity oq1 = new TestEntity();
-        oq1.entityName = "testentityq1";
+        oq1.setEntityName("testentityq1");
         entityManagerQ1.persist(oq1);
         TestEntity oq2 = new TestEntity();
-        oq2.entityName = "testentityq2";
+        oq2.setEntityName("testentityq2");
         entityManagerQ2.persist(oq2);
         TestEntityH2 oh2 = new TestEntityH2();
-        oh2.entityName = "testentityh2";
+        oh2.setEntityName("testentityh2");
         entityManagerH2.persist(oh2);
         Assert.assertNotNull(entityManagerQ1.find(TestEntity.class, oq1.getId()));
         Assert.assertNotNull(entityManagerQ2.find(TestEntity.class, oq2.getId()));
@@ -119,49 +120,4 @@ public class TestJtaJpa {
         Assert.assertNotNull(entityManagerQ1.find(TestEntity.class, oq2.getId()));
         Assert.assertNull(entityManagerQ1.find(TestEntityH2.class, oh2.getId()));
     }
-
-    static class Q1Factory extends JtaEntityManagerFactoryBase {
-        @Override
-        public String getPersistenceUnitName() {
-            return "q1";
-        }
-
-        @Override
-        @Q1
-        @Produces
-        public EntityManager produceEntityManager() {
-            return super.produceEntityManager();
-        }
-    }
-
-    static class Q2Factory extends JtaEntityManagerFactoryBase {
-        @Override
-        public String getPersistenceUnitName() {
-            return "q2";
-        }
-
-        @Override
-        @Q2
-        @Produces
-        public EntityManager produceEntityManager() {
-            return super.produceEntityManager();
-        }
-    }
-
-
-    static class H2TestFactory extends JtaEntityManagerFactoryBase {
-        @Override
-        public String getPersistenceUnitName() {
-            return "test";
-        }
-
-        @Override
-        @PersistenceContextQualifier(unitName = "test")
-        @Produces
-        public EntityManager produceEntityManager() {
-            return super.produceEntityManager();
-        }
-    }
-
-
 }

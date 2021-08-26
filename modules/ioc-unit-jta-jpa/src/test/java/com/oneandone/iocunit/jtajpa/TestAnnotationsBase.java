@@ -1,4 +1,4 @@
-package net.oneandone.iocunit.jtajpa;
+package com.oneandone.iocunit.jtajpa;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -9,23 +9,14 @@ import javax.transaction.HeuristicRollbackException;
 import javax.transaction.NotSupportedException;
 import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
-import javax.transaction.Transactional;
 import javax.transaction.TransactionalException;
 import javax.transaction.UserTransaction;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 
-import com.oneandone.cdi.discoveryrunner.WeldDiscoveryExtension;
+import com.oneandone.iocunit.jtajpa.beans.MainBean;
 
-import net.oneandone.iocunit.jtajpa.beans.MainBean;
-
-/**
- * @author aschoerk
- */
-@ExtendWith(WeldDiscoveryExtension.class)
-@Transactional(Transactional.TxType.NOT_SUPPORTED)
-public class JtaJpaTest extends TestBeanBase {
+abstract class TestJtaJpaAnnotationsBase extends TestBeanBase {
     @Inject
     MainBean mainBean;
     @Inject

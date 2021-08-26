@@ -5,7 +5,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
 import com.oneandone.iocunit.jtajpa.JtaEntityManagerFactoryBase;
-import com.oneandone.iocunit.jtajpa.TestEntity;
+import com.oneandone.iocunit.jtajpa.helpers.TestEntity;
 
 import net.oneandone.iocunit.jtajpa.beans.MandatoryBean;
 import net.oneandone.iocunit.jtajpa.beans.NeverBean;
