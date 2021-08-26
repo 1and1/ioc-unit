@@ -1,7 +1,5 @@
 package com.oneandone.iocunit.jtajpa;
 
-import java.util.Arrays;
-
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.AfterBeanDiscovery;
@@ -19,8 +17,6 @@ import javax.persistence.PersistenceContext;
 import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
 
 import com.oneandone.cdi.weldstarter.ExtensionSupport;
-import com.oneandone.iocunit.jtajpa.internal.EntityManagerFactoryFactory;
-import com.oneandone.iocunit.jtajpa.narayana.cdi.CDITransactionProducers;
 
 /**
  * @author aschoerk
@@ -28,24 +24,15 @@ import com.oneandone.iocunit.jtajpa.narayana.cdi.CDITransactionProducers;
 public class JPAAnnotationsExtension implements Extension {
 
     public <T> void processBeforeBeanDiscovery(@Observes BeforeBeanDiscovery bbd, BeanManager bm) {
-        Arrays.asList(
-                EntityManagerFactoryFactory.class,
-                CDITransactionProducers.class
-        ).forEach(c -> addType(bbd, bm, c));
         bbd.addQualifier(PersistenceContextQualifier.class);
-
     }
 
-    public class ArtemisActiveMQExtension implements Extension {
-        public <T> void processAfterBeanDiscovery(@Observes AfterBeanDiscovery abd, BeanManager bm) {
-            JtaJpaTestExtensionService.testClasses.forEach(c -> ExtensionSupport.addTypeAfterBeanDiscovery(abd, bm, c));
-        }
+
+    public <T> void processAfterBeanDiscovery(@Observes AfterBeanDiscovery abd, BeanManager bm) {
+        JtaJpaTestExtensionService.testClasses
+                .forEach(c -> ExtensionSupport.addTypeAfterBeanDiscovery(abd, bm, c));
     }
 
-    private void addType(final BeforeBeanDiscovery bbd, final BeanManager bm, final Class<?> c) {
-        AnnotatedType<? extends Object> at = bm.createAnnotatedType(c);
-        bbd.addAnnotatedType(at, "EjbExtensionExtended_" + c.getName());
-    }
 
     public <T> void processAnnotatedType(@Observes @WithAnnotations(PersistenceContext.class)
                                                  ProcessAnnotatedType<T> pat) {
