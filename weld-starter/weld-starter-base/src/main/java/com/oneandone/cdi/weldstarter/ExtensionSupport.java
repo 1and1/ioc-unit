@@ -2,8 +2,8 @@ package com.oneandone.cdi.weldstarter;
 
 import javax.enterprise.inject.spi.AfterBeanDiscovery;
 import javax.enterprise.inject.spi.AnnotatedType;
-import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
+import javax.enterprise.inject.spi.PassivationCapable;
 
 import org.apache.deltaspike.core.util.bean.BeanBuilder;
 
@@ -15,10 +15,11 @@ public class ExtensionSupport {
         Iterable<? extends AnnotatedType<?>> res = abd.getAnnotatedTypes(type);
         if(!res.iterator().hasNext()) {
             AnnotatedType<?> annotatedType = bm.createAnnotatedType(type);
-            Bean<?> bean
-                    = new BeanBuilder<>(bm)
-                    .readFromType((AnnotatedType<Object>) annotatedType).create();
-            abd.addBean(bean);
+            BeanBuilder<Object> builder = new BeanBuilder<>(bm);
+            if(PassivationCapable.class.isAssignableFrom(type)) {
+                builder = builder.passivationCapable(true);
+            }
+            abd.addBean(builder.readFromType((AnnotatedType<Object>) annotatedType).create());
         }
     }
 

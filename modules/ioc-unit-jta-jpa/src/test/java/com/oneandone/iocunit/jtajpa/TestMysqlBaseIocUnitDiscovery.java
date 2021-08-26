@@ -19,7 +19,7 @@ import com.oneandone.iocunit.jtajpa.internal.EntityManagerFactoryFactory;
 @SutClasses({EntityManagerFactoryFactory.class})
 @TestClasses({H2TestFactory.class, Q1Factory.class, Q2Factory.class})
 @ApplicationScoped
-public class TestJtaJpaIocUnitDiscovery extends TestJtaJpa {
+public class TestMysqlBaseIocUnitDiscovery extends TestMysqlBase {
 
 }
 

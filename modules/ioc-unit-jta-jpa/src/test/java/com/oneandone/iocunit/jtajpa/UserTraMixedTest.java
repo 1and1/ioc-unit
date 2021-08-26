@@ -1,4 +1,4 @@
-package net.oneandone.iocunit.jtajpa;
+package com.oneandone.iocunit.jtajpa;
 
 import javax.inject.Inject;
 import javax.transaction.HeuristicMixedException;
@@ -7,12 +7,12 @@ import javax.transaction.NotSupportedException;
 import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-import com.oneandone.cdi.discoveryrunner.WeldDiscoveryExtension;
+import com.oneandone.cdi.discoveryrunner.WeldDiscoveryRunner;
 
-@ExtendWith(WeldDiscoveryExtension.class)
+@RunWith(WeldDiscoveryRunner.class)
 public class UserTraMixedTest {
 
     @Inject

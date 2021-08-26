@@ -1,4 +1,4 @@
-package com.oneandone.iocunit.jtajpa;
+package com.oneandone.iocunit.jtajpa.helpers;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -9,6 +9,7 @@ import org.junit.runner.RunWith;
 
 import com.oneandone.cdi.discoveryrunner.WeldDiscoveryRunner;
 import com.oneandone.cdi.weldstarter.CreationalContexts;
+import com.oneandone.iocunit.jtajpa.TestResources;
 
 @RunWith(WeldDiscoveryRunner.class)
 public class QualTest {

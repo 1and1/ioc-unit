@@ -1,11 +1,11 @@
-package net.oneandone.iocunit.jtajpa.beans;
+package com.oneandone.iocunit.jtajpa.beans;
 
 import static javax.transaction.Transactional.TxType.REQUIRED;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.transaction.Transactional;
 
-import net.oneandone.iocunit.jtajpa.TestBeanBase;
+import com.oneandone.iocunit.jtajpa.TestBeanBase;
 
 /**
  * @author aschoerk

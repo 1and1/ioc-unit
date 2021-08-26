@@ -1,12 +1,15 @@
-package com.oneandone.iocunit.jtajpa;
+package com.oneandone.iocunit.jtajpa.helpers;
 
 import javax.enterprise.inject.Produces;
 import javax.persistence.EntityManager;
 
+import com.oneandone.iocunit.jtajpa.JtaEntityManagerFactoryBase;
+import com.oneandone.iocunit.jtajpa.PersistenceContextQualifier;
+
 /**
  * @author aschoerk
  */
-class H2TestFactory extends JtaEntityManagerFactoryBase {
+public class H2TestFactory extends JtaEntityManagerFactoryBase {
     @Override
     public String getPersistenceUnitName() {
         return "test";

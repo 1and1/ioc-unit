@@ -1,4 +1,4 @@
-package com.oneandone.iocunit.jtajpa;
+package com.oneandone.iocunit.jtajpa.helpers;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

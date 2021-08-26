@@ -2,14 +2,14 @@ package com.oneandone.iocunit.jtajpa;
 
 import javax.transaction.Transactional;
 
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.runner.RunWith;
 
-import com.oneandone.cdi.discoveryrunner.WeldDiscoveryExtension;
+import com.oneandone.cdi.discoveryrunner.WeldDiscoveryRunner;
 
 /**
  * @author aschoerk
  */
-@ExtendWith(WeldDiscoveryExtension.class)
+@RunWith(WeldDiscoveryRunner.class)
 @Transactional(Transactional.TxType.NOT_SUPPORTED)
-public class TestJtaJpaAnnotationsWeldDiscovery extends TestJtaJpaAnnotationsBase {
+public class TestAnnotationsWeldDiscovery extends TestAnnotationsBase {
 }

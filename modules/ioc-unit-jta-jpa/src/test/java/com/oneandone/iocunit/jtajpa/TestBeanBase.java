@@ -1,18 +1,16 @@
-package net.oneandone.iocunit.jtajpa;
+package com.oneandone.iocunit.jtajpa;
 
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
-import com.oneandone.iocunit.jtajpa.JtaEntityManagerFactoryBase;
+import com.oneandone.iocunit.jtajpa.beans.MandatoryBean;
+import com.oneandone.iocunit.jtajpa.beans.NeverBean;
+import com.oneandone.iocunit.jtajpa.beans.NotSuppBean;
+import com.oneandone.iocunit.jtajpa.beans.ReqNewBean;
+import com.oneandone.iocunit.jtajpa.beans.RequiredBean;
+import com.oneandone.iocunit.jtajpa.beans.SupportsBean;
 import com.oneandone.iocunit.jtajpa.helpers.TestEntity;
-
-import net.oneandone.iocunit.jtajpa.beans.MandatoryBean;
-import net.oneandone.iocunit.jtajpa.beans.NeverBean;
-import net.oneandone.iocunit.jtajpa.beans.NotSuppBean;
-import net.oneandone.iocunit.jtajpa.beans.ReqNewBean;
-import net.oneandone.iocunit.jtajpa.beans.RequiredBean;
-import net.oneandone.iocunit.jtajpa.beans.SupportsBean;
 
 /**
  * @author aschoerk

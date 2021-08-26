@@ -7,6 +7,8 @@ import java.util.List;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
 
+import com.oneandone.iocunit.jtajpa.helpers.PersQualifier;
+
 /**
  * @author aschoerk
  */

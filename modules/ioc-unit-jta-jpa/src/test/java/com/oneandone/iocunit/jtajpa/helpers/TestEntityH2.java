@@ -1,4 +1,4 @@
-package com.oneandone.iocunit.jtajpa;
+package com.oneandone.iocunit.jtajpa.helpers;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

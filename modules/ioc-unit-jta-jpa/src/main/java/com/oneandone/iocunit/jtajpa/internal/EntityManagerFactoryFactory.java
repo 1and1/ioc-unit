@@ -1,14 +1,11 @@
 package com.oneandone.iocunit.jtajpa.internal;
 
-import java.io.Serializable;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Disposes;
-import javax.enterprise.inject.Produces;
+import javax.enterprise.inject.spi.PassivationCapable;
 import javax.inject.Inject;
 import javax.naming.NamingException;
 import javax.persistence.EntityManager;
@@ -16,7 +13,6 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.transaction.Status;
 import javax.transaction.SystemException;
-import javax.transaction.Transaction;
 import javax.transaction.TransactionScoped;
 import javax.transaction.UserTransaction;
 
@@ -24,14 +20,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.arjuna.ats.arjuna.coordinator.TxControl;
-import com.arjuna.ats.internal.jta.transaction.arjunacore.TransactionImple;
 import com.oneandone.cdi.weldstarter.CreationalContexts;
 
 /**
  * @author aschoerk
  */
 @ApplicationScoped
-public class EntityManagerFactoryFactory {
+public class EntityManagerFactoryFactory implements PassivationCapable {
     // used during EntityManagerFactory-Creation to let PersistenceXmlConnectionProvider know what the current PuName is.
     public static ThreadLocal<String> currentPuName = new ThreadLocal<>();
     public static ThreadLocal<EntityManagerWrapper> traLessEntityManagers = new ThreadLocal<>();
@@ -69,15 +64,18 @@ public class EntityManagerFactoryFactory {
         currentPuName.set(null);
     }
 
-    void dispose(@Disposes EntityManagerFactoryFactory.EntityManagerWrapper emWrapper) {
+    /*
+    void dispose(@Disposes EntityManagerWrapper emWrapper) {
         emWrapper.clrEntityManagers();
     }
 
     @TransactionScoped
     @Produces
-    EntityManagerFactoryFactory.EntityManagerWrapper transactionalEntityManagerWrapper() {
+    EntityManagerWrapper transactionalEntityManagerWrapper() {
         return new EntityManagerWrapper();
     }
+
+     */
 
     public EntityManager getEntityManager(final String persistenceUnitName, boolean transactional) {
         EntityManagerFactory factory = factories.get(persistenceUnitName);
@@ -113,42 +111,9 @@ public class EntityManagerFactoryFactory {
         }
     }
 
-    public static class EntityManagerWrapper implements Serializable {
-        private static final long serialVersionUID = -7441007325030843990L;
-        private Map<String, EntityManager> entityManagers = new HashMap<>();
-        private Transaction transaction;
-
-        public EntityManagerWrapper() {
-            transaction = TransactionImple.getTransaction();
-        }
-
-        public EntityManager getEntityManager(EntityManagerFactory factory, String puName) {
-            EntityManager result = entityManagers.get(puName);
-            if(result == null) {
-                result = factory.createEntityManager();
-                entityManagers.put(puName, result);
-            }
-            return result;
-        }
-
-        public Transaction getTransaction() {
-            return transaction;
-        }
-
-        public void clrEntityManagers() {
-            try {
-                entityManagers
-                        .entrySet()
-                        .stream().map(e -> e.getValue())
-                        .filter(e -> e != null && e.isOpen())
-                        .forEach(e -> {
-                            e.clear();
-                            e.close();
-                        });
-            } finally {
-                entityManagers.clear();
-            }
-            this.transaction = null;
-        }
+    @Override
+    public String getId() {
+        return getClass().getName() + "_" + this.hashCode();
     }
+
 }

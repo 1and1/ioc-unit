@@ -1,4 +1,4 @@
-package net.oneandone.iocunit.jtajpa;
+package com.oneandone.iocunit.jtajpa;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -15,14 +15,13 @@ import javax.transaction.UserTransaction;
 import org.junit.jupiter.api.Test;
 
 import com.oneandone.cdi.discoveryrunner.annotations.TestClasses;
-
-import net.oneandone.iocunit.jtajpa.beans.MainBean;
-import net.oneandone.iocunit.jtajpa.beans.MandatoryBean;
-import net.oneandone.iocunit.jtajpa.beans.NeverBean;
-import net.oneandone.iocunit.jtajpa.beans.NotSuppBean;
-import net.oneandone.iocunit.jtajpa.beans.ReqNewBean;
-import net.oneandone.iocunit.jtajpa.beans.RequiredBean;
-import net.oneandone.iocunit.jtajpa.beans.SupportsBean;
+import com.oneandone.iocunit.jtajpa.beans.MainBean;
+import com.oneandone.iocunit.jtajpa.beans.MandatoryBean;
+import com.oneandone.iocunit.jtajpa.beans.NeverBean;
+import com.oneandone.iocunit.jtajpa.beans.NotSuppBean;
+import com.oneandone.iocunit.jtajpa.beans.ReqNewBean;
+import com.oneandone.iocunit.jtajpa.beans.RequiredBean;
+import com.oneandone.iocunit.jtajpa.beans.SupportsBean;
 
 @TestClasses({RequiredBean.class, NotSuppBean.class, MandatoryBean.class, ReqNewBean.class, SupportsBean.class,
         NeverBean.class,

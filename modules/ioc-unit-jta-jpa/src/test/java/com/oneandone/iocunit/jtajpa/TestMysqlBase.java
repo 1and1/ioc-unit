@@ -25,7 +25,7 @@ import com.oneandone.iocunit.jtajpa.helpers.TestEntityH2;
  * @author aschoerk
  */
 
-abstract class TestJtaJpa {
+abstract class TestMysqlBase {
 
     @Q1
     @Inject

@@ -17,6 +17,8 @@ import javax.persistence.PersistenceContext;
 import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
 
 import com.oneandone.cdi.weldstarter.ExtensionSupport;
+import com.oneandone.iocunit.jtajpa.internal.EntityManagerFactoryFactory;
+import com.oneandone.iocunit.jtajpa.internal.EntityManagerWrapper;
 
 /**
  * @author aschoerk
@@ -29,8 +31,8 @@ public class JPAAnnotationsExtension implements Extension {
 
 
     public <T> void processAfterBeanDiscovery(@Observes AfterBeanDiscovery abd, BeanManager bm) {
-        JtaJpaTestExtensionService.testClasses
-                .forEach(c -> ExtensionSupport.addTypeAfterBeanDiscovery(abd, bm, c));
+        ExtensionSupport.addTypeAfterBeanDiscovery(abd, bm, EntityManagerFactoryFactory.class);
+        ExtensionSupport.addTypeAfterBeanDiscovery(abd, bm, EntityManagerWrapper.class);
     }
 
 

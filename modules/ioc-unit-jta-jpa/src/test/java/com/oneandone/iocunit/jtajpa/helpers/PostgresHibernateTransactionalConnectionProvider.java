@@ -1,4 +1,4 @@
-package com.oneandone.iocunit.jtajpa;
+package com.oneandone.iocunit.jtajpa.helpers;
 
 import java.sql.Connection;
 import java.sql.SQLException;

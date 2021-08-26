@@ -1,1 +1,2 @@
 com.oneandone.iocunit.jtajpa.JPAAnnotationsExtension
+com.arjuna.ats.jta.cdi.TransactionExtension

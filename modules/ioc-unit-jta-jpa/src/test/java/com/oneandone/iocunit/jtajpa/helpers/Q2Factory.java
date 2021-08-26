@@ -1,12 +1,14 @@
-package com.oneandone.iocunit.jtajpa;
+package com.oneandone.iocunit.jtajpa.helpers;
 
 import javax.enterprise.inject.Produces;
 import javax.persistence.EntityManager;
 
+import com.oneandone.iocunit.jtajpa.JtaEntityManagerFactoryBase;
+
 /**
  * @author aschoerk
  */
-class Q2Factory extends JtaEntityManagerFactoryBase {
+public class Q2Factory extends JtaEntityManagerFactoryBase {
     @Override
     public String getPersistenceUnitName() {
         return "q2";

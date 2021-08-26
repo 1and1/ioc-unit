@@ -9,6 +9,6 @@ import com.oneandone.cdi.discoveryrunner.annotations.ExcludedClasses;
  * @author aschoerk
  */
 @RunWith(WeldDiscoveryRunner.class)
-@ExcludedClasses({TestJtaJpaIocUnitDiscovery.class})
-public class TestJtaJpaWeldDiscovery extends TestJtaJpa {
+@ExcludedClasses({TestMysqlBaseIocUnitDiscovery.class})
+public class TestMysqlBaseWeldDiscovery extends TestMysqlBase {
 }
