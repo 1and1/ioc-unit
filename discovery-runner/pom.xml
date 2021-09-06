@@ -3,7 +3,7 @@
 
     <groupId>net.oneandone.ioc-unit</groupId>
     <artifactId>discovery-runner</artifactId>
-    <version>2.0.41-SNAPSHOT</version>
+    <version>2.0.41</version>
     <packaging>jar</packaging>
     <name>net.oneandone.ioc-unit:discovery-runner</name>
     <description>Runners, Rules, Extensions used to start Junitx Tests inside a weldcontainer in discovery mode
@@ -191,7 +191,7 @@
         <url>https://github.com/1and1/ioc-unit</url>
         <connection>scm:git:ssh://git@github.com/1and1/ioc-unit.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/1and1/ioc-unit.git</developerConnection>
-        <tag>v2.0.27</tag>
+        <tag>ioc-unit-parent-2.0.41</tag>
     </scm>
     <issueManagement>
         <system>GitHub</system>
