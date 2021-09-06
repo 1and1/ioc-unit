@@ -119,6 +119,11 @@
                 <!--module>modules/ioc-unit-warcheck-plugin</module-->
                 <module>modules/ioc-unit-dbunit</module>
                 <module>modules/ioc-unit-simulators</module>
+                <module>modules/ioc-unit-wf10-specs</module>
+                <module>modules/ioc-unit-wf24-specs</module>
+                <module>modules/ioc-unit-wf10</module>
+                <module>modules/ioc-unit-wf24</module>
+
 
                 <module>examples2</module>
             </modules>
@@ -374,6 +379,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -589,6 +595,7 @@
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>${junit4.version}</version>
+                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.junit</groupId>

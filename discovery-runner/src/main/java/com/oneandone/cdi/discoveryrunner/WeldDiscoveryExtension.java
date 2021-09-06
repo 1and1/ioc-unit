@@ -19,6 +19,9 @@ import org.junit.jupiter.api.extension.TestInstanceFactory;
 import org.junit.jupiter.api.extension.TestInstanceFactoryContext;
 import org.junit.jupiter.api.extension.TestInstantiationException;
 
+import com.oneandone.cdi.discoveryrunner.internal.AnnotationInterpreter;
+import com.oneandone.cdi.discoveryrunner.internal.WeldDiscoveryCdiExtension;
+import com.oneandone.cdi.discoveryrunner.internal.WeldInfo;
 import com.oneandone.cdi.discoveryrunner.naming.CdiUnitContext;
 
 /**
@@ -27,14 +30,14 @@ import com.oneandone.cdi.discoveryrunner.naming.CdiUnitContext;
 public class WeldDiscoveryExtension implements BeforeAllCallback, AfterAllCallback, TestInstanceFactory {
     Weld weld;
     WeldContainer container;
-    WeldDiscoveryRunner.WeldInfo weldInfo;
+    WeldInfo weldInfo;
     private CreationalContexts creationalContexts;
     private InitialContext initialContext;
 
     @Override
     public void beforeAll(ExtensionContext context) throws Exception {
-        weldInfo = new WeldDiscoveryRunner.WeldInfo();
-        WeldDiscoveryRunner.prepareWeldInfo(context.getTestClass().get(), weldInfo);
+        weldInfo = new WeldInfo();
+        AnnotationInterpreter.prepareWeldInfo(context.getTestClass().get(), weldInfo);
         if(determineTestLifecycle(context).equals(PER_CLASS)) {
             initWeld();
         }
@@ -73,9 +76,9 @@ public class WeldDiscoveryExtension implements BeforeAllCallback, AfterAllCallba
             }
         }
         weld = new Weld()
-                .addExtension(new ExcludedBeansExtension(weldInfo.toExclude))
-                .alternatives(weldInfo.alternatives.toArray(new Class[weldInfo.alternatives.size()]))
-                .beanClasses(weldInfo.toAdd.toArray(new Class[weldInfo.toAdd.size()]));
+                .addExtension(new WeldDiscoveryCdiExtension(weldInfo))
+                .alternatives(weldInfo.getAlternatives().toArray(new Class[weldInfo.getAlternatives().size()]))
+                .beanClasses(weldInfo.getToAdd().toArray(new Class[weldInfo.getToAdd().size()]));
         this.initialContext = new InitialContext();
         container = weld.initialize();
         final BeanManager beanManager = container.getBeanManager();

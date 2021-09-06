@@ -1,14 +1,6 @@
 package com.oneandone.cdi.discoveryrunner;
 
-import static java.util.Arrays.stream;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.CDI;
@@ -23,9 +15,9 @@ import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.Statement;
 
-import com.oneandone.cdi.discoveryrunner.annotations.EnabledAlternatives;
-import com.oneandone.cdi.discoveryrunner.annotations.ExcludedClasses;
-import com.oneandone.cdi.discoveryrunner.annotations.TestClasses;
+import com.oneandone.cdi.discoveryrunner.internal.AnnotationInterpreter;
+import com.oneandone.cdi.discoveryrunner.internal.WeldDiscoveryCdiExtension;
+import com.oneandone.cdi.discoveryrunner.internal.WeldInfo;
 import com.oneandone.cdi.discoveryrunner.naming.CdiUnitContext;
 
 /**
@@ -43,36 +35,10 @@ public class WeldDiscoveryRunner extends BlockJUnit4ClassRunner {
         super(clazz);
         this.clazz = clazz;
         weldInfo = new WeldInfo();
-        prepareWeldInfo(clazz, weldInfo);
+        AnnotationInterpreter.prepareWeldInfo(clazz, weldInfo);
     }
 
-    public static void prepareWeldInfo(Class<?> clazzP, WeldInfo weldInfoP) {
-        Collection<Class<?>> toScan = Arrays.asList(clazzP);
-        List<Class<?>> didScan = new ArrayList<>();
-        // weldInfoP.toAdd.add(clazzP);
-        while (toScan.size() > 0) {
-            Set<Class<?>> nextToScan = new HashSet<>();
-            toScan.forEach(c -> {
-                AnnotationSupport.findRepeatableAnnotations(c, ExcludedClasses.class)
-                        .stream()
-                        .flatMap(ann -> stream(ann.value()))
-                        .forEach(weldInfoP.toExclude::add);
-                AnnotationSupport.findRepeatableAnnotations(c, EnabledAlternatives.class)
-                        .stream()
-                        .flatMap(ann -> stream(ann.value()))
-                        .peek(nextToScan::add)
-                        .forEach(weldInfoP.alternatives::add);
-                AnnotationSupport.findRepeatableAnnotations(c, TestClasses.class)
-                        .stream()
-                        .flatMap(ann -> stream(ann.value()))
-                        .peek(nextToScan::add)
-                        .forEach(weldInfoP.toAdd::add);
-            });
-            didScan.addAll(toScan);
-            nextToScan.removeAll(didScan);
-            toScan = nextToScan;
-        }
-    }
+
 
     @Override
     protected Statement methodBlock(final FrameworkMethod frameworkMethodP) {
@@ -108,9 +74,10 @@ public class WeldDiscoveryRunner extends BlockJUnit4ClassRunner {
     @Override
     protected Object createTest() throws Exception {
         weld = new Weld()
-                .beanClasses(weldInfo.toAdd.toArray(new Class<?>[weldInfo.toAdd.size()]))
-                .alternatives(weldInfo.alternatives.toArray(new Class<?>[weldInfo.alternatives.size()]))
-                .addExtension(new ExcludedBeansExtension(weldInfo.toExclude));
+                .beanClasses(weldInfo.getToAdd().toArray(new Class<?>[weldInfo.getToAdd().size()]))
+                .alternatives(weldInfo.getAlternatives().toArray(new Class<?>[weldInfo.getAlternatives().size()]))
+                .addExtension(new WeldDiscoveryCdiExtension(weldInfo));
+        ;
         try {
             container = weld.initialize();
             return CDI.current().select(clazz).get();
@@ -122,11 +89,5 @@ public class WeldDiscoveryRunner extends BlockJUnit4ClassRunner {
         }
     }
 
-
-    public static class WeldInfo {
-        Set<Class<?>> toExclude = new HashSet<>();
-        Set<Class<?>> alternatives = new HashSet<>();
-        Set<Class<?>> toAdd = new HashSet<>();
-    }
 
 }

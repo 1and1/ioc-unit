@@ -11,10 +11,75 @@
     <name>samples:jms-examples</name>
 
     <modules>
-        <module>exjms1-amqp-rabbitmq</module>
+        <!--module>exjms1-amqp-rabbitmq</module-->
         <module>ex5-asyncconsumedjms1</module>
         <module>ex6-asyncconsumedjms2</module>
     </modules>
+
+    <profiles>
+        <profile>
+            <id>weld2.3</id>
+            <dependencies>
+                <dependency>
+                    <groupId>net.oneandone.ioc-unit</groupId>
+                    <artifactId>ioc-unit-wf10</artifactId>
+                    <version>${project.version}</version>
+                    <scope>test</scope>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>net.oneandone.ioc-unit</groupId>
+                            <artifactId>ioc-unit-resource</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>net.oneandone.ioc-unit</groupId>
+                            <artifactId>ioc-unit-jms-artemisactivemq</artifactId>
+                        </exclusion>
+                    </exclusions>
+                </dependency>
+                <dependency>
+                    <groupId>com.github.melowe</groupId>
+                    <artifactId>jms2-compat</artifactId>
+                    <version>1.0.3.7</version>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>javax.jms</groupId>
+                            <artifactId>javax.jms-api</artifactId>
+                        </exclusion>
+                    </exclusions>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>weld3.1</id>
+            <dependencies>
+                <dependency>
+                    <groupId>net.oneandone.ioc-unit</groupId>
+                    <artifactId>ioc-unit-wf24</artifactId>
+                    <version>${project.version}</version>
+                    <scope>test</scope>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>net.oneandone.ioc-unit</groupId>
+                            <artifactId>ioc-unit-resource</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>net.oneandone.ioc-unit</groupId>
+                            <artifactId>ioc-unit-jms-artemisactivemq</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>org.apache.activemq</groupId>
+                            <artifactId>artemis-jms-server</artifactId>
+                        </exclusion>
+                        <!-- need to replace jms-client in scope-test to enable Embedded Test Server-->
+                        <exclusion>
+                            <groupId>org.apache.activemq</groupId>
+                            <artifactId>artemis-jms-client</artifactId>
+                        </exclusion>
+                    </exclusions>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
 
 </project>
 

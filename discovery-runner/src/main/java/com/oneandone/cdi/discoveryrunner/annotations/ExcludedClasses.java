@@ -20,9 +20,16 @@ public @interface ExcludedClasses {
     public Class<?>[] value();
 
     /**
-     * @return Array of class names to make discoverable during testing (late binding allows specifying classes that are package visible).
+     * @return Array of regex to make discoverable during testing (late binding allows specifying
+     * classes that are package visible, groups of classes can be defined by regular expressions).
      */
-    public String[] late() default {};
+    public String[] expressions() default {};
+
+    /**
+     * @return Array of classname-parts to make discoverable during testing (late binding allows specifying
+     * classes that are package visible, groups of classes can be defined by regular expressions).
+     */
+    public String[] nameParts() default {};
 
 
     @Retention(RetentionPolicy.RUNTIME)

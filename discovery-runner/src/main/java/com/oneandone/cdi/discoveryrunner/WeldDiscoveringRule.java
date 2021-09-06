@@ -19,6 +19,9 @@ import org.junit.runners.model.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.oneandone.cdi.discoveryrunner.internal.AnnotationInterpreter;
+import com.oneandone.cdi.discoveryrunner.internal.WeldDiscoveryCdiExtension;
+import com.oneandone.cdi.discoveryrunner.internal.WeldInfo;
 import com.oneandone.cdi.discoveryrunner.naming.CdiUnitContext;
 
 /**
@@ -31,14 +34,14 @@ public class WeldDiscoveringRule implements TestRule {
 
     Weld weld;
     WeldContainer container;
-    WeldDiscoveryRunner.WeldInfo weldInfo;
+    WeldInfo weldInfo;
     private CreationalContexts creationalContexts;
     private InitialContext initialContext;
 
     public WeldDiscoveringRule(final Object instance) {
         this.instance = instance;
-        weldInfo = new WeldDiscoveryRunner.WeldInfo();
-        WeldDiscoveryRunner.prepareWeldInfo(instance.getClass(), weldInfo);
+        weldInfo = new WeldInfo();
+        AnnotationInterpreter.prepareWeldInfo(instance.getClass(), weldInfo);
     }
 
     private void initWeld() throws NamingException {
@@ -50,9 +53,9 @@ public class WeldDiscoveringRule implements TestRule {
             }
         }
         weld = new Weld()
-                .addExtension(new ExcludedBeansExtension(weldInfo.toExclude))
-                .alternatives(weldInfo.alternatives.toArray(new Class[weldInfo.alternatives.size()]))
-                .beanClasses(weldInfo.toAdd.toArray(new Class[weldInfo.toAdd.size()]));
+                .addExtension(new WeldDiscoveryCdiExtension(weldInfo))
+                .alternatives(weldInfo.getAlternatives().toArray(new Class[weldInfo.getAlternatives().size()]))
+                .beanClasses(weldInfo.getToAdd().toArray(new Class[weldInfo.getToAdd().size()]));
         this.initialContext = new InitialContext();
         container = weld.initialize();
         final BeanManager beanManager = container.getBeanManager();

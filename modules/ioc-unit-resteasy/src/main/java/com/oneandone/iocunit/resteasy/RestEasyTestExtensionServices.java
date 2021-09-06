@@ -9,7 +9,12 @@ import java.util.List;
 import java.util.Set;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.spi.CDI;
 import javax.enterprise.inject.spi.Extension;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.validation.ValidatorFactory;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.ext.Provider;
@@ -146,6 +151,23 @@ public class RestEasyTestExtensionServices implements TestExtensionService {
     public void postStartupAction(final CreationalContexts creationalContexts, final WeldStarter weldStarter) {
         creationalContexts.create(RestEasyMockInit.class, ApplicationScoped.class);
         ResteasyProviderFactory.setInstance(null);
+        try {
+            ValidatorFactory vfac = CDI.current().select(ValidatorFactory.class).get();
+            try {
+                Context context = new InitialContext();
+                if(context.lookup("java:comp/ValidatorFactory") != null) {
+                    context.rebind("java:comp/ValidatorFactory", vfac);
+                }
+                else {
+                    context.bind("java:comp/ValidatorFactory", vfac);
+                }
+                context.close();
+            } catch (NamingException nm) {
+                throw new RuntimeException(nm);
+            }
+        } catch (Exception e) {
+            logger.error("Exception encountered trying to add ValidatorFactory to Naming", e);
+        }
     }
 
     /**

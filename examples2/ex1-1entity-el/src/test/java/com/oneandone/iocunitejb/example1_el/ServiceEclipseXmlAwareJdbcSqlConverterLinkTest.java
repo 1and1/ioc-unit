@@ -1,5 +1,7 @@
 package com.oneandone.iocunitejb.example1_el;
 
+import static com.oneandone.iocunit.ejb.persistence.PersistenceFactory.Provider.ECLIPSELINK;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Default;
 import javax.enterprise.inject.Produces;
@@ -56,6 +58,12 @@ public class ServiceEclipseXmlAwareJdbcSqlConverterLinkTest extends TestBase {
     }
 
     public static class EclipselinkPersistenceFactory extends XmlAwarePersistenceFactory {
+
+        @Override
+        protected Provider getRecommendedProvider() {
+            return ECLIPSELINK;
+        }
+
         @Override
         public String getPersistenceUnitName() {
             return "test";

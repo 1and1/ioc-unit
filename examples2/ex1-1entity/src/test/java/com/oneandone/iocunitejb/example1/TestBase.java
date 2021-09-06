@@ -28,6 +28,7 @@ import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 import com.oneandone.iocunit.ejb.persistence.PersistenceFactory;
 import com.oneandone.iocunit.ejb.persistence.TestClosure;
 import com.oneandone.iocunit.ejb.persistence.TestTransactionException;
+import com.oneandone.iocunit.validate.ValidateClasses;
 
 /**
  * @author aschoerk
@@ -36,6 +37,7 @@ import com.oneandone.iocunit.ejb.persistence.TestTransactionException;
 @SutPackages(Service.class)
 @TestClasses({TestResources.class})
 @SutClasses({ValidationInterceptor.class})
+@ValidateClasses({Service.class})
 public abstract class TestBase {
     @Inject
     ServiceIntf sut;

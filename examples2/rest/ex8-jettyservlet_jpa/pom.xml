@@ -3,7 +3,7 @@
     <parent>
         <groupId>net.oneandone.ioc-unit</groupId>
         <artifactId>ioc-unit-rest-examples2-parent</artifactId>
-        <version>2.0.40-SNAPSHOT</version>
+        <version>2.0.41-SNAPSHOT</version>
     </parent>
 
 
@@ -17,7 +17,6 @@
         <jetty.version>9.4.29.v20200521</jetty.version>
     </properties>
     <dependencies>
-
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -28,12 +27,6 @@
             <artifactId>logback-classic</artifactId>
             <version>1.0.9</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>javax</groupId>
-            <artifactId>javaee-api</artifactId>
-            <version>7.0</version>
-            <scope>provided</scope>
         </dependency>
 
         <!-- testing -->
@@ -69,14 +62,6 @@
             <version>2.3.5.Final</version>
         </dependency>
         <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.jboss.logging</groupId>
             <artifactId>jboss-logging</artifactId>
             <version>3.3.2.Final</version>
@@ -85,15 +70,9 @@
         <dependency>
             <groupId>net.oneandone.ioc-unit</groupId>
             <artifactId>ioc-unit-ejb</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-entitymanager</artifactId>
-        </dependency>
-        <!--dependency>
-            <groupId>net.oneandone.ioc-unit</groupId>
-            <artifactId>weld2-starter</artifactId>
-        </dependency-->
     </dependencies>
 
     <build>

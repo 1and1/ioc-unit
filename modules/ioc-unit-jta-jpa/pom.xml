@@ -50,6 +50,7 @@
                     <artifactId>jboss-transaction-api_1.2_spec</artifactId>
                 </exclusion>
             </exclusions>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.jboss.weld</groupId>
@@ -124,6 +125,7 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
+            <scope>provided</scope>
         </dependency>
 
     </dependencies>

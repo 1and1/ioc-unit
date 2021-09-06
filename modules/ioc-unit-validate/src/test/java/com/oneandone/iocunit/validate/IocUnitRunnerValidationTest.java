@@ -14,7 +14,7 @@ import com.oneandone.iocunit.IocUnitRunner;
  * @author aschoerk
  */
 @RunWith(IocUnitRunner.class)
-@TestClasses({Sut1.class})
+@TestClasses({Sut1.class, ValidationInitializer.class})
 public class IocUnitRunnerValidationTest {
 
     @Inject

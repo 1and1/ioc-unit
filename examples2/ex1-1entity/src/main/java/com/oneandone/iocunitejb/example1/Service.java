@@ -3,14 +3,12 @@ package com.oneandone.iocunitejb.example1;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
-import org.hibernate.validator.internal.cdi.interceptor.MethodValidated;
+import javax.validation.constraints.NotNull;
 
 /**
  * Created by aschoerk on 28.06.17.
  */
 @Stateless
-@MethodValidated
 public class Service implements ServiceIntf {
 
     @PersistenceContext
@@ -22,7 +20,7 @@ public class Service implements ServiceIntf {
     }
 
     @Override
-    public long newEntity1(int intValue, String stringValue) {
+    public long newEntity1(int intValue, @NotNull String stringValue) {
         ExampleEntity1 entity1 = new ExampleEntity1(intValue, stringValue);
         entityManager.persist(entity1);
         return entity1.getId().longValue();

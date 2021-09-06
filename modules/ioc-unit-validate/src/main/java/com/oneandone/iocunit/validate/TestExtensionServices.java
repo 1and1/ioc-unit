@@ -8,7 +8,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.enterprise.inject.spi.CDI;
 import javax.enterprise.inject.spi.Extension;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.validation.ValidatorFactory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +42,23 @@ public class TestExtensionServices implements TestExtensionService {
     @Override
     public void postStartupAction(final CreationalContexts creationalContexts, final WeldStarter weldStarter) {
 
+        try {
+            ValidatorFactory vfac = CDI.current().select(ValidatorFactory.class).get();
+            try {
+                Context context = new InitialContext();
+                if(context.lookup("java:comp/ValidatorFactory") != null) {
+                    context.rebind("java:comp/ValidatorFactory", vfac);
+                }
+                else {
+                    context.bind("java:comp/ValidatorFactory", vfac);
+                }
+                context.close();
+            } catch (NamingException nm) {
+                throw new RuntimeException(nm);
+            }
+        } catch (Exception e) {
+            logger.error("Exception encountered trying to add ValidatorFactory to Naming", e);
+        }
     }
 
     @Override
@@ -58,6 +80,7 @@ public class TestExtensionServices implements TestExtensionService {
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
 
         }
+        result.add(new ValidateTestExtension());
 
         return result;
     }

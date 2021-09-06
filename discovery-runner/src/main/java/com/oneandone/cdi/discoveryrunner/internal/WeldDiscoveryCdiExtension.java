@@ -14,20 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.oneandone.cdi.discoveryrunner;
+package com.oneandone.cdi.discoveryrunner.internal;
 
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import javax.enterprise.context.NormalScope;
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.spi.AnnotatedType;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
 import javax.enterprise.inject.spi.WithAnnotations;
-import javax.inject.Scope;
 
 import org.apache.deltaspike.core.api.literal.ApplicationScopedLiteral;
 import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
@@ -40,18 +38,18 @@ import org.junit.runner.RunWith;
  * Extension class that ensures selected classes are excluded as
  * beans.
  */
-public class ExcludedBeansExtension implements Extension {
+public class WeldDiscoveryCdiExtension implements Extension {
     private static final ApplicationScopedLiteral APPLICATIONSCOPED = new ApplicationScopedLiteral();
 
     private Set<String> excludedBeanClassNames;
     private List<Pattern> excludedNameExpressions;
     private List<String> excludedNameParts;
 
-    public ExcludedBeansExtension(WeldInfo weldInfo) {
-        this.excludedBeanClassNames = weldInfo.toExcludeClassNames;
-        this.excludedNameParts = weldInfo.toExcludeClassNameParts;
+    public WeldDiscoveryCdiExtension(WeldInfo weldInfo) {
+        this.excludedBeanClassNames = weldInfo.getToExcludeClassNames();
+        this.excludedNameParts = weldInfo.getToExcludeClassNameParts();
         excludedNameExpressions = weldInfo
-                .toExcludeExpressions
+                .getToExcludeExpressions()
                 .stream()
                 .map(Pattern::compile)
                 .collect(Collectors.toList());

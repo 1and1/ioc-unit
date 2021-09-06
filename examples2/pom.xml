@@ -13,38 +13,45 @@
 
     <profiles>
         <profile>
-            <id>bomwf10</id>
-            <properties>
-                <bom.artifactId>ioc-unit-wf10-bom</bom.artifactId>
-            </properties>
-            <modules>
-                <module>rest</module>
-            </modules>
+            <id>weld2.3</id>
+            <dependencies>
+                <dependency>
+                    <groupId>net.oneandone.ioc-unit</groupId>
+                    <artifactId>ioc-unit-wf10-specs</artifactId>
+                    <version>${project.version}</version>
+                    <scope>provided</scope>
+                </dependency>
+                <dependency>
+                    <groupId>net.oneandone.ioc-unit</groupId>
+                    <artifactId>ioc-unit-wf10</artifactId>
+                    <version>${project.version}</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
         </profile>
         <profile>
-            <id>bomjavaee70</id>
-            <properties>
-                <bom.artifactId>ioc-unit-javaee70-bom</bom.artifactId>
-            </properties>
-            <modules>
-                <module>rest</module>
-            </modules>
-        </profile>
-        <profile>
-            <id>bomjavaee80</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <bom.artifactId>ioc-unit-javaee80-bom</bom.artifactId>
-            </properties>
+            <id>weld3.1</id>
+            <dependencies>
+                <dependency>
+                    <groupId>net.oneandone.ioc-unit</groupId>
+                    <artifactId>ioc-unit-wf24-specs</artifactId>
+                    <version>${project.version}</version>
+                    <scope>provided</scope>
+                </dependency>
+                <dependency>
+                    <groupId>net.oneandone.ioc-unit</groupId>
+                    <artifactId>ioc-unit-wf24</artifactId>
+                    <version>${project.version}</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
         </profile>
     </profiles>
 
     <modules>
-        <module>ex1-1entity</module>
+        <!--module>ex1-1entity</module>
         <module>ex1-1entity-el</module>
-        <module>ex1-1entity-hb</module>
+        <module>ex1-1entity-hb</module-->
         <module>ex1-1entity5</module>
         <module>ex1-2entity4220b_5</module>
         <module>ex2-syncconsumed</module>
@@ -54,18 +61,6 @@
         <module>jms</module>
     </modules>
 
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>net.oneandone.ioc-unit</groupId>
-                <artifactId>${bom.artifactId}</artifactId>
-                <version>${project.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 
     <build>
         <plugins>
