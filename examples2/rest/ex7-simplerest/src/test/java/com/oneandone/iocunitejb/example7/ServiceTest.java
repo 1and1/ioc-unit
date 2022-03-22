@@ -13,8 +13,6 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
-import org.jboss.resteasy.core.Dispatcher;
-import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.Before;
@@ -24,6 +22,8 @@ import org.junit.runner.RunWith;
 import com.oneandone.iocunit.IocUnitRunner;
 import com.oneandone.iocunit.analyzer.annotations.SutClasses;
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
+import com.oneandone.iocunit.jboss.resteasy.mock.IocUnitMockDispatcherFactory;
+import com.oneandone.iocunit.jboss.resteasy.mock.IocUnitResteasyDispatcher;
 import com.oneandone.iocunit.jpa.XmlLessPersistenceFactory;
 
 /**
@@ -31,7 +31,7 @@ import com.oneandone.iocunit.jpa.XmlLessPersistenceFactory;
  */
 @RunWith(IocUnitRunner.class)
 @TestClasses(XmlLessPersistenceFactory.class)
-@SutClasses({ Service.class })
+@SutClasses({Service.class})
 public class ServiceTest {
 
     @Inject
@@ -40,16 +40,16 @@ public class ServiceTest {
     @Inject
     EntityManager entityManager;
 
-    private Dispatcher dispatcher;
+    private IocUnitResteasyDispatcher dispatcher;
 
     @Before
     public void setUp() {
-        dispatcher = MockDispatcherFactory.createDispatcher();
+        dispatcher = IocUnitMockDispatcherFactory.createDispatcher();
         dispatcher.getRegistry().addSingletonResource(sut);
     }
 
     @Test
-    public void canServiceReturnFive() throws URISyntaxException {
+    public void canServiceReturnFive() throws URISyntaxException, UnsupportedEncodingException {
         MockHttpRequest request = MockHttpRequest.get("/simplerest/numbers/5");
         MockHttpResponse response = new MockHttpResponse();
         dispatcher.invoke(request, response);
@@ -70,7 +70,7 @@ public class ServiceTest {
 
     private Long createEntity(int i, String s) throws URISyntaxException, UnsupportedEncodingException {
         MockHttpRequest request = MockHttpRequest.post("/simplerest/entities/entity1?intvalue=" + i + "&stringvalue="
-                + URLEncoder.encode(s, "UTF-8"));
+                                                       + URLEncoder.encode(s, "UTF-8"));
         MockHttpResponse response = new MockHttpResponse();
         dispatcher.invoke(request, response);
         assertEquals(200, response.getStatus());

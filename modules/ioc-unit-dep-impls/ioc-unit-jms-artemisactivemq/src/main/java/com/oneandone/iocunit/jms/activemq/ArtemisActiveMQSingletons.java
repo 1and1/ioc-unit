@@ -45,7 +45,7 @@ public class ArtemisActiveMQSingletons implements JmsSingletonsIntf {
 
     private Logger logger = LoggerFactory.getLogger("JmsFactory");
 
-    private AtomicReference<Map<String, Destination>> destinations = new AtomicReference<>();
+    private AtomicReference<Map<String, Destination>> destinations = new AtomicReference<>(new ConcurrentHashMap<>());
     private AtomicReference<EmbeddedActiveMQ> embedded = new AtomicReference<>();
 
     @Override

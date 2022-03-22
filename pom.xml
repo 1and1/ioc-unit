@@ -71,6 +71,8 @@
         <deployment.port>10099</deployment.port>
         <deployment.targetdir>${basedir}/target/</deployment.targetdir>
         <mysql.connector.version>5.1.38</mysql.connector.version>
+        <h2.version>1.4.200</h2.version>
+        <hamcrest.version>2.1</hamcrest.version>
 
         <site.deploy.base.url>http://maven-sites.server.lan</site.deploy.base.url>
         <site-url>${site.deploy.base.url}/${project.groupId}/${project.version}</site-url>
@@ -90,8 +92,8 @@
         <compile.version.ejb-api>3.2.6</compile.version.ejb-api>
         <compile.version.interceptor-api>1.2.5</compile.version.interceptor-api>
         <compile.version.servlet-api>4.0.3</compile.version.servlet-api>
-        <compile.version.weld-spi>3.1.SP2</compile.version.weld-spi>
-        <compile.version.weld-api>3.1.SP2</compile.version.weld-api>
+        <compile.version.weld-spi>3.1.SP4</compile.version.weld-spi>
+        <compile.version.weld-api>3.1.SP4</compile.version.weld-api>
         <compile.version.persistence-api>2.2.3</compile.version.persistence-api>
         <compile.version.faces-api>2.3.2</compile.version.faces-api>
         <compile.version.bind-api>2.3.3</compile.version.bind-api>
@@ -121,11 +123,11 @@
                 <module>modules/ioc-unit-simulators</module>
                 <module>modules/ioc-unit-wf10-specs</module>
                 <module>modules/ioc-unit-wf24-specs</module>
+                <module>modules/ioc-unit-wf26-specs</module>
                 <module>modules/ioc-unit-wf10</module>
                 <module>modules/ioc-unit-wf24</module>
-
-
-                <module>examples2</module>
+                <module>modules/ioc-unit-wf26</module>
+                <!--module>examples2</module-->
             </modules>
             <dependencies>
                 <dependency>
@@ -175,7 +177,8 @@
                             <!-- Sets the VM argument line used when unit tests are run. -->
                             <!--argLine> - -add-modules java.xml,java.sql -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5006</argLine-->
                             <argLine>
-                                -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5006
+                                -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5006 --add-opens
+                                java.base/java.lang=ALL-UNNAMED
                             </argLine>
                             <forkCount>1</forkCount>
                             <reuseForks>false</reuseForks>
@@ -190,83 +193,14 @@
         <profile>
             <id>junit4</id>
             <modules>
-                <module>testing/ioc-unit-test-war</module>
-                <module>testing/ioc-unit-tests</module>
-                <!--module>ioc-unit-tests-7plus</module-->
-                <module>testing/ioc-unit-contexts-tests</module>
-                <!--module>ioc-unit-camunda</module-->
-
+                <module>testing</module>
             </modules>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <version>${maven-surefire-plugin.version}</version>
-                        <dependencies>
-                            <dependency>
-                                <groupId>org.apache.maven.surefire</groupId>
-                                <artifactId>surefire-junit47</artifactId>
-                                <version>${maven-surefire-plugin.version}</version>
-                            </dependency>
-                        </dependencies>
-                        <configuration>
-                            <systemPropertyVariables>
-                                <javax.xml.parsers.DocumentBuilderFactory>
-                                    com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl
-                                </javax.xml.parsers.DocumentBuilderFactory>
-                            </systemPropertyVariables>
-
-                            <reportFormat>plain</reportFormat>
-                            <redirectTestOutputToFile>true</redirectTestOutputToFile>
-                            <!-- Sets the VM argument line used when unit tests are run. -->
-                            <!--argLine> - -add-modules java.xml,java.sql -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5006</argLine-->
-                            <argLine>
-                                -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5006
-                            </argLine>
-                            <forkCount>1</forkCount>
-                            <reuseForks>false</reuseForks>
-                            <classpathDependencyExcludes>
-                                <classpathDependencyExclude>net.oneandone:purecdi-tests</classpathDependencyExclude>
-                            </classpathDependencyExcludes>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
         </profile>
         <profile>
             <id>junit5</id>
             <modules>
-                <module>testing/ioc-unit-test-war</module>
-                <module>testing/ioc-unit-tests5</module>
+                <module>testing</module>
             </modules>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <version>${maven-surefire-plugin.version}</version>
-                        <configuration>
-                            <systemPropertyVariables>
-                                <javax.xml.parsers.DocumentBuilderFactory>
-                                    com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl
-                                </javax.xml.parsers.DocumentBuilderFactory>
-                            </systemPropertyVariables>
-
-                            <reportFormat>plain</reportFormat>
-                            <redirectTestOutputToFile>true</redirectTestOutputToFile>
-                            <!-- Sets the VM argument line used when unit tests are run. -->
-                            <!--argLine> - -add-modules java.xml,java.sql -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005</argLine-->
-                            <argLine>
-                                -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
-                            </argLine>
-                            <classpathDependencyExcludes>
-                                <classpathDependencyExclude>net.oneandone:purecdi-tests</classpathDependencyExclude>
-                            </classpathDependencyExcludes>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
         </profile>
         <profile>
             <id>release-sign-artifacts</id>
@@ -352,16 +286,16 @@
                 <module>testing/purecdi-tests</module>
             </modules>
             <properties>
-                <weld.version>3.1.3.Final</weld.version>
-                <weld-spi.version>3.1.SP2</weld-spi.version>
+                <weld.version>3.1.8.Final</weld.version>
+                <weld-spi.version>3.1.SP4</weld-spi.version>
                 <version.org.hibernate.api>1.0.0.Final</version.org.hibernate.api>
-                <version.org.hibernate>5.3.6.Final</version.org.hibernate>
-                <version.org.hibernate.validator>6.0.1.Final</version.org.hibernate.validator>
-                <version.org.hibernate.validator-cdi>6.0.1.Final</version.org.hibernate.validator-cdi>
+                <version.org.hibernate>5.3.24.Final</version.org.hibernate>
+                <version.org.hibernate.validator>6.0.22.Final</version.org.hibernate.validator>
+                <version.org.hibernate.validator-cdi>6.0.22.Final</version.org.hibernate.validator-cdi>
                 <version.validation-api>2.0.2</version.validation-api>
-                <version.cdi-api>2.0.SP1</version.cdi-api>
+                <version.cdi-api>2.0.2</version.cdi-api>
                 <version.javaee-api>8.0</version.javaee-api>
-                <version.resteasy>3.11.0.Final</version.resteasy>
+                <version.resteasy>4.7.4.Final</version.resteasy>
             </properties>
             <dependencies>
                 <dependency>
@@ -402,7 +336,7 @@
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest</artifactId>
-            <version>2.1</version>
+            <version>${hamcrest.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -497,93 +431,9 @@
 
             <!-- testing -->
             <dependency>
-                <groupId>org.mockito</groupId>
-                <artifactId>mockito-core</artifactId>
-                <version>${mockito.version}</version>
-                <scope>test</scope>
-                <exclusions>
-                    <exclusion>
-                        <artifactId>hamcrest-core</artifactId>
-                        <groupId>org.hamcrest</groupId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>com.mockrunner</groupId>
-                <artifactId>mockrunner-jms</artifactId>
-                <version>${mockrunner.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.mockrunner</groupId>
-                <artifactId>mockrunner-core</artifactId>
-                <version>${mockrunner.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>cglib</groupId>
                 <artifactId>cglib</artifactId>
                 <version>${version.cglib}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.hamcrest</groupId>
-                <artifactId>hamcrest</artifactId>
-                <version>2.1</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.h2database</groupId>
-                <artifactId>h2</artifactId>
-                <version>1.4.193</version>
-            </dependency>
-            <dependency>
-                <groupId>org.hibernate</groupId>
-                <artifactId>hibernate-core</artifactId>
-                <version>${version.org.hibernate}</version>
-                <scope>provided</scope>
-                <exclusions>
-                    <exclusion>
-                        <groupId>javax.enterprise</groupId>
-                        <artifactId>cdi-api</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.hibernate.javax.persistence</groupId>
-                        <artifactId>hibernate-jpa-2.1-api</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.apache.geronimo.specs</groupId>
-                        <artifactId>geronimo-jta_1.1_spec</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.hibernate</groupId>
-                <artifactId>hibernate-entitymanager</artifactId>
-                <version>${version.org.hibernate}</version>
-                <scope>provided</scope>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.hibernate.javax.persistence</groupId>
-                        <artifactId>hibernate-jpa-2.1-api</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.hibernate</groupId>
-                <artifactId>hibernate-validator</artifactId>
-                <version>${version.org.hibernate.validator}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.hibernate</groupId>
-                <artifactId>hibernate-validator-cdi</artifactId>
-                <version>${version.org.hibernate.validator-cdi}</version>
-                <scope>test</scope>
-                <optional>true</optional>
-            </dependency>
-            <dependency>
-                <groupId>org.glassfish</groupId>
-                <artifactId>jakarta.el</artifactId>
-                <version>3.0.3</version>
-                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.junit.vintage</groupId>
@@ -605,12 +455,6 @@
                 <scope>import</scope>
             </dependency>
             <dependency>
-                <groupId>mysql</groupId>
-                <artifactId>mysql-connector-java</artifactId>
-                <version>${mysql.connector.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
                 <groupId>org.javassist</groupId>
                 <artifactId>javassist</artifactId>
                 <version>${javassist.version}</version>
@@ -620,24 +464,6 @@
                 <groupId>org.reflections</groupId>
                 <artifactId>reflections</artifactId>
                 <version>${reflections.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jboss.weld.se</groupId>
-                <artifactId>weld-se-core</artifactId>
-                <version>${weld.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.camunda.bpm</groupId>
-                <artifactId>camunda-engine</artifactId>
-                <version>${camunda-engine.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.camunda.bpm</groupId>
-                <artifactId>camunda-engine-cdi</artifactId>
-                <version>${camunda-engine.version}</version>
-                <scope>provided</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>

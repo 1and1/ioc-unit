@@ -43,6 +43,13 @@ import com.oneandone.iocunit.ejb.SupportEjbExtended;
 @TestClasses({PersistenceFactoryResources.class})
 public abstract class PersistenceFactory {
 
+    private static JdbcSqlConverter jdbcSqlNotConverter = new JdbcSqlConverter() {
+        @Override
+        public String convert(final String sql) {
+            return sql;
+        }
+    };
+
     public enum Provider {
         HIBERNATE,
         ECLIPSELINK
@@ -256,7 +263,8 @@ public abstract class PersistenceFactory {
      * @return the EntityManager as it is returnable by producers.
      */
     public EntityManager produceEntityManager() {
-        return new EntityManagerDelegate(this);
+        JdbcSqlConverter c = getJdbcSqlConverterIfThereIsOne();
+        return new EntityManagerDelegate(this, c);
     }
 
     /**
@@ -311,7 +319,13 @@ public abstract class PersistenceFactory {
     }
 
     JdbcSqlConverter getJdbcSqlConverterIfThereIsOne() {
-        return persistenceFactoryResources.getJdbcSqlConverterIfThereIsOne();
+        JdbcSqlConverter result = persistenceFactoryResources.getJdbcSqlConverterIfThereIsOne();
+        if(result == null) {
+            return jdbcSqlNotConverter;
+        }
+        else {
+            return result;
+        }
     }
 
 

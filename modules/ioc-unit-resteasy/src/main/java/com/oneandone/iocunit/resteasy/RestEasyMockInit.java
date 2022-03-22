@@ -10,9 +10,10 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 
-import org.jboss.resteasy.core.Dispatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.oneandone.iocunit.jboss.resteasy.mock.IocUnitResteasyDispatcher;
 
 import io.restassured.RestAssured;
 
@@ -30,7 +31,7 @@ public class RestEasyMockInit {
     JaxRSRestEasyTestExtension jaxRsRestEasyTestExtension;
 
     @Produces
-    public Dispatcher getDispatcher() {
+    public IocUnitResteasyDispatcher getDispatcher() {
         return dispatcher;
     }
 

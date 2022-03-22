@@ -1,7 +1,6 @@
 package com.oneandone.iocunit.resteasy.restassured;
 
-import org.jboss.resteasy.core.Dispatcher;
-
+import com.oneandone.iocunit.jboss.resteasy.mock.IocUnitResteasyDispatcher;
 import com.oneandone.iocunit.resteasy.IocUnitResteasyHttpClient;
 
 /**
@@ -10,8 +9,9 @@ import com.oneandone.iocunit.resteasy.IocUnitResteasyHttpClient;
  */
 @Deprecated
 public class TestHttpClient extends IocUnitResteasyHttpClient {
-    public TestHttpClient(Dispatcher dispatcher) {
-        super(dispatcher);}
+    public TestHttpClient(IocUnitResteasyDispatcher dispatcher) {
+        super(dispatcher);
+    }
 
     public TestHttpClient() {
         super();

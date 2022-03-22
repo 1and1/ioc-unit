@@ -57,6 +57,12 @@
         </dependency>
         <dependency>
             <groupId>net.oneandone.ioc-unit</groupId>
+            <artifactId>ioc-unit-resource</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.oneandone.ioc-unit</groupId>
             <artifactId>ioc-unit-jms</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>

@@ -4,7 +4,7 @@ import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.sql.DataSource;
 
-import com.oneandone.iocunit.ejb.ResourceQualifier;
+import com.oneandone.iocunit.resource.ResourceQualifier;
 
 /**
  * @author aschoerk

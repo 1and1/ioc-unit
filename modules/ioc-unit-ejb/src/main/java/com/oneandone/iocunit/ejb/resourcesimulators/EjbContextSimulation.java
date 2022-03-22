@@ -11,8 +11,8 @@ import javax.ejb.EJBLocalHome;
 import javax.ejb.TimerService;
 import javax.transaction.UserTransaction;
 
-import com.oneandone.iocunit.ejb.ResourceQualifier;
 import com.oneandone.iocunit.ejb.persistence.SimulatedTransactionManager;
+import com.oneandone.iocunit.resource.ResourceQualifier;
 
 /**
  * @author aschoerk

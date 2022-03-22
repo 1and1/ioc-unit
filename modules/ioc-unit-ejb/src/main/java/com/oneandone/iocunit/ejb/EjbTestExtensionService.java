@@ -272,7 +272,7 @@ public class EjbTestExtensionService implements TestExtensionService {
             ArrayList<Annotation> annotations = new ArrayList<Annotation>();
             String typeName = f.getType().getName();
             try {
-                Class literal = Class.forName("com.oneandone.iocunit.ejb.ResourceQualifier$ResourceQualifierLiteral");
+                Class literal = Class.forName("com.oneandone.iocunit.resource.ResourceQualifier$ResourceQualifierLiteral");
                 Constructor[] cs = literal.getConstructors();
 
                 if(f.getAnnotation(Resource.class) != null) {

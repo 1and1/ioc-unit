@@ -24,7 +24,7 @@ public class TestPersistenceFactoryH2Test extends PersistenceFactoryTestBase {
 
         public PersistenceFactory() {
             addProperty("hibernate.connection.url",
-                    "jdbc:h2:mem:testIntercepted;MODE=MySQL;DB_CLOSE_ON_EXIT=TRUE;MVCC=TRUE;" +
+                    "jdbc:h2:mem:testIntercepted;MODE=MySQL;DB_CLOSE_ON_EXIT=TRUE;" +
                     "INIT=create schema if not exists testschema;DB_CLOSE_DELAY=0;LOCK_MODE=0;LOCK_TIMEOUT=10000");
             addProperty("hibernate.default_schema", "testschema");
             addProperty("hibernate.ejb.naming_strategy", "org.hibernate.cfg.ImprovedNamingStrategy");

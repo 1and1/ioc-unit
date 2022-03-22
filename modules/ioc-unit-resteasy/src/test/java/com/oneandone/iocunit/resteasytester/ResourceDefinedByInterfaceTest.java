@@ -6,7 +6,6 @@ import java.net.URISyntaxException;
 
 import javax.inject.Inject;
 
-import org.jboss.resteasy.core.Dispatcher;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.Test;
@@ -14,6 +13,7 @@ import org.junit.runner.RunWith;
 
 import com.oneandone.iocunit.IocUnitRunner;
 import com.oneandone.iocunit.analyzer.annotations.SutClasses;
+import com.oneandone.iocunit.jboss.resteasy.mock.IocUnitResteasyDispatcher;
 import com.oneandone.iocunit.resteasytester.resources.ResourceDefinedByInterface;
 
 /**
@@ -23,7 +23,7 @@ import com.oneandone.iocunit.resteasytester.resources.ResourceDefinedByInterface
 @SutClasses({ExampleErrorMapper.class, ResourceDefinedByInterface.class})
 public class ResourceDefinedByInterfaceTest {
     @Inject
-    Dispatcher dispatcher;
+    IocUnitResteasyDispatcher dispatcher;
 
     @Test
     public void testGreen() throws URISyntaxException {

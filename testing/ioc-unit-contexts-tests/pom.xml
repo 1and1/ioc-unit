@@ -3,9 +3,9 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>net.oneandone.ioc-unit</groupId>
-        <artifactId>ioc-unit-parent</artifactId>
+        <artifactId>testing</artifactId>
         <version>2.0.43-SNAPSHOT</version>
-        <relativePath>../../pom.xml</relativePath>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
 
@@ -31,12 +31,6 @@
             </exclusions>
         </dependency>
 
-        <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-        </dependency>
-
-
         <!-- logging -->
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -54,6 +48,7 @@
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest</artifactId>
             <scope>test</scope>
+            <version>${hamcrest.version}</version>
         </dependency>
         <dependency>
             <groupId>net.oneandone.ioc-unit</groupId>
@@ -64,6 +59,7 @@
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <scope>test</scope>
+            <version>${mockito.version}</version>
         </dependency>
         <dependency>
             <groupId>net.oneandone.ioc-unit</groupId>

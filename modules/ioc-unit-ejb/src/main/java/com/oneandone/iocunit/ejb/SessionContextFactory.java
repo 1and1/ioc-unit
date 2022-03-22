@@ -6,8 +6,8 @@ import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
 
-import com.oneandone.iocunit.ejb.resourcesimulators.MessageContextSimulation;
 import com.oneandone.iocunit.ejb.resourcesimulators.SessionContextSimulation;
+import com.oneandone.iocunit.resource.ResourceQualifier;
 
 /**
  * @author aschoerk
@@ -22,12 +22,6 @@ public class SessionContextFactory {
     SessionContextSimulation createSessionContext(InjectionPoint ip) {
         SessionContextSimulation injectedBean = new SessionContextSimulation("dummy");
         injectedBean.setContainer(ip.getBean(), beanManager);
-        return injectedBean;
-    }
-
-    @Produces
-    MessageContextSimulation createMessageContext(InjectionPoint ip) {
-        MessageContextSimulation injectedBean = new MessageContextSimulation();
         return injectedBean;
     }
 

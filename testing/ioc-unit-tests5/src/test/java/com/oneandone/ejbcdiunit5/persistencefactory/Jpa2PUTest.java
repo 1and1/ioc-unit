@@ -18,7 +18,6 @@ import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 
-import org.hibernate.exception.GenericJDBCException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,18 +25,18 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.oneandone.ejbcdiunit5.helpers.J2eeSimTest1Factory;
+import com.oneandone.ejbcdiunit5.helpers.J2eeSimTest2Factory;
+import com.oneandone.ejbcdiunit5.helpers.TestResources;
+import com.oneandone.iocunit.IocJUnit5Extension;
 import com.oneandone.iocunit.analyzer.annotations.EnabledAlternatives;
 import com.oneandone.iocunit.analyzer.annotations.SutClasses;
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.iocunit.IocJUnit5Extension;
 import com.oneandone.iocunit.ejb.persistence.TestTransaction;
 import com.oneandone.iocunitejb.ClassWithTwoDifferentEntityManagers;
 import com.oneandone.iocunitejb.cdiunit.Pu1Em;
 import com.oneandone.iocunitejb.cdiunit.Pu2Em;
 import com.oneandone.iocunitejb.entities.TestEntity1;
-import com.oneandone.ejbcdiunit5.helpers.J2eeSimTest1Factory;
-import com.oneandone.ejbcdiunit5.helpers.J2eeSimTest2Factory;
-import com.oneandone.ejbcdiunit5.helpers.TestResources;
 
 /**
  * @author aschoerk
@@ -183,7 +182,8 @@ public class Jpa2PUTest {
                 fail("expected PersistenceException because of two updates");
             } catch (PersistenceException e) {
 
-                assert (e.getCause().getClass().equals(GenericJDBCException.class));
+                assert (e.getCause().getClass().getName().contains("GenericJDBCException")
+                        || e.getCause().getClass().getName().contains("QueryTimeoutException"));
             }
         }
     }

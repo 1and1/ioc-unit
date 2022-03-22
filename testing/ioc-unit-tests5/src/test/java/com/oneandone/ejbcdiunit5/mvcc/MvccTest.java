@@ -52,7 +52,7 @@ public class MvccTest {
         switch (mode) {
             case H2: {
                 Class.forName("org.h2.Driver");
-                Connection conn = DriverManager.getConnection("jdbc:h2:mem:testIntercepted;MODE=MySQL;MVCC=TRUE;MV_STORE=TRUE;DB_CLOSE_DELAY=1",
+                Connection conn = DriverManager.getConnection("jdbc:h2:mem:testIntercepted;MODE=MySQL;MV_STORE=TRUE;DB_CLOSE_DELAY=1",
                         "sa", "");
                 return conn;
             }

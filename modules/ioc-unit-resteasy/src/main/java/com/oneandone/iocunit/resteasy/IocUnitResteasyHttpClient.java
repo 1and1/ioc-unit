@@ -13,7 +13,9 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.Configurable;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.AbstractHttpClient;
@@ -22,29 +24,30 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.BasicHttpProcessor;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.Args;
-import org.jboss.resteasy.core.Dispatcher;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.oneandone.iocunit.jboss.resteasy.mock.IocUnitMockDispatcherFactory;
+import com.oneandone.iocunit.jboss.resteasy.mock.IocUnitResteasyDispatcher;
 import com.oneandone.iocunit.resteasy.restassured.CloseableMockResponse;
 
 /**
  * HttpClient that does not send via Network, but sends via Resteasy-MockDispatcher
  **/
 @IocUnitResteasy
-public class IocUnitResteasyHttpClient extends AbstractHttpClient {
+public class IocUnitResteasyHttpClient extends AbstractHttpClient implements Configurable {
 
     public static final String LOCALHOST = "//localhost";
 
     @Inject
-    Dispatcher dispatcher;
+    IocUnitResteasyDispatcher dispatcher;
 
     Logger logger = LoggerFactory.getLogger(IocUnitResteasyHttpClient.class);
 
-    public IocUnitResteasyHttpClient(Dispatcher dispatcher) {
+    public IocUnitResteasyHttpClient(IocUnitResteasyDispatcher dispatcher) {
         super(null, null);
         this.dispatcher = dispatcher;
     }
@@ -87,14 +90,15 @@ public class IocUnitResteasyHttpClient extends AbstractHttpClient {
 
 
     protected CloseableHttpResponse innerExecute(final HttpHost target, final HttpRequest request, final HttpContext context) throws IOException, ClientProtocolException {
-
-        Set<Map.Entry<Class<?>, Object>> contextData = ResteasyProviderFactory.getContextDataMap().entrySet();
-        ResteasyProviderFactory.clearContextData();
+        Set<Map.Entry<Class<?>, Object>> contextData = IocUnitMockDispatcherFactory.getContextDataMap().entrySet();
+        IocUnitMockDispatcherFactory.clearContextData();
         try {
             MockHttpRequest mockRequest = createMockHttpRequestFromRequest(request);
             addHeadersFromRequest(request, mockRequest);
             MockHttpResponse response = new MockHttpResponse();
-            Map<Class<?>, Object> map = ResteasyProviderFactory.getContextDataMap();
+            // TODO: save ContextDataMap
+            Map<Class<?>, Object> map = IocUnitMockDispatcherFactory.getContextDataMap();
+
             dispatcher.invoke(mockRequest, response);
             return new CloseableMockResponse(response);
         } catch (URISyntaxException e) {
@@ -203,5 +207,10 @@ public class IocUnitResteasyHttpClient extends AbstractHttpClient {
         dispatcher = null;
         logger = null;
         super.close();
+    }
+
+    @Override
+    public RequestConfig getConfig() {
+        return RequestConfig.custom().build();
     }
 }

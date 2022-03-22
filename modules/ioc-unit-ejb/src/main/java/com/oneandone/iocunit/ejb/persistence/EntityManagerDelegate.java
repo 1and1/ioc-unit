@@ -28,9 +28,11 @@ import javax.persistence.metamodel.Metamodel;
 class EntityManagerDelegate implements EntityManager {
 
     private final PersistenceFactory entityManagerStore;
+    private final JdbcSqlConverter converter;
 
-    EntityManagerDelegate(PersistenceFactory entityManagerStore) {
+    EntityManagerDelegate(PersistenceFactory entityManagerStore, final JdbcSqlConverter c) {
         this.entityManagerStore = entityManagerStore;
+        this.converter = c;
     }
 
     private EntityManager getEmbeddedEntityManager() {
@@ -85,7 +87,7 @@ class EntityManagerDelegate implements EntityManager {
 
     @Override
     public <T> T find(final Class<T> entityClass, final Object primaryKey, final LockModeType lockMode,
-            final Map<String, Object> properties) {
+                      final Map<String, Object> properties) {
         return getEmbeddedEntityManager().find(entityClass, primaryKey, lockMode, properties);
     }
 
@@ -171,7 +173,7 @@ class EntityManagerDelegate implements EntityManager {
 
     @Override
     public Query createQuery(final String qlString) {
-        return getEmbeddedEntityManager().createQuery(qlString);
+        return getEmbeddedEntityManager().createQuery(converter.convert(qlString));
     }
 
     @Override
@@ -191,7 +193,7 @@ class EntityManagerDelegate implements EntityManager {
 
     @Override
     public <T> TypedQuery<T> createQuery(final String qlString, final Class<T> resultClass) {
-        return getEmbeddedEntityManager().createQuery(qlString, resultClass);
+        return getEmbeddedEntityManager().createQuery(converter.convert(qlString), resultClass);
     }
 
     @Override
@@ -206,18 +208,18 @@ class EntityManagerDelegate implements EntityManager {
 
     @Override
     public Query createNativeQuery(final String sqlString) {
-        return getEmbeddedEntityManager().createNativeQuery(sqlString);
+        return getEmbeddedEntityManager().createNativeQuery(converter.convert(sqlString));
     }
 
     @SuppressWarnings("rawtypes")
     @Override
     public Query createNativeQuery(final String sqlString, final Class resultClass) {
-        return getEmbeddedEntityManager().createNativeQuery(sqlString, resultClass);
+        return getEmbeddedEntityManager().createNativeQuery(converter.convert(sqlString), resultClass);
     }
 
     @Override
     public Query createNativeQuery(final String sqlString, final String resultSetMapping) {
-        return getEmbeddedEntityManager().createNativeQuery(sqlString, resultSetMapping);
+        return getEmbeddedEntityManager().createNativeQuery(converter.convert(sqlString), resultSetMapping);
     }
 
     @Override

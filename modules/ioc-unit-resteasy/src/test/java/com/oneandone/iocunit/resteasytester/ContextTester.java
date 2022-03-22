@@ -6,7 +6,6 @@ import java.net.URISyntaxException;
 
 import javax.inject.Inject;
 
-import org.jboss.resteasy.core.Dispatcher;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.Test;
@@ -14,6 +13,7 @@ import org.junit.runner.RunWith;
 
 import com.oneandone.iocunit.IocUnitRunner;
 import com.oneandone.iocunit.analyzer.annotations.SutClasses;
+import com.oneandone.iocunit.jboss.resteasy.mock.IocUnitResteasyDispatcher;
 import com.oneandone.iocunit.resteasytester.resources.ResourceUsingDifferentContexts;
 
 /**
@@ -23,7 +23,7 @@ import com.oneandone.iocunit.resteasytester.resources.ResourceUsingDifferentCont
 @SutClasses({ResourceUsingDifferentContexts.class})
 public class ContextTester {
     @Inject
-    Dispatcher dispatcher;
+    IocUnitResteasyDispatcher dispatcher;
 
     @Test
     public void test() throws URISyntaxException {

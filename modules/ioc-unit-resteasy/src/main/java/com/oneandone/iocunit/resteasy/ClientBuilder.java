@@ -3,8 +3,6 @@ package com.oneandone.iocunit.resteasy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 
-import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
-
 /**
  * @author aschoerk
  * use {@link IocUnitResteasyClientBuilder}
@@ -14,7 +12,7 @@ import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 public class ClientBuilder extends IocUnitResteasyClientBuilder {
 
     @Produces
-    public ResteasyClientBuilder createClientBuilder() {
+    public javax.ws.rs.client.ClientBuilder createClientBuilder() {
         return super.createClientBuilder();
     }
 }

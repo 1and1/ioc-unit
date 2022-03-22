@@ -1,5 +1,8 @@
 package com.oneandone.iocunit.resource;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.annotation.Resource;
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.Produces;
@@ -17,6 +20,18 @@ import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
  * @author aschoerk
  */
 public class ResourceExtension implements Extension {
+
+    static Set<String> resourceToIgnore = new HashSet<String>() {
+        private static final long serialVersionUID = -1540511962019840039L;
+
+        {
+            add("javax.jms.Queue");
+            add("javax.jms.Topic");
+            add("javax.jms.ConnectionFactory");
+
+        }
+    };
+
     public <T> void processAnnotatedType(@Observes @WithAnnotations(Resource.class)
                                                  ProcessAnnotatedType<T> pat) {
         AnnotatedType<T> annotatedType = pat.getAnnotatedType();
@@ -34,19 +49,24 @@ public class ResourceExtension implements Extension {
                 Produces produces = field.getAnnotation(Produces.class);
                 doResourceQualifyIfNecessary(builder, field, resource);
                 // cannot produce, since the container is not there. Must be injected by test-code
-                if (produces != null) {
+                if(produces != null) {
                     builder.removeFromField(field, Produces.class);
                 }
             }
 
         }
-        if (modified) {
+        if(modified) {
             pat.setAnnotatedType(builder.create());
         }
     }
 
+    private <T> boolean doQualifyByResourceQualifier(final AnnotatedField<? super T> field) {
+        String typeName = field.getJavaMember().getType().getName();
+        return !resourceToIgnore.contains(typeName);
+    }
+
     private <T> void doResourceQualifyIfNecessary(final AnnotatedTypeBuilder<T> builder, final AnnotatedField<? super T> field, final Resource resource) {
-        if (field.getAnnotation(Produces.class) == null) {
+        if(field.getAnnotation(Produces.class) == null && doQualifyByResourceQualifier(field)) {
             if(resource != null && !(resource.name().isEmpty() && resource.mappedName().isEmpty() && resource.lookup().isEmpty())) {
                 builder.addToField(field, new ResourceQualifier.ResourceQualifierLiteral(resource.name(), resource.lookup(), resource.mappedName()));
             }

@@ -6,6 +6,7 @@ import java.util.Set;
 
 import javax.ejb.EJBLocalObject;
 import javax.ejb.EJBObject;
+import javax.ejb.MessageDrivenContext;
 import javax.ejb.SessionContext;
 import javax.enterprise.inject.Vetoed;
 import javax.enterprise.inject.spi.Bean;
@@ -23,7 +24,7 @@ import net.sf.cglib.proxy.InvocationHandler;
  * @author aschoerk
  */
 @Vetoed
-public class SessionContextSimulation extends EjbContextSimulation implements SessionContext {
+public class SessionContextSimulation extends EjbContextSimulation implements SessionContext, MessageDrivenContext {
 
     private BeanManager beanManager;
 

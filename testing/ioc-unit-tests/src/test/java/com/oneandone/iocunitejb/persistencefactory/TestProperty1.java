@@ -1,5 +1,7 @@
 package com.oneandone.iocunitejb.persistencefactory;
 
+import static org.junit.Assert.fail;
+
 import java.sql.SQLException;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -14,8 +16,8 @@ import javax.transaction.NotSupportedException;
 import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
 
-import org.h2.jdbc.JdbcSQLException;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -30,11 +32,41 @@ import com.oneandone.iocunitejb.entities.TestEntity1;
  * @author aschoerk
  */
 @RunWith(IocUnitRunner.class)
-@TestClasses({ TestProperty1.PersistenceFactory.class, TestEntity1.class })
+@TestClasses({TestProperty1.PersistenceFactory.class, TestEntity1.class})
 public class TestProperty1 extends PersistenceFactoryTestBase {
 
     @Inject
     EntityManager entityManager;
+
+    @After
+    public void checkSchema() {
+        entityManager.createNativeQuery("select * from schema.test_entity_1").getResultList();
+    }
+
+    @Test
+    public void test() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+        userTransaction.begin();
+        entityManager.persist(new TestEntity1());
+        userTransaction.commit();
+    }
+
+    @Test(expected = PersistenceException.class)
+    public void doesFlushBeforeNativeQuery() throws Exception {
+        super.doesFlushBeforeNativeQuery();
+    }
+
+    public void checkUserTransactionAndDataSource()
+            throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException, SQLException {
+        try {
+            super.checkUserTransactionAndDataSource();
+            fail("Expected Exception");
+        } catch (Exception e) {
+            Assert.assertTrue(
+                    e.getClass().getName().contains("JdbcSQLException") ||
+                    e.getClass().getName().contains("JdbcSQLSyntaxErrorException"));
+
+        }
+    }
 
     @ApplicationScoped
     public static class PersistenceFactory extends XmlLessPersistenceFactory {
@@ -57,27 +89,5 @@ public class TestProperty1 extends PersistenceFactoryTestBase {
         }
 
 
-    }
-    @After
-    public void checkSchema() {
-        entityManager.createNativeQuery("select * from schema.test_entity_1").getResultList();
-    }
-
-    @Test
-    public void test() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
-        userTransaction.begin();
-        entityManager.persist(new TestEntity1());
-        userTransaction.commit();
-    }
-
-    @Test(expected = PersistenceException.class)
-    public void doesFlushBeforeNativeQuery() throws Exception {
-        super.doesFlushBeforeNativeQuery();
-    }
-
-    @Test(expected = JdbcSQLException.class)
-    public void checkUserTransactionAndDataSource()
-            throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException, SQLException {
-        super.checkUserTransactionAndDataSource();
     }
 }

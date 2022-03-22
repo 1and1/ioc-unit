@@ -9,11 +9,18 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <httpcore.version>4.4.1</httpcore.version>
+        <httpclient.version>4.5</httpclient.version>
+        <rest-assured.version>4.0.0</rest-assured.version>
     </properties>
 
     <profiles>
         <profile>
             <id>weld2.3</id>
+            <properties>
+                <resteasy.version>3.0.26.Final</resteasy.version>
+                <jackson2.version>2.9.10</jackson2.version>
+            </properties>
             <dependencies>
                 <dependency>
                     <groupId>net.oneandone.ioc-unit</groupId>
@@ -31,16 +38,20 @@
         </profile>
         <profile>
             <id>weld3.1</id>
+            <properties>
+                <resteasy.version>4.7.4.Final</resteasy.version>
+                <jackson2.version>2.12.3</jackson2.version>
+            </properties>
             <dependencies>
                 <dependency>
                     <groupId>net.oneandone.ioc-unit</groupId>
-                    <artifactId>ioc-unit-wf24-specs</artifactId>
+                    <artifactId>ioc-unit-wf26-specs</artifactId>
                     <version>${project.version}</version>
                     <scope>provided</scope>
                 </dependency>
                 <dependency>
                     <groupId>net.oneandone.ioc-unit</groupId>
-                    <artifactId>ioc-unit-wf24</artifactId>
+                    <artifactId>ioc-unit-wf26</artifactId>
                     <version>${project.version}</version>
                     <scope>test</scope>
                 </dependency>
@@ -59,7 +70,16 @@
         <module>ex4-asyncconsumedpush</module>
         <module>mockito-example</module>
         <module>jms</module>
+        <module>rest</module>
     </modules>
+
+    <dependencies>
+        <dependency>
+            <groupId>net.oneandone.ioc-unit</groupId>
+            <artifactId>ioc-unit</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
 
 
     <build>

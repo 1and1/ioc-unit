@@ -15,7 +15,6 @@ import org.hamcrest.Matcher;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.oneandone.iocunit.rest.minimal_rest_war.restassured_1.Dto;
-import org.oneandone.iocunit.rest.minimal_rest_war.restassured_1.Jackson1Config;
 import org.oneandone.iocunit.rest.minimal_rest_war.restassured_1.Jackson2Config;
 import org.oneandone.iocunit.rest.minimal_rest_war.restassured_1.RestResource;
 
@@ -25,14 +24,13 @@ import com.oneandone.iocunit.analyzer.annotations.SutClasses;
 
 import io.restassured.RestAssured;
 import io.restassured.config.ObjectMapperConfig;
-import io.restassured.path.json.mapper.factory.Jackson1ObjectMapperFactory;
 import io.restassured.path.json.mapper.factory.Jackson2ObjectMapperFactory;
 
 /**
  * @author aschoerk
  */
 @RunWith(IocUnitRunner.class)
-@SutClasses({RestResource.class, Jackson2Config.class, Jackson1Config.class})
+@SutClasses({RestResource.class, Jackson2Config.class,})
 public class ObjectMapperTest {
     static <T> Matcher<Number> asDouble(final Matcher<? extends T> submatcher) {
         return new AsDouble(submatcher);
@@ -75,17 +73,6 @@ public class ObjectMapperTest {
                             @Override
                             public ObjectMapper create(final Type cls, final String charset) {
                                 return new Jackson2Config().getContext(null);
-                            }
-                        };
-                    }
-
-                    @Override
-                    public Jackson1ObjectMapperFactory jackson1ObjectMapperFactory() {
-                        return new Jackson1ObjectMapperFactory() {
-                            @Override
-
-                            public org.codehaus.jackson.map.ObjectMapper create(final Type cls, final String charset) {
-                                return new Jackson1Config().getContext(null);
                             }
                         };
                     }

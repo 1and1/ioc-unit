@@ -1,5 +1,7 @@
 package com.oneandone.iocunit.resteasy;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,18 +10,19 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 
-import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
-import org.jboss.resteasy.client.jaxrs.engines.ApacheHttpClient4Engine;
-import org.jboss.resteasy.core.Dispatcher;
+import org.jboss.resteasy.client.jaxrs.ClientHttpEngine;
+import org.jboss.resteasy.client.jaxrs.engines.ApacheHttpClient43Engine;
+
+import com.oneandone.iocunit.jboss.resteasy.mock.IocUnitResteasyDispatcher;
 
 /**
  * Extension/Replacement of ResteasyClientBuilder, using a HttpClient that routes all Requests to
- * MockDispatcherFactory-Dispatcher
+ * IocUnitMockDispatcherFactory-IocUnitResteasyDispatcher
  */
 @ApplicationScoped
 public class IocUnitResteasyClientBuilder {
     @Inject
-    private Dispatcher dispatcher;
+    private IocUnitResteasyDispatcher dispatcher;
 
     private List<IocUnitResteasyHttpClient> httpClients = new ArrayList<>();
 
@@ -29,10 +32,16 @@ public class IocUnitResteasyClientBuilder {
     }
 
     @Produces
-    public ResteasyClientBuilder createClientBuilder() {
+    public javax.ws.rs.client.ClientBuilder createClientBuilder() {
         IocUnitResteasyHttpClient httpClient = new IocUnitResteasyHttpClient(dispatcher);
         httpClients.add(httpClient);
-        return new ResteasyClientBuilder()
-                .httpEngine(new ApacheHttpClient4Engine(httpClient));
+        javax.ws.rs.client.ClientBuilder builder = javax.ws.rs.client.ClientBuilder.newBuilder();
+        try {
+            Method engineSetter = builder.getClass().getMethod("httpEngine", ClientHttpEngine.class);
+            engineSetter.invoke(builder, new ApacheHttpClient43Engine(httpClient));
+        } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+        return builder;
     }
 }

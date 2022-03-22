@@ -234,12 +234,7 @@ public class EjbExtensionExtended extends EjbExtensionBase implements Extension 
                     builder.addToField(field, DefaultLiteral.INSTANCE);
                 }
             }
-            Resource resource = field.getAnnotation(Resource.class);
             PersistenceContext persistenceContext = field.getAnnotation(PersistenceContext.class);
-            if(resource != null) {  // all Resources will be set injected. The Tester must provide anything for them.
-                // this means that MessageDrivenContexts, SessionContext and JMS-Resources will be expected to be injected.
-                addInject = true;
-            }
             if(field.getAnnotation(PersistenceContext.class) != null) {
                 addInject = true;
                 builder.removeFromField(field, PersistenceContext.class);
@@ -251,37 +246,15 @@ public class EjbExtensionExtended extends EjbExtensionBase implements Extension 
                 });
                 Produces produces = field.getAnnotation(Produces.class);
 
-
                 final String typeName = field.getBaseType().getTypeName();
-                if(!typeName.startsWith("javax.jms")) {
-                    switch (typeName) {
-                        case "java.lang.String":
-                            builder.addToField(field, new ResourceQualifier.ResourceQualifierLiteral(resource.name(), resource.lookup(), resource.mappedName()));
-                            break;
-                        case "java.sql.DataSource":
-                            doResourceQualifyIfNecessary(builder, field, resource);
-                            break;
-                        case "javax.ejb.EJBContext":
-                            builder.addToField(field, new ResourceQualifier.ResourceQualifierLiteral("javax.ejb.EJBContext", "", ""));
-                            break;
-                        case "javax.transaction.UserTransaction":
-                        case "javax.ejb.SessionContext":
-                        case "javax.ejb.MessageDrivenContext":
-                        case "javax.ejb.EntityContext":
-                            // no resource-qualifier necessary, type specifies enough
-                            break;
-                        case "javax.persistence.EntityManager":
-                            if(produces == null && persistenceContext != null &&
-                               (persistenceContext.name() != null && !persistenceContext.name().isEmpty()
-                                || persistenceContext.unitName() != null && !persistenceContext.unitName().isEmpty())) {
-                                builder.addToField(field, new PersistenceContextQualifier.PersistenceContextQualifierLiteral(persistenceContext.name(), persistenceContext.unitName()));
-                            }
-                            break;
-                        default:
-                            doResourceQualifyIfNecessary(builder, field, resource);
-                            break;
-                    }
+                if(typeName.startsWith("javax.persistence.EntityManager") &&
+                   produces == null && persistenceContext != null &&
+                   (persistenceContext.name() != null && !persistenceContext.name().isEmpty()
+                    || persistenceContext.unitName() != null && !persistenceContext.unitName().isEmpty())) {
+                    builder.addToField(field, new PersistenceContextQualifier.PersistenceContextQualifierLiteral(persistenceContext.name(), persistenceContext.unitName()));
                 }
+
+
                 // cannot produce, since the container is not there. Must be injected by test-code
                 if(produces != null) {
                     builder.removeFromField(field, Produces.class);
@@ -322,13 +295,6 @@ public class EjbExtensionExtended extends EjbExtensionBase implements Extension 
         }
     }
 
-    private <T> void doResourceQualifyIfNecessary(final AnnotatedTypeBuilder<T> builder, final AnnotatedField<? super T> field, final Resource resource) {
-        if(field.getAnnotation(Produces.class) == null) {
-            if(resource != null && !(resource.name().isEmpty() && resource.mappedName().isEmpty() && resource.lookup().isEmpty())) {
-                builder.addToField(field, new ResourceQualifier.ResourceQualifierLiteral(resource.name(), resource.lookup(), resource.mappedName()));
-            }
-        }
-    }
 
     public <X> void processTransactionalMember(
             @Observes

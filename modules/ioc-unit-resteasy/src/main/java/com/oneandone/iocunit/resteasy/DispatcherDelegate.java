@@ -8,8 +8,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.ext.Provider;
 
-import org.jboss.resteasy.core.Dispatcher;
-import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.spi.HttpRequest;
 import org.jboss.resteasy.spi.HttpRequestPreprocessor;
 import org.jboss.resteasy.spi.HttpResponse;
@@ -20,11 +18,13 @@ import org.slf4j.LoggerFactory;
 
 import com.oneandone.cdi.weldstarter.CreationalContexts;
 import com.oneandone.cdi.weldstarter.WeldSetupClass;
+import com.oneandone.iocunit.jboss.resteasy.mock.IocUnitMockDispatcherFactory;
+import com.oneandone.iocunit.jboss.resteasy.mock.IocUnitResteasyDispatcher;
 
 /**
  * @author aschoerk
  */
-public class DispatcherDelegate implements Dispatcher, AutoCloseable {
+public class DispatcherDelegate implements IocUnitResteasyDispatcher, AutoCloseable {
 
 
     public DispatcherDelegate(final JaxRSRestEasyTestExtension jaxRsTestExtension) {
@@ -61,7 +61,7 @@ public class DispatcherDelegate implements Dispatcher, AutoCloseable {
             return;
         }
         setupDone = true;
-        delegate = MockDispatcherFactory.createDispatcher();
+        delegate = IocUnitMockDispatcherFactory.createDispatcher();
         addAnnotationDefinedJaxRSClasses();
         try {
             creationalContexts = new CreationalContexts();
@@ -82,11 +82,11 @@ public class DispatcherDelegate implements Dispatcher, AutoCloseable {
         for (Class<?> clazz : jaxRsTestExtension.getProviders()) {
             logger.info("Creating rest-provider {}", clazz.getName());
             Object res = creationalContexts.create(clazz, ApplicationScoped.class);
-            provfactory.register(res);
+            IocUnitMockDispatcherFactory.register(res);
         }
         try {
             Object securityContext = creationalContexts.create(SecurityContext.class, ApplicationScoped.class);
-            ResteasyProviderFactory.getContextDataMap().put(SecurityContext.class, securityContext);
+            IocUnitMockDispatcherFactory.getContextDataMap().put(SecurityContext.class, securityContext);
             securityContextThreadLocal.set(securityContext);
         } catch (Exception e) {
             if(e.getClass().getName().contains("AmbiguousResolutionException")) {
@@ -129,7 +129,7 @@ public class DispatcherDelegate implements Dispatcher, AutoCloseable {
 
     }
 
-    Dispatcher delegate;
+    IocUnitResteasyDispatcher delegate;
 
     @Override
     public ResteasyProviderFactory getProviderFactory() {

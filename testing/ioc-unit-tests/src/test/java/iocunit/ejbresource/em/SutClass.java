@@ -42,11 +42,17 @@ public class SutClass {
 
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     void createTables() {
+        em1.createNativeQuery("drop table t if exists").executeUpdate();
         em1.createNativeQuery("create table t (a varchar)").executeUpdate();
+        em1.createNativeQuery("drop table em1 if exists").executeUpdate();
         em1.createNativeQuery("create table em1 (a varchar)").executeUpdate();
+        em2.createNativeQuery("drop table t if exists").executeUpdate();
         em2.createNativeQuery("create table t (a varchar)").executeUpdate();
+        em2.createNativeQuery("drop table em2 if exists").executeUpdate();
         em2.createNativeQuery("create table em2 (a varchar)").executeUpdate();
+        em3_1.createNativeQuery("drop table t if exists").executeUpdate();
         em3_1.createNativeQuery("create table t (a varchar)").executeUpdate();
+        em3_1.createNativeQuery("drop table em3 if exists").executeUpdate();
         em3_1.createNativeQuery("create table em3 (a varchar)").executeUpdate();
     }
 
@@ -68,7 +74,6 @@ public class SutClass {
         em2.persist(entity2);
         Entity3 entity3 = new Entity3("em3");
         em3_1.persist(entity3);
-
     }
 
 

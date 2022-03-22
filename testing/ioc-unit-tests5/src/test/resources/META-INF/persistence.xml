@@ -83,7 +83,7 @@
             <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
             <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
             <property name="javax.persistence.jdbc.url"
-                      value="jdbc:h2:mem:mss-simple;MODE=PostgreSQL;DB_CLOSE_ON_EXIT=TRUE;DB_CLOSE_DELAY=0;MVCC=TRUE;LOCK_TIMEOUT=10000"/>
+                      value="jdbc:h2:mem:mss-simple;MODE=PostgreSQL;DB_CLOSE_ON_EXIT=TRUE;DB_CLOSE_DELAY=0;LOCK_TIMEOUT=10000"/>
             <property name="javax.persistence.jdbc.user" value="sa"/>
             <property name="javax.persistence.jdbc.password" value="sa"/>
             <!-- -->

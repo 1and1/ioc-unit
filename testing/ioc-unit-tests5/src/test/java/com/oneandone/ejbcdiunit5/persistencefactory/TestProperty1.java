@@ -14,7 +14,7 @@ import javax.transaction.NotSupportedException;
 import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
 
-import org.h2.jdbc.JdbcSQLException;
+import org.h2.jdbc.JdbcSQLSyntaxErrorException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -82,6 +82,6 @@ public class TestProperty1 extends PersistenceFactoryTestBase {
     @Test
     public void checkUserTransactionAndDataSource()
             throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException, SQLException {
-        Assertions.assertThrows(JdbcSQLException.class, () -> super.checkUserTransactionAndDataSource());
+        Assertions.assertThrows(JdbcSQLSyntaxErrorException.class, () -> super.checkUserTransactionAndDataSource());
     }
 }

@@ -1,0 +1,29 @@
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:activemq"
+               xsi:schemaLocation="urn:activemq /schema/artemis-server.xsd">
+    <core xmlns="urn:activemq:core">
+
+        <persistence-enabled>true</persistence-enabled>
+
+        <security-enabled>false</security-enabled>
+        <max-disk-usage>100</max-disk-usage>
+
+        <acceptors>
+            <acceptor name="in-vm">vm://0</acceptor>
+        </acceptors>
+        <addresses>
+            <address name="delayer">
+                <anycast>
+                    <queue name="delayer"/>
+                </anycast>
+            </address>
+            <address name="error">
+                <anycast>
+                    <queue name="error"/>
+                </anycast>
+            </address>
+        </addresses>
+
+        <journal-type>NIO</journal-type>
+        <journal-pool-files>-1</journal-pool-files>
+    </core>
+</configuration>

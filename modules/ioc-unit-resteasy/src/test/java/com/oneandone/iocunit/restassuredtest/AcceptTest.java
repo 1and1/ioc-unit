@@ -7,7 +7,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.jboss.resteasy.core.Dispatcher;
 import org.jboss.resteasy.spi.HttpRequest;
 import org.jboss.resteasy.spi.HttpRequestPreprocessor;
 import org.junit.Before;
@@ -16,6 +15,7 @@ import org.junit.runner.RunWith;
 
 import com.oneandone.iocunit.IocUnitRunner;
 import com.oneandone.iocunit.analyzer.annotations.SutClasses;
+import com.oneandone.iocunit.jboss.resteasy.mock.IocUnitResteasyDispatcher;
 import com.oneandone.iocunit.restassuredtest.http.GreetingResource;
 
 import io.restassured.RestAssured;
@@ -29,7 +29,7 @@ import io.restassured.http.ContentType;
 @SutClasses(GreetingResource.class)
 public class AcceptTest {
     @Inject
-    Dispatcher dispatcher;
+    IocUnitResteasyDispatcher dispatcher;
 
     final List<String> accept = new ArrayList<String>();
 

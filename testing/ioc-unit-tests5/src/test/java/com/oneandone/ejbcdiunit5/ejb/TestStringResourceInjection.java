@@ -10,7 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.oneandone.iocunit.IocJUnit5Extension;
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
-import com.oneandone.iocunit.ejb.ResourceQualifier;
+import com.oneandone.iocunit.resource.ResourceQualifier;
 import com.oneandone.iocunitejb.ejbs.ResourceTestEjb;
 
 /**

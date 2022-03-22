@@ -70,6 +70,7 @@
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest</artifactId>
             <scope>test</scope>
+            <version>${hamcrest.version}</version>
         </dependency>
         <dependency>
             <groupId>net.oneandone.ioc-unit</groupId>

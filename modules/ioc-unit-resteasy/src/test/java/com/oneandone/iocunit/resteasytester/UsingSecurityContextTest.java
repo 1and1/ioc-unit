@@ -9,7 +9,6 @@ import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.ws.rs.core.SecurityContext;
 
-import org.jboss.resteasy.core.Dispatcher;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.Test;
@@ -17,6 +16,7 @@ import org.junit.runner.RunWith;
 
 import com.oneandone.iocunit.IocUnitRunner;
 import com.oneandone.iocunit.analyzer.annotations.SutClasses;
+import com.oneandone.iocunit.jboss.resteasy.mock.IocUnitResteasyDispatcher;
 import com.oneandone.iocunit.resteasytester.resources.ResourceUsingSecurityContext;
 
 /**
@@ -26,7 +26,7 @@ import com.oneandone.iocunit.resteasytester.resources.ResourceUsingSecurityConte
 @SutClasses({ResourceUsingSecurityContext.class})
 public class UsingSecurityContextTest {
     @Inject
-    Dispatcher dispatcher;
+    IocUnitResteasyDispatcher dispatcher;
 
     @Produces
     SecurityContext createSecurityContext() {

@@ -8,7 +8,6 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import javax.inject.Inject;
 
-import org.jboss.resteasy.core.Dispatcher;
 import org.jboss.resteasy.spi.HttpRequest;
 import org.jboss.resteasy.spi.HttpRequestPreprocessor;
 import org.junit.Before;
@@ -17,6 +16,7 @@ import org.junit.runner.RunWith;
 
 import com.oneandone.iocunit.IocUnitRunner;
 import com.oneandone.iocunit.analyzer.annotations.SutClasses;
+import com.oneandone.iocunit.jboss.resteasy.mock.IocUnitResteasyDispatcher;
 import com.oneandone.iocunit.restassuredtest.http.GreetingResource;
 
 import io.restassured.RestAssured;
@@ -32,7 +32,7 @@ public class ContentTypeTest {
     private static final String UTF_16 = "UTF-16";
 
     @Inject
-    Dispatcher dispatcher;
+    IocUnitResteasyDispatcher dispatcher;
 
     final AtomicReference<String> contentType = new AtomicReference<>();
     final List<String> contentTypes = new ArrayList<>();
