@@ -33,7 +33,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.ArrayUtils;
-import com.oneandone.iocunit.analyzer.reflect.FieldUtils;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import com.oneandone.iocunit.analyzer.reflect.testbed.Ambig;
 import com.oneandone.iocunit.analyzer.reflect.testbed.Annotated;
 import com.oneandone.iocunit.analyzer.reflect.testbed.Foo;
@@ -42,8 +44,6 @@ import com.oneandone.iocunit.analyzer.reflect.testbed.PublicChild;
 import com.oneandone.iocunit.analyzer.reflect.testbed.PubliclyShadowedChild;
 import com.oneandone.iocunit.analyzer.reflect.testbed.StaticContainer;
 import com.oneandone.iocunit.analyzer.reflect.testbed.StaticContainerChild;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
 /**
  * Unit tests FieldUtils
@@ -56,12 +56,29 @@ public class FieldUtilsTest {
     static final Double D0 = Double.valueOf(0.0);
     static final Double D1 = Double.valueOf(1.0);
 
+
     @Annotated
     private PublicChild publicChild;
     private PubliclyShadowedChild publiclyShadowedChild;
     @Annotated
     private PrivatelyShadowedChild privatelyShadowedChild;
     private final Class<? super PublicChild> parentClass = PublicChild.class.getSuperclass();
+    private int javaVersion;
+
+    private static int getVersion() {
+        String version = System.getProperty("java.version");
+        if(version.startsWith("1.")) {
+            version = version.substring(2, 3);
+        }
+        else {
+            int dot = version.indexOf(".");
+            if(dot != -1) {
+                version = version.substring(0, dot);
+            }
+        }
+        return Integer.parseInt(version);
+    }
+
 
     @BeforeEach
     public void setUp() {
@@ -69,6 +86,7 @@ public class FieldUtilsTest {
         publicChild = new PublicChild();
         publiclyShadowedChild = new PubliclyShadowedChild();
         privatelyShadowedChild = new PrivatelyShadowedChild();
+        javaVersion = getVersion();
     }
 
     @Test
@@ -988,48 +1006,6 @@ public class FieldUtilsTest {
         assertThrows(IllegalArgumentException.class, () -> FieldUtils.getField(Ambig.class, "VALUE"));
     }
 
-    @Test
-    public void testRemoveFinalModifier() throws Exception {
-        final Field field = StaticContainer.class.getDeclaredField("IMMUTABLE_PRIVATE_2");
-        assertFalse(field.isAccessible());
-        assertTrue(Modifier.isFinal(field.getModifiers()));
-        FieldUtils.removeFinalModifier(field);
-        // The field is no longer final
-        assertFalse(Modifier.isFinal(field.getModifiers()));
-        assertFalse(field.isAccessible());
-    }
 
-    @Test
-    public void testRemoveFinalModifierWithAccess() throws Exception {
-        final Field field = StaticContainer.class.getDeclaredField("IMMUTABLE_PRIVATE_2");
-        assertFalse(field.isAccessible());
-        assertTrue(Modifier.isFinal(field.getModifiers()));
-        FieldUtils.removeFinalModifier(field, true);
-        // The field is no longer final
-        assertFalse(Modifier.isFinal(field.getModifiers()));
-        assertFalse(field.isAccessible());
-    }
-
-    @Test
-    public void testRemoveFinalModifierWithoutAccess() throws Exception {
-        final Field field = StaticContainer.class.getDeclaredField("IMMUTABLE_PRIVATE_2");
-        assertFalse(field.isAccessible());
-        assertTrue(Modifier.isFinal(field.getModifiers()));
-        FieldUtils.removeFinalModifier(field, false);
-        // The field is STILL final because we did not force access
-        assertTrue(Modifier.isFinal(field.getModifiers()));
-        assertFalse(field.isAccessible());
-    }
-
-    @Test
-    public void testRemoveFinalModifierAccessNotNeeded() throws Exception {
-        final Field field = StaticContainer.class.getDeclaredField("IMMUTABLE_PACKAGE");
-        assertFalse(field.isAccessible());
-        assertTrue(Modifier.isFinal(field.getModifiers()));
-        FieldUtils.removeFinalModifier(field, false);
-        // The field is no longer final AND we did not need to force access
-        assertTrue(Modifier.isFinal(field.getModifiers()));
-        assertFalse(field.isAccessible());
-    }
 
 }

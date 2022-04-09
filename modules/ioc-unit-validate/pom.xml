@@ -21,6 +21,7 @@
         </license>
     </licenses>
     <properties>
+        <version.validation-api>2.0.2</version.validation-api>
     </properties>
 
     <dependencies>
