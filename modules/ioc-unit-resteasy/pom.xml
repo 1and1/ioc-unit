@@ -23,7 +23,7 @@
     <properties>
         <resteasy.version>3.11.0.Final</resteasy.version>
         <javax.json.version>1.1</javax.json.version>
-        <rest-assured.version>4.0.0</rest-assured.version>
+        <rest-assured.version>4.5.1</rest-assured.version>
     </properties>
 
     <dependencies>
@@ -105,7 +105,36 @@
             <version>4.1</version>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>net.oneandone.ioc-unit</groupId>
+            <artifactId>ioc-unit-validate</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>6.0.22.Final</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator-cdi</artifactId>
+            <version>6.0.22.Final</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.el</groupId>
+            <artifactId>jakarta.el-api</artifactId>
+            <version>3.0.3</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>jakarta.el</artifactId>
+            <version>3.0.3</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
 </project>

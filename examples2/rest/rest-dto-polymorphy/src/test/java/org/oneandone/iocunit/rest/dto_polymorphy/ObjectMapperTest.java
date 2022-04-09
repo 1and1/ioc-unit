@@ -44,7 +44,9 @@ public class ObjectMapperTest {
     @Before
     public void before() {
         RestAssuredConfig config = config().objectMapperConfig(
-                objectMapperConfig().jackson2ObjectMapperFactory((cls, charset) -> Jackson2Config.produceObjectMapper()));
+                objectMapperConfig()
+                        .jackson2ObjectMapperFactory((cls, charset) ->
+                                Jackson2Config.produceObjectMapper()));
 
         spec = new RequestSpecBuilder()
                 .setConfig(config)
@@ -109,8 +111,11 @@ public class ObjectMapperTest {
     @Test
     public void canSendComplexPolymorph2() {
         final ComplexDtoWithSetters complexDtoWithSetters = new ComplexDtoWithSetters(new Dto2(1, "dto2"), new BDto1(0, "dto1"));
+
         given()
                 .spec(spec)
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
                 .body(complexDtoWithSetters)
                 .when().post("/rest/complexdtowithsetters")
                 .as(ComplexDto.class).equals(complexDtoWithSetters);

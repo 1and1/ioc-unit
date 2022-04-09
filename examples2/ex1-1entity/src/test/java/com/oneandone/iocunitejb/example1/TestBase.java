@@ -17,12 +17,10 @@ import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 
-import org.hibernate.validator.internal.cdi.interceptor.ValidationInterceptor;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.oneandone.iocunit.IocUnitRunner;
-import com.oneandone.iocunit.analyzer.annotations.SutClasses;
 import com.oneandone.iocunit.analyzer.annotations.SutPackages;
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 import com.oneandone.iocunit.ejb.persistence.PersistenceFactory;
@@ -36,7 +34,6 @@ import com.oneandone.iocunit.validate.ValidateClasses;
 @RunWith(IocUnitRunner.class)
 @SutPackages(Service.class)
 @TestClasses({TestResources.class})
-@SutClasses({ValidationInterceptor.class})
 @ValidateClasses({Service.class})
 public abstract class TestBase {
     @Inject

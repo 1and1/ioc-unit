@@ -4,6 +4,7 @@
         <groupId>net.oneandone.ioc-unit</groupId>
         <artifactId>ioc-unit-examples2-parent</artifactId>
         <version>2.0.43-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
 
@@ -49,7 +50,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>3.3.2</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>

@@ -98,20 +98,6 @@ public class RestResourceTest {
     }
 
     @Test
-    public void canUnMarshallDtoByJackson1() {
-        Dto toMirror = new Dto(2);
-        Dto mirrored = given()
-                .config(RestAssured.config().objectMapperConfig(new ObjectMapperConfig(ObjectMapperType.JACKSON_1)))
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .body(toMirror)
-                .when()
-                .post("/rest/dto")
-                .as(Dto.class);
-        assertThat(mirrored.getId(), equalTo(toMirror.getId()));
-        assertThat(mirrored.getDoubleNumber(), equalTo(toMirror.getDoubleNumber()));
-    }
-    @Test
     public void canUnMarshallDtoByJackson2() {
         Dto toMirror = new Dto(2);
         Dto mirrored = given()

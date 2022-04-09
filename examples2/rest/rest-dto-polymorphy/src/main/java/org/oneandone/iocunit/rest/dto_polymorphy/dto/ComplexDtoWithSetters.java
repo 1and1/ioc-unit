@@ -7,9 +7,15 @@ import org.oneandone.iocunit.rest.dto_polymorphy.dto.second.DtoInterface2;
 import org.oneandone.iocunit.rest.dto_polymorphy.dto.typename.Dto2;
 import org.oneandone.iocunit.rest.dto_polymorphy.dto.typename.DtoInterface;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 /**
  * @author aschoerk
  */
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "type")
 public class ComplexDtoWithSetters {
     private DtoInterface dtoPart1;
     private DtoInterface2 dtoPart2;

@@ -1,1 +1,1 @@
-mvn release:perform -Pweld2.3,base
+mvn release:perform -Pweld3.1,base

@@ -26,7 +26,6 @@ import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.Args;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
-import org.jboss.resteasy.spi.ResteasyProviderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -105,7 +104,7 @@ public class IocUnitResteasyHttpClient extends AbstractHttpClient implements Con
             throw new RuntimeException(e);
         } finally {
             contextData.forEach(d ->
-                    ResteasyProviderFactory.getContextDataMap().put(
+                    IocUnitMockDispatcherFactory.getContextDataMap().put(
                             d.getKey(),
                             d.getValue()));
         }

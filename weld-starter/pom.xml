@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>net.oneandone.ioc-unit</groupId>
@@ -25,14 +26,6 @@
         </developer>
     </developers>
 
-    <modules>
-        <module>weld-starter-base</module>
-        <module>weld1-starter</module>
-        <module>weld2-starter</module>
-        <module>weld3-starter</module>
-        <module>weld31-starter</module>
-        <module>weld-starter-test</module>
-    </modules>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -41,8 +34,8 @@
         <logback.version>1.0.9</logback.version>
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <delta-spike.version>1.0.1</delta-spike.version>
+        <maven-surefire-plugin.version>3.0.0-M4</maven-surefire-plugin.version>
     </properties>
-
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -65,6 +58,7 @@
         </dependencies>
     </dependencyManagement>
 
+
     <build>
         <plugins>
             <plugin>
@@ -76,9 +70,85 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.maven.surefire</groupId>
+                        <artifactId>surefire-junit47</artifactId>
+                        <version>${maven-surefire-plugin.version}</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <systemPropertyVariables>
+                        <javax.xml.parsers.DocumentBuilderFactory>
+                            com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl
+                        </javax.xml.parsers.DocumentBuilderFactory>
+                    </systemPropertyVariables>
+
+                    <reportFormat>plain</reportFormat>
+                    <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                    <!-- Sets the VM argument line used when unit tests are run. -->
+                    <!--argLine> - -add-modules java.xml,java.sql -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5006</argLine-->
+                    <argLine>
+                        ${surefire-argline}
+                    </argLine>
+                    <forkCount>1</forkCount>
+                    <reuseForks>false</reuseForks>
+                    <classpathDependencyExcludes>
+                        <classpathDependencyExclude>net.oneandone:purecdi-tests</classpathDependencyExclude>
+                    </classpathDependencyExcludes>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
     <profiles>
+        <profile>
+            <id>jdk8</id>
+            <activation>
+                <jdk>(,1.8)></jdk>
+            </activation>
+            <modules>
+                <module>weld-starter-base</module>
+                <module>weld1-starter</module>
+                <module>weld2-starter</module>
+                <!--module>weld3-starter</module-->
+                <module>weld31-starter</module>
+                <module>weld-starter-test</module>
+            </modules>
+            <properties>
+                <surefire-argline>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5006</surefire-argline>
+            </properties>
+        </profile>
+        <profile>
+            <id>jdk11ff</id>
+            <activation>
+                <jdk>(11,)></jdk>
+            </activation>
+            <modules>
+                <module>weld-starter-base</module>
+                <module>weld1-starter</module>
+                <module>weld2-starter</module>
+                <module>weld31-starter</module>
+                <module>weld-starter-test</module>
+            </modules>
+
+            <properties>
+                <surefire-argline>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5006 --add-opens
+                    java.base/java.lang=ALL-UNNAMED
+                </surefire-argline>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>org.jboss.classfilewriter</groupId>
+                    <artifactId>jboss-classfilewriter</artifactId>
+                    <version>1.2.5.Final</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+        </profile>
         <profile>
             <id>release-sign-artifacts</id>
             <activation>

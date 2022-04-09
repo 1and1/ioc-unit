@@ -65,7 +65,7 @@ public class ContentTypeTest {
                 then().
                 statusCode(200);
 
-        assertEquals(contentType.get(), "application/json; charset=" + RestAssured.config().getEncoderConfig().defaultCharsetForContentType(ContentType.JSON));
+        assertEquals(contentType.get(), "application/json");
     }
     @Test public void
     adds_specific_charset_to_content_type_by_default() {
@@ -118,8 +118,8 @@ public class ContentTypeTest {
                 then().
                 statusCode(200);
 
-        assertEquals(1,contentTypes.size());
-        assertEquals("application/json; charset=UTF-8",contentTypes.get(0));
+        assertEquals(1, contentTypes.size());
+        assertEquals("application/json", contentTypes.get(0));
     }
 
     @Test public void

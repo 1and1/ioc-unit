@@ -4,6 +4,7 @@
         <groupId>net.oneandone.ioc-unit</groupId>
         <artifactId>ioc-unit-examples2-parent</artifactId>
         <version>2.0.43-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>ioc-unit-rest-examples2-parent</artifactId>
@@ -15,7 +16,6 @@
         <module>ex8-jettyservlet_jpa</module>
         <module>minimal-resteasy3-webtarget-war</module>
         <module>minimal-resteasy3-war</module>
-        <module>minimal-resteasy2-war</module>
         <module>minimal-rest-dto-jackson</module>
         <module>rest-dto-polymorphy</module>
         <!--module>ex-swagger-openapi</module-->

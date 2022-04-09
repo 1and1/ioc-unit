@@ -81,7 +81,7 @@
                     <!-- Sets the VM argument line used when unit tests are run. -->
                     <!--argLine> - -add-modules java.xml,java.sql -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005</argLine-->
                     <argLine>
-                        -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+                        ${surefire-argline}
                     </argLine>
                     <classpathDependencyExcludes>
                         <classpathDependencyExclude>net.oneandone:purecdi-tests</classpathDependencyExclude>
