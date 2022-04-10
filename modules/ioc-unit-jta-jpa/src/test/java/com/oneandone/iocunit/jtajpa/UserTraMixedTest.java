@@ -10,9 +10,9 @@ import javax.transaction.SystemException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.oneandone.cdi.discoveryrunner.WeldDiscoveryRunner;
+import com.oneandone.iocunit.IocUnitRunner;
 
-@RunWith(WeldDiscoveryRunner.class)
+@RunWith(IocUnitRunner.class)
 public class UserTraMixedTest {
 
     @Inject

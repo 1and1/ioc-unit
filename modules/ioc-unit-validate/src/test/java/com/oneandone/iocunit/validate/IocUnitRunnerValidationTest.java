@@ -6,8 +6,8 @@ import javax.validation.ConstraintViolationException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.oneandone.cdi.discoveryrunner.annotations.TestClasses;
 import com.oneandone.iocunit.IocUnitRunner;
+import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 
 
 /**

@@ -41,6 +41,11 @@
             <version>1.0.9</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.jboss.weld</groupId>
+            <artifactId>weld-spi</artifactId>
+            <version>${weld-spi.version}</version>
+        </dependency>
 
         <!-- testing -->
         <dependency>

@@ -10,14 +10,14 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.oneandone.cdi.discoveryrunner.WeldDiscoveryRunner;
-import com.oneandone.cdi.discoveryrunner.annotations.TestClasses;
+import com.oneandone.iocunit.IocUnitRunner;
+import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 
 /**
  * @author aschoerk
  */
 @Ignore // no tests with weldstarter1 possible, because of mixing of spi version 3.0 and weld 1.1
-@RunWith(WeldDiscoveryRunner.class)
+@RunWith(IocUnitRunner.class)
 @TestClasses({EjbContextTest.class})
 public class EjbContextTest {
 

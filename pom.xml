@@ -150,7 +150,6 @@
                 <module>modules/ioc-unit-wf10</module>
                 <module>modules/ioc-unit-wf24</module>
                 <module>modules/ioc-unit-wf26</module>
-                <module>examples2</module>
             </modules>
             <dependencies>
                 <dependency>
@@ -215,6 +214,7 @@
         <profile>
             <id>junit4</id>
             <modules>
+                <module>examples2</module>
                 <module>testing</module>
             </modules>
             <build>
@@ -257,6 +257,7 @@
         <profile>
             <id>junit5</id>
             <modules>
+                <module>examples2</module>
                 <module>testing</module>
             </modules>
             <build>
