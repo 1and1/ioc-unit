@@ -2,9 +2,9 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>net.oneandone.ioc-unit</groupId>
-        <artifactId>testing</artifactId>
+        <artifactId>ioc-unit-parent</artifactId>
         <version>2.0.43-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
 
 
@@ -15,6 +15,42 @@
     <name>testing:net.oneandone.ioc-unit:purecdi-tests</name>
     <description>Examples, how to use CDI-SE without extra framework. Only weld3!</description>
     <url>https://github.com/1and1/ioc-unit</url>
+    <profiles>
+        <profile>
+            <id>weld2.3</id>
+            <dependencies>
+                <dependency>
+                    <groupId>net.oneandone.ioc-unit</groupId>
+                    <artifactId>ioc-unit-wf10-specs</artifactId>
+                    <version>${project.version}</version>
+                    <scope>provided</scope>
+                </dependency>
+                <dependency>
+                    <groupId>net.oneandone.ioc-unit</groupId>
+                    <artifactId>ioc-unit-wf10</artifactId>
+                    <version>${project.version}</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>weld3.1</id>
+            <dependencies>
+                <dependency>
+                    <groupId>net.oneandone.ioc-unit</groupId>
+                    <artifactId>ioc-unit-wf26-specs</artifactId>
+                    <version>${project.version}</version>
+                    <scope>provided</scope>
+                </dependency>
+                <dependency>
+                    <groupId>net.oneandone.ioc-unit</groupId>
+                    <artifactId>ioc-unit-wf26</artifactId>
+                    <version>${project.version}</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
     <dependencies>
 
         <!-- logging -->

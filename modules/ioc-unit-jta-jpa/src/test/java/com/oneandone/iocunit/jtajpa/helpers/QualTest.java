@@ -7,11 +7,13 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.oneandone.cdi.discoveryrunner.WeldDiscoveryRunner;
 import com.oneandone.cdi.weldstarter.CreationalContexts;
+import com.oneandone.iocunit.IocUnitRunner;
+import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 import com.oneandone.iocunit.jtajpa.TestResources;
 
-@RunWith(WeldDiscoveryRunner.class)
+@RunWith(IocUnitRunner.class)
+@TestClasses({TestResources.class})
 public class QualTest {
 
     @Inject

@@ -14,7 +14,7 @@ import javax.transaction.UserTransaction;
 
 import org.junit.jupiter.api.Test;
 
-import com.oneandone.cdi.discoveryrunner.annotations.TestClasses;
+import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 import com.oneandone.iocunit.jtajpa.beans.MainBean;
 import com.oneandone.iocunit.jtajpa.beans.MandatoryBean;
 import com.oneandone.iocunit.jtajpa.beans.NeverBean;
