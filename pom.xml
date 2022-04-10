@@ -129,8 +129,6 @@
         <profile>
             <id>base</id>
             <modules>
-                <!--module>boms</module-->
-                <!--module>discovery-runner</module-->
                 <module>weld-starter</module>
                 <module>modules/ioc-unit-analyzer</module>
                 <module>modules/ioc-unit</module>
