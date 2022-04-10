@@ -4,7 +4,10 @@ import static com.oneandone.iocunitejb.example5.AsynchronousServiceIntf.Callback
 import static com.oneandone.iocunitejb.example5.AsynchronousServiceIntf.CorrelationId;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -67,17 +70,19 @@ public class AsynchronousServiceWithCallbackTest {
     @Test
     public void canServiceInsertEntity1Remotely() throws ExecutionException, InterruptedException {
         CorrelationId correlationId = sut.newRemoteEntity1(1, "test1");
-        waitForActiveMQ();
-        assertThat(asynchronousManager.once(), is(1)); // send to remote
-        waitForActiveMQ();
-        assertThat(asynchronousManager.once(), is(1)); // send callback
+        waitForActiveMQ(2);
         assertThat(idResults.get(correlationId), is(1L));
     }
 
-    private void waitForActiveMQ() throws InterruptedException {
-        while (!asynchronousManager.thereAreOnces()) { // activemq uses extra thread for delivery of messages
-            Thread.sleep(100);
+    private void waitForActiveMQ(int destNo) throws InterruptedException {
+        Instant i = Instant.now();
+        while (destNo > 0 && Instant.now().isBefore(i.plus(600, ChronoUnit.SECONDS))) {
+            while (!asynchronousManager.thereAreOnces()) { // activemq uses extra thread for delivery of messages
+                Thread.sleep(100);
+            }
+            destNo -= asynchronousManager.once();
         }
+        assertTrue(destNo == 0);
     }
 
     @Test
@@ -86,17 +91,11 @@ public class AsynchronousServiceWithCallbackTest {
         for (int i = 0; i < 10; i++) {
             correlationIds.add(sut.newRemoteEntity1(i, "string: " + i));
         }
-        waitForActiveMQ();
-        assertThat(asynchronousManager.once(), is(10)); // sends to remote
-        waitForActiveMQ();
-        assertThat(asynchronousManager.once(), is(10)); // sends to callback
+        waitForActiveMQ(20);
         // fetch the 6th inserted entity.
         final Long id = idResults.get(correlationIds.get(5));
         final CorrelationId correlationId = sut.getRemoteStringValueFor(id);
-        waitForActiveMQ();
-        assertThat(asynchronousManager.once(), is(1)); // send to remote
-        waitForActiveMQ();
-        assertThat(asynchronousManager.once(), is(1)); // send callback
+        waitForActiveMQ(2);
         assertThat(stringResults.get(correlationId), is(remoteService.getStringValueFor(id)));
     }
 

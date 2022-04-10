@@ -1,20 +1,23 @@
 package com.oneandone.iocunitejb.example3;
 
-import com.oneandone.iocunit.analyzer.annotations.SutPackages;
-import com.oneandone.iocunit.IocUnitRunner;
-import com.oneandone.iocunit.ejb.AsynchronousManager;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import com.oneandone.iocunit.IocUnitRunner;
+import com.oneandone.iocunit.analyzer.annotations.SutPackages;
+import com.oneandone.iocunit.ejb.AsynchronousManager;
 
 /**
  * @author aschoerk
@@ -29,12 +32,13 @@ public class AsynchronousServiceMultithreadedTest {
     AsynchronousManager asynchronousManager;
 
     @Produces
-    RemoteServiceIntf remoteService = new RemoteServiceSimulator();
+    RemoteServiceSimulator remoteServiceSimulator = new RemoteServiceSimulator();
 
     @Before
     public void beforeReallyAsynchronousServiceTest() {
         asynchronousManager.setEnqueAsynchronousCalls(true); // asynchronous futures don't handle the call themselves
         asynchronousManager.startThread(); // a thread will periodically check for actions to be handled
+        assertEquals(0, remoteServiceSimulator.getAtomicInteger().get());
     }
 
     @Test
@@ -63,7 +67,7 @@ public class AsynchronousServiceMultithreadedTest {
         while (s == null) {
             s = sut.pollString(correlationId);
         }
-        assertThat(s, is(remoteService.getStringValueFor(id)));
+        assertThat(s, is(remoteServiceSimulator.getStringValueFor(id)));
     }
 
 }

@@ -108,7 +108,9 @@
         <profile>
             <id>jdk8</id>
             <activation>
-                <jdk>(,1.8)></jdk>
+                <jdk>
+                    (,1.8]
+                </jdk>
             </activation>
             <modules>
                 <module>weld-starter-base</module>
@@ -125,7 +127,9 @@
         <profile>
             <id>jdk11ff</id>
             <activation>
-                <jdk>(11,)></jdk>
+                <jdk>
+                    [11,)
+                </jdk>
             </activation>
             <modules>
                 <module>weld-starter-base</module>

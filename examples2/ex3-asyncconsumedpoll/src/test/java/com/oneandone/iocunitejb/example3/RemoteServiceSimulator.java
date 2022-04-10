@@ -23,6 +23,10 @@ public class RemoteServiceSimulator implements RemoteServiceIntf {
 
     @Override
     public String getStringValueFor(long id) {
-        return "string: " + (id-1L);
+        return "string: " + (id - 1L);
+    }
+
+    public AtomicInteger getAtomicInteger() {
+        return atomicInteger;
     }
 }

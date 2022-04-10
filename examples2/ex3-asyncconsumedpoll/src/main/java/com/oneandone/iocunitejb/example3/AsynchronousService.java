@@ -1,12 +1,13 @@
 package com.oneandone.iocunitejb.example3;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicLong;
+
+import javax.ejb.Stateless;
+import javax.inject.Inject;
 
 /**
  * Created by aschoerk on 28.06.17.
@@ -20,9 +21,9 @@ public class AsynchronousService implements AsynchronousServiceIntf {
     Map<CorrelationId, Future<?>> futures = new HashMap<>();
     AtomicLong atomicLong = new AtomicLong(0);
 
-    CorrelationId insertFuture(Future<?> furture) {
+    CorrelationId insertFuture(Future<?> future) {
         final CorrelationId correlationId = new CorrelationId(atomicLong.incrementAndGet());
-        futures.put(correlationId, furture);
+        futures.put(correlationId, future);
         return correlationId;
     }
 
