@@ -6,7 +6,7 @@ import java.util.Properties;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
-import javax.naming.InitialContext;
+import javax.enterprise.inject.spi.CDI;
 
 import org.eclipse.persistence.exceptions.DatabaseException;
 import org.eclipse.persistence.sessions.DefaultConnector;
@@ -22,10 +22,8 @@ public class EclipselinkConnectionProvider extends DefaultConnector {
 
     @Override
     public Connection connect(final Properties properties, final Session session) throws DatabaseException {
-        InitialContext initialContext = null;
         try {
-            initialContext = new InitialContext();
-            final BeanManager beanManager = (BeanManager) initialContext.lookup("java:comp/BeanManager");
+            final BeanManager beanManager = CDI.current().getBeanManager();
             Bean<?> bean = beanManager.resolve(beanManager.getBeans(JdbcSqlConverter.class));
             if(bean != null) {
                 try (CreationalContexts creationalContexts = new CreationalContexts(beanManager)) {

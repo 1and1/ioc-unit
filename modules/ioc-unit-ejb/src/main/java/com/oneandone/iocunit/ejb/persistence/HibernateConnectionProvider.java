@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
-import javax.naming.InitialContext;
+import javax.enterprise.inject.spi.CDI;
 
 import org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl;
 
@@ -20,10 +20,8 @@ public class HibernateConnectionProvider extends DriverManagerConnectionProvider
 
     @Override
     public Connection getConnection() throws SQLException {
-        InitialContext initialContext = null;
         try {
-            initialContext = new InitialContext();
-            final BeanManager beanManager = (BeanManager) initialContext.lookup("java:comp/BeanManager");
+            final BeanManager beanManager = CDI.current().getBeanManager();
             Bean<?> bean = beanManager.resolve(beanManager.getBeans(JdbcSqlConverter.class));
             if(bean != null) {
                 try (CreationalContexts creationalContexts = new CreationalContexts(beanManager)) {
