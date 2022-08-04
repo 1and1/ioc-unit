@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
+import javax.ws.rs.core.SecurityContext;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -87,7 +88,6 @@ public class IocUnitResteasyHttpClient extends AbstractHttpClient {
 
 
     protected CloseableHttpResponse innerExecute(final HttpHost target, final HttpRequest request, final HttpContext context) throws IOException, ClientProtocolException {
-
         Set<Map.Entry<Class<?>, Object>> contextData = ResteasyProviderFactory.getContextDataMap().entrySet();
         ResteasyProviderFactory.clearContextData();
         try {
@@ -95,6 +95,9 @@ public class IocUnitResteasyHttpClient extends AbstractHttpClient {
             addHeadersFromRequest(request, mockRequest);
             MockHttpResponse response = new MockHttpResponse();
             Map<Class<?>, Object> map = ResteasyProviderFactory.getContextDataMap();
+            if(DispatcherDelegate.getSecurityContext() != null) {
+                map.put(SecurityContext.class, DispatcherDelegate.getSecurityContext());
+            }
             dispatcher.invoke(mockRequest, response);
             return new CloseableMockResponse(response);
         } catch (URISyntaxException e) {
