@@ -170,14 +170,20 @@ public class DispatcherDelegate implements IocUnitResteasyDispatcher, AutoClosea
     @Override
     public void close() {
         try {
-            if (creationalContexts != null)
+            if(creationalContexts != null) {
                 creationalContexts.close();
+            }
             creationalContexts = null;
             delegate = null;
             jaxRsTestExtension = null;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
     }
+
+
+    public static SecurityContext getSecurityContext() {
+        return (SecurityContext) securityContextThreadLocal.get();
+    }
+
 }
