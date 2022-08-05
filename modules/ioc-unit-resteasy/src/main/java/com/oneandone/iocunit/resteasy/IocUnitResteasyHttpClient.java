@@ -107,7 +107,7 @@ public class IocUnitResteasyHttpClient extends AbstractHttpClient implements Con
             throw new RuntimeException(e);
         } finally {
             contextData.forEach(d ->
-                    ResteasyProviderFactory.getContextDataMap().put(
+                    IocUnitMockDispatcherFactory.getContextDataMap().put(
                             d.getKey(),
                             d.getValue()));
         }
