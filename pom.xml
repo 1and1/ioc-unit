@@ -71,7 +71,7 @@
         <deployment.port>10099</deployment.port>
         <deployment.targetdir>${basedir}/target/</deployment.targetdir>
         <mysql.connector.version>5.1.38</mysql.connector.version>
-        <h2.version>1.4.200</h2.version>
+        <h2.version>1.4.199</h2.version>
         <hamcrest.version>2.1</hamcrest.version>
 
         <site.deploy.base.url>http://maven-sites.server.lan</site.deploy.base.url>
