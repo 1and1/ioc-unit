@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
+import javax.servlet.ServletContext;
 import javax.ws.rs.core.SecurityContext;
 
 import org.apache.http.Header;
@@ -96,10 +97,13 @@ public class IocUnitResteasyHttpClient extends AbstractHttpClient implements Con
             MockHttpRequest mockRequest = createMockHttpRequestFromRequest(request);
             addHeadersFromRequest(request, mockRequest);
             MockHttpResponse response = new MockHttpResponse();
-            // TODO: save ContextDataMap
+            dispatcher.setUp();
             Map<Class<?>, Object> map = IocUnitMockDispatcherFactory.getContextDataMap();
-            if(DispatcherDelegate.getSecurityContext() != null) {
+            if(DispatcherDelegate.getSecurityContext() != null && !map.containsKey(SecurityContext.class)) {
                 map.put(SecurityContext.class, DispatcherDelegate.getSecurityContext());
+            }
+            if(DispatcherDelegate.getServletContext() != null && !map.containsKey(ServletContext.class)) {
+                map.put(ServletContext.class, DispatcherDelegate.getServletContext());
             }
             dispatcher.invoke(mockRequest, response);
             return new CloseableMockResponse(response);

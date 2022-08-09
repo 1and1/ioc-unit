@@ -22,4 +22,6 @@ public interface IocUnitResteasyDispatcher {
     void addHttpPreprocessor(HttpRequestPreprocessor var1);
 
     Map<Class, Object> getDefaultContextObjects();
+
+    void setUp();
 }

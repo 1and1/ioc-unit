@@ -110,6 +110,11 @@ public class IocUnitMockDispatcherFactory {
             public Map<Class, Object> getDefaultContextObjects() {
                 return dispatcher.getDefaultContextObjects();
             }
+
+            @Override
+            public void setUp() {
+
+            }
         };
     }
 

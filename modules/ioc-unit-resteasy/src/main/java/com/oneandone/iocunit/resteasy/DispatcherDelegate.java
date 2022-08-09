@@ -4,6 +4,7 @@ import java.util.Map;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.naming.NamingException;
+import javax.servlet.ServletContext;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.ext.Provider;
@@ -37,7 +38,8 @@ public class DispatcherDelegate implements IocUnitResteasyDispatcher, AutoClosea
     Logger logger = LoggerFactory.getLogger("RestEasy MockDispatcher Delegate");
     boolean setupDone = false;
 
-    static ThreadLocal<Object> securityContextThreadLocal = new ThreadLocal<>();
+    static ThreadLocal<SecurityContext> securityContextThreadLocal = new ThreadLocal<>();
+    static ThreadLocal<ServletContext> servletContextThreadLocal = new ThreadLocal<>();
 
     private void addAnnotationDefinedJaxRSClasses() {
         Boolean onlyAnnotationDefined = RestEasyTestExtensionServices.onlyAnnotationDefined.get();
@@ -84,20 +86,24 @@ public class DispatcherDelegate implements IocUnitResteasyDispatcher, AutoClosea
             Object res = creationalContexts.create(clazz, ApplicationScoped.class);
             IocUnitMockDispatcherFactory.register(res);
         }
+        handleContext(ServletContext.class, servletContextThreadLocal);
+        handleContext(SecurityContext.class, securityContextThreadLocal);
+        checkJackson(provfactory);
+    }
+
+    private <T> void handleContext(Class<T> interfaceClass, ThreadLocal<T> threadLocalContainer) {
         try {
-            Object securityContext = creationalContexts.create(SecurityContext.class, ApplicationScoped.class);
-            IocUnitMockDispatcherFactory.getContextDataMap().put(SecurityContext.class, securityContext);
-            securityContextThreadLocal.set(securityContext);
+            T bean = (T) creationalContexts.create(interfaceClass, ApplicationScoped.class);
+            IocUnitMockDispatcherFactory.getContextDataMap().put(interfaceClass, bean);
+            threadLocalContainer.set(bean);
         } catch (Exception e) {
             if(e.getClass().getName().contains("AmbiguousResolutionException")) {
                 throw new RuntimeException(e);
             }
             else {
-                logger.info("No Test SecurityContext found");
+                logger.info("No Test " + interfaceClass.getName() + " found");
             }
         }
-
-        checkJackson(provfactory);
     }
 
     private void checkJackson(final ResteasyProviderFactory provfactory) {
@@ -183,7 +189,11 @@ public class DispatcherDelegate implements IocUnitResteasyDispatcher, AutoClosea
 
 
     public static SecurityContext getSecurityContext() {
-        return (SecurityContext) securityContextThreadLocal.get();
+        return securityContextThreadLocal.get();
+    }
+
+    public static ServletContext getServletContext() {
+        return servletContextThreadLocal.get();
     }
 
 }
