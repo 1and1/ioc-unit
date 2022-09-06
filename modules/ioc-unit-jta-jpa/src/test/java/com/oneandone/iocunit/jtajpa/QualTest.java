@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
+import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
 
@@ -23,10 +24,13 @@ public class QualTest {
     @PersQualifier(name = "ss")
     String s;
 
+    @Inject
+    BeanManager beanManager;
+
     @Produces
     @PersQualifier
     String producer(InjectionPoint p) {
-        if (p != null && p.getQualifiers() != null)
+        if(p != null && p.getQualifiers() != null)
             for (Annotation a : p.getQualifiers()) {
                 System.out.println(a.toString());
                 if(a.annotationType().equals(PersQualifier.class)) {
@@ -42,7 +46,7 @@ public class QualTest {
     @Test
     public void test() throws Exception {
 
-        try (CreationalContexts creationalContexts = new CreationalContexts()) {
+        try (CreationalContexts creationalContexts = new CreationalContexts(beanManager)) {
             final PersQualifier.PersQualifierLiteral qualifier = new PersQualifier.PersQualifierLiteral("test", "", "");
             String res = (String) creationalContexts.create(String.class, ApplicationScoped.class, qualifier);
             Assert.assertTrue(s.equals("ss"));

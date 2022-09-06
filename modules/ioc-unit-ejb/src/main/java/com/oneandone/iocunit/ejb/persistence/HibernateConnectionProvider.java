@@ -11,6 +11,7 @@ import javax.enterprise.inject.spi.CDI;
 import org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl;
 
 import com.oneandone.cdi.weldstarter.CreationalContexts;
+import com.oneandone.iocunit.IocUnitAnalyzeAndStarter;
 
 /**
  * @author aschoerk
@@ -21,7 +22,10 @@ public class HibernateConnectionProvider extends DriverManagerConnectionProvider
     @Override
     public Connection getConnection() throws SQLException {
         try {
-            final BeanManager beanManager = CDI.current().getBeanManager();
+            BeanManager beanManager = IocUnitAnalyzeAndStarter.getInitBeanManager();
+            if(beanManager == null) {
+                beanManager = CDI.current().getBeanManager();
+            }
             Bean<?> bean = beanManager.resolve(beanManager.getBeans(JdbcSqlConverter.class));
             if(bean != null) {
                 try (CreationalContexts creationalContexts = new CreationalContexts(beanManager)) {

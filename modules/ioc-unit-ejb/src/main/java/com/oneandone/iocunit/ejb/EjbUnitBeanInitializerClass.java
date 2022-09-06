@@ -8,7 +8,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
-import javax.naming.NamingException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,13 +44,9 @@ public class EjbUnitBeanInitializerClass {
     public void init() {
         List<Class<?>> startups = ejbExtensionExtended.getStartupSingletons();
         if (!startups.isEmpty()) {
-            try {
-                creationalContexts = new CreationalContexts();
-                for (Class<?> clazz: startups) {
-                    creationalContexts.create(clazz, ApplicationScoped.class);
-                }
-            } catch (NamingException e) {
-                throw new RuntimeException(e);
+            creationalContexts = new CreationalContexts(bm);
+            for (Class<?> clazz : startups) {
+                creationalContexts.create(clazz, ApplicationScoped.class);
             }
         }
         asynchronousManager.addTimerMethods();

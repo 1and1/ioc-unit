@@ -22,7 +22,8 @@ abstract public class XmlAwarePersistenceFactory extends PersistenceFactory {
 
     protected EntityManagerFactory createEntityManagerFactory() {
         PersistenceProvider actProvider = getPersistenceProvider();
-        return actProvider.createEntityManagerFactory(getPersistenceUnitName(), getPropertiesMap());
+        EntityManagerFactory res = actProvider.createEntityManagerFactory(getPersistenceUnitName(), getPropertiesMap());
+        return res;
     }
 
 

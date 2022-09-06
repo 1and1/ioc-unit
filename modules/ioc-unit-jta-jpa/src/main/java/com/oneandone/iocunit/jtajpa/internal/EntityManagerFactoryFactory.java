@@ -4,12 +4,13 @@ import java.io.Serializable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Disposes;
 import javax.enterprise.inject.Produces;
+import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
-import javax.naming.NamingException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -22,7 +23,6 @@ import javax.transaction.UserTransaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.arjuna.ats.arjuna.StateManager;
 import com.arjuna.ats.arjuna.coordinator.TxControl;
 import com.arjuna.ats.internal.jta.transaction.arjunacore.TransactionImple;
 import com.oneandone.cdi.weldstarter.CreationalContexts;
@@ -40,45 +40,46 @@ public class EntityManagerFactoryFactory {
     @Inject
     UserTransaction userTransaction;
 
+    @Inject
+    BeanManager beanManager;
+
     CreationalContexts creationalContexts;
 
     {
         TxControl.setDefaultTimeout(1200);  // after 20 Minutes end transaction, Debugging should be possible
     }
-    
+
     Map<String, EntityManager> traLess = new ConcurrentHashMap<>();
-    
+
     EntityManager getTraLessEM(String puName) {
         long threadId = Thread.currentThread().getId();
         String key = threadId + "__" + puName;
         EntityManager res = traLess.get(key);
-        if (res == null || !res.isOpen()) {
+        if(res == null || !res.isOpen()) {
             res = getEntityManager(puName, false).getEntityManager();
             traLess.put(key, res);
         }
         return res;
     }
 
+    @PostConstruct
+    public void postConstruct() {
+        creationalContexts = new CreationalContexts(beanManager);
+    }
+
     @PreDestroy
     public void preDestroy() {
         try {
-            if ( userTransaction.getStatus() != Status.STATUS_NO_TRANSACTION)
+            if(userTransaction.getStatus() != Status.STATUS_NO_TRANSACTION) {
                 userTransaction.rollback();
+            }
         } catch (SystemException e) {
-            logger.error("Disposing UserTransaction in preDestroy delivered",e);
+            logger.error("Disposing UserTransaction in preDestroy delivered", e);
         }
         currentPuName.set(null);
         currentFactory.set(null);
         for (EntityManager em: traLess.values()) {
             em.close();
-        }
-    }
-
-    public EntityManagerFactoryFactory() {
-        try {
-            creationalContexts = new CreationalContexts();
-        } catch (NamingException e) {
-            throw new RuntimeException(e);
         }
     }
 

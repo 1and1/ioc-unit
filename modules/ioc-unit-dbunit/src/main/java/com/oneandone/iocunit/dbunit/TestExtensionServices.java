@@ -14,10 +14,8 @@ import javax.enterprise.inject.Any;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.util.AnnotationLiteral;
-import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-import com.oneandone.iocunit.util.Annotations;
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.DefaultDatabaseTester;
 import org.dbunit.IDatabaseTester;
@@ -36,6 +34,7 @@ import com.oneandone.cdi.weldstarter.WeldSetupClass;
 import com.oneandone.cdi.weldstarter.spi.TestExtensionService;
 import com.oneandone.cdi.weldstarter.spi.WeldStarter;
 import com.oneandone.iocunit.ejb.persistence.PersistenceFactory;
+import com.oneandone.iocunit.util.Annotations;
 
 /**
  * @author aschoerk
@@ -66,22 +65,19 @@ public class TestExtensionServices implements TestExtensionService {
 
             }
         }
-        try {
-            BeanManager bm = CreationalContexts.getBeanManager();
-            Set<Bean<?>> beans = bm.getBeans(PersistenceFactory.class, ANY_LITERAL);
-            for (Bean b : beans) {
-                HashSet<Bean<?>> h = new HashSet<>();
-                h.add(b);
-                Bean<?> b2 = bm.resolve(h);
-                if(b2 != null) {
-                    PersistenceFactory instance = (PersistenceFactory) creationalContexts.create(b2, ApplicationScoped.class);
-                    if(names.contains(instance.getPersistenceUnitName())) {
-                        res.put(instance.getPersistenceUnitName(), instance.produceDataSource());
-                    }
+
+        BeanManager bm = creationalContexts.getBeanManager();
+        Set<Bean<?>> beans = bm.getBeans(PersistenceFactory.class, ANY_LITERAL);
+        for (Bean b : beans) {
+            HashSet<Bean<?>> h = new HashSet<>();
+            h.add(b);
+            Bean<?> b2 = bm.resolve(h);
+            if(b2 != null) {
+                PersistenceFactory instance = (PersistenceFactory) creationalContexts.create(b2, ApplicationScoped.class);
+                if(names.contains(instance.getPersistenceUnitName())) {
+                    res.put(instance.getPersistenceUnitName(), instance.produceDataSource());
                 }
             }
-        } catch (NamingException e) {
-            throw new RuntimeException(e);
         }
         return res;
     }

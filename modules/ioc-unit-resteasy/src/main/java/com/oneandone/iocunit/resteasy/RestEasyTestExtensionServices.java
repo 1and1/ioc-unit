@@ -61,7 +61,6 @@ public class RestEasyTestExtensionServices implements TestExtensionService {
         } catch (NoClassDefFoundError ex) {
             ;
         }
-
         return result;
     }
 
@@ -72,6 +71,7 @@ public class RestEasyTestExtensionServices implements TestExtensionService {
         result.add(RestEasyMockInit.class);
         result.add(AuthInterceptor.class);
         result.add(IocUnitResteasyHttpClient.class);
+        result.add(DispatcherDelegate.class);
         try {
             Class<?> tmp = Class.forName("javax.servlet.http.HttpSession.class");
             result.add(IocUnitHttpSession.class);

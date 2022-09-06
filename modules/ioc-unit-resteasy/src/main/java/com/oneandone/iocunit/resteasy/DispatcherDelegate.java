@@ -3,7 +3,8 @@ package com.oneandone.iocunit.resteasy;
 import java.util.Map;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.naming.NamingException;
+import javax.enterprise.inject.spi.BeanManager;
+import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.ext.Provider;
@@ -24,14 +25,15 @@ import com.oneandone.cdi.weldstarter.WeldSetupClass;
 /**
  * @author aschoerk
  */
+@ApplicationScoped
 public class DispatcherDelegate implements Dispatcher, AutoCloseable {
 
-
-    public DispatcherDelegate(final JaxRsRestEasyTestExtension jaxRsTestExtension) {
-        this.jaxRsTestExtension = jaxRsTestExtension;
-    }
-
+    @Inject
     private JaxRsRestEasyTestExtension jaxRsTestExtension;
+
+    @Inject
+    private BeanManager beanManager;
+
     private CreationalContexts creationalContexts;
 
     Logger logger = LoggerFactory.getLogger("RestEasy MockDispatcher Delegate");
@@ -63,21 +65,17 @@ public class DispatcherDelegate implements Dispatcher, AutoCloseable {
         setupDone = true;
         delegate = MockDispatcherFactory.createDispatcher();
         addAnnotationDefinedJaxRSClasses();
-        try {
-            creationalContexts = new CreationalContexts();
-            for (Class<?> clazz : jaxRsTestExtension.getResourceClasses()) {
-                logger.info("Creating restresource {}", clazz.getName());
-                try {
-                    Object res = creationalContexts.create(clazz, ApplicationScoped.class);
-                    delegate.getRegistry().addSingletonResource(res);
-                } catch (Throwable thw) {
-                    logger.debug(thw.getMessage(), thw);
-                }
+        creationalContexts = new CreationalContexts(beanManager);
+        for (Class<?> clazz : jaxRsTestExtension.getResourceClasses()) {
+            logger.info("Creating restresource {}", clazz.getName());
+            try {
+                Object res = creationalContexts.create(clazz, ApplicationScoped.class);
+                delegate.getRegistry().addSingletonResource(res);
+            } catch (Throwable thw) {
+                logger.debug(thw.getMessage(), thw);
             }
-
-        } catch (NamingException e) {
-            throw new RuntimeException(e);
         }
+
         ResteasyProviderFactory provfactory = delegate.getProviderFactory();
         for (Class<?> clazz : jaxRsTestExtension.getProviders()) {
             logger.info("Creating rest-provider {}", clazz.getName());

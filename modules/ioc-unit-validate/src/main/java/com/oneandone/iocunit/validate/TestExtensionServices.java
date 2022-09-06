@@ -8,7 +8,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.spi.Extension;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.validation.ValidatorFactory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,37 +40,49 @@ public class TestExtensionServices implements TestExtensionService {
     }
 
     @Override
+    public void postStartupAction(final CreationalContexts creationalContexts, final WeldStarter weldStarter) {
+
+        try {
+
+            ValidatorFactory vfac = creationalContexts.create(ValidatorFactory.class, ApplicationScoped.class);
+            try {
+                Context context = new InitialContext();
+                if(context.lookup("java:comp/ValidatorFactory") != null) {
+                    context.rebind("java:comp/ValidatorFactory", vfac);
+                }
+                else {
+                    context.bind("java:comp/ValidatorFactory", vfac);
+                }
+                context.close();
+            } catch (NamingException nm) {
+                throw new RuntimeException(nm);
+            }
+        } catch (Exception e) {
+            logger.error("Exception encountered trying to add ValidatorFactory to Naming", e);
+        }
+    }
+
+    @Override
     public List<Extension> getExtensions() {
         List<Extension> result = new ArrayList<>();
         try {
-            result.add(new ValidateTestExtension());
-        } catch (NoClassDefFoundError ex) {
-            ;
+            Class<?> c = Class.forName("org.hibernate.validator.cdi.internal.ValidationExtension");
+            result.add((Extension) c.newInstance());
+        } catch (NoClassDefFoundError e) {
+
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+
         }
+        try {
+            Class<?> c = Class.forName("org.hibernate.validator.internal.cdi.ValidationExtension");
+            result.add((Extension) c.newInstance());
+        } catch (NoClassDefFoundError e) {
 
-        return result;
-    }
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
 
-    @Override
-    public void postStartupAction(final CreationalContexts creationalContexts, final WeldStarter weldStarter) {
-
-    }
-
-
-    @Override
-    public List<Class<?>> testClasses() {
-        List<Class<?>> result = new ArrayList<Class<?>>() {
-
-            private static final long serialVersionUID = -519466824492284375L;
-
-            {
-                add(ValidationInitializer.class);
-            }
-
-        };
-        if(ValidationClassFinder.getInterceptor() != null) {
-            result.add(ValidationClassFinder.getInterceptor());
         }
+        result.add(new ValidateTestExtension());
+
         return result;
     }
 

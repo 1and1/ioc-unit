@@ -128,8 +128,15 @@ public class IocUnitAnalyzeAndStarter {
         }
     }
 
+    private static ThreadLocal<BeanManager> initBeanManager = new ThreadLocal<>();
+
+    public static BeanManager getInitBeanManager() {
+        return initBeanManager.get();
+    }
+
     public void postStartupActions() {
         if(testExtensionServices != null) {
+            initBeanManager.set(creationalContexts.getBeanManager());
             for (TestExtensionService te : testExtensionServices) {
                 te.postStartupAction(creationalContexts, weldStarter);
             }
@@ -141,6 +148,7 @@ public class IocUnitAnalyzeAndStarter {
             creationalContexts.closeIt();
             creationalContexts = null;
         }
+        initBeanManager.set(null);
         getWeldStarter().tearDown();
         weldStarter = null;
     }

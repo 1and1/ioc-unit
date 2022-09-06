@@ -7,10 +7,9 @@ import java.lang.reflect.Method;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Produces;
+import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 
-import org.jboss.resteasy.core.Dispatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,26 +23,24 @@ public class RestEasyMockInit {
 
     Logger logger = LoggerFactory.getLogger("RestEasyMockDispatcherFactory init");
 
-    DispatcherDelegate dispatcher;
+    @Inject
+    private JaxRsRestEasyTestExtension jaxRsRestEasyTestExtension;
 
     @Inject
-    JaxRsRestEasyTestExtension jaxRsRestEasyTestExtension;
+    private BeanManager beanManager;
 
-    @Produces
-    public Dispatcher getDispatcher() {
-        return dispatcher;
-    }
+    @Inject
+    private DispatcherDelegate dispatcher;
 
     Closeable factory = null;
 
     @PostConstruct
     public void setUp() {
-        dispatcher = new DispatcherDelegate(jaxRsRestEasyTestExtension);
 
         try {
             Class initClass = Class.forName("com.oneandone.iocunit.resteasy.restassured.Initializer");
             Method initmethod = initClass.getMethod("init", DispatcherDelegate.class);
-            factory = (Closeable)initmethod.invoke(null, dispatcher);
+            factory = (Closeable) initmethod.invoke(null, dispatcher);
         } catch (Throwable e) {
             handleNotDefinedError(e);
         }
