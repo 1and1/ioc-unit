@@ -79,6 +79,18 @@ public class RestEasyTestExtensionServices implements TestExtensionService {
 
     @Override
     public List<Class<?>> testClasses() {
+        List<Class<?>> result = new ArrayList<>();
+        result.add(RestEasyMockInit.class);
+        result.add(AuthInterceptor.class);
+        result.add(IocUnitResteasyHttpClient.class);
+        result.add(DispatcherDelegate.class);
+        try {
+            Class<?> tmp = Class.forName("javax.servlet.http.HttpSession.class");
+            result.add(IocUnitHttpSession.class);
+            result.add(IocUnitHttpServletRequest.class);
+        } catch (Exception e) {
+            logger.info("Resteasy usage without HttpSession-Class.");
+        }
         return testClasses;
     }
 

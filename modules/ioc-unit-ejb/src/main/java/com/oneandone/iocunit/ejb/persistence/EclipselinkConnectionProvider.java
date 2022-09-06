@@ -13,7 +13,7 @@ import org.eclipse.persistence.sessions.DefaultConnector;
 import org.eclipse.persistence.sessions.Session;
 
 import com.oneandone.cdi.weldstarter.CreationalContexts;
-import com.oneandone.iocunit.jpa.XmlAwarePersistenceFactory;
+import com.oneandone.iocunit.IocUnitAnalyzeAndStarter;
 
 /**
  * @author aschoerk
@@ -24,7 +24,7 @@ public class EclipselinkConnectionProvider extends DefaultConnector {
     @Override
     public Connection connect(final Properties properties, final Session session) throws DatabaseException {
         try {
-            BeanManager beanManager = XmlAwarePersistenceFactory.getCurrentBeanManager();
+            BeanManager beanManager = IocUnitAnalyzeAndStarter.getInitBeanManager();
             if(beanManager == null) {
                 beanManager = CDI.current().getBeanManager();
             }

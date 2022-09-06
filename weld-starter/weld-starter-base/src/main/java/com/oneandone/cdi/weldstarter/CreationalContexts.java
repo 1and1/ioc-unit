@@ -28,16 +28,6 @@ public class CreationalContexts implements AutoCloseable {
     private Logger logger = null;
 
     /**
-     * Create and search for BeanManager in InitialContext
-     *
-     * @throws NamingException thrown when problems with InitialContext
-     */
-    public CreationalContexts() throws NamingException {
-        BeanManager tmpBm = discoverBeanManager();
-        this.bm = tmpBm;
-    }
-
-    /**
      * Create it
      *
      * @param bm the Weld-Beanmanager

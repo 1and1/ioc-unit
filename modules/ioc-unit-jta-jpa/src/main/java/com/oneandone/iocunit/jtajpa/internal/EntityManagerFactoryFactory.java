@@ -3,11 +3,11 @@ package com.oneandone.iocunit.jtajpa.internal;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.spi.PassivationCapable;
 import javax.inject.Inject;
-import javax.naming.NamingException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -32,24 +32,26 @@ public class EntityManagerFactoryFactory implements PassivationCapable {
     public static ThreadLocal<EntityManagerWrapper> traLessEntityManagers = new ThreadLocal<>();
     static Logger logger = LoggerFactory.getLogger(EntityManagerFactoryFactory.class);
     Map<String, EntityManagerFactory> factories = new ConcurrentHashMap<>();
-    CreationalContexts creationalContexts;
+
     @Inject
-    private UserTransaction userTransaction;
+    UserTransaction userTransaction;
+
+    @Inject
+    BeanManager beanManager;
+
+    CreationalContexts creationalContexts;
 
     {
         TxControl.setDefaultTimeout(1200);  // after 20 Minutes end transaction, Debugging should be possible
     }
 
-    public EntityManagerFactoryFactory() {
-        try {
-            creationalContexts = new CreationalContexts();
-        } catch (NamingException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     EntityManager getTraLessEM(String puName) {
         return getEntityManager(puName, false);
+    }
+
+    @PostConstruct
+    public void postConstruct() {
+        creationalContexts = new CreationalContexts(beanManager);
     }
 
     @PreDestroy
