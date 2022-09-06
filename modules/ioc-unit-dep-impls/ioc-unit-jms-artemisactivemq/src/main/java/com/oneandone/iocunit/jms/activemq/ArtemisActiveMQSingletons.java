@@ -76,7 +76,7 @@ public class ArtemisActiveMQSingletons implements JmsSingletonsIntf {
     @Override
     public void destroy() {
         try {
-            mdbConnection.get().close();
+            getConnection().close();
             embedded.get().stop();
         } catch (JMSException e) {
             throw new RuntimeException(e);
@@ -89,7 +89,7 @@ public class ArtemisActiveMQSingletons implements JmsSingletonsIntf {
     @Override
     public Queue createQueue(String name) {
         if(!destinations.get().containsKey(name)) {
-            try (Session session = mdbConnection.get().createSession()) {
+            try (Session session = getConnection().createSession()) {
                 destinations.get().put(name, session.createQueue(name));
             } catch (JMSException e) {
                 throw new RuntimeException(e);
@@ -101,7 +101,7 @@ public class ArtemisActiveMQSingletons implements JmsSingletonsIntf {
     @Override
     public Topic createTopic(String name) {
         if(!destinations.get().containsKey(name)) {
-            try (Session session = mdbConnection.get().createSession()) {
+            try (Session session = getConnection().createSession()) {
                 destinations.get().put(name, session.createTopic(name));
             } catch (JMSException e) {
                 throw new RuntimeException(e);
@@ -119,10 +119,14 @@ public class ArtemisActiveMQSingletons implements JmsSingletonsIntf {
     @Override
     public ConnectionFactory getConnectionFactory() throws Exception {
         if(embedded.get() == null) {
-            embedded.set(new EmbeddedActiveMQ());
-
-            embedded.get().start();
-
+            EmbeddedActiveMQ embeddedObject = new EmbeddedActiveMQ();
+            try {
+                embeddedObject.start();
+            } catch (Exception e) {
+                logger.error("Initializing Artemis", e);
+                throw e;
+            }
+            embedded.set(embeddedObject);
         }
         if(connectionFactoryAtomicReference.get() == null) {
             ServerLocator serverLocator = ActiveMQClient.createServerLocatorWithoutHA(new TransportConfiguration(

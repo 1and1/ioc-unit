@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Set;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.spi.CDI;
 import javax.enterprise.inject.spi.Extension;
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -152,7 +151,7 @@ public class RestEasyTestExtensionServices implements TestExtensionService {
         creationalContexts.create(RestEasyMockInit.class, ApplicationScoped.class);
         ResteasyProviderFactory.setInstance(null);
         try {
-            ValidatorFactory vfac = CDI.current().select(ValidatorFactory.class).get();
+            ValidatorFactory vfac = creationalContexts.create(ValidatorFactory.class, ApplicationScoped.class);
             try {
                 Context context = new InitialContext();
                 if(context.lookup("java:comp/ValidatorFactory") != null) {

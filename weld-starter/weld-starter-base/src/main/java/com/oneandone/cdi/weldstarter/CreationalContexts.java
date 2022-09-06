@@ -20,11 +20,11 @@ import org.slf4j.LoggerFactory;
  *
  * @author aschoerk
  */
-public class CreationalContexts<T> implements AutoCloseable {
+public class CreationalContexts implements AutoCloseable {
 
 
     private final BeanManager bm;
-    private List<CreationalContext<T>> creationalContexts = new ArrayList<>();
+    private List<CreationalContext<?>> creationalContexts = new ArrayList<>();
     private Logger logger = null;
 
     /**
@@ -33,7 +33,7 @@ public class CreationalContexts<T> implements AutoCloseable {
      * @throws NamingException thrown when problems with InitialContext
      */
     public CreationalContexts() throws NamingException {
-        BeanManager tmpBm = getBeanManager();
+        BeanManager tmpBm = discoverBeanManager();
         this.bm = tmpBm;
     }
 
@@ -46,7 +46,11 @@ public class CreationalContexts<T> implements AutoCloseable {
         this.bm = bm;
     }
 
-    public static BeanManager getBeanManager() throws NamingException {
+    public BeanManager getBeanManager() {
+        return bm;
+    }
+
+    public static BeanManager discoverBeanManager() throws NamingException {
         BeanManager tmpBm = null;
         try {
             // the following code simulates: tmpBm = CDI.current().getBeanManager();
@@ -75,14 +79,14 @@ public class CreationalContexts<T> implements AutoCloseable {
      * @param scope either ApplicationScoped or Dependent
      * @return the created bean
      */
-    public Object create(Class<T> clazz, Class<? extends Annotation> scope, Annotation... qualifiers) {
+    public <C> C create(Class<C> clazz, Class<? extends Annotation> scope, Annotation... qualifiers) {
         Bean<?> bean = bm.resolve(bm.getBeans(clazz, qualifiers));
         if(bean != null) {
-            Object result = create((Contextual<T>) bean, scope);
+            Object result = create((Contextual<C>) bean, scope);
             if(result == null) {
                 throw new RuntimeException("Could not create Bean to be initialized of Class: " + clazz);
             }
-            return result;
+            return (C) result;
         }
         else {
             throw new RuntimeException("Could not resolve Bean to be initialized of Class: " + clazz);
@@ -96,12 +100,12 @@ public class CreationalContexts<T> implements AutoCloseable {
      * @param scope either ApplicationScoped or Dependent
      * @return the created bean
      */
-    public Object create(Contextual<T> b, Class<? extends Annotation> scope) {
+    public <C> C create(Contextual<C> b, Class<? extends Annotation> scope) {
         try {
-            final CreationalContext<T> cb = bm.createCreationalContext(b);
+            final CreationalContext<C> cb = bm.createCreationalContext(b);
             // assumes the bean will exist only once
             Context context = bm.getContext(scope);
-            final Object o = context.get(b, cb);
+            final C o = context.get(b, cb);
             creationalContexts.add(cb);
             return o;
         } catch (Throwable thw) {

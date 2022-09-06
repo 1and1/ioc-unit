@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.enterprise.inject.spi.CDI;
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.spi.Extension;
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -43,7 +43,8 @@ public class TestExtensionServices implements TestExtensionService {
     public void postStartupAction(final CreationalContexts creationalContexts, final WeldStarter weldStarter) {
 
         try {
-            ValidatorFactory vfac = CDI.current().select(ValidatorFactory.class).get();
+
+            ValidatorFactory vfac = creationalContexts.create(ValidatorFactory.class, ApplicationScoped.class);
             try {
                 Context context = new InitialContext();
                 if(context.lookup("java:comp/ValidatorFactory") != null) {
