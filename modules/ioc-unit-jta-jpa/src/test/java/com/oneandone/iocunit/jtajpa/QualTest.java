@@ -16,6 +16,7 @@ import org.junit.runner.RunWith;
 
 import com.oneandone.cdi.weldstarter.CreationalContexts;
 import com.oneandone.iocunit.IocUnitRunner;
+import com.oneandone.iocunit.jtajpa.helpers.PersQualifier;
 
 @RunWith(IocUnitRunner.class)
 public class QualTest {

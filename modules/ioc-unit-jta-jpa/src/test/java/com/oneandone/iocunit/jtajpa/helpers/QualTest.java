@@ -1,6 +1,7 @@
 package com.oneandone.iocunit.jtajpa.helpers;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 
 import org.junit.Assert;
@@ -20,10 +21,13 @@ public class QualTest {
     @PersQualifier(name = "ss")
     String s;
 
+    @Inject
+    BeanManager beanManager;
+
     @Test
     public void test() throws Exception {
 
-        try (CreationalContexts creationalContexts = new CreationalContexts()) {
+        try (CreationalContexts creationalContexts = new CreationalContexts(beanManager)) {
             final PersQualifier.PersQualifierLiteral qualifier = new PersQualifier.PersQualifierLiteral("test", "", "");
             String res = (String) creationalContexts.create(String.class, ApplicationScoped.class, qualifier);
             Assert.assertTrue(s.equals("ss"));

@@ -13,6 +13,7 @@ import javax.enterprise.inject.spi.Extension;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.servlet.ServletContext;
 import javax.validation.ValidatorFactory;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.SecurityContext;
@@ -20,6 +21,7 @@ import javax.ws.rs.ext.Provider;
 
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
+import org.jboss.weld.context.http.HttpRequestContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,6 +33,9 @@ import com.oneandone.iocunit.analyzer.ClasspathHandler;
 import com.oneandone.iocunit.analyzer.ConfigStatics;
 import com.oneandone.iocunit.resteasy.auth.AuthInterceptor;
 import com.oneandone.iocunit.resteasy.auth.TestAuth;
+import com.oneandone.iocunit.resteasy.servlet.IocUnitHttpServletRequest;
+import com.oneandone.iocunit.resteasy.servlet.IocUnitHttpSession;
+import com.oneandone.iocunit.resteasy.servlet.IocUnitServletContextHolder;
 import com.oneandone.iocunit.util.Annotations;
 
 /**
@@ -66,17 +71,6 @@ public class RestEasyTestExtensionServices implements TestExtensionService {
         return result;
     }
 
-    public static List<Class<?>> testClasses = new ArrayList<Class<?>>() {
-
-        private static final long serialVersionUID = -4796654729518427543L;
-
-        {
-            add(RestEasyMockInit.class);
-            add(AuthInterceptor.class);
-        }
-    };
-
-
     @Override
     public List<Class<?>> testClasses() {
         List<Class<?>> result = new ArrayList<>();
@@ -84,14 +78,16 @@ public class RestEasyTestExtensionServices implements TestExtensionService {
         result.add(AuthInterceptor.class);
         result.add(IocUnitResteasyHttpClient.class);
         result.add(DispatcherDelegate.class);
+        result.add(IocUnitServletContextHolder.class);
+        result.add(IocUnitResteasyClientBuilder.class);
         try {
-            Class<?> tmp = Class.forName("javax.servlet.http.HttpSession.class");
+            Class<?> tmp = Class.forName("javax.servlet.http.HttpSession");
             result.add(IocUnitHttpSession.class);
             result.add(IocUnitHttpServletRequest.class);
         } catch (Exception e) {
             logger.info("Resteasy usage without HttpSession-Class.");
         }
-        return testClasses;
+        return result;
     }
 
     public static List<Class<?>> availableTestClasses = new ArrayList<Class<?>>() {
@@ -231,5 +227,17 @@ public class RestEasyTestExtensionServices implements TestExtensionService {
         else {
             testSecurityThreadLocal.set(null);
         }
+    }
+
+    @Override
+    public List<? extends Class<?>> excludeAsInjects() {
+        List<Class<?>> result = new ArrayList<>();
+        try {
+            result.add(HttpRequestContext.class);
+            result.add(ServletContext.class);
+        } catch (NoClassDefFoundError ex) {
+            ;
+        }
+        return result;
     }
 }

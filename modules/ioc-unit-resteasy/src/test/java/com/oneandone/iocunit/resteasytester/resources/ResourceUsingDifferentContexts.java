@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
@@ -45,8 +46,17 @@ public class ResourceUsingDifferentContexts {
     Providers provider;
 
     @GET
-    @Path("/method1")
-    public Response method1() {
+    @Path("/method1/{test}")
+    public Response method1(@PathParam("test") String test) {
+        if(test.equals("SERVLETCONTEXT")) {
+            String path = servletContext.getContextPath();
+        }
+        if(test.equals("URIINFO")) {
+            String path = uriInfo.getPath();
+            if(!path.contains("/method1/URIINFO")) {
+                throw new AssertionError("expected uriinfocontext");
+            }
+        }
         return Response.ok().build();
     }
 

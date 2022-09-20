@@ -150,6 +150,7 @@
                 <module>modules/ioc-unit-wf10</module>
                 <module>modules/ioc-unit-wf24</module>
                 <module>modules/ioc-unit-wf26</module>
+                <module>boms</module>
             </modules>
             <dependencies>
                 <dependency>

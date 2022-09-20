@@ -2,6 +2,7 @@ package com.oneandone.iocunit.resteasy;
 
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
+import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
 
 /**
@@ -13,6 +14,7 @@ public class IocUnitResteasyWebTargetBuilder {
 
     @Produces
     WebTarget webTarget() {
-        return clientBuilder.createClientBuilder().build().target("/");
+        Client client = clientBuilder.createClientBuilder().build();
+        return client.target("/");
     }
 }

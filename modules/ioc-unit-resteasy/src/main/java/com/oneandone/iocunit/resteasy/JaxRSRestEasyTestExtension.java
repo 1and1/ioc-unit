@@ -36,6 +36,7 @@ import com.oneandone.iocunit.resteasy.auth.AuthInterceptor;
 import com.oneandone.iocunit.resteasy.auth.RestEasyAuthorized;
 import com.oneandone.iocunit.resteasy.servlet.IocUnitHttpServletRequest;
 import com.oneandone.iocunit.resteasy.servlet.IocUnitHttpSession;
+import com.oneandone.iocunit.resteasy.servlet.IocUnitServletContextHolder;
 
 /**
  * @author aschoerk
@@ -51,8 +52,10 @@ public class JaxRSRestEasyTestExtension implements Extension {
         ExtensionSupport.addTypeAfterBeanDiscovery(abd, bm, RestEasyMockInit.class);
         ExtensionSupport.addTypeAfterBeanDiscovery(abd, bm, AuthInterceptor.class);
         ExtensionSupport.addTypeAfterBeanDiscovery(abd, bm, IocUnitResteasyHttpClient.class);
+        ExtensionSupport.addTypeAfterBeanDiscovery(abd, bm, DispatcherDelegate.class);
+        ExtensionSupport.addTypeAfterBeanDiscovery(abd, bm, IocUnitServletContextHolder.class);
         try {
-            Class<?> tmp = Class.forName("javax.servlet.http.HttpSession.class");
+            Class<?> tmp = Class.forName("javax.servlet.http.HttpSession");
             ExtensionSupport.addTypeAfterBeanDiscovery(abd, bm, IocUnitHttpSession.class);
             ExtensionSupport.addTypeAfterBeanDiscovery(abd, bm, IocUnitHttpServletRequest.class);
         } catch (Exception e) {

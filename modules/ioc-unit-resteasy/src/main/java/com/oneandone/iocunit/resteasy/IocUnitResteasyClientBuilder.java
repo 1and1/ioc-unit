@@ -11,6 +11,7 @@ import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 
 import org.jboss.resteasy.client.jaxrs.ClientHttpEngine;
+import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.client.jaxrs.engines.ApacheHttpClient43Engine;
 
 import com.oneandone.iocunit.jboss.resteasy.mock.IocUnitResteasyDispatcher;
@@ -32,7 +33,7 @@ public class IocUnitResteasyClientBuilder {
     }
 
     @Produces
-    public javax.ws.rs.client.ClientBuilder createClientBuilder() {
+    public ResteasyClientBuilder createClientBuilder() {
         IocUnitResteasyHttpClient httpClient = new IocUnitResteasyHttpClient(dispatcher);
         httpClients.add(httpClient);
         javax.ws.rs.client.ClientBuilder builder = javax.ws.rs.client.ClientBuilder.newBuilder();
@@ -42,6 +43,6 @@ public class IocUnitResteasyClientBuilder {
         } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
-        return builder;
+        return (ResteasyClientBuilder) builder;
     }
 }

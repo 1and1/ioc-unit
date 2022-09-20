@@ -15,6 +15,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.oneandone.iocunit.IocUnitRunner;
+import com.oneandone.iocunit.analyzer.annotations.ProducesAlternative;
 import com.oneandone.iocunit.analyzer.annotations.SutClasses;
 import com.oneandone.iocunit.jboss.resteasy.mock.IocUnitResteasyDispatcher;
 import com.oneandone.iocunit.resteasytester.resources.ResourceUsingSecurityContext;
@@ -29,6 +30,7 @@ public class UsingSecurityContextTest {
     IocUnitResteasyDispatcher dispatcher;
 
     @Produces
+    @ProducesAlternative
     SecurityContext createSecurityContext() {
         return new SecurityContext() {
             @Override
@@ -55,8 +57,6 @@ public class UsingSecurityContextTest {
 
     @Test
     public void callMethod1() throws URISyntaxException {
-        // ResteasyProviderFactory.getContextDataMap().put(SecurityContext.class, );
-
         MockHttpRequest request =
                 MockHttpRequest.get("/restpathsecure/method1");
         MockHttpResponse response = new MockHttpResponse();

@@ -84,6 +84,24 @@
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>net.oneandone.ioc-unit</groupId>
+            <artifactId>ioc-unit-jms-artemisactivemq</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>artemis-jms-server</artifactId>
+            <version>2.19.0</version>
+        </dependency>
+        <!-- need to replace jms-client in scope-test to enable Embedded Test Server-->
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>artemis-jms-client</artifactId>
+            <version>2.19.0</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>

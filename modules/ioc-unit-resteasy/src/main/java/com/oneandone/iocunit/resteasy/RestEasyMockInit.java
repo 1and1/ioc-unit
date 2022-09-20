@@ -26,7 +26,7 @@ public class RestEasyMockInit {
     Logger logger = LoggerFactory.getLogger("RestEasyMockDispatcherFactory init");
 
     @Inject
-    private JaxRsRestEasyTestExtension jaxRsRestEasyTestExtension;
+    private JaxRSRestEasyTestExtension jaxRSRestEasyTestExtension;
 
     @Inject
     private BeanManager beanManager;
@@ -58,8 +58,6 @@ public class RestEasyMockInit {
                 }
                 RestAssured.config = null;
             }
-            if (dispatcher != null)
-                dispatcher.close();
     }
 
     private void handleNotDefinedError(final Throwable e) {
