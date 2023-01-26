@@ -3,7 +3,7 @@
     <parent>
         <groupId>net.oneandone.ioc-unit</groupId>
         <artifactId>ioc-unit-bom-parent</artifactId>
-        <version>3.0.1-SNAPSHOT</version>
+        <version>4.0.1-SNAPSHOT</version>
     </parent>
     <artifactId>ioc-unit-javaee70-bom</artifactId>
     <name>boms:ioc-unit-javaee70-bom</name>
