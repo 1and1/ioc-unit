@@ -1,6 +1,6 @@
 package com.oneandone.iocunitejb.ejbs;
 
-import javax.ejb.Stateless;
+import jakarta.ejb.Stateless;
 
 /**
  * @author aschoerk

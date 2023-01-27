@@ -6,14 +6,14 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.util.Arrays;
 
-import javax.ejb.EJBException;
-import javax.inject.Inject;
-import javax.persistence.TransactionRequiredException;
-import javax.transaction.HeuristicMixedException;
-import javax.transaction.HeuristicRollbackException;
-import javax.transaction.NotSupportedException;
-import javax.transaction.RollbackException;
-import javax.transaction.SystemException;
+import jakarta.ejb.EJBException;
+import jakarta.inject.Inject;
+import jakarta.persistence.TransactionRequiredException;
+import jakarta.transaction.HeuristicMixedException;
+import jakarta.transaction.HeuristicRollbackException;
+import jakarta.transaction.NotSupportedException;
+import jakarta.transaction.RollbackException;
+import jakarta.transaction.SystemException;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;

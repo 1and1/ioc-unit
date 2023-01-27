@@ -1,7 +1,7 @@
 package iocunit.ejbresource;
 
-import javax.enterprise.inject.Produces;
-import javax.persistence.EntityManager;
+import jakarta.enterprise.inject.Produces;
+import jakarta.persistence.EntityManager;
 
 import com.oneandone.iocunit.ejb.PersistenceContextQualifier;
 import com.oneandone.iocunit.jpa.XmlLessInitializingPersistenceFactory;

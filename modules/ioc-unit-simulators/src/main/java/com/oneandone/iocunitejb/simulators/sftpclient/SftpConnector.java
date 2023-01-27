@@ -18,8 +18,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import javax.annotation.PreDestroy;
-import javax.inject.Inject;
+import jakarta.annotation.PreDestroy;
+import jakarta.inject.Inject;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;

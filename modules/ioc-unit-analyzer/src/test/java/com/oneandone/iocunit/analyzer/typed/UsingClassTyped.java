@@ -1,6 +1,6 @@
 package com.oneandone.iocunit.analyzer.typed;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import com.oneandone.iocunit.analyzer.BaseClass;
 

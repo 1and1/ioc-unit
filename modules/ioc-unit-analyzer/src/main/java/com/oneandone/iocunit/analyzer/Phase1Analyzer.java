@@ -13,11 +13,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.decorator.Decorator;
-import javax.enterprise.inject.Produces;
-import javax.enterprise.inject.Specializes;
-import javax.enterprise.inject.Stereotype;
-import javax.interceptor.Interceptor;
+import jakarta.decorator.Decorator;
+import jakarta.enterprise.inject.Produces;
+import jakarta.enterprise.inject.Specializes;
+import jakarta.enterprise.inject.Stereotype;
+import jakarta.interceptor.Interceptor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

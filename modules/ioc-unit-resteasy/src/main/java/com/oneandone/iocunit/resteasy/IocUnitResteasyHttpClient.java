@@ -6,9 +6,9 @@ import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.Set;
 
-import javax.inject.Inject;
-import javax.servlet.ServletContext;
-import javax.ws.rs.core.SecurityContext;
+import jakarta.inject.Inject;
+import jakarta.servlet.ServletContext;
+import jakarta.ws.rs.core.SecurityContext;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;

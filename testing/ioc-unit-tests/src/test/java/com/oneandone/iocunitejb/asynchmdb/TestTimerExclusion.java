@@ -3,7 +3,7 @@ package com.oneandone.iocunitejb.asynchmdb;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import com.oneandone.iocunit.analyzer.annotations.ExcludedClasses;
 import com.oneandone.iocunit.analyzer.annotations.SutClasses;

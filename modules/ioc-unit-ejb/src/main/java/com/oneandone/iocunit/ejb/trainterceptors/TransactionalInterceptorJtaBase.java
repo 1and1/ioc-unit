@@ -2,12 +2,12 @@ package com.oneandone.iocunit.ejb.trainterceptors;
 
 import java.lang.annotation.Annotation;
 
-import javax.ejb.TransactionAttributeType;
-import javax.enterprise.inject.Stereotype;
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.InvocationContext;
-import javax.transaction.RollbackException;
-import javax.transaction.Transactional;
+import jakarta.ejb.TransactionAttributeType;
+import jakarta.enterprise.inject.Stereotype;
+import jakarta.interceptor.AroundInvoke;
+import jakarta.interceptor.InvocationContext;
+import jakarta.transaction.RollbackException;
+import jakarta.transaction.Transactional;
 
 import org.slf4j.MDC;
 

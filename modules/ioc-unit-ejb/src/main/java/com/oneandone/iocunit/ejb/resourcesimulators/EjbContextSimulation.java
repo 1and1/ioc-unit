@@ -5,11 +5,11 @@ import java.security.Principal;
 import java.util.Map;
 import java.util.Properties;
 
-import javax.ejb.EJBContext;
-import javax.ejb.EJBHome;
-import javax.ejb.EJBLocalHome;
-import javax.ejb.TimerService;
-import javax.transaction.UserTransaction;
+import jakarta.ejb.EJBContext;
+import jakarta.ejb.EJBHome;
+import jakarta.ejb.EJBLocalHome;
+import jakarta.ejb.TimerService;
+import jakarta.transaction.UserTransaction;
 
 import com.oneandone.iocunit.ejb.persistence.SimulatedTransactionManager;
 import com.oneandone.iocunit.resource.ResourceQualifier;

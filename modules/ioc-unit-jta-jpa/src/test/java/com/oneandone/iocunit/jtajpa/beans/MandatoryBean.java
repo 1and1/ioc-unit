@@ -1,7 +1,7 @@
 package com.oneandone.iocunit.jtajpa.beans;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.transaction.Transactional;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.transaction.Transactional;
 
 import com.oneandone.iocunit.jtajpa.TestBeanBase;
 

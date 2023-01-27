@@ -1,6 +1,6 @@
 package com.oneandone.iocunit.analyzer.rawtype;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import com.oneandone.iocunit.analyzer.BaseClass;
 import com.oneandone.iocunit.analyzer.annotations.ExcludedClasses;

@@ -1,9 +1,9 @@
 package com.oneandone.cdi.weld;
 
-import javax.decorator.Decorator;
-import javax.decorator.Delegate;
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
+import jakarta.decorator.Decorator;
+import jakarta.decorator.Delegate;
+import jakarta.enterprise.inject.Produces;
+import jakarta.inject.Inject;
 
 import org.jboss.weld.exceptions.DefinitionException;
 import org.junit.Assert;

@@ -1,6 +1,6 @@
 package com.oneandone.cdi.weld.beans;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 /**
  * @author aschoerk

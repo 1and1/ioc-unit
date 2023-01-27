@@ -1,7 +1,7 @@
 package net.oneandone.ejbcdiunit.tests.notavailable;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 /**
  * @author aschoerk Bean used in tests for complilation, but not available during tests.

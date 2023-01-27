@@ -1,7 +1,7 @@
 package com.oneandone.iocunit.jtajpa;
 
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 import com.oneandone.cdi.weldstarter.CreationalContexts;
 import com.oneandone.iocunit.jtajpa.internal.EntityManagerDelegate;

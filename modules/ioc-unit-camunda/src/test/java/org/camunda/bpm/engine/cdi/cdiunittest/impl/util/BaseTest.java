@@ -2,7 +2,7 @@ package org.camunda.bpm.engine.cdi.cdiunittest.impl.util;
 
 import java.util.TimerTask;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.camunda.bpm.engine.ManagementService;
 import org.camunda.bpm.engine.RuntimeService;

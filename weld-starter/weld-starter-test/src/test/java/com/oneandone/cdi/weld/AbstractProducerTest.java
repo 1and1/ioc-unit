@@ -8,8 +8,8 @@ import java.util.Arrays;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
+import jakarta.enterprise.inject.Produces;
+import jakarta.inject.Inject;
 
 import com.oneandone.cdi.weld.beans.ConcreteClass3;
 import com.oneandone.cdi.weld.beans.ToInclude;

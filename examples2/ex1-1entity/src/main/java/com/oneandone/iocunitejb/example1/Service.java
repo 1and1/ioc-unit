@@ -1,9 +1,9 @@
 package com.oneandone.iocunitejb.example1;
 
-import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.validation.constraints.NotNull;
+import jakarta.ejb.Stateless;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * Created by aschoerk on 28.06.17.

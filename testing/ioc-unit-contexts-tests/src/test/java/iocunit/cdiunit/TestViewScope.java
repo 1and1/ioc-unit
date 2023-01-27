@@ -2,10 +2,10 @@ package iocunit.cdiunit;
 
 import java.io.Serializable;
 
-import javax.faces.view.ViewScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Provider;
+import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.inject.Provider;
 
 import org.junit.Assert;
 import org.junit.Test;

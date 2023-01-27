@@ -10,19 +10,20 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import javax.enterprise.context.Dependent;
-import javax.enterprise.context.spi.CreationalContext;
-import javax.enterprise.event.Observes;
-import javax.enterprise.inject.Any;
-import javax.enterprise.inject.Default;
-import javax.enterprise.inject.spi.AfterBeanDiscovery;
-import javax.enterprise.inject.spi.AnnotatedType;
-import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.enterprise.inject.spi.Extension;
-import javax.enterprise.inject.spi.InjectionPoint;
-import javax.enterprise.inject.spi.InjectionTarget;
-import javax.enterprise.util.AnnotationLiteral;
+import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.context.spi.CreationalContext;
+import jakarta.enterprise.event.Observes;
+import jakarta.enterprise.inject.Any;
+import jakarta.enterprise.inject.Default;
+import jakarta.enterprise.inject.spi.AfterBeanDiscovery;
+import jakarta.enterprise.inject.spi.AnnotatedType;
+import jakarta.enterprise.inject.spi.Bean;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.Extension;
+import jakarta.enterprise.inject.spi.InjectionPoint;
+import jakarta.enterprise.inject.spi.InjectionTarget;
+import jakarta.enterprise.inject.spi.InjectionTargetFactory;
+import jakarta.enterprise.util.AnnotationLiteral;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,7 +57,7 @@ public class ProducerConfigExtension implements Extension {
             log.info("Defining bean: value={} class={} ",
                     annotation, annotation.getClass().getName());
             AnnotatedType<? extends Annotation> at = bm.createAnnotatedType(annotation.getClass());
-            final InjectionTarget<? extends Annotation> it = bm.createInjectionTarget(at);
+            final InjectionTarget<? extends Annotation> it = bm.getInjectionTargetFactory(at).createInjectionTarget(null);
             abd.addBean(new Bean<Annotation>() {
                 @Override
                 public Class<?> getBeanClass() {
@@ -102,11 +103,6 @@ public class ProducerConfigExtension implements Extension {
 
                 @Override
                 public boolean isAlternative() {
-                    return false;
-                }
-
-                @Override
-                public boolean isNullable() {
                     return false;
                 }
 

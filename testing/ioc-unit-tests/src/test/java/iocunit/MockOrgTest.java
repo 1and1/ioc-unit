@@ -1,6 +1,6 @@
 package iocunit;
 
-import javax.enterprise.inject.Produces;
+import jakarta.enterprise.inject.Produces;
 
 import org.junit.runner.RunWith;
 import org.mockito.Mock;

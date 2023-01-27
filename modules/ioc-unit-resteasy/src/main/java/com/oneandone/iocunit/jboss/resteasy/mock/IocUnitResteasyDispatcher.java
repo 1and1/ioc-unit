@@ -2,7 +2,7 @@ package com.oneandone.iocunit.jboss.resteasy.mock;
 
 import java.util.Map;
 
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response;
 
 import org.jboss.resteasy.spi.HttpRequest;
 import org.jboss.resteasy.spi.HttpRequestPreprocessor;

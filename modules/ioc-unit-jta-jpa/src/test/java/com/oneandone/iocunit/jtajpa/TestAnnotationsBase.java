@@ -1,14 +1,14 @@
 package com.oneandone.iocunit.jtajpa;
 
-import javax.inject.Inject;
-import javax.persistence.TransactionRequiredException;
-import javax.transaction.HeuristicMixedException;
-import javax.transaction.HeuristicRollbackException;
-import javax.transaction.NotSupportedException;
-import javax.transaction.RollbackException;
-import javax.transaction.SystemException;
-import javax.transaction.TransactionalException;
-import javax.transaction.UserTransaction;
+import jakarta.inject.Inject;
+import jakarta.persistence.TransactionRequiredException;
+import jakarta.transaction.HeuristicMixedException;
+import jakarta.transaction.HeuristicRollbackException;
+import jakarta.transaction.NotSupportedException;
+import jakarta.transaction.RollbackException;
+import jakarta.transaction.SystemException;
+import jakarta.transaction.TransactionalException;
+import jakarta.transaction.UserTransaction;
 
 import org.junit.Test;
 

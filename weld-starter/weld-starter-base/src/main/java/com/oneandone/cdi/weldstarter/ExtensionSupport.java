@@ -1,9 +1,9 @@
 package com.oneandone.cdi.weldstarter;
 
-import javax.enterprise.inject.spi.AfterBeanDiscovery;
-import javax.enterprise.inject.spi.AnnotatedType;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.enterprise.inject.spi.PassivationCapable;
+import jakarta.enterprise.inject.spi.AfterBeanDiscovery;
+import jakarta.enterprise.inject.spi.AnnotatedType;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.PassivationCapable;
 
 import org.apache.deltaspike.core.util.bean.BeanBuilder;
 

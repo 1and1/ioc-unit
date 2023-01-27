@@ -1,7 +1,7 @@
 package net.oneandone.ejbcdiunit.purecdi;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 import org.junit.Test;
 

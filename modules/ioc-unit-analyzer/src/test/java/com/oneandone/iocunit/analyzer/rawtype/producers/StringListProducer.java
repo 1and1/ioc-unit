@@ -1,6 +1,6 @@
 package com.oneandone.iocunit.analyzer.rawtype.producers;
 
-import javax.enterprise.inject.Produces;
+import jakarta.enterprise.inject.Produces;
 
 import com.oneandone.iocunit.analyzer.rawtype.types.StringList;
 

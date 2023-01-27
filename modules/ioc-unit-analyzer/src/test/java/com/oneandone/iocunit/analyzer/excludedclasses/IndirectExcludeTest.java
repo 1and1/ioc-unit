@@ -1,6 +1,6 @@
 package com.oneandone.iocunit.analyzer.excludedclasses;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import com.oneandone.iocunit.analyzer.BaseTest;
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;

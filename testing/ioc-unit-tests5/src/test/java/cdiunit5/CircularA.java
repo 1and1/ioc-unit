@@ -1,6 +1,6 @@
 package cdiunit5;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 public class CircularA {
 

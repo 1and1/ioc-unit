@@ -3,21 +3,21 @@ package com.oneandone.iocunit.ejb.trainterceptors;
 import java.lang.annotation.Annotation;
 import java.util.List;
 
-import javax.annotation.Priority;
-import javax.ejb.ApplicationException;
-import javax.ejb.EJB;
-import javax.ejb.EJBException;
-import javax.ejb.MessageDriven;
-import javax.ejb.Singleton;
-import javax.ejb.Stateful;
-import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.Interceptor;
-import javax.interceptor.InvocationContext;
-import javax.transaction.RollbackException;
-import javax.transaction.Transactional;
+import jakarta.annotation.Priority;
+import jakarta.ejb.ApplicationException;
+import jakarta.ejb.EJB;
+import jakarta.ejb.EJBException;
+import jakarta.ejb.MessageDriven;
+import jakarta.ejb.Singleton;
+import jakarta.ejb.Stateful;
+import jakarta.ejb.Stateless;
+import jakarta.ejb.TransactionAttribute;
+import jakarta.ejb.TransactionAttributeType;
+import jakarta.interceptor.AroundInvoke;
+import jakarta.interceptor.Interceptor;
+import jakarta.interceptor.InvocationContext;
+import jakarta.transaction.RollbackException;
+import jakarta.transaction.Transactional;
 
 import org.slf4j.MDC;
 

@@ -2,7 +2,7 @@ package com.oneandone.ejbcdiunit5.excludedclasses;
 
 import static org.hamcrest.Matchers.is;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.BeforeAll;

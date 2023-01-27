@@ -1,12 +1,12 @@
 package com.oneandone.iocunit.jms;
 
-import javax.annotation.PreDestroy;
-import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
-import javax.jms.Message;
-import javax.jms.MessageListener;
-import javax.jms.Queue;
-import javax.jms.Topic;
+import jakarta.annotation.PreDestroy;
+import jakarta.jms.Connection;
+import jakarta.jms.ConnectionFactory;
+import jakarta.jms.Message;
+import jakarta.jms.MessageListener;
+import jakarta.jms.Queue;
+import jakarta.jms.Topic;
 
 /**
  * @author aschoerk

@@ -1,10 +1,10 @@
 package com.oneandone.ejbcdiunit5.ejb;
 
-import javax.ejb.TransactionManagement;
-import javax.ejb.TransactionManagementType;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.TransactionRequiredException;
+import jakarta.ejb.TransactionManagement;
+import jakarta.ejb.TransactionManagementType;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TransactionRequiredException;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

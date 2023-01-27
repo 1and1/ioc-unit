@@ -17,8 +17,8 @@ import java.util.TimerTask;
 import java.util.concurrent.Callable;
 import java.util.logging.Logger;
 
-import javax.enterprise.inject.spi.BeanManager;
-import javax.inject.Inject;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.inject.Inject;
 
 import org.camunda.bpm.engine.AuthorizationService;
 import org.camunda.bpm.engine.CaseService;

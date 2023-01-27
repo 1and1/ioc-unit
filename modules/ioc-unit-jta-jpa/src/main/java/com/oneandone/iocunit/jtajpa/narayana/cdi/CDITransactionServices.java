@@ -17,12 +17,12 @@
 
 package com.oneandone.iocunit.jtajpa.narayana.cdi;
 
-import javax.transaction.RollbackException;
-import javax.transaction.Status;
-import javax.transaction.Synchronization;
-import javax.transaction.SystemException;
-import javax.transaction.TransactionalException;
-import javax.transaction.UserTransaction;
+import jakarta.transaction.RollbackException;
+import jakarta.transaction.Status;
+import jakarta.transaction.Synchronization;
+import jakarta.transaction.SystemException;
+import jakarta.transaction.TransactionalException;
+import jakarta.transaction.UserTransaction;
 
 import org.jboss.weld.transaction.spi.TransactionServices;
 import org.slf4j.Logger;

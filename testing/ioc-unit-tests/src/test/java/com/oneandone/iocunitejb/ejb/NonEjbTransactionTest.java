@@ -1,10 +1,10 @@
 package com.oneandone.iocunitejb.ejb;
 
-import javax.ejb.TransactionManagement;
-import javax.ejb.TransactionManagementType;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.TransactionRequiredException;
+import jakarta.ejb.TransactionManagement;
+import jakarta.ejb.TransactionManagementType;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TransactionRequiredException;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -1,6 +1,6 @@
 package com.oneandone.ejbcdiunit5.excludedclasses.pcktoinclude;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 /**
  * @author aschoerk

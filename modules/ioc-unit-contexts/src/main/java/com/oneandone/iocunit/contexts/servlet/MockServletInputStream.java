@@ -9,8 +9,8 @@ package com.oneandone.iocunit.contexts.servlet;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
-import javax.servlet.ReadListener;
-import javax.servlet.ServletInputStream;
+import jakarta.servlet.ReadListener;
+import jakarta.servlet.ServletInputStream;
 
 /**
  * Mock implementation of <code>ServletInputStream</code>.

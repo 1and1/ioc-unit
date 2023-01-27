@@ -6,7 +6,7 @@
  */
 package org.camunda.bpm.engine.experimental;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.camunda.bpm.engine.cdi.annotation.ProcessVariable;
 

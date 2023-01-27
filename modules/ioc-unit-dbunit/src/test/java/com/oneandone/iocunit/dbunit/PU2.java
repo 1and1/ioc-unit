@@ -3,8 +3,8 @@ package com.oneandone.iocunit.dbunit;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.enterprise.inject.Produces;
-import javax.persistence.EntityManager;
+import jakarta.enterprise.inject.Produces;
+import jakarta.persistence.EntityManager;
 
 import com.oneandone.iocunit.entities.A;
 import com.oneandone.iocunit.entities.Aa;

@@ -1,6 +1,6 @@
 package com.oneandone.iocunitejb.example2.uselookup;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import com.oneandone.iocunitejb.example2.ServiceIntf;
 

@@ -1,7 +1,7 @@
 package com.oneandone.iocunit.analyzer.instance.sut;
 
-import javax.enterprise.inject.Instance;
-import javax.inject.Inject;
+import jakarta.enterprise.inject.Instance;
+import jakarta.inject.Inject;
 
 /**
  * @author aschoerk

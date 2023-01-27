@@ -1,10 +1,10 @@
 package com.oneandone.iocunitejb.testbases;
 
-import javax.ejb.EJB;
-import javax.ejb.EJBException;
-import javax.inject.Inject;
-import javax.validation.ConstraintViolationException;
-import javax.validation.ValidationException;
+import jakarta.ejb.EJB;
+import jakarta.ejb.EJBException;
+import jakarta.inject.Inject;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.ValidationException;
 
 import org.junit.Test;
 

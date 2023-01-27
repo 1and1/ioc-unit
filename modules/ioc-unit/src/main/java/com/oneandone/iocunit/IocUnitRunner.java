@@ -3,7 +3,7 @@ package com.oneandone.iocunit;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.BeanManager;
 import javax.naming.InitialContext;
 
 import org.junit.Test;

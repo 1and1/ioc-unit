@@ -1,6 +1,6 @@
 package iocunit.cdiunit;
 
-import javax.enterprise.inject.Vetoed;
+import jakarta.enterprise.inject.Vetoed;
 
 
 @Vetoed

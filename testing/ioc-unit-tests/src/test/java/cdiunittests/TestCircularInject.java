@@ -1,7 +1,7 @@
 package cdiunittests;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

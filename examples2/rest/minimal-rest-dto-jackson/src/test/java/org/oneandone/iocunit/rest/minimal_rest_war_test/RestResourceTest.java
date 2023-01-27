@@ -14,7 +14,7 @@ import static org.hamcrest.Matchers.lessThanOrEqualTo;
 
 import java.util.Date;
 
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MediaType;
 
 import org.hamcrest.Matcher;
 import org.junit.Test;

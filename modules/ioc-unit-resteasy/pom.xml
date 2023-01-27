@@ -21,7 +21,7 @@
         </license>
     </licenses>
     <properties>
-        <resteasy.version>3.11.0.Final</resteasy.version>
+        <resteasy.version>6.2.1.Final</resteasy.version>
         <javax.json.version>1.1</javax.json.version>
         <rest-assured.version>4.5.1</rest-assured.version>
     </properties>
@@ -46,29 +46,25 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>jakarta.ws.rs</groupId>
+            <artifactId>jakarta.ws.rs-api</artifactId>
+            <version>3.1.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>net.oneandone.ioc-unit</groupId>
             <artifactId>ioc-unit</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
-            <artifactId>resteasy-jaxrs</artifactId>
+            <artifactId>resteasy-core</artifactId>
             <version>${resteasy.version}</version>
             <scope>provided</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.sun.activation</groupId>
-                    <artifactId>jakarta.activation</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.jboss.spec.javax.annotation</groupId>
-                    <artifactId>jboss-annotations-api_1.3_spec</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
-            <artifactId>resteasy-jackson-provider</artifactId>
+            <artifactId>resteasy-jackson2-provider</artifactId>
             <version>${resteasy.version}</version>
             <scope>provided</scope>
 	    </dependency>
@@ -77,6 +73,12 @@
             <artifactId>resteasy-client</artifactId>
             <version>${resteasy.version}</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.11.0</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>io.rest-assured</groupId>
@@ -114,25 +116,25 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <version>6.0.22.Final</version>
+            <version>8.0.0.Final</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator-cdi</artifactId>
-            <version>6.0.22.Final</version>
+            <version>8.0.0.Final</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>jakarta.el</groupId>
             <artifactId>jakarta.el-api</artifactId>
-            <version>3.0.3</version>
+            <version>5.0.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.glassfish</groupId>
             <artifactId>jakarta.el</artifactId>
-            <version>3.0.3</version>
+            <version>4.0.2</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

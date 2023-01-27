@@ -1,6 +1,6 @@
 package com.oneandone.iocunitejb.cdibeans;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 /**
  * @author aschoerk

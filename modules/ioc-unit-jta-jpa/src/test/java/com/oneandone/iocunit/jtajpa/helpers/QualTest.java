@@ -1,8 +1,8 @@
 package com.oneandone.iocunit.jtajpa.helpers;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.inject.Inject;
 
 import org.junit.Assert;
 import org.junit.Test;

@@ -2,7 +2,7 @@ package com.oneandone.iocunitejb.excludedclasses;
 
 import static org.hamcrest.Matchers.is;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.junit.Assert;
 import org.junit.Rule;

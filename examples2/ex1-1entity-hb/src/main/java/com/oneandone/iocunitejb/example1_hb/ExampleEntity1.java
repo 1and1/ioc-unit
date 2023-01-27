@@ -1,8 +1,8 @@
 package com.oneandone.iocunitejb.example1_hb;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 
 /**
  * Created by aschoerk on 28.06.17.

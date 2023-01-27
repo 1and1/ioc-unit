@@ -3,8 +3,8 @@ package ejbcdiunit;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import javax.ejb.SessionContext;
-import javax.inject.Inject;
+import jakarta.ejb.SessionContext;
+import jakarta.inject.Inject;
 
 import org.hamcrest.Matchers;
 import org.jboss.arquillian.container.test.api.Deployment;

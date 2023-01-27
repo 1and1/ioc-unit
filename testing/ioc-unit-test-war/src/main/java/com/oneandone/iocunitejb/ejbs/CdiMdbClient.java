@@ -1,6 +1,6 @@
 package com.oneandone.iocunitejb.ejbs;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 /**
  * @author aschoerk

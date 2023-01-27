@@ -4,8 +4,8 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.persistence.spi.PersistenceUnitInfo;
-import javax.sql.DataSource;
+import jakarta.persistence.spi.PersistenceUnitInfo;
+import jakarta.sql.DataSource;
 
 import org.eclipse.persistence.internal.jpa.deployment.SEPersistenceUnitInfo;
 

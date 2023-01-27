@@ -1,6 +1,6 @@
 package iocunit.producing;
 
-import javax.enterprise.inject.Produces;
+import jakarta.enterprise.inject.Produces;
 
 import iocunit.test2.Test2B;
 

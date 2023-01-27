@@ -2,7 +2,7 @@ package net.oneandone.example;
 
 import java.lang.reflect.Method;
 
-import javax.enterprise.inject.spi.Extension;
+import jakarta.enterprise.inject.spi.Extension;
 
 import org.jboss.weld.metadata.MetadataImpl;
 import org.jglue.cdiunit.internal.ProducerConfigExtension;

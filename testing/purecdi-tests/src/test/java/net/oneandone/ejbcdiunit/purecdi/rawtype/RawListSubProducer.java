@@ -1,6 +1,6 @@
 package net.oneandone.ejbcdiunit.purecdi.rawtype;
 
-import javax.enterprise.inject.Produces;
+import jakarta.enterprise.inject.Produces;
 
 /**
  * @author aschoerk

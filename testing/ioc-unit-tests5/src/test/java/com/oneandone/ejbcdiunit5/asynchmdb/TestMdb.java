@@ -3,8 +3,8 @@ package com.oneandone.ejbcdiunit5.asynchmdb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
-import javax.inject.Inject;
-import javax.jms.JMSException;
+import jakarta.inject.Inject;
+import jakarta.jms.JMSException;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

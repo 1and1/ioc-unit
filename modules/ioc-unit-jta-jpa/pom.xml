@@ -21,8 +21,8 @@
         </license>
     </licenses>
     <properties>
-        <version.narayana>5.10.4.Final</version.narayana>
-        <version.weld>3.1.9.Final</version.weld>
+        <version.narayana>5.13.0.Final</version.narayana>
+        <version.weld>5.1.0.Final</version.weld>
     </properties>
 
 
@@ -39,30 +39,24 @@
             <version>2.0.1</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+            <version>3.1.0</version>
+            <scope>provided</scope>
+        </dependency>
 
         <dependency>
             <groupId>org.jboss.narayana.jta</groupId>
-            <artifactId>narayana-jta</artifactId>
-            <version>${version.narayana}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.jboss.spec.javax.transaction</groupId>
-                    <artifactId>jboss-transaction-api_1.2_spec</artifactId>
-                </exclusion>
-            </exclusions>
-            <scope>provided</scope>
+            <artifactId>narayana-jta-jakarta</artifactId>
+            <version>5.13.0.Final</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.jboss.weld</groupId>
             <artifactId>weld-spi</artifactId>
             <version>${compile.version.weld-spi}</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.deltaspike.core</groupId>
-            <artifactId>deltaspike-core-api</artifactId>
-            <version>${delta-spike.version}</version>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>net.oneandone.ioc-unit</groupId>
@@ -72,8 +66,8 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>5.4.1.Final</version>
-            <scope>provided</scope>
+            <version>${version.org.hibernate}</version>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>

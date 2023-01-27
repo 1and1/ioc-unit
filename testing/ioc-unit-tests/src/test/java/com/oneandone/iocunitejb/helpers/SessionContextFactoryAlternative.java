@@ -2,12 +2,12 @@ package com.oneandone.iocunitejb.helpers;
 
 import java.security.Principal;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Alternative;
-import javax.enterprise.inject.Produces;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.enterprise.inject.spi.InjectionPoint;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Alternative;
+import jakarta.enterprise.inject.Produces;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.InjectionPoint;
+import jakarta.inject.Inject;
 
 import com.oneandone.iocunit.analyzer.annotations.ProducesAlternative;
 import com.oneandone.iocunit.ejb.resourcesimulators.SessionContextSimulation;

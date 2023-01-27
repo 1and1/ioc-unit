@@ -1,6 +1,6 @@
 package com.oneandone.iocunit.jtajpa;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 import org.junit.runner.RunWith;
 

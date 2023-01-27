@@ -1,6 +1,6 @@
 package com.oneandone.iocunit;
 
-import javax.interceptor.InvocationContext;
+import jakarta.interceptor.InvocationContext;
 import java.lang.annotation.Annotation;
 
 public class InterceptorBase {

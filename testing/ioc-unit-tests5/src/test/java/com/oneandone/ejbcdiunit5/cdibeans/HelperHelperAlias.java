@@ -1,6 +1,6 @@
 package com.oneandone.ejbcdiunit5.cdibeans;
 
-import javax.enterprise.inject.Alternative;
+import jakarta.enterprise.inject.Alternative;
 
 import com.oneandone.iocunitejb.cdibeans.ServiceBeanDepScopedHelper;
 import com.oneandone.iocunitejb.cdibeans.ServiceBeanHelperHelper;

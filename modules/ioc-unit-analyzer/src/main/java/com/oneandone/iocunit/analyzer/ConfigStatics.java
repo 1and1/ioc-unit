@@ -7,10 +7,10 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Set;
 
-import javax.decorator.Decorator;
-import javax.enterprise.inject.spi.Extension;
-import javax.inject.Inject;
-import javax.interceptor.Interceptor;
+import jakarta.decorator.Decorator;
+import jakarta.enterprise.inject.spi.Extension;
+import jakarta.inject.Inject;
+import jakarta.interceptor.Interceptor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

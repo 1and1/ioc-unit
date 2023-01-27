@@ -2,11 +2,11 @@ package com.oneandone.iocunitejb.ejbs;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.annotation.Resource;
-import javax.ejb.ConcurrencyManagement;
-import javax.ejb.ConcurrencyManagementType;
-import javax.ejb.EJBContext;
-import javax.ejb.Singleton;
+import jakarta.annotation.Resource;
+import jakarta.ejb.ConcurrencyManagement;
+import jakarta.ejb.ConcurrencyManagementType;
+import jakarta.ejb.EJBContext;
+import jakarta.ejb.Singleton;
 
 /**
  * @author aschoerk

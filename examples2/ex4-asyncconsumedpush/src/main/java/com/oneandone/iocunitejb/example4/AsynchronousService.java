@@ -2,8 +2,8 @@ package com.oneandone.iocunitejb.example4;
 
 import java.util.concurrent.atomic.AtomicLong;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
 
 /**
  * Created by aschoerk on 28.06.17.

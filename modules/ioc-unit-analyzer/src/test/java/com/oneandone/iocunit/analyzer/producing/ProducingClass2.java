@@ -2,7 +2,7 @@ package com.oneandone.iocunit.analyzer.producing;
 
 import com.oneandone.iocunit.analyzer.test2.Test2B;
 
-import javax.enterprise.inject.Produces;
+import jakarta.enterprise.inject.Produces;
 
 /**
  * @author aschoerk

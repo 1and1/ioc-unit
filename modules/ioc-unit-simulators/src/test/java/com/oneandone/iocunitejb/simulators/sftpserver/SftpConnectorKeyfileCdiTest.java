@@ -5,7 +5,7 @@ import static org.junit.Assert.fail;
 
 import java.util.regex.Pattern;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.junit.Before;
 import org.junit.Ignore;

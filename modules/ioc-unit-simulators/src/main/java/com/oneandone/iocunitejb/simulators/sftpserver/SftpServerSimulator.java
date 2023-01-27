@@ -2,9 +2,9 @@ package com.oneandone.iocunitejb.simulators.sftpserver;
 
 import org.slf4j.Logger;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import javax.inject.Inject;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
+import jakarta.inject.Inject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.ServerSocket;

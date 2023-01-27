@@ -1,7 +1,7 @@
 package com.oneandone.iocunitejb.example2.useejbinject;
 
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
+import jakarta.ejb.EJB;
+import jakarta.ejb.Stateless;
 
 import com.oneandone.iocunitejb.example2.RemoteServiceIntf;
 import com.oneandone.iocunitejb.example2.ServiceIntf;

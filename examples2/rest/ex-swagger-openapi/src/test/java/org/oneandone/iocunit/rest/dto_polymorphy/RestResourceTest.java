@@ -6,8 +6,8 @@ import static org.hamcrest.Matchers.equalTo;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.inject.Inject;
-import javax.ws.rs.core.Application;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.core.Application;
 
 import org.jboss.resteasy.core.Dispatcher;
 import org.junit.Before;

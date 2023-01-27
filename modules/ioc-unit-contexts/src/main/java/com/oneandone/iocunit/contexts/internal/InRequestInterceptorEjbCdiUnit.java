@@ -15,10 +15,10 @@
  */
 package com.oneandone.iocunit.contexts.internal;
 
-import javax.inject.Inject;
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.Interceptor;
-import javax.interceptor.InvocationContext;
+import jakarta.inject.Inject;
+import jakarta.interceptor.AroundInvoke;
+import jakarta.interceptor.Interceptor;
+import jakarta.interceptor.InvocationContext;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

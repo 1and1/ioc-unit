@@ -1,6 +1,6 @@
 package com.oneandone.iocunit.jtajpa;
 
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 
 import org.junit.runner.RunWith;
 

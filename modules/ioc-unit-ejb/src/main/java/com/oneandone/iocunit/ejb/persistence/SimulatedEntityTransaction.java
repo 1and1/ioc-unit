@@ -1,10 +1,10 @@
 package com.oneandone.iocunit.ejb.persistence;
 
-import javax.persistence.EntityTransaction;
-import javax.persistence.PersistenceException;
-import javax.persistence.RollbackException;
-import javax.transaction.Status;
-import javax.transaction.SystemException;
+import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.PersistenceException;
+import jakarta.persistence.RollbackException;
+import jakarta.transaction.Status;
+import jakarta.transaction.SystemException;
 
 /**
  * Simulates the EntityTransaction as it is returned by the EntityManagerDelegates

@@ -7,8 +7,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import javax.enterprise.inject.spi.Extension;
-import javax.persistence.PersistenceContext;
+import jakarta.enterprise.inject.spi.Extension;
+import jakarta.persistence.PersistenceContext;
 
 import org.jboss.weld.transaction.spi.TransactionServices;
 
@@ -29,10 +29,9 @@ public class JtaJpaTestExtensionService implements TestExtensionService {
     public void preStartupAction(final WeldSetupClass weldSetup, final Class clazz, final Method method) {
         currentClass.set(clazz);
         currentMethod.set(method);
-        if(weldSetup.isWeld3()) {
-            if(!weldSetup.getBeanClasses().contains(CDITransactionProducers.class.getName())) {
-                weldSetup.getBeanClasses().add(CDITransactionProducers.class.getName());
-            }
+
+        if(!weldSetup.getBeanClasses().contains(CDITransactionProducers.class.getName())) {
+            weldSetup.getBeanClasses().add(CDITransactionProducers.class.getName());
         }
         weldSetup.addService(new WeldSetup.ServiceConfig(TransactionServices.class, new CDITransactionServices()));
     }

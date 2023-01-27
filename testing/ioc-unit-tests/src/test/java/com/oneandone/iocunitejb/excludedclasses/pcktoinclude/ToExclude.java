@@ -1,7 +1,7 @@
 package com.oneandone.iocunitejb.excludedclasses.pcktoinclude;
 
-import javax.annotation.PostConstruct;
-import javax.enterprise.inject.Produces;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.inject.Produces;
 
 /**
  * @author aschoerk

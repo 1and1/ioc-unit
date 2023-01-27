@@ -8,7 +8,7 @@ package org.camunda.bpm.engine.cdi.cdiunittest.impl.beans;
 
 import java.io.Serializable;
 
-import javax.inject.Named;
+import jakarta.inject.Named;
 
 import org.camunda.bpm.engine.cdi.annotation.BusinessProcessScoped;
 

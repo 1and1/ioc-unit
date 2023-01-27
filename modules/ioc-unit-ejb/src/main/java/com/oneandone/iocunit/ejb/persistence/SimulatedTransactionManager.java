@@ -11,15 +11,15 @@ import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import javax.ejb.TransactionAttributeType;
-import javax.ejb.TransactionRolledbackLocalException;
-import javax.persistence.TransactionRequiredException;
-import javax.transaction.HeuristicMixedException;
-import javax.transaction.HeuristicRollbackException;
-import javax.transaction.RollbackException;
-import javax.transaction.Status;
-import javax.transaction.Synchronization;
-import javax.transaction.SystemException;
+import jakarta.ejb.TransactionAttributeType;
+import jakarta.ejb.TransactionRolledbackLocalException;
+import jakarta.persistence.TransactionRequiredException;
+import jakarta.transaction.HeuristicMixedException;
+import jakarta.transaction.HeuristicRollbackException;
+import jakarta.transaction.RollbackException;
+import jakarta.transaction.Status;
+import jakarta.transaction.Synchronization;
+import jakarta.transaction.SystemException;
 
 /**
  * Instance used to handle threadlocal transaction-stack. Transaction-Interceptors can push the current

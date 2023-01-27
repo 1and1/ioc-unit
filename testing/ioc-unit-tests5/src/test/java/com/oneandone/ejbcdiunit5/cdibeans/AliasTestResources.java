@@ -2,8 +2,8 @@ package com.oneandone.ejbcdiunit5.cdibeans;
 
 import static org.mockito.Mockito.when;
 
-import javax.annotation.PostConstruct;
-import javax.enterprise.inject.Produces;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.inject.Produces;
 
 import org.junit.jupiter.api.Assertions;
 import org.mockito.Mock;

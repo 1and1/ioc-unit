@@ -5,25 +5,25 @@ import static com.oneandone.iocunit.resteasy.RestEasyTestExtensionServices.perAn
 import java.lang.reflect.Method;
 import java.util.HashSet;
 
-import javax.annotation.security.DenyAll;
-import javax.annotation.security.PermitAll;
-import javax.annotation.security.RolesAllowed;
-import javax.annotation.security.RunAs;
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Observes;
-import javax.enterprise.inject.spi.AfterBeanDiscovery;
-import javax.enterprise.inject.spi.AnnotatedType;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.enterprise.inject.spi.BeforeBeanDiscovery;
-import javax.enterprise.inject.spi.Extension;
-import javax.enterprise.inject.spi.ProcessAnnotatedType;
-import javax.enterprise.inject.spi.WithAnnotations;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.ext.Provider;
+import jakarta.annotation.security.DenyAll;
+import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
+import jakarta.annotation.security.RunAs;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.event.Observes;
+import jakarta.enterprise.inject.spi.AfterBeanDiscovery;
+import jakarta.enterprise.inject.spi.AnnotatedType;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.BeforeBeanDiscovery;
+import jakarta.enterprise.inject.spi.Extension;
+import jakarta.enterprise.inject.spi.ProcessAnnotatedType;
+import jakarta.enterprise.inject.spi.WithAnnotations;
+import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.ext.Provider;
 
 import org.apache.deltaspike.core.util.metadata.AnnotationInstanceProvider;
 import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
@@ -129,19 +129,6 @@ public class JaxRSRestEasyTestExtension implements Extension {
                                               ProcessAnnotatedType<T> pat) {
         AnnotatedType<T> annotatedType = pat.getAnnotatedType();
 
-        try {
-            if(WeldSetupClass.isWeld1()) {
-                if(annotatedType.isAnnotationPresent(Provider.class)) {
-                    return;
-                }
-                final Class<T> javaClass = annotatedType.getJavaClass();
-                if(!needsAuthInterceptorClassDeep(javaClass)) {
-                    return;
-                }
-            }
-        } catch (RuntimeException | NoClassDefFoundError e) {
-            ;
-        }
         makeInterceptedForAuth(pat, annotatedType);
     }
 

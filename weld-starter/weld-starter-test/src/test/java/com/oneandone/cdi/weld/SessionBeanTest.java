@@ -2,8 +2,8 @@ package com.oneandone.cdi.weld;
 
 import static org.junit.Assert.assertNotNull;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

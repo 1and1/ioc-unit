@@ -29,11 +29,15 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit4.version>4.12</junit4.version>
-        <slf4j.version>1.7.25</slf4j.version>
+        <slf4j.version>2.0.5</slf4j.version>
         <logback.version>1.0.9</logback.version>
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
-        <delta-spike.version>1.0.1</delta-spike.version>
+        <delta-spike.version>1.9.6</delta-spike.version>
         <maven-surefire-plugin.version>3.0.0-M4</maven-surefire-plugin.version>
+
+        <surefire-argline>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5006 --add-opens
+            java.base/java.lang=ALL-UNNAMED
+        </surefire-argline>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -105,54 +109,6 @@
     </build>
     <profiles>
         <profile>
-            <id>jdk8</id>
-            <activation>
-                <jdk>
-                    (,1.8]
-                </jdk>
-            </activation>
-            <modules>
-                <module>weld-starter-base</module>
-                <module>weld1-starter</module>
-                <module>weld2-starter</module>
-                <!--module>weld3-starter</module-->
-                <module>weld31-starter</module>
-                <module>weld-starter-test</module>
-            </modules>
-            <properties>
-                <surefire-argline>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5006</surefire-argline>
-            </properties>
-        </profile>
-        <profile>
-            <id>jdk11ff</id>
-            <activation>
-                <jdk>
-                    [11,)
-                </jdk>
-            </activation>
-            <modules>
-                <module>weld-starter-base</module>
-                <module>weld1-starter</module>
-                <module>weld2-starter</module>
-                <module>weld31-starter</module>
-                <module>weld-starter-test</module>
-            </modules>
-
-            <properties>
-                <surefire-argline>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5006 --add-opens
-                    java.base/java.lang=ALL-UNNAMED
-                </surefire-argline>
-            </properties>
-            <dependencies>
-                <dependency>
-                    <groupId>org.jboss.classfilewriter</groupId>
-                    <artifactId>jboss-classfilewriter</artifactId>
-                    <version>1.2.5.Final</version>
-                    <scope>test</scope>
-                </dependency>
-            </dependencies>
-        </profile>
-        <profile>
             <id>release-sign-artifacts</id>
             <activation>
                 <property>
@@ -180,7 +136,11 @@
             </build>
         </profile>
     </profiles>
-
+    <modules>
+        <module>weld-starter-base</module>
+        <module>weld4-starter</module>
+        <module>weld-starter-test</module>
+    </modules>
     <scm>
         <url>https://github.com/1and1/ioc-unit</url>
         <connection>scm:git:ssh://git@github.com/1and1/ioc-unit.git</connection>
@@ -205,5 +165,55 @@
             <url>https://artifactory.1and1.org/artifactory/access-snapshot</url>
         </snapshotRepository>
     </distributionManagement>
+    <dependencies>
+        <!-- logging -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>2.0.5</version>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.cdi-api</artifactId>
+            <version>4.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.annotation</groupId>
+            <artifactId>jakarta.annotation-api</artifactId>
+            <version>2.1.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.interceptor</groupId>
+            <artifactId>jakarta.interceptor-api</artifactId>
+            <version>2.1.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.inject</groupId>
+            <artifactId>jakarta.inject-api</artifactId>
+            <version>2.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.weld</groupId>
+            <artifactId>weld-spi</artifactId>
+            <version>5.0.SP3</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.classfilewriter</groupId>
+            <artifactId>jboss-classfilewriter</artifactId>
+            <version>1.2.5.Final</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
 </project>

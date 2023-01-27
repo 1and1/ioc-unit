@@ -1,7 +1,7 @@
 package org.camunda.bpm.engine.cdi.cdiunittest.impl.beans;
 
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 import org.camunda.bpm.engine.ProcessEngine;
 

@@ -1,6 +1,6 @@
 package net.oneandone.iocunit.testalt;
 
-import javax.enterprise.inject.Produces;
+import jakarta.enterprise.inject.Produces;
 
 /**
  * @author aschoerk

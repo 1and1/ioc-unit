@@ -8,9 +8,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.annotation.Resource;
-import javax.ejb.EJB;
-import javax.enterprise.inject.spi.Extension;
+import jakarta.annotation.Resource;
+import jakarta.ejb.EJB;
+import jakarta.enterprise.inject.spi.Extension;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

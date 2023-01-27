@@ -4,7 +4,7 @@ import com.oneandone.iocunit.analyzer.test1.Qualifier1A;
 import com.oneandone.iocunit.analyzer.test1.Test1A;
 import com.oneandone.iocunit.analyzer.test1.Test1B;
 
-import javax.enterprise.inject.Produces;
+import jakarta.enterprise.inject.Produces;
 
 /**
  * @author aschoerk

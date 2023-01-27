@@ -42,10 +42,10 @@ public class PersistenceXmlConnectionProvider extends ConnectionProviderBase {
         ParsedPersistenceXmlDescriptor descriptor = pu.get();
         Properties props = descriptor.getProperties();
         try {
-            url = (String) props.get("javax.persistence.jdbc.url");
-            String userName = (String) props.get("javax.persistence.jdbc.user");
-            String password = (String) props.get("javax.persistence.jdbc.password");
-            String driverName = (String) props.get("javax.persistence.jdbc.driver");
+            url = (String) props.get("jakarta.persistence.jdbc.url");
+            String userName = (String) props.get("jakarta.persistence.jdbc.user");
+            String password = (String) props.get("jakarta.persistence.jdbc.password");
+            String driverName = (String) props.get("jakarta.persistence.jdbc.driver");
             if(driverName.equals(TestContainer.class.getName())) {
                 TestContainer testContainer = (TestContainer) System.getProperties().get(TestContainer.TESTCONTAINERINITIALIZED);
                 userName = testContainer.getUsername();

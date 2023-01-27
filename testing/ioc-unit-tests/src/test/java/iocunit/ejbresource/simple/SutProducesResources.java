@@ -1,8 +1,8 @@
 package iocunit.ejbresource.simple;
 
-import javax.annotation.Resource;
-import javax.enterprise.inject.Produces;
-import javax.sql.DataSource;
+import jakarta.annotation.Resource;
+import jakarta.enterprise.inject.Produces;
+import jakarta.sql.DataSource;
 
 /**
  * @author aschoerk

@@ -2,10 +2,10 @@ package com.oneandone.iocunitejb.example4;
 
 import java.util.concurrent.Future;
 
-import javax.ejb.AsyncResult;
-import javax.ejb.Asynchronous;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
+import jakarta.ejb.AsyncResult;
+import jakarta.ejb.Asynchronous;
+import jakarta.ejb.EJB;
+import jakarta.ejb.Stateless;
 
 import com.oneandone.iocunitejb.example4.AsynchronousServiceIntf.Callbacks;
 import com.oneandone.iocunitejb.example4.AsynchronousServiceIntf.CorrelationId;

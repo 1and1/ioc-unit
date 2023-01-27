@@ -1,7 +1,7 @@
 package com.oneandone.iocunit.validate;
 
-import javax.inject.Inject;
-import javax.validation.ConstraintViolationException;
+import jakarta.inject.Inject;
+import jakarta.validation.ConstraintViolationException;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

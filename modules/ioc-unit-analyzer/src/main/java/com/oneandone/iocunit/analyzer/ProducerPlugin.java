@@ -1,6 +1,6 @@
 package com.oneandone.iocunit.analyzer;
 
-import javax.enterprise.inject.spi.Extension;
+import jakarta.enterprise.inject.spi.Extension;
 import java.lang.annotation.Annotation;
 
 

@@ -1,9 +1,9 @@
 package com.oneandone.iocunit.resteasy;
 
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.WebTarget;
+import jakarta.enterprise.inject.Produces;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.WebTarget;
 
 /**
  * @author aschoerk

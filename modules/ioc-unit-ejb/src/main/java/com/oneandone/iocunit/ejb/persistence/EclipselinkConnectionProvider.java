@@ -3,10 +3,10 @@ package com.oneandone.iocunit.ejb.persistence;
 import java.sql.Connection;
 import java.util.Properties;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.enterprise.inject.spi.CDI;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.spi.Bean;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.CDI;
 
 import org.eclipse.persistence.exceptions.DatabaseException;
 import org.eclipse.persistence.sessions.DefaultConnector;

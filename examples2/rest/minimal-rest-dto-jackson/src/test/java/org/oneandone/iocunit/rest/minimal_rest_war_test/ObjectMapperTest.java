@@ -9,7 +9,7 @@ import static org.hamcrest.Matchers.lessThan;
 
 import java.lang.reflect.Type;
 
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MediaType;
 
 import org.hamcrest.Matcher;
 import org.junit.Test;

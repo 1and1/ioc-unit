@@ -2,11 +2,11 @@ package com.oneandone.iocunitejb.transactional;
 
 import java.nio.InvalidMarkException;
 
-import javax.annotation.Resource;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.transaction.TransactionSynchronizationRegistry;
+import jakarta.annotation.Resource;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.TransactionSynchronizationRegistry;
 
 import com.oneandone.iocunitejb.entities.TestEntity1;
 

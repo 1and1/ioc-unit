@@ -2,9 +2,9 @@ package com.oneandone.iocunitejb.resource;
 
 import static org.junit.Assert.assertTrue;
 
-import javax.annotation.Resource;
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
+import jakarta.annotation.Resource;
+import jakarta.enterprise.inject.Produces;
+import jakarta.inject.Inject;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

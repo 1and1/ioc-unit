@@ -4,14 +4,14 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Set;
 
-import javax.ejb.EJBLocalObject;
-import javax.ejb.EJBObject;
-import javax.ejb.MessageDrivenContext;
-import javax.ejb.SessionContext;
-import javax.enterprise.inject.Vetoed;
-import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.xml.rpc.handler.MessageContext;
+import jakarta.ejb.EJBLocalObject;
+import jakarta.ejb.EJBObject;
+import jakarta.ejb.MessageDrivenContext;
+import jakarta.ejb.SessionContext;
+import jakarta.enterprise.inject.Vetoed;
+import jakarta.enterprise.inject.spi.Bean;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.xml.rpc.handler.MessageContext;
 
 import com.oneandone.cdi.weldstarter.WeldSetupClass;
 

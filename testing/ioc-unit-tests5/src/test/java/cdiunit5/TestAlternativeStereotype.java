@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 @ExtendWith(IocJUnit5Extension.class)
 @TestClasses({ AImplementation3.class, AImplementation1.class })

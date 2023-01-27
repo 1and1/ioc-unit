@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.camunda.bpm.engine.cdi.cdiunittest.impl.beans.DeclarativeProcessController;
 import org.camunda.bpm.engine.test.Deployment;

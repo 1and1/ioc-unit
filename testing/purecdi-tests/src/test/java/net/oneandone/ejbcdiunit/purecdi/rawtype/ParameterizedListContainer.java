@@ -2,7 +2,7 @@ package net.oneandone.ejbcdiunit.purecdi.rawtype;
 
 import java.util.List;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 /**
  * @author aschoerk

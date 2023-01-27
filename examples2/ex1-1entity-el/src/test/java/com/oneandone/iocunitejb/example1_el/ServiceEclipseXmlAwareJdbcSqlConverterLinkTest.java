@@ -2,12 +2,12 @@ package com.oneandone.iocunitejb.example1_el;
 
 import static com.oneandone.iocunit.ejb.persistence.PersistenceFactory.Provider.ECLIPSELINK;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Default;
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.sql.DataSource;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Default;
+import jakarta.enterprise.inject.Produces;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.sql.DataSource;
 
 import org.junit.After;
 import org.junit.Assert;

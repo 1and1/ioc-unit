@@ -4,8 +4,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
 
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response;
 
+import org.jboss.resteasy.core.ResteasyContext;
 import org.jboss.resteasy.core.SynchronousDispatcher;
 import org.jboss.resteasy.plugins.providers.RegisterBuiltin;
 import org.jboss.resteasy.spi.HttpRequest;
@@ -56,7 +57,7 @@ public class IocUnitMockDispatcherFactory {
             }
         }
         else {
-            return ResteasyProviderFactory.getContextDataMap();
+            return ResteasyContext.getContextDataMap();
         }
     }
 
@@ -69,7 +70,7 @@ public class IocUnitMockDispatcherFactory {
             }
         }
         else {
-            ResteasyProviderFactory.clearContextData();
+            ResteasyContext.clearContextData();
         }
     }
 

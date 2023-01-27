@@ -6,8 +6,8 @@
  */
 package org.camunda.bpm.engine.cdi.cdiunittest.impl.context.beans;
 
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 import org.camunda.bpm.engine.cdi.BusinessProcess;
 import org.junit.Assert;

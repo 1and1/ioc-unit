@@ -1,6 +1,6 @@
 package com.oneandone.iocunitejb.ejbs;
 
-import javax.ejb.Singleton;
+import jakarta.ejb.Singleton;
 
 /**
  * @author aschoerk

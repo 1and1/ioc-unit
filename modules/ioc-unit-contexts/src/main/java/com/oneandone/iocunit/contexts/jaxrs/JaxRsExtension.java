@@ -6,14 +6,14 @@
  */
 package com.oneandone.iocunit.contexts.jaxrs;
 
-import javax.enterprise.event.Observes;
-import javax.enterprise.inject.spi.AnnotatedField;
-import javax.enterprise.inject.spi.AnnotatedType;
-import javax.enterprise.inject.spi.Extension;
-import javax.enterprise.inject.spi.ProcessAnnotatedType;
-import javax.enterprise.util.AnnotationLiteral;
-import javax.inject.Inject;
-import javax.ws.rs.core.Context;
+import jakarta.enterprise.event.Observes;
+import jakarta.enterprise.inject.spi.AnnotatedField;
+import jakarta.enterprise.inject.spi.AnnotatedType;
+import jakarta.enterprise.inject.spi.Extension;
+import jakarta.enterprise.inject.spi.ProcessAnnotatedType;
+import jakarta.enterprise.util.AnnotationLiteral;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.core.Context;
 
 import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
 

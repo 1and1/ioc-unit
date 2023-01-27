@@ -1,6 +1,6 @@
 package com.oneandone.iocunit.analyzer.derivedproducers;
 
-import javax.enterprise.inject.Produces;
+import jakarta.enterprise.inject.Produces;
 
 import org.mockito.Mock;
 

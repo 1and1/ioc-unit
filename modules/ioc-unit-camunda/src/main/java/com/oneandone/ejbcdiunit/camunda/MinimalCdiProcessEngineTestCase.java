@@ -6,7 +6,7 @@
  */
 package com.oneandone.iocunitejb.camunda;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;

@@ -5,7 +5,7 @@ import static org.junit.Assert.assertNull;
 
 import java.lang.reflect.ParameterizedType;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.junit.Test;
 

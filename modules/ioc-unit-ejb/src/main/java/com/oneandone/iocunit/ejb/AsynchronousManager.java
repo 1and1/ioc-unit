@@ -4,17 +4,17 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Set;
 
-import javax.annotation.PostConstruct;
-import javax.ejb.Schedule;
-import javax.ejb.Schedules;
-import javax.ejb.Timeout;
-import javax.ejb.TransactionAttributeType;
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.Dependent;
-import javax.enterprise.inject.Instance;
-import javax.enterprise.inject.spi.Bean;
-import javax.inject.Inject;
-import javax.transaction.Status;
+import jakarta.annotation.PostConstruct;
+import jakarta.ejb.Schedule;
+import jakarta.ejb.Schedules;
+import jakarta.ejb.Timeout;
+import jakarta.ejb.TransactionAttributeType;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.inject.Instance;
+import jakarta.enterprise.inject.spi.Bean;
+import jakarta.inject.Inject;
+import jakarta.transaction.Status;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

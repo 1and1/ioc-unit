@@ -8,13 +8,13 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
-import javax.xml.ws.EndpointReference;
-import javax.xml.ws.WebServiceContext;
-import javax.xml.ws.handler.MessageContext;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.xml.ws.EndpointReference;
+import jakarta.xml.ws.WebServiceContext;
+import jakarta.xml.ws.handler.MessageContext;
 
 import org.w3c.dom.Element;
 

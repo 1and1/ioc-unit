@@ -20,9 +20,9 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.TreeMap;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 
 import com.oneandone.iocunit.resteasy.IocUnitResteasy;
 

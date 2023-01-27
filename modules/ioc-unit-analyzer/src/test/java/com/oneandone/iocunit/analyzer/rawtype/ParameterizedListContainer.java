@@ -2,7 +2,7 @@ package com.oneandone.iocunit.analyzer.rawtype;
 
 import java.util.List;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import com.oneandone.iocunit.analyzer.BaseClass;
 

@@ -5,7 +5,7 @@ import static org.junit.Assert.assertThat;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.hamcrest.CoreMatchers;
 import org.junit.Before;

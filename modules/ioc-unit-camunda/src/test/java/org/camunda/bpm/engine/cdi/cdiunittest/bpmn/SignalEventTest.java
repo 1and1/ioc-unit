@@ -10,8 +10,8 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.HashMap;
 
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.cdi.BusinessProcess;

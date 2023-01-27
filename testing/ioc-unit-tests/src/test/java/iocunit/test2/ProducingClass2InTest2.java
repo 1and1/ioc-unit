@@ -1,6 +1,6 @@
 package iocunit.test2;
 
-import javax.enterprise.inject.Produces;
+import jakarta.enterprise.inject.Produces;
 
 /**
  * @author aschoerk

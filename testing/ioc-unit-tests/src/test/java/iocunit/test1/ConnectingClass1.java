@@ -1,6 +1,6 @@
 package iocunit.test1;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import iocunit.test2.Test2Interface;
 

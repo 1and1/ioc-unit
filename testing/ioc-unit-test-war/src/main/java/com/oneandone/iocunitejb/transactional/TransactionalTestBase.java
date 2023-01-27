@@ -1,8 +1,8 @@
 package com.oneandone.iocunitejb.transactional;
 
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.transaction.UserTransaction;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.UserTransaction;
 
 import org.slf4j.Logger;
 

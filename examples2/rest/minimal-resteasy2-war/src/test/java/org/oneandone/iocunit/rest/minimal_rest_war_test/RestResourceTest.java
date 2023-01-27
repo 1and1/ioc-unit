@@ -3,7 +3,7 @@ package org.oneandone.iocunit.rest.minimal_rest_war_test;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MediaType;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

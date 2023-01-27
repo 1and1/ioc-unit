@@ -1,7 +1,7 @@
 package com.oneandone.iocunitejb.camunda;
 
-import javax.ejb.TransactionAttributeType;
-import javax.transaction.Status;
+import jakarta.ejb.TransactionAttributeType;
+import jakarta.transaction.Status;
 
 import org.camunda.bpm.engine.impl.cfg.TransactionContext;
 import org.camunda.bpm.engine.impl.cfg.TransactionContextFactory;

@@ -2,7 +2,7 @@ package com.oneandone.iocunit.resteasy;
 
 import com.oneandone.iocunit.resteasy.auth.TestAuth;
 
-import javax.ws.rs.core.SecurityContext;
+import jakarta.ws.rs.core.SecurityContext;
 import java.security.Principal;
 import java.util.Arrays;
 import java.util.Collections;

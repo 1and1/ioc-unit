@@ -2,9 +2,9 @@ package com.oneandone.iocunitejb.ejbs;
 
 import java.util.concurrent.Future;
 
-import javax.ejb.AsyncResult;
-import javax.ejb.Asynchronous;
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.ejb.AsyncResult;
+import jakarta.ejb.Asynchronous;
+import jakarta.enterprise.context.ApplicationScoped;
 
 /**
  * @author aschoerk

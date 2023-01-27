@@ -4,9 +4,9 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import javax.annotation.Resource;
-import javax.enterprise.inject.Produces;
-import javax.sql.DataSource;
+import jakarta.annotation.Resource;
+import jakarta.enterprise.inject.Produces;
+import jakarta.sql.DataSource;
 
 /**
  * @author aschoerk

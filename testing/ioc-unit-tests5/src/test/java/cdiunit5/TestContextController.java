@@ -5,7 +5,7 @@ import com.oneandone.iocunit.IocJUnit5Extension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import java.util.concurrent.ExecutionException;
 
 @ExtendWith(IocJUnit5Extension.class)

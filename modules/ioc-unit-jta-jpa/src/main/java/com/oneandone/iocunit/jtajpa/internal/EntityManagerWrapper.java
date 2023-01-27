@@ -4,12 +4,12 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.annotation.PreDestroy;
-import javax.enterprise.inject.spi.PassivationCapable;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.transaction.Transaction;
-import javax.transaction.TransactionScoped;
+import jakarta.annotation.PreDestroy;
+import jakarta.enterprise.inject.spi.PassivationCapable;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.transaction.Transaction;
+import jakarta.transaction.TransactionScoped;
 
 import com.arjuna.ats.internal.jta.transaction.arjunacore.TransactionImple;
 

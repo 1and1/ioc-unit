@@ -2,8 +2,8 @@ package net.oneandone.ejbcdiunit.purecdi;
 
 import static org.junit.Assert.assertNotNull;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
 
 import org.junit.Test;
 

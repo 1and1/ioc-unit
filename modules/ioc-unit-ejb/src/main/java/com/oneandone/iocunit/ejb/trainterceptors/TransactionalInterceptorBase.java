@@ -2,17 +2,17 @@ package com.oneandone.iocunit.ejb.trainterceptors;
 
 import java.lang.annotation.Annotation;
 
-import javax.ejb.MessageDriven;
-import javax.ejb.Singleton;
-import javax.ejb.Stateful;
-import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.ejb.TransactionManagement;
-import javax.ejb.TransactionManagementType;
-import javax.inject.Inject;
-import javax.interceptor.InvocationContext;
-import javax.transaction.Transactional;
+import jakarta.ejb.MessageDriven;
+import jakarta.ejb.Singleton;
+import jakarta.ejb.Stateful;
+import jakarta.ejb.Stateless;
+import jakarta.ejb.TransactionAttribute;
+import jakarta.ejb.TransactionAttributeType;
+import jakarta.ejb.TransactionManagement;
+import jakarta.ejb.TransactionManagementType;
+import jakarta.inject.Inject;
+import jakarta.interceptor.InvocationContext;
+import jakarta.transaction.Transactional;
 
 import com.oneandone.iocunit.InterceptorBase;
 import org.slf4j.Logger;

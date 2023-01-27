@@ -10,9 +10,9 @@ import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.enterprise.inject.Produces;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;

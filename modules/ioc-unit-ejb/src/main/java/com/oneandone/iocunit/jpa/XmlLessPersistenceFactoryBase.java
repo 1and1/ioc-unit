@@ -2,7 +2,7 @@ package com.oneandone.iocunit.jpa;
 
 import java.util.UUID;
 
-import javax.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityManagerFactory;
 
 import com.oneandone.iocunit.ejb.persistence.PersistenceFactory;
 

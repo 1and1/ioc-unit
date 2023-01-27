@@ -3,7 +3,7 @@ package com.oneandone.iocunit.mocks;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.enterprise.inject.spi.Extension;
+import jakarta.enterprise.inject.spi.Extension;
 
 import org.easymock.EasyMockSupport;
 import org.mockito.Mockito;

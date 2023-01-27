@@ -6,7 +6,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.Set;
 
-import javax.enterprise.inject.spi.Extension;
+import jakarta.enterprise.inject.spi.Extension;
 
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.ByteArrayAsset;

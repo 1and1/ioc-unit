@@ -1,7 +1,7 @@
 package com.oneandone.iocunit.ejb.resourcesimulators;
 
-import javax.ejb.MessageDrivenContext;
-import javax.enterprise.inject.Vetoed;
+import jakarta.ejb.MessageDrivenContext;
+import jakarta.enterprise.inject.Vetoed;
 
 /**
  * @author aschoerk

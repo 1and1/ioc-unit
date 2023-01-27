@@ -27,10 +27,6 @@
         </developer>
     </developers>
 
-    <modules>
-
-    </modules>
-
 
     <properties>
         <!--maven.javadoc.skip>true</maven.javadoc.skip-->
@@ -58,7 +54,6 @@
         <!-- external -->
         <slf4j.version>1.7.25</slf4j.version>
         <logback.version>1.0.9</logback.version>
-        <persistence-api.version>1.0</persistence-api.version>
 
         <!-- test -->
         <mockito.version>2.19.0</mockito.version>
@@ -82,213 +77,37 @@
         <jaxrpc.version>1.1</jaxrpc.version>
 
         <camunda-engine.version>7.5.0</camunda-engine.version>
-        <delta-spike.version>1.0.1</delta-spike.version>
         <weld.compile.version>3.1.9.Final</weld.compile.version>
         <version.cdi-api>2.0</version.cdi-api>
         <additionalparam>-Xdoclint:none</additionalparam>
 
-        <compile.version.cdi-api>2.0.2</compile.version.cdi-api>
-        <compile.version.transaction-api>1.3.2</compile.version.transaction-api>
-        <compile.version.ejb-api>3.2.6</compile.version.ejb-api>
-        <compile.version.interceptor-api>1.2.5</compile.version.interceptor-api>
-        <compile.version.servlet-api>4.0.3</compile.version.servlet-api>
-        <compile.version.weld-spi>3.1.SP4</compile.version.weld-spi>
-        <compile.version.weld-api>3.1.SP4</compile.version.weld-api>
-        <compile.version.persistence-api>2.2.3</compile.version.persistence-api>
-        <compile.version.faces-api>2.3.2</compile.version.faces-api>
-        <compile.version.bind-api>2.3.3</compile.version.bind-api>
-        <compile.version.jms-api>2.0.3</compile.version.jms-api>
+        <compile.version.cdi-api>4.0.0</compile.version.cdi-api>
+        <compile.version.transaction-api>2.0.1</compile.version.transaction-api>
+        <compile.version.ejb-api>4.0.1</compile.version.ejb-api>
+        <compile.version.interceptor-api>2.1.0</compile.version.interceptor-api>
+        <compile.version.servlet-api>6.0.0</compile.version.servlet-api>
+        <compile.version.weld-spi>5.0.SP3</compile.version.weld-spi>
+        <compile.version.weld-api>5.0.SP3</compile.version.weld-api>
+        <compile.version.persistence-api>3.1.0</compile.version.persistence-api>
+        <compile.version.faces-api>4.0.1</compile.version.faces-api>
+        <compile.version.bind-api>4.0.0</compile.version.bind-api>
+        <compile.version.jms-api>3.1.0</compile.version.jms-api>
+
+        <weld.version>5.1.0.Final</weld.version>
+        <weld-spi.version>5.0.SP3</weld-spi.version>
+        <version.org.hibernate>6.1.5.Final</version.org.hibernate>
+        <version.org.hibernate.validator>8.0.0.Final</version.org.hibernate.validator>
+        <version.org.hibernate.validator-cdi>8.0.0.Final</version.org.hibernate.validator-cdi>
+        <version.validation-api>3.0.2</version.validation-api>
+        <version.cdi-api>4.0.0</version.cdi-api>
+        <version.javaee-api>10.0</version.javaee-api>
+        <version.resteasy>6.2.1.Final</version.resteasy>
+        <surefire-argline>
+            -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5006 --add-opens
+            java.base/java.lang=ALL-UNNAMED
+        </surefire-argline>
     </properties>
-
     <profiles>
-        <profile>
-            <id>jdk8</id>
-            <activation>
-                <jdk>
-                    (,1.8]
-                </jdk>
-            </activation>
-            <properties>
-                <surefire-argline>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5006</surefire-argline>
-            </properties>
-        </profile>
-        <profile>
-            <id>jdk11ff</id>
-            <activation>
-                <jdk>
-                    [11,)
-                </jdk>
-            </activation>
-            <properties>
-                <surefire-argline>
-                    -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5006 --add-opens
-                    java.base/java.lang=ALL-UNNAMED
-                </surefire-argline>
-            </properties>
-        </profile>
-        <profile>
-            <id>base</id>
-            <modules>
-                <module>weld-starter</module>
-                <module>modules/ioc-unit-analyzer</module>
-                <module>modules/ioc-unit</module>
-                <module>modules/ioc-unit-mockseasy</module>
-                <module>modules/ioc-unit-resource</module>
-                <module>modules/ioc-unit-jta-jpa</module>
-                <module>modules/ioc-unit-validate</module>
-                <module>modules/ioc-unit-resteasy</module>
-                <module>modules/ioc-unit-jms</module>
-                <module>modules/ioc-unit-ejb</module>
-                <module>modules/ioc-unit-dep-impls</module>
-                <module>modules/ioc-unit-contexts</module>
-                <!--module>modules/ioc-unit-warcheck-plugin</module-->
-                <module>modules/ioc-unit-dbunit</module>
-                <module>modules/ioc-unit-simulators</module>
-                <module>modules/ioc-unit-wf10-specs</module>
-                <module>modules/ioc-unit-wf24-specs</module>
-                <module>modules/ioc-unit-wf26-specs</module>
-                <module>modules/ioc-unit-wf10</module>
-                <module>modules/ioc-unit-wf24</module>
-                <module>modules/ioc-unit-wf26</module>
-                <module>boms</module>
-            </modules>
-            <dependencies>
-                <dependency>
-                    <groupId>net.oneandone.ioc-unit</groupId>
-                    <artifactId>weld-starter-base</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
-            </dependencies>
-        </profile>
-        <profile>
-            <id>arquillian</id>
-            <properties>
-                <version.org.hibernate.api>1.0.0.Final</version.org.hibernate.api>
-                <version.org.hibernate>5.0.10.Final</version.org.hibernate>
-                <version.org.hibernate.validator>5.2.4.Final</version.org.hibernate.validator>
-                <version.org.hibernate.validator-cdi>5.2.4.Final</version.org.hibernate.validator-cdi>
-                <version.validation-api>2.0.1</version.validation-api>
-                <version.cdi-api>1.2</version.cdi-api>
-                <version.javaee-api>8.0</version.javaee-api>
-            </properties>
-            <modules>
-                <module>testing/ioc-unit-test-war</module>
-                <module>testing/ioc-unit-arq</module>
-            </modules>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <version>${maven-surefire-plugin.version}</version>
-                        <dependencies>
-                            <dependency>
-                                <groupId>org.apache.maven.surefire</groupId>
-                                <artifactId>surefire-junit47</artifactId>
-                                <version>${maven-surefire-plugin.version}</version>
-                            </dependency>
-                        </dependencies>
-                        <configuration>
-                            <systemPropertyVariables>
-                                <javax.xml.parsers.DocumentBuilderFactory>
-                                    com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl
-                                </javax.xml.parsers.DocumentBuilderFactory>
-                            </systemPropertyVariables>
-
-                            <reportFormat>plain</reportFormat>
-                            <redirectTestOutputToFile>true</redirectTestOutputToFile>
-                            <!-- Sets the VM argument line used when unit tests are run. -->
-                            <!--argLine> - -add-modules java.xml,java.sql -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5006</argLine-->
-                            <argLine>
-                                ${surefire-argline}
-                            </argLine>
-                            <forkCount>1</forkCount>
-                            <reuseForks>false</reuseForks>
-                            <classpathDependencyExcludes>
-                                <classpathDependencyExclude>net.oneandone:purecdi-tests</classpathDependencyExclude>
-                            </classpathDependencyExcludes>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>junit4</id>
-            <modules>
-                <module>examples2</module>
-                <module>testing</module>
-            </modules>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <version>${maven-surefire-plugin.version}</version>
-                        <dependencies>
-                            <dependency>
-                                <groupId>org.apache.maven.surefire</groupId>
-                                <artifactId>surefire-junit47</artifactId>
-                                <version>${maven-surefire-plugin.version}</version>
-                            </dependency>
-                        </dependencies>
-                        <configuration>
-                            <systemPropertyVariables>
-                                <javax.xml.parsers.DocumentBuilderFactory>
-                                    com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl
-                                </javax.xml.parsers.DocumentBuilderFactory>
-                            </systemPropertyVariables>
-
-                            <reportFormat>plain</reportFormat>
-                            <redirectTestOutputToFile>true</redirectTestOutputToFile>
-                            <!-- Sets the VM argument line used when unit tests are run. -->
-                            <!--argLine> - -add-modules java.xml,java.sql -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5006</argLine-->
-                            <argLine>
-                                ${surefire-argline}
-                            </argLine>
-                            <forkCount>1</forkCount>
-                            <reuseForks>false</reuseForks>
-                            <classpathDependencyExcludes>
-                                <classpathDependencyExclude>net.oneandone:purecdi-tests</classpathDependencyExclude>
-                            </classpathDependencyExcludes>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>junit5</id>
-            <modules>
-                <module>examples2</module>
-                <module>testing</module>
-            </modules>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <version>${maven-surefire-plugin.version}</version>
-                        <configuration>
-                            <systemPropertyVariables>
-                                <javax.xml.parsers.DocumentBuilderFactory>
-                                    com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl
-                                </javax.xml.parsers.DocumentBuilderFactory>
-                            </systemPropertyVariables>
-
-                            <reportFormat>plain</reportFormat>
-                            <redirectTestOutputToFile>true</redirectTestOutputToFile>
-                            <!-- Sets the VM argument line used when unit tests are run. -->
-                            <!--argLine> - -add-modules java.xml,java.sql -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005</argLine-->
-                            <argLine>
-                                ${surefire-argline}
-                            </argLine>
-                            <classpathDependencyExcludes>
-                                <classpathDependencyExclude>net.oneandone:purecdi-tests</classpathDependencyExclude>
-                            </classpathDependencyExcludes>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
         <profile>
             <id>release-sign-artifacts</id>
             <activation>
@@ -316,87 +135,43 @@
                 </plugins>
             </build>
         </profile>
-        <profile>
-            <id>weld1.1</id>
-            <properties>
-                <weld.version>1.1.14.Final</weld.version>
-                <weld-spi.version>1.1.Final</weld-spi.version>
-                <version.org.hibernate.api>1.0.1.Final</version.org.hibernate.api>
-                <version.org.hibernate>5.2.4.Final</version.org.hibernate>
-                <version.org.hibernate.validator>5.2.4.Final</version.org.hibernate.validator>
-                <version.org.hibernate.validator-cdi>5.2.4.Final</version.org.hibernate.validator-cdi>
-                <version.validation-api>2.0.1</version.validation-api>
-                <version.cdi-api>1.0</version.cdi-api>
-                <version.javaee-api>7.0</version.javaee-api>
-                <version.resteasy>3.0.14.Final</version.resteasy>
-            </properties>
-            <dependencies>
-                <dependency>
-                    <groupId>net.oneandone.ioc-unit</groupId>
-                    <artifactId>weld1-starter</artifactId>
-                    <version>${project.version}</version>
-                    <scope>test</scope>
-                </dependency>
-            </dependencies>
-        </profile>
-        <profile>
-            <id>weld2.3</id>
-            <modules>
-                <module>testing/purecdi-tests</module>
-            </modules>
-            <properties>
-                <weld.version>2.3.5.Final</weld.version>
-                <weld-spi.version>2.3.Final</weld-spi.version>
-                <weld-api.version>2.3.Final</weld-api.version>
-                <version.org.hibernate.api>1.0.0.Final</version.org.hibernate.api>
-                <version.org.hibernate>5.3.6.Final</version.org.hibernate>
-                <version.org.hibernate.validator>5.2.4.Final</version.org.hibernate.validator>
-                <version.org.hibernate.validator-cdi>5.2.4.Final</version.org.hibernate.validator-cdi>
-                <version.validation-api>2.0.2</version.validation-api>
-                <version.cdi-api>1.2</version.cdi-api>
-                <version.javaee-api>8.0</version.javaee-api>
-                <version.resteasy>3.9.3.Final</version.resteasy>
-            </properties>
-            <dependencies>
-                <dependency>
-                    <groupId>net.oneandone.ioc-unit</groupId>
-                    <artifactId>weld2-starter</artifactId>
-                    <version>${project.version}</version>
-                    <scope>test</scope>
-                </dependency>
-
-            </dependencies>
-        </profile>
-        <profile>
-            <id>weld3.1</id>
-            <modules>
-                <module>testing/purecdi-tests</module>
-            </modules>
-            <properties>
-                <weld.version>3.1.9.Final</weld.version>
-                <weld-spi.version>3.1.SP4</weld-spi.version>
-                <version.org.hibernate.api>1.0.0.Final</version.org.hibernate.api>
-                <version.org.hibernate>5.3.24.Final</version.org.hibernate>
-                <version.org.hibernate.validator>6.0.22.Final</version.org.hibernate.validator>
-                <version.org.hibernate.validator-cdi>6.0.22.Final</version.org.hibernate.validator-cdi>
-                <version.validation-api>2.0.2</version.validation-api>
-                <version.cdi-api>2.0.2</version.cdi-api>
-                <version.javaee-api>8.0</version.javaee-api>
-                <version.resteasy>4.7.4.Final</version.resteasy>
-            </properties>
-            <dependencies>
-                <dependency>
-                    <groupId>net.oneandone.ioc-unit</groupId>
-                    <artifactId>weld31-starter</artifactId>
-                    <version>${project.version}</version>
-                    <scope>test</scope>
-                </dependency>
-            </dependencies>
-        </profile>
     </profiles>
-
+    <modules>
+        <module>weld-starter</module>
+        <module>modules/ioc-unit-analyzer</module>
+        <module>modules/ioc-unit</module>
+        <module>modules/ioc-unit-mockseasy</module>
+        <module>modules/ioc-unit-resource</module>
+        <module>modules/ioc-unit-jta-jpa</module>
+        <module>modules/ioc-unit-validate</module>
+        <module>modules/ioc-unit-resteasy</module>
+        <!--module>modules/ioc-unit-jms</module>
+        <module>modules/ioc-unit-ejb</module>
+        <module>modules/ioc-unit-dep-impls</module>
+        <module>modules/ioc-unit-contexts</module>
+        <module>modules/ioc-unit-dbunit</module>
+        <module>modules/ioc-unit-simulators</module>
+        <module>modules/ioc-unit-wf10-specs</module>
+        <module>modules/ioc-unit-wf24-specs</module>
+        <module>modules/ioc-unit-wf26-specs</module>
+        <module>modules/ioc-unit-wf10</module>
+        <module>modules/ioc-unit-wf24</module>
+        <module>modules/ioc-unit-wf26</module>
+        <module>boms</module-->
+    </modules>
 
     <dependencies>
+        <dependency>
+            <groupId>net.oneandone.ioc-unit</groupId>
+            <artifactId>weld-starter-base</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.oneandone.ioc-unit</groupId>
+            <artifactId>weld4-starter</artifactId>
+            <version>4.0.1-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -433,6 +208,54 @@
             <!-- to get around bug https://github.com/junit-team/junit5/issues/1367 -->
             <scope>test</scope>
             <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.cdi-api</artifactId>
+            <version>4.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.annotation</groupId>
+            <artifactId>jakarta.annotation-api</artifactId>
+            <version>2.1.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+            <version>3.0.2</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.interceptor</groupId>
+            <artifactId>jakarta.interceptor-api</artifactId>
+            <version>2.1.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.ejb</groupId>
+            <artifactId>jakarta.ejb-api</artifactId>
+            <version>4.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.transaction</groupId>
+            <artifactId>jakarta.transaction-api</artifactId>
+            <version>2.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.inject</groupId>
+            <artifactId>jakarta.inject-api</artifactId>
+            <version>2.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.weld</groupId>
+            <artifactId>weld-spi</artifactId>
+            <version>5.0.SP3</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
@@ -624,6 +447,24 @@
                     </dependencies>
 
                 </plugin>
+                <plugin>
+                    <groupId>org.openrewrite.maven</groupId>
+                    <artifactId>rewrite-maven-plugin</artifactId>
+                    <version>4.39.0</version>
+                    <configuration>
+                        <activeRecipes>
+                            <recipe>org.openrewrite.java.migrate.jakarta.JavaxMigrationToJakarta</recipe>
+                        </activeRecipes>
+                    </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.openrewrite.recipe</groupId>
+                            <artifactId>rewrite-migrate-java</artifactId>
+                            <version>1.16.0</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+
             </plugins>
         </pluginManagement>
     </build>

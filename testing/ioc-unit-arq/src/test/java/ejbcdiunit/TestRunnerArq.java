@@ -2,10 +2,10 @@ package ejbcdiunit;
 
 import static org.hamcrest.core.Is.is;
 
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.transaction.Status;
-import javax.transaction.UserTransaction;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Status;
+import jakarta.transaction.UserTransaction;
 
 import org.junit.Assert;
 import org.slf4j.Logger;

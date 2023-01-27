@@ -3,8 +3,8 @@ package com.oneandone.iocunitejb.ejbs;
 import static javax.transaction.Transactional.TxType.REQUIRED;
 import static javax.transaction.Transactional.TxType.REQUIRES_NEW;
 
-import javax.inject.Inject;
-import javax.transaction.Transactional;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 
 import com.oneandone.iocunitejb.entities.TestEntity1;
 

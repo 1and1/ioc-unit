@@ -2,7 +2,7 @@ package com.oneandone.iocunit.basetests.rawtype;
 
 import java.util.List;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.junit.Assert;
 import org.junit.Test;

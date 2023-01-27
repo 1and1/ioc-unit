@@ -1,6 +1,6 @@
 package net.oneandone.iocunit.testalt;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 /**
  * @author aschoerk

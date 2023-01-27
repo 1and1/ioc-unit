@@ -2,19 +2,19 @@ package com.oneandone.iocunitejb.entities;
 
 import java.rmi.RemoteException;
 
-import javax.annotation.Resource;
-import javax.ejb.EJBContext;
-import javax.ejb.EJBException;
-import javax.ejb.EntityBean;
-import javax.ejb.EntityContext;
-import javax.ejb.RemoveException;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import jakarta.annotation.Resource;
+import jakarta.ejb.EJBContext;
+import jakarta.ejb.EJBException;
+import jakarta.ejb.EntityBean;
+import jakarta.ejb.EntityContext;
+import jakarta.ejb.RemoveException;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

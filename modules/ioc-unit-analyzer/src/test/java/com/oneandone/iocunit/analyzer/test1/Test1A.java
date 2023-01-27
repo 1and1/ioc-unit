@@ -1,6 +1,6 @@
 package com.oneandone.iocunit.analyzer.test1;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 /**
  * @author aschoerk

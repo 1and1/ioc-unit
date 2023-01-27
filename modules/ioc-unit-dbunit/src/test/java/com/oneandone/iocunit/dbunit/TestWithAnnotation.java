@@ -1,7 +1,7 @@
 package com.oneandone.iocunit.dbunit;
 
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

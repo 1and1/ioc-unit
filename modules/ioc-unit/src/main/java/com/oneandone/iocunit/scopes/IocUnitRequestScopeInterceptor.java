@@ -3,10 +3,10 @@ package com.oneandone.iocunit.scopes;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.inject.Inject;
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.Interceptor;
-import javax.interceptor.InvocationContext;
+import jakarta.inject.Inject;
+import jakarta.interceptor.AroundInvoke;
+import jakarta.interceptor.Interceptor;
+import jakarta.interceptor.InvocationContext;
 
 import org.jboss.weld.context.bound.BoundRequestContext;
 import org.slf4j.Logger;

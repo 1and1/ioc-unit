@@ -4,8 +4,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import javax.inject.Inject;
-import javax.sql.DataSource;
+import jakarta.inject.Inject;
+import jakarta.sql.DataSource;
 
 /**
  * @author aschoerk

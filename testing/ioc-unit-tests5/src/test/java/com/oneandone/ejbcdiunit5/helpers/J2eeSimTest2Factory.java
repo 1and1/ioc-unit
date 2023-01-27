@@ -1,6 +1,6 @@
 package com.oneandone.ejbcdiunit5.helpers;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 import com.oneandone.iocunit.jpa.XmlAwarePersistenceFactory;
 

@@ -1,8 +1,8 @@
 package iocunit.ejbresource;
 
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
-import javax.sql.DataSource;
+import jakarta.enterprise.inject.Produces;
+import jakarta.inject.Inject;
+import jakarta.sql.DataSource;
 
 import com.oneandone.iocunit.resource.ResourceQualifier;
 

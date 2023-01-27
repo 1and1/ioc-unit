@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.NewCookie;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.NewCookie;
 
 import org.apache.http.Header;
 import org.apache.http.HeaderElement;

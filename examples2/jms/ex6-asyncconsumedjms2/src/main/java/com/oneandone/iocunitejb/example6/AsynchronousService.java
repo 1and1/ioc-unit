@@ -2,9 +2,9 @@ package com.oneandone.iocunitejb.example6;
 
 import java.util.HashMap;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.jms.JMSException;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
+import jakarta.jms.JMSException;
 
 /**
  * Created by aschoerk on 28.06.17.

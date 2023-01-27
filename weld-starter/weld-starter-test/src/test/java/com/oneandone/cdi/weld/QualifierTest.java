@@ -7,13 +7,13 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import javax.enterprise.inject.Any;
-import javax.enterprise.inject.Default;
-import javax.enterprise.inject.Instance;
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Qualifier;
+import jakarta.enterprise.inject.Any;
+import jakarta.enterprise.inject.Default;
+import jakarta.enterprise.inject.Instance;
+import jakarta.enterprise.inject.Produces;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.inject.Qualifier;
 
 import org.junit.Test;
 
@@ -433,8 +433,8 @@ public class QualifierTest extends WeldStarterTestsBase {
         start();
         BeanEmpty bean = selectGet(BeanEmpty.class);
         assertEquals(22, bean.toInjectAny.signifyClass());
-        if (WeldSetupClass.isWeld3())
-            throw new StarterDeploymentException(null);
+
+        throw new StarterDeploymentException(null);
     }
 
     @Test(expected = StarterDeploymentException.class)
@@ -443,8 +443,7 @@ public class QualifierTest extends WeldStarterTestsBase {
         start();
         BeanDefault bean = selectGet(BeanDefault.class);
         assertEquals(22, bean.toInjectAny.signifyClass());
-        if (WeldSetupClass.isWeld3())
-            throw new StarterDeploymentException(null);
+        throw new StarterDeploymentException(null);
     }
 
 }

@@ -1,10 +1,10 @@
 package com.oneandone.iocunit.ejb.jms;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import javax.inject.Provider;
-import javax.inject.Singleton;
-import javax.jms.JMSException;
+import jakarta.annotation.PostConstruct;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+import jakarta.inject.Singleton;
+import jakarta.jms.JMSException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

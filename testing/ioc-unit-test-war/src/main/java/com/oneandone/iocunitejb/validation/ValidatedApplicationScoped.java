@@ -1,8 +1,8 @@
 package com.oneandone.iocunitejb.validation;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.transaction.Transactional;
-import javax.validation.constraints.NotNull;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.transaction.Transactional;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * @author aschoerk

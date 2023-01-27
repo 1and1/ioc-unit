@@ -30,12 +30,6 @@
             <artifactId>slf4j-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.deltaspike.core</groupId>
-            <artifactId>deltaspike-core-api</artifactId>
-            <version>${delta-spike.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>net.oneandone.ioc-unit</groupId>
             <artifactId>ioc-unit-analyzer</artifactId>
             <version>${project.version}</version>
@@ -45,12 +39,6 @@
             <groupId>org.jboss.weld</groupId>
             <artifactId>weld-api</artifactId>
             <version>${compile.version.weld-api}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>jakarta.interceptor</groupId>
-            <artifactId>jakarta.interceptor-api</artifactId>
-            <version>1.2.5</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

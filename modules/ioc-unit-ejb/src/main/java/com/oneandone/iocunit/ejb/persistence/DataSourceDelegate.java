@@ -7,8 +7,8 @@ import java.sql.SQLFeatureNotSupportedException;
 import java.sql.SQLTimeoutException;
 import java.util.logging.Logger;
 
-import javax.persistence.EntityManager;
-import javax.sql.DataSource;
+import jakarta.persistence.EntityManager;
+import jakarta.sql.DataSource;
 
 import org.hibernate.Session;
 import org.hibernate.engine.spi.SessionImplementor;

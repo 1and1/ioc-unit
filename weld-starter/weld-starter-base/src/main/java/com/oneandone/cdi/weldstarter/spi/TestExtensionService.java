@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import javax.enterprise.inject.spi.Extension;
+import jakarta.enterprise.inject.spi.Extension;
 
 import org.jboss.weld.bootstrap.api.Service;
 

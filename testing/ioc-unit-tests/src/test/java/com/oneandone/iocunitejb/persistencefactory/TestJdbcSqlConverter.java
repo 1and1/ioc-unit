@@ -5,9 +5,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.sql.DataSource;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.sql.DataSource;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

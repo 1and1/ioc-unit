@@ -8,10 +8,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import javax.enterprise.inject.Alternative;
-import javax.enterprise.inject.Produces;
-import javax.enterprise.inject.Stereotype;
-import javax.inject.Inject;
+import jakarta.enterprise.inject.Alternative;
+import jakarta.enterprise.inject.Produces;
+import jakarta.enterprise.inject.Stereotype;
+import jakarta.inject.Inject;
 
 import org.junit.Test;
 import org.mockito.Mockito;

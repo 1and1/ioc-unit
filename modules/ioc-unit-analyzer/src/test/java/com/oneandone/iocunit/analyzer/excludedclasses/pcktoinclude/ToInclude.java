@@ -1,6 +1,6 @@
 package com.oneandone.iocunit.analyzer.excludedclasses.pcktoinclude;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 /**
  * @author aschoerk

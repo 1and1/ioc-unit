@@ -1,9 +1,9 @@
 package com.oneandone.cdi.weld;
 
-import javax.enterprise.event.Observes;
-import javax.enterprise.inject.spi.AnnotatedType;
-import javax.enterprise.inject.spi.Extension;
-import javax.enterprise.inject.spi.ProcessAnnotatedType;
+import jakarta.enterprise.event.Observes;
+import jakarta.enterprise.inject.spi.AnnotatedType;
+import jakarta.enterprise.inject.spi.Extension;
+import jakarta.enterprise.inject.spi.ProcessAnnotatedType;
 
 import org.apache.deltaspike.core.api.literal.ApplicationScopedLiteral;
 import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;

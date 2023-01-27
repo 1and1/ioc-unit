@@ -2,8 +2,8 @@ package com.oneandone.iocunitejb.asynchmdb;
 
 import static org.hamcrest.core.Is.is;
 
-import javax.inject.Inject;
-import javax.jms.JMSException;
+import jakarta.inject.Inject;
+import jakarta.jms.JMSException;
 
 import org.junit.Assert;
 import org.junit.Test;

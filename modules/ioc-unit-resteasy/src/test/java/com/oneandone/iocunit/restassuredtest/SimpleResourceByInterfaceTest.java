@@ -21,6 +21,6 @@ public class SimpleResourceByInterfaceTest {
     public void test() {
         // can't be found since @Path, @GET, ... not in Class-Definition to be found.
         // Weld1 does not filter by Annotations
-        given().get("/check").then().statusCode(WeldSetupClass.isWeld1() ? 200 : 404);
+        given().get("/check").then().statusCode( 404);
     }
 }

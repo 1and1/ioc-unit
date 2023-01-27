@@ -2,9 +2,9 @@ package com.oneandone.iocunit.ejb.trainterceptors;
 
 import static javax.transaction.Transactional.TxType.SUPPORTS;
 
-import javax.annotation.Priority;
-import javax.interceptor.Interceptor;
-import javax.transaction.Transactional;
+import jakarta.annotation.Priority;
+import jakarta.interceptor.Interceptor;
+import jakarta.transaction.Transactional;
 
 /**
  * @author aschoerk

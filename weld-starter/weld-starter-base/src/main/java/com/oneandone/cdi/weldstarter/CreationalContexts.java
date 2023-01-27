@@ -5,11 +5,11 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.enterprise.context.spi.Context;
-import javax.enterprise.context.spi.Contextual;
-import javax.enterprise.context.spi.CreationalContext;
-import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.context.spi.Context;
+import jakarta.enterprise.context.spi.Contextual;
+import jakarta.enterprise.context.spi.CreationalContext;
+import jakarta.enterprise.inject.spi.Bean;
+import jakarta.enterprise.inject.spi.BeanManager;
 import javax.naming.NamingException;
 
 import org.slf4j.Logger;
@@ -44,13 +44,13 @@ public class CreationalContexts implements AutoCloseable {
         BeanManager tmpBm = null;
         try {
             // the following code simulates: tmpBm = CDI.current().getBeanManager();
-            Class<?> cdiClass = Class.forName("javax.enterprise.inject.spi.CDI");
+            Class<?> cdiClass = Class.forName("jakarta.enterprise.inject.spi.CDI");
             Method currentMethod = cdiClass.getMethod("current");
             Method getBeanManagerMethod = cdiClass.getMethod("getBeanManager");
             Object cdi = currentMethod.invoke(null);
             tmpBm = (BeanManager) getBeanManagerMethod.invoke(cdi);
         } catch (Exception e) {
-            throw new RuntimeException("Cannot use javax.enterprise.inject.spi.CDI in this weld-version");
+            throw new RuntimeException("Cannot use jakarta.enterprise.inject.spi.CDI in this weld-version");
         }
         return tmpBm;
     }

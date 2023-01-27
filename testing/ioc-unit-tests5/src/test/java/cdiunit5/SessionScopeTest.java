@@ -2,8 +2,8 @@ package cdiunit5;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 import com.oneandone.iocunit.contexts.InRequestScope;
 import com.oneandone.iocunit.contexts.InSessionScope;

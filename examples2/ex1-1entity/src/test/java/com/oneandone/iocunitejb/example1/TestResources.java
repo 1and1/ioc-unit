@@ -1,9 +1,9 @@
 package com.oneandone.iocunitejb.example1;
 
-import javax.enterprise.inject.Produces;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
+import jakarta.enterprise.inject.Produces;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
 
 /**
  * @author aschoerk

@@ -1,8 +1,8 @@
 package com.oneandone.iocunit.jpa;
 
-import javax.enterprise.inject.Produces;
-import javax.persistence.EntityManager;
-import javax.sql.DataSource;
+import jakarta.enterprise.inject.Produces;
+import jakarta.persistence.EntityManager;
+import jakarta.sql.DataSource;
 
 /**
  * @author aschoerk

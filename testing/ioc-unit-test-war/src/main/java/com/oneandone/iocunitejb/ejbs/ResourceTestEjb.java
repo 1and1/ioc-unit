@@ -1,7 +1,7 @@
 package com.oneandone.iocunitejb.ejbs;
 
-import javax.annotation.Resource;
-import javax.ejb.Stateless;
+import jakarta.annotation.Resource;
+import jakarta.ejb.Stateless;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

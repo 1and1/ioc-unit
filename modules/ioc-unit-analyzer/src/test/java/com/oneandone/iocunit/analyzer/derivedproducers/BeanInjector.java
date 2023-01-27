@@ -1,6 +1,6 @@
 package com.oneandone.iocunit.analyzer.derivedproducers;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 /**
  * @author aschoerk

@@ -2,7 +2,7 @@ package com.oneandone.cdi.weldstarter.spi;
 
 import java.lang.annotation.Annotation;
 
-import javax.enterprise.inject.spi.Extension;
+import jakarta.enterprise.inject.spi.Extension;
 
 import com.oneandone.cdi.weldstarter.WeldSetup;
 

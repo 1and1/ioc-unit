@@ -1,6 +1,6 @@
 package com.oneandone.iocunitejb.example8;
 
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response;
 
 /**
  * Created by aschoerk on 28.06.17.

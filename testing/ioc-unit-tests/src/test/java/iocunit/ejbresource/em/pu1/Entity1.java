@@ -1,7 +1,7 @@
 package iocunit.ejbresource.em.pu1;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 
 /**
  * @author aschoerk

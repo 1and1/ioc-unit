@@ -13,7 +13,7 @@ import static org.junit.Assert.assertThat;
 import java.util.List;
 import java.util.Set;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.camunda.bpm.engine.cdi.BusinessProcessEvent;
 import org.camunda.bpm.engine.cdi.cdiunittest.impl.util.BaseTest;

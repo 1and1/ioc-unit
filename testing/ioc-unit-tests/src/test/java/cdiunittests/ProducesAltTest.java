@@ -3,8 +3,8 @@ package cdiunittests;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
+import jakarta.enterprise.inject.Produces;
+import jakarta.inject.Inject;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -1,9 +1,9 @@
 package com.oneandone.iocunitejb.ejbs;
 
-import javax.annotation.PostConstruct;
-import javax.ejb.Singleton;
-import javax.ejb.Timeout;
-import javax.inject.Inject;
+import jakarta.annotation.PostConstruct;
+import jakarta.ejb.Singleton;
+import jakarta.ejb.Timeout;
+import jakarta.inject.Inject;
 
 /**
  * @author aschoerk

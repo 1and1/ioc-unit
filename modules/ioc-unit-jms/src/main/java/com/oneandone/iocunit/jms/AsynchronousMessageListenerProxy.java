@@ -1,7 +1,7 @@
 package com.oneandone.iocunit.jms;
 
-import javax.jms.Message;
-import javax.jms.MessageListener;
+import jakarta.jms.Message;
+import jakarta.jms.MessageListener;
 
 import com.oneandone.iocunit.AsynchronousSimulator;
 

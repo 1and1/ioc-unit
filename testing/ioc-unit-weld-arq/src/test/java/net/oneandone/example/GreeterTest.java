@@ -2,9 +2,9 @@ package net.oneandone.example;
 
 import java.io.UnsupportedEncodingException;
 
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
-import javax.transaction.UserTransaction;
+import jakarta.enterprise.inject.Produces;
+import jakarta.inject.Inject;
+import jakarta.transaction.UserTransaction;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;

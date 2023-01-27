@@ -3,10 +3,10 @@ package org.oneandone.iocunit.rest.dto_polymorphy.service;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.servlet.ServletConfig;
-import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.core.Application;
-import javax.ws.rs.core.Context;
+import jakarta.servlet.ServletConfig;
+import jakarta.ws.rs.ApplicationPath;
+import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.core.Context;
 
 import io.swagger.v3.jaxrs2.integration.JaxrsOpenApiContextBuilder;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;

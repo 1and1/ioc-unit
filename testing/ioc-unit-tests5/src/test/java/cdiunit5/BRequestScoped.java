@@ -1,6 +1,6 @@
 package cdiunit5;
 
-import javax.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.RequestScoped;
 
 @RequestScoped
 public class BRequestScoped {

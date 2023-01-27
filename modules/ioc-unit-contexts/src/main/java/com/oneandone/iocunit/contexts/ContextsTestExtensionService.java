@@ -8,11 +8,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.enterprise.context.Conversation;
-import javax.enterprise.context.spi.Contextual;
-import javax.enterprise.context.spi.CreationalContext;
-import javax.enterprise.inject.Default;
-import javax.servlet.ServletContext;
+import jakarta.enterprise.context.Conversation;
+import jakarta.enterprise.context.spi.Contextual;
+import jakarta.enterprise.context.spi.CreationalContext;
+import jakarta.enterprise.inject.Default;
+import jakarta.servlet.ServletContext;
 
 import org.jboss.weld.context.ConversationContext;
 import org.jboss.weld.context.ManagedConversation;

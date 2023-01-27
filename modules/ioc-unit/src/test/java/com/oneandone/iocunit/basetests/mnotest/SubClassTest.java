@@ -1,6 +1,6 @@
 package com.oneandone.iocunit.basetests.mnotest;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.junit.Test;
 

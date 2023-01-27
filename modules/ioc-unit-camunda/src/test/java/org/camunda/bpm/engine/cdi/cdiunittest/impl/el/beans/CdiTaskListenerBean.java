@@ -9,8 +9,8 @@ package org.camunda.bpm.engine.cdi.cdiunittest.impl.el.beans;
 
 import static org.junit.Assert.assertEquals;
 
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 import org.camunda.bpm.engine.cdi.BusinessProcess;
 import org.camunda.bpm.engine.delegate.DelegateTask;

@@ -8,7 +8,7 @@ package org.camunda.bpm.engine.cdi.cdiunittest.api.annotation;
 
 import static org.junit.Assert.assertNull;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.camunda.bpm.engine.cdi.cdiunittest.impl.beans.DeclarativeProcessController;
 import org.camunda.bpm.engine.cdi.impl.annotation.CompleteTaskInterceptor;

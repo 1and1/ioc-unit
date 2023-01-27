@@ -1,8 +1,8 @@
 package com.oneandone.ejbcdiunit5.ejb;
 
-import javax.ejb.EJB;
-import javax.enterprise.inject.Produces;
-import javax.inject.Singleton;
+import jakarta.ejb.EJB;
+import jakarta.enterprise.inject.Produces;
+import jakarta.inject.Singleton;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

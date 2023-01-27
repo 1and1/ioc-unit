@@ -1,7 +1,7 @@
 package com.oneandone.iocunit.dbunit;
 
-import javax.inject.Inject;
-import javax.sql.DataSource;
+import jakarta.inject.Inject;
+import jakarta.sql.DataSource;
 
 import org.dbunit.DefaultDatabaseTester;
 import org.dbunit.IDatabaseTester;

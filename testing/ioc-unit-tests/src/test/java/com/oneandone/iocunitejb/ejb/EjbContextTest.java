@@ -1,9 +1,9 @@
 package com.oneandone.iocunitejb.ejb;
 
-import javax.annotation.Resource;
-import javax.ejb.EJBContext;
-import javax.ejb.MessageDrivenContext;
-import javax.ejb.SessionContext;
+import jakarta.annotation.Resource;
+import jakarta.ejb.EJBContext;
+import jakarta.ejb.MessageDrivenContext;
+import jakarta.ejb.SessionContext;
 
 import org.junit.Assert;
 import org.junit.Test;

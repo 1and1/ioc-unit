@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import com.oneandone.cdi.weldstarter.spi.TestExtensionService;
 

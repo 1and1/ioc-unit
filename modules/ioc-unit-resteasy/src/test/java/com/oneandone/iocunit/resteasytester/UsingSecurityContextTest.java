@@ -5,9 +5,9 @@ import static org.junit.Assert.assertEquals;
 import java.net.URISyntaxException;
 import java.security.Principal;
 
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
-import javax.ws.rs.core.SecurityContext;
+import jakarta.enterprise.inject.Produces;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.core.SecurityContext;
 
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;

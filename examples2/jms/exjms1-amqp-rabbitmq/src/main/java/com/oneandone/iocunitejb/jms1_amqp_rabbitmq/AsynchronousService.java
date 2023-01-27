@@ -2,8 +2,8 @@ package com.oneandone.iocunitejb.jms1_amqp_rabbitmq;
 
 import java.util.HashMap;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
 
 /**
  * Created by aschoerk on 28.06.17.

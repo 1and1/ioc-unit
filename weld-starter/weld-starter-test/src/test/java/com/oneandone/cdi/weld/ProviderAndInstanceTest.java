@@ -4,11 +4,11 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import javax.enterprise.inject.AmbiguousResolutionException;
-import javax.enterprise.inject.Instance;
-import javax.enterprise.inject.UnsatisfiedResolutionException;
-import javax.inject.Inject;
-import javax.inject.Provider;
+import jakarta.enterprise.inject.AmbiguousResolutionException;
+import jakarta.enterprise.inject.Instance;
+import jakarta.enterprise.inject.UnsatisfiedResolutionException;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 import org.junit.Test;
 

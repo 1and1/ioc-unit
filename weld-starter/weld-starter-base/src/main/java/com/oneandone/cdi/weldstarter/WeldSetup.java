@@ -3,8 +3,8 @@ package com.oneandone.cdi.weldstarter;
 import java.util.Collection;
 import java.util.List;
 
-import javax.enterprise.inject.spi.DeploymentException;
-import javax.enterprise.inject.spi.Extension;
+import jakarta.enterprise.inject.spi.DeploymentException;
+import jakarta.enterprise.inject.spi.Extension;
 
 import org.jboss.weld.bootstrap.api.Service;
 import org.jboss.weld.bootstrap.api.ServiceRegistry;

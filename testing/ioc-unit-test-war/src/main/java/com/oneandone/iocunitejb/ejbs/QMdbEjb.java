@@ -2,15 +2,15 @@ package com.oneandone.iocunitejb.ejbs;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.annotation.Resource;
-import javax.ejb.ActivationConfigProperty;
-import javax.ejb.EJBContext;
-import javax.ejb.MessageDriven;
-import javax.ejb.MessageDrivenContext;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.jms.Message;
-import javax.jms.MessageListener;
+import jakarta.annotation.Resource;
+import jakarta.ejb.ActivationConfigProperty;
+import jakarta.ejb.EJBContext;
+import jakarta.ejb.MessageDriven;
+import jakarta.ejb.MessageDrivenContext;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.jms.Message;
+import jakarta.jms.MessageListener;
 
 import org.slf4j.Logger;
 

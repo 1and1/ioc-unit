@@ -1,6 +1,6 @@
 package com.oneandone.iocunit.basetests.rawtype;
 
-import javax.enterprise.inject.Produces;
+import jakarta.enterprise.inject.Produces;
 
 /**
  * @author aschoerk

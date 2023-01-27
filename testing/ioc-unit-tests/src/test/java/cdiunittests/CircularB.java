@@ -1,6 +1,6 @@
 package cdiunittests;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 public class CircularB {
     @Inject

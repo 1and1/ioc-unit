@@ -2,14 +2,14 @@ package com.oneandone.iocunit.resteasy;
 
 import java.util.Map;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.inject.Inject;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
-import javax.ws.rs.ext.Provider;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.inject.Inject;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.SecurityContext;
+import jakarta.ws.rs.ext.Provider;
 
 import org.jboss.resteasy.spi.HttpRequest;
 import org.jboss.resteasy.spi.HttpRequestPreprocessor;
@@ -133,9 +133,7 @@ public class DispatcherDelegate implements IocUnitResteasyDispatcher, AutoClosea
                 logger.warn("Both ResteasyJacksonProvider and ResteasyJackson2Provider found!");
             }
         } catch (NoSuchMethodError e) {
-            if(!WeldSetupClass.isWeld1()) {
-                throw e;
-            }
+            throw e;
         }
 
     }

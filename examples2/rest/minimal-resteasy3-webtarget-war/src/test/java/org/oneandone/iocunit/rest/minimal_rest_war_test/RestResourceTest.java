@@ -1,10 +1,10 @@
 package org.oneandone.iocunit.rest.minimal_rest_war_test;
 
-import javax.inject.Inject;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 import org.junit.Assert;
 import org.junit.Test;

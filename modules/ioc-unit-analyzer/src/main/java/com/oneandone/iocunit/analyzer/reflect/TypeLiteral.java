@@ -25,7 +25,7 @@ import java.lang.reflect.TypeVariable;
 import org.apache.commons.lang3.Validate;
 
 /**
- * <p>Type literal comparable to {@code javax.enterprise.util.TypeLiteral},
+ * <p>Type literal comparable to {@code jakarta.enterprise.util.TypeLiteral},
  * made generally available outside the JEE context. Allows the passing around of
  * a "token" that represents a type in a typesafe manner, as opposed to
  * passing the (non-parameterized) {@link Type} object itself. Consider:</p>

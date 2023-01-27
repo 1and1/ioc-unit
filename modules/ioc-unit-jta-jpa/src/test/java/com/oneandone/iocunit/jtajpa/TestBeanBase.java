@@ -1,8 +1,8 @@
 package com.oneandone.iocunit.jtajpa;
 
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
+import jakarta.enterprise.inject.Produces;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 import com.oneandone.iocunit.jtajpa.beans.MandatoryBean;
 import com.oneandone.iocunit.jtajpa.beans.NeverBean;

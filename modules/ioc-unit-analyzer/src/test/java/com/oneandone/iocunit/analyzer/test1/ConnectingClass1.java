@@ -2,7 +2,7 @@ package com.oneandone.iocunit.analyzer.test1;
 
 import com.oneandone.iocunit.analyzer.test2.Test2Interface;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 /**
  * @author aschoerk

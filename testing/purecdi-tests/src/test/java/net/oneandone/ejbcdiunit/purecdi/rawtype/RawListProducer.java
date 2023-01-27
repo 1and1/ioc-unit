@@ -3,7 +3,7 @@ package net.oneandone.ejbcdiunit.purecdi.rawtype;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.enterprise.inject.Produces;
+import jakarta.enterprise.inject.Produces;
 
 /**
  * @author aschoerk

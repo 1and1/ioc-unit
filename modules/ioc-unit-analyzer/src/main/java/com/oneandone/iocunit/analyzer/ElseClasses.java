@@ -5,11 +5,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.decorator.Decorator;
-import javax.enterprise.inject.Alternative;
-import javax.enterprise.inject.Stereotype;
-import javax.enterprise.inject.spi.Extension;
-import javax.interceptor.Interceptor;
+import jakarta.decorator.Decorator;
+import jakarta.enterprise.inject.Alternative;
+import jakarta.enterprise.inject.Stereotype;
+import jakarta.enterprise.inject.spi.Extension;
+import jakarta.interceptor.Interceptor;
 
 /**
  * @author aschoerk

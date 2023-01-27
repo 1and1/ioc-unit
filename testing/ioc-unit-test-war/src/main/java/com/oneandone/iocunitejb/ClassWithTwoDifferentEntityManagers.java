@@ -1,7 +1,7 @@
 package com.oneandone.iocunitejb;
 
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 import com.oneandone.iocunitejb.cdiunit.Pu1Em;
 import com.oneandone.iocunitejb.cdiunit.Pu2Em;

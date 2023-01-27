@@ -60,12 +60,6 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>org.apache.deltaspike.core</groupId>
-            <artifactId>deltaspike-core-api</artifactId>
-            <version>${delta-spike.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>jakarta.interceptor</groupId>
             <artifactId>jakarta.interceptor-api</artifactId>
             <version>${compile.version.interceptor-api}</version>
@@ -91,7 +85,7 @@
         </dependency>
         <dependency>
             <groupId>net.oneandone.ioc-unit</groupId>
-            <artifactId>weld2-starter</artifactId>
+            <artifactId>weld31-starter</artifactId>
             <version>2.0.37</version>
             <scope>test</scope>
         </dependency>

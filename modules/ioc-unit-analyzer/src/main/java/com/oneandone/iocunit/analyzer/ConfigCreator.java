@@ -2,12 +2,12 @@ package com.oneandone.iocunit.analyzer;
 
 import java.lang.reflect.Method;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.oneandone.cdi.weldstarter.AddOpens;
+// import com.oneandone.cdi.weldstarter.AddOpens;
 import com.oneandone.cdi.weldstarter.WeldSetupClass;
 import com.oneandone.iocunit.analyzer.extensions.TestScopeExtension;
 
@@ -21,7 +21,7 @@ public class ConfigCreator extends ConfigCreatorBase {
     Configuration configuration = null;
 
     private void init(InitialConfiguration initial, TesterExtensionsConfigsFinder testerExtensionsConfigsFinder) {
-        AddOpens.open("java.base", "java.lang", "java.util");
+        // TODO: AddOpens.open("java.base", "java.lang", "java.util");
         configuration = new Configuration(testerExtensionsConfigsFinder);
         configuration.setPhase(Configuration.Phase.INITIALIZING);
         if(initial.testClass != null) {

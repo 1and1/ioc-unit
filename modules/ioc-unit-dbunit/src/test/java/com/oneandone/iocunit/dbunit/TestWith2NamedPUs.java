@@ -3,9 +3,9 @@ package com.oneandone.iocunit.dbunit;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
+import jakarta.enterprise.inject.Produces;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 import org.junit.Assert;
 import org.junit.Test;

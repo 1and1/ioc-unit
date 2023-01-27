@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.cdi.cdiunittest.impl.beans.MessageBean;

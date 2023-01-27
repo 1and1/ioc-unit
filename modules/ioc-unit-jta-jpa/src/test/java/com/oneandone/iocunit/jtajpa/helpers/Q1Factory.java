@@ -1,7 +1,7 @@
 package com.oneandone.iocunit.jtajpa.helpers;
 
-import javax.enterprise.inject.Produces;
-import javax.persistence.EntityManager;
+import jakarta.enterprise.inject.Produces;
+import jakarta.persistence.EntityManager;
 
 import com.oneandone.iocunit.jtajpa.JtaEntityManagerFactoryBase;
 

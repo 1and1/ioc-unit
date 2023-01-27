@@ -2,10 +2,10 @@ package com.oneandone.iocunitejb.validation;
 
 import java.io.Serializable;
 
-import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.validation.constraints.NotNull;
+import jakarta.ejb.Stateless;
+import jakarta.ejb.TransactionAttribute;
+import jakarta.ejb.TransactionAttributeType;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * @author aschoerk

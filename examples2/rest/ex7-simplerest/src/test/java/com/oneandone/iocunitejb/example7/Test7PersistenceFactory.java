@@ -1,7 +1,7 @@
 package com.oneandone.iocunitejb.example7;
 
-import javax.enterprise.inject.Produces;
-import javax.persistence.EntityManager;
+import jakarta.enterprise.inject.Produces;
+import jakarta.persistence.EntityManager;
 
 import com.oneandone.iocunit.jpa.XmlAwarePersistenceFactory;
 

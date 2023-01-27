@@ -1,6 +1,6 @@
 package com.oneandone.iocunit.analyzer.specializing.sutsamples;
 
-import javax.enterprise.inject.Specializes;
+import jakarta.enterprise.inject.Specializes;
 
 /**
  * @author aschoerk

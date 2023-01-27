@@ -2,9 +2,9 @@ package com.oneandone.iocunit.ejb.persistence;
 
 import java.lang.reflect.Method;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Instance;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Instance;
+import jakarta.inject.Inject;
 
 /**
  * @author aschoerk

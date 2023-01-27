@@ -1,7 +1,7 @@
 package com.oneandone.iocunitejb.example2.uselookup;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Produces;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Produces;
 
 import com.oneandone.iocunitejb.example2.RemoteServiceIntf;
 

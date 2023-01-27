@@ -1,9 +1,9 @@
 package com.oneandone.iocunitejb.example7;
 
-import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.ws.rs.core.Response;
+import jakarta.ejb.Stateless;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.ws.rs.core.Response;
 
 /**
  * Created by aschoerk on 28.06.17.

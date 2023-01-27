@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ServiceLoader;
 
-import javax.enterprise.inject.spi.Extension;
+import jakarta.enterprise.inject.spi.Extension;
 
 import com.oneandone.cdi.weldstarter.spi.WeldStarter;
 
@@ -37,16 +37,8 @@ public class WeldSetupClass extends WeldSetupBase implements WeldSetup {
         return starters.get(0);
     }
 
-    public static boolean isWeld3() {
-        return getWeldStarter().getClass().getName().contains("weld3");
-    }
-
-    public static boolean isWeld2() {
-        return getWeldStarter().getClass().getName().contains("weld2");
-    }
-
-    public static boolean isWeld1() {
-        return getWeldStarter().getClass().getName().contains("weld1");
+    public static boolean isWeld4() {
+        return getWeldStarter().getClass().getName().contains("weld4");
     }
 
     public void setBeanClasses(Class... classes) {

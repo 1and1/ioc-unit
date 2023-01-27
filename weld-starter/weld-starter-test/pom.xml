@@ -20,49 +20,13 @@
         </license>
     </licenses>
 
-    <profiles>
-        <profile>
-            <id>base</id>
-        </profile>
-        <profile>
-            <id>weld1.1</id>
-            <dependencies>
-                <dependency>
-                    <groupId>net.oneandone.ioc-unit</groupId>
-                    <artifactId>weld1-starter</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
-            </dependencies>
-        </profile>
-        <profile>
-            <id>weld2.3</id>
-            <dependencies>
-                <dependency>
-                    <groupId>net.oneandone.ioc-unit</groupId>
-                    <artifactId>weld2-starter</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
-            </dependencies>
-        </profile>
-        <profile>
-            <id>weld3.1</id>
-            <dependencies>
-                <dependency>
-                    <groupId>net.oneandone.ioc-unit</groupId>
-                    <artifactId>weld31-starter</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>jakarta.interceptor</groupId>
-                    <artifactId>jakarta.interceptor-api</artifactId>
-                    <version>1.2.5</version>
-                    <scope>provided</scope>
-                </dependency>
-            </dependencies>
-        </profile>
-    </profiles>
-
     <dependencies>
+
+        <dependency>
+            <groupId>net.oneandone.ioc-unit</groupId>
+            <artifactId>weld4-starter</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <!-- logging -->
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -74,13 +38,6 @@
             <version>1.0.9</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>javax.ejb</groupId>
-            <artifactId>javax.ejb-api</artifactId>
-            <version>3.2.2</version>
-            <scope>test</scope>
-        </dependency>
-
 
         <dependency>
             <groupId>junit</groupId>
@@ -106,11 +63,23 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.apache.deltaspike.core</groupId>
-            <artifactId>deltaspike-core-api</artifactId>
-            <version>1.0.1</version>
+            <groupId>org.jboss.weld</groupId>
+            <artifactId>weld-spi</artifactId>
+            <version>5.0.SP3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.weld</groupId>
+            <artifactId>weld-core-impl</artifactId>
+            <version>5.1.0.Final</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>jakarta.ejb</groupId>
+            <artifactId>jakarta.ejb-api</artifactId>
+            <version>4.0.1</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
     <build>
         <plugins>

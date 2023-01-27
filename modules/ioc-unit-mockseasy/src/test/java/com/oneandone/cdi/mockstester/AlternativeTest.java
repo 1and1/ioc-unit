@@ -5,9 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.net.MalformedURLException;
 
-import javax.annotation.PostConstruct;
-import javax.enterprise.inject.Alternative;
-import javax.inject.Inject;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.inject.Alternative;
+import jakarta.inject.Inject;
 
 import org.junit.jupiter.api.Test;
 

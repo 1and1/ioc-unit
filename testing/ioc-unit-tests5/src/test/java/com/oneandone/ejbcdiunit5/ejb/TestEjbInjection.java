@@ -6,7 +6,7 @@ import static org.hamcrest.Matchers.notNullValue;
 
 import java.lang.reflect.Field;
 
-import javax.ejb.EJB;
+import jakarta.ejb.EJB;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

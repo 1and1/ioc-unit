@@ -1,6 +1,6 @@
 package cdiunit5;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 /**
  * @author aschoerk

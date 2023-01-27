@@ -8,8 +8,8 @@ package org.camunda.bpm.engine.cdi.cdiunittest.jsf;
 
 import java.util.Set;
 
-import javax.enterprise.inject.AmbiguousResolutionException;
-import javax.enterprise.inject.spi.Bean;
+import jakarta.enterprise.inject.AmbiguousResolutionException;
+import jakarta.enterprise.inject.spi.Bean;
 
 import org.camunda.bpm.engine.cdi.compat.CamundaTaskForm;
 import org.camunda.bpm.engine.cdi.compat.FoxTaskForm;

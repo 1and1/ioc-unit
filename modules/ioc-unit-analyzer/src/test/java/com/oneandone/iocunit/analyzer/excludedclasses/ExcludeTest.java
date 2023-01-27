@@ -1,7 +1,7 @@
 package com.oneandone.iocunit.analyzer.excludedclasses;
 
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
+import jakarta.enterprise.inject.Produces;
+import jakarta.inject.Inject;
 
 import org.junit.BeforeClass;
 

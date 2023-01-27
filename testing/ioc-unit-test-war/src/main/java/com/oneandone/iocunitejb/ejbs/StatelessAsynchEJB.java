@@ -2,11 +2,11 @@ package com.oneandone.iocunitejb.ejbs;
 
 import java.util.concurrent.Future;
 
-import javax.annotation.Resource;
-import javax.ejb.AsyncResult;
-import javax.ejb.Asynchronous;
-import javax.ejb.EJBContext;
-import javax.ejb.Stateless;
+import jakarta.annotation.Resource;
+import jakarta.ejb.AsyncResult;
+import jakarta.ejb.Asynchronous;
+import jakarta.ejb.EJBContext;
+import jakarta.ejb.Stateless;
 
 /**
  * @author aschoerk

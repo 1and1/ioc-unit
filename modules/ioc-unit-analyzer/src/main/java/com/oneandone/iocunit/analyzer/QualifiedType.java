@@ -15,12 +15,12 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.enterprise.inject.Alternative;
-import javax.enterprise.inject.Instance;
-import javax.enterprise.inject.Stereotype;
-import javax.enterprise.inject.Typed;
-import javax.inject.Provider;
-import javax.inject.Qualifier;
+import jakarta.enterprise.inject.Alternative;
+import jakarta.enterprise.inject.Instance;
+import jakarta.enterprise.inject.Stereotype;
+import jakarta.enterprise.inject.Typed;
+import jakarta.inject.Provider;
+import jakarta.inject.Qualifier;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -374,34 +374,34 @@ public class QualifiedType {
             if(produced.isEmpty()
                || produced
                     .stream()
-                    .anyMatch(a -> a.annotationType().getName().equals("javax.enterprise.inject.Default"))) {
+                    .anyMatch(a -> a.annotationType().getName().equals("jakarta.enterprise.inject.Default"))) {
                 return true;
             }
         }
-        if(to.size() == 1 && to.iterator().next().annotationType().getName().equals("javax.enterprise.inject.Any")) {
+        if(to.size() == 1 && to.iterator().next().annotationType().getName().equals("jakarta.enterprise.inject.Any")) {
             return true;
         }
         Set<Annotation> toFiltered = to
                 .stream()
-                .filter(a -> !(a.annotationType().getName().equals("javax.enterprise.inject.Any")
-                               || a.annotationType().getName().equals("javax.enterprise.inject.New")))
+                .filter(a -> !(a.annotationType().getName().equals("jakarta.enterprise.inject.Any")
+                               || a.annotationType().getName().equals("jakarta.enterprise.context.Dependent")))
                 .collect(Collectors.toSet());
         if(produced.containsAll(toFiltered) && !to.isEmpty()) {
             return true;
         }
-        if(produced.size() == 1 && produced.iterator().next().annotationType().getName().equals("javax.enterprise.inject.Default")) {
+        if(produced.size() == 1 && produced.iterator().next().annotationType().getName().equals("jakarta.enterprise.inject.Default")) {
             if(toFiltered.isEmpty()) // to is Default already checked
             {
                 return true;
             }
         }
-        Set<String> producednames = produced.stream().map(a -> a.annotationType().getName()).filter(n -> !n.equals("javax.enterprise.inject.Default"))
+        Set<String> producednames = produced.stream().map(a -> a.annotationType().getName()).filter(n -> !n.equals("jakarta.enterprise.inject.Default"))
                 .collect(Collectors.toSet());
         if(producednames.size() == 1 && producednames.contains("javax.inject.Named")) {
             if(toFiltered.isEmpty()
                || toFiltered.size() == 1
                   && toFiltered.iterator().next().annotationType()
-                          .getName().equals("javax.enterprise.inject.Default")) // to
+                          .getName().equals("jakarta.enterprise.inject.Default")) // to
             // is
             // Default
             // already

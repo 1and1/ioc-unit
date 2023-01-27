@@ -4,9 +4,9 @@ import static javax.ejb.TransactionAttributeType.NOT_SUPPORTED;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.ejb.TransactionAttributeType;
-import javax.persistence.EntityTransaction;
-import javax.persistence.TransactionRequiredException;
+import jakarta.ejb.TransactionAttributeType;
+import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.TransactionRequiredException;
 
 import org.slf4j.MDC;
 

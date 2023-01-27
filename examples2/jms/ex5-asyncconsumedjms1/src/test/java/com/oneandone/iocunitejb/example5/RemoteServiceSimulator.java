@@ -2,7 +2,7 @@ package com.oneandone.iocunitejb.example5;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 /**
  * @author aschoerk

@@ -1,8 +1,8 @@
 package com.oneandone.iocunitejb.ejbs.appexc;
 
-import javax.ejb.*;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
+import jakarta.ejb.*;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;

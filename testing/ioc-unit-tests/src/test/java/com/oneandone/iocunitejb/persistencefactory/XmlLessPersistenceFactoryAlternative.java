@@ -1,10 +1,10 @@
 package com.oneandone.iocunitejb.persistencefactory;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Default;
-import javax.enterprise.inject.Produces;
-import javax.persistence.EntityManager;
-import javax.sql.DataSource;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Default;
+import jakarta.enterprise.inject.Produces;
+import jakarta.persistence.EntityManager;
+import jakarta.sql.DataSource;
 
 import com.oneandone.iocunit.jpa.XmlLessPersistenceFactory;
 

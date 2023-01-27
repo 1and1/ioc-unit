@@ -14,12 +14,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpSessionAttributeListener;
-import javax.servlet.http.HttpSessionBindingEvent;
-import javax.servlet.http.HttpSessionBindingListener;
-import javax.servlet.http.HttpSessionContext;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpSessionAttributeListener;
+import jakarta.servlet.http.HttpSessionBindingEvent;
+import jakarta.servlet.http.HttpSessionBindingListener;
 
 import com.oneandone.iocunit.resteasy.IocUnitResteasy;
 
@@ -212,10 +211,6 @@ public class IocUnitHttpSession implements HttpSession {
 
     public synchronized void setMaxInactiveInterval(int maxInactiveInterval) {
         this.maxInactiveInterval = maxInactiveInterval;
-    }
-
-    public synchronized HttpSessionContext getSessionContext() {
-        throw new RuntimeException("not implemented in IocUnit-Resteasy");
     }
 
     private synchronized void callAttributeListenersAddedMethod(String key,

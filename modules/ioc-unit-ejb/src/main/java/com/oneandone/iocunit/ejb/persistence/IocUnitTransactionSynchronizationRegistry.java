@@ -1,9 +1,9 @@
 package com.oneandone.iocunit.ejb.persistence;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.transaction.Synchronization;
-import javax.transaction.SystemException;
-import javax.transaction.TransactionSynchronizationRegistry;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.transaction.Synchronization;
+import jakarta.transaction.SystemException;
+import jakarta.transaction.TransactionSynchronizationRegistry;
 
 /**
  * @author aschoerk

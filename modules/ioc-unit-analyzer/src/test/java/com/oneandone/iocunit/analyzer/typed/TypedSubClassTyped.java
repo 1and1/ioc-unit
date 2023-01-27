@@ -1,6 +1,6 @@
 package com.oneandone.iocunit.analyzer.typed;
 
-import javax.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Typed;
 
 /**
  * @author aschoerk

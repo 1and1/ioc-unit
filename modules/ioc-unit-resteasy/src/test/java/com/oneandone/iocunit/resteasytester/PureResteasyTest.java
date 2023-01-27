@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.net.URISyntaxException;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
