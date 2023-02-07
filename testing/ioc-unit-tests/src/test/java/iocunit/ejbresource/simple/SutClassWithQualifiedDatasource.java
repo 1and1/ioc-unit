@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import jakarta.annotation.Resource;
-import jakarta.sql.DataSource;
+import javax.sql.DataSource;
 
 /**
  * @author aschoerk

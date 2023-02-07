@@ -18,61 +18,53 @@
  */
 package org.apache.deltaspike.core.api.scope;
 
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
 /**
- * Represents a subgroup of a conversation group. Useful for closing a subset of {@code @GroupConversationScoped} beans
- * in a {@code ConversationGroup}.
+ * Allows to close a part of a group e.g.:
  *
- * <pre>
  * public class MyGroup{}
- *
- * &#064;ConversationScoped
- * &#064;ConversationGroup(MyGroup.class)
+ * @ConversationScoped
+ * @ConversationGroup(MyGroup.class)
  * public class BeanA {}
- *
- * &#064;ConversationScoped
- * &#064;ConversationGroup(MyGroup.class)
+ * <p/>
+ * @ConversationScoped
+ * @ConversationGroup(MyGroup.class)
  * public class BeanB {}
- *
- * &#064;ConversationScoped
- * &#064;ConversationGroup(MyGroup.class)
+ * <p/>
+ * @ConversationScoped
+ * @ConversationGroup(MyGroup.class)
  * public class BeanC {}
- *
- * &#064;ConversationSubGroup(of = MyGroup.class, subGroup = {BeanA.class, BeanB.class})
+ * <p/>
+ * @ConversationSubGroup(of = MyGroup.class, subGroup = {BeanA.class, BeanB.class})
  * public class MySubGroup {}
- * </pre> or
- * <pre>
- * &#064;ConversationSubGroup(subGroup = {BeanA.class, BeanB.class})
+ * <br/>or</br>
+ * @ConversationSubGroup(subGroup = {BeanA.class, BeanB.class})
  * public class MySubGroup extends MyGroup {}
- *
+ * <p/>
  * //...
  * this.groupedConversationManager.closeConversation(MySubGroup.class)
- * </pre> or it's possible to use implicit subgroups (point to the interface instead of the bean class itself):
- * <pre>
+ *
+ * OR it's possible to use implicit sub-groups (point to the interface(s) instead of the bean-class itself):
  * public interface MyUseCase {}
  *
- * &#064;ConversationSubGroup(of = MyGroup.class, subGroup = MyUseCase.class)
+ * @ConversationSubGroup(of = MyGroup.class, subGroup = MyUseCase.class)
  * public class ImplicitSubGroup {}
  *
- * &#064;Named("myController")
- * &#064;ConversationScoped
- * &#064;ConversationGroup(MyGroup.class)
+ * @Named("myController")
+ * @ConversationScoped
+ * @ConversationGroup(MyGroup.class)
  * public class MyController implements Serializable, MyUseCase
  * {
  *    //...
  * }
  * //...
  * this.groupedConversationManager.closeConversation(ImplicitSubGroup.class)
- * </pre>
- * 
- * @see ConversationGroup
- * @see GroupedConversationScoped
  */
 @Target(TYPE)
 @Retention(RUNTIME)
@@ -80,16 +72,14 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface ConversationSubGroup
 {
     /**
-     * Optionally defines the base conversation group.
-     *
+     * Optionally defines the base conversation group
      * @return base conversation group or ConversationSubGroup if the subgroup inherits from the base conversation group
      */
     Class<?> of() default ConversationSubGroup.class;
 
     /**
-     * Members of the subgroup.
-     *
-     * @return beans to include in the subgroup
+     * Beans of the group which should be closed
+     * @return beans of the group which should be closed
      */
     Class<?>[] subGroup();
 }

@@ -1,7 +1,7 @@
 package com.oneandone.iocunitejb.ejbs;
 
-import static javax.transaction.Transactional.TxType.REQUIRED;
-import static javax.transaction.Transactional.TxType.REQUIRES_NEW;
+import static jakarta.transaction.Transactional.TxType.REQUIRED;
+import static jakarta.transaction.Transactional.TxType.REQUIRES_NEW;
 
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;

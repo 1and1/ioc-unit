@@ -18,11 +18,11 @@
  */
 package org.apache.deltaspike.core.spi.scope.conversation;
 
-import org.apache.deltaspike.core.util.context.ContextualStorage;
-
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.util.Set;
+
+import org.apache.deltaspike.core.util.context.ContextualStorage;
 
 public interface GroupedConversationManager extends Serializable
 {

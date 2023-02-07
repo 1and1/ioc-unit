@@ -19,8 +19,9 @@
 
 package org.apache.deltaspike.core.util;
 
-import jakarta.enterprise.inject.Typed;
 import java.lang.reflect.Constructor;
+
+import jakarta.enterprise.inject.Typed;
 
 @Typed()
 public abstract class ExceptionUtils

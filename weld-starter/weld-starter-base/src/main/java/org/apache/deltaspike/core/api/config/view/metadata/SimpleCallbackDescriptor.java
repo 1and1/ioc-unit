@@ -22,19 +22,19 @@ import java.lang.annotation.Annotation;
 import java.util.List;
 
 /**
- * {@link ExecutableCallbackDescriptor} for simple callback methods without (supported) parameters, which exposes
- * #execute without parameters.
+ * {@link ExecutableCallbackDescriptor} for simple callback-methods without (supported) parameters,
+ * which exposes #execute without parameters.
  *
  * @param <R> return type
  */
 public abstract class SimpleCallbackDescriptor<R> extends ExecutableCallbackDescriptor<R>
 {
-    protected SimpleCallbackDescriptor(Class<?> beanClass, Class<? extends Annotation> callbackMarker)
+    protected SimpleCallbackDescriptor(Class beanClass, Class<? extends Annotation> callbackMarker)
     {
         super(beanClass, callbackMarker);
     }
 
-    protected SimpleCallbackDescriptor(Class<?>[] beanClasses, Class<? extends Annotation> callbackMarker)
+    protected SimpleCallbackDescriptor(Class[] beanClasses, Class<? extends Annotation> callbackMarker)
     {
         super(beanClasses, callbackMarker);
     }

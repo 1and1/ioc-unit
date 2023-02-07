@@ -19,8 +19,9 @@
 
 package org.apache.deltaspike.core.util.context;
 
-import jakarta.enterprise.context.spi.CreationalContext;
 import java.io.Serializable;
+
+import jakarta.enterprise.context.spi.CreationalContext;
 
 /**
  * This data holder contains all necessary data you need to
@@ -38,7 +39,7 @@ public class ContextualInstanceInfo<T> implements Serializable
     /**
      * We need to store the CreationalContext as we need it for
      * properly destroying the contextual instance via
-     * {@link jakarta.enterprise.context.spi.Contextual#destroy(Object, CreationalContext)}
+     * {@link jakarta.enterprise.context.spi.Contextual#destroy(Object, jakarta.enterprise.context.spi.CreationalContext)}
      */
     private CreationalContext<T> creationalContext;
 

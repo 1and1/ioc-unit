@@ -8,7 +8,7 @@ import java.sql.SQLTimeoutException;
 import java.util.logging.Logger;
 
 import jakarta.persistence.EntityManager;
-import jakarta.sql.DataSource;
+import javax.sql.DataSource;
 
 import org.hibernate.Session;
 import org.hibernate.engine.spi.SessionImplementor;

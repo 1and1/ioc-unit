@@ -81,7 +81,7 @@ public class RestEasyTestExtensionServices implements TestExtensionService {
         result.add(IocUnitServletContextHolder.class);
         result.add(IocUnitResteasyClientBuilder.class);
         try {
-            Class<?> tmp = Class.forName("javax.servlet.http.HttpSession");
+            Class<?> tmp = Class.forName("jakarta.servlet.http.HttpSession");
             result.add(IocUnitHttpSession.class);
             result.add(IocUnitHttpServletRequest.class);
         } catch (Exception e) {

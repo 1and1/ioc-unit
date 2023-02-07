@@ -18,18 +18,20 @@
  */
 package org.apache.deltaspike.core.api.common;
 
-import java.lang.annotation.Documented;
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.ElementType.TYPE;
+
+import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
 import jakarta.inject.Qualifier;
 
 /**
- * Common qualifier to manage co-existence of DeltaSpike features and Java EE features.
+ * Common qualifier to manage co-existence of DeltaSpike features and JavaEE features.
  */
 @Target( { TYPE, METHOD, PARAMETER, FIELD })
 @Retention(value = RetentionPolicy.RUNTIME)

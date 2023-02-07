@@ -7,7 +7,7 @@ import java.sql.Statement;
 
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
-import jakarta.sql.DataSource;
+import javax.sql.DataSource;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

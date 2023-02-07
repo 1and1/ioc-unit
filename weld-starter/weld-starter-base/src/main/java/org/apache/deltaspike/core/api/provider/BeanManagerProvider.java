@@ -18,6 +18,10 @@
  */
 package org.apache.deltaspike.core.api.provider;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
+
 import jakarta.enterprise.event.Observes;
 import jakarta.enterprise.inject.spi.AfterBeanDiscovery;
 import jakarta.enterprise.inject.spi.AfterDeploymentValidation;
@@ -26,129 +30,90 @@ import jakarta.enterprise.inject.spi.BeforeShutdown;
 import jakarta.enterprise.inject.spi.Extension;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import java.lang.reflect.Method;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import org.apache.deltaspike.core.api.config.base.CoreBaseConfig;
 import org.apache.deltaspike.core.util.ClassUtils;
 
 
 /**
- * This class provides access to the {@link BeanManager} by registering the current {@link BeanManager} in an extension
- * and making it available via a singleton factory for the current application.
- *
- * <p>This is really handy when you need to access CDI functionality from places where no injection is available.</p>
- *
- * <p>If a simple but manual bean lookup is needed, it's easier to use the {@link BeanProvider}.</p>
- * 
- * <p>As soon as an application shuts down, the reference to the {@link BeanManager} is removed.</p>
- * 
- * <p>
- * Usage:
-
+ * <p>This class provides access to the {@link BeanManager}
+ * by registering the current {@link BeanManager} in an extension and
+ * making it available via a singleton factory for the current application.</p>
+ * <p>This is really handy if you like to access CDI functionality
+ * from places where no injection is available.</p>
+ * <p>If a simple but manual bean-lookup is needed, it's easier to use the {@link BeanProvider}.</p>
+ * <p/>
+ * <p>As soon as an application shuts down, the reference to the {@link BeanManager} will be removed.<p>
+ * <p/>
+ * <p>Usage:<p/>
  * <pre>
- * BeanManager bm = BeanManagerProvider.getInstance().getBeanManager();</pre>
- * </p>
- * <p>
- * <b>Attention:</b> This approach is intended for use in user code at runtime. If BeanManagerProvider is used during
- * Container boot (in an Extension), non-portable behaviour results. During bootstrapping, an Extension shall
- * &#064;Inject BeanManager to get access to the underlying BeanManager (see e.g. {@link #cleanupFinalBeanManagers}).
- * This is the only way to guarantee that the right BeanManager is obtained in more complex Container scenarios.</p>
+ * BeanManager bm = BeanManagerProvider.getInstance().getBeanManager();
+ * 
+ * </pre>
+ *
+ * <p><b>Attention:</b> This method is intended for being used in user code at runtime.
+ * If this method gets used during Container boot (in an Extension), non-portable
+ * behaviour results. During bootstrapping an Extension shall &#064;Inject BeanManager to get
+ * access to the underlying BeanManager (see e.g. {@link #cleanupFinalBeanManagers} ).
+ * This is the only way to guarantee to get the right
+ * BeanManager in more complex Container scenarios.</p>
  */
 public class BeanManagerProvider implements Extension
 {
     private static final Logger  LOG = Logger.getLogger(BeanManagerProvider.class.getName());
 
-    //for CDI 1.1+ delegation
-    private static final Method CDI_CURRENT_METHOD;
-    private static final Method CDI_CURRENT_BEAN_MANAGER_METHOD;
-
-    private static BeanManagerProvider bmpSingleton;
-
-    static
-    {
-        Class cdiClass = ClassUtils.tryToLoadClassForName("jakarta.enterprise.inject.spi.CDI");
-
-        Method resolvedCdiCurrentMethod = null;
-        Method resolvedCdiBeanManagerMethod = null;
-        //only init methods if a cdi 1.1+ container is available and the delegation-mode isn't deactivated.
-        //deactivation is e.g. useful if owb is used in "parallel mode" in a weld-based server.
-        if (cdiClass != null && CoreBaseConfig.BeanManagerIntegration.DELEGATE_LOOKUP)
-        {
-            try
-            {
-                resolvedCdiCurrentMethod = cdiClass.getDeclaredMethod("current");
-                resolvedCdiBeanManagerMethod = cdiClass.getDeclaredMethod("getBeanManager");
-            }
-            catch (Exception e)
-            {
-                LOG.log(Level.SEVERE, "Couldn't get method from " + cdiClass.getName(), e);
-            }
-        }
-
-        //null if no init happened e.g. due to CDI 1.0 or deactivated delegation-mode
-        CDI_CURRENT_METHOD = resolvedCdiCurrentMethod;
-        CDI_CURRENT_BEAN_MANAGER_METHOD = resolvedCdiBeanManagerMethod;
-    }
+    private static BeanManagerProvider bmpSingleton = null;
 
     /**
-     * This data container is used for storing the BeanManager for each web application. This is needed in EAR or other
-     * multi-webapp scenarios when the DeltaSpike classes (jars) are provided in a shared ClassLoader.
+     * This data container is used for storing the BeanManager for each
+     * WebApplication. This is needed in EAR or other multi-webapp scenarios
+     * if the DeltaSpike classes (jars) are provided in a shared ClassLoader.
      */
     private static class BeanManagerInfo
     {
         /**
-         * The BeanManager picked up via Extension loading.
+         * The BeanManager picked up via Extension loading
          */
-        private BeanManager loadTimeBm;
+        private BeanManager loadTimeBm = null;
 
         /**
-         * The final BeanManager. After the container did finally boot, we first try to resolve them from JNDI, and only
-         * if we don't find any BM there we take the ones picked up at startup.
+         * The final BeanManagers.
+         * After the container did finally boot, we first try to resolve them from JNDI,
+         * and only if we don't find any BM there we take the ones picked up at startup.
          */
-        private BeanManager finalBm;
+        private BeanManager finalBm = null;
 
         /**
-         * Whether the CDI Application has finally booted. Please note that this is only a nearby value as there is no
-         * reliable event for this status in EE6.
+         * Whether the CDI Application has finally booted.
+         * Please note that this is only a nearby value
+         * as there is no reliable event for this status in EE6.
          */
-        private boolean booted;
+        private boolean booted = false;
     }
 
     /**
-     * The BeanManagerInfo for the current ClassLoader.
-     * 
+     * <p>The BeanManagerInfo for the current ClassLoader.</p>
      * <p><b>Attention:</b> This instance must only be used through the {@link #bmpSingleton} singleton!</p>
      */
     private volatile Map<ClassLoader, BeanManagerInfo> bmInfos = new ConcurrentHashMap<ClassLoader, BeanManagerInfo>();
 
     /**
-     * Indicates whether the {@link BeanManagerProvider} has been initialized. Usually it's not necessary to call this
-     * method in application code. It's useful e.g. for other frameworks to check if DeltaSpike and the CDI container in
-     * general have been started.
+     * Returns if the {@link BeanManagerProvider} has been initialized.
+     * Usually it isn't needed to call this method in application code.
+     * It's e.g. useful for other frameworks to check if DeltaSpike and the CDI container in general have been started.
      *
-     * @return true if the BeanManagerProvider is ready to be used
+     * @return true if the bean-manager-provider is ready to be used
      */
     public static boolean isActive()
     {
-        // CDI#current delegation enabled, skip everything
-        if (CDI_CURRENT_METHOD != null && CDI_CURRENT_BEAN_MANAGER_METHOD != null)
-        {
-            return bmpSingleton != null;
-        }
-
-        return bmpSingleton != null && bmpSingleton.bmInfos.containsKey(ClassUtils.getClassLoader(null));
+        return bmpSingleton != null;
     }
 
     /**
-     * Returns the current provider instance which provides access to the current {@link BeanManager}.
+     * Allows to get the current provider instance which provides access to the current {@link BeanManager}
      *
-     * @throws IllegalStateException if the {@link BeanManagerProvider} isn't ready to be used. That's the case if the
-     *                               environment isn't configured properly and therefore the {@link AfterBeanDiscovery}
-     *                               hasn't been called before this method gets called.
+     * @throws IllegalStateException if the {@link BeanManagerProvider} isn't ready to be used.
+     * That's the case if the environment isn't configured properly and therefore the {@link AfterBeanDiscovery}
+     * hasn't be called before this method gets called.
      * @return the singleton BeanManagerProvider
      */
     public static BeanManagerProvider getInstance()
@@ -174,9 +139,9 @@ public class BeanManagerProvider implements Extension
     }
 
     /**
-     * It doesn't really matter which of the system events is used to obtain the BeanManager, but
-     * {@link AfterBeanDiscovery} has been chosen since it allows all events which occur after the
-     * {@link AfterBeanDiscovery} to use the {@link BeanManagerProvider}.
+     * It basically doesn't matter which of the system events we use,
+     * but basically we use the {@link AfterBeanDiscovery} event since it allows to use the
+     * {@link BeanManagerProvider} for all events which occur after the {@link AfterBeanDiscovery} event.
      *
      * @param afterBeanDiscovery event which we don't actually use ;)
      * @param beanManager        the BeanManager we store and make available.
@@ -185,51 +150,32 @@ public class BeanManagerProvider implements Extension
     {
         setBeanManagerProvider(this);
 
-        // CDI#current delegation enabled, skip everything
-        if (CDI_CURRENT_METHOD != null && CDI_CURRENT_BEAN_MANAGER_METHOD != null &&
-            resolveBeanManagerViaStaticHelper() != null)
-        {
-            return;
-        }
-
         BeanManagerInfo bmi = getBeanManagerInfo(ClassUtils.getClassLoader(null));
-        bmi.loadTimeBm = beanManager;
+        bmi.loadTimeBm =  beanManager;
     }
 
     /**
-     * The active {@link BeanManager} for the current application (current {@link ClassLoader}). This method will throw
-     * an {@link IllegalStateException} if the BeanManager cannot be found.
+     * The active {@link BeanManager} for the current application (/{@link ClassLoader}). This method will throw an
+     * {@link IllegalStateException} if the BeanManager cannot be found.
      *
-     * @return the current BeanManager, never <code>null</code>
-     *
+     * @return the current bean-manager, never <code>null</code>
      * @throws IllegalStateException if the BeanManager cannot be found
      */
     public BeanManager getBeanManager()
     {
-        // CDI#current delegation enabled, skip everything
-        if (CDI_CURRENT_METHOD != null && CDI_CURRENT_BEAN_MANAGER_METHOD != null)
-        {
-            BeanManager bm = resolveBeanManagerViaStaticHelper();
-            if (bm != null)
-            {
-                return bm;
-            }
-        }
-
         BeanManagerInfo bmi = getBeanManagerInfo(ClassUtils.getClassLoader(null));
 
+        // warn the user if he tries to use the BeanManager before container startup
         if (!bmi.booted)
         {
-            // This is a workaround for some containers with messed up EAR handling.
-            // Those containers might boot up with the shared ear ClassLoader
-            // and later run the WARs with their own child ClassLoaders.
-            if (bmi.loadTimeBm == null)
+            if (!isParentBeanManagerBooted())
             {
-                BeanManagerInfo parentBmi = getParentBeanManagerInfo(ClassUtils.getClassLoader(null));
-                if (parentBmi != null)
-                {
-                    bmi.loadTimeBm = parentBmi.loadTimeBm;
-                }
+                LOG.warning("When using the BeanManager to retrieve Beans before the Container is started," +
+                        " non-portable behaviour results!");
+
+                // reset the flag to only issue the warning once.
+                // this is a workaround for some containers which mess up EAR handling.
+                bmi.booted = true;
             }
         }
 
@@ -268,23 +214,21 @@ public class BeanManagerProvider implements Extension
     }
 
     /**
-     * By cleaning the final BeanManager map after the deployment gets validated, premature loading of information from
-     * JNDI is prevented in cases where the container might not be fully setup yet.
+     * By cleaning the final BeanManager map after the Deployment got Validated,
+     * we prevent premature loading of information from JNDI in cases where the
+     * container might not be fully setup yet.
      *
-     * This might happen if the BeanManagerProvider is used in an extension during CDI bootstrap. This should be
-     * generally avoided. Instead, an injected BeanManager should be used in Extensions and propagated using setters.
+     * This might happen if someone uses the BeanManagerProvider during Extension
+     * startup. This should generally avoided but instead you should just use
+     * an injected BeanManager in your Extension and propagate the BeanManager
+     * via setters.
      *
-     * In EARs with multiple webapps, each WAR might get a different Extension. This depends on the container used.
+     * In EARs with multiple webapps you might get different Extensions per WAR.
+     * This depends on the container you use. By resetting <i>all</i> known
+     * BeanManagerInfos we try to
      */
     public void cleanupFinalBeanManagers(@Observes AfterDeploymentValidation adv)
     {
-        // CDI#current delegation enabled, skip everything
-        if (CDI_CURRENT_METHOD != null && CDI_CURRENT_BEAN_MANAGER_METHOD != null &&
-            resolveBeanManagerViaStaticHelper() != null)
-        {
-            return;
-        }
-
         for (BeanManagerInfo bmi : bmpSingleton.bmInfos.values())
         {
             bmi.finalBm = null;
@@ -298,25 +242,20 @@ public class BeanManagerProvider implements Extension
     }
 
     /**
-     * Cleanup on container shutdown.
+     * Cleanup on container shutdown
      *
-     * @param beforeShutdown CDI shutdown event
+     * @param beforeShutdown cdi shutdown event
      */
     public void cleanupStoredBeanManagerOnShutdown(@Observes BeforeShutdown beforeShutdown)
     {
-        // CDI#current delegation enabled, skip everything
-        if (CDI_CURRENT_METHOD != null && CDI_CURRENT_BEAN_MANAGER_METHOD != null)
-        {
-            return;
-        }
-
         if (bmpSingleton == null)
         {
             // this happens if there has been a failure at startup
             return;
         }
 
-        bmpSingleton.bmInfos.remove(ClassUtils.getClassLoader(null));
+        ClassLoader classLoader = ClassUtils.getClassLoader(null);
+        bmpSingleton.bmInfos.remove(classLoader);
     }
 
     /**
@@ -339,25 +278,8 @@ public class BeanManagerProvider implements Extension
         }
     }
 
-    private BeanManager resolveBeanManagerViaStaticHelper()
-    {
-        if (CDI_CURRENT_METHOD != null && CDI_CURRENT_BEAN_MANAGER_METHOD != null)
-        {
-            try
-            {
-                Object cdiCurrentObject = CDI_CURRENT_METHOD.invoke(null);
-                return (BeanManager) CDI_CURRENT_BEAN_MANAGER_METHOD.invoke(cdiCurrentObject);
-            }
-            catch (Throwable t)
-            {
-                LOG.log(Level.FINEST, "failed to delegate bean-manager lookup -> fallback to default.", t);
-            }
-        }
-        return null;
-    }
-
     /**
-     * Get or create the BeanManagerInfo for the given ClassLoader.
+     * Get or create the BeanManagerInfo for the given ClassLoader
      */
     private BeanManagerInfo getBeanManagerInfo(ClassLoader cl)
     {
@@ -372,10 +294,6 @@ public class BeanManagerProvider implements Extension
                 {
                     bmi = new BeanManagerInfo();
                     bmpSingleton.bmInfos.put(cl, bmi);
-                    if (cl.getParent() != null && !bmpSingleton.bmInfos.containsKey(cl.getParent()))
-                    {
-                        bmpSingleton.bmInfos.put(cl.getParent(), bmi);
-                    }
                 }
             }
         }
@@ -384,11 +302,10 @@ public class BeanManagerProvider implements Extension
     }
 
     /**
-     * This function exists to prevent findbugs from complaining about setting a static member from a non-static
-     * function.
+     * This function exists to prevent findbugs to complain about
+     * setting a static member from a non-static function.
      *
      * @param beanManagerProvider the bean-manager-provider which should be used if there isn't an existing provider
-     *
      * @return the first BeanManagerProvider
      */
     private static BeanManagerProvider setBeanManagerProvider(BeanManagerProvider beanManagerProvider)
@@ -402,15 +319,26 @@ public class BeanManagerProvider implements Extension
     }
 
     /**
-     * This method recurses into the parent ClassLoaders and checks whether a BeanManagerInfo for it exists.
-     *
-     * @return the BeanManagerInfo of the parent ClassLoader hierarchy if any exists, or <code>null</code> if there is
-     *         no {@link BeanManagerInfo} for the ClassLoaders in the hierarchy.
+     * @return whether a BeanManagerInfo for a parent classloader is available and has the booted flag set.
+     */
+    private boolean isParentBeanManagerBooted()
+    {
+        ClassLoader classLoader = ClassUtils.getClassLoader(null);
+        BeanManagerInfo parentBmi = getParentBeanManagerInfo(classLoader);
+
+        return parentBmi != null && parentBmi.booted;
+    }
+
+    /**
+     * This method recurses into the parent ClassLoaders and will check if a
+     * BeanManagerInfo for it exists.
+     * @return the BeanManagerInfo of the parent ClassLoader hierarchy if any exists,
+     *         or <code>null</code> if there is no {@link BeanManagerInfo} for the ClassLoaders in the hierarchy.
      */
     private BeanManagerInfo getParentBeanManagerInfo(ClassLoader classLoader)
     {
         ClassLoader parentClassLoader = classLoader.getParent();
-        if (parentClassLoader == null)
+        if (parentClassLoader.equals(ClassLoader.getSystemClassLoader()))
         {
             return null;
         }
@@ -418,11 +346,11 @@ public class BeanManagerProvider implements Extension
         BeanManagerInfo bmi = getBeanManagerInfo(parentClassLoader);
         if (bmi == null)
         {
-            // recursive call up to the root ClassLoader
             bmi = getParentBeanManagerInfo(parentClassLoader);
         }
 
         return bmi;
     }
+
 
 }

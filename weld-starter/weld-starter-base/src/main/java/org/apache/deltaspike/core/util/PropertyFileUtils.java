@@ -18,18 +18,15 @@
  */
 package org.apache.deltaspike.core.util;
 
-import jakarta.enterprise.inject.Typed;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.ResourceBundle;
-import java.util.Vector;
+
+import jakarta.enterprise.inject.Typed;
 
 @Typed()
 public abstract class PropertyFileUtils
@@ -44,44 +41,6 @@ public abstract class PropertyFileUtils
 
     public static Enumeration<URL> resolvePropertyFiles(String propertyFileName) throws IOException
     {
-        if (propertyFileName != null && (propertyFileName.contains("://") || propertyFileName.startsWith("file:")))
-        {
-            // the given string is actually already an URL
-            Vector<URL> propertyFileUrls = new Vector<URL>();
-            URL url = new URL(propertyFileName);
-
-            if (propertyFileName.startsWith("file:"))
-            {
-                try
-                {
-                    File file = new File(url.toURI());
-                    if (file.exists())
-                    {
-                        propertyFileUrls.add(url);
-                    }
-                }
-                catch (URISyntaxException e)
-                {
-                    throw new IllegalStateException("Property file URL is malformed", e);
-                }
-            }
-            else
-            {
-                propertyFileUrls.add(url);
-            }
-
-            return propertyFileUrls.elements();
-        }
-
-        if (propertyFileName != null)
-        {
-            File file = new File(propertyFileName);
-            if (file.exists())
-            {
-                return Collections.enumeration(Collections.singleton(file.toURI().toURL()));
-            }
-        }
-
         ClassLoader cl = ClassUtils.getClassLoader(null);
 
         Enumeration<URL> propertyFileUrls = cl.getResources(propertyFileName);

@@ -10,9 +10,9 @@ Adapts the CDI-Container to
 to CDI-Injects so that simple producers can replace those in a testenvironment.
 * qualify ResourceInjects
    * java.lang.String: ResourceQualifier with name, mappedName and lookup if set
-   * javax.ejb.EJBContext: ResourceQualifier("javax.ejb.EJBContext")
-   * javax.ejb.SessionContext,javax.ejb.MessageDrivenContext,javax.ejb.EntityContext: no Qualifier
-   * other Resources(e.g. java.sql.DataSource): if name, mappedName or lookup set: ResourceQualifier accordingly.
+   * jakarta.ejb.EJBContext: ResourceQualifier("jakarta.ejb.EJBContext")
+   * jakarta.ejb.SessionContext,jakarta.ejb.MessageDrivenContext,jakarta.ejb.EntityContext: no Qualifier
+   * other Resources(e.g. javax.sql.DataSource): if name, mappedName or lookup set: ResourceQualifier accordingly.
      Exception: if the Resource is used as Producer-Field (@Produce)-Annotation. In that case there should be no
      Ambiguity with other Resources of the same type or the Producer has already been qualified to fit to the right 
      Injects by the Developer. 

@@ -18,27 +18,25 @@
  */
 package org.apache.deltaspike.core.api.config.view;
 
-import org.apache.deltaspike.core.api.literal.ViewControllerRefLiteral;
-import org.apache.deltaspike.core.api.config.view.metadata.InlineViewMetaData;
-import org.apache.deltaspike.core.spi.config.view.InlineMetaDataTransformer;
-import org.apache.deltaspike.core.spi.config.view.TargetViewConfigProvider;
-import org.apache.deltaspike.core.api.config.view.controller.ViewControllerRef;
-
-import jakarta.enterprise.util.Nonbinding;
-import jakarta.inject.Named;
-import java.lang.annotation.Documented;
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
-
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+
+import jakarta.enterprise.util.Nonbinding;
+import jakarta.inject.Named;
+
+import org.apache.deltaspike.core.api.config.view.controller.ViewControllerRef;
+import org.apache.deltaspike.core.api.config.view.metadata.InlineViewMetaData;
+import org.apache.deltaspike.core.api.literal.ViewControllerRefLiteral;
+import org.apache.deltaspike.core.spi.config.view.InlineMetaDataTransformer;
+import org.apache.deltaspike.core.spi.config.view.TargetViewConfigProvider;
+
 /**
- * A reference to a view-config, applied on a view-controller. The opposite direction of {@link ViewControllerRef}.
- *
- * ViewRef annotation instances are not present at runtime as metadata, they are instead transformed to
- * ViewControllerRef instances during deployment.
+ * Allows to reference a view-config
  */
 
 @Target({ TYPE, METHOD })
@@ -55,9 +53,9 @@ public @interface ViewRef
     }
 
     /**
-     * Specifies the views to bind to the view-controller.
+     * Specifies the pages via type-safe {@link ViewConfig}.
      *
-     * @return {@link ViewConfig}s of views bound to the view-controller
+     * @return views which should be aware of the bean or observer
      */
     @Nonbinding Class<? extends ViewConfig>[] config();
 
@@ -75,18 +73,15 @@ public @interface ViewRef
         @Override
         public ViewControllerRef convertToViewMetaData(ViewRef inlineMetaData, Class<?> sourceClass)
         {
+            String beanName = null;
 
             Named named = sourceClass.getAnnotation(Named.class);
 
-            String beanName;
-            if (named == null)
-            {
-                beanName = null;
-            }
-            else
+            if (named != null)
             {
                 beanName = named.value();
             }
+
             return new ViewControllerRefLiteral(sourceClass, beanName);
         }
     }

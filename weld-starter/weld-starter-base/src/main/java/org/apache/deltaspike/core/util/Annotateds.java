@@ -19,14 +19,6 @@
 
 package org.apache.deltaspike.core.util;
 
-import jakarta.enterprise.inject.Typed;
-import jakarta.enterprise.inject.spi.Annotated;
-import jakarta.enterprise.inject.spi.AnnotatedCallable;
-import jakarta.enterprise.inject.spi.AnnotatedConstructor;
-import jakarta.enterprise.inject.spi.AnnotatedField;
-import jakarta.enterprise.inject.spi.AnnotatedMethod;
-import jakarta.enterprise.inject.spi.AnnotatedParameter;
-import jakarta.enterprise.inject.spi.AnnotatedType;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
@@ -43,6 +35,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import jakarta.enterprise.inject.spi.Annotated;
+import jakarta.enterprise.inject.spi.AnnotatedCallable;
+import jakarta.enterprise.inject.spi.AnnotatedConstructor;
+import jakarta.enterprise.inject.spi.AnnotatedField;
+import jakarta.enterprise.inject.spi.AnnotatedMethod;
+import jakarta.enterprise.inject.spi.AnnotatedParameter;
+import jakarta.enterprise.inject.spi.AnnotatedType;
 
 /**
  * <p>
@@ -67,7 +67,6 @@ public final class Annotateds
      * Does the first stage of comparing AnnoatedCallables, however it cannot
      * compare the method parameters
      */
-    @Typed()
     private static class AnnotatedCallableComparator<T>
         implements Comparator<AnnotatedCallable<? super T>>, Serializable
     {
@@ -92,7 +91,6 @@ public final class Annotateds
 
     }
 
-    @Typed()
     private static class AnnotatedMethodComparator<T>
         implements Comparator<AnnotatedMethod<? super T>>, Serializable
     {
@@ -126,7 +124,6 @@ public final class Annotateds
 
     }
 
-    @Typed()
     private static class AnnotatedConstructorComparator<T>
         implements Comparator<AnnotatedConstructor<? super T>>, Serializable
     {
@@ -160,7 +157,6 @@ public final class Annotateds
 
     }
 
-    @Typed()
     private static class AnnotatedFieldComparator<T>
         implements Comparator<AnnotatedField<? super T>>, Serializable
     {
@@ -182,7 +178,6 @@ public final class Annotateds
 
     }
 
-    @Typed()
     private static class AnnotationComparator implements Comparator<Annotation>, Serializable
     {
 
@@ -194,7 +189,6 @@ public final class Annotateds
         }
     }
 
-    @Typed()
     private static class MethodComparator implements Comparator<Method>
     {
 
@@ -602,26 +596,7 @@ public final class Annotateds
                     Object value = method.invoke(a);
                     builder.append(method.getName());
                     builder.append('=');
-                    if (value.getClass().isArray())
-                    {
-                        Class<?> componentType = value.getClass().getComponentType();
-                        if (componentType.isAnnotation())
-                        {
-                            builder.append(Arrays.asList((Object[]) value));
-                        }
-                        else if (componentType instanceof Class<?>)
-                        {
-                            builder.append(createArrayId(value));
-                        }
-                        else
-                        {
-                            builder.append(value.toString());
-                        }
-                    }
-                    else
-                    {
-                        builder.append(value.toString());
-                    }
+                    builder.append(value.toString());
                 }
                 catch (NullPointerException e)
                 {
@@ -649,66 +624,6 @@ public final class Annotateds
                 }
             }
             builder.append(')');
-        }
-        builder.append(']');
-        return builder.toString();
-    }
-
-    /**
-     * Appends comma separated list of class names from classArray to builder
-     */
-    private static String createArrayId(Object value)
-    {
-        if (value instanceof int[])
-        {
-            return Arrays.toString((int[]) value);
-        }
-        if (value instanceof short[])
-        {
-            return Arrays.toString((short[]) value);
-        }
-        if (value instanceof byte[])
-        {
-            return Arrays.toString((byte[]) value);
-        }
-        if (value instanceof char[])
-        {
-            return Arrays.toString((char[]) value);
-        }
-        if (value instanceof long[])
-        {
-            return Arrays.toString((long[]) value);
-        }
-        if (value instanceof float[])
-        {
-            return Arrays.toString((float[]) value);
-        }
-        if (value instanceof double[])
-        {
-            return Arrays.toString((double[]) value);
-        }
-        if (value instanceof String[])
-        {
-            return Arrays.toString((String[]) value);
-        }
-
-        return createClassArrayId((Class<?>[]) value);
-    }
-
-    /**
-     * Appends comma separated list of class names from classArray to builder
-     */
-    private static String createClassArrayId(Class<?>[] classArray)
-    {
-        StringBuilder builder = new StringBuilder();
-        builder.append('[');
-        for (int i = 0; i < classArray.length; i++)
-        {
-            builder.append(classArray[i].getName());
-            if (i + 1 != classArray.length)
-            {
-                builder.append(',');
-            }
         }
         builder.append(']');
         return builder.toString();

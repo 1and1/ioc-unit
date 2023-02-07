@@ -3,7 +3,7 @@ package com.oneandone.iocunitejb.persistencefactory;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
 import jakarta.persistence.EntityManager;
-import jakarta.sql.DataSource;
+import javax.sql.DataSource;
 
 import org.junit.runner.RunWith;
 

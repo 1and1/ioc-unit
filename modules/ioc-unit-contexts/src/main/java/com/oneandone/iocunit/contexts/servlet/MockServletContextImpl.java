@@ -479,19 +479,19 @@ public class MockServletContextImpl implements ServletContext {
     }
 
     @Override
-    public javax.servlet.FilterRegistration.Dynamic addFilter(
+    public jakarta.servlet.FilterRegistration.Dynamic addFilter(
             String filterName, String className) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public javax.servlet.FilterRegistration.Dynamic addFilter(
+    public jakarta.servlet.FilterRegistration.Dynamic addFilter(
             String filterName, Filter filter) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public javax.servlet.FilterRegistration.Dynamic addFilter(
+    public jakarta.servlet.FilterRegistration.Dynamic addFilter(
             String filterName, Class<? extends Filter> filterClass) {
         throw new UnsupportedOperationException();
     }

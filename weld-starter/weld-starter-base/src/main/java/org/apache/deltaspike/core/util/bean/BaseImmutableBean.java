@@ -19,19 +19,19 @@
 
 package org.apache.deltaspike.core.util.bean;
 
-import org.apache.deltaspike.core.api.literal.DefaultLiteral;
-import org.apache.deltaspike.core.util.ArraysUtils;
-import org.apache.deltaspike.core.util.metadata.InjectionPointWrapper;
-
-import jakarta.enterprise.context.Dependent;
-import jakarta.enterprise.inject.spi.Bean;
-import jakarta.enterprise.inject.spi.InjectionPoint;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
+
+import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.inject.spi.Bean;
+import jakarta.enterprise.inject.spi.InjectionPoint;
+
+import org.apache.deltaspike.core.api.literal.DefaultLiteral;
+import org.apache.deltaspike.core.util.ArraysUtils;
 
 /**
  * <p>
@@ -57,6 +57,7 @@ public abstract class BaseImmutableBean<T> implements Bean<T>
     private final Set<Class<? extends Annotation>> stereotypes;
     private final Set<Type> types;
     private final boolean alternative;
+    private final boolean nullable;
     private final Set<InjectionPoint> injectionPoints;
     private final String toString;
 
@@ -74,6 +75,7 @@ public abstract class BaseImmutableBean<T> implements Bean<T>
      * @param types           The bean's types, if null, the beanClass and {@link Object}
      *                        will be used
      * @param alternative     True if the bean is an alternative
+     * @param nullable        True if the bean is nullable
      * @param injectionPoints the bean's injection points, if null an empty set is used
      * @param toString        the string which should be returned by #{@link #toString()}
      * @throws IllegalArgumentException if the beanClass is null
@@ -85,6 +87,7 @@ public abstract class BaseImmutableBean<T> implements Bean<T>
                              Set<Class<? extends Annotation>> stereotypes,
                              Set<Type> types,
                              boolean alternative,
+                             boolean nullable,
                              Set<InjectionPoint> injectionPoints,
                              String toString)
     {
@@ -147,25 +150,11 @@ public abstract class BaseImmutableBean<T> implements Bean<T>
         }
         else
         {
-            // Check for null Beans, wrap if there isn't one -- DELTASPIKE-400
-            final HashSet<InjectionPoint> ips = new HashSet<InjectionPoint>(injectionPoints.size());
-
-            for (InjectionPoint ip : injectionPoints)
-            {
-                if (ip.getBean() == null)
-                {
-                    ips.add(new InjectionPointWrapper(ip, this));
-                }
-                else
-                {
-                    ips.add(ip);
-                }
-            }
-
-            this.injectionPoints = ips;
+            this.injectionPoints = new HashSet<InjectionPoint>(injectionPoints);
         }
 
         this.alternative = alternative;
+        this.nullable = nullable;
 
         if (toString != null)
         {

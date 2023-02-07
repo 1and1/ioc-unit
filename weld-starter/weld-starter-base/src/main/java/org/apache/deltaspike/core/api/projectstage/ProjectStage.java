@@ -19,52 +19,52 @@
 package org.apache.deltaspike.core.api.projectstage;
 
 
-import org.apache.deltaspike.core.util.ServiceUtils;
-
-import jakarta.enterprise.inject.Typed;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import jakarta.enterprise.inject.Typed;
+
+import org.apache.deltaspike.core.util.ServiceUtils;
+
 /**
- * This class is the base of all ProjectStages. A ProjectStage identifies the environment the application currently runs
- * in. It provides the same functionality as the JSF2 ProjectStage but has a few additional benefits:
+ * <p>This class is the base of all ProjectStages. A ProjectStage
+ * identifies the environment the application currently runs in.
+ * It provides the same functionality as the JSF-2 ProjectStage
+ * but has a few additional benefits:
  * <ul>
- * <li>it works for JSF 1.0, JSF 1.1 and JSF 1.2 applications</li>
- * <li>it works in pure backends and unit tests without any JSF API</li>
- * <li>it is dynamic. Everyone can add their own ProjectStages!</li>
+ *  <li>it also works for JSF-1.0, JSF-1.1 and JSF-1.2 applications</li>
+ *  <li>it also works in pure backends and unit tests without any faces-api</li>
+ *  <li>it is dynamic. Everyone can add their own ProjectStages!</p>
+ * </ul>
+ * </p>
+ *
+ * <p>Technically this is kind of a 'dynamic enum'.</p>
+ * <p>The following ProjectStages are provided by default</p>
+ * <ul>
+ *  <li>UnitTest</li>
+ *  <li>Development</li>
+ *  <li>SystemTest</li>
+ *  <li>IntegrationTest</li>
+ *  <li>Staging</li>
+ *  <li>Production</li>
  * </ul>
  *
- * <p>
- * Technically this is kind of a 'dynamic enum'.</p>
- *
- * <p>
- * The following ProjectStages are provided by default:</p>
+ * <p>The following resolution mechanism is used to determine the current ProjectStage:
  * <ul>
- * <li>UnitTest</li>
- * <li>Development</li>
- * <li>SystemTest</li>
- * <li>IntegrationTest</li>
- * <li>Staging</li>
- * <li>Production</li>
+ *  <li>TODO specify!</li>
  * </ul>
+ * </p>
  *
- * <p>
- * The following resolution mechanism is used to determine the current ProjectStage:</p>
- * <ul>
- * <li>TODO specify!</li>
- * </ul>
+ * <p>Adding a new ProjectStage is done via the
+ * {@link java.util.ServiceLoader} mechanism. A class deriving from {@link ProjectStage}
+ * must be provided and used for creating a single static instance of it.
  *
- * <p>
- * New ProjectStages can be added via the {@link java.util.ServiceLoader} mechanism. A class deriving from
- * {@link ProjectStage} must be provided and used for creating a single static instance of it.</p>
- *
- * <p>
- * Custom ProjectStages can be implemented by writing anonymous ProjectStage members into a registered
- * {@link ProjectStageHolder} as shown in the following example:</p>
- *
+ * <p>Custom ProjectStages can be implemented by writing anonymous ProjectStage
+ * members into a registered {@link ProjectStageHolder} as shown in the following
+ * sample:</p>
  * <pre>
  * package org.apache.deltaspike.test.core.api.projectstage;
  * public class TestProjectStages implements ProjectStageHolder {
@@ -75,31 +75,28 @@ import java.util.logging.Logger;
  *     public static final MyOtherProjectStage MyOtherProjectStage = new MyOtherProjectStage();
  * }
  * </pre>
- *
- * <p>
- * To activate those ProjectStages, you have to register the ProjectStageHolder class to get picked up via the
- * ServiceLoader mechanism. Simply create a file
+ * <p>For activating those ProjectStages, you have to register this ProjectStageHolder class
+ * to get picked up via the java.util.ServiceLoader mechanism. Simply create a file
  * <pre>
  * META-INF/services/org.apache.deltaspike.core.api.projectstage.ProjectStageHolder
- * </pre> which contains the fully qualified class name of custom ProjectStageHolder implementation:
+ * </pre>
+ * which contains the fully qualified class name of custom ProjectStageHolder implementation:
  * <pre>
  * # this class now gets picked up by java.util.ServiceLoader
  * org.apache.deltaspike.test.core.api.projectstage.TestProjectStages
  * </pre>
  * </p>
- *
- * <p>
- * You can use your own ProjectStages exactly the same way as all the ones provided by the system:
+ * <p>You can use your own ProjectStages exactly the same way as all the ones provided
+ * by the system:
  * <pre>
  * ProjectStage myOwnPs = ProjectStage.valueOf("MyOwnProjectStage");
- * if (myOwnPs.equals(MyOwnProjectStage.MyOwnProjectStage)) ...
+   if (myOwnPs.equals(MyOwnProjectStage.MyOwnProjectStage)) ...
  * </pre>
- * </p>
  *
- * <p>
- * <b>Note:</b> DeltaSpike will only find {@link ProjectStageHolder}s which are accessible by this very class. If you
- * deploy the deltaspike-core jar to a shared EAR classloader, it will e.g. <i>not</i> be able to register ProjectStages
- * defined in a web application's WEB-INF/classes directory!
+ * <p><b>Note:</b> Please note that DeltaSpike will only find {@link ProjectStageHolder}s
+ * which are accessible by this very class. If you deploy the deltaspike-core jar to a
+ * shared EAR classloader, it will e.g. <i>not</i> be able to register ProjectStages defined
+ * in a web applications WEB-INF/classes directory!
  * </p>
  *
  */
@@ -163,7 +160,7 @@ public abstract class ProjectStage implements Serializable
     }
 
     /**
-     * This function exists to prevent findbugs from complaining about
+     * This function exists to prevent findbugs to complain about
      * setting a static member from a non-static function.
      *
      * @param projectStageClassName name of the project-stage
@@ -195,9 +192,8 @@ public abstract class ProjectStage implements Serializable
     }
 
     /**
-     * Exposes all registered {@link ProjectStage} implementations.
-     *
-     * @return provided and custom ProjectStage implementations
+     * Exposes all registered {@link ProjectStage} implementations
+     * @return provided and custom project-stage implementations
      */
     public static ProjectStage[] values()
     {

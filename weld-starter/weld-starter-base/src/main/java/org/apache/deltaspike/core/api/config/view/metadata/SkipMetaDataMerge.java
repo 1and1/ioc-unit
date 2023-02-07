@@ -18,20 +18,20 @@
  */
 package org.apache.deltaspike.core.api.config.view.metadata;
 
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
-/**
- * Disables metadata merging on attributes of @ViewMetaData annotations. Used in cases (e.g. @Folder#name) where it
- * doesn't make sense to merge that part with inherited information.
- */
 @Target( METHOD )
 @Retention(RUNTIME)
 @Documented
+
+/**
+ * In some cases (e.g. @Folder#name) it doesn't make sense to merge that part with inherited information.
+ */
 public @interface SkipMetaDataMerge
 {
 }

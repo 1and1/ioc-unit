@@ -18,17 +18,13 @@
  */
 package org.apache.deltaspike.core.util;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
-import jakarta.enterprise.inject.Typed;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
+import java.net.URL;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-import java.util.jar.Manifest;
 import java.util.jar.Attributes;
-import java.net.URL;
+import java.util.jar.Manifest;
+
+import jakarta.enterprise.inject.Typed;
 
 /**
  * Util methods for classes, {@link ClassLoader} and {@link Manifest} handling
@@ -108,78 +104,6 @@ public abstract class ClassUtils
         return loader;
     }
 
-
-    /**
-     * Checks whether the CDI rules for proxyable beans are met.
-     * See
-     * <a href="https://docs.jboss.org/cdi/spec/1.2/cdi-spec-with-assertions.html#unproxyable">
-     *     CDI spec unproxyable bean types</a>
-     *
-     * @param type
-     * @return {@code true} if all proxy conditions are met, {@code false} otherwise
-     */
-    public static boolean isProxyableClass(Type type)
-    {
-        Class clazz = null;
-        if (type instanceof Class)
-        {
-            clazz = (Class) type;
-        }
-        if (type instanceof ParameterizedType && ((ParameterizedType) type).getRawType() instanceof Class)
-        {
-            clazz = (Class) ((ParameterizedType) type).getRawType();
-        }
-        if (clazz == null)
-        {
-            return false;
-        }
-
-        // classes which don’t have a non-private constructor with no parameters
-        try
-        {
-            Constructor constructor = clazz.getConstructor();
-            if (Modifier.isPrivate(constructor.getModifiers()))
-            {
-                return false;
-            }
-        }
-        catch (NoSuchMethodException e)
-        {
-            return false;
-        }
-
-        // classes which are declared final
-        if (Modifier.isFinal(clazz.getModifiers()))
-        {
-            return false;
-        }
-
-        // classes which have non-static, final methods with public, protected or default visibility,
-        for (Method method : clazz.getMethods())
-        {
-            if (method.getDeclaringClass() == Object.class)
-            {
-                continue;
-            }
-
-            if (!method.isBridge() && !method.isSynthetic() && !Modifier.isStatic(method.getModifiers()) &&
-                !Modifier.isPrivate(method.getModifiers()) && Modifier.isFinal(method.getModifiers()))
-            {
-                return false;
-            }
-        }
-
-
-        // primitive types,
-        // and array types.
-        if (clazz.isPrimitive() || clazz.isArray())
-        {
-            return false;
-
-        }
-        return true;
-    }
-
     /**
      * Tries to load a class based on the given name and interface or abstract class.
      * @param name name of the concrete class
@@ -190,19 +114,6 @@ public abstract class ClassUtils
     public static <T> Class<T> tryToLoadClassForName(String name, Class<T> targetType)
     {
         return (Class<T>) tryToLoadClassForName(name);
-    }
-    
-    /**
-     * Tries to load a class based on the given name and interface or abstract class.
-     * @param name name of the concrete class
-     * @param targetType target type (interface or abstract class)
-     * @param classLoader The {@link ClassLoader}.
-     * @param <T> current type
-     * @return loaded class or null if it isn't in the classpath
-     */
-    public static <T> Class<T> tryToLoadClassForName(String name, Class<T> targetType, ClassLoader classLoader)
-    {
-        return (Class<T>) tryToLoadClassForName(name, classLoader);
     }
 
     /**
@@ -215,25 +126,6 @@ public abstract class ClassUtils
         try
         {
             return loadClassForName(name);
-        }
-        catch (ClassNotFoundException e)
-        {
-            //do nothing - it's just a try
-            return null;
-        }
-    }
-    
-    /**
-     * Tries to load a class based on the given name
-     * @param name name of the class
-     * @param classLoader The {@link ClassLoader}.
-     * @return loaded class or <code>null</code> if it isn't in the classpath
-     */
-    public static Class tryToLoadClassForName(String name, ClassLoader classLoader)
-    {
-        try
-        {
-            return classLoader.loadClass(name);
         }
         catch (ClassNotFoundException e)
         {
@@ -397,107 +289,5 @@ public abstract class ClassUtils
 
         String classLocation = targetClass.getResource(targetClass.getSimpleName() + ".class").toString();
         return classLocation.substring(0, classLocation.indexOf(classFilePath) - 1) + manifestFilePath;
-    }
-    
-    /**
-     * Checks if the given class contains a method with the same signature.
-     * 
-     * @param targetClass The class to check
-     * @param method The source method
-     * @return if it contains a method with the same signature.
-     */
-    public static boolean containsMethod(Class<?> targetClass, Method method)
-    {
-        return extractMethod(targetClass, method) != null;
-    }
-
-    /**
-     * Extracts a method with same signature as the source method.
-     * 
-     * @param clazz The target class
-     * @param sourceMethod The source method.
-     * @return the extracted method or <code>null</code>
-     */
-    public static Method extractMethod(Class<?> clazz, Method sourceMethod)
-    {
-        try
-        {
-            String name = sourceMethod.getName();
-            return clazz != null ? clazz.getMethod(name, sourceMethod.getParameterTypes()) : null;
-        }
-        catch (NoSuchMethodException e)
-        {
-            return null;
-        }
-    }
-
-    /**
-     * Checks if the given class has a method with the same signature, taking in to account generic types
-     * @param targetClass
-     * @param method
-     * @return if it contains a method with the same signature.
-     */
-    public static boolean containsPossiblyGenericMethod(Class<?> targetClass, Method method)
-    {
-        return extractPossiblyGenericMethod(targetClass, method) != null;
-    }
-
-    /**
-     * Extracts a method matching the source method, allowing generic type parameters to be substituted as
-     * long as they are properly castable.
-     *
-     * @param clazz The target class
-     * @param sourceMethod The source method.
-     * @return the extracted method or <code>null</code>
-     */
-    public static Method extractPossiblyGenericMethod(Class<?> clazz, Method sourceMethod)
-    {
-        Method exactMethod = extractMethod(clazz, sourceMethod);
-        if (exactMethod == null)
-        {
-            String methodName = sourceMethod.getName();
-            Class<?>[] parameterTypes = sourceMethod.getParameterTypes();
-            for (Method method : clazz.getMethods())
-            {
-                if (method.getName().equals(methodName) &&
-                        allSameType(method.getParameterTypes(), parameterTypes))
-                {
-                    return method;
-                }
-            }
-            return null;
-        }
-        else
-        {
-            return exactMethod;
-        }
-    }
-
-    /**
-     * Whether all of the parameters from left to right are equivalent.
-     * In order to support generics, it takes the form of left.isAssignableFrom(right)
-     * @param left left hand side to check
-     * @param right right hand side to check
-     * @return whether all of the left classes can be assigned to the right hand side types
-     */
-    private static boolean allSameType(Class<?>[] left, Class<?>[] right)
-    {
-        if (left.length != right.length)
-        {
-            return false;
-        }
-        for (int p = 0; p < left.length; p++)
-        {
-            if (!left[p].isAssignableFrom(right[p]))
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-    
-    public static boolean returns(Method method, Class<?> clazz)
-    {
-        return method.getReturnType().isAssignableFrom(clazz);
     }
 }

@@ -18,7 +18,6 @@
  */
 package org.apache.deltaspike.core.api.resourceloader;
 
-import jakarta.enterprise.context.ApplicationScoped;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -26,8 +25,10 @@ import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import jakarta.enterprise.context.ApplicationScoped;
+
 /**
- * A file-based resource provider, looking for a file based on the name.
+ * A file based resource provider, looking for a file based on the name.
  */
 @ApplicationScoped
 public class FileResourceProvider extends AbstractResourceProvider

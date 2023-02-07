@@ -18,12 +18,12 @@
  */
 package org.apache.deltaspike.core.spi.config.view;
 
-import org.apache.deltaspike.core.api.config.view.metadata.CallbackDescriptor;
-
 import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.apache.deltaspike.core.api.config.view.metadata.CallbackDescriptor;
 
 /**
  * Node-type used for building the meta-data-tree during the bootstrapping process.
@@ -34,7 +34,7 @@ public interface ViewConfigNode
 
     List<ViewConfigNode> getChildren();
 
-    Class<?> getSource();
+    Class getSource();
 
     Set<Annotation> getMetaData();
 

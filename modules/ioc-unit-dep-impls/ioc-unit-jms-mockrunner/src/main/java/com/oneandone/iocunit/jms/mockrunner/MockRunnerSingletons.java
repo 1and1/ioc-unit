@@ -16,9 +16,6 @@ import jakarta.jms.Topic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.melowe.jms2.compat.Jms2ConnectionFactory;
-import com.melowe.jms2.compat.Jms2Message;
-import com.melowe.jms2.compat.Jms2MessageListener;
 import com.mockrunner.jms.ConfigurationManager;
 import com.mockrunner.jms.DestinationManager;
 import com.mockrunner.mock.jms.MockConnectionFactory;
@@ -33,8 +30,6 @@ import com.oneandone.iocunit.jms.JmsSingletonsIntf;
 public class MockRunnerSingletons implements JmsSingletonsIntf {
 
     private AtomicReference<DestinationManager> destinationManagerAtomicReference = new AtomicReference<>();
-
-    private AtomicReference<Jms2ConnectionFactory> connectionFactoryAtomicReference = new AtomicReference<>();
 
     private AtomicReference<MockConnectionFactory> mockConnectionFactoryAtomicReference = new AtomicReference<>();
 
@@ -59,7 +54,7 @@ public class MockRunnerSingletons implements JmsSingletonsIntf {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        return connectionFactoryAtomicReference.get().createContext();
+        return mockConnectionFactoryAtomicReference.get().createContext();
     }
 
 
@@ -69,10 +64,9 @@ public class MockRunnerSingletons implements JmsSingletonsIntf {
     @PreDestroy
     @Override
     public void destroy() {
-        if(connectionFactoryAtomicReference.get() != null) {
+        if(mockConnectionFactoryAtomicReference.get() != null) {
             mockConnectionFactoryAtomicReference.get().clearConnections();
             mockConnectionFactoryAtomicReference = new AtomicReference<>();
-            connectionFactoryAtomicReference = new AtomicReference<>();
         }
         destinationManagerAtomicReference = new AtomicReference<>();
         mdbConnection = new AtomicReference<>();
@@ -104,27 +98,20 @@ public class MockRunnerSingletons implements JmsSingletonsIntf {
      */
     @Override
     public ConnectionFactory getConnectionFactory() throws Exception {
-        if(connectionFactoryAtomicReference.get() == null) {
+        if(mockConnectionFactoryAtomicReference.get() == null) {
             final ConfigurationManager configurationManager = new ConfigurationManager();
             configurationManager.setDoCloneOnSend(true);
             final MockConnectionFactory mockConnectionFactory = new MockConnectionFactory(getDestinationManager(), configurationManager);
-            Jms2ConnectionFactory tmp = new Jms2ConnectionFactory(mockConnectionFactory);
-            if(connectionFactoryAtomicReference.compareAndSet(null, tmp)) {
-                mockConnectionFactoryAtomicReference.compareAndSet(null, mockConnectionFactory);
-                mdbConnection.set(tmp.createConnection());
+            if(mockConnectionFactoryAtomicReference.compareAndSet(null, mockConnectionFactory)) {
+                mdbConnection.set(mockConnectionFactory.createConnection());
             }
         }
-        return connectionFactoryAtomicReference.get();
+        return mockConnectionFactoryAtomicReference.get();
     }
 
     @Override
     public void jms2OnMessage(final MessageListener listener, final Message message) {
-        if(message instanceof Jms2Message) {
-            listener.onMessage(message);
-        }
-        else {
-            new Jms2MessageListener(listener).onMessage(message);
-        }
+        listener.onMessage(message);
     }
 
 }

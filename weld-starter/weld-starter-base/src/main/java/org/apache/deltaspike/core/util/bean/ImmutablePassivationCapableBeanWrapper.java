@@ -18,11 +18,12 @@
  */
 package org.apache.deltaspike.core.util.bean;
 
-import jakarta.enterprise.inject.spi.Bean;
-import jakarta.enterprise.inject.spi.PassivationCapable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Set;
+
+import jakarta.enterprise.inject.spi.Bean;
+import jakarta.enterprise.inject.spi.PassivationCapable;
 
 /**
  * <p>PassivationCapable version of an ImmutableBeanWrapper.
@@ -47,6 +48,7 @@ public class ImmutablePassivationCapableBeanWrapper<T> extends ImmutableBeanWrap
      * @param stereotypes the bean's stereotypes
      * @param types       the types of the bean
      * @param alternative whether the bean is an alternative
+     * @param nullable    true if the bean is nullable
      * @param toString    the string which should be returned by #{@link #toString()}
      * @param id          the passivationId which gets returned by {@link #getId()}
      */
@@ -57,10 +59,11 @@ public class ImmutablePassivationCapableBeanWrapper<T> extends ImmutableBeanWrap
                                                   Set<Class<? extends Annotation>> stereotypes,
                                                   Set<Type> types,
                                                   boolean alternative,
+                                                  boolean nullable,
                                                   String toString,
                                                   String id)
     {
-        super(bean, name, qualifiers, scope, stereotypes, types, alternative, toString);
+        super(bean, name, qualifiers, scope, stereotypes, types, alternative, nullable, toString);
         this.id = id;
     }
 

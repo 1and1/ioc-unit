@@ -33,7 +33,7 @@ public class SimulatedEntityTransaction implements EntityTransaction {
     public void commit() throws IllegalStateException, RollbackException {
         try {
             new SimulatedTransactionManager().commit(true);
-        } catch (javax.transaction.RollbackException e) {
+        } catch (jakarta.transaction.RollbackException e) {
             throw new RollbackException(e);
         } catch (Exception e) {
             throw new IllegalStateException(e);

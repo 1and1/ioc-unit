@@ -55,7 +55,7 @@ public class JaxRSRestEasyTestExtension implements Extension {
         ExtensionSupport.addTypeAfterBeanDiscovery(abd, bm, DispatcherDelegate.class);
         ExtensionSupport.addTypeAfterBeanDiscovery(abd, bm, IocUnitServletContextHolder.class);
         try {
-            Class<?> tmp = Class.forName("javax.servlet.http.HttpSession");
+            Class<?> tmp = Class.forName("jakarta.servlet.http.HttpSession");
             ExtensionSupport.addTypeAfterBeanDiscovery(abd, bm, IocUnitHttpSession.class);
             ExtensionSupport.addTypeAfterBeanDiscovery(abd, bm, IocUnitHttpServletRequest.class);
         } catch (Exception e) {

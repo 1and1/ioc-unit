@@ -18,14 +18,15 @@
  */
 package org.apache.deltaspike.core.util;
 
-import org.apache.deltaspike.core.spi.activation.Deactivatable;
-
-import jakarta.enterprise.inject.Typed;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ServiceLoader;
 import java.util.logging.Logger;
+
+import jakarta.enterprise.inject.Typed;
+
+import org.apache.deltaspike.core.spi.activation.Deactivatable;
 
 /**
  * Allows handling the lookup (with fallbacks) in a central place.
@@ -49,24 +50,9 @@ public abstract class ServiceUtils
     public static <T> List<T> loadServiceImplementations(Class<T> serviceType,
                                                          boolean ignoreServicesWithMissingDependencies)
     {
-        return loadServiceImplementations(serviceType, ignoreServicesWithMissingDependencies, null);
-    }
-
-    public static <T> List<T> loadServiceImplementations(Class<T> serviceType,
-                                                         boolean ignoreServicesWithMissingDependencies,
-                                                         ClassLoader classLoader)
-    {
         List<T> result = new ArrayList<T>();
 
-        Iterator<T> servicesIterator;
-        if (classLoader != null)
-        {
-            servicesIterator = ServiceLoader.load(serviceType, classLoader).iterator();
-        }
-        else
-        {
-            servicesIterator = ServiceLoader.load(serviceType).iterator();
-        }
+        Iterator<T> servicesIterator = ServiceLoader.load(serviceType).iterator();
 
         if (!servicesIterator.hasNext())
         {

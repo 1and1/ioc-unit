@@ -2,7 +2,7 @@ package com.oneandone.iocunitejb.helpers;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
-import jakarta.sql.DataSource;
+import javax.sql.DataSource;
 
 import com.oneandone.iocunit.jpa.XmlAwarePersistenceFactory;
 

@@ -18,23 +18,24 @@
  */
 package org.apache.deltaspike.core.api.config.view.controller;
 
-import org.apache.deltaspike.core.api.config.view.metadata.SimpleCallbackDescriptor;
-import org.apache.deltaspike.core.api.config.view.metadata.ViewMetaData;
-import org.apache.deltaspike.core.spi.config.view.ConfigPreProcessor;
-import org.apache.deltaspike.core.spi.config.view.ViewConfigNode;
+/**
+ * Specifies one or more page-beans via the type-safe view-config.
+ * Such page beans support e.g. the view-controller annotations.
+ */
+
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.lang.annotation.Annotation;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import org.apache.deltaspike.core.api.config.view.metadata.SimpleCallbackDescriptor;
+import org.apache.deltaspike.core.api.config.view.metadata.ViewMetaData;
+import org.apache.deltaspike.core.spi.config.view.ConfigPreProcessor;
+import org.apache.deltaspike.core.spi.config.view.ViewConfigNode;
 
-/**
- * Specifies one or more view-controllers for the view-config which has this annotation applied. View-controllers can
- * handle callbacks like {@link InitView}, {@link PreRenderView}, etc.
- */
 //don't use @Inherited
 @Target(TYPE)
 @Retention(RUNTIME)
@@ -44,17 +45,19 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface ViewControllerRef
 {
     /**
-     * Class of the view-controller.
+     * Class of the page-bean
      *
-     * @return class of the view-controller
+     * @return class of the page-bean
      */
-    Class<?> value();
+    Class value();
 
     /**
-     * Currently not implemented. 
-     * Optional name of the view-controller.
+     * Currently not implemented
      *
-     * @return name of the view-controller
+     *
+     * Optional name of the page-bean
+     *
+     * @return name of the page-bean
      */
     //TODO
     String name() default "";
@@ -77,9 +80,9 @@ public @interface ViewControllerRef
     }
 
     //not needed outside
-    class Descriptor extends SimpleCallbackDescriptor<Void>
+    static class Descriptor extends SimpleCallbackDescriptor<Void>
     {
-        protected Descriptor(Class<?> beanClass, Class<? extends Annotation> callbackType)
+        protected Descriptor(Class beanClass, Class<? extends Annotation> callbackType)
         {
             super(beanClass, callbackType);
         }

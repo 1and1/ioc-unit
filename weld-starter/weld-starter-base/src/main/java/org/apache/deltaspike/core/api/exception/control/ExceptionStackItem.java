@@ -19,9 +19,10 @@
 
 package org.apache.deltaspike.core.api.exception.control;
 
-import jakarta.enterprise.inject.Typed;
 import java.io.Serializable;
 import java.util.Arrays;
+
+import jakarta.enterprise.inject.Typed;
 
 /**
  * Container for the exception and it's stack trace.

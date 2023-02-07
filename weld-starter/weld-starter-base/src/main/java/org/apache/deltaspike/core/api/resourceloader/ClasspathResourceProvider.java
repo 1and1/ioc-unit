@@ -18,9 +18,6 @@
  */
 package org.apache.deltaspike.core.api.resourceloader;
 
-import org.apache.deltaspike.core.util.ClassUtils;
-
-import jakarta.enterprise.context.ApplicationScoped;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -30,8 +27,12 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import jakarta.enterprise.context.ApplicationScoped;
+
+import org.apache.deltaspike.core.util.ClassUtils;
+
 /**
- * A classpath-based resource provider.
+ * A classpath based resource provider
  */
 @ApplicationScoped
 public class ClasspathResourceProvider extends AbstractResourceProvider
@@ -120,7 +121,7 @@ public class ClasspathResourceProvider extends AbstractResourceProvider
 
     private String urlsToString(List<URL> urls, String name)
     {
-        if (urls.isEmpty())
+        if (urls.size() == 0)
         {
             return String.format("No resources found for '%s'",name);
         }

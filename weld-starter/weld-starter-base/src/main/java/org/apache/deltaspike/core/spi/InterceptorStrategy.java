@@ -18,8 +18,9 @@
  */
 package org.apache.deltaspike.core.spi;
 
-import jakarta.interceptor.InvocationContext;
 import java.io.Serializable;
+
+import jakarta.interceptor.InvocationContext;
 
 /**
  * Base interface for all interceptor strategies which allow to provide

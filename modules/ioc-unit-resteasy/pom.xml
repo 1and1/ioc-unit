@@ -23,7 +23,6 @@
     <properties>
         <resteasy.version>6.2.1.Final</resteasy.version>
         <javax.json.version>1.1</javax.json.version>
-        <rest-assured.version>4.5.1</rest-assured.version>
     </properties>
 
     <dependencies>
@@ -83,7 +82,7 @@
         <dependency>
             <groupId>io.rest-assured</groupId>
             <artifactId>rest-assured</artifactId>
-            <version>${rest-assured.version}</version>
+            <version>5.3.0</version>
             <scope>provided</scope>
             <exclusions>
                 <exclusion>
@@ -95,7 +94,7 @@
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
-            <version>3.12.2</version>
+            <version>3.24.2</version>
             <scope>test</scope>
         </dependency>
         <!-- logging -->

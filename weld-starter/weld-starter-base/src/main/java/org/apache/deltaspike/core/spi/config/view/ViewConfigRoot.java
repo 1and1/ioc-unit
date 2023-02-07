@@ -18,14 +18,14 @@
  */
 package org.apache.deltaspike.core.spi.config.view;
 
-import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigResolver;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import org.apache.deltaspike.core.api.config.view.metadata.ViewConfigResolver;
 
 /**
  * Allows to customize the default behaviour for processing the meta-data-tree

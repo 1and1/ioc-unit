@@ -18,20 +18,23 @@
  */
 package org.apache.deltaspike.core.api.scope;
 
-import jakarta.enterprise.context.NormalScope;
-import java.lang.annotation.Documented;
-import java.lang.annotation.Inherited;
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
-
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+import java.lang.annotation.Documented;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+
+import jakarta.enterprise.context.NormalScope;
+
 /**
- * The scope is active as long as its bean is accessed by a view. Basically &#064;ViewAccessScoped is a DeltaSpike
- * Conversation which automatically gets ended when the next view tree gets restored without hitting the bean.
+ * The scope is active as long as it's bean is accessed by a view.
+ * Basically &#064;ViewAccessScoped is a DeltaSpike Conversation which
+ * automatically gets ended when the next view tree gets restored
+ * without hitting the bean.
  */
 @Target( { METHOD,TYPE,FIELD } )
 @Retention(RUNTIME)

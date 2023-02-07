@@ -20,7 +20,6 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.HttpSessionAttributeListener;
 import jakarta.servlet.http.HttpSessionBindingEvent;
 import jakarta.servlet.http.HttpSessionBindingListener;
-import jakarta.servlet.http.HttpSessionContext;
 
 /**
  * Shamlessly ripped from mockrunner. If mockrunner supports servlet 3.1 https://github.com/mockrunner/mockrunner/issues/4 then this class can extend
@@ -214,10 +213,6 @@ public class MockHttpSessionImpl implements HttpSession {
 
     public synchronized int getMaxInactiveInterval() {
         return maxInactiveInterval;
-    }
-
-    public synchronized HttpSessionContext getSessionContext() {
-        return new MockSessionContext();
     }
 
     private synchronized void callAttributeListenersAddedMethod(String key,

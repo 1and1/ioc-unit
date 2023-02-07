@@ -6,7 +6,7 @@ import java.sql.Statement;
 import java.util.Collections;
 import java.util.List;
 
-import jakarta.sql.DataSource;
+import javax.sql.DataSource;
 
 /**
  * @author aschoerk

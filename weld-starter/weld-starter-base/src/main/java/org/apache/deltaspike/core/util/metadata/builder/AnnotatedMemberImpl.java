@@ -19,11 +19,12 @@
 
 package org.apache.deltaspike.core.util.metadata.builder;
 
-import jakarta.enterprise.inject.spi.AnnotatedMember;
-import jakarta.enterprise.inject.spi.AnnotatedType;
 import java.lang.reflect.Member;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
+
+import jakarta.enterprise.inject.spi.AnnotatedMember;
+import jakarta.enterprise.inject.spi.AnnotatedType;
 
 /**
  * An implementation of {@link AnnotatedMember} to be used in CDI life cycle events and

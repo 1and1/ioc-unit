@@ -20,9 +20,9 @@ import jakarta.jms.Topic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.melowe.jms2.compat.Jms2ConnectionFactory;
-import com.melowe.jms2.compat.Jms2Message;
-import com.melowe.jms2.compat.Jms2MessageListener;
+// import com.melowe.jms2.compat.Jms2ConnectionFactory;
+// import com.melowe.jms2.compat.Jms2Message;
+// import com.melowe.jms2.compat.Jms2MessageListener;
 import com.oneandone.iocunit.jms.JmsSingletonsIntf;
 import com.rabbitmq.jms.admin.RMQConnectionFactory;
 import com.rabbitmq.jms.admin.RMQDestination;
@@ -39,7 +39,7 @@ import io.arivera.oss.embedded.rabbitmq.EmbeddedRabbitMqConfig;
 @Singleton
 public class RabbitMQSingletons implements JmsSingletonsIntf {
 
-    private AtomicReference<Jms2ConnectionFactory> connectionFactoryAtomicReference = new AtomicReference<>();
+    private AtomicReference<RMQConnectionFactory> connectionFactoryAtomicReference = new AtomicReference<>();
 
     private AtomicReference<Connection> mdbConnection = new AtomicReference<Connection>();
 
@@ -137,9 +137,8 @@ public class RabbitMQSingletons implements JmsSingletonsIntf {
             cf.setVirtualHost("/");
             cf.setPort(5672);
             cf.setCleanUpServerNamedQueuesForNonDurableTopicsOnSessionClose(true);
-            final Jms2ConnectionFactory jms2Cf = new Jms2ConnectionFactory(cf);
-            if(connectionFactoryAtomicReference.compareAndSet(null, jms2Cf)) {
-                final Connection connection = jms2Cf.createConnection();
+            if(connectionFactoryAtomicReference.compareAndSet(null, cf)) {
+                final Connection connection = cf.createConnection();
                 connection.start();
                 destinations.set(new ConcurrentHashMap<>());
                 mdbConnection.set(connection);
@@ -150,12 +149,7 @@ public class RabbitMQSingletons implements JmsSingletonsIntf {
 
     @Override
     public void jms2OnMessage(final MessageListener listener, final Message message) {
-        if(message instanceof Jms2Message) {
-            listener.onMessage(message);
-        }
-        else {
-            new Jms2MessageListener(listener).onMessage(message);
-        }
+        listener.onMessage(message);
     }
 
 }

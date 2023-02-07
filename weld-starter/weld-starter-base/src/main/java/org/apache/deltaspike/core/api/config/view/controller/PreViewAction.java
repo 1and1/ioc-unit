@@ -18,16 +18,17 @@
  */
 package org.apache.deltaspike.core.api.config.view.controller;
 
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
 /**
- * Callback annotation for view-controllers. Methods annotated with this annotation will be invoked before the method
- * binding gets invoked. Can be used as a callback in a view-controller in parallel with 3rd party flow-engines.
+ * View-controller annotation for page-beans.
+ * Methods annotated with this annotation will be invoked before the method binding gets invoked.
+ * Usually only used for using a callback in the page-bean in parallel with 3rd party flow-engines
  */
 @Target(METHOD)
 @Retention(RUNTIME)

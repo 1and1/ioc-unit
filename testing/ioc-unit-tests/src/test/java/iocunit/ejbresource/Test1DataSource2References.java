@@ -2,7 +2,7 @@ package iocunit.ejbresource;
 
 import jakarta.enterprise.inject.Produces;
 import jakarta.inject.Inject;
-import jakarta.sql.DataSource;
+import javax.sql.DataSource;
 
 import com.oneandone.iocunit.resource.ResourceQualifier;
 

@@ -31,6 +31,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.UserTransaction;
 
+import org.apache.deltaspike.core.api.message.MessageContext;
 import org.jboss.weld.transaction.spi.TransactionServices;
 import org.objectweb.asm.ClassWriter;
 import org.slf4j.Logger;
@@ -137,11 +138,11 @@ public class EjbTestExtensionService implements TestExtensionService {
 
     public static void checkCreateMessageContextInterface() {
         try {
-            Class.forName("javax.xml.rpc.handler.MessageContext").getDeclaredMethods();
+            Class.forName("jakarta.xml.rpc.handler.MessageContext").getDeclaredMethods();
             return;
         } catch (ClassNotFoundException ncdfe) {
             ClassWriter cw = new ClassWriter(0);
-            cw.visit(V1_5, ACC_PUBLIC + ACC_ABSTRACT + ACC_INTERFACE, "javax/xml/rpc/handler/MessageContext",
+            cw.visit(V1_5, ACC_PUBLIC + ACC_ABSTRACT + ACC_INTERFACE, "jakarta/xml/rpc/handler/MessageContext",
                     null, "java/lang/Object", new String[]{});
             cw.visitMethod(ACC_PUBLIC + ACC_ABSTRACT, "setProperty", "(Ljava/lang/String;Ljava/lang/Object;)V", null, null);
             cw.visitMethod(ACC_PUBLIC + ACC_ABSTRACT, "getProperty", "(Ljava/lang/String;)Ljava/lang/Object;", null, null);
@@ -163,7 +164,7 @@ public class EjbTestExtensionService implements TestExtensionService {
             }
             m.setAccessible(true);
             try {
-                m.invoke(o, "javax.xml.rpc.handler.MessageContext", ba, 0, ba.length);
+                m.invoke(o, "jakarta.xml.rpc.handler.MessageContext", ba, 0, ba.length);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -280,16 +281,16 @@ public class EjbTestExtensionService implements TestExtensionService {
                         case "java.lang.String":
                             qualifiers.add((Annotation) (cs[0].newInstance(resource.name(), resource.lookup(), resource.mappedName())));
                             break;
-                        case "java.sql.DataSource":
+                        case "javax.sql.DataSource":
                             doesResourceQualifyIfNecessary(f, qualifiers, resource, cs);
                             break;
-                        case "javax.ejb.EJBContext":
-                            qualifiers.add((Annotation) (cs[0].newInstance("javax.ejb.EJBContext", "", "")));
+                        case "jakarta.ejb.EJBContext":
+                            qualifiers.add((Annotation) (cs[0].newInstance("jakarta.ejb.EJBContext", "", "")));
                             break;
-                        case "javax.transaction.UserTransaction":
-                        case "javax.ejb.SessionContext":
-                        case "javax.ejb.MessageDrivenContext":
-                        case "javax.ejb.EntityContext":
+                        case "jakarta.transaction.UserTransaction":
+                        case "jakarta.ejb.SessionContext":
+                        case "jakarta.ejb.MessageDrivenContext":
+                        case "jakarta.ejb.EntityContext":
                             // no resource-qualifier necessary, type specifies enough
                             break;
                         default:

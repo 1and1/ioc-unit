@@ -19,9 +19,10 @@
 
 package org.apache.deltaspike.core.util.metadata.builder;
 
+import java.lang.reflect.Type;
+
 import jakarta.enterprise.inject.spi.AnnotatedCallable;
 import jakarta.enterprise.inject.spi.AnnotatedParameter;
-import java.lang.reflect.Type;
 
 /**
  * Implementation of {@link AnnotatedParameter}.
@@ -35,7 +36,7 @@ class AnnotatedParameterImpl<X> extends AnnotatedImpl implements AnnotatedParame
     /**
      * Constructor
      */
-    AnnotatedParameterImpl(AnnotatedCallable<X> declaringCallable, Class<?> type, int position,
+    public AnnotatedParameterImpl(AnnotatedCallable<X> declaringCallable, Class<?> type, int position,
                                   AnnotationStore annotations, Type genericType, Type typeOverride)
     {
         super(type, annotations, genericType, typeOverride);

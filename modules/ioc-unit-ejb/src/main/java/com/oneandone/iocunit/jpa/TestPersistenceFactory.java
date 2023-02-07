@@ -2,7 +2,7 @@ package com.oneandone.iocunit.jpa;
 
 import jakarta.enterprise.inject.Produces;
 import jakarta.persistence.EntityManager;
-import jakarta.sql.DataSource;
+import javax.sql.DataSource;
 
 /**
  * @author aschoerk

@@ -19,12 +19,13 @@
 
 package org.apache.deltaspike.core.util.metadata.builder;
 
+import static java.util.Collections.emptySet;
+
+import java.util.Set;
+
 import jakarta.enterprise.context.spi.CreationalContext;
 import jakarta.enterprise.inject.spi.InjectionPoint;
 import jakarta.enterprise.inject.spi.InjectionTarget;
-import java.util.Set;
-
-import static java.util.Collections.emptySet;
 
 /**
  * Injection target implementation that does nothing

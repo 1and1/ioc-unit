@@ -7,7 +7,6 @@ import jakarta.enterprise.inject.Produces;
 
 import org.junit.jupiter.api.Assertions;
 import org.mockito.Mock;
-import org.mockito.internal.util.reflection.FieldSetter;
 
 import com.oneandone.iocunit.analyzer.annotations.ProducesAlternative;
 import com.oneandone.iocunitejb.cdibeans.ServiceBeanDepScopedHelper;
@@ -26,7 +25,7 @@ public class AliasTestResources {
     @PostConstruct
     public void postConstruct() throws NoSuchFieldException {
         when(serviceBeanDepScopedHelper.getInitCalled()).thenReturn(111);
-        FieldSetter.setField(serviceBeanDepScopedHelper,
+        ReflectUtils.setField(serviceBeanDepScopedHelper,
                 ServiceBeanDepScopedHelper.class.getDeclaredField("initCalled"), 112);
         // when(serviceBeanDepScopedHelper.initCalled).thenReturn(112);
         when(helperHelperProducer.getServiceBeanDepScopedHelper()).thenReturn(serviceBeanDepScopedHelper);

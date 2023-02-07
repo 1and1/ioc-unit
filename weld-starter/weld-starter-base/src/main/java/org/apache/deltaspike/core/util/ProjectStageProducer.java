@@ -18,15 +18,16 @@
  */
 package org.apache.deltaspike.core.util;
 
-import org.apache.deltaspike.core.api.config.ConfigResolver;
-import org.apache.deltaspike.core.api.projectstage.ProjectStage;
+import java.io.Serializable;
+import java.util.logging.Logger;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.context.Dependent;
 import jakarta.enterprise.inject.Default;
 import jakarta.enterprise.inject.Produces;
-import java.io.Serializable;
-import java.util.logging.Logger;
+
+import org.apache.deltaspike.core.api.config.ConfigResolver;
+import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 
 /**
  * <p>Produces {@link ProjectStage} configurations.</p>
@@ -72,7 +73,7 @@ public class ProjectStageProducer implements Serializable
     /**
      * The detected ProjectStage
      */
-    private static volatile ProjectStage projectStage;
+    private static ProjectStage projectStage;
 
     /**
      * for the singleton factory
@@ -134,10 +135,9 @@ public class ProjectStageProducer implements Serializable
             return;
         }
 
-        ProjectStageProducer newProjectStageProducer = new ProjectStageProducer();
-        newProjectStageProducer.initProjectStage();
+        projectStageProducer = new ProjectStageProducer();
 
-        projectStageProducer = newProjectStageProducer;
+        projectStageProducer.initProjectStage();
     }
 
     /**
@@ -215,15 +215,6 @@ public class ProjectStageProducer implements Serializable
      */
     public static void setProjectStage(ProjectStage ps)
     {
-        if (projectStage == null)
-        {
-            LOG.info("change project-stage to " + ps);
-        }
-        else if (!projectStage.equals(ps))
-        {
-            LOG.info("change project-stage from " + projectStage + " to " + ps);
-        }
-
         projectStage = ps;
     }
 }

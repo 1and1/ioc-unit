@@ -25,9 +25,9 @@ public class ResourceExtension implements Extension {
         private static final long serialVersionUID = -1540511962019840039L;
 
         {
-            add("javax.jms.Queue");
-            add("javax.jms.Topic");
-            add("javax.jms.ConnectionFactory");
+            add("jakarta.jms.Queue");
+            add("jakarta.jms.Topic");
+            add("jakarta.jms.ConnectionFactory");
 
         }
     };

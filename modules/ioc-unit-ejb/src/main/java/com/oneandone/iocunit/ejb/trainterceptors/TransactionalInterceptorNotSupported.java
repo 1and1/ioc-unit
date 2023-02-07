@@ -1,6 +1,6 @@
 package com.oneandone.iocunit.ejb.trainterceptors;
 
-import static javax.transaction.Transactional.TxType.NOT_SUPPORTED;
+import static jakarta.transaction.Transactional.TxType.NOT_SUPPORTED;
 
 import jakarta.annotation.Priority;
 import jakarta.interceptor.Interceptor;

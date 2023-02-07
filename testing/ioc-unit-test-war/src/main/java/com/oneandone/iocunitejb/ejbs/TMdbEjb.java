@@ -18,7 +18,7 @@ import org.slf4j.Logger;
  * @author aschoerk
  */
 @MessageDriven(name = "TMdbEjb", activationConfig = {
-        @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Topic"),
+        @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "jakarta.jms.Topic"),
         @ActivationConfigProperty(propertyName = "destination", propertyValue = "myTopic")
 })
 @ApplicationScoped

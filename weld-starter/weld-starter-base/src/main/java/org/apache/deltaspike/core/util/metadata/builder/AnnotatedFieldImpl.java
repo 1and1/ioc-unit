@@ -19,10 +19,11 @@
 
 package org.apache.deltaspike.core.util.metadata.builder;
 
-import jakarta.enterprise.inject.spi.AnnotatedField;
-import jakarta.enterprise.inject.spi.AnnotatedType;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
+
+import jakarta.enterprise.inject.spi.AnnotatedField;
+import jakarta.enterprise.inject.spi.AnnotatedType;
 
 /**
  * Implementation of {@link AnnotatedField} to be used in CDI life cycle events and
@@ -34,7 +35,7 @@ class AnnotatedFieldImpl<X> extends AnnotatedMemberImpl<X, Field> implements Ann
     /**
      * Constructor.
      */
-    AnnotatedFieldImpl(AnnotatedType<X> declaringType, Field field, AnnotationStore annotations,
+    public AnnotatedFieldImpl(AnnotatedType<X> declaringType, Field field, AnnotationStore annotations,
                               Type overriddenType)
     {
         super(declaringType, field, field.getType(), annotations, field.getGenericType(), overriddenType);

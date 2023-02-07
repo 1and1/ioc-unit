@@ -19,8 +19,8 @@
 
 package org.apache.deltaspike.core.spi.exception.control.event;
 
-import org.apache.deltaspike.core.api.exception.control.event.ExceptionEvent;
 import org.apache.deltaspike.core.api.exception.control.ExceptionHandlingFlow;
+import org.apache.deltaspike.core.api.exception.control.event.ExceptionEvent;
 
 /**
  * Internal view into the ExceptionEvent. Methods on this interface are used by the ExceptionHandlerBroadcaster.

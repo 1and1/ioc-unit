@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import jakarta.persistence.spi.PersistenceUnitInfo;
-import jakarta.sql.DataSource;
+import javax.sql.DataSource;
 
 import org.eclipse.persistence.internal.jpa.deployment.SEPersistenceUnitInfo;
 

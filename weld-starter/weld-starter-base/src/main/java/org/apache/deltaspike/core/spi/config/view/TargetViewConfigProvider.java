@@ -18,9 +18,9 @@
  */
 package org.apache.deltaspike.core.spi.config.view;
 
-import org.apache.deltaspike.core.api.config.view.ViewConfig;
-
 import java.lang.annotation.Annotation;
+
+import org.apache.deltaspike.core.api.config.view.ViewConfig;
 
 /**
  * It's restricted to reference {@link ViewConfig} classes to force more solid references.

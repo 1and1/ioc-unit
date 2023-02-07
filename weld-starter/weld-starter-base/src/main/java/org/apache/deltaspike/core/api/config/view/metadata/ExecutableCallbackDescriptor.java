@@ -18,29 +18,28 @@
  */
 package org.apache.deltaspike.core.api.config.view.metadata;
 
-import org.apache.deltaspike.core.util.ExceptionUtils;
-
 import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.deltaspike.core.util.ExceptionUtils;
+
 /**
- * Specialized {@link CallbackDescriptor} which provides {@link #execute} only for concrete descriptors, but doesn't
- * expose it (and can't get used by accident). Concrete implementations can provide type-safe versions of it, but
- * delegate the final execution to {@link #execute}.
+ * Specialized {@link CallbackDescriptor}
+ * which provides {@link #execute} only for concrete descriptors, but doesn't expose it (-> can't get used by accident).
+ * Concrete implementations can provide type-safe versions of it, but delegate the final execution to {@link #execute}.
  *
  * @param <R> return type
  */
 public abstract class ExecutableCallbackDescriptor<R> extends CallbackDescriptor
 {
-    protected ExecutableCallbackDescriptor(Class<?> beanClass, Class<? extends Annotation> callbackMarker)
+    protected ExecutableCallbackDescriptor(Class beanClass, Class<? extends Annotation> callbackMarker)
     {
         super(beanClass, callbackMarker);
     }
 
-    protected ExecutableCallbackDescriptor(Class<?>[] beanClasses, Class<? extends Annotation> callbackMarker)
+    protected ExecutableCallbackDescriptor(Class[] beanClasses, Class<? extends Annotation> callbackMarker)
     {
         super(beanClasses, callbackMarker);
     }
@@ -69,7 +68,6 @@ public abstract class ExecutableCallbackDescriptor<R> extends CallbackDescriptor
                         }
                     }
 
-                    @SuppressWarnings("unchecked")
                     R result = (R) callbackMethod.invoke(bean, parameters);
 
                     if (result != null)
@@ -79,10 +77,6 @@ public abstract class ExecutableCallbackDescriptor<R> extends CallbackDescriptor
                 }
                 catch (Exception e)
                 {
-                    if (e instanceof InvocationTargetException)
-                    {
-                        ExceptionUtils.throwAsRuntimeException(e.getCause());
-                    }
                     ExceptionUtils.throwAsRuntimeException(e);
                 }
             }

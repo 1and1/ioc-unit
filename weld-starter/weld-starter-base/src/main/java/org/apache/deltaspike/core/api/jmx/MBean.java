@@ -18,52 +18,35 @@
  */
 package org.apache.deltaspike.core.api.jmx;
 
-import jakarta.enterprise.inject.Stereotype;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
 /**
  * This annotation marks a CDI managed bean as exported through JMX.
  */
-@Stereotype
-
 @Retention(RUNTIME)
 @Target(TYPE)
 @Inherited
 public @interface MBean
 {
     /**
-     * @return the category to use if no objectName was specified. Default is "org.apache.deltaspike" and can be
-     *         overriden either directly by the value or by a key used to resolve a value using
-     *         {@link org.apache.deltaspike.core.api.config.ConfigResolver}. It is a key if the value is between
-     *         brackets. Default key is "org.apache.deltaspike.mbean.category".
+     * @return the category to use if no objectName was specified. Default is "org.apache.deltaspike"
+     * and can be overriden either directly by the value or by a key used to resolve a value using
+     * {@see org.apache.deltaspike.core.api.config.ConfigResolver}. It is a key if the value is
+     * between bracket. Default key is "org.apache.deltaspike.mbean.category".
      */
     String category() default "{org.apache.deltaspike.mbean.category}";
 
     /**
-     * @return the name of the bean used if no objectName was specified. It is used with category value to create the
-     *         MBean {@link javax.management.ObjectName} using the following pattern:
-     *         &lt;category&gt;:type=MBeans,name=&lt;name&gt;
+     * @return the name of the bean used if no objectName was specified.
+     * It is used with category value to create the MBean {@see javax.management.ObjectName}
+     * using the following pattern: &lt;category&gt;:type=MBeans,name=&lt;name&gt;
      */
     String name() default "";
-
-    /**
-     * @return the properties part of the objectName if no objectName was specified.
-     *         If name and type are specified this segment is concatenated after.
-     */
-    String properties() default "";
-
-    /**
-     * @return the type to use if no objectName was specified. Default is <pre>MBeans</pre> and can be
-     *         overriden either directly by the value or by a key used to resolve a value using
-     *         {@link org.apache.deltaspike.core.api.config.ConfigResolver}. It is a key if the value is between
-     *         brackets.
-     */
-    String type() default "";
 
     /**
      * @return the direct object name used to export the decorated bean.

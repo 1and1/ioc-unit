@@ -18,10 +18,11 @@
  */
 package org.apache.deltaspike.core.util;
 
-import jakarta.enterprise.inject.Typed;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+
+import jakarta.enterprise.inject.Typed;
 
 /**
  * A collection of utilities for working with Arrays
@@ -47,10 +48,5 @@ public abstract class ArraysUtils
         Set<T> result = new HashSet<T>();
         Collections.addAll(result, array);
         return result;
-    }
-
-    public static boolean isEmpty(Object[] array)
-    {
-        return array == null || array.length == 0;
     }
 }

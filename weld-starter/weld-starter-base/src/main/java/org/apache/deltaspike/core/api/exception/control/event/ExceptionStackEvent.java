@@ -19,15 +19,16 @@
 
 package org.apache.deltaspike.core.api.exception.control.event;
 
-import org.apache.deltaspike.core.api.exception.control.ExceptionStackItem;
-
-import jakarta.enterprise.inject.Typed;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
+
+import jakarta.enterprise.inject.Typed;
+
+import org.apache.deltaspike.core.api.exception.control.ExceptionStackItem;
 
 /**
  * Information about the current exception and exception cause container.  This object is not immutable.

@@ -19,18 +19,20 @@
 
 package org.apache.deltaspike.core.util.bean;
 
-import jakarta.enterprise.context.spi.CreationalContext;
-import jakarta.enterprise.inject.spi.InjectionPoint;
-import org.apache.deltaspike.core.util.metadata.builder.ContextualLifecycle;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Set;
 
+import jakarta.enterprise.context.spi.CreationalContext;
+import jakarta.enterprise.inject.spi.InjectionPoint;
+
+import org.apache.deltaspike.core.util.metadata.builder.ContextualLifecycle;
+
 /**
  *
  */
-public class ImmutableBean<T> extends BaseImmutableBean<T> {
+public class ImmutableBean<T> extends BaseImmutableBean<T>
+{
     private final ContextualLifecycle<T> lifecycle;
 
     /**
@@ -47,29 +49,33 @@ public class ImmutableBean<T> extends BaseImmutableBean<T> {
      * @param types               The bean's types, if null, the beanClass and {@link Object}
      *                            will be used
      * @param alternative         True if the bean is an alternative
+     * @param nullable            True if the bean is nullable
      * @param injectionPoints     the bean's injection points, if null an empty set is used
      * @param toString            the string which should be returned by #{@link #toString()}
-     * @param contextualLifecycle Handler for {@link #create(CreationalContext)} and
-     *                            {@link #destroy(Object, CreationalContext)}
+     * @param contextualLifecycle Handler for {@link #create(jakarta.enterprise.context.spi.CreationalContext)} and
+     *                            {@link #destroy(Object, jakarta.enterprise.context.spi.CreationalContext)}
      * @throws IllegalArgumentException if the beanClass is null
      */
     // CHECKSTYLE:OFF
     public ImmutableBean(Class<?> beanClass, String name, Set<Annotation> qualifiers, Class<? extends Annotation> scope,
                          Set<Class<? extends Annotation>> stereotypes, Set<Type> types, boolean alternative,
-                         Set<InjectionPoint> injectionPoints, String toString,
-                         ContextualLifecycle<T> contextualLifecycle) {
+                         boolean nullable, Set<InjectionPoint> injectionPoints, String toString,
+                         ContextualLifecycle<T> contextualLifecycle)
+    {
         // CHECKSTYLE:ON
-        super(beanClass, name, qualifiers, scope, stereotypes, types, alternative, injectionPoints, toString);
+        super(beanClass, name, qualifiers, scope, stereotypes, types, alternative, nullable, injectionPoints, toString);
         this.lifecycle = contextualLifecycle;
     }
 
     @Override
-    public T create(CreationalContext<T> creationalContext) {
+    public T create(CreationalContext<T> creationalContext)
+    {
         return lifecycle.create(this, creationalContext);
     }
 
     @Override
-    public void destroy(T instance, CreationalContext<T> creationalContext) {
+    public void destroy(T instance, CreationalContext<T> creationalContext)
+    {
         this.lifecycle.destroy(this, instance, creationalContext);
     }
 }

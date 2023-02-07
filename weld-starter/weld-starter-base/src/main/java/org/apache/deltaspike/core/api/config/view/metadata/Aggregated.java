@@ -18,31 +18,28 @@
  */
 package org.apache.deltaspike.core.api.config.view.metadata;
 
+import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
 /**
- * Marks view-metadata annotations or their fields as aggregated metadata. That results in retention of multiple
- * instances of such annotation per view instead of the metadata getting overriden by lower levels.
- *
- * Core just provides this annotation, but the concrete behaviour is defined by a concrete ConfigNodeConverter. E.g.
- * DefaultConfigNodeConverter uses the result stored in
- * {@link org.apache.deltaspike.core.spi.config.view.ViewConfigNode#getInheritedMetaData} to replace default- (/ null-)
- * values of "higher" levels with custom values of "lower" levels, if #value is 'true'.
+ * This annotation can be used to mark annotations as aggregated meta-data.
+ * Core just provides this annotation, but the concrete behaviour is defined by a concrete ConfigNodeConverter.
+ * E.g. DefaultConfigNodeConverter uses the result stored in ViewConfigNode#getInheritedMetaData to replace
+ * default- (/ null-) values of "higher" levels with custom values of "lower" levels,
+ * if #value is 'true'.
  */
-//TODO re-visit and discuss method-level (for annotation-attributes)
-@Target({ ANNOTATION_TYPE })
+@Target({ ANNOTATION_TYPE }) //TODO re-visit and discuss method-level (for annotation-attributes)
 @Retention(RUNTIME)
 @Documented
 public @interface Aggregated
 {
     /**
-     * @return false to override the same metadata type of the parent view-config, and true to allow multiple instances
-     *         of a metadata per view
+     * @return false to override the same meta-data type of the parent view-config and
+     *         true to allow multiple instances of a meta-data per view
      */
     boolean value();
 }

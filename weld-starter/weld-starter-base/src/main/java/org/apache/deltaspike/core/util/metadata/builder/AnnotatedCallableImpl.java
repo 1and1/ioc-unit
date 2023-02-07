@@ -18,15 +18,16 @@
  */
 package org.apache.deltaspike.core.util.metadata.builder;
 
-import jakarta.enterprise.inject.spi.AnnotatedCallable;
-import jakarta.enterprise.inject.spi.AnnotatedParameter;
-import jakarta.enterprise.inject.spi.AnnotatedType;
 import java.lang.reflect.Member;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+
+import jakarta.enterprise.inject.spi.AnnotatedCallable;
+import jakarta.enterprise.inject.spi.AnnotatedParameter;
+import jakarta.enterprise.inject.spi.AnnotatedType;
 
 /**
  * Implementation of {@link AnnotatedCallable}

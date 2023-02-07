@@ -19,6 +19,7 @@
 package org.apache.deltaspike.core.api.literal;
 
 import jakarta.enterprise.util.AnnotationLiteral;
+
 import org.apache.deltaspike.core.api.common.DeltaSpike;
 
 /**

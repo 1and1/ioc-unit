@@ -28,6 +28,7 @@ import jakarta.inject.Inject;
 import jakarta.servlet.AsyncContext;
 import jakarta.servlet.DispatcherType;
 import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletConnection;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletInputStream;
@@ -233,9 +234,6 @@ public class LifecycleAwareRequest implements HttpServletRequest {
 		return delegate.getServletPath();
 	}
 
-	public String getRealPath(String path) {
-		return delegate.getRealPath(path);
-	}
 
 	public int getRemotePort() {
 		return delegate.getRemotePort();
@@ -287,10 +285,6 @@ public class LifecycleAwareRequest implements HttpServletRequest {
 		return delegate.isRequestedSessionIdFromURL();
 	}
 
-	public boolean isRequestedSessionIdFromUrl() {
-		return delegate.isRequestedSessionIdFromUrl();
-	}
-
 	public boolean authenticate(HttpServletResponse response)
 			throws IOException, ServletException {
 		return delegate.authenticate(response);
@@ -327,6 +321,21 @@ public class LifecycleAwareRequest implements HttpServletRequest {
 
 	public DispatcherType getDispatcherType() {
 		return delegate.getDispatcherType();
+	}
+
+	@Override
+	public String getRequestId() {
+		return delegate.getRequestId();
+	}
+
+	@Override
+	public String getProtocolRequestId() {
+		return delegate.getProtocolRequestId();
+	}
+
+	@Override
+	public ServletConnection getServletConnection() {
+		return delegate.getServletConnection();
 	}
 
 	@Override

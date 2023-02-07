@@ -19,10 +19,11 @@
 
 package org.apache.deltaspike.core.util.metadata.builder;
 
-import jakarta.enterprise.inject.spi.AnnotatedConstructor;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Type;
 import java.util.Map;
+
+import jakarta.enterprise.inject.spi.AnnotatedConstructor;
 
 /**
  * Implementation of {@link AnnotatedConstructor} to be used in
@@ -35,7 +36,7 @@ class AnnotatedConstructorImpl<X> extends AnnotatedCallableImpl<X, Constructor<X
     /**
      * Constructor
      */
-    AnnotatedConstructorImpl(AnnotatedTypeImpl<X> type, Constructor<?> constructor, AnnotationStore annotations,
+    public AnnotatedConstructorImpl(AnnotatedTypeImpl<X> type, Constructor<?> constructor, AnnotationStore annotations,
                                     Map<Integer, AnnotationStore> parameterAnnotations,
                                     Map<Integer, Type> typeOverrides)
     {
@@ -51,9 +52,9 @@ class AnnotatedConstructorImpl<X> extends AnnotatedCallableImpl<X, Constructor<X
         // length, this is a hack to fix this.
         // TODO: investigate this behavior further, on different JVM's and
         // compilers
-        if (genericTypes.length < constructor.getParameterTypes().length)
+        if (genericTypes.length + 1 == constructor.getParameterTypes().length)
         {
-            genericTypes = new Type[constructor.getParameterTypes().length];
+            genericTypes = new Type[constructor.getGenericParameterTypes().length + 1];
             genericTypes[0] = constructor.getParameterTypes()[0];
             for (int i = 0; i < constructor.getGenericParameterTypes().length; ++i)
             {

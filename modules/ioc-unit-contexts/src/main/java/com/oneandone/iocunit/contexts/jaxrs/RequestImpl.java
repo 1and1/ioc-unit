@@ -20,7 +20,7 @@ import org.jboss.resteasy.specimpl.MultivaluedMapImpl;
 import org.jboss.resteasy.util.DateUtil;
 import org.jboss.resteasy.util.Encode;
 import org.jboss.resteasy.util.HttpHeaderNames;
-import org.jboss.resteasy.util.HttpResponseCodes;
+
 
 /**
  * Treaked from resteasy RequestImpl
@@ -124,7 +124,7 @@ public class RequestImpl implements Request {
         }
         if (match)
             return null;
-        return Response.status(HttpResponseCodes.SC_PRECONDITION_FAILED).tag(eTag);
+        return Response.status(HttpServletResponse.SC_PRECONDITION_FAILED).tag(eTag);
 
     }
 
@@ -141,7 +141,7 @@ public class RequestImpl implements Request {
                 return Response.notModified(eTag);
             }
 
-            return Response.status(HttpResponseCodes.SC_PRECONDITION_FAILED).tag(eTag);
+            return Response.status(HttpServletResponse.SC_PRECONDITION_FAILED).tag(eTag);
         }
         return null;
     }
@@ -184,7 +184,7 @@ public class RequestImpl implements Request {
         if (date.getTime() >= lastModified.getTime()) {
             return null;
         }
-        return Response.status(HttpResponseCodes.SC_PRECONDITION_FAILED).lastModified(lastModified);
+        return Response.status(HttpServletResponse.SC_PRECONDITION_FAILED).lastModified(lastModified);
 
     }
 
@@ -238,7 +238,7 @@ public class RequestImpl implements Request {
             return null;
         }
 
-        return Response.status(HttpResponseCodes.SC_PRECONDITION_FAILED);
+        return Response.status(HttpServletResponse.SC_PRECONDITION_FAILED);
     }
 
 }

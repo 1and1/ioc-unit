@@ -18,15 +18,16 @@
  */
 package org.apache.deltaspike.core.api.message;
 
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
 /**
- * Configures message resolution and processing of a {@link MessageBundle}.
+ * Allows to customize the message-resolution and processing
+ * in combination with {@link MessageBundle}.
  */
 @Target({ TYPE })
 @Retention(RUNTIME)
@@ -34,42 +35,39 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface MessageContextConfig
 {
     /**
-     * <p>Additional message source.</p>
+     * <p>Additional message-source.</p>
      *
-     * <p>A message source is a lookup hint for the {@link MessageResolver}. For the default MessageResolver this is the
-     * name of the {@link java.util.ResourceBundle}.</p>
+     * <p>A message-source is a lookup hint for the {@link MessageResolver}.
+     * For the default MessageResolver this is the name of the
+     * {@link java.util.ResourceBundle}.</p>
      *
-     * <p>Example: To use 2 additional ResourceBundles for the lookup, you can configure the MessageContextConfig like
-     * this:
+     * <p>Example: For using 2 additional ResourceBundles for the lookup,
+     * you can use the MessageContextConfig like that:
      * <pre>
      *  &#064;MessageBundle
      *  &#064;MessageContextConfig(messageSource = {"mycomp.ErrorMessages","mycomp.BusinessMessages"})
      *  public interface MyCompanyMessages {...
-     * </pre>.
-     * </p>
-     *
+     * </pre>.</p>
      * @return classes of the message-sources
      */
     String[] messageSource() default { };
 
     /**
-     * {@link MessageResolver} to use for resolution of message templates to message text.
-     *
-     * @return class of the {@link MessageResolver} bean or the default marker
+     * {@link MessageResolver} which should be used for resolving the message-template (= basic text)
+     * @return class of the {@link MessageResolver}-bean or the default marker
      */
     Class<? extends MessageResolver> messageResolver() default MessageResolver.class;
 
     /**
-     * {@link MessageInterpolator} to use for interpolation of placeholders in the resolved text.
-     *
-     * @return class of the {@link MessageInterpolator} bean or the default marker
+     * {@link MessageInterpolator} which should be used for replacing the placeholders in the resolved text
+     * @return class of the {@link MessageInterpolator}-bean or the default marker
      */
     Class<? extends MessageInterpolator> messageInterpolator() default MessageInterpolator.class;
 
     /**
-     * {@link LocaleResolver} providing the locale for message template resolution.
-     *
-     * @return class of the {@link LocaleResolver} bean or the default marker
+     * {@link LocaleResolver} which should be used for providing the locale for resolving
+     * the message-template (= basic text)
+     * @return class of the {@link LocaleResolver}-bean or the default marker
      */
     Class<? extends LocaleResolver> localeResolver() default LocaleResolver.class;
 }

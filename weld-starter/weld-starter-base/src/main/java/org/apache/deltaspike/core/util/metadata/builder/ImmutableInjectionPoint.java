@@ -18,7 +18,13 @@
  */
 package org.apache.deltaspike.core.util.metadata.builder;
 
-import org.apache.deltaspike.core.util.BeanUtils;
+import static java.util.Collections.unmodifiableSet;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Member;
+import java.lang.reflect.Type;
+import java.util.HashSet;
+import java.util.Set;
 
 import jakarta.enterprise.inject.spi.Annotated;
 import jakarta.enterprise.inject.spi.AnnotatedField;
@@ -26,13 +32,8 @@ import jakarta.enterprise.inject.spi.AnnotatedParameter;
 import jakarta.enterprise.inject.spi.Bean;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.inject.spi.InjectionPoint;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Member;
-import java.lang.reflect.Type;
-import java.util.HashSet;
-import java.util.Set;
 
-import static java.util.Collections.unmodifiableSet;
+import org.apache.deltaspike.core.util.BeanUtils;
 
 /**
  * <p>

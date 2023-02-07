@@ -26,7 +26,7 @@ public class SessionContextFactory {
     }
 
     @Produces
-    @ResourceQualifier(name = "javax.ejb.EJBContext")
+    @ResourceQualifier(name = "jakarta.ejb.EJBContext")
     EJBContext createEjbContextSimulation(InjectionPoint ip) {
         SessionContextSimulation injectedBean = new SessionContextSimulation("ejbcontext");
         injectedBean.setContainer(ip.getBean(), beanManager);

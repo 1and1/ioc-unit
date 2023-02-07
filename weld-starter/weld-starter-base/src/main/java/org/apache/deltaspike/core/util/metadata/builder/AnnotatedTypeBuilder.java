@@ -19,15 +19,6 @@
 
 package org.apache.deltaspike.core.util.metadata.builder;
 
-import org.apache.deltaspike.core.util.ReflectionUtils;
-import org.apache.deltaspike.core.util.securitymanaged.SetAccessiblePrivilegedAction;
-
-import jakarta.enterprise.inject.spi.Annotated;
-import jakarta.enterprise.inject.spi.AnnotatedConstructor;
-import jakarta.enterprise.inject.spi.AnnotatedField;
-import jakarta.enterprise.inject.spi.AnnotatedMethod;
-import jakarta.enterprise.inject.spi.AnnotatedParameter;
-import jakarta.enterprise.inject.spi.AnnotatedType;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -36,6 +27,16 @@ import java.lang.reflect.Type;
 import java.security.AccessController;
 import java.util.HashMap;
 import java.util.Map;
+
+import jakarta.enterprise.inject.spi.Annotated;
+import jakarta.enterprise.inject.spi.AnnotatedConstructor;
+import jakarta.enterprise.inject.spi.AnnotatedField;
+import jakarta.enterprise.inject.spi.AnnotatedMethod;
+import jakarta.enterprise.inject.spi.AnnotatedParameter;
+import jakarta.enterprise.inject.spi.AnnotatedType;
+
+import org.apache.deltaspike.core.util.ReflectionUtils;
+import org.apache.deltaspike.core.util.securitymanaged.SetAccessiblePrivilegedAction;
 
 /**
  * Builder to aid in creation of a new {@link AnnotatedType} for use in CDI life cycle events.

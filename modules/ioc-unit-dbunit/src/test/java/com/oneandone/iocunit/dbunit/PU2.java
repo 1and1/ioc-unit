@@ -16,7 +16,7 @@ import com.oneandone.iocunit.jpa.XmlLessPersistenceFactory;
  */
 class PU2 extends XmlLessPersistenceFactory {
     public PU2() {
-        addProperty( "javax.persistence.jdbc.url",
+        addProperty( "jakarta.persistence.jdbc.url",
                 "jdbc:h2:file:/tmp/pu2;DB_CLOSE_ON_EXIT=TRUE;DB_CLOSE_DELAY=0;LOCK_MODE=0;LOCK_TIMEOUT=10000;TRACE_LEVEL_SYSTEM_OUT=1");
     }
 

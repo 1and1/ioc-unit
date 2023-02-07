@@ -18,7 +18,7 @@ import org.slf4j.Logger;
  * @author aschoerk
  */
 @MessageDriven(name = "QMdbEjb", activationConfig = {
-        @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"),
+        @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "jakarta.jms.Queue"),
         @ActivationConfigProperty(propertyName = "destination", propertyValue = "myQueue1"),
         @ActivationConfigProperty(propertyName = "messageSelector", propertyValue = "ForQMdbEjb")
 })

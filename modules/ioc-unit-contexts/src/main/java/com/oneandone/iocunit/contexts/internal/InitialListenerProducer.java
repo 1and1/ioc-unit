@@ -23,12 +23,7 @@ public class InitialListenerProducer
 
 
     static {
-        // workaround for WELD-1269/WELD-2305 changes
-        if (WeldSetupClass.isWeld3()) {
-            handlerClassName = "org.jboss.weld.module.web.servlet.WeldInitialListener";
-        } else {
-            handlerClassName = "org.jboss.weld.servlet.WeldListener";
-        }
+        handlerClassName = "org.jboss.weld.module.web.servlet.WeldInitialListener";
     }
 
     @Produces

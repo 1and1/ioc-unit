@@ -1,10 +1,10 @@
 package com.oneandone.iocunit.ejb.persistence;
 
-import static javax.ejb.TransactionAttributeType.MANDATORY;
-import static javax.ejb.TransactionAttributeType.NOT_SUPPORTED;
-import static javax.ejb.TransactionAttributeType.REQUIRED;
-import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
-import static javax.ejb.TransactionAttributeType.SUPPORTS;
+import static jakarta.ejb.TransactionAttributeType.MANDATORY;
+import static jakarta.ejb.TransactionAttributeType.NOT_SUPPORTED;
+import static jakarta.ejb.TransactionAttributeType.REQUIRED;
+import static jakarta.ejb.TransactionAttributeType.REQUIRES_NEW;
+import static jakarta.ejb.TransactionAttributeType.SUPPORTS;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -313,9 +313,9 @@ public class SimulatedTransactionManager {
     private void handleExceptions(ArrayList<Exception> exceptions) throws RollbackException {
         if (exceptions.size() == 1) {
             final Exception currentException = exceptions.get(0);
-            if (currentException instanceof javax.transaction.RollbackException) {
+            if (currentException instanceof jakarta.transaction.RollbackException) {
                 throw (RollbackException) currentException;
-            } else if (currentException instanceof javax.persistence.TransactionRequiredException) {
+            } else if (currentException instanceof jakarta.persistence.TransactionRequiredException) {
                 throw (TransactionRequiredException) currentException;
             } else {
                 throw new RuntimeException(currentException);

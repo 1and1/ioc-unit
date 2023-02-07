@@ -19,8 +19,6 @@
 package org.apache.deltaspike.core.spi.config;
 
 import java.util.Map;
-import java.util.Set;
-import java.util.function.Consumer;
 
 /**
  * <p>Implement this interfaces to provide a ConfigSource.
@@ -34,9 +32,6 @@ import java.util.function.Consumer;
  * <i>META-INF/services/org.apache.deltaspike.core.spi.config.ConfigSource</i>
  * file and adding the fully qualified class name of your ConfigSource
  * implementation into it. </p>
- *
- * <p>If a ConfigSource implements the {@link AutoCloseable} interface it will automatically
- * be released when the Config is shut down.</p>
  */
 public interface ConfigSource
 {
@@ -107,22 +102,5 @@ public interface ConfigSource
      * @return true if this ConfigSource should be scanned for its list of properties, 
      * false if it should not be scanned.
      */
-    boolean isScannable();
-
-    /**
-     * This callback should get invoked if an attribute change got detected inside the ConfigSource.
-     *
-     * An example would be a database backed ConfigSource which scans the DB every second in a background task.
-     * And once it detects a change in values, it will notify the Config about the changed attributes
-     * by invoking {@code reportAttributeChange.accept(changedKeys);}
-     *
-     * @param reportAttributeChange will be set by the {@link org.apache.deltaspike.core.api.config.Config} after this
-     *                              {@code ConfigSource} got created and before any configured values
-     *                              get served.
-     */
-    default void setOnAttributeChange(Consumer<Set<String>> reportAttributeChange)
-    {
-        // do nothing by default. Just for compat with older ConfigSources.
-    }
-
+    boolean isScannable(); 
 }

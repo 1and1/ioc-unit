@@ -18,21 +18,19 @@
  */
 package org.apache.deltaspike.core.api.config.view.metadata;
 
-import org.apache.deltaspike.core.spi.config.view.ConfigPreProcessor;
+import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import org.apache.deltaspike.core.spi.config.view.ConfigPreProcessor;
 
 /**
- * Meta-annotation for custom metadata which can be applied to view-configs.
- *
- * By default, metadata of a lower level overrides metadata of the same type from a higher level (cascading behaviour).
- * This behaviour can be changed by annotating the target annotation (or only chosen fields of it) with
- * {@code @Aggregated(true)}.
+ * This meta-annotation allows to create custom meta-data which can be used for view-configs.
+ * Per default meta-data of a lower level overrides meta-data on a higher level which has the same type.
+ * Can be customized via annotating the final annotation as a whole via @Aggregated(true) or only special fields of it.
  */
 @Target({ ANNOTATION_TYPE })
 @Retention(RUNTIME)
@@ -41,6 +39,5 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Aggregated(false)
 public @interface ViewMetaData
 {
-    @SuppressWarnings("rawtypes")
     Class<? extends ConfigPreProcessor> preProcessor() default ConfigPreProcessor.class;
 }

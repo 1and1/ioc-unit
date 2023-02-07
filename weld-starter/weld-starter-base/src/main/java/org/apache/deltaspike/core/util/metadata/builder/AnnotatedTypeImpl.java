@@ -19,11 +19,6 @@
 
 package org.apache.deltaspike.core.util.metadata.builder;
 
-import jakarta.enterprise.inject.spi.AnnotatedConstructor;
-import jakarta.enterprise.inject.spi.AnnotatedField;
-import jakarta.enterprise.inject.spi.AnnotatedMethod;
-import jakarta.enterprise.inject.spi.AnnotatedType;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -32,6 +27,11 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import jakarta.enterprise.inject.spi.AnnotatedConstructor;
+import jakarta.enterprise.inject.spi.AnnotatedField;
+import jakarta.enterprise.inject.spi.AnnotatedMethod;
+import jakarta.enterprise.inject.spi.AnnotatedType;
 
 /**
  * An implementation of {@link AnnotatedType} to be used in CDI life cycle events and
@@ -90,7 +90,7 @@ class AnnotatedTypeImpl<X> extends AnnotatedImpl implements AnnotatedType<X>
         methods = new HashSet<AnnotatedMethod<? super X>>();
         for (Method m : clazz.getMethods())
         {
-            if (!m.getDeclaringClass().equals(Object.class) && !m.getDeclaringClass().equals(Annotation.class))
+            if (!m.getDeclaringClass().equals(Object.class))
             {
                 AnnotatedMethodImpl<X> met = new AnnotatedMethodImpl<X>(this, m, methodAnnotations.get(m),
                         methodParameterAnnotations.get(m), methodParameterTypes.get(m));

@@ -27,7 +27,7 @@ import com.oneandone.iocunit.jpa.XmlLessPersistenceFactory;
 public class TestWithNamedPU {
     static class PU1 extends XmlLessPersistenceFactory {
         public PU1() {
-            addProperty( "javax.persistence.jdbc.url",
+            addProperty( "jakarta.persistence.jdbc.url",
                     "jdbc:h2:mem:pu1;DB_CLOSE_ON_EXIT=TRUE;DB_CLOSE_DELAY=0;LOCK_MODE=0;LOCK_TIMEOUT=10000");
         }
 

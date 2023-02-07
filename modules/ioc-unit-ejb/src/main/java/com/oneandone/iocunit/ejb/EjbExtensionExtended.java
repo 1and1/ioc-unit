@@ -247,7 +247,7 @@ public class EjbExtensionExtended extends EjbExtensionBase implements Extension 
                 Produces produces = field.getAnnotation(Produces.class);
 
                 final String typeName = field.getBaseType().getTypeName();
-                if(typeName.startsWith("javax.persistence.EntityManager") &&
+                if(typeName.startsWith("jakarta.persistence.EntityManager") &&
                    produces == null && persistenceContext != null &&
                    (persistenceContext.name() != null && !persistenceContext.name().isEmpty()
                     || persistenceContext.unitName() != null && !persistenceContext.unitName().isEmpty())) {

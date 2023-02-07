@@ -17,7 +17,7 @@ import com.oneandone.iocunit.resource.ResourceQualifier;
 /**
  * @author aschoerk
  */
-@ResourceQualifier(name = "javax.ejb.EJBContextx")
+@ResourceQualifier(name = "jakarta.ejb.EJBContextx")
 public abstract class EjbContextSimulation implements EJBContext {
     /**
      * Obtain the enterprise bean's remote home interface.
@@ -45,37 +45,6 @@ public abstract class EjbContextSimulation implements EJBContext {
     }
 
     /**
-     * Obtain the enterprise bean's environment properties.
-     * <p>
-     * <p><b>Note:</b> If the enterprise bean has no environment properties
-     * this method returns an empty <code>java.util.Properties</code> object.
-     * This method never returns <code>null</code>.
-     *
-     * @return The environment properties for the enterprise bean.
-     * @deprecated Use the JNDI naming context java:comp/env to access
-     * enterprise bean's environment.
-     */
-    @Override
-    public Properties getEnvironment() {
-        return new Properties();
-    }
-
-    /**
-     * Obtain the <code>java.security.Identity</code> of the caller.
-     * <p>
-     * This method is deprecated in EJB 1.1. The Container
-     * is allowed to return always <code>null</code> from this method. The enterprise
-     * bean should use the <code>getCallerPrincipal</code> method instead.
-     *
-     * @return The <code>Identity</code> object that identifies the caller.
-     * @deprecated Use Principal getCallerPrincipal() instead.
-     */
-    @Override
-    public Identity getCallerIdentity() {
-        throw new NotImplementedException("getCallerIdentity not implemented in SessionContextSimulation of ejb-cdi-unit");
-    }
-
-    /**
      * Obtain the <code>java.security.Principal</code> that identifies the caller.
      *
      * @return The <code>Principal</code> object that identifies the caller. This
@@ -94,20 +63,6 @@ public abstract class EjbContextSimulation implements EJBContext {
         };
     }
 
-    /**
-     * Test if the caller has a given role.
-     * <p>
-     * <p>This method is deprecated in EJB 1.1. The enterprise bean
-     * should use the <code>isCallerInRole(String roleName)</code> method instead.
-     *
-     * @param role The <code>java.security.Identity</code> of the role to be tested.
-     * @return True if the caller has the specified role.
-     * @deprecated Use boolean isCallerInRole(String roleName) instead.
-     */
-    @Override
-    public boolean isCallerInRole(Identity role) {
-        throw new NotImplementedException("isCallerInRole not implemented in SessionContextSimulation of ejb-cdi-unit");
-    }
 
     /**
      * Test if the caller has a given security role.

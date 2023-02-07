@@ -18,26 +18,15 @@
  */
 package org.apache.deltaspike.core.api.config.view.metadata;
 
-import org.apache.deltaspike.core.spi.config.view.InlineMetaDataTransformer;
-import org.apache.deltaspike.core.spi.config.view.TargetViewConfigProvider;
+import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
-/**
- * Provides the ability to apply metadata to a view-config "remotely" &ndash; from a
- * different place than the view-config itself (and with different syntax and a different annotation).
- *
- * <p>
- * <b>For example</b>, the @ViewControllerRef (main) vs. @ViewRef (inline) &ndash; the @ViewControllerRef is applied
- * directly on a view-config and references a view-controller, but there's also @ViewRef, which has the same purpose,
- * but is applied in reverse &ndash; on a view-controller, referencing a view-config.
- * </p>
- */
+import org.apache.deltaspike.core.spi.config.view.InlineMetaDataTransformer;
+import org.apache.deltaspike.core.spi.config.view.TargetViewConfigProvider;
 
 @Target({ ANNOTATION_TYPE })
 @Retention(RUNTIME)
@@ -45,8 +34,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 public @interface InlineViewMetaData
 {
-    Class<? extends TargetViewConfigProvider<?>> targetViewConfigProvider();
+    Class<? extends TargetViewConfigProvider> targetViewConfigProvider();
 
-    @SuppressWarnings("rawtypes")
     Class<? extends InlineMetaDataTransformer> inlineMetaDataTransformer() default InlineMetaDataTransformer.class;
 }

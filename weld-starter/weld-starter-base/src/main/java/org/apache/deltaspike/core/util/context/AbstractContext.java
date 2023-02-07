@@ -19,16 +19,17 @@
 
 package org.apache.deltaspike.core.util.context;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import jakarta.enterprise.context.ContextNotActiveException;
 import jakarta.enterprise.context.spi.Context;
 import jakarta.enterprise.context.spi.Contextual;
 import jakarta.enterprise.context.spi.CreationalContext;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.inject.spi.PassivationCapable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * A skeleton containing the most important parts of a custom CDI Context.
@@ -96,7 +97,7 @@ public abstract class AbstractContext implements Context
     {
         if (creationalContext == null)
         {
-            return get(bean);
+            return null;
         }
         
         checkActive();

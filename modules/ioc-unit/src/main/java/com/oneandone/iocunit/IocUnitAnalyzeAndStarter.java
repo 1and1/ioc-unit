@@ -13,6 +13,7 @@ import javax.naming.NamingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.oneandone.cdi.weldstarter.AddOpens;
 import com.oneandone.cdi.weldstarter.CreationalContexts;
 import com.oneandone.cdi.weldstarter.WeldSetupClass;
 import com.oneandone.cdi.weldstarter.spi.TestExtensionService;
@@ -51,6 +52,7 @@ public class IocUnitAnalyzeAndStarter {
     private final List<TestExtensionService> testExtensionServices = new ArrayList<>();
 
     public IocUnitAnalyzeAndStarter(InitialConfiguration initialConfiguration) {
+        AddOpens.open("java.base", "java.lang", "java.util");
         this.initialConfiguration = initialConfiguration;
         if(testExtensionServices.size() == 0) {
             ServiceLoader<TestExtensionService> loader = ServiceLoader.load(TestExtensionService.class);

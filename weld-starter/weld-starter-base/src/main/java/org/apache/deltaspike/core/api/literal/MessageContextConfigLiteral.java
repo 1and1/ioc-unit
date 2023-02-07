@@ -18,12 +18,12 @@
  */
 package org.apache.deltaspike.core.api.literal;
 
+import jakarta.enterprise.util.AnnotationLiteral;
+
 import org.apache.deltaspike.core.api.message.LocaleResolver;
 import org.apache.deltaspike.core.api.message.MessageContextConfig;
 import org.apache.deltaspike.core.api.message.MessageInterpolator;
 import org.apache.deltaspike.core.api.message.MessageResolver;
-
-import jakarta.enterprise.util.AnnotationLiteral;
 
 /**
  * Literal for {@link MessageContextConfig}

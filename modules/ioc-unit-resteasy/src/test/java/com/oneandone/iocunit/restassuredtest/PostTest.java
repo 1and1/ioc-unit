@@ -28,6 +28,7 @@ import com.oneandone.iocunit.restassuredtest.support.Greeting;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import io.restassured.http.Header;
 
 @RunWith(IocUnitRunner.class)
 @SutClasses(PostResource.class)
@@ -52,6 +53,18 @@ public class PostTest {
                 post("/stringBody").
         then().
                 body(equalTo("a string"));
+    }
+
+    @Test public void
+    can_supply_string_as_body_and_header_for_post() {
+        final String johnDoe = "John Doe";
+        RestAssured.given().
+                header(new Header("headerName", johnDoe)).
+                body("a string").
+                when().
+                post("/stringBodyWithHeader").
+                then().
+                body(equalTo("a string|"+johnDoe));
     }
 
     @Test public void

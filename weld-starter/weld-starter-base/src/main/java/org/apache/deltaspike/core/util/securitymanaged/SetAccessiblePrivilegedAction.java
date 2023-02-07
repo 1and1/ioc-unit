@@ -19,9 +19,10 @@
 
 package org.apache.deltaspike.core.util.securitymanaged;
 
-import jakarta.enterprise.inject.Typed;
 import java.lang.reflect.AccessibleObject;
 import java.security.PrivilegedAction;
+
+import jakarta.enterprise.inject.Typed;
 
 /**
  * PrivilegedAction instance to enabling access to the specified {@link AccessibleObject}.

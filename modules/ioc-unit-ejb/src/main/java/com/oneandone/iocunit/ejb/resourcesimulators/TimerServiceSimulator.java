@@ -258,7 +258,7 @@ public class TimerServiceSimulator implements TimerService {
      * Returns all active timers associated with this bean. These include both the
      * programmatically-created timers and the automatically-created timers.
      *
-     * @return a collection of <code>javax.ejb.Timer</code> objects.
+     * @return a collection of <code>jakarta.ejb.Timer</code> objects.
      * @throws IllegalStateException If this method is
      *                               invoked while the instance is in a state that does not allow access
      *                               to this method.
@@ -275,7 +275,7 @@ public class TimerServiceSimulator implements TimerService {
      * which the caller bean is packaged. These include both the
      * programmatically-created timers and the automatically-created timers.
      *
-     * @return a collection of <code>javax.ejb.Timer</code> objects.
+     * @return a collection of <code>jakarta.ejb.Timer</code> objects.
      * @throws IllegalStateException If this method is
      *                               invoked while the instance is in a state that does not allow access
      *                               to this method.

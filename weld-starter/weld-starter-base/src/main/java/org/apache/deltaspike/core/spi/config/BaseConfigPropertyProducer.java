@@ -18,14 +18,12 @@
  */
 package org.apache.deltaspike.core.spi.config;
 
+import java.lang.annotation.Annotation;
+
 import jakarta.enterprise.inject.spi.InjectionPoint;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
-
-import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.api.config.ConfigProperty;
-import org.apache.deltaspike.core.api.provider.BeanProvider;
+import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.apache.deltaspike.core.util.BeanUtils;
 
 /**
@@ -33,8 +31,8 @@ import org.apache.deltaspike.core.util.BeanUtils;
  * ConfigProperty producers.</p>
  *
  * <h2>Providing own Converters and Type injection</h2>
- * <p>DeltaSpikes own configuration system natively supports only Strings.
- * If you'd like to apply own Converters or extract other types from those Strings,
+ * <p>DeltaSpikes own configuration system only natively only supports Strings.
+ * If you like to apply own Converters or extract other types from those Strings,
  * you can simply do this by providing an own Qualifier and a simple
  * CDI producer method for it.</p>
  *
@@ -80,7 +78,7 @@ import org.apache.deltaspike.core.util.BeanUtils;
  *
  *         // format according to the given pattern
  *         DecimalFormat df = new DecimalFormat(metaData.pattern(), new DecimalFormatSymbols(Locale.US));
- *         return df.parse(configuredValue).floatValue();
+ *         return df.parse(configuredValue).floatValue(); *
  *     }
  * }
  * </pre>
@@ -107,26 +105,12 @@ public abstract class BaseConfigPropertyProducer
             throw new IllegalStateException("producer method called without @ConfigProperty being present!");
         }
 
-        return getPropertyValue(injectionPoint, String.class);
-    }
+        String configuredValue;
+        String defaultValue = configProperty.defaultValue();
 
-    protected <T> T getPropertyValue(InjectionPoint injectionPoint, Class<T> ipCls)
-    {
-        return getUntypedPropertyValue(injectionPoint, ipCls);
-    }
+        configuredValue = getPropertyValue(configProperty.name(), defaultValue);
 
-    protected <T> T getUntypedPropertyValue(InjectionPoint injectionPoint, Type ipCls)
-    {
-        ConfigProperty configProperty = getAnnotation(injectionPoint, ConfigProperty.class);
-
-        if (configProperty == null)
-        {
-            throw new IllegalStateException("producer method called without @ConfigProperty being present!");
-        }
-
-        return readEntry(configProperty.name(), configProperty.defaultValue(), ipCls,
-                configProperty.converter(), configProperty.parameterizedBy(),
-                configProperty.projectStageAware(), configProperty.evaluateVariables());
+        return configuredValue;
     }
 
     /**
@@ -159,37 +143,5 @@ public abstract class BaseConfigPropertyProducer
     protected <T extends Annotation> T getAnnotation(InjectionPoint injectionPoint, Class<T> targetType)
     {
         return BeanUtils.extractAnnotation(injectionPoint.getAnnotated(), targetType);
-    }
-
-    public <T> T readEntry(final String key, final String stringDefault, final Type ipCls,
-                           final Class<? extends ConfigResolver.Converter> converterType,
-                           final String parameterizedBy, final boolean projectStageAware, final boolean evaluate)
-    {
-        final ConfigResolver.TypedResolver<T> resolver = asResolver(
-                key, stringDefault, ipCls, converterType, parameterizedBy, projectStageAware, evaluate);
-        return resolver.getValue();
-    }
-
-    public <T> ConfigResolver.TypedResolver<T> asResolver(final String key, final String stringDefault,
-                                                          final Type ipCls,
-                                                          final Class<? extends ConfigResolver.Converter> converterType,
-                                                          final String parameterizedBy,
-                                                          final boolean projectStageAware, final boolean evaluate)
-    {
-        final ConfigResolver.UntypedResolver<String> untypedResolver = ConfigResolver.resolve(key);
-        final ConfigResolver.TypedResolver<T> resolver =
-                (ConfigResolver.Converter.class == converterType ?
-                        untypedResolver.as(Class.class.cast(ipCls)) :
-                        untypedResolver.as(ipCls, BeanProvider.getContextualReference(converterType)))
-                        .withCurrentProjectStage(projectStageAware);
-        if (!ConfigProperty.NULL.equals(stringDefault))
-        {
-            resolver.withStringDefault(stringDefault);
-        }
-        if (!ConfigProperty.NULL.equals(parameterizedBy))
-        {
-            resolver.parameterizedBy(parameterizedBy);
-        }
-        return resolver.evaluateVariables(evaluate);
     }
 }

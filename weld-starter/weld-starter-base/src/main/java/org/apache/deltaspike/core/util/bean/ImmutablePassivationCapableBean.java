@@ -19,13 +19,14 @@
 
 package org.apache.deltaspike.core.util.bean;
 
-import org.apache.deltaspike.core.util.metadata.builder.ContextualLifecycle;
-
-import jakarta.enterprise.inject.spi.InjectionPoint;
-import jakarta.enterprise.inject.spi.PassivationCapable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Set;
+
+import jakarta.enterprise.inject.spi.InjectionPoint;
+import jakarta.enterprise.inject.spi.PassivationCapable;
+
+import org.apache.deltaspike.core.util.metadata.builder.ContextualLifecycle;
 
 /**
  *
@@ -48,6 +49,7 @@ public class ImmutablePassivationCapableBean<T> extends ImmutableBean<T> impleme
      * @param types           The bean's types, if null, the beanClass and {@link Object}
      *                        will be used
      * @param alternative     True if the bean is an alternative
+     * @param nullable        True if the bean is nullable
      * @param injectionPoints the bean's injection points, if null an empty set is used
      * @param toString        the string which should be returned by #{@link #toString()}
      * @param lifecycle       Handler for {@link #create(jakarta.enterprise.context.spi.CreationalContext)} and
@@ -59,12 +61,12 @@ public class ImmutablePassivationCapableBean<T> extends ImmutableBean<T> impleme
     public ImmutablePassivationCapableBean(Class<?> beanClass, String name, Set<Annotation> qualifiers,
                                            Class<? extends Annotation> scope,
                                            Set<Class<? extends Annotation>> stereotypes, Set<Type> types,
-                                           boolean alternative,
+                                           boolean alternative, boolean nullable,
                                            Set<InjectionPoint> injectionPoints, String toString,
                                            ContextualLifecycle<T> lifecycle, String passivationId)
     {
         // CHECKSTYLE:ON
-        super(beanClass, name, qualifiers, scope, stereotypes, types, alternative, injectionPoints, toString,
+        super(beanClass, name, qualifiers, scope, stereotypes, types, alternative, nullable, injectionPoints, toString,
                 lifecycle);
         this.id = passivationId;
     }

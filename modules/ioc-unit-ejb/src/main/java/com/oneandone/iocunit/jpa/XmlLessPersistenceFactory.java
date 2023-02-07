@@ -26,7 +26,7 @@ import jakarta.persistence.spi.ClassTransformer;
 import jakarta.persistence.spi.PersistenceProvider;
 import jakarta.persistence.spi.PersistenceUnitInfo;
 import jakarta.persistence.spi.PersistenceUnitTransactionType;
-import jakarta.sql.DataSource;
+import javax.sql.DataSource;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.slf4j.Logger;
@@ -344,12 +344,12 @@ public class XmlLessPersistenceFactory extends XmlLessPersistenceFactoryBase {
     AtomicInteger count = new AtomicInteger(0);
 
     private void initEclipseLinkProperties(final HashMap<String, Object> properties) {
-        properties.put("javax.persistence.jdbc.driver","org.h2.Driver");
+        properties.put("jakarta.persistence.jdbc.driver","org.h2.Driver");
         String db = getDbNameOrMem();
-        properties.put("javax.persistence.jdbc.url",
+        properties.put("jakarta.persistence.jdbc.url",
                 "jdbc:h2:" + db + ";DB_CLOSE_ON_EXIT=TRUE;DB_CLOSE_DELAY=0;LOCK_MODE=0;LOCK_TIMEOUT=10000");
-        properties.put("javax.persistence.jdbc.user" , "sa");
-        properties.put("javax.persistence.jdbc.password", "");
+        properties.put("jakarta.persistence.jdbc.user" , "sa");
+        properties.put("jakarta.persistence.jdbc.password", "");
         properties.put("eclipselink.disableXmlSecurity","true");
         properties.put("eclipselink.ddl-generation", "drop-and-create-tables");
         properties.put("eclipselink.target-database", "MYSQL");
@@ -386,12 +386,12 @@ public class XmlLessPersistenceFactory extends XmlLessPersistenceFactoryBase {
     }
 
     private void initHibernateProperties(final HashMap<String, Object> properties) {
-        properties.put("javax.persistence.jdbc.driver","org.h2.Driver");
+        properties.put("jakarta.persistence.jdbc.driver","org.h2.Driver");
         String db = getDbNameOrMem();
-        properties.put("javax.persistence.jdbc.url",
+        properties.put("jakarta.persistence.jdbc.url",
                 "jdbc:h2:" + db + ";DB_CLOSE_ON_EXIT=TRUE;DB_CLOSE_DELAY=0;LOCK_MODE=0;LOCK_TIMEOUT=10000");
-        properties.put("javax.persistence.jdbc.user" , "sa");
-        properties.put("javax.persistence.jdbc.password", "");
+        properties.put("jakarta.persistence.jdbc.user" , "sa");
+        properties.put("jakarta.persistence.jdbc.password", "");
         properties.put("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
         properties.put("hibernate.show_sql", true);
         properties.put("hibernate.transaction.jta.platform", "org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform");
@@ -402,7 +402,7 @@ public class XmlLessPersistenceFactory extends XmlLessPersistenceFactoryBase {
             properties.put(name, childProperties.get(name));
         }
         if (properties.containsKey("hibernate.connection.url")) {
-            properties.put("javax.persistence.jdbc.url",properties.get("hibernate.connection.url"));
+            properties.put("jakarta.persistence.jdbc.url",properties.get("hibernate.connection.url"));
         }
 
     }
@@ -449,10 +449,10 @@ public class XmlLessPersistenceFactory extends XmlLessPersistenceFactoryBase {
 
     public DataSource createDataSource() {
         BasicDataSource bds = createBasicDataSource();
-        bds.setDriverClassName(getProperty(properties, "javax.persistence.jdbc.driver", "hibernate.connection.driverclass", "org.h2.Driver"));
-        bds.setUrl(getProperty(properties, "javax.persistence.jdbc.url", "hibernate.connection.url", "jdbc:h2:mem:test;MODE=MySQL;DB_CLOSE_ON_EXIT=TRUE;DB_CLOSE_DELAY=0;LOCK_MODE=0;LOCK_TIMEOUT=10000"));
-        bds.setUsername(getProperty(properties, "javax.persistence.jdbc.user", "hibernate.connection.username", "sa"));
-        bds.setPassword(getProperty(properties, "javax.persistence.jdbc.password", "hibernate.connection.password", ""));
+        bds.setDriverClassName(getProperty(properties, "jakarta.persistence.jdbc.driver", "hibernate.connection.driverclass", "org.h2.Driver"));
+        bds.setUrl(getProperty(properties, "jakarta.persistence.jdbc.url", "hibernate.connection.url", "jdbc:h2:mem:test;MODE=MySQL;DB_CLOSE_ON_EXIT=TRUE;DB_CLOSE_DELAY=0;LOCK_MODE=0;LOCK_TIMEOUT=10000"));
+        bds.setUsername(getProperty(properties, "jakarta.persistence.jdbc.user", "hibernate.connection.username", "sa"));
+        bds.setPassword(getProperty(properties, "jakarta.persistence.jdbc.password", "hibernate.connection.password", ""));
         return checkAndDoInFirstConnection(bds);
     }
 

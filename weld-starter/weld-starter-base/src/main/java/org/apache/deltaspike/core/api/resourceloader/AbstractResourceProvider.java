@@ -18,10 +18,6 @@
  */
 package org.apache.deltaspike.core.api.resourceloader;
 
-import jakarta.enterprise.inject.Any;
-import jakarta.enterprise.inject.Instance;
-import jakarta.enterprise.inject.spi.InjectionPoint;
-import jakarta.inject.Inject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
@@ -31,6 +27,11 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import jakarta.enterprise.inject.Any;
+import jakarta.enterprise.inject.Instance;
+import jakarta.enterprise.inject.spi.InjectionPoint;
+import jakarta.inject.Inject;
 
 /**
  * An abstract InjectableResourceProvider implementation with some basic utility functionality.
@@ -84,30 +85,9 @@ public abstract class AbstractResourceProvider implements InjectableResourceProv
     {
         final Properties properties = new Properties();
         final String name = injectableResource.location();
-        InputStream inputStream = null;
-        try
-        {
-            inputStream = this.readStream(injectableResource);
-            this.loadInputStreamToProperties(inputStream, properties, name);
-            return properties;
-        }
-        finally
-        {
-            if (inputStream != null)
-            {
-                try
-                {
-                    inputStream.close();
-                }
-                catch (IOException e)
-                {
-                    if (logger.isLoggable(Level.FINE))
-                    {
-                        logger.log(Level.FINE, "Problem closing resource.", e);
-                    }
-                }
-            }
-        }
+        final InputStream inputStream = this.readStream(injectableResource);
+        this.loadInputStreamToProperties(inputStream, properties, name);
+        return properties;
     }
 
     @Override

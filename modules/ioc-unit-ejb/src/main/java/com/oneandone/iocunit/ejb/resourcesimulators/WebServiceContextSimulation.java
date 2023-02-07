@@ -12,9 +12,9 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.xml.ws.EndpointReference;
-import jakarta.xml.ws.WebServiceContext;
-import jakarta.xml.ws.handler.MessageContext;
+import javax.xml.ws.EndpointReference;
+import javax.xml.ws.WebServiceContext;
+import javax.xml.ws.handler.MessageContext;
 
 import org.w3c.dom.Element;
 
@@ -170,17 +170,7 @@ public class WebServiceContextSimulation implements WebServiceContext {
         }
 
         @Override
-        public String encodeRedirectUrl(String url) {
-            return null;
-        }
-
-        @Override
         public String encodeURL(String url) {
-            return null;
-        }
-
-        @Override
-        public String encodeUrl(String url) {
             return null;
         }
 
@@ -212,11 +202,6 @@ public class WebServiceContextSimulation implements WebServiceContext {
         @Override
         public void setIntHeader(String name, int value) {
             // dummy
-        }
-
-        @Override
-        public void setStatus(int sc, String sm) {
-            status = sc;
         }
     }
 

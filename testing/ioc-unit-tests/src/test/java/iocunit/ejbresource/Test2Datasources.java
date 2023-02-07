@@ -1,7 +1,7 @@
 package iocunit.ejbresource;
 
 import jakarta.enterprise.inject.Produces;
-import jakarta.sql.DataSource;
+import javax.sql.DataSource;
 
 import com.oneandone.iocunit.analyzer.annotations.TestClasses;
 import com.oneandone.iocunit.jpa.XmlLessPersistenceFactory;

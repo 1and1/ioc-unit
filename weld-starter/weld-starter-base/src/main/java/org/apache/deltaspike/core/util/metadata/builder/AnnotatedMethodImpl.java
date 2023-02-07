@@ -19,11 +19,12 @@
 
 package org.apache.deltaspike.core.util.metadata.builder;
 
-import jakarta.enterprise.inject.spi.AnnotatedMethod;
-import jakarta.enterprise.inject.spi.AnnotatedType;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.Map;
+
+import jakarta.enterprise.inject.spi.AnnotatedMethod;
+import jakarta.enterprise.inject.spi.AnnotatedType;
 
 /**
  * Implementation of {@link AnnotatedMethod} to be used in CDI life cycle events and
@@ -34,7 +35,7 @@ class AnnotatedMethodImpl<X> extends AnnotatedCallableImpl<X, Method> implements
     /**
      * Constructor.
      */
-    AnnotatedMethodImpl(AnnotatedType<X> type,
+    public AnnotatedMethodImpl(AnnotatedType<X> type,
                                Method method,
                                AnnotationStore annotations,
                                Map<Integer, AnnotationStore> parameterAnnotations,

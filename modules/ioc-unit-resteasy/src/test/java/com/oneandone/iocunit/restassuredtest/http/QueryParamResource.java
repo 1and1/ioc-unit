@@ -35,6 +35,6 @@ public class QueryParamResource {
     public String queryParam(@QueryParam("name") String name, @QueryParam("message") String message, @Context UriInfo uriInfo) {
         return "{ \"name\" : \"" + String.format(template, name) + "\"," +
                 " \"message\" : \"" + message + "\", " +
-                " \"_link\" : \"" + uriInfo.getAbsolutePath() + "\" }";
+                " \"_link\" : \"" + uriInfo.getRequestUri() + "\" }";
     }
 }

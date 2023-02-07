@@ -4,9 +4,12 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.FormParam;
+import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 
 /**
@@ -33,6 +36,16 @@ public class PostResource {
         return body;
     }
 
+    @Context
+    private HttpHeaders headers;
+
+    @POST
+    @Path("/stringBodyWithHeader")
+    public String stringBodyWithHeader(@HeaderParam("headerName") String header, String body) {
+        assert header != null && header.length() > 0;
+        return body + "|" + header;
+    }
+
     @POST
     @Path("/jsonReflect")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -40,5 +53,7 @@ public class PostResource {
     public String jsonReflect(String body) {
         return body;
     }
+
+
 
 }

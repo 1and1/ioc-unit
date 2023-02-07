@@ -18,19 +18,20 @@
  */
 package org.apache.deltaspike.core.api.scope;
 
-import jakarta.enterprise.context.NormalScope;
-import java.lang.annotation.Documented;
-import java.lang.annotation.Inherited;
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
-
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+import java.lang.annotation.Documented;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+
+import jakarta.enterprise.context.NormalScope;
+
 /**
- * Beans in this scope are bound to an application window (or browser tab).
+ * Beans which use this scope are bound to a application window (or browser tab).
  */
 @Target( { METHOD,TYPE,FIELD } )
 @Retention(RUNTIME)

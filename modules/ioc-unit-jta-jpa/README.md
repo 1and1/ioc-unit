@@ -31,10 +31,10 @@ Example using H2
             <property name="hibernate.transaction.io.narayana.jta.platform" value="JBossTS"/>
             <!-- We provide our own connection provider, in order to integrate TransactionalDriver with Hibernate -->
             <property name="hibernate.connection.provider_class" value="com.oneandone.iocunit.jtajpa.PersistenceXmlConnectionProvider" />
-            <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
-            <property name="javax.persistence.jdbc.url" value="jdbc:h2:mem:test;MODE=PostgreSQL;DB_CLOSE_DELAY=0"/>
-            <property name="javax.persistence.jdbc.user" value="sa"/>
-            <property name="javax.persistence.jdbc.password" value=""/>
+            <property name="jakarta.persistence.jdbc.driver" value="org.h2.Driver"/>
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:h2:mem:test;MODE=PostgreSQL;DB_CLOSE_DELAY=0"/>
+            <property name="jakarta.persistence.jdbc.user" value="sa"/>
+            <property name="jakarta.persistence.jdbc.password" value=""/>
         </properties>
     </persistence-unit>
 ```
@@ -51,7 +51,7 @@ Example using Testcontainer
             <property name="hibernate.transaction.io.narayana.jta.platform" value="JBossTS"/>
             <!-- We provide our own connection provider, in order to integrate TransactionalDriver with Hibernate -->
             <property name="hibernate.connection.provider_class" value="com.oneandone.iocunit.jtajpa.PersistenceXmlConnectionProvider" />
-            <property name="javax.persistence.jdbc.driver" value="com.oneandone.iocunit.jtajpa.TestContainer"/>
+            <property name="jakarta.persistence.jdbc.driver" value="com.oneandone.iocunit.jtajpa.TestContainer"/>
          </properties>
     </persistence-unit>
 ```

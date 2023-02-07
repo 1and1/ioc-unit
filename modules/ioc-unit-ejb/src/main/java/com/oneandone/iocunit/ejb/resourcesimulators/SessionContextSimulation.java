@@ -4,6 +4,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Set;
 
+import javax.xml.ws.handler.MessageContext;
+
 import jakarta.ejb.EJBLocalObject;
 import jakarta.ejb.EJBObject;
 import jakarta.ejb.MessageDrivenContext;
@@ -11,7 +13,6 @@ import jakarta.ejb.SessionContext;
 import jakarta.enterprise.inject.Vetoed;
 import jakarta.enterprise.inject.spi.Bean;
 import jakarta.enterprise.inject.spi.BeanManager;
-import jakarta.xml.rpc.handler.MessageContext;
 
 import com.oneandone.cdi.weldstarter.WeldSetupClass;
 
@@ -98,29 +99,7 @@ public class SessionContextSimulation extends EjbContextSimulation implements Se
         throw new NotImplementedException("getObject not implemented in SessionContextSimulation of ejb-cdi-unit");
     }
 
-    /**
-     * Obtain a reference to the JAX-RPC MessageContext.
-     * <p>
-     * <p> An instance of a stateless session bean can call this method
-     * from any business method invoked through its web service
-     * endpoint interface.
-     * <p>
-     * <p><b>Note:</b> Support for web services invocations using JAX-RPC is optional as of EJB 3.2
-     *
-     * @return The MessageContext for this web service invocation.
-     * @throws IllegalStateException Thrown if this method is invoked
-     *                               while the instance is in a state that does not allow access
-     *                               to this method.
-     * @since EJB 2.1
-     */
-    @Override
-    public MessageContext getMessageContext() throws IllegalStateException {
-        throw new NotImplementedException("getMessageContext not implemented in SessionContextSimulation of ejb-cdi-unit");
-    }
-
-
-
-    /**
+     /**
      * Obtain an object that can be used to invoke the current bean through
      * a particular business interface view or its no-interface view.
      *

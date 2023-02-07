@@ -19,7 +19,6 @@
 
 package org.apache.deltaspike.core.util;
 
-import jakarta.enterprise.inject.Typed;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
@@ -29,6 +28,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import jakarta.enterprise.inject.Typed;
 
 /**
  * Utility class for resolving all bean types from a given type.

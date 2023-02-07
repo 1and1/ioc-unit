@@ -18,26 +18,26 @@
  */
 package org.apache.deltaspike.core.api.provider;
 
-import jakarta.enterprise.context.spi.CreationalContext;
-import jakarta.enterprise.inject.spi.Bean;
-import jakarta.enterprise.inject.spi.PassivationCapable;
-import jakarta.inject.Provider;
-
 import java.io.IOException;
 import java.io.NotSerializableException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
+import jakarta.enterprise.context.spi.CreationalContext;
+import jakarta.enterprise.inject.spi.Bean;
+import jakarta.enterprise.inject.spi.PassivationCapable;
+import jakarta.inject.Provider;
+
 /**
- * A {@link Provider} for &#064;Dependent scoped contextual instances. We need this to be able to properly clean them up
- * when they are not needed anymore via the {@link #destroy()} method.
+ * A {@link Provider} for &#064;Dependent scoped contextual instances.
+ * We need this to be apble to properly clean them up when they are not
+ * needed anymore via the {@link #destroy()} method.
  *
  * Instances of this class can be retrieved using the {@link BeanProvider}.
  *
- * Instances of this class are Serializable if the wrapped contextual instance is Serializable.
- *
- * @see BeanProvider#getDependent(Class, java.lang.annotation.Annotation...)
+ * Instances of this class are Serializable if the wrapped contextual instance
+ * is Serializable.
  */
 public class DependentProvider<T> implements Provider<T>, Serializable
 {
@@ -91,7 +91,6 @@ public class DependentProvider<T> implements Provider<T>, Serializable
         out.writeObject(creationalContext);
     }
 
-    @SuppressWarnings("unchecked")
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
     {
         long oldSerialId = in.readLong();

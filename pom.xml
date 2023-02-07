@@ -103,8 +103,7 @@
         <version.javaee-api>10.0</version.javaee-api>
         <version.resteasy>6.2.1.Final</version.resteasy>
         <surefire-argline>
-            -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5006 --add-opens
-            java.base/java.lang=ALL-UNNAMED
+            -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5006
         </surefire-argline>
     </properties>
     <profiles>
@@ -145,19 +144,14 @@
         <module>modules/ioc-unit-jta-jpa</module>
         <module>modules/ioc-unit-validate</module>
         <module>modules/ioc-unit-resteasy</module>
-        <!--module>modules/ioc-unit-jms</module>
+        <module>modules/ioc-unit-jms</module>
         <module>modules/ioc-unit-ejb</module>
         <module>modules/ioc-unit-dep-impls</module>
         <module>modules/ioc-unit-contexts</module>
-        <module>modules/ioc-unit-dbunit</module>
-        <module>modules/ioc-unit-simulators</module>
-        <module>modules/ioc-unit-wf10-specs</module>
-        <module>modules/ioc-unit-wf24-specs</module>
-        <module>modules/ioc-unit-wf26-specs</module>
-        <module>modules/ioc-unit-wf10</module>
-        <module>modules/ioc-unit-wf24</module>
-        <module>modules/ioc-unit-wf26</module>
-        <module>boms</module-->
+        <!--module>modules/ioc-unit-dbunit</module>
+        <module>modules/ioc-unit-simulators</module-->
+        <module>testing/ioc-unit-test-war</module>
+        <module>testing/ioc-unit-tests5</module>
     </modules>
 
     <dependencies>

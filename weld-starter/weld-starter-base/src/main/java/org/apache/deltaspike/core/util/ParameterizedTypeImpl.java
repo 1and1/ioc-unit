@@ -19,10 +19,11 @@
 
 package org.apache.deltaspike.core.util;
 
-import jakarta.enterprise.inject.Typed;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Arrays;
+
+import jakarta.enterprise.inject.Typed;
 
 /**
  * A basic implementation of {@link ParameterizedType}.

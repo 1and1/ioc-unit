@@ -1,9 +1,9 @@
 package com.oneandone.iocunitejb.ejbs;
 
-import static javax.transaction.Transactional.TxType.NOT_SUPPORTED;
-import static javax.transaction.Transactional.TxType.REQUIRED;
-import static javax.transaction.Transactional.TxType.REQUIRES_NEW;
-import static javax.transaction.Transactional.TxType.SUPPORTS;
+import static jakarta.transaction.Transactional.TxType.NOT_SUPPORTED;
+import static jakarta.transaction.Transactional.TxType.REQUIRED;
+import static jakarta.transaction.Transactional.TxType.REQUIRES_NEW;
+import static jakarta.transaction.Transactional.TxType.SUPPORTS;
 
 import java.io.IOException;
 

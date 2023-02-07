@@ -20,15 +20,16 @@
 package org.apache.deltaspike.core.util.context;
 
 
-import jakarta.enterprise.context.spi.Contextual;
-import jakarta.enterprise.context.spi.CreationalContext;
-import jakarta.enterprise.inject.spi.BeanManager;
-import jakarta.enterprise.inject.spi.PassivationCapable;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+
+import jakarta.enterprise.context.spi.Contextual;
+import jakarta.enterprise.context.spi.CreationalContext;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.PassivationCapable;
 
 /**
  * This Storage holds all information needed for storing
@@ -155,7 +156,7 @@ public class ContextualStorage implements Serializable
 
     /**
      * Restores the Bean from its beanKey.
-     * @see #getBeanKey(Contextual)
+     * @see #getBeanKey(jakarta.enterprise.context.spi.Contextual)
      */
     public Contextual<?> getBean(Object beanKey)
     {

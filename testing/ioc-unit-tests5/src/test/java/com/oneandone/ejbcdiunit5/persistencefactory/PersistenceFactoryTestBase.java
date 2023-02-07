@@ -1,8 +1,8 @@
 package com.oneandone.ejbcdiunit5.persistencefactory;
 
-import static javax.ejb.TransactionAttributeType.MANDATORY;
-import static javax.ejb.TransactionAttributeType.REQUIRED;
-import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
+import static jakarta.ejb.TransactionAttributeType.MANDATORY;
+import static jakarta.ejb.TransactionAttributeType.REQUIRED;
+import static jakarta.ejb.TransactionAttributeType.REQUIRES_NEW;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
@@ -25,7 +25,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.LockModeType;
 import jakarta.persistence.PersistenceException;
 import jakarta.persistence.TransactionRequiredException;
-import jakarta.sql.DataSource;
+import javax.sql.DataSource;
 import jakarta.transaction.HeuristicMixedException;
 import jakarta.transaction.HeuristicRollbackException;
 import jakarta.transaction.NotSupportedException;

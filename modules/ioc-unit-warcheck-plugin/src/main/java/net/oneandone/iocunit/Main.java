@@ -32,8 +32,8 @@ public class Main {
             {"org.jboss.spec.javax.annotation", "jboss-annotations-api_1.2_spec", "1.0.0.Final"},
             {"org.jboss.spec.javax.ejb", "jboss-ejb-api_3.2_spec", "1.0.0.Final"},
             {"org.jboss.spec.javax.el", "jboss-el-api_3.0_spec", "1.0.7.Final"},
-            {"javax.enterprise", "cdi-api", "1.2"},
-            {"javax.inject", "javax.inject", "1"},
+            {"jakarta.enterprise", "cdi-api", "1.2"},
+            {"jakarta.inject", "jakarta.inject", "1"},
             {"org.jboss.spec.javax.interceptor", "jboss-interceptors-api_1.2_spec", "1.0.0.Final"},
             {"org.jboss.spec.javax.jms", "jboss-jms-api_2.0_spec", "1.0.0.Final"},
             {"org.hibernate.javax.persistence", "hibernate-jpa-2.1-api", "1.0.0.Final"},
@@ -99,7 +99,7 @@ public class Main {
             Class appScopedServiceBeanClass = cl.loadClass("com.oneandone.iocunitejb.cdibeans.AppScopedServiceBean");
             Class indirectClass = cl.loadClass("org.junit.rules.DisableOnDebug");
             // Class mainClass = cl.loadClass("net.oneandone.iocunit.Main");
-            Class jmsClass = cl.loadClass("javax.jms.JMSConnectionFactory");
+            Class jmsClass = cl.loadClass("jakarta.jms.JMSConnectionFactory");
 
             // assert (Main.class.equals(mainClass));
 

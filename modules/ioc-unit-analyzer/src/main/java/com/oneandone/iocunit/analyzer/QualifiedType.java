@@ -397,7 +397,7 @@ public class QualifiedType {
         }
         Set<String> producednames = produced.stream().map(a -> a.annotationType().getName()).filter(n -> !n.equals("jakarta.enterprise.inject.Default"))
                 .collect(Collectors.toSet());
-        if(producednames.size() == 1 && producednames.contains("javax.inject.Named")) {
+        if(producednames.size() == 1 && producednames.contains("jakarta.inject.Named")) {
             if(toFiltered.isEmpty()
                || toFiltered.size() == 1
                   && toFiltered.iterator().next().annotationType()

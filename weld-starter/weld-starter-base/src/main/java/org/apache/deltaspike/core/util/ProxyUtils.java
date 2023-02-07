@@ -18,10 +18,12 @@
  */
 package org.apache.deltaspike.core.util;
 
-import jakarta.enterprise.inject.Typed;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import jakarta.enterprise.inject.Typed;
 
 /**
  * Helper for proxies
@@ -40,14 +42,11 @@ public abstract class ProxyUtils
      */
     public static Class getUnproxiedClass(Class currentClass)
     {
-        Class unproxiedClass = currentClass;
-        
-        while (isProxiedClass(unproxiedClass))
+        if (isProxiedClass(currentClass))
         {
-            unproxiedClass = unproxiedClass.getSuperclass();
+            return currentClass.getSuperclass();
         }
-
-        return unproxiedClass;
+        return currentClass;
     }
 
     /**
@@ -62,38 +61,21 @@ public abstract class ProxyUtils
             return false;
         }
 
-        String name = currentClass.getName();
-        return name.startsWith(currentClass.getSuperclass().getName())
-                    && (name.contains("$$") // CDI
-                    || name.contains("_ClientProxy") //Quarkus
-                    || name.contains("$HibernateProxy$")); // Hibernate
+        return currentClass.getName().startsWith(currentClass.getSuperclass().getName()) &&
+            currentClass.getName().contains("$$");
     }
 
     public static List<Class<?>> getProxyAndBaseTypes(Class<?> proxyClass)
     {
         List<Class<?>> result = new ArrayList<Class<?>>();
         result.add(proxyClass);
-        
         if (isInterfaceProxy(proxyClass))
         {
-            for (Class<?> currentInterface : proxyClass.getInterfaces())
-            {
-                if (proxyClass.getName().startsWith(currentInterface.getName()))
-                {
-                    result.add(currentInterface);
-                }
-            }
+            result.addAll(Arrays.asList(proxyClass.getInterfaces()));
         }
         else
         {
-            Class unproxiedClass = proxyClass.getSuperclass();
-            result.add(unproxiedClass);
-
-            while (isProxiedClass(unproxiedClass))
-            {
-                unproxiedClass = unproxiedClass.getSuperclass();
-                result.add(unproxiedClass);
-            }
+            result.add(proxyClass.getSuperclass());
         }
         return result;
     }
@@ -101,28 +83,7 @@ public abstract class ProxyUtils
     public static boolean isInterfaceProxy(Class<?> proxyClass)
     {
         Class<?>[] interfaces = proxyClass.getInterfaces();
-        if (Proxy.class.equals(proxyClass.getSuperclass()) &&
-                interfaces != null && interfaces.length > 0)
-        {
-            return true;
-        }
-        
-        if (proxyClass.getSuperclass() != null && !proxyClass.getSuperclass().equals(Object.class))
-        {
-            return false;
-        }
-        
-        if (proxyClass.getName().contains("$$"))
-        {
-            for (Class<?> currentInterface : interfaces)
-            {
-                if (proxyClass.getName().startsWith(currentInterface.getName()))
-                {
-                    return true;
-                }
-            }
-        }
-        
-        return false;
+        return Proxy.class.equals(proxyClass.getSuperclass()) &&
+                interfaces != null && interfaces.length > 0;
     }
 }

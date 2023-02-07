@@ -19,19 +19,14 @@
 package org.apache.deltaspike.core.api.interpreter;
 
 /**
- * Generic interface for evaluation of expressions, like the ones provided by
- * {@link org.apache.deltaspike.core.api.exclude.Exclude#onExpression()}.
- * 
- * @param <E> expression type
- * @param <R> result type
+ * Interface for interpreting an expression e.g. provided by
+ * {@link org.apache.deltaspike.core.api.exclude.Exclude#onExpression()}
  */
 public interface ExpressionInterpreter<E, R>
 {
     /**
-     * Evaluates the given expression and returns the result for it.
-     *
-     * @param expression expression to evaluate
-     *
+     * Evaluates the given expression and returns the result for it
+     * @param expression expression which should be evaluated
      * @return result of the evaluated expression
      */
     R evaluate(E expression);

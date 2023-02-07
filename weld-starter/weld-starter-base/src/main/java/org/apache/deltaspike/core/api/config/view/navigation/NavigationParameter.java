@@ -18,23 +18,23 @@
  */
 package org.apache.deltaspike.core.api.config.view.navigation;
 
-import org.apache.deltaspike.core.api.config.view.metadata.Aggregated;
-import org.apache.deltaspike.core.api.config.view.metadata.ViewMetaData;
-
-import jakarta.enterprise.util.Nonbinding;
-import jakarta.interceptor.InterceptorBinding;
-import java.lang.annotation.Documented;
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
-
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+
+import jakarta.enterprise.util.Nonbinding;
+import jakarta.interceptor.InterceptorBinding;
+
+import org.apache.deltaspike.core.api.config.view.metadata.Aggregated;
+import org.apache.deltaspike.core.api.config.view.metadata.ViewMetaData;
+
 /**
- * Used on JSF action methods, this adds navigation parameters (key-value pairs) to the resulting navigation string.
- * Alternatively, {@link NavigationParameterContext} can be used
- * to add the parameters.
+ * This annotation can be used as interceptor for JSF action methods as an alternative for
+ * {@link NavigationParameterContext}.
  */
 @Target({ METHOD, TYPE })
 @Retention(RUNTIME)
@@ -46,14 +46,14 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface NavigationParameter
 {
     /**
-     * Key of the parameter.
+     * Key of the parameter
      *
      * @return name of the key
      */
     @Nonbinding String key();
 
     /**
-     * Value of the parameter, a plain String or an EL expression.
+     * Value or EL-Expression of the parameter
      *
      * @return ref or expression
      */
@@ -65,7 +65,7 @@ public @interface NavigationParameter
 
     //TODO add special support for list-annotations (add value automatically)
     /**
-     * A container for multiple NavigationParameters.
+     * Allows to specify multiple parameters (@see ViewParameter)
      */
     @ViewMetaData
     @Aggregated(true)
@@ -73,7 +73,7 @@ public @interface NavigationParameter
     public static @interface List
     {
         /**
-         * One or more navigation parameters.
+         * 1-n parameters
          *
          * @return parameters
          */

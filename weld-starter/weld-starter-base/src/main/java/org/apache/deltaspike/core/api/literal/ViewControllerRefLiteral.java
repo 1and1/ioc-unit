@@ -19,9 +19,9 @@
 
 package org.apache.deltaspike.core.api.literal;
 
-import org.apache.deltaspike.core.api.config.view.controller.ViewControllerRef;
-
 import jakarta.enterprise.util.AnnotationLiteral;
+
+import org.apache.deltaspike.core.api.config.view.controller.ViewControllerRef;
 
 /**
  * Literal for {@link ViewControllerRef}

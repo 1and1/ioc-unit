@@ -104,10 +104,10 @@ public class EjbJmsMocksFactory {
                     final Connection connection = jmsSingletons.get().getConnection();
                     Session session = acknowledgeMode == null ? connection.createSession(false, Session.AUTO_ACKNOWLEDGE) : connection.createSession(false, acknowledgeMode);
                     Destination dest = null;
-                    if("javax.jms.Queue".equals(destinationType)) {
+                    if("jakarta.jms.Queue".equals(destinationType)) {
                         dest = jmsSingletons.get().createQueue(destination);
                     }
-                    else if("javax.jms.Topic".equals(destinationType)) {
+                    else if("jakarta.jms.Topic".equals(destinationType)) {
                         dest = jmsSingletons.get().createTopic(destination);
                     }
                     final MessageConsumer messageConsumer = messageSelector == null ? session.createConsumer(dest) : session.createConsumer(dest, messageSelector);

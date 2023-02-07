@@ -19,14 +19,15 @@
 
 package org.apache.deltaspike.core.util.metadata.builder;
 
-import org.apache.deltaspike.core.util.HierarchyDiscovery;
-
-import jakarta.enterprise.inject.spi.Annotated;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+
+import jakarta.enterprise.inject.spi.Annotated;
+
+import org.apache.deltaspike.core.util.HierarchyDiscovery;
 
 /**
  * The base class for all New Annotated types.

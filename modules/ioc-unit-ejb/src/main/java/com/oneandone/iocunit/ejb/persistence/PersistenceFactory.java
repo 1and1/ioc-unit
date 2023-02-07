@@ -19,7 +19,7 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.TransactionRequiredException;
 import jakarta.persistence.spi.PersistenceProvider;
 import jakarta.persistence.spi.PersistenceProviderResolverHolder;
-import jakarta.sql.DataSource;
+import javax.sql.DataSource;
 import jakarta.transaction.Status;
 import jakarta.transaction.SystemException;
 
@@ -279,8 +279,8 @@ public abstract class PersistenceFactory {
             return checkAndDoInFirstConnection(emfDatasource);
         } else {
             BasicDataSource newDataSource = createBasicDataSource();
-            newDataSource.setDriverClassName((String) props.get("javax.persistence.jdbc.driver"));
-            newDataSource.setUrl((String) props.get("javax.persistence.jdbc.url"));
+            newDataSource.setDriverClassName((String) props.get("jakarta.persistence.jdbc.driver"));
+            newDataSource.setUrl((String) props.get("jakarta.persistence.jdbc.url"));
             return checkAndDoInFirstConnection(newDataSource);
         }
     }

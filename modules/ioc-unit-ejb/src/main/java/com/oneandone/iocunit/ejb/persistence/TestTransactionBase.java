@@ -1,6 +1,6 @@
 package com.oneandone.iocunit.ejb.persistence;
 
-import static javax.ejb.TransactionAttributeType.NOT_SUPPORTED;
+import static jakarta.ejb.TransactionAttributeType.NOT_SUPPORTED;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

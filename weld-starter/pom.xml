@@ -35,9 +35,7 @@
         <delta-spike.version>1.9.6</delta-spike.version>
         <maven-surefire-plugin.version>3.0.0-M4</maven-surefire-plugin.version>
 
-        <surefire-argline>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5006 --add-opens
-            java.base/java.lang=ALL-UNNAMED
-        </surefire-argline>
+        <surefire-argline>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5006 </surefire-argline>
     </properties>
     <dependencyManagement>
         <dependencies>

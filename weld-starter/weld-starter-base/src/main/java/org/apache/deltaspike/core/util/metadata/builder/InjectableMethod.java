@@ -18,19 +18,20 @@
  */
 package org.apache.deltaspike.core.util.metadata.builder;
 
-import org.apache.deltaspike.core.util.metadata.builder.ParameterValueRedefiner.ParameterValue;
+import static org.apache.deltaspike.core.util.BeanUtils.createInjectionPoints;
+import static org.apache.deltaspike.core.util.ReflectionUtils.invokeMethod;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import jakarta.enterprise.context.spi.CreationalContext;
 import jakarta.enterprise.inject.spi.AnnotatedMethod;
 import jakarta.enterprise.inject.spi.Bean;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.inject.spi.InjectionPoint;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
-import static org.apache.deltaspike.core.util.BeanUtils.createInjectionPoints;
-import static org.apache.deltaspike.core.util.ReflectionUtils.invokeMethod;
+import org.apache.deltaspike.core.util.metadata.builder.ParameterValueRedefiner.ParameterValue;
 
 /**
  * <p>
