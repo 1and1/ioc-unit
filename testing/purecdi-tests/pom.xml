@@ -2,7 +2,7 @@
         <modelVersion>4.0.0</modelVersion>
         <parent>
             <groupId>net.oneandone.ioc-unit</groupId>
-            <artifactId>ioc-unit-parent</artifactId>
+            <artifactId>testing</artifactId>
             <version>4.0.1-SNAPSHOT</version>
             <relativePath>../../pom.xml</relativePath>
         </parent>
