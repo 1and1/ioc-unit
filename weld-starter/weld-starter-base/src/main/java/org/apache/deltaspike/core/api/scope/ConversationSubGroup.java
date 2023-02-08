@@ -29,36 +29,36 @@ import java.lang.annotation.Target;
  * Allows to close a part of a group e.g.:
  *
  * public class MyGroup{}
- * @ConversationScoped
- * @ConversationGroup(MyGroup.class)
+ * &#x0040;ConversationScoped
+ * &#x0040;ConversationGroup(MyGroup.class)
  * public class BeanA {}
- * <p/>
- * @ConversationScoped
- * @ConversationGroup(MyGroup.class)
+ * <p></p>
+ * &#x0040;ConversationScoped
+ * &#x0040;ConversationGroup(MyGroup.class)
  * public class BeanB {}
- * <p/>
- * @ConversationScoped
- * @ConversationGroup(MyGroup.class)
+ * <p></p>
+ * &#x0040;ConversationScoped
+ * &#x0040;ConversationGroup(MyGroup.class)
  * public class BeanC {}
- * <p/>
- * @ConversationSubGroup(of = MyGroup.class, subGroup = {BeanA.class, BeanB.class})
+ * <p></p>
+ * &#x0040;ConversationSubGroup(of = MyGroup.class, subGroup = {BeanA.class, BeanB.class})
  * public class MySubGroup {}
- * <br/>or</br>
- * @ConversationSubGroup(subGroup = {BeanA.class, BeanB.class})
+ * <p>or</p>
+ * &#x0040;ConversationSubGroup(subGroup = {BeanA.class, BeanB.class})
  * public class MySubGroup extends MyGroup {}
- * <p/>
+ * <p></p>
  * //...
  * this.groupedConversationManager.closeConversation(MySubGroup.class)
  *
  * OR it's possible to use implicit sub-groups (point to the interface(s) instead of the bean-class itself):
  * public interface MyUseCase {}
  *
- * @ConversationSubGroup(of = MyGroup.class, subGroup = MyUseCase.class)
+ * &#x0040;ConversationSubGroup(of = MyGroup.class, subGroup = MyUseCase.class)
  * public class ImplicitSubGroup {}
  *
- * @Named("myController")
- * @ConversationScoped
- * @ConversationGroup(MyGroup.class)
+ * &#x0040;Named("myController")
+ * &#x0040;ConversationScoped
+ * &#x0040;ConversationGroup(MyGroup.class)
  * public class MyController implements Serializable, MyUseCase
  * {
  *    //...

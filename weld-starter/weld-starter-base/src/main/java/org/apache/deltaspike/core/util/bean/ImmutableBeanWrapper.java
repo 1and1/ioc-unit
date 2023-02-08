@@ -32,7 +32,7 @@ import jakarta.enterprise.inject.spi.Bean;
  * You can easily create instances of this class with the
  * {@link WrappingBeanBuilder}.
  * </p>
- * <p/>
+ * <p></p>
  * <p>For example, you could create a producer method which uses an a
  * String ID tolocated an object (the object can have any class):</p>
  * <pre>

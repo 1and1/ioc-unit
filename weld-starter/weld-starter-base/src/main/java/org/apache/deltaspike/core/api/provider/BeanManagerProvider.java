@@ -41,10 +41,10 @@ import org.apache.deltaspike.core.util.ClassUtils;
  * <p>This is really handy if you like to access CDI functionality
  * from places where no injection is available.</p>
  * <p>If a simple but manual bean-lookup is needed, it's easier to use the {@link BeanProvider}.</p>
- * <p/>
+ * <p></p>
  * <p>As soon as an application shuts down, the reference to the {@link BeanManager} will be removed.<p>
- * <p/>
- * <p>Usage:<p/>
+ * <p></p>
+ * <p>Usage:<p></p>
  * <pre>
  * BeanManager bm = BeanManagerProvider.getInstance().getBeanManager();
  * 

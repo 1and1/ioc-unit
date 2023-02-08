@@ -39,7 +39,7 @@ import org.apache.deltaspike.core.util.ArraysUtils;
  * <p>A WrappingBeanBuilder helps creating Beans which internally
  * just wrap another existing Bean. The Types, Qualifiers
  * and other attributes of the resulting Bean can be modified.</p>
- * <p/>
+ * <p></p>
  * <p>The {@link Bean#create(jakarta.enterprise.context.spi.CreationalContext)}
  * and {@link Bean#destroy(Object, jakarta.enterprise.context.spi.CreationalContext)}
  * methods will get delegated to the underlying wrapped Bean.</p>

@@ -33,18 +33,20 @@ import java.util.Map;
 /**
  * <p>A small helper class to create an Annotation instance of the given annotation class
  * via {@link Proxy}. The annotation literal gets filled with the default values.</p>
- * <p/>
+ * <p></p>
  * <p>This class can be used to dynamically create Annotations which can be usd in AnnotatedTyp.
  * This is e.g. the case if you configure an annotation via properties or XML file. In those cases you
  * cannot use {@link jakarta.enterprise.util.AnnotationLiteral} because the type is not known at compile time.</p>
  * <p>usage:</p>
- * <pre>
- * String annotationClassName = ...;
- * Class<? extends annotation> annotationClass =
- *     (Class<? extends Annotation>) ClassUtils.getClassLoader(null).loadClass(annotationClassName);
- * Annotation a = DefaultAnnotation.of(annotationClass)
- * </pre>
- */
+ * {@code :
+ *
+ *      String annotationClassName = ...;
+ *      Class<? extends annotation> annotationClass =
+ *          (Class<? extends Annotation>) ClassUtils.getClassLoader(null).loadClass(annotationClassName);
+ *      Annotation a = DefaultAnnotation.of(annotationClass)
+ *
+ * }
+ * */
 public class AnnotationInstanceProvider implements Annotation, InvocationHandler, Serializable
 {
     private static final long serialVersionUID = -2345068201195886173L;

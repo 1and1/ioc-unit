@@ -36,14 +36,15 @@ public @interface MBean
     /**
      * @return the category to use if no objectName was specified. Default is "org.apache.deltaspike"
      * and can be overriden either directly by the value or by a key used to resolve a value using
-     * {@see org.apache.deltaspike.core.api.config.ConfigResolver}. It is a key if the value is
+     * @see org.apache.deltaspike.core.api.config.ConfigResolver It is a key if the value is
      * between bracket. Default key is "org.apache.deltaspike.mbean.category".
      */
     String category() default "{org.apache.deltaspike.mbean.category}";
 
     /**
      * @return the name of the bean used if no objectName was specified.
-     * It is used with category value to create the MBean {@see javax.management.ObjectName}
+     * It is used with category value to create the MBean
+     * @see javax.management.ObjectName
      * using the following pattern: &lt;category&gt;:type=MBeans,name=&lt;name&gt;
      */
     String name() default "";

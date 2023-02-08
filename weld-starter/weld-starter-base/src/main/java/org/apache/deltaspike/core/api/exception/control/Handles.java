@@ -27,7 +27,12 @@ import java.lang.annotation.Target;
 
 /**
  * Marker annotation for a method to be considered an Exception Handler. Handlers are typically in the form of
- * <code>public void ... (@Handles ... CaughtException<...> ...)</code> methods. If a method has a return type, it is
+ * {@code :
+ *     <pre>
+ *     public void ... (@Handles ... CaughtException<...> ...)
+ *     </pre>
+ * }
+ * methods. If a method has a return type, it is
  * ignored.
  */
 @Retention(RetentionPolicy.RUNTIME)

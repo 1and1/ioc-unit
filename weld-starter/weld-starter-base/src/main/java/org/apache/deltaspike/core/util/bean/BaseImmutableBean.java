@@ -39,7 +39,7 @@ import org.apache.deltaspike.core.util.ArraysUtils;
  * collections are defensively copied on instantiation. It uses the defaults
  * from the specification for properties if not specified.
  * </p>
- * <p/>
+ * <p></p>
  * <p>
  * This class does not provide any bean lifecycle operations
  * </p>

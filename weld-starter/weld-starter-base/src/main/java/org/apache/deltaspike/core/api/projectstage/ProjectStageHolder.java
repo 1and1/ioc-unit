@@ -25,11 +25,11 @@ package org.apache.deltaspike.core.api.projectstage;
  *
  * <p>Any custom ProjectStageHolder must get registered via the
  * {@link java.util.ServiceLoader} mechanism. Simply create a file
+ * </p>
  * <pre>
  *     META-INF/services/org.apache.deltaspike.core.api.projectstage.ProjectStageHolder
  * </pre>
  * and write the fully qualified class name of your ProjectStageHolder into it.
- * </p>
  */
 public interface ProjectStageHolder
 {

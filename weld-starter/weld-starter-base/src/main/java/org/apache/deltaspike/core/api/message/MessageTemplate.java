@@ -44,7 +44,6 @@ import java.lang.annotation.Target;
  * </pre>
  * This will lookup a <code>welcome_to = Hello to Aruba</code> from the configured
  * resource bundle.
- * </p>
  *
  *
  * <p>MessageTemplate values without '{', '}' bracelets will be directly used

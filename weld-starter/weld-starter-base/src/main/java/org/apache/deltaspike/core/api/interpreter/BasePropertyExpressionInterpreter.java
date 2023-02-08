@@ -21,7 +21,7 @@ package org.apache.deltaspike.core.api.interpreter;
 /**
  * Base implementation for simple (property) expressions
  *
- * Supported operations:<p/>
+ * Supported operations:<p></p>
  * <ul>
  *     <li>[key]==[value]</li>
  *     <li>[key]!=[value]</li>

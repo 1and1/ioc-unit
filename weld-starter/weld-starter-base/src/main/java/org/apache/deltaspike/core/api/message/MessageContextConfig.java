@@ -47,7 +47,7 @@ public @interface MessageContextConfig
      *  &#064;MessageBundle
      *  &#064;MessageContextConfig(messageSource = {"mycomp.ErrorMessages","mycomp.BusinessMessages"})
      *  public interface MyCompanyMessages {...
-     * </pre>.</p>
+     * </pre>
      * @return classes of the message-sources
      */
     String[] messageSource() default { };

@@ -37,10 +37,10 @@ import jakarta.inject.Qualifier;
  * via simple injection.</p>
  *
  * <p>Example 1:
- * <pre>
+ * {@code
  *   &#064;Inject &#064;ConfigProperty(name=&quot;locationId&quot;)
  *   private String locationId;
- * </pre>
+ * }
  * </p>
  *
  * <p>Example 2 (the type-safe alternative):
@@ -56,10 +56,9 @@ import jakarta.inject.Qualifier;
  *   {
  *   }
  * </pre>
- * </p>
  *
  * Depending on the producer it's possible to use a String or a custom type like an enum at the injection point.
- * <p/>
+ * <p></p>
  * With a String:
  * <pre>
  *   &#064;Location

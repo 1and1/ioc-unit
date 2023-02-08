@@ -129,13 +129,13 @@ public abstract class ReflectionUtils
      * Invoke the method on the instance, with any arguments specified, casting
      * the result of invoking the method to the expected return type.
      * </p>
-     * <p/>
+     * <p></p>
      * <p>
      * This method wraps {@link Method#invoke(Object, Object...)}, converting the
      * checked exceptions that {@link Method#invoke(Object, Object...)} specifies
      * to runtime exceptions.
      * </p>
-     * <p/>
+     * <p></p>
      * <p>
      * If instructed, this method attempts to set the accessible flag of the method in a
      * {@link java.security.PrivilegedAction} before invoking the method.

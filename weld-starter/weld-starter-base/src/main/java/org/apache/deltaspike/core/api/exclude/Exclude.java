@@ -36,30 +36,30 @@ import org.apache.deltaspike.core.api.projectstage.ProjectStage;
  * &#064;Exclude(onExpression="[my custom expression syntax]", interpretedBy=CustomExpressionInterpreter.class)
  * </pre>
  *
- * <p/>
+ * <p></p>
  * examples:
- * <p/>
+ * <p></p>
  * <p>the following bean gets excluded in any case</p>
  * <pre>
  * &#064;Exclude
  * public class NoBean {}
  * </pre>
  *
- * <p/>
+ * <p></p>
  * <p>the following bean gets excluded in case of project-stage development</p>
  * <pre>
  * &#064;Exclude(ifProjectStage = ProjectStage.Development.class)
  * public class ProductionBean {}
  * </pre>
  *
- * <p/>
+ * <p></p>
  * <p>the following bean gets excluded in every case except of project-stage development</p>
  * <pre>
  * &#064;Exclude(exceptIfProjectStage = ProjectStage.Development.class)
  * public class DevBean {}
  * </pre>
  *
- * <p/>
+ * <p></p>
  * <p>the following bean gets excluded if the expression evaluates to true.
  * that means there is a configured property called 'myProper' with the value 'myValue'</p>
  * <pre>
@@ -67,7 +67,7 @@ import org.apache.deltaspike.core.api.projectstage.ProjectStage;
  * public class ProductionBean {}
  * </pre>
  *
- * <p/>
+ * <p></p>
  * <p>the following bean gets excluded if the expression evaluates to true</p>
  * &#064;Exclude(onExpression="[my custom expression syntax]", interpretedBy=CustomExpressionInterpreter.class)
  * public class ProductionBean {}

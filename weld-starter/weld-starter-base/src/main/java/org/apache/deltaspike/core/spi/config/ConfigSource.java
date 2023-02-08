@@ -51,7 +51,7 @@ public interface ConfigSource
      *     <li>JNDI values (ordinal 200)</li>
      *     <li>Properties file values (/META-INF/apache-deltaspike.properties) (ordinal 100)</li>
      * </ol>
-     * <p/>
+     * <p></p>
      * <p><b>Important Hints for custom implementations</b>:</p>
      * <p>
      * If a custom implementation should be invoked <b>before</b> the default implementations, use a value &gt; 400
@@ -66,7 +66,7 @@ public interface ConfigSource
      *     implementations provided by DeltaSpike do.
      *
      * </p>
-     * <p/>
+     * <p></p>
      * <p>Reordering of the default order of the config-sources:</p>
      * <p>Example: If the properties file/s should be used <b>before</b> the other implementations,
      * you have to configure an ordinal &gt; 400. That means, you have to add e.g. deltaspike_ordinal=401 to

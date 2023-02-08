@@ -54,7 +54,7 @@ import org.apache.deltaspike.core.util.BeanUtils;
  *     boolean pattern(); // the pattern for NumberFormatter
  * }
  * </pre>
- * </p>
+
  *
  * <p>The producer method implementation is pretty easy as well:
  * <pre>
@@ -82,8 +82,6 @@ import org.apache.deltaspike.core.util.BeanUtils;
  *     }
  * }
  * </pre>
- * </p>
-
  */
 public abstract class BaseConfigPropertyProducer
 {

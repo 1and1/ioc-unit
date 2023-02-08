@@ -76,7 +76,6 @@ public class SessionContextSimulation extends EjbContextSimulation implements Se
     /**
      * Obtain a reference to the EJB object that is currently associated with
      * the instance.
-     * </p>
      * <p> An instance of a session enterprise Bean can call this
      * method at anytime between the <code>PostConstruct</code> or
      * <code>ejbCreate</code> and the <code>PreDestroy</code> or

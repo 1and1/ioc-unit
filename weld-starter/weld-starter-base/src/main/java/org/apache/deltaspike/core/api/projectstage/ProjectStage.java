@@ -37,9 +37,8 @@ import org.apache.deltaspike.core.util.ServiceUtils;
  * <ul>
  *  <li>it also works for JSF-1.0, JSF-1.1 and JSF-1.2 applications</li>
  *  <li>it also works in pure backends and unit tests without any faces-api</li>
- *  <li>it is dynamic. Everyone can add their own ProjectStages!</p>
+ *  <li>it is dynamic. Everyone can add their own ProjectStages!</li>
  * </ul>
- * </p>
  *
  * <p>Technically this is kind of a 'dynamic enum'.</p>
  * <p>The following ProjectStages are provided by default</p>
@@ -56,7 +55,6 @@ import org.apache.deltaspike.core.util.ServiceUtils;
  * <ul>
  *  <li>TODO specify!</li>
  * </ul>
- * </p>
  *
  * <p>Adding a new ProjectStage is done via the
  * {@link java.util.ServiceLoader} mechanism. A class deriving from {@link ProjectStage}
@@ -85,7 +83,6 @@ import org.apache.deltaspike.core.util.ServiceUtils;
  * # this class now gets picked up by java.util.ServiceLoader
  * org.apache.deltaspike.test.core.api.projectstage.TestProjectStages
  * </pre>
- * </p>
  * <p>You can use your own ProjectStages exactly the same way as all the ones provided
  * by the system:
  * <pre>

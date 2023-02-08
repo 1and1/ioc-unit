@@ -38,7 +38,7 @@ import org.apache.deltaspike.core.util.metadata.builder.ParameterValueRedefiner.
  * Allows an {@link AnnotatedMethod} to be injected using the CDI type safe
  * resolution rules.
  * </p>
- * <p/>
+ * <p></p>
  * <p>
  * {@link ParameterValueRedefiner} allows the default value to be overridden by
  * the caller of
@@ -107,7 +107,7 @@ public class InjectableMethod<X>
     /**
      * Invoke the method, causing all parameters to be injected according to the
      * CDI type safe resolution rules.public class ParameterValueRedefiner {
-     * <p/>
+     * <p></p>
      * }
      *
      * @param <T>               the return type of the method

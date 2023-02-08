@@ -229,10 +229,10 @@ public final class ConfigResolver
      *
      * <p>The first step is to resolve the value of the given property. This will
      * take the current ProjectStage into account. E.g. given the property is 'dbvendor'
-     * and the ProjectStage is 'UnitTest', the first lookup is
+     * and the ProjectStage is 'UnitTest', the first lookup is</p>
      * <ul><li>'dbvendor.UnitTest'</li></ul>.
      * If this value is not found then we will do a 2nd lookup for
-     * <ul><li>'dbvendor'</li></ul></p>
+     * <ul><li>'dbvendor'</li></ul>
      *
      * <p>If a value was found for the given property (e.g. dbvendor = 'mysql'
      * then we will use this value to lookup in the following order until we
@@ -246,7 +246,6 @@ public final class ConfigResolver
      *      <li>'datasource.UnitTest'</li>
      *      <li>'datasource'</li>
      * </ul>
-     * </p>
      *
      *
      * <p><b>Attention</b> This method must only be used after all ConfigSources

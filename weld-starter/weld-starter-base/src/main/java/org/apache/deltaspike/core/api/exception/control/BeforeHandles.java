@@ -29,7 +29,7 @@ import java.lang.annotation.Target;
 /**
  * Marker annotation for a method to be considered an Exception Handler, handles the exception in the BEFORE
  * traversal of the exception chain. Handlers are typically in the form of
- * <code>public void ... (@BeforeHandles ... CaughtException<...> ...)</code> methods.
+ * {@code : public void ... (@BeforeHandles ... CaughtException<...> ...)} methods.
  * If a method has a return type, it is ignored.
  */
 @Retention(RetentionPolicy.RUNTIME)

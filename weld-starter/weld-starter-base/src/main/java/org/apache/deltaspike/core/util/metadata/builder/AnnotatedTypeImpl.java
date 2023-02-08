@@ -49,7 +49,7 @@ class AnnotatedTypeImpl<X> extends AnnotatedImpl implements AnnotatedType<X>
     /**
      * We make sure that there is a NewAnnotatedMember for every public
      * method/field/constructor
-     * <p/>
+     * <p></p>
      * If annotation have been added to other methods as well we add them to
      */
     AnnotatedTypeImpl(Class<X> clazz,
