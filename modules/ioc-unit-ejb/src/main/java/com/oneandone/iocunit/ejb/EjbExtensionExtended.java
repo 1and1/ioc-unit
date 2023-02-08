@@ -105,10 +105,7 @@ public class EjbExtensionExtended extends EjbExtensionBase implements Extension 
      * @param <T> not used
      */
     public <T> void processBeforeBeanDiscovery(@Observes BeforeBeanDiscovery bbd, BeanManager bm) {
-
-
         new SimulatedTransactionManager().init();
-
     }
 
     private void addType(final BeforeBeanDiscovery bbd, final BeanManager bm, final Class<?> c) {

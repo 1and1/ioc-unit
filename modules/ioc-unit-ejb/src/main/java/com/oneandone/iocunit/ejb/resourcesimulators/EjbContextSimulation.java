@@ -1,6 +1,5 @@
 package com.oneandone.iocunit.ejb.resourcesimulators;
 
-import java.security.Identity;
 import java.security.Principal;
 import java.util.Map;
 import java.util.Properties;

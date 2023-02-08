@@ -53,13 +53,11 @@ public class SessionContextSimulation extends EjbContextSimulation implements Se
     /**
      * Obtain a reference to the EJB local object that is
      * associated with the instance.
-     * <p>
      * <p> An instance of a session bean can call this method at
      * anytime between the <code>PostConstruct</code> or
      * <code>ejbCreate</code> and <code>PreDestroy</code> or
      * <code>ejbRemove</code> methods, including from within these
      * methods.
-     * <p>
      * <p> An instance can use this method, for example, when it wants to
      * pass a reference to itself in a method argument or result.
      *
@@ -78,13 +76,13 @@ public class SessionContextSimulation extends EjbContextSimulation implements Se
     /**
      * Obtain a reference to the EJB object that is currently associated with
      * the instance.
-     * <p>
+     * </p>
      * <p> An instance of a session enterprise Bean can call this
      * method at anytime between the <code>PostConstruct</code> or
      * <code>ejbCreate</code> and the <code>PreDestroy</code> or
      * <code>ejbRemove</code> methods, including from within these
      * methods.
-     * <p>
+     * </p>
      * <p> An instance can use this method, for example, when it wants to
      * pass a reference to itself in a method argument or result.
      *

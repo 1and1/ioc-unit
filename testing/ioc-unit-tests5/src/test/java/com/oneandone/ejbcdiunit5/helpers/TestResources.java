@@ -1,6 +1,5 @@
 package com.oneandone.ejbcdiunit5.helpers;
 
-import java.security.Identity;
 import java.security.Principal;
 import java.util.Map;
 import java.util.Properties;
