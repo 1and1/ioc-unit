@@ -182,8 +182,7 @@ public class Jpa2PUTest {
                 fail("expected PersistenceException because of two updates");
             } catch (PersistenceException e) {
 
-                assert (e.getCause().getClass().getName().contains("GenericJDBCException")
-                        || e.getCause().getClass().getName().contains("QueryTimeoutException"));
+                assert e.getCause().getClass().getName().contains("Pessimistic");
             }
         }
     }

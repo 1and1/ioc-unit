@@ -91,6 +91,10 @@ public class WeldStarterImpl implements WeldStarter {
                 return res;
             }
 
+            @Override
+            protected boolean isSyntheticBeanArchiveRequired() {
+                return true;
+            }
         };
         try {
             weld.disableDiscovery();
@@ -99,6 +103,8 @@ public class WeldStarterImpl implements WeldStarter {
             throw new StarterDeploymentException(ex);
         }
     }
+
+
 
     private BeanDeploymentArchive createOneDeploymentArchive(WeldSetup weldSetup, final ServiceRegistry services) {
         return new BeanDeploymentArchive() {
@@ -158,7 +164,7 @@ public class WeldStarterImpl implements WeldStarter {
                     weldSetup.getEnabledInterceptors(), // interceptors
                     Scanning.EMPTY_SCANNING,
                     // These were added in Weld 2.0:
-                    new URL("file:weld31-starter"),
+                    new URL("file:weld4-starter"),
                     annotatedDiscoveryMode(),
                     "1.0",
                     // isTrimmed: added in Weld 2.4.2 [WELD-2314]:

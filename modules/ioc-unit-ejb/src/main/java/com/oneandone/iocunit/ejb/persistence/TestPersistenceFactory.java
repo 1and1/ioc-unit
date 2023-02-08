@@ -422,7 +422,7 @@ public class TestPersistenceFactory extends XmlAwarePersistenceFactory {
                 "jdbc:h2:" + db + ";DB_CLOSE_ON_EXIT=TRUE;DB_CLOSE_DELAY=0;LOCK_MODE=0;LOCK_TIMEOUT=10000");
         properties.put("jakarta.persistence.jdbc.user" , "sa");
         properties.put("jakarta.persistence.jdbc.password", "");
-        properties.put("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
+        properties.put("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
         properties.put("hibernate.show_sql", true);
         properties.put("hibernate.hbm2ddl.auto", "create-drop");
         properties.put("hibernate.id.new_generator_mappings", false);
