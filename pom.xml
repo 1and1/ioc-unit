@@ -3,7 +3,7 @@
 
     <groupId>net.oneandone.ioc-unit</groupId>
     <artifactId>ioc-unit-parent</artifactId>
-    <version>4.0.2-SNAPSHOT</version>
+    <version>4.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>net.oneandone.ioc-unit:ioc-unit-parent</name>
@@ -163,7 +163,7 @@
         <dependency>
             <groupId>net.oneandone.ioc-unit</groupId>
             <artifactId>weld4-starter</artifactId>
-            <version>4.0.2-SNAPSHOT</version>
+            <version>4.0.1-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
         <dependency>
