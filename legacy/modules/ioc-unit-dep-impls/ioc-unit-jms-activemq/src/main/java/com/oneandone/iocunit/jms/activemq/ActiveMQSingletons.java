@@ -36,7 +36,7 @@ import com.oneandone.iocunit.jms.JmsSingletonsIntf;
 @ApplicationScoped
 public class ActiveMQSingletons implements JmsSingletonsIntf {
 
-    private AtomicReference<Jms2ConnectionFactory> connectionFactoryAtomicReference = new AtomicReference<>();
+    private AtomicReference<ActiveMQConnectionFactory> connectionFactoryAtomicReference = new AtomicReference<>();
 
     private AtomicReference<Connection> mdbConnection = new AtomicReference<Connection>();
 
@@ -114,7 +114,7 @@ public class ActiveMQSingletons implements JmsSingletonsIntf {
     @Override
     public ConnectionFactory getConnectionFactory() throws Exception {
         if(connectionFactoryAtomicReference.get() == null) {
-            Jms2ConnectionFactory cf = new Jms2ConnectionFactory(new ActiveMQConnectionFactory("vm://localhost?broker.persistent=false"));
+            ActiveMQConnectionFactory cf = new ActiveMQConnectionFactory("vm://localhost?broker.persistent=false");
 
             if(connectionFactoryAtomicReference.compareAndSet(null, cf)) {
                 final Connection connection = cf.createConnection();

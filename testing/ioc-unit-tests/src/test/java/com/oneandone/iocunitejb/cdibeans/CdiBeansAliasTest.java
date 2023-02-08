@@ -1,6 +1,5 @@
 package com.oneandone.iocunitejb.cdibeans;
 
-import jakarta.enterprise.inject.New;
 import jakarta.enterprise.inject.Produces;
 import jakarta.inject.Inject;
 
@@ -29,7 +28,7 @@ public class CdiBeansAliasTest {
 
     @Produces
     @ProducesAlternative
-    ServiceBeanHelperHelperIf helperHelperProducer(@New HelperHelperAlias helperHelperAlias) {
+    ServiceBeanHelperHelperIf helperHelperProducer(HelperHelperAlias helperHelperAlias) {
         return helperHelperAlias;
     }
 

@@ -1,6 +1,5 @@
 package com.oneandone.iocunitejb.helpers;
 
-import java.security.Identity;
 import java.security.Principal;
 import java.util.Map;
 import java.util.Properties;
@@ -16,7 +15,6 @@ import jakarta.enterprise.inject.Produces;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.UserTransaction;
-import jakarta.xml.rpc.handler.MessageContext;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,13 +53,6 @@ public class TestResources {
                 return null;
             }
 
-
-            @Override
-            public MessageContext getMessageContext() throws IllegalStateException {
-                return null;
-            }
-
-
             @Override
             public <T> T getBusinessObject(Class<T> businessInterface) throws IllegalStateException {
                 return null;
@@ -91,30 +82,10 @@ public class TestResources {
                 return null;
             }
 
-
-            @Override
-            public Properties getEnvironment() {
-                return null;
-            }
-
-
-            @Override
-            public Identity getCallerIdentity() {
-                return null;
-            }
-
-
             @Override
             public Principal getCallerPrincipal() throws IllegalStateException {
                 return null;
             }
-
-
-            @Override
-            public boolean isCallerInRole(Identity role) {
-                return false;
-            }
-
 
             @Override
             public boolean isCallerInRole(String roleName) throws IllegalStateException {

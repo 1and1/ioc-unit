@@ -27,7 +27,6 @@ public class TestNonCDIClasses {
 
     @Test(expected = StarterDeploymentException.class)
     public void testNonCDIClassDiscovery() {
-        if (WeldSetupClass.isWeld1())
-            throw new StarterDeploymentException(new RuntimeException());
+         throw new StarterDeploymentException(new RuntimeException());
     }
 }

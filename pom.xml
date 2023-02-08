@@ -150,7 +150,9 @@
         <module>modules/ioc-unit-contexts</module>
         <!--module>modules/ioc-unit-dbunit</module>
         <module>modules/ioc-unit-simulators</module-->
+        <module>testing/purecdi-tests</module>
         <module>testing/ioc-unit-test-war</module>
+        <module>testing/ioc-unit-tests</module>
         <module>testing/ioc-unit-tests5</module>
     </modules>
 

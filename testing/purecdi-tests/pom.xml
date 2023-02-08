@@ -15,42 +15,7 @@
     <name>testing:net.oneandone.ioc-unit:purecdi-tests</name>
     <description>Examples, how to use CDI-SE without extra framework. Only weld3!</description>
     <url>https://github.com/1and1/ioc-unit</url>
-    <profiles>
-        <profile>
-            <id>weld2.3</id>
-            <dependencies>
-                <dependency>
-                    <groupId>net.oneandone.ioc-unit</groupId>
-                    <artifactId>ioc-unit-wf10-specs</artifactId>
-                    <version>${project.version}</version>
-                    <scope>provided</scope>
-                </dependency>
-                <dependency>
-                    <groupId>net.oneandone.ioc-unit</groupId>
-                    <artifactId>ioc-unit-wf10</artifactId>
-                    <version>${project.version}</version>
-                    <scope>test</scope>
-                </dependency>
-            </dependencies>
-        </profile>
-        <profile>
-            <id>weld3.1</id>
-            <dependencies>
-                <dependency>
-                    <groupId>net.oneandone.ioc-unit</groupId>
-                    <artifactId>ioc-unit-wf26-specs</artifactId>
-                    <version>${project.version}</version>
-                    <scope>provided</scope>
-                </dependency>
-                <dependency>
-                    <groupId>net.oneandone.ioc-unit</groupId>
-                    <artifactId>ioc-unit-wf26</artifactId>
-                    <version>${project.version}</version>
-                    <scope>test</scope>
-                </dependency>
-            </dependencies>
-        </profile>
-    </profiles>
+
     <dependencies>
 
         <!-- logging -->
@@ -75,6 +40,12 @@
             <artifactId>logback-classic</artifactId>
             <version>1.0.9</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.8.1</version>
+            <scope>compile</scope>
         </dependency>
         <!-- testing -->
         <dependency>
