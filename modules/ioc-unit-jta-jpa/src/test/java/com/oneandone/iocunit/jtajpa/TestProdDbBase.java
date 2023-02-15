@@ -11,9 +11,7 @@ import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
-import org.testcontainers.containers.MariaDBContainer;
 
 import com.arjuna.ats.arjuna.coordinator.TxControl;
 import com.oneandone.iocunit.jtajpa.helpers.Q1;
@@ -25,7 +23,7 @@ import com.oneandone.iocunit.jtajpa.helpers.TestEntityH2;
  * @author aschoerk
  */
 
-abstract class TestMysqlBase {
+abstract class TestProdDbBase {
 
     @Q1
     @Inject
@@ -45,11 +43,7 @@ abstract class TestMysqlBase {
         TxControl.setDefaultTimeout(1000000);
     }
 
-    @Before
-    public void beforeTestJtaJpa() {
-        container = new TestContainer(new MariaDBContainer());
-        container.start();
-    }
+
 
     @Test
     public void testStartingWithoutTransaction() throws HeuristicRollbackException, RollbackException, HeuristicMixedException, SystemException, NotSupportedException {
@@ -119,5 +113,13 @@ abstract class TestMysqlBase {
         Assert.assertNull(entityManagerQ2.find(TestEntityH2.class, oh2.getId()));
         Assert.assertNotNull(entityManagerQ1.find(TestEntity.class, oq2.getId()));
         Assert.assertNull(entityManagerQ1.find(TestEntityH2.class, oh2.getId()));
+    }
+
+    protected void setContainer(final TestContainer testContainer) {
+        container = testContainer;
+    }
+
+    protected TestContainer getContainer() {
+        return container;
     }
 }
