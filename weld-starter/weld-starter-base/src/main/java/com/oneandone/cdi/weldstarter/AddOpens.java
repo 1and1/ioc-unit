@@ -17,6 +17,7 @@ package com.oneandone.cdi.weldstarter;
  */
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Optional;
 
@@ -98,25 +99,37 @@ public final class AddOpens {
         }
     }
 
-    private static void setAccessible(Method method) {
-        if(U != null) {
-            U.putBoolean(method, OVERRIDE_OFFSET, true);
+    private static Object getUnsafe(){
+        try {
+            Class<?> unsafeClass = Class.forName("sun.misc.Unsafe");
+            Field singleoneInstanceField = unsafeClass.getDeclaredField("theUnsafe");
+            singleoneInstanceField.setAccessible(true);
+            putBooleanMethod = unsafeClass.getDeclaredMethod("putBoolean", Object.class, Long.TYPE, Boolean.TYPE);
+            return  singleoneInstanceField.get(null);
+//             return unsafeClass.getDeclaredMethod("putBoolean");
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
         }
     }
 
-    private static sun.misc.Unsafe getUnsafe() {
+    private static void setAccessible(Method method) {
         try {
-            Field unsafe = sun.misc.Unsafe.class.getDeclaredField("theUnsafe");
-            unsafe.setAccessible(true);
-            return (sun.misc.Unsafe) unsafe.get(null);
-        } catch (Throwable ignore) {
-            return null;
+            putBooleanMethod.invoke(U, method, OVERRIDE_OFFSET, true);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
+            throw new RuntimeException(e);
         }
+        // if(U != null) {
+           //  U.putBoolean(method, OVERRIDE_OFFSET, true);
+        // }
     }
 
     // field offset of the override field (Warning: this may change at any time!)
     private static final long OVERRIDE_OFFSET = 12;
-    private static final sun.misc.Unsafe U = getUnsafe();
+    private static final Object U = getUnsafe();
+
+    private static Method putBooleanMethod;
 
     private AddOpens() {
         throw new AssertionError();

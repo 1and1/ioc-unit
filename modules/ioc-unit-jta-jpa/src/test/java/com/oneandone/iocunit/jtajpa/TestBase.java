@@ -1,5 +1,6 @@
 package com.oneandone.iocunit.jtajpa;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -11,7 +12,6 @@ import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.testcontainers.containers.MariaDBContainer;
 
@@ -21,11 +21,13 @@ import com.oneandone.iocunit.jtajpa.helpers.Q2;
 import com.oneandone.iocunit.jtajpa.helpers.TestEntity;
 import com.oneandone.iocunit.jtajpa.helpers.TestEntityH2;
 
+import javax.enterprise.inject.Produces;
+
 /**
  * @author aschoerk
  */
 
-abstract class TestMysqlBase {
+abstract class TestBase {
 
     @Q1
     @Inject
@@ -39,17 +41,15 @@ abstract class TestMysqlBase {
 
     @Inject
     UserTransaction userTransaction;
+
+    @Inject
     private TestContainer container;
 
     {
         TxControl.setDefaultTimeout(1000000);
     }
 
-    @Before
-    public void beforeTestJtaJpa() {
-        container = new TestContainer(new MariaDBContainer());
-        container.start();
-    }
+
 
     @Test
     public void testStartingWithoutTransaction() throws HeuristicRollbackException, RollbackException, HeuristicMixedException, SystemException, NotSupportedException {
@@ -94,8 +94,7 @@ abstract class TestMysqlBase {
         userTransaction.commit();
     }
 
-    @Test
-    public void testWithThreeConnections() throws Exception {
+    protected void testWithThreeConnections() throws Exception {
         userTransaction.begin();
         TestEntity oq1 = new TestEntity();
         oq1.setEntityName("testentityq1");

@@ -18,6 +18,8 @@ import com.arjuna.ats.jdbc.TransactionalDriver;
 import com.oneandone.iocunit.jtajpa.internal.ConnectionProviderBase;
 import com.oneandone.iocunit.jtajpa.internal.EntityManagerFactoryFactory;
 
+import javax.enterprise.inject.spi.CDI;
+
 /**
  * @author aschoerk
  */
@@ -47,7 +49,8 @@ public class PersistenceXmlConnectionProvider extends ConnectionProviderBase {
             String password = (String) props.get("javax.persistence.jdbc.password");
             String driverName = (String) props.get("javax.persistence.jdbc.driver");
             if(driverName.equals(TestContainer.class.getName())) {
-                TestContainer testContainer = (TestContainer) System.getProperties().get(TestContainer.TESTCONTAINERINITIALIZED);
+                TestContainer testContainer = CDI.current().select(TestContainer.class).get();
+                // TestContainer testContainer = (TestContainer) System.getProperties().get(TestContainer.TESTCONTAINERINITIALIZED);
                 userName = testContainer.getUsername();
                 password = testContainer.getPassword();
                 url = testContainer.getJdbcUrl();

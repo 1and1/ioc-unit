@@ -3,11 +3,14 @@ package com.oneandone.iocunit.jtajpa;
 import java.lang.reflect.Method;
 import java.util.Properties;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.spi.CDI;
+
 /**
  * @author aschoerk
  */
+@ApplicationScoped
 public class TestContainer {
-    public final static String TESTCONTAINERINITIALIZED = "TestContainerInitialized";
     public final static String DRIVERCLASSNAME = "DriverClassName";
     public final static String PASSWORD = "Password";
     public final static String USERNAME = "Username";
@@ -20,7 +23,6 @@ public class TestContainer {
     public TestContainer(final Object sqlContainer) {
         this.container = sqlContainer;
         callVoidValue(container, "start");
-        System.getProperties().put(TESTCONTAINERINITIALIZED, this);
     }
 
     public Method getVoidMethod(Class c, String name) {

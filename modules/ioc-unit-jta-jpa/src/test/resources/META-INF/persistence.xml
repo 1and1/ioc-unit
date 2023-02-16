@@ -23,6 +23,7 @@ http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
     </persistence-unit>
     <persistence-unit name="q1" transaction-type="JTA">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <class>com.oneandone.iocunit.jtajpa.helpers.TestEntity</class>
         <properties>
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
@@ -37,9 +38,10 @@ http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
     </persistence-unit>
     <persistence-unit name="q2" transaction-type="JTA">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <class>com.oneandone.iocunit.jtajpa.helpers.TestEntity</class>
         <properties>
             <property name="hibernate.show_sql" value="true"/>
-            <property name="hibernate.hbm2ddl.auto" value="validate"/>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
             <property name="hibernate.id.new_generator_mappings" value="false"/>
             <!-- Set Hibernate to use Narayana as a JTA platform -->
             <property name="hibernate.transaction.io.narayana.jta.platform" value="JBossTS"/>
