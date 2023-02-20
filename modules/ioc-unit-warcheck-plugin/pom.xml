@@ -4,7 +4,7 @@
     <groupId>net.oneandone.ioc-unit</groupId>
     <artifactId>ioc-unit-warcheck-plugin</artifactId>
     <packaging>maven-plugin</packaging>
-    <version>2.0.47-SNAPSHOT</version>
+    <version>2.0.48-SNAPSHOT</version>
     <name>ioc-unit-warcheck-plugin Maven Mojo</name>
     <url>http://maven.apache.org</url>
     <properties>

@@ -3,7 +3,7 @@
     <parent>
         <groupId>net.oneandone.ioc-unit</groupId>
         <artifactId>ioc-unit-examples2-parent</artifactId>
-        <version>2.0.47-SNAPSHOT</version>
+        <version>2.0.48-SNAPSHOT</version>
     </parent>
 
     <artifactId>ioc-unit-rest-examples2-jms-parent</artifactId>
