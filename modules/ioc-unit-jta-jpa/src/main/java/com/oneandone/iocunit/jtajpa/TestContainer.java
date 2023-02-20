@@ -15,11 +15,12 @@ import javax.enterprise.inject.spi.CDI;
 /**
  * @author aschoerk
  */
-@ApplicationScoped
+
 /**
-  * used to signal PersistenceXmlConnectionProvider, that a Testcontainer is used.
+ * used to signal PersistenceXmlConnectionProvider, that a Testcontainer is used.
  * and used to start a db-Testcontainer by the test.
- */p
+ */
+@ApplicationScoped
 public class TestContainer implements Driver {
     public final static String DRIVERCLASSNAME = "DriverClassName";
     public final static String PASSWORD = "Password";
