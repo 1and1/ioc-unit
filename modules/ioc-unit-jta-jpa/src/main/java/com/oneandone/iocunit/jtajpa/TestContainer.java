@@ -21,6 +21,7 @@ import jakarta.enterprise.context.ApplicationScoped;
  */
 @ApplicationScoped
 public class TestContainer implements Driver {
+    public final static String TESTCONTAINERINITIALIZED = "TestContainerInitialized";
     public final static String DRIVERCLASSNAME = "DriverClassName";
     public final static String PASSWORD = "Password";
     public final static String USERNAME = "Username";
@@ -31,6 +32,7 @@ public class TestContainer implements Driver {
     public TestContainer(final Object sqlContainer) {
         this.container = sqlContainer;
         callVoidValue(container, "start");
+        System.getProperties().put(TESTCONTAINERINITIALIZED, this);
     }
 
     public Method getVoidMethod(Class c, String name) {

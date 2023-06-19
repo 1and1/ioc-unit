@@ -28,7 +28,7 @@
             <property name="hibernate.id.new_generator_mappings" value="false"/>
             <!-- Set Hibernate to use Narayana as a JTA platform -->
             <property name="hibernate.transaction.io.narayana.jta.platform" value="JBossTS"/>
-            <property name="hibernate.connection.isolation" value="repeatable read"/>
+            <property name="hibernate.connection.isolation" value="2"/>
             <!-- We provide our own connection provider, in order to integrate TransactionalDriver with Hibernate -->
             <property name="hibernate.connection.provider_class" value="com.oneandone.iocunit.jtajpa.PersistenceXmlConnectionProvider" />
             <property name="jakarta.persistence.jdbc.driver" value="com.oneandone.iocunit.jtajpa.TestContainer"/>
@@ -42,7 +42,7 @@
             <property name="hibernate.id.new_generator_mappings" value="false"/>
             <!-- Set Hibernate to use Narayana as a JTA platform -->
             <property name="hibernate.transaction.io.narayana.jta.platform" value="JBossTS"/>
-            <property name="hibernate.connection.isolation" value="repeatable read"/>
+            <property name="hibernate.connection.isolation" value="2"/>
             <!-- We provide our own connection provider, in order to integrate TransactionalDriver with Hibernate -->
             <property name="hibernate.connection.provider_class" value="com.oneandone.iocunit.jtajpa.PersistenceXmlConnectionProvider" />
             <property name="jakarta.persistence.jdbc.driver" value="com.oneandone.iocunit.jtajpa.TestContainer"/>

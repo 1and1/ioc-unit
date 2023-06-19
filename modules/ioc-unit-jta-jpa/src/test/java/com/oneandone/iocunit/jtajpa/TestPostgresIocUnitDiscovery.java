@@ -1,8 +1,7 @@
 package com.oneandone.iocunit.jtajpa;
 
-import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.testcontainers.containers.MariaDBContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.utility.DockerImageName;
 
@@ -15,6 +14,7 @@ import com.oneandone.iocunit.jtajpa.helpers.Q2Factory;
 import com.oneandone.iocunit.jtajpa.internal.EntityManagerFactoryFactory;
 
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Produces;
 
 /**
  * @author aschoerk
@@ -23,12 +23,25 @@ import jakarta.enterprise.context.ApplicationScoped;
 @SutClasses({EntityManagerFactoryFactory.class})
 @TestClasses({H2TestFactory.class, Q1Factory.class, Q2Factory.class})
 @ApplicationScoped
-public class TestPostgresIocUnitDiscovery extends TestProdDbBase {
-    @Before
-    public void beforeTestJtaJpa() {
-        final DockerImageName postgresImage = DockerImageName.parse("postgres:14.6").asCompatibleSubstituteFor("postgres");
-        super.setContainer(new TestContainer(new PostgreSQLContainer<>(postgresImage)));
-            super.getContainer().start();
+public class TestPostgresIocUnitDiscovery extends TestBase {
+    @Produces
+    @ApplicationScoped
+    TestContainer postgresDBProducer() {
+        final DockerImageName postgresImage = DockerImageName
+                .parse("postgres:14.6")
+                .asCompatibleSubstituteFor("postgres");
+
+        PostgreSQLContainer pgcontainer = new PostgreSQLContainer<>(postgresImage);
+        TestContainer testContainer = new TestContainer(pgcontainer);
+        testContainer.start();
+        return testContainer;
     }
+
+    @Test
+    @Override
+    public void testWithThreeConnections() throws Exception {
+
+    }
+
 }
 

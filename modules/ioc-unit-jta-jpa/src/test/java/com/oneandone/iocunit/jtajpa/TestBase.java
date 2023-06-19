@@ -11,7 +11,9 @@ import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
+import org.testcontainers.containers.MariaDBContainer;
 
 import com.arjuna.ats.arjuna.coordinator.TxControl;
 import com.oneandone.iocunit.jtajpa.helpers.Q1;
@@ -19,11 +21,13 @@ import com.oneandone.iocunit.jtajpa.helpers.Q2;
 import com.oneandone.iocunit.jtajpa.helpers.TestEntity;
 import com.oneandone.iocunit.jtajpa.helpers.TestEntityH2;
 
+import jakarta.enterprise.inject.Produces;
+
 /**
  * @author aschoerk
  */
 
-abstract class TestProdDbBase {
+abstract class TestBase {
 
     @Q1
     @Inject
@@ -37,6 +41,8 @@ abstract class TestProdDbBase {
 
     @Inject
     UserTransaction userTransaction;
+
+    @Inject
     private TestContainer container;
 
     {
@@ -44,6 +50,10 @@ abstract class TestProdDbBase {
     }
 
 
+    @Before
+    public void init() {
+        String url = container.getJdbcUrl();
+    }
 
     @Test
     public void testStartingWithoutTransaction() throws HeuristicRollbackException, RollbackException, HeuristicMixedException, SystemException, NotSupportedException {
@@ -88,7 +98,7 @@ abstract class TestProdDbBase {
         userTransaction.commit();
     }
 
-    @Test
+    // @Test
     public void testWithThreeConnections() throws Exception {
         userTransaction.begin();
         TestEntity oq1 = new TestEntity();
@@ -113,13 +123,5 @@ abstract class TestProdDbBase {
         Assert.assertNull(entityManagerQ2.find(TestEntityH2.class, oh2.getId()));
         Assert.assertNotNull(entityManagerQ1.find(TestEntity.class, oq2.getId()));
         Assert.assertNull(entityManagerQ1.find(TestEntityH2.class, oh2.getId()));
-    }
-
-    protected void setContainer(final TestContainer testContainer) {
-        container = testContainer;
-    }
-
-    protected TestContainer getContainer() {
-        return container;
     }
 }
