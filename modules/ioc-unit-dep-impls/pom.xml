@@ -3,7 +3,7 @@
 
     <groupId>net.oneandone.ioc-unit</groupId>
     <artifactId>ioc-unit-dep-impls</artifactId>
-    <version>4.0.2-SNAPSHOT</version>
+    <version>4.0.2</version>
     <packaging>pom</packaging>
     <name>net.oneandone.ioc-unit:ioc-unit-dependencies</name>
     <description>used to create dependency modules, not used as parent pom</description>
