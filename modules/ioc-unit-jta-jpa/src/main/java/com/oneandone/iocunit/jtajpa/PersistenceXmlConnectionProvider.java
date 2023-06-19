@@ -28,6 +28,8 @@ public class PersistenceXmlConnectionProvider extends ConnectionProviderBase {
     private TransactionalDriver arjunaJDBC2Driver = null;
     private Properties dbProps = null;
 
+    private int defaultTransactionIsolation = Connection.TRANSACTION_READ_COMMITTED;
+
     public PersistenceXmlConnectionProvider() {
         String puName = EntityManagerFactoryFactory.currentPuName.get();
         if(puName == null) {
@@ -64,6 +66,10 @@ public class PersistenceXmlConnectionProvider extends ConnectionProviderBase {
             dbProps.put(TransactionalDriver.password, password);
             dbProps.put(TransactionalDriver.XADataSource, jdbcDataSource);
             dbProps.put(TransactionalDriver.poolConnections, "false");
+            final Object isolation = props.get("hibernate.connection.isolation");
+            if (isolation != null) {
+                dbProps.put("hibernate.connection.isolation", isolation);
+            }
 
             this.arjunaJDBC2Driver = new TransactionalDriver();
         } catch (Exception ex) {
@@ -100,6 +106,12 @@ public class PersistenceXmlConnectionProvider extends ConnectionProviderBase {
     public Connection getConnection() throws SQLException {
         Connection result;
         result = arjunaJDBC2Driver.connect("jdbc:arjuna:" + url, dbProps);
+        final String isolationLevel = dbProps.getProperty("hibernate.connection.isolation");
+        if (isolationLevel != null) {
+            result.setTransactionIsolation(Integer.parseInt(isolationLevel));
+        } else {
+            result.setTransactionIsolation(defaultTransactionIsolation);
+        }
         connectionCount.incrementAndGet();
         return result;
     }

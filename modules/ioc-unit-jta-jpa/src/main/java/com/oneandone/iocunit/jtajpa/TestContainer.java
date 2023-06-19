@@ -1,26 +1,36 @@
 package com.oneandone.iocunit.jtajpa;
 
 import java.lang.reflect.Method;
+import java.sql.Connection;
+import java.sql.Driver;
+import java.sql.DriverPropertyInfo;
+import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 import java.util.Properties;
+import java.util.logging.Logger;
+
+import jakarta.enterprise.context.ApplicationScoped;
 
 /**
  * @author aschoerk
  */
-public class TestContainer {
-    public final static String TESTCONTAINERINITIALIZED = "TestContainerInitialized";
+
+/**
+ * used to signal PersistenceXmlConnectionProvider, that a Testcontainer is used.
+ * and used to start a db-Testcontainer by the test.
+ */
+@ApplicationScoped
+public class TestContainer implements Driver {
     public final static String DRIVERCLASSNAME = "DriverClassName";
     public final static String PASSWORD = "Password";
     public final static String USERNAME = "Username";
     public final static String JDBCURL = "JdbcUrl";
-
-    public final Properties props = new Properties();
 
     private final Object container;
 
     public TestContainer(final Object sqlContainer) {
         this.container = sqlContainer;
         callVoidValue(container, "start");
-        System.getProperties().put(TESTCONTAINERINITIALIZED, this);
     }
 
     public Method getVoidMethod(Class c, String name) {
@@ -68,5 +78,40 @@ public class TestContainer {
 
     public void stop() {
         callVoidValue(container,"stop");
+    }
+
+    @Override
+    public Connection connect(final String url, final Properties info) throws SQLException {
+        throw new IllegalAccessError("TestContainer Driver should never get used directly");
+    }
+
+    @Override
+    public boolean acceptsURL(final String url) throws SQLException {
+        throw new IllegalAccessError("TestContainer Driver should never get used directly");
+    }
+
+    @Override
+    public DriverPropertyInfo[] getPropertyInfo(final String url, final Properties info) throws SQLException {
+        throw new IllegalAccessError("TestContainer Driver should never get used directly");
+    }
+
+    @Override
+    public int getMajorVersion() {
+        throw new IllegalAccessError("TestContainer Driver should never get used directly");
+    }
+
+    @Override
+    public int getMinorVersion() {
+        throw new IllegalAccessError("TestContainer Driver should never get used directly");
+    }
+
+    @Override
+    public boolean jdbcCompliant() {
+        throw new IllegalAccessError("TestContainer Driver should never get used directly");
+    }
+
+    @Override
+    public Logger getParentLogger() throws SQLFeatureNotSupportedException {
+        throw new IllegalAccessError("TestContainer Driver should never get used directly");
     }
 }
