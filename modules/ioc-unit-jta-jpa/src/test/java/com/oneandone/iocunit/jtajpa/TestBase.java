@@ -52,6 +52,7 @@ abstract class TestBase {
 
     @Before
     public void init() {
+        // make sure that testcontainer is really started
         String url = container.getJdbcUrl();
     }
 

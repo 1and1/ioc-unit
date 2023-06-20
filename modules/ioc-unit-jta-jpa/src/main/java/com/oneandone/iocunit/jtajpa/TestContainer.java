@@ -32,7 +32,11 @@ public class TestContainer implements Driver {
     public TestContainer(final Object sqlContainer) {
         this.container = sqlContainer;
         callVoidValue(container, "start");
-        System.getProperties().put(TESTCONTAINERINITIALIZED, this);
+        System.setProperty("testcontainer.jdbc.url", getJdbcUrl());
+        System.setProperty("testcontainer.jdbc.user", getUsername());
+        System.setProperty("testcontainer.jdbc.password", getPassword());
+        System.setProperty("testcontainer.jdbc.driver", getDriverclassname());
+
     }
 
     public Method getVoidMethod(Class c, String name) {

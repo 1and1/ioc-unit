@@ -49,11 +49,10 @@ public class PersistenceXmlConnectionProvider extends ConnectionProviderBase {
             String password = (String) props.get("jakarta.persistence.jdbc.password");
             String driverName = (String) props.get("jakarta.persistence.jdbc.driver");
             if(driverName.equals(TestContainer.class.getName())) {
-                TestContainer testContainer = (TestContainer) System.getProperties().get(TestContainer.TESTCONTAINERINITIALIZED);
-                userName = testContainer.getUsername();
-                password = testContainer.getPassword();
-                url = testContainer.getJdbcUrl();
-                driverName = testContainer.getDriverclassname();
+                url = (String) System.getProperty("testcontainer.jdbc.url");
+                userName = (String) System.getProperty("testcontainer.jdbc.user");
+                password = (String) System.getProperty("testcontainer.jdbc.password");
+                driverName = (String) System.getProperty("testcontainer.jdbc.driver");
             }
             Class dsClass = Class.forName(getDatasourceClassName(driverName));
             Method setUrlMethod = getSetUrlMethod(dsClass);
