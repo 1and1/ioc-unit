@@ -291,8 +291,6 @@ What do we need to be able to achieve this?
 * **SessionContextFactory** provides a SessionContextSimulation which will be injected where necessary.
 * **TestPersistenceFactory** searches for persistence-unit "test", if it does not exist, using HibernatePersistenceProvider a configuration is created which can be used. Additionally, Entity-Classes will be discovered, if they are added via @AdditionalClasses, @AdditionalClassPath or @AdditionalPackage.
 
-
-
 # Usage
 
 The usage does not differ very much from cdi-unit:
