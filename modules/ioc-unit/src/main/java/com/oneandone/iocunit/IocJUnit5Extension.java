@@ -25,8 +25,6 @@ public class IocJUnit5Extension implements BeforeEachCallback,
     IocUnitAnalyzeAndStarter analyzeAndStarter = new IocUnitAnalyzeAndStarter();
 
     protected Throwable startupException;
-    private Method testMethod;
-    private Class<?> testClass;
 
 
     public IocJUnit5Extension() {
@@ -37,6 +35,7 @@ public class IocJUnit5Extension implements BeforeEachCallback,
     public void afterAll(final ExtensionContext extensionContext) throws Exception {
         logger.trace("---->after All execution {} {}\n", extensionContext.getDisplayName(), this);
         analyzeAndStarter.shutdownWeldIfRunning(false);
+        analyzeAndStarter = null;
     }
 
 
@@ -127,8 +126,6 @@ public class IocJUnit5Extension implements BeforeEachCallback,
     @Override
     public void beforeEach(final ExtensionContext extensionContext) throws Exception {
         if(startupException != null) {
-            this.testMethod = extensionContext.getTestMethod().orElse(null);
-            this.testClass = extensionContext.getTestClass().orElse(null);
             if(extensionContext.getTestMethod().isPresent()
                && extensionContext.getTestMethod().get().isAnnotationPresent(ExpectedStartupException.class)) {
                 ExpectedStartupException ann = extensionContext.getTestMethod().get().getAnnotation(ExpectedStartupException.class);
