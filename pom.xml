@@ -3,7 +3,7 @@
 
     <groupId>net.oneandone.ioc-unit</groupId>
     <artifactId>ioc-unit-parent</artifactId>
-    <version>2.0.49-SNAPSHOT</version>
+    <version>2.0.49</version>
     <packaging>pom</packaging>
 
     <name>net.oneandone.ioc-unit:ioc-unit-parent</name>
@@ -632,7 +632,7 @@
         <url>https://github.com/1and1/ioc-unit</url>
         <connection>scm:git:ssh://git@github.com/1and1/ioc-unit.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/1and1/ioc-unit.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>ioc-unit-parent-2.0.49</tag>
     </scm>
     <issueManagement>
         <system>GitHub</system>
