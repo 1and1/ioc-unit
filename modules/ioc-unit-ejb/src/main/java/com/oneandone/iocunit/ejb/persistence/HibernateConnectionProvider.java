@@ -1,7 +1,6 @@
 package com.oneandone.iocunit.ejb.persistence;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.spi.Bean;
@@ -20,20 +19,26 @@ public class HibernateConnectionProvider extends DriverManagerConnectionProvider
     private static final long serialVersionUID = -3538987211261126789L;
 
     @Override
-    public Connection getConnection() throws SQLException {
+    public Connection getConnection() {
         try {
             BeanManager beanManager = IocUnitAnalyzeAndStarter.getInitBeanManager();
-            if(beanManager == null) {
+            if (beanManager == null) {
                 beanManager = CDI.current().getBeanManager();
             }
-            Bean<?> bean = beanManager.resolve(beanManager.getBeans(JdbcSqlConverter.class));
-            if(bean != null) {
+            Bean<?> bean;
+            try {
+                bean = beanManager.resolve(beanManager.getBeans(JdbcSqlConverter.class));
+            } catch (IllegalStateException e) {
+                beanManager = CDI.current().getBeanManager();
+                bean = beanManager.resolve(beanManager.getBeans(JdbcSqlConverter.class));
+            }
+
+            if (bean != null) {
                 try (CreationalContexts creationalContexts = new CreationalContexts(beanManager)) {
                     JdbcSqlConverter jdbcSqlConverter = (JdbcSqlConverter) creationalContexts.create(bean, ApplicationScoped.class);
                     return new ConnectionDelegate(super.getConnection(), jdbcSqlConverter, true);
                 }
-            }
-            else {
+            } else {
                 return super.getConnection();
             }
         } catch (Exception e) {
