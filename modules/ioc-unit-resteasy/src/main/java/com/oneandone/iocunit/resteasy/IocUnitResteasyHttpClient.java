@@ -3,18 +3,14 @@ package com.oneandone.iocunit.resteasy;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
-import jakarta.inject.Inject;
-import jakarta.servlet.ServletContext;
-import jakarta.ws.rs.core.SecurityContext;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.Configurable;
@@ -26,6 +22,7 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.BasicHttpProcessor;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.Args;
+import org.jboss.resteasy.core.ResteasyContext;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.slf4j.Logger;
@@ -34,6 +31,10 @@ import org.slf4j.LoggerFactory;
 import com.oneandone.iocunit.jboss.resteasy.mock.IocUnitMockDispatcherFactory;
 import com.oneandone.iocunit.jboss.resteasy.mock.IocUnitResteasyDispatcher;
 import com.oneandone.iocunit.resteasy.restassured.CloseableMockResponse;
+
+import jakarta.inject.Inject;
+import jakarta.servlet.ServletContext;
+import jakarta.ws.rs.core.SecurityContext;
 
 /**
  * HttpClient that does not send via Network, but sends via Resteasy-MockDispatcher
@@ -61,9 +62,7 @@ public class IocUnitResteasyHttpClient extends AbstractHttpClient implements Con
      * {@inheritDoc}
      */
     @Override
-    public CloseableHttpResponse execute(
-            final HttpHost target,
-            final HttpRequest request) throws IOException, ClientProtocolException {
+    public CloseableHttpResponse execute(final HttpHost target, final HttpRequest request) throws IOException {
         return innerExecute(target, request, null);
     }
 
@@ -71,10 +70,7 @@ public class IocUnitResteasyHttpClient extends AbstractHttpClient implements Con
      * {@inheritDoc}
      */
     @Override
-    public CloseableHttpResponse execute(
-            final HttpHost target,
-            final HttpRequest request,
-            final HttpContext context) throws IOException, ClientProtocolException {
+    public CloseableHttpResponse execute(final HttpHost target, final HttpRequest request, final HttpContext context) throws IOException {
         return innerExecute(target, request, context);
     }
 
@@ -84,25 +80,27 @@ public class IocUnitResteasyHttpClient extends AbstractHttpClient implements Con
     @Override
     public CloseableHttpResponse execute(
             final HttpUriRequest request,
-            final HttpContext context) throws IOException, ClientProtocolException {
+            final HttpContext context) throws IOException {
         Args.notNull(request, "HTTP request");
         return innerExecute(null, request, context);
     }
 
 
-    protected CloseableHttpResponse innerExecute(final HttpHost target, final HttpRequest request, final HttpContext context) throws IOException, ClientProtocolException {
-        Set<Map.Entry<Class<?>, Object>> contextData = IocUnitMockDispatcherFactory.getContextDataMap().entrySet();
-        IocUnitMockDispatcherFactory.clearContextData();
+    protected CloseableHttpResponse innerExecute(final HttpHost target, final HttpRequest request, final HttpContext context) throws IOException {
+        List<Map<Class<?>, Object>> contextDataList = saveResteasyContext();
+        // immediately restore since ResteasyContext is a stack and while saving the context, stack required to be popped
+        restoreResteasyContext(contextDataList);
+
         try {
             MockHttpRequest mockRequest = createMockHttpRequestFromRequest(request);
             addHeadersFromRequest(request, mockRequest);
             MockHttpResponse response = new MockHttpResponse();
             dispatcher.setUp();
             Map<Class<?>, Object> map = IocUnitMockDispatcherFactory.getContextDataMap();
-            if(DispatcherDelegate.getSecurityContext() != null && !map.containsKey(SecurityContext.class)) {
+            if (DispatcherDelegate.getSecurityContext() != null && !map.containsKey(SecurityContext.class)) {
                 map.put(SecurityContext.class, DispatcherDelegate.getSecurityContext());
             }
-            if(DispatcherDelegate.getServletContext() != null && !map.containsKey(ServletContext.class)) {
+            if (DispatcherDelegate.getServletContext() != null && !map.containsKey(ServletContext.class)) {
                 map.put(ServletContext.class, DispatcherDelegate.getServletContext());
             }
             dispatcher.invoke(mockRequest, response);
@@ -110,12 +108,26 @@ public class IocUnitResteasyHttpClient extends AbstractHttpClient implements Con
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         } finally {
-            contextData.forEach(d ->
-                    IocUnitMockDispatcherFactory.getContextDataMap().put(
-                            d.getKey(),
-                            d.getValue()));
+            restoreResteasyContext(contextDataList);
         }
+    }
 
+    private List<Map<Class<?>, Object>> saveResteasyContext() {
+        List<Map<Class<?>, Object>> contextDataList = new ArrayList<>();
+        while(ResteasyContext.getContextDataLevelCount() != 0) {
+            contextDataList.add(ResteasyContext.getContextDataMap());
+            ResteasyContext.removeContextDataLevel();
+        }
+        return contextDataList;
+    }
+
+    private void restoreResteasyContext(List<Map<Class<?>, Object>> contextDataList) {
+        for (int i = contextDataList.size() - 1; i >= 0; i--) {
+            ResteasyContext.addContextDataLevel();
+            for (Map.Entry<Class<?>, Object> entry : contextDataList.get(i).entrySet()) {
+                ResteasyContext.getContextDataMap().put(entry.getKey(), entry.getValue());
+            }
+        }
     }
 
     private void addHeadersFromRequest(final HttpRequest request, final MockHttpRequest mockRequest) {
