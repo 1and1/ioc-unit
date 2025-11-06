@@ -18,9 +18,11 @@ public class IocUnitMockDispatcherFactory {
     private static Class<?> resteasyContextClass = null;
     private static Method getContextDataMethod = null;
     private static Method clearContextDataMethod = null;
+    private static Method getContextDataLevelCount = null;
+    private static Method removeContextDataLevel = null;
+    private static Method addContextDataLevel = null;
 
     private static Method registerMethod = null;
-
     private static Class<?> resteasyContextFactoryClass = null;
 
     static {
@@ -29,8 +31,51 @@ public class IocUnitMockDispatcherFactory {
             resteasyContextClass = Class.forName("org.jboss.resteasy.core.ResteasyContext");
             getContextDataMethod = resteasyContextClass.getMethod("getContextDataMap");
             clearContextDataMethod = resteasyContextClass.getMethod("clearContextData");
+            getContextDataLevelCount = resteasyContextClass.getMethod("getContextDataLevelCount");
+            removeContextDataLevel = resteasyContextClass.getMethod("removeContextDataLevel");
+            addContextDataLevel = resteasyContextClass.getMethod("addContextDataLevel");
             registerMethod = resteasyContextFactoryClass.getMethod("register", Object.class);
         } catch (ClassNotFoundException | NoSuchMethodException e) {
+        }
+    }
+
+    public static boolean isResteasyContextAvailable() {
+        return resteasyContextClass != null;
+    }
+
+    public static int getContextDataLevelCount() {
+        if (getContextDataLevelCount != null) {
+            try {
+                return (int) getContextDataLevelCount.invoke(null);
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            throw new UnsupportedOperationException("Resteasy version does not support getContextDataLevelCount");
+        }
+    }
+
+    public static void removeContextDataLevel() {
+        if (removeContextDataLevel != null) {
+            try {
+                removeContextDataLevel.invoke(null);
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            throw new UnsupportedOperationException("Resteasy version does not support removeContextDataLevel");
+        }
+    }
+
+    public static void addContextDataLevel() {
+        if (addContextDataLevel != null) {
+            try {
+                addContextDataLevel.invoke(null);
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            throw new UnsupportedOperationException("Resteasy version does not support addContextDataLevel");
         }
     }
 

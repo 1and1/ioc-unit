@@ -3,6 +3,8 @@ package com.oneandone.iocunit.resteasy;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -14,7 +16,6 @@ import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.Configurable;
@@ -61,9 +62,7 @@ public class IocUnitResteasyHttpClient extends AbstractHttpClient implements Con
      * {@inheritDoc}
      */
     @Override
-    public CloseableHttpResponse execute(
-            final HttpHost target,
-            final HttpRequest request) throws IOException, ClientProtocolException {
+    public CloseableHttpResponse execute(final HttpHost target, final HttpRequest request) throws IOException {
         return innerExecute(target, request, null);
     }
 
@@ -71,10 +70,7 @@ public class IocUnitResteasyHttpClient extends AbstractHttpClient implements Con
      * {@inheritDoc}
      */
     @Override
-    public CloseableHttpResponse execute(
-            final HttpHost target,
-            final HttpRequest request,
-            final HttpContext context) throws IOException, ClientProtocolException {
+    public CloseableHttpResponse execute(final HttpHost target, final HttpRequest request, final HttpContext context) throws IOException {
         return innerExecute(target, request, context);
     }
 
@@ -82,17 +78,23 @@ public class IocUnitResteasyHttpClient extends AbstractHttpClient implements Con
      * {@inheritDoc}
      */
     @Override
-    public CloseableHttpResponse execute(
-            final HttpUriRequest request,
-            final HttpContext context) throws IOException, ClientProtocolException {
+    public CloseableHttpResponse execute(final HttpUriRequest request, final HttpContext context) throws IOException {
         Args.notNull(request, "HTTP request");
         return innerExecute(null, request, context);
     }
 
 
-    protected CloseableHttpResponse innerExecute(final HttpHost target, final HttpRequest request, final HttpContext context) throws IOException, ClientProtocolException {
-        Set<Map.Entry<Class<?>, Object>> contextData = IocUnitMockDispatcherFactory.getContextDataMap().entrySet();
-        IocUnitMockDispatcherFactory.clearContextData();
+    protected CloseableHttpResponse innerExecute(final HttpHost target, final HttpRequest request, final HttpContext context) throws IOException {
+        Set<Map.Entry<Class<?>, Object>> contextData = null;
+        List<Map<Class<?>, Object>> contextDataList = null;
+
+        // wildfly 26 uses ResteasyContext to store context data
+        if (IocUnitMockDispatcherFactory.isResteasyContextAvailable()) {
+            contextDataList = saveResteasyContext();
+        } else {
+            contextData = IocUnitMockDispatcherFactory.getContextDataMap().entrySet();
+            IocUnitMockDispatcherFactory.clearContextData();
+        }
         try {
             MockHttpRequest mockRequest = createMockHttpRequestFromRequest(request);
             addHeadersFromRequest(request, mockRequest);
@@ -110,12 +112,30 @@ public class IocUnitResteasyHttpClient extends AbstractHttpClient implements Con
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         } finally {
-            contextData.forEach(d ->
-                    IocUnitMockDispatcherFactory.getContextDataMap().put(
-                            d.getKey(),
-                            d.getValue()));
+            if (IocUnitMockDispatcherFactory.isResteasyContextAvailable() && contextDataList != null) {
+                restoreResteasyContext(contextDataList);
+            } else if (contextData != null) {
+                contextData.forEach(d -> IocUnitMockDispatcherFactory.getContextDataMap().put(d.getKey(), d.getValue()));
+            }
         }
+    }
 
+    private List<Map<Class<?>, Object>> saveResteasyContext() {
+        List<Map<Class<?>, Object>> contextDataList = new ArrayList<>();
+        while(IocUnitMockDispatcherFactory.getContextDataLevelCount() != 0) {
+            contextDataList.add(IocUnitMockDispatcherFactory.getContextDataMap());
+            IocUnitMockDispatcherFactory.removeContextDataLevel();
+        }
+        return contextDataList;
+    }
+
+    private void restoreResteasyContext(List<Map<Class<?>, Object>> contextDataList) {
+        for (int i = contextDataList.size() - 1; i >= 0; i--) {
+            IocUnitMockDispatcherFactory.addContextDataLevel();
+            for (Map.Entry<Class<?>, Object> entry : contextDataList.get(i).entrySet()) {
+                IocUnitMockDispatcherFactory.getContextDataMap().put(entry.getKey(), entry.getValue());
+            }
+        }
     }
 
     private void addHeadersFromRequest(final HttpRequest request, final MockHttpRequest mockRequest) {
