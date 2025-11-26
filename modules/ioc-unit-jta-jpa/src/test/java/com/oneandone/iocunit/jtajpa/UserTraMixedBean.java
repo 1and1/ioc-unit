@@ -74,7 +74,7 @@ public class UserTraMixedBean extends TestBeanBase {
 
     @Test
     @Transactional(Transactional.TxType.REQUIRED)
-    public void canNotUseUserTransactionInRequired() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+    public void canNotUseUserTransactionInRequired() {
         assertThrows(TransactionalException.class, () -> {
             userTransaction.begin();
             userTransaction.commit();
@@ -85,7 +85,7 @@ public class UserTraMixedBean extends TestBeanBase {
 
     @Test
     @Transactional(Transactional.TxType.REQUIRES_NEW)
-    public void canNotUseUserTransactionInRequiresNew() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+    public void canNotUseUserTransactionInRequiresNew() {
         assertThrows(TransactionalException.class, () -> {
             userTransaction.begin();
             writing();
@@ -98,7 +98,7 @@ public class UserTraMixedBean extends TestBeanBase {
 
     @Test
     @Transactional(Transactional.TxType.REQUIRES_NEW)
-    public void canMixInRequiresNew() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+    public void canMixInRequiresNew() {
         writing();
         notSuppBean.callReqNewBean();
         writing();
@@ -111,7 +111,7 @@ public class UserTraMixedBean extends TestBeanBase {
 
     @Test
     @Transactional(Transactional.TxType.NEVER)
-    public void canMixInNever() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+    public void canMixInNever() {
         reading();
         notSuppBean.callReqNewBean();
         reading();

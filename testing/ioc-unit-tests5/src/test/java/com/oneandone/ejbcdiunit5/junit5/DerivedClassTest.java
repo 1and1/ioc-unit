@@ -4,8 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import jakarta.inject.Inject;
-
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.RepeatedTest;
@@ -14,30 +12,29 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import com.oneandone.ejbcdiunit5.junit5.beans.AppScopedBean2;
 
-/**
- * @author aschoerk
- */
-public class DerivedClassTest extends TwoMethodTest {
+import jakarta.inject.Inject;
+
+class DerivedClassTest extends TwoMethodTest {
 
     @BeforeAll
-    public static void beforeAll() {
+    static void beforeAll() {
         testCalled = 0;
+    }
+
+    // name must be the same as in superclass, otherwise both will be called.
+    @AfterAll
+    static void afterAll() {
+        // check if super class tests (2), 6 repetitions and 2 params have been called
+        assertEquals(10, testCalled);
     }
 
     @Inject
     AppScopedBean2 appScopedBean2;
 
     @RepeatedTest(6)
-    public void testRepetition() {
+    void testRepetition() {
         checkAppScopedBean2();
     }
-
-    private void checkAppScopedBean2() {
-        // check if injection has been done
-        assertNotNull(appScopedBean2);
-        assertTrue(appScopedBean2.toString().contains(AppScopedBean2.class.getSimpleName()));
-    }
-
 
     @ParameterizedTest
     @ValueSource(strings = { "a", "b" })
@@ -45,11 +42,9 @@ public class DerivedClassTest extends TwoMethodTest {
         checkAppScopedBean2();
     }
 
-
-    @AfterAll
-    // name must be the same as in superclass, otherwise both will be called.
-    public static void afterAll() {
-        // check if superclasstests (2), 6 repetitions and 2 params have been called
-        assertEquals(testCalled, 10);
+    private void checkAppScopedBean2() {
+        // check if injection has been done
+        assertNotNull(appScopedBean2);
+        assertTrue(appScopedBean2.toString().contains(AppScopedBean2.class.getSimpleName()));
     }
 }

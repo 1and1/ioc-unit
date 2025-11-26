@@ -4,16 +4,11 @@ import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.DriverPropertyInfo;
-import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.util.Properties;
 import java.util.logging.Logger;
 
 import jakarta.enterprise.context.ApplicationScoped;
-
-/**
- * @author aschoerk
- */
 
 /**
  * used to signal PersistenceXmlConnectionProvider, that a Testcontainer is used.
@@ -87,17 +82,17 @@ public class TestContainer implements Driver {
     }
 
     @Override
-    public Connection connect(final String url, final Properties info) throws SQLException {
+    public Connection connect(final String url, final Properties info) {
         throw new IllegalAccessError("TestContainer Driver should never get used directly");
     }
 
     @Override
-    public boolean acceptsURL(final String url) throws SQLException {
+    public boolean acceptsURL(final String url) {
         throw new IllegalAccessError("TestContainer Driver should never get used directly");
     }
 
     @Override
-    public DriverPropertyInfo[] getPropertyInfo(final String url, final Properties info) throws SQLException {
+    public DriverPropertyInfo[] getPropertyInfo(final String url, final Properties info) {
         throw new IllegalAccessError("TestContainer Driver should never get used directly");
     }
 

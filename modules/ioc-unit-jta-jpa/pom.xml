@@ -25,7 +25,6 @@
         <version.weld>5.1.0.Final</version.weld>
     </properties>
 
-
     <dependencies>
         <dependency>
             <groupId>jakarta.enterprise</groupId>
@@ -45,7 +44,6 @@
             <version>3.1.0</version>
             <scope>provided</scope>
         </dependency>
-
         <dependency>
             <groupId>org.jboss.narayana.jta</groupId>
             <artifactId>narayana-jta-jakarta</artifactId>
@@ -64,12 +62,11 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.hibernate</groupId>
+            <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-core</artifactId>
             <version>${version.org.hibernate}</version>
             <scope>compile</scope>
         </dependency>
-
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
@@ -78,20 +75,26 @@
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>1.17.6</version>
+            <artifactId>testcontainers</artifactId>
+            <version>1.21.3</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.postgresql</groupId>
+            <groupId>org.testcontainers</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.2.12</version>
+            <version>1.20.6</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>mariadb</artifactId>
-            <version>1.16.3</version>
+            <version>1.20.4</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.7.3</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -100,7 +103,6 @@
             <version>2.6.0</version>
             <scope>test</scope>
         </dependency>
-
 
         <!-- logging -->
         <dependency>

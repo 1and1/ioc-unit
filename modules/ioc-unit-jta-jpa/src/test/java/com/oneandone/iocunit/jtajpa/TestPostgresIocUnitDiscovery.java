@@ -16,9 +16,6 @@ import com.oneandone.iocunit.jtajpa.internal.EntityManagerFactoryFactory;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
 
-/**
- * @author aschoerk
- */
 @RunWith(IocUnitRunner.class)
 @SutClasses({EntityManagerFactoryFactory.class})
 @TestClasses({H2TestFactory.class, Q1Factory.class, Q2Factory.class})
@@ -31,7 +28,7 @@ public class TestPostgresIocUnitDiscovery extends TestBase {
                 .parse("postgres:14.6")
                 .asCompatibleSubstituteFor("postgres");
 
-        PostgreSQLContainer pgcontainer = new PostgreSQLContainer<>(postgresImage);
+        PostgreSQLContainer<?> pgcontainer = new PostgreSQLContainer<>(postgresImage);
         TestContainer testContainer = new TestContainer(pgcontainer);
         testContainer.start();
         return testContainer;
@@ -39,7 +36,7 @@ public class TestPostgresIocUnitDiscovery extends TestBase {
 
     @Test
     @Override
-    public void testWithThreeConnections() throws Exception {
+    public void testWithThreeConnections() {
 
     }
 

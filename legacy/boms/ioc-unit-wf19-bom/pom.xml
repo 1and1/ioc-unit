@@ -253,7 +253,7 @@
 
             <!-- jpa -modules -->
             <dependency>
-                <groupId>org.hibernate</groupId>
+                <groupId>org.hibernate.orm</groupId>
                 <artifactId>hibernate-core</artifactId>
                 <version>5.3.15.Final</version>
                 <scope>test</scope>
@@ -287,13 +287,13 @@
 
             <!-- validator -->
             <dependency>
-                <groupId>org.hibernate</groupId>
+                <groupId>org.hibernate.validator</groupId>
                 <artifactId>hibernate-validator</artifactId>
                 <version>6.0.18.Final</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>org.hibernate</groupId>
+                <groupId>org.hibernate.validator</groupId>
                 <artifactId>hibernate-validator-cdi</artifactId>
                 <version>6.0.18.Final</version>
                 <scope>test</scope>

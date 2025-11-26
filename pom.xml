@@ -58,7 +58,7 @@
         <!-- test -->
         <mockito.version>2.19.0</mockito.version>
         <!-- weld.version>1.1.14.Final</weld.version-->
-        <junit4.version>4.12</junit4.version>
+        <junit4.version>4.13.2</junit4.version>
         <junit5.version>5.7.2</junit5.version>
         <mockrunner.version>2.0.4</mockrunner.version>
         <version.cglib>3.2.5</version.cglib>
@@ -332,7 +332,10 @@
                 <version>${maven-surefire-plugin.version}</version>
                 <configuration>
                     <redirectTestOutputToFile>true</redirectTestOutputToFile>
-
+                    <!-- docker test container bug: https://github.com/testcontainers/testcontainers-java/issues/11212 -->
+                    <systemPropertyVariables>
+                        <api.version>1.44</api.version>
+                    </systemPropertyVariables>
                 </configuration>
             </plugin>
             <plugin>
