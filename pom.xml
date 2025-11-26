@@ -3,7 +3,7 @@
 
     <groupId>net.oneandone.ioc-unit</groupId>
     <artifactId>ioc-unit-parent</artifactId>
-    <version>4.0.4-SNAPSHOT</version>
+    <version>4.0.4</version>
     <packaging>pom</packaging>
 
     <name>net.oneandone.ioc-unit:ioc-unit-parent</name>
@@ -163,7 +163,7 @@
         <dependency>
             <groupId>net.oneandone.ioc-unit</groupId>
             <artifactId>weld4-starter</artifactId>
-            <version>4.0.4-SNAPSHOT</version>
+            <version>4.0.4</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -494,7 +494,7 @@
         <url>https://github.com/1and1/ioc-unit</url>
         <connection>scm:git:ssh://git@github.com/1and1/ioc-unit.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/1and1/ioc-unit.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>v4.0.4</tag>
     </scm>
     <issueManagement>
         <system>GitHub</system>
