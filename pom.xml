@@ -363,14 +363,29 @@
                             <goal>jar</goal>
                         </goals>
                         <configuration>
+                            <doclint>none</doclint>
                             <source>8</source>
+                            <additionalOptions>-Xdoclint:none</additionalOptions>
                         </configuration>
                     </execution>
                 </executions>
                 <configuration>
                     <detectOfflineLinks>false</detectOfflineLinks>
                     <failOnError>false</failOnError>
+                    <doclint>none</doclint>
+                    <additionalOptions>-Xdoclint:none</additionalOptions>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.basepom.maven</groupId>
