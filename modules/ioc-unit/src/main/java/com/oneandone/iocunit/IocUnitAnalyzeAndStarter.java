@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ServiceLoader;
 
-import jakarta.enterprise.inject.spi.BeanManager;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
@@ -20,6 +19,8 @@ import com.oneandone.cdi.weldstarter.spi.TestExtensionService;
 import com.oneandone.cdi.weldstarter.spi.WeldStarter;
 import com.oneandone.iocunit.analyzer.ConfigCreator;
 import com.oneandone.iocunit.analyzer.InitialConfiguration;
+
+import jakarta.enterprise.inject.spi.BeanManager;
 
 /**
  * @author aschoerk
@@ -127,6 +128,7 @@ public class IocUnitAnalyzeAndStarter {
                 weldStarter.tearDown();
             }
             weldStarter = null;
+            initBeanManager.set(null);
         }
     }
 
