@@ -49,7 +49,7 @@
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
             <property name="hibernate.id.new_generator_mappings" value="false"/>
-            <property name="jakarta.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
+            <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
             <property name="jakarta.persistence.jdbc.url"
                       value="jdbc:mysql://localhost:3407/test?autoReconnect=true&amp;useSSL=false"/>
             <property name="jakarta.persistence.jdbc.user" value="root"/>

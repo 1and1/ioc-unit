@@ -32,8 +32,7 @@
         <!-- WildFly 39 requires Java 17+ at runtime; align the build toolchain accordingly. -->
         <maven.compiler.release>17</maven.compiler.release>
         <junit4.version>4.13.2</junit4.version>
-        <slf4j.version>2.0.5</slf4j.version>
-        <logback.version>1.0.9</logback.version>
+        <logback.version>1.5.38</logback.version>
         <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
         <delta-spike.version>1.9.6</delta-spike.version>
         <maven-surefire-plugin.version>3.5.6</maven-surefire-plugin.version>
@@ -53,11 +52,6 @@
                 <version>${wildfly.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-api</artifactId>
-                <version>${slf4j.version}</version>
             </dependency>
             <dependency>
                 <groupId>ch.qos.logback</groupId>

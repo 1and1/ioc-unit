@@ -37,12 +37,11 @@
         <dependency>
             <groupId>com.rabbitmq</groupId>
             <artifactId>amqp-client</artifactId>
-            <version>5.16.0</version>
         </dependency>
         <dependency>
             <groupId>com.rabbitmq.jms</groupId>
             <artifactId>rabbitmq-jms</artifactId>
-            <version>3.1.0</version>
+            <version>3.7.0</version>
         </dependency>
         <!--dependency>
             <groupId>com.github.melowe</groupId>

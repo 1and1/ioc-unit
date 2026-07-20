@@ -16,6 +16,9 @@ import jakarta.inject.Inject;
 
 class DerivedClassTest extends TwoMethodTest {
 
+    @Inject
+    AppScopedBean2 appScopedBean2;
+
     @BeforeAll
     static void beforeAll() {
         testCalled = 0;
@@ -27,9 +30,6 @@ class DerivedClassTest extends TwoMethodTest {
         // check if super class tests (2), 6 repetitions and 2 params have been called
         assertEquals(10, testCalled);
     }
-
-    @Inject
-    AppScopedBean2 appScopedBean2;
 
     @RepeatedTest(6)
     void testRepetition() {

@@ -4,18 +4,24 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Objects;
+
+import jakarta.inject.Inject;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.oneandone.ejbcdiunit5.junit5.beans.AppScopedBean1;
 import com.oneandone.iocunit.IocJUnit5Extension;
 import com.oneandone.iocunit.analyzer.annotations.SutPackages;
 
-import jakarta.inject.Inject;
-
+/**
+ * I really don't understand the intention of this test. Is this testing CDI or Junit5 inheritance?
+ */
 @ExtendWith(IocJUnit5Extension.class)
 @SutPackages(AppScopedBean1.class)
 class TwoMethodTest {
@@ -33,8 +39,11 @@ class TwoMethodTest {
     }
 
     @AfterAll
-    static void afterAll() {
-        assertEquals(2, testCalled);
+    static void afterAll(TestInfo testInfo) {
+        Class<?> testClass = testInfo.getTestClass().orElse(null);
+        if (Objects.nonNull(testClass) && testClass == TwoMethodTest.class) {
+            assertEquals(2, testCalled);
+        }
     }
 
     @AfterEach

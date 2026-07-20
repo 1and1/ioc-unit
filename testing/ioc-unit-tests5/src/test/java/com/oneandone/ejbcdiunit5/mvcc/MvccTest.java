@@ -6,10 +6,7 @@ import static com.oneandone.ejbcdiunit5.mvcc.MvccTest.Mode.MYSQL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
-
-import javax.sql.DataSource;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -17,44 +14,29 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.oneandone.iocunit.IocJUnit5Extension;
 
-import ch.vorburger.exec.ManagedProcessException;
 import ch.vorburger.mariadb4j.DB;
 import ch.vorburger.mariadb4j.DBConfigurationBuilder;
 
-/**
- * @author aschoerk
- */
 @ExtendWith(IocJUnit5Extension.class)
 public class MvccTest {
 
     Mode mode = MYSQL;
-    private DataSource ds;
     private DB mariaDb;
-    private String mariaDbUrl;;
+    private String mariaDbUrl;
 
     String autoCommitFalse() {
-        switch (mode) {
-            case H2: {
-                return "set autocommit false";
-
-            }
-            case MYSQL: {
-                return "set autocommit = 0";
-
-            }
-            default:
-                throw new RuntimeException("unexpected dbms");
-        }
+        return switch (mode) {
+            case H2 -> "set autocommit false";
+            case MYSQL -> "set autocommit = 0";
+        };
     }
 
-    public Connection createConnection()
-            throws SQLException, ClassNotFoundException, IllegalAccessException, InstantiationException, ManagedProcessException {
+    public Connection createConnection() throws Exception {
         switch (mode) {
             case H2: {
                 Class.forName("org.h2.Driver");
-                Connection conn = DriverManager.getConnection("jdbc:h2:mem:testIntercepted;MODE=MySQL;MV_STORE=TRUE;DB_CLOSE_DELAY=1",
+                return DriverManager.getConnection("jdbc:h2:mem:testIntercepted;MODE=MySQL;MV_STORE=TRUE;DB_CLOSE_DELAY=1",
                         "sa", "");
-                return conn;
             }
             case MYSQL: {
                 if (mariaDb == null) {
@@ -63,9 +45,8 @@ public class MvccTest {
                     mariaDb.start();
                     mariaDbUrl = config.getURL("test");
                 }
-                Object i = Class.forName("com.mysql.jdbc.Driver").newInstance();
-                Connection conn = DriverManager.getConnection(mariaDbUrl, "root", "");
-                return conn;
+                Class.forName("org.mariadb.jdbc.Driver").getDeclaredConstructor().newInstance();
+                return DriverManager.getConnection(mariaDbUrl, "root", "");
             }
             default:
                 throw new RuntimeException("unexpected dbms");
@@ -74,7 +55,7 @@ public class MvccTest {
 
     }
 
-    public void initDb() throws SQLException, ClassNotFoundException, IllegalAccessException, ManagedProcessException, InstantiationException {
+    public void initDb() throws Exception {
 
         try (Connection conn = createConnection()) {
             try (Statement stmt = conn.createStatement()) {
@@ -89,19 +70,19 @@ public class MvccTest {
     }
 
     @Test
-    public void testH2() throws SQLException, ClassNotFoundException, IllegalAccessException, ManagedProcessException, InstantiationException {
+    public void testH2() throws Exception {
         mode = H2;
         initDb();
         try (Connection conn1 = createConnection();
                 Connection conn2 = createConnection();
                 Statement stmt1 = conn1.createStatement();
-                Statement stmt2 = conn2.createStatement();) {
+                Statement stmt2 = conn2.createStatement()) {
             stmt1.execute(autoCommitFalse());
             stmt2.execute(autoCommitFalse());
             try (ResultSet res = stmt2.executeQuery("select * from a")) {
-                Assertions.assertEquals(res.first(), true);
-                Assertions.assertEquals(res.next(), true);
-                Assertions.assertEquals(res.next(), false);
+                Assertions.assertTrue(res.next());
+                Assertions.assertTrue(res.next());
+                Assertions.assertFalse(res.next());
             }
 
             stmt1.execute("insert into a (a) values (1)");
@@ -109,35 +90,33 @@ public class MvccTest {
             stmt1.execute("commit");
             try (ResultSet res = stmt2.executeQuery("select * from a")) {
 
-                Assertions.assertEquals(res.first(), true);
-                Assertions.assertEquals(res.next(), true);
-                Assertions.assertEquals(res.next(), true); // that's wrong changes on connection
+                Assertions.assertTrue(res.next());
+                Assertions.assertTrue(res.next());
+                Assertions.assertTrue(res.next()); // that's wrong changes on connection
                                                        // 1 should be visible after commit
-                Assertions.assertEquals(res.next(), true); // that's wrong
-                Assertions.assertEquals(res.next(), false);
+                Assertions.assertTrue(res.next()); // that's wrong
+                Assertions.assertFalse(res.next());
             }
             stmt2.execute("commit");
             try (ResultSet res = stmt2.executeQuery("select * from a")) {
 
-                Assertions.assertEquals(res.first(), true);
-                Assertions.assertEquals(res.next(), true);
-                Assertions.assertEquals(res.next(), true);
-                Assertions.assertEquals(res.next(), true);
-                Assertions.assertEquals(res.next(), false);
+                Assertions.assertTrue(res.first());
+                Assertions.assertTrue(res.next());
+                Assertions.assertTrue(res.next());
+                Assertions.assertTrue(res.next());
+                Assertions.assertFalse(res.next());
             }
-
-
         }
     }
 
     @Test
-    public void testMariaDb() throws SQLException, ClassNotFoundException, IllegalAccessException, ManagedProcessException, InstantiationException {
+    public void testMariaDb() throws Exception {
         mode = MYSQL;
         initDb();
         try (Connection conn1 = createConnection();
                 Connection conn2 = createConnection();
                 Statement stmt1 = conn1.createStatement();
-                Statement stmt2 = conn2.createStatement();) {
+                Statement stmt2 = conn2.createStatement()) {
             stmt1.execute(autoCommitFalse());
             stmt2.execute(autoCommitFalse());
             stmt2.execute("select 1 from b");
@@ -147,21 +126,19 @@ public class MvccTest {
             stmt1.execute("commit");
             try (ResultSet res = stmt2.executeQuery("select * from a")) {
 
-                Assertions.assertEquals(res.first(), true);
-                Assertions.assertEquals(res.next(), true);
-                Assertions.assertEquals(res.next(), false);
+                Assertions.assertTrue(res.next());
+                Assertions.assertTrue(res.next());
+                Assertions.assertFalse(res.next());
             }
             stmt2.execute("commit");
             try (ResultSet res = stmt2.executeQuery("select * from a")) {
 
-                Assertions.assertEquals(res.first(), true);
-                Assertions.assertEquals(res.next(), true);
-                Assertions.assertEquals(res.next(), true);
-                Assertions.assertEquals(res.next(), true);
-                Assertions.assertEquals(res.next(), false);
+                Assertions.assertTrue(res.next());
+                Assertions.assertTrue(res.next());
+                Assertions.assertTrue(res.next());
+                Assertions.assertTrue(res.next());
+                Assertions.assertFalse(res.next());
             }
-
-
         }
     }
 
