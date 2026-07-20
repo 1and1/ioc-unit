@@ -4,6 +4,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 
+import java.util.Objects;
+
 import jakarta.annotation.Resource;
 import jakarta.ejb.EJB;
 import jakarta.ejb.EJBException;
@@ -100,7 +102,7 @@ public class TestBaseClass {
         }
         try {
             userTransaction.commit();
-            if (expected == orgCount) {
+            if (Objects.equals(expected, orgCount)) {
                 throw new RuntimeException("Expected RollbackException");
             }
         } catch (RollbackException rbx) {
@@ -110,7 +112,7 @@ public class TestBaseClass {
         } catch (AssertionError aserr) {
             throw aserr;
         } catch (Throwable thw) {
-            throw new RuntimeException("expected no expception to be catched anymore");
+            throw new RuntimeException("expected no exception to be caught anymore");
         }
         assertThat(countEntities(), is(expected));
 

@@ -295,7 +295,74 @@ What do we need to be able to achieve this?
 
 # Usage
 
+## Dependency management (BOM-first)
+
+ioc-unit is meant to be used inside a project that is already built against a WildFly
+version, and it deliberately does **not** pin the versions of the Jakarta EE APIs,
+Hibernate, RESTEasy, etc. that it compiles against - it only declares them with
+`<scope>provided</scope>`. That means your application's own WildFly BOM imports are what
+actually decide which Jakarta/Hibernate/RESTEasy versions end up on the test classpath, so
+there is no duplicate/conflicting version of these libraries shipped transitively by
+ioc-unit itself.
+
+Import both BOMs in your project's `dependencyManagement` (order matters: your WildFly
+BOMs first, then the ioc-unit BOM):
+
+```XML
+<dependencyManagement>
+    <dependencies>
+        <!-- Pins every Jakarta EE / Hibernate / RESTEasy / etc. version to match a real
+             WildFly 39 runtime. -->
+        <dependency>
+            <groupId>org.wildfly.bom</groupId>
+            <artifactId>wildfly-ee-with-tools</artifactId>
+            <version>39.0.1.Final</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wildfly.bom</groupId>
+            <artifactId>wildfly-expansion-with-tools</artifactId>
+            <version>39.0.1.Final</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+
+        <!-- Pins every net.oneandone.ioc-unit:* artifact to one consistent version. -->
+        <dependency>
+            <groupId>net.oneandone.ioc-unit</groupId>
+            <artifactId>ioc-unit-bom</artifactId>
+            <version>${ioc-unit.version}</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
+```
+
+Then declare the modules you need, without repeating a version (it comes from the BOM
+above), and normally scoped `test`:
+
+```XML
+<dependency>
+    <groupId>net.oneandone.ioc-unit</groupId>
+    <artifactId>ioc-unit</artifactId>
+    <scope>test</scope>
+</dependency>
+```
+
+Notes:
+* Weld (`org.jboss.weld:*`) is **not** part of the WildFly BOM (it is a container-internal
+  detail), so ioc-unit still pins its own Weld version internally. This only affects
+  ioc-unit's own build/test classpath, not yours.
+* `jakarta.el` is intentionally still pinned by ioc-unit's `provided`/`test` scoped
+  dependencies rather than taken from the WildFly BOM, since WildFly manages EL under a
+  different artifact (`org.jboss.spec.jakarta.el:jboss-el-api_5.0_spec`) than the
+  `jakarta.el:jakarta.el-api` / `org.glassfish:jakarta.el` GAs used here.
+* Requires Java 17+ and Maven 3.8+ (enforced by the reactor's `maven-enforcer-plugin`).
+
 The usage does not differ very much from cdi-unit:
+
 
 * You need to include additionally:    
 

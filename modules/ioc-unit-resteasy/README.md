@@ -57,24 +57,23 @@ To do so the JaxRS-Classes must either get included as SutClasses or explicitly 
 
 ### pom.xml
 
-To support jaxrs to gether with json-marshalling:
+Import the WildFly BOMs and the `ioc-unit-bom` in your `dependencyManagement` (see the
+[root README](../../README.md#dependency-management-bom-first) for the full snippet), then
+declare, without any explicit version:
 
-    <parent>
+    <dependency>
         <groupId>net.oneandone.ioc-unit</groupId>
         <artifactId>ioc-unit-resteasy</artifactId>
-        <version>${version.ioc-unit}</version>
-        <scope>test</scope>
-    </parent>
-    <dependency>
-        <groupId>org.jboss.resteasy</groupId>
-        <artifactId>resteasy-jaxrs</artifactId>
-        <version>${resteasy.version}</version>
         <scope>test</scope>
     </dependency>
     <dependency>
         <groupId>org.jboss.resteasy</groupId>
-        <artifactId>resteasy-jackson-provider</artifactId>
-        <version>${resteasy.version}</version>
+        <artifactId>resteasy-core</artifactId>
+        <scope>test</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.jboss.resteasy</groupId>
+        <artifactId>resteasy-jackson2-provider</artifactId>
         <scope>test</scope>
     </dependency>
 
@@ -110,12 +109,12 @@ The Initial Configuration will make sure that the RestResources and Providers
 
 ### pom.xml
 
-        <dependency>
-            <groupId>io.rest-assured</groupId>
-            <artifactId>rest-assured</artifactId>
-            <version>${rest-assured.version}</version>
-            <scope>test</scope>
-        </dependency>
+    <dependency>
+        <groupId>io.rest-assured</groupId>
+        <artifactId>rest-assured</artifactId>
+        <version>${rest-assured.version}</version>
+        <scope>test</scope>
+    </dependency>
 
 
 

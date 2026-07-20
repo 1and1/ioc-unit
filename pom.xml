@@ -29,27 +29,32 @@
 
 
     <properties>
+        <!-- WildFly platform alignment: Jakarta specs, Hibernate, RESTEasy, Narayana etc.
+             are managed by the imported WildFly BOMs below and must not be re-pinned here. -->
+        <wildfly.version>39.0.1.Final</wildfly.version>
         <!--maven.javadoc.skip>true</maven.javadoc.skip-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- apache plugin versions and configurations, please sort alphabetically -->
-        <maven-checkstyle-plugin.version>3.1.1</maven-checkstyle-plugin.version>
+        <maven-checkstyle-plugin.version>3.6.0</maven-checkstyle-plugin.version>
         <maven-checkstyle-plugin.configLocation>site/checkstyle.xml</maven-checkstyle-plugin.configLocation>
         <maven-checkstyle-plugin.suppressionsLocation>checkstyle_suppressions.xml</maven-checkstyle-plugin.suppressionsLocation>
-        <maven-dependency-plugin.version>3.1.2</maven-dependency-plugin.version>
-        <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
-        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
-        <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
-        <maven-javadoc-plugin.version>3.2.0</maven-javadoc-plugin.version>
+        <maven-dependency-plugin.version>3.6.1</maven-dependency-plugin.version>
+        <maven-deploy-plugin.version>3.1.4</maven-deploy-plugin.version>
+        <maven-compiler-plugin.version>3.14.1</maven-compiler-plugin.version>
+        <!-- WildFly 39 requires Java 17+ at runtime; align the build toolchain accordingly. -->
+        <maven.compiler.release>17</maven.compiler.release>
+        <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
+        <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
 
-        <maven-scm-plugin.version>1.9.5</maven-scm-plugin.version>
-        <maven-scm-publish-plugin.version>3.0.0</maven-scm-publish-plugin.version>
-        <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
-        <maven-resources-plugin.version>3.1.0</maven-resources-plugin.version>
-        <maven-site-plugin.version>3.9.0</maven-site-plugin.version>
-        <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
-        <maven-surefire-plugin.version>3.0.0-M7</maven-surefire-plugin.version>
-        <maven-war-plugin.version>3.2.3</maven-war-plugin.version>
+        <maven-scm-plugin.version>2.2.1</maven-scm-plugin.version>
+        <maven-scm-publish-plugin.version>3.3.0</maven-scm-publish-plugin.version>
+        <maven-release-plugin.version>3.3.1</maven-release-plugin.version>
+        <maven-resources-plugin.version>3.5.0</maven-resources-plugin.version>
+        <maven-site-plugin.version>3.22.0</maven-site-plugin.version>
+        <maven-source-plugin.version>3.4.0</maven-source-plugin.version>
+        <maven-surefire-plugin.version>3.5.6</maven-surefire-plugin.version>
+        <maven-war-plugin.version>3.5.1</maven-war-plugin.version>
 
         <!-- external -->
         <slf4j.version>1.7.25</slf4j.version>
@@ -81,27 +86,16 @@
         <version.cdi-api>2.0</version.cdi-api>
         <additionalparam>-Xdoclint:none</additionalparam>
 
-        <compile.version.cdi-api>4.0.0</compile.version.cdi-api>
-        <compile.version.transaction-api>2.0.1</compile.version.transaction-api>
-        <compile.version.ejb-api>4.0.1</compile.version.ejb-api>
-        <compile.version.interceptor-api>2.1.0</compile.version.interceptor-api>
-        <compile.version.servlet-api>6.0.0</compile.version.servlet-api>
+        <!-- Weld is not part of the WildFly BOM (container-internal); keep pinned. -->
         <compile.version.weld-spi>5.0.SP3</compile.version.weld-spi>
         <compile.version.weld-api>5.0.SP3</compile.version.weld-api>
-        <compile.version.persistence-api>3.1.0</compile.version.persistence-api>
-        <compile.version.faces-api>4.0.1</compile.version.faces-api>
-        <compile.version.bind-api>4.0.0</compile.version.bind-api>
-        <compile.version.jms-api>3.1.0</compile.version.jms-api>
+        <!-- jakarta.el:jakarta.el-api is NOT managed under this GA by the WildFly BOM
+             (WildFly manages org.jboss.spec.jakarta.el:jboss-el-api_5.0_spec instead),
+             so it stays explicitly pinned where used. -->
 
         <weld.version>5.1.0.Final</weld.version>
         <weld-spi.version>5.0.SP3</weld-spi.version>
-        <version.org.hibernate>6.1.5.Final</version.org.hibernate>
-        <version.org.hibernate.validator>8.0.0.Final</version.org.hibernate.validator>
-        <version.org.hibernate.validator-cdi>8.0.0.Final</version.org.hibernate.validator-cdi>
-        <version.validation-api>3.0.2</version.validation-api>
         <version.cdi-api>4.0.0</version.cdi-api>
-        <version.javaee-api>10.0</version.javaee-api>
-        <version.resteasy>6.2.1.Final</version.resteasy>
         <surefire-argline>
             -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5006
         </surefire-argline>
@@ -136,6 +130,7 @@
         </profile>
     </profiles>
     <modules>
+        <module>boms/ioc-unit-bom</module>
         <module>weld-starter</module>
         <module>modules/ioc-unit-analyzer</module>
         <module>modules/ioc-unit</module>
@@ -148,113 +143,86 @@
         <module>modules/ioc-unit-ejb</module>
         <module>modules/ioc-unit-dep-impls</module>
         <module>modules/ioc-unit-contexts</module>
-        <!--module>modules/ioc-unit-dbunit</module>
-        <module>modules/ioc-unit-simulators</module-->
-
         <module>testing</module>
     </modules>
 
-    <dependencies>
-        <dependency>
-            <groupId>net.oneandone.ioc-unit</groupId>
-            <artifactId>weld-starter-base</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>net.oneandone.ioc-unit</groupId>
-            <artifactId>weld4-starter</artifactId>
-            <version>5.0.0-SNAPSHOT</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-params</artifactId>
-            <version>${junit5.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>${junit5.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>${junit5.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest</artifactId>
-            <version>${hamcrest.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.maven.surefire</groupId>
-            <artifactId>surefire-logger-api</artifactId>
-            <version>2.21.0</version>
-            <!-- to get around bug https://github.com/junit-team/junit5/issues/1367 -->
-            <scope>test</scope>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>jakarta.enterprise</groupId>
-            <artifactId>jakarta.enterprise.cdi-api</artifactId>
-            <version>4.0.1</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>jakarta.annotation</groupId>
-            <artifactId>jakarta.annotation-api</artifactId>
-            <version>2.1.1</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>jakarta.validation</groupId>
-            <artifactId>jakarta.validation-api</artifactId>
-            <version>3.0.2</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>jakarta.interceptor</groupId>
-            <artifactId>jakarta.interceptor-api</artifactId>
-            <version>2.1.0</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>jakarta.ejb</groupId>
-            <artifactId>jakarta.ejb-api</artifactId>
-            <version>4.0.1</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>jakarta.transaction</groupId>
-            <artifactId>jakarta.transaction-api</artifactId>
-            <version>2.0.1</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>jakarta.inject</groupId>
-            <artifactId>jakarta.inject-api</artifactId>
-            <version>2.0.1</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.weld</groupId>
-            <artifactId>weld-spi</artifactId>
-            <version>5.0.SP3</version>
-            <scope>provided</scope>
-        </dependency>
-    </dependencies>
-
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.wildfly.bom</groupId>
+                <artifactId>wildfly-ee-with-tools</artifactId>
+                <version>${wildfly.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.wildfly.bom</groupId>
+                <artifactId>wildfly-expansion-with-tools</artifactId>
+                <version>${wildfly.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- Internal modules -->
+            <dependency>
+                <groupId>net.oneandone.ioc-unit</groupId>
+                <artifactId>weld-starter-base</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.oneandone.ioc-unit</groupId>
+                <artifactId>weld4-starter</artifactId>
+                <version>${project.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <!-- testing -->
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-params</artifactId>
+                <version>${junit5.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-api</artifactId>
+                <version>${junit5.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-engine</artifactId>
+                <version>${junit5.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.hamcrest</groupId>
+                <artifactId>hamcrest</artifactId>
+                <version>${hamcrest.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.maven.surefire</groupId>
+                <artifactId>surefire-logger-api</artifactId>
+                <version>2.21.0</version>
+                <!-- to get around bug https://github.com/junit-team/junit5/issues/1367 -->
+                <scope>test</scope>
+                <optional>true</optional>
+            </dependency>
+
+            <!-- Jakarta specs (jakarta.enterprise.cdi-api, jakarta.annotation-api, jakarta.validation-api,
+                 jakarta.interceptor-api, jakarta.ejb-api, jakarta.transaction-api, jakarta.inject-api, etc.)
+                 are intentionally NOT listed here: their versions are supplied transitively by the imported
+                 WildFly BOMs above. Each module declares the specs it actually uses (scope "provided",
+                 no <version>) and picks up the version from the BOM import. -->
+            <!-- Weld is not part of the WildFly BOM (container-internal); keep pinned. -->
+            <dependency>
+                <groupId>org.jboss.weld</groupId>
+                <artifactId>weld-spi</artifactId>
+                <version>${weld-spi.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            
             <!-- logging -->
             <dependency>
                 <groupId>org.slf4j</groupId>
@@ -307,15 +275,61 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.6.3</version>
+                <executions>
+                    <execution>
+                        <id>enforce-build-environment</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireJavaVersion>
+                                    <version>[17,)</version>
+                                </requireJavaVersion>
+                                <requireMavenVersion>
+                                    <version>[3.8.0,)</version>
+                                </requireMavenVersion>
+                                <!-- Fails the build on conflicting transitive versions instead of
+                                     silently letting Maven's "nearest wins" pick one - this is what
+                                     protects consumers from the double-BOM leakage this migration
+                                     fixes from recurring silently in the future. -->
+                                <dependencyConvergence/>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven-compiler-plugin.version}</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                    <jdkToolchain>
-                        <version>10</version>
-                    </jdkToolchain>
+                    <release>${maven.compiler.release}</release>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>${maven-dependency-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>analyze-only</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>analyze-only</goal>
+                        </goals>
+                        <configuration>
+                            <!-- Flags declared-but-unused and used-but-undeclared dependencies -
+                                 the classic source of accidental transitive leakage. Reports only
+                                 for now (failOnWarning=false) since the reactor hasn't been fully
+                                 swept yet; tighten to true once clean. -->
+                            <failOnWarning>false</failOnWarning>
+                            <ignoreNonCompile>true</ignoreNonCompile>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -364,7 +378,7 @@
                         </goals>
                         <configuration>
                             <doclint>none</doclint>
-                            <source>8</source>
+                            <source>${maven.compiler.release}</source>
                             <additionalOptions>-Xdoclint:none</additionalOptions>
                         </configuration>
                     </execution>
