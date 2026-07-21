@@ -47,8 +47,30 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <!-- Explicit scope override: the root pom's dependencyManagement pins weld-spi at
+                 scope "provided" for modules (like ioc-unit-ejb) that are meant to run inside a
+                 real container which already supplies Weld's SPI classes. weld4-starter bootstraps
+                 a *standalone* Weld SE engine in the test JVM - nothing else supplies weld-spi at
+                 runtime - so it must be a real (non-provided) dependency here, matching its
+                 sibling weld-se-core/weld-core-impl/weld-web/weld-jta dependencies below, so it
+                 transitively reaches any consumer that depends on weld4-starter for testing. -->
             <groupId>org.jboss.weld</groupId>
             <artifactId>weld-spi</artifactId>
+            <version>5.0.SP3</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <!-- Same reasoning as weld-spi above: ioc-unit/ioc-unit-contexts/ioc-unit-resteasy
+                 declare weld-api as "provided" (correct for real-container use), but nothing
+                 supplies it when weld4-starter bootstraps a standalone Weld SE engine. Without
+                 this, classes like org.jboss.weld.context.api.ContextualInstance,
+                 org.jboss.weld.context.bound.BoundRequestContext and
+                 org.jboss.weld.context.http.HttpRequestContext are missing at runtime, causing
+                 NoClassDefFoundError during Weld container startup. -->
+            <groupId>org.jboss.weld</groupId>
+            <artifactId>weld-api</artifactId>
+            <version>5.0.SP3</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.jboss.weld.se</groupId>

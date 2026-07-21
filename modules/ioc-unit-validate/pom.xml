@@ -65,32 +65,52 @@
             <version>${project.version}</version>
         </dependency>
 
+        <!-- This module's whole purpose is to build a real jakarta.validation ValidatorFactory
+             for standalone (non-container) tests, so hibernate-validator/-cdi and a working EL
+             stack are not optional test tooling - they are required at real (compile) scope for
+             ioc-unit-validate itself to function. "provided" was previously used here to mirror
+             the assumption that a real WildFly container supplies these, but that assumption
+             breaks for weld4-starter's standalone Weld SE bootstrap, where nothing else supplies
+             them - the same reasoning already applied to weld-spi/weld-api in weld4-starter.
+             Note "optional" is intentionally NOT used on hibernate-validator-cdi: an optional
+             dependency never flows transitively regardless of scope, which would silently
+             re-introduce this exact gap for any consumer. -->
         <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator-cdi</artifactId>
-            <scope>provided</scope>
-            <optional>true</optional>
+            <scope>compile</scope>
         </dependency>
         <!-- jakarta.el:jakarta.el-api and org.glassfish:jakarta.el are not managed under
              these GAs by the WildFly BOM (WildFly manages
-             org.jboss.spec.jakarta.el:jboss-el-api_5.0_spec instead), so they stay pinned. -->
+             org.jboss.spec.jakarta.el:jboss-el-api_5.0_spec instead), so they stay pinned.
+             Together these two supply both the EL API (jakarta.el.ELManager, required by
+             Hibernate Validator's ResourceBundleMessageInterpolator) and a real EL
+             ExpressionFactory implementation (com.sun.el.ExpressionFactoryImpl) - both
+             needed at real (compile) scope for the same standalone-bootstrap reason as above. -->
         <dependency>
             <groupId>jakarta.el</groupId>
             <artifactId>jakarta.el-api</artifactId>
             <version>5.0.1</version>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.glassfish</groupId>
             <artifactId>jakarta.el</artifactId>
-            <!--version>3.0.3.jbossorg-2</version--> <!-- not available on maven central -->
             <version>4.0.2</version>
-            <scope>provided</scope>
+            <scope>compile</scope>
+            <exclusions>
+                <!-- Avoid a dependency-convergence conflict with our own jakarta.el-api:5.0.1
+                     pin above; this artifact's own transitive is an older 4.0.0. -->
+                <exclusion>
+                    <groupId>jakarta.el</groupId>
+                    <artifactId>jakarta.el-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- logging -->

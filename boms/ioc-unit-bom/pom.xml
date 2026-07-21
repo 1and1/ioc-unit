@@ -1,13 +1,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>net.oneandone.ioc-unit</groupId>
-        <artifactId>ioc-unit-parent</artifactId>
-        <version>5.0.0-SNAPSHOT</version>
-        <relativePath>../../pom.xml</relativePath>
-    </parent>
 
+    <!-- Intentionally has NO <parent>. A BOM must be the sole, complete source of truth for
+         what it exposes: if it inherited ioc-unit-parent's <dependencyManagement>, every entry
+         there (junit, jakarta specs, wildfly boms, mockito, hamcrest, logback, javassist, ...)
+         would leak into any consumer that imports this BOM - exactly what happened before this
+         was split out. This mirrors how spring-boot-dependencies, quarkus-bom,
+         testcontainers-bom and org.junit:junit-bom are published (no parent). -->
+    <groupId>net.oneandone.ioc-unit</groupId>
     <artifactId>ioc-unit-bom</artifactId>
+    <version>5.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>net.oneandone.ioc-unit:ioc-unit-bom</name>
@@ -17,7 +19,10 @@
         without pinning versions of the WildFly/Jakarta APIs that ioc-unit itself only
         requires as "provided". Those must keep coming from the consumer's own WildFly BOM
         (org.wildfly.bom:wildfly-ee-with-tools / wildfly-expansion-with-tools) so no
-        duplicate/conflicting Jakarta or Hibernate versions end up on the classpath.
+        duplicate/conflicting Jakarta or Hibernate versions end up on the classpath. Likewise,
+        junit/mockito/hamcrest/logback/javassist are the ioc-unit reactor's own build/test
+        dependencies and are deliberately NOT re-exposed here - consumers own their own test
+        stack versions.
     </description>
     <url>https://github.com/1and1/ioc-unit</url>
 
@@ -28,38 +33,90 @@
         </license>
     </licenses>
 
+    <developers>
+        <developer>
+            <name>Fahad Aizaz</name>
+            <email>fahad.aizaz@1und1.de</email>
+            <organization>1und1</organization>
+            <organizationUrl>https://www.1und1.de/</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <url>https://github.com/1and1/ioc-unit</url>
+        <connection>scm:git:ssh://git@github.com/1and1/ioc-unit.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/1and1/ioc-unit.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/1and1/ioc-unit/issues/</url>
+    </issueManagement>
+    <inceptionYear>2017</inceptionYear>
+
+    <distributionManagement>
+        <repository>
+            <id>sonatype-nexus-staging</id>
+            <url>https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/</url>
+        </repository>
+        <snapshotRepository>
+            <uniqueVersion>true</uniqueVersion>
+            <id>artifactory-snapshots</id>
+            <name>access-snapshot</name>
+            <url>https://artifactory.1and1.org/artifactory/access-snapshot</url>
+        </snapshotRepository>
+    </distributionManagement>
+
     <dependencyManagement>
         <dependencies>
+            <!-- Every entry below is deliberately pinned at scope "test": ioc-unit is exclusively
+                 a testing framework (see each module's own description) with no production/runtime
+                 use case, so a consumer's bare <dependency> (without its own scope override) should
+                 default to "test" rather than silently falling back to Maven's default "compile"
+                 and leaking test-framework jars into the production classpath/WAR. This is a
+                 deliberate deviation from the usual "BOMs only pin versions, not scopes" convention
+                 (e.g. org.junit:junit-bom, testcontainers-bom don't set scope) - justified here
+                 because, unlike junit/testcontainers, none of these artifacts have a valid
+                 non-test use case. A consumer's own explicit <scope> in its <dependency>
+                 declaration always takes precedence over this default. -->
+
             <!-- core -->
             <dependency>
                 <groupId>net.oneandone.ioc-unit</groupId>
                 <artifactId>ioc-unit</artifactId>
                 <version>${project.version}</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>net.oneandone.ioc-unit</groupId>
                 <artifactId>ioc-unit-analyzer</artifactId>
                 <version>${project.version}</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>net.oneandone.ioc-unit</groupId>
                 <artifactId>ioc-unit-resource</artifactId>
                 <version>${project.version}</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>net.oneandone.ioc-unit</groupId>
                 <artifactId>ioc-unit-contexts</artifactId>
                 <version>${project.version}</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>net.oneandone.ioc-unit</groupId>
                 <artifactId>ioc-unit-mockseasy</artifactId>
                 <version>${project.version}</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>net.oneandone.ioc-unit</groupId>
                 <artifactId>ioc-unit-validate</artifactId>
                 <version>${project.version}</version>
+                <scope>test</scope>
             </dependency>
 
             <!-- integrations -->
@@ -67,36 +124,43 @@
                 <groupId>net.oneandone.ioc-unit</groupId>
                 <artifactId>ioc-unit-jta-jpa</artifactId>
                 <version>${project.version}</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>net.oneandone.ioc-unit</groupId>
                 <artifactId>ioc-unit-resteasy</artifactId>
                 <version>${project.version}</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>net.oneandone.ioc-unit</groupId>
                 <artifactId>ioc-unit-jms</artifactId>
                 <version>${project.version}</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>net.oneandone.ioc-unit</groupId>
                 <artifactId>ioc-unit-ejb</artifactId>
                 <version>${project.version}</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>net.oneandone.ioc-unit</groupId>
                 <artifactId>ioc-unit-jms-artemisactivemq</artifactId>
                 <version>${project.version}</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>net.oneandone.ioc-unit</groupId>
                 <artifactId>ioc-unit-jms-mockrunner</artifactId>
                 <version>${project.version}</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>net.oneandone.ioc-unit</groupId>
                 <artifactId>ioc-unit-jms-rabbitmq</artifactId>
                 <version>${project.version}</version>
+                <scope>test</scope>
             </dependency>
 
             <!-- weld-starter (independently versioned reactor, same ${project.version} today) -->
@@ -104,32 +168,18 @@
                 <groupId>net.oneandone.ioc-unit</groupId>
                 <artifactId>weld-starter-base</artifactId>
                 <version>${project.version}</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>net.oneandone.ioc-unit</groupId>
                 <artifactId>weld4-starter</artifactId>
                 <version>${project.version}</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
 
-    <build>
-        <plugins>
-            <!-- A BOM has no sources; skip plugins that assume a jar build. -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <configuration>
-                    <skipSource>true</skipSource>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+    <!-- No <build> section needed: packaging=pom has no default source-jar/javadoc lifecycle
+         bindings, and those plugin executions are no longer inherited now that this POM has no
+         parent, so there is nothing to skip. -->
 </project>

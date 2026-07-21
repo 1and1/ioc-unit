@@ -66,20 +66,17 @@ declare, without any explicit version:
         <artifactId>ioc-unit-resteasy</artifactId>
         <scope>test</scope>
     </dependency>
-    <dependency>
-        <groupId>org.jboss.resteasy</groupId>
-        <artifactId>resteasy-core</artifactId>
-        <scope>test</scope>
-    </dependency>
-    <dependency>
-        <groupId>org.jboss.resteasy</groupId>
-        <artifactId>resteasy-jackson2-provider</artifactId>
-        <scope>test</scope>
-    </dependency>
+
+That's it — `resteasy-core`, `resteasy-client`, `resteasy-jackson2-provider`,
+`resteasy-validator-provider`, `reactive-streams` and `json-patch` are pulled in automatically at
+`compile` scope by `ioc-unit-resteasy` itself, so REST dispatch/marshalling/validation work in a
+standalone Weld SE test JVM without you declaring any of them yourself. You do **not** need to
+add `resteasy-core`/`resteasy-jackson2-provider` to your own pom.
 
 ## Restassured included
 
-if restassured can be found by ioc-unit-resteasy in the test-classpath, it can be used in the testcode.
+`rest-assured` is also pulled in automatically at `compile` scope by `ioc-unit-resteasy` — no
+extra dependency or explicit version is needed in your own pom to use it in testcode.
 
 * **But**: Make sure not to override the RestAssuredConfig. 
 The Initial Configuration will make sure that the RestResources and Providers
@@ -104,17 +101,6 @@ The Initial Configuration will make sure that the RestResources and Providers
                     .get("/restpath/method1");
         }
      }
-
-
-
-### pom.xml
-
-    <dependency>
-        <groupId>io.rest-assured</groupId>
-        <artifactId>rest-assured</artifactId>
-        <version>${rest-assured.version}</version>
-        <scope>test</scope>
-    </dependency>
 
 
 

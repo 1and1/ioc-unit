@@ -33,59 +33,23 @@ public class ValidationTest {
 }
 ```
 
-In case of javaee-7.x necessary dependencies in pom when using hibernate-validater:
-```XML
-        <dependency>
-           <groupId>net.oneandone.ioc-unit</groupId>
-           <artifactId>ioc-unit-validate</artifactId>
-           <version>2.0.18</version>
-           <scope>test</scope>
-       </dependency>              
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-validator</artifactId>
-            <version>5.3.1.Final</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-validator-cdi</artifactId>
-            <version>5.3.1.Final</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>jakarta.el</artifactId>
-            <version>3.0.3</version>
-            <scope>test</scope>
-        </dependency>
-``` 
+## pom.xml
 
+Import the WildFly BOMs and the `ioc-unit-bom` in your `dependencyManagement` (see the
+[root README](../../README.md#dependency-management-bom-first) for the full snippet), then
+declare, without any explicit version:
 
-In case of javaee-8.x necessary dependencies in pom when using hibernate-validater:
 ```XML
-        <dependency>
-           <groupId>net.oneandone.ioc-unit</groupId>
-           <artifactId>ioc-unit-validate</artifactId>
-           <version>2.0.18</version>
-           <scope>test</scope>
-       </dependency>              
-       <dependency>
-          <groupId>org.hibernate</groupId>
-          <artifactId>hibernate-validator</artifactId>
-          <version>6.1.0.Final</version>
-          <scope>test</scope>
-      </dependency>
-      <dependency>
-          <groupId>org.hibernate</groupId>
-          <artifactId>hibernate-validator-cdi</artifactId>
-          <version>6.1.0.Final</version>
-          <scope>test</scope>
-      </dependency>
-        <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>jakarta.el</artifactId>
-            <version>3.0.3</version>
-            <scope>test</scope>
-        </dependency>
-``` 
+<dependency>
+   <groupId>net.oneandone.ioc-unit</groupId>
+   <artifactId>ioc-unit-validate</artifactId>
+   <scope>test</scope>
+</dependency>
+```
+
+That's it — `hibernate-validator`, `hibernate-validator-cdi`, and a working EL implementation
+(`jakarta.el:jakarta.el-api` + `org.glassfish:jakarta.el`) are pulled in automatically at
+`compile` scope by `ioc-unit-validate` itself, so a standalone Weld SE test JVM (which, unlike a
+real WildFly container, has nothing else to supply these) has everything it needs to build a
+real `jakarta.validation.ValidatorFactory`. You do **not** need to declare
+`hibernate-validator`/`hibernate-validator-cdi`/`jakarta.el` yourself.

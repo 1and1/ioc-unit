@@ -298,12 +298,24 @@ What do we need to be able to achieve this?
 ## Dependency management (BOM-first)
 
 ioc-unit is meant to be used inside a project that is already built against a WildFly
-version, and it deliberately does **not** pin the versions of the Jakarta EE APIs,
-Hibernate, RESTEasy, etc. that it compiles against - it only declares them with
-`<scope>provided</scope>`. That means your application's own WildFly BOM imports are what
-actually decide which Jakarta/Hibernate/RESTEasy versions end up on the test classpath, so
-there is no duplicate/conflicting version of these libraries shipped transitively by
+version. Most Jakarta EE APIs, Hibernate, and container-internal artifacts it compiles against
+are declared with `<scope>provided</scope>` and are **not** pinned by ioc-unit — your
+application's own WildFly BOM imports are what actually decide which versions end up on the test
+classpath, so there is no duplicate/conflicting version of these libraries shipped transitively by
 ioc-unit itself.
+
+A smaller set of dependencies, however, are things a real WildFly container would normally supply
+but that a *standalone* Weld SE test JVM (as bootstrapped by `weld4-starter`) has nothing else to
+supply. For exactly these, the owning module declares them at `compile` scope instead, so they
+flow to you automatically without any extra declaration on your side:
+
+* `weld4-starter`: `weld-spi`, `weld-api`.
+* `ioc-unit-validate`: `hibernate-validator`, `hibernate-validator-cdi`, `jakarta.el:jakarta.el-api`, `org.glassfish:jakarta.el`.
+* `ioc-unit-resteasy`: `resteasy-core`, `resteasy-client`, `resteasy-jackson2-provider`, `resteasy-validator-provider`, `rest-assured`, `reactive-streams`, `json-patch`.
+
+See each module's own README for the full picture of what it needs, and what (if anything) is
+still your own project's responsibility to add (e.g. your JPA provider for `ioc-unit-ejb`, or
+your mocking library of choice for `ioc-unit-mockseasy`).
 
 Import both BOMs in your project's `dependencyManagement` (order matters: your WildFly
 BOMs first, then the ioc-unit BOM):
@@ -355,10 +367,11 @@ Notes:
 * Weld (`org.jboss.weld:*`) is **not** part of the WildFly BOM (it is a container-internal
   detail), so ioc-unit still pins its own Weld version internally. This only affects
   ioc-unit's own build/test classpath, not yours.
-* `jakarta.el` is intentionally still pinned by ioc-unit's `provided`/`test` scoped
-  dependencies rather than taken from the WildFly BOM, since WildFly manages EL under a
+* `jakarta.el` is intentionally still pinned and supplied at `compile` scope by
+  `ioc-unit-validate` rather than taken from the WildFly BOM, since WildFly manages EL under a
   different artifact (`org.jboss.spec.jakarta.el:jboss-el-api_5.0_spec`) than the
-  `jakarta.el:jakarta.el-api` / `org.glassfish:jakarta.el` GAs used here.
+  `jakarta.el:jakarta.el-api` / `org.glassfish:jakarta.el` GAs used here — and a standalone Weld SE
+  test JVM has no WildFly container to supply either one anyway.
 * Requires Java 17+ and Maven 3.8+ (enforced by the reactor's `maven-enforcer-plugin`).
 
 The usage does not differ very much from cdi-unit:

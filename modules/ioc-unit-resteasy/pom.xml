@@ -92,20 +92,64 @@
             <artifactId>ioc-unit</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <!-- These RESTEasy artifacts are the actual mechanism this module's MockDispatcherFactory
+             relies on for dispatching/marshalling requests, and rest-assured is this module's
+             own choice of REST test client - none of these are optional test tooling a consumer
+             might swap out, they're required for ioc-unit-resteasy's advertised feature to work
+             at all standalone. "provided" previously assumed a real WildFly container supplies
+             them; that assumption fails for weld4-starter's standalone bootstrap, same reasoning
+             already applied to weld-spi/weld-api. -->
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-core</artifactId>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-jackson2-provider</artifactId>
-            <scope>provided</scope>
+            <scope>compile</scope>
 	    </dependency>
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-client</artifactId>
-            <scope>provided</scope>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <version>5.3.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <!-- Wires RESTEasy's @Valid parameter/entity validation interceptor into the mock
+             dispatcher - without it, @Valid-annotated REST resources silently skip validation
+             during standalone tests instead of failing loudly, which is worse than a missing
+             class error. Sibling of resteasy-core/resteasy-client above; same compile-scope
+             reasoning applies. -->
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-validator-provider</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <!-- WildFly's own BOM (imported by the root ioc-unit pom, and by essentially every real
+             consumer testing a WildFly app) wildcard-excludes ALL transitive dependencies of
+             every artifact it manages, including resteasy-jackson2-provider above. That silently
+             drops reactive-streams and json-patch (both real transitive deps of
+             resteasy-jackson2-provider, needed at runtime for JSON (de)serialization), for
+             essentially every consumer of this module. Since the WildFly BOM's exclusion only
+             applies to resteasy-jackson2-provider's own transitive edge, declaring these two
+             directly (with an explicit version, bypassing that edge entirely) is the only
+             reliable way to keep them flowing. -->
+        <dependency>
+            <groupId>org.reactivestreams</groupId>
+            <artifactId>reactive-streams</artifactId>
+            <version>1.0.4</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.fge</groupId>
+            <artifactId>json-patch</artifactId>
+            <version>1.9</version>
+            <scope>compile</scope>
         </dependency>
         <!-- WildFly's BOM-managed httpclient excludes commons-logging (it uses jboss-logging
              instead); rest-assured/httpclient still expect the JCL API to be present at
@@ -119,12 +163,6 @@
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.rest-assured</groupId>
-            <artifactId>rest-assured</artifactId>
-            <version>5.3.0</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.assertj</groupId>
