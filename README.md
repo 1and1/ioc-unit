@@ -1,6 +1,5 @@
 ioc-unit (formerly ejb-cdi-unit)
 ================================
-![Build Status](https://travis-ci.org/1and1/ioc-unit.svg?branch=master)
 
 # Where can ioc-unit-ejb help..
 

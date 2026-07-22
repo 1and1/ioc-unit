@@ -45,6 +45,7 @@
         <!-- WildFly 39 requires Java 17+ at runtime; align the build toolchain accordingly. -->
         <maven.compiler.release>17</maven.compiler.release>
         <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
+        <central-publishing-maven-plugin.version>0.8.0</central-publishing-maven-plugin.version>
         <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
 
         <maven-scm-plugin.version>2.2.1</maven-scm-plugin.version>
@@ -121,6 +122,20 @@
                                 </goals>
                             </execution>
                         </executions>
+                    </plugin>
+                    <!-- Publishes release artifacts to Maven Central via the Central Portal
+                         Publisher API. Only active when performRelease=true (e.g. during
+                         mvn release:perform), so plain "mvn deploy" (SNAPSHOTs) is unaffected
+                         and continues to go to the internal Artifactory snapshot repository. -->
+                    <plugin>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>${central-publishing-maven-plugin.version}</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <publishingServerId>central</publishingServerId>
+                            <autoPublish>true</autoPublish>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>
@@ -456,6 +471,11 @@
             <plugins>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>${maven-deploy-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
                     <version>${maven-source-plugin.version}</version>
                 </plugin>
@@ -474,6 +494,11 @@
                     <artifactId>maven-release-plugin</artifactId>
                     <version>${maven-release-plugin.version}</version>
                     <inherited>true</inherited>
+                    <configuration>
+                        <!-- Keep tags consistent with the project's existing "vX.Y.Z" convention
+                             instead of the plugin default "artifactId-version". -->
+                        <tagNameFormat>v@{project.version}</tagNameFormat>
+                    </configuration>
                     <dependencies>
                         <dependency>
                             <groupId>org.apache.maven.scm</groupId>
@@ -489,7 +514,7 @@
 
     <scm>
         <url>https://github.com/1and1/ioc-unit</url>
-        <connection>scm:git:ssh://git@github.com/1and1/ioc-unit.git</connection>
+        <connection>scm:git:https://github.com/1and1/ioc-unit.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/1and1/ioc-unit.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
@@ -500,10 +525,9 @@
     <inceptionYear>2017</inceptionYear>
 
     <distributionManagement>
-        <repository>
-            <id>sonatype-nexus-staging</id>
-            <url>https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/</url>
-        </repository>
+        <!-- Releases go to Maven Central via the central-publishing-maven-plugin
+             (see release-sign-artifacts profile); no repository entry is needed
+             here for that, the plugin talks to the Central Portal API directly. -->
         <snapshotRepository>
             <uniqueVersion>true</uniqueVersion>
             <id>artifactory-snapshots</id>
