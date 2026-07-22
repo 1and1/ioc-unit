@@ -24,7 +24,7 @@
 
         <dependency>
             <groupId>net.oneandone.ioc-unit</groupId>
-            <artifactId>weld4-starter</artifactId>
+            <artifactId>weld-starter</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

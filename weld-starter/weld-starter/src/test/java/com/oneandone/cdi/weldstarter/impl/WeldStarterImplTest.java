@@ -1,4 +1,4 @@
-package com.oneandone.cdi.weld4starter;
+package com.oneandone.cdi.weldstarter.impl;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -9,7 +9,7 @@ import com.oneandone.cdi.weldstarter.WeldStarterTestBase;
 /**
  * @author aschoerk
  */
-public class Weld4StarterTest extends WeldStarterTestBase {
+public class WeldStarterImplTest extends WeldStarterTestBase {
 
     static class TestBean {
 

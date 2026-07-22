@@ -61,7 +61,6 @@
 
         <!-- test -->
         <mockito.version>4.11.0</mockito.version>
-        <!-- weld.version>1.1.14.Final</weld.version-->
         <junit4.version>4.13.2</junit4.version>
         <junit5.version>5.14.4</junit5.version>
         <mockrunner.version>2.0.4</mockrunner.version>
@@ -81,20 +80,19 @@
         <jaxrpc.version>1.1</jaxrpc.version>
 
         <camunda-engine.version>7.5.0</camunda-engine.version>
-        <weld.compile.version>3.1.9.Final</weld.compile.version>
-        <version.cdi-api>2.0</version.cdi-api>
         <additionalparam>-Xdoclint:none</additionalparam>
 
-        <!-- Weld is not part of the WildFly BOM (container-internal); keep pinned. -->
-        <compile.version.weld-spi>5.0.SP3</compile.version.weld-spi>
-        <compile.version.weld-api>5.0.SP3</compile.version.weld-api>
+        <!-- Weld is not part of the WildFly BOM (container-internal); keep pinned.
+             weld-spi and weld-api are always bundled by WildFly at the same version as each
+             other (confirmed for WildFly 39.0.1.Final: both weld-spi-5.0.SP3.jar and
+             weld-api-5.0.SP3.jar), so one property drives both "provided"-scope
+             dependencyManagement entries below (used by ioc-unit/ioc-unit-contexts/
+             ioc-unit-resteasy for real-container use). -->
+        <weld-spi-api.version>5.0.SP3</weld-spi-api.version>
         <!-- jakarta.el:jakarta.el-api is NOT managed under this GA by the WildFly BOM
              (WildFly manages org.jboss.spec.jakarta.el:jboss-el-api_5.0_spec instead),
              so it stays explicitly pinned where used. -->
 
-        <weld.version>5.1.0.Final</weld.version>
-        <weld-spi.version>5.0.SP3</weld-spi.version>
-        <version.cdi-api>4.0.0</version.cdi-api>
         <surefire-argline>
             -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5006
         </surefire-argline>
@@ -170,7 +168,7 @@
             </dependency>
             <dependency>
                 <groupId>net.oneandone.ioc-unit</groupId>
-                <artifactId>weld4-starter</artifactId>
+                <artifactId>weld-starter</artifactId>
                 <version>${project.version}</version>
                 <scope>test</scope>
             </dependency>
@@ -218,7 +216,7 @@
             <dependency>
                 <groupId>org.jboss.weld</groupId>
                 <artifactId>weld-spi</artifactId>
-                <version>${weld-spi.version}</version>
+                <version>${weld-spi-api.version}</version>
                 <scope>provided</scope>
             </dependency>
             

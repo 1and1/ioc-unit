@@ -69,15 +69,15 @@
              for standalone (non-container) tests, so hibernate-validator/-cdi are required at
              real (compile) scope for ioc-unit-validate itself to function. "provided" was
              previously used here to mirror the assumption that a real WildFly container
-             supplies these, but that assumption breaks for weld4-starter's standalone Weld SE
+             supplies these, but that assumption breaks for weld-starter's standalone Weld SE
              bootstrap, where nothing else supplies them.
              Note "optional" is intentionally NOT used on hibernate-validator-cdi: an optional
              dependency never flows transitively regardless of scope, which would silently
              re-introduce this exact gap for any consumer.
              The EL stack itself (jakarta.el-api / org.glassfish:jakarta.el) is NOT declared
-             here anymore: it is a runtime requirement of weld-web (pulled in by weld4-starter,
+             here anymore: it is a runtime requirement of weld-web (pulled in by weld-starter,
              which this module already depends on transitively), not of ioc-unit-validate, so
-             weld4-starter now owns that dependency at compile scope instead. Declaring it here
+             weld-starter now owns that dependency at compile scope instead. Declaring it here
              too was accidental coupling: consumers that dropped ioc-unit-validate lost their
              only source of a working jakarta.el implementation and failed with
              NoClassDefFoundError on org.jboss.weld.module.web.WeldWebModule. -->
@@ -89,6 +89,22 @@
         <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator-cdi</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <!-- WildFly's own BOM wildcard-excludes ALL transitive dependencies of every artifact it
+             manages, including hibernate-validator above - silently dropping classmate (a real
+             transitive dependency of hibernate-validator, required by
+             ValidatorFactoryImpl/TypeResolutionHelper to actually construct a ValidatorFactory).
+             Without it, building a ValidatorFactory fails with NoClassDefFoundError:
+             com/fasterxml/classmate/TypeResolver - but ONLY when nothing else on the classpath
+             happens to also pull in classmate transitively (e.g. via ioc-unit-resteasy), which is
+             why this was masked for a long time. Same root cause and same fix pattern already
+             applied to ioc-unit-resteasy for reactive-streams/json-patch: declare it directly,
+             with an explicit version, bypassing the excluded transitive edge entirely. -->
+        <dependency>
+            <groupId>com.fasterxml</groupId>
+            <artifactId>classmate</artifactId>
+            <version>1.5.1</version>
             <scope>compile</scope>
         </dependency>
 
@@ -104,7 +120,7 @@
         </dependency>
         <dependency>
             <groupId>net.oneandone.ioc-unit</groupId>
-            <artifactId>weld4-starter</artifactId>
+            <artifactId>weld-starter</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>

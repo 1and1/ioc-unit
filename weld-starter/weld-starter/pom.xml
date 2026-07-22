@@ -6,13 +6,33 @@
         <version>5.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>weld4-starter</artifactId>
+    <artifactId>weld-starter</artifactId>
     <packaging>jar</packaging>
 
-    <name>net.oneandone.ioc-unit:weld4-starter</name>
-    <description>Supports the starting of a weld 3.1 standalone engine using a version-independent configuration.
+    <name>net.oneandone.ioc-unit:weld-starter</name>
+    <description>Supports the starting of a standalone Weld SE engine using a version-independent
+        configuration. Registers as a WeldStarter SPI implementation (see weld-starter-base) via
+        java.util.ServiceLoader, so consumers add this as a test-scoped dependency to select it.
     </description>
     <url>https://github.com/1and1/ioc-unit</url>
+
+    <properties>
+        <!-- These two are genuinely separate Weld release trains (confirmed by inspecting
+             WildFly 39.0.1.Final's own modules/system/layers/base/org/jboss/weld/ tree):
+             weld-spi/weld-api lag behind at 5.0.SP3 while weld-core-impl/weld-web/weld-jta
+             are at 5.1.6.Final. Re-verify both against the target WildFly release's own
+             bundled Weld jars whenever the WildFly version this project targets changes. -->
+        <weld-spi-api.version>5.0.SP3</weld-spi-api.version>
+        <!-- NOTE: WildFly 39.0.1.Final actually bundles weld-core-impl/weld-web/weld-jta at
+             5.1.6.Final (confirmed by inspecting its modules/ tree), but bumping to that
+             version here breaks 5 ioc-unit-analyzer tests under excludedclasses/ with
+             WELD-001408 (producer field on an abstract superclass no longer resolves once
+             its owning subclass is excluded) - a real CDI/Weld behavior change between
+             5.1.0.Final and 5.1.6.Final, not a simple patch-compatible bump. Deliberately
+             left at 5.1.0.Final until that regression is root-caused/fixed; see
+             .idea/codeReview for the investigation notes. -->
+        <weld-engine.version>5.1.0.Final</weld-engine.version>
+    </properties>
 
     <licenses>
         <license>
@@ -49,55 +69,55 @@
         <dependency>
             <!-- Explicit scope override: the root pom's dependencyManagement pins weld-spi at
                  scope "provided" for modules (like ioc-unit-ejb) that are meant to run inside a
-                 real container which already supplies Weld's SPI classes. weld4-starter bootstraps
+                 real container which already supplies Weld's SPI classes. weld-starter bootstraps
                  a *standalone* Weld SE engine in the test JVM - nothing else supplies weld-spi at
                  runtime - so it must be a real (non-provided) dependency here, matching its
                  sibling weld-se-core/weld-core-impl/weld-web/weld-jta dependencies below, so it
-                 transitively reaches any consumer that depends on weld4-starter for testing. -->
+                 transitively reaches any consumer that depends on weld-starter for testing. -->
             <groupId>org.jboss.weld</groupId>
             <artifactId>weld-spi</artifactId>
-            <version>5.0.SP3</version>
+            <version>${weld-spi-api.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <!-- Same reasoning as weld-spi above: ioc-unit/ioc-unit-contexts/ioc-unit-resteasy
                  declare weld-api as "provided" (correct for real-container use), but nothing
-                 supplies it when weld4-starter bootstraps a standalone Weld SE engine. Without
+                 supplies it when weld-starter bootstraps a standalone Weld SE engine. Without
                  this, classes like org.jboss.weld.context.api.ContextualInstance,
                  org.jboss.weld.context.bound.BoundRequestContext and
                  org.jboss.weld.context.http.HttpRequestContext are missing at runtime, causing
                  NoClassDefFoundError during Weld container startup. -->
             <groupId>org.jboss.weld</groupId>
             <artifactId>weld-api</artifactId>
-            <version>5.0.SP3</version>
+            <version>${weld-spi-api.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.jboss.weld.se</groupId>
             <artifactId>weld-se-core</artifactId>
-            <version>5.1.0.Final</version>
+            <version>${weld-engine.version}</version>
         </dependency>
         <dependency>
             <groupId>org.jboss.weld</groupId>
             <artifactId>weld-core-impl</artifactId>
-            <version>5.1.0.Final</version>
+            <version>${weld-engine.version}</version>
         </dependency>
         <dependency>
             <groupId>org.jboss.weld.module</groupId>
             <artifactId>weld-web</artifactId>
-            <version>5.1.0.Final</version>
+            <version>${weld-engine.version}</version>
         </dependency>
         <dependency>
             <groupId>org.jboss.weld.module</groupId>
             <artifactId>weld-jta</artifactId>
-            <version>5.1.0.Final</version>
+            <version>${weld-engine.version}</version>
         </dependency>
         <!-- weld-web above (org.jboss.weld.module:weld-web) statically initializes
              org.jboss.weld.module.web.WeldWebModule, which eagerly references
              jakarta.el.ExpressionFactory - regardless of whether the consuming test actually
-             uses EL/JSP. Since weld4-starter is the module that brings in weld-web, it - not
+             uses EL/JSP. Since weld-starter is the module that brings in weld-web, it - not
              ioc-unit-validate - is the correct owner of this dependency; every consumer of
-             weld4-starter (i.e. every IocUnit test) needs it transitively at compile scope. -->
+             weld-starter (i.e. every IocUnit test) needs it transitively at compile scope. -->
         <dependency>
             <groupId>jakarta.el</groupId>
             <artifactId>jakarta.el-api</artifactId>

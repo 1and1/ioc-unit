@@ -54,7 +54,7 @@ real `jakarta.validation.ValidatorFactory`. You do **not** need to declare
 `hibernate-validator`/`hibernate-validator-cdi` yourself.
 
 A working EL implementation (`jakarta.el:jakarta.el-api` + `org.glassfish:jakarta.el`), also
-required to build a `ValidatorFactory`, is supplied separately by `weld4-starter` (which every
+required to build a `ValidatorFactory`, is supplied separately by `weld-starter` (which every
 IocUnit test already depends on) — see the [weld-starter README](../../weld-starter/README.md)
 for why it lives there instead of here.
 

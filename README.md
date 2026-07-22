@@ -325,12 +325,12 @@ classpath, so there is no duplicate/conflicting version of these libraries shipp
 ioc-unit itself.
 
 A smaller set of dependencies, however, are things a real WildFly container would normally supply
-but that a *standalone* Weld SE test JVM (as bootstrapped by `weld4-starter`) has nothing else to
+but that a *standalone* Weld SE test JVM (as bootstrapped by `weld-starter`) has nothing else to
 supply. For exactly these, the owning module declares them at `compile` scope instead, so they
 flow to you automatically without any extra declaration on your side:
 
-* `weld4-starter`: `weld-spi`, `weld-api`, `jakarta.el:jakarta.el-api`, `org.glassfish:jakarta.el`
-  (the EL implementation is required because `weld-web`, which `weld4-starter` also declares,
+* `weld-starter`: `weld-spi`, `weld-api`, `jakarta.el:jakarta.el-api`, `org.glassfish:jakarta.el`
+  (the EL implementation is required because `weld-web`, which `weld-starter` also declares,
   eagerly touches `jakarta.el.ExpressionFactory` during Weld container startup — it lives here,
   not in `ioc-unit-validate`, so it flows to *every* IocUnit test, whether or not `ioc-unit-validate`
   is used).
@@ -392,11 +392,11 @@ Notes:
   detail), so ioc-unit still pins its own Weld version internally. This only affects
   ioc-unit's own build/test classpath, not yours.
 * `jakarta.el` is intentionally still pinned and supplied at `compile` scope by
-  `weld4-starter` (not `ioc-unit-validate` — see above) rather than taken from the WildFly BOM,
+  `weld-starter` (not `ioc-unit-validate` — see above) rather than taken from the WildFly BOM,
   since WildFly manages EL under a different artifact
   (`org.jboss.spec.jakarta.el:jboss-el-api_5.0_spec`) than the `jakarta.el:jakarta.el-api` /
   `org.glassfish:jakarta.el` GAs used here — and a standalone Weld SE test JVM has no WildFly
-  container to supply either one anyway. Every IocUnit test depends on `weld4-starter`, so this
+  container to supply either one anyway. Every IocUnit test depends on `weld-starter`, so this
   is available regardless of which other ioc-unit modules (e.g. `ioc-unit-validate`,
   `ioc-unit-resteasy`) you do or don't include.
 * Requires Java 17+ and Maven 3.8+ (enforced by the reactor's `maven-enforcer-plugin`).

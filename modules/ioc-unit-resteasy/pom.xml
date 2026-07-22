@@ -74,7 +74,7 @@
         <dependency>
             <groupId>org.jboss.weld</groupId>
             <artifactId>weld-api</artifactId>
-            <version>${compile.version.weld-api}</version>
+            <version>${weld-spi-api.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -97,7 +97,7 @@
              own choice of REST test client - none of these are optional test tooling a consumer
              might swap out, they're required for ioc-unit-resteasy's advertised feature to work
              at all standalone. "provided" previously assumed a real WildFly container supplies
-             them; that assumption fails for weld4-starter's standalone bootstrap, same reasoning
+             them; that assumption fails for weld-starter's standalone bootstrap, same reasoning
              already applied to weld-spi/weld-api. -->
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
@@ -220,7 +220,7 @@
         </dependency>
         <dependency>
             <groupId>net.oneandone.ioc-unit</groupId>
-            <artifactId>weld4-starter</artifactId>
+            <artifactId>weld-starter</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>

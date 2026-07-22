@@ -1,4 +1,4 @@
-package com.oneandone.cdi.weld4starter;
+package com.oneandone.cdi.weldstarter.impl;
 
 import java.util.Arrays;
 import java.util.Collection;

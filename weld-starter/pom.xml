@@ -1,136 +1,54 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>net.oneandone.ioc-unit</groupId>
+    <parent>
+        <groupId>net.oneandone.ioc-unit</groupId>
+        <artifactId>ioc-unit-parent</artifactId>
+        <version>5.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
     <artifactId>weld-starter-parent</artifactId>
-    <version>5.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>net.oneandone.ioc-unit:weld-starter-parent</name>
-    <description>Parentclass for weldstarter. For tests define the profile weld1.1, weld2.3 or weld3.0.</description>
-    <url>https://github.com/1and1/ioc-unit</url>
+    <description>Parent for the weld-starter modules, which boot a standalone (non-container) Weld
+        SE engine used to run ioc-unit tests. A true child of ioc-unit-parent (see the root
+        README/pom for shared properties, plugin versions, release/distribution management, scm,
+        etc. - not duplicated here to avoid the version drift this project previously had).
+    </description>
 
-    <licenses>
-        <license>
-            <name>The Apache License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-        </license>
-    </licenses>
+    <!-- Everything else (licenses, developers, url, scm, issueManagement, inceptionYear,
+         distributionManagement, release-sign-artifacts profile, and all plugin/property versions
+         that matched the root pom's values) is inherited from ioc-unit-parent. Only entries
+         genuinely unique to the weld-starter modules remain below. -->
 
-    <developers>
-        <developer>
-            <name>Andreas Schörk</name>
-            <email>andreas.schoerk@1and1.com</email>
-            <organization>1and1</organization>
-            <organizationUrl>http://www.1and1.com</organizationUrl>
-        </developer>
-    </developers>
-
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <wildfly.version>39.0.1.Final</wildfly.version>
-        <!-- WildFly 39 requires Java 17+ at runtime; align the build toolchain accordingly. -->
-        <maven.compiler.release>17</maven.compiler.release>
-        <junit4.version>4.13.2</junit4.version>
-        <logback.version>1.5.38</logback.version>
-        <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
-        <delta-spike.version>1.9.6</delta-spike.version>
-        <maven-surefire-plugin.version>3.5.6</maven-surefire-plugin.version>
-        <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
-        <maven-source-plugin.version>3.4.0</maven-source-plugin.version>
-        <maven-compiler-plugin.version>3.14.1</maven-compiler-plugin.version>
-        <maven-deploy-plugin.version>3.1.4</maven-deploy-plugin.version>
-
-        <surefire-argline>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5006 </surefire-argline>
-    </properties>
     <dependencyManagement>
         <dependencies>
-            <!-- Align with the WildFly BOMs so specs/impls match a real WildFly runtime. -->
-            <dependency>
-                <groupId>org.wildfly.bom</groupId>
-                <artifactId>wildfly-ee-with-tools</artifactId>
-                <version>${wildfly.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-classic</artifactId>
-                <version>${logback.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>${junit4.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <!-- Jakarta specs (jakarta.enterprise.cdi-api, jakarta.annotation-api, jakarta.interceptor-api,
-                 jakarta.inject-api, etc.) are intentionally NOT listed here: their versions are supplied
-                 transitively by the imported WildFly BOM above. Each module declares the specs it actually
-                 uses (scope "provided", no <version>) and picks up the version from the BOM import. -->
-            <dependency>
-                <groupId>org.jboss.weld</groupId>
-                <artifactId>weld-spi</artifactId>
-                <version>5.0.SP3</version>
-                <scope>provided</scope>
-            </dependency>
+            <!-- jboss-classfilewriter (used by weld-starter-test) is not managed by
+                 ioc-unit-parent; stays pinned here. -->
             <dependency>
                 <groupId>org.jboss.classfilewriter</groupId>
                 <artifactId>jboss-classfilewriter</artifactId>
                 <version>1.2.5.Final</version>
                 <scope>test</scope>
             </dependency>
+            <!-- Now that this pom inherits ioc-unit-parent's dependencyManagement (which imports
+                 the WildFly BOMs), jakarta.enterprise.cdi-api:4.0.1 transitively pulls
+                 jakarta.el-api:5.0.0 - which conflicts with weld-starter's own explicit
+                 jakarta.el-api:5.0.1 pin (needed for weld-web's WeldWebModule, see
+                 weld-starter/pom.xml) and fails the inherited dependencyConvergence enforcer
+                 rule. Pin jakarta.el-api here so the whole weld-starter subtree converges on one
+                 version instead of each module resolving it independently. -->
+            <dependency>
+                <groupId>jakarta.el</groupId>
+                <artifactId>jakarta.el-api</artifactId>
+                <version>5.0.1</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
-
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>${maven-javadoc-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                        <configuration>
-                            <doclint>none</doclint>
-                            <source>${maven.compiler.release}</source>
-                            <additionalOptions>-Xdoclint:none</additionalOptions>
-                        </configuration>
-                    </execution>
-                </executions>
-                <configuration>
-                    <detectOfflineLinks>false</detectOfflineLinks>
-                    <failOnError>false</failOnError>
-                    <doclint>none</doclint>
-                    <additionalOptions>-Xdoclint:none</additionalOptions>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>${maven-source-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>jar-no-fork</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven-compiler-plugin.version}</version>
-                <configuration>
-                    <release>${maven.compiler.release}</release>
-                </configuration>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -152,7 +70,6 @@
                     <reportFormat>plain</reportFormat>
                     <redirectTestOutputToFile>true</redirectTestOutputToFile>
                     <!-- Sets the VM argument line used when unit tests are run. -->
-                    <!--argLine> - -add-modules java.xml,java.sql -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5006</argLine-->
                     <argLine>
                         ${surefire-argline}
                     </argLine>
@@ -165,63 +82,11 @@
             </plugin>
         </plugins>
     </build>
-    <profiles>
-        <profile>
-            <id>release-sign-artifacts</id>
-            <activation>
-                <property>
-                    <name>performRelease</name>
-                    <value>true</value>
-                </property>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                        <version>${maven-gpg-plugin.version}</version>
-                        <executions>
-                            <execution>
-                                <id>sign-artifacts</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
+
     <modules>
         <module>weld-starter-base</module>
-        <module>weld4-starter</module>
+        <module>weld-starter</module>
         <module>weld-starter-test</module>
     </modules>
-    <scm>
-        <url>https://github.com/1and1/ioc-unit</url>
-        <connection>scm:git:ssh://git@github.com/1and1/ioc-unit.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/1and1/ioc-unit.git</developerConnection>
-        <tag>v2.0.27</tag>
-    </scm>
-    <issueManagement>
-        <system>GitHub</system>
-        <url>https://github.com/1and1/ioc-unit/issues/</url>
-    </issueManagement>
-    <inceptionYear>2017</inceptionYear>
-
-    <distributionManagement>
-        <repository>
-            <id>sonatype-nexus-staging</id>
-            <url>https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/</url>
-        </repository>
-        <snapshotRepository>
-            <uniqueVersion>true</uniqueVersion>
-            <id>artifactory-snapshots</id>
-            <name>access-snapshot</name>
-            <url>https://artifactory.1and1.org/artifactory/access-snapshot</url>
-        </snapshotRepository>
-    </distributionManagement>
 
 </project>
