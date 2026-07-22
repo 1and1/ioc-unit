@@ -23,6 +23,17 @@
                     <skip>true</skip>
                 </configuration>
             </plugin>
+            <!-- Also skip publishing to Maven Central during release:perform - this module
+                 is not meant to be published as a public artifact.
+                 central-publishing-maven-plugin does not honor maven-deploy-plugin's
+                 skip flag above, so it must be disabled independently here. -->
+            <plugin>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <configuration>
+                    <skipPublishing>true</skipPublishing>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>
