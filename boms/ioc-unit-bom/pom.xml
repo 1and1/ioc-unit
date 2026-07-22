@@ -56,10 +56,9 @@
     <inceptionYear>2017</inceptionYear>
 
     <distributionManagement>
-        <repository>
-            <id>sonatype-nexus-staging</id>
-            <url>https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/</url>
-        </repository>
+        <!-- Releases go to Maven Central via the central-publishing-maven-plugin
+             (see release-sign-artifacts profile below); no repository entry is needed
+             here for that, the plugin talks to the Central Portal API directly. -->
         <snapshotRepository>
             <uniqueVersion>true</uniqueVersion>
             <id>artifactory-snapshots</id>
@@ -180,6 +179,47 @@
     </dependencyManagement>
 
     <!-- No <build> section needed: packaging=pom has no default source-jar/javadoc lifecycle
-         bindings, and those plugin executions are no longer inherited now that this POM has no
-         parent, so there is nothing to skip. -->
+         bindings. The profile below is still required, though: this pom has no <parent> (see
+         note above), so it does NOT inherit ioc-unit-parent's release-sign-artifacts profile.
+         Without its own copy, this module's .pom would be deployed unsigned and never routed
+         through central-publishing-maven-plugin during a release. -->
+    <profiles>
+        <profile>
+            <id>release-sign-artifacts</id>
+            <activation>
+                <property>
+                    <name>performRelease</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>3.2.8</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>0.11.0</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <publishingServerId>central</publishingServerId>
+                            <autoPublish>true</autoPublish>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

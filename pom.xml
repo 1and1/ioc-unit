@@ -39,13 +39,13 @@
         <maven-checkstyle-plugin.version>3.6.0</maven-checkstyle-plugin.version>
         <maven-checkstyle-plugin.configLocation>site/checkstyle.xml</maven-checkstyle-plugin.configLocation>
         <maven-checkstyle-plugin.suppressionsLocation>checkstyle_suppressions.xml</maven-checkstyle-plugin.suppressionsLocation>
-        <maven-dependency-plugin.version>3.6.1</maven-dependency-plugin.version>
+        <maven-dependency-plugin.version>3.11.0</maven-dependency-plugin.version>
         <maven-deploy-plugin.version>3.1.4</maven-deploy-plugin.version>
-        <maven-compiler-plugin.version>3.14.1</maven-compiler-plugin.version>
+        <maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
         <!-- WildFly 39 requires Java 17+ at runtime; align the build toolchain accordingly. -->
         <maven.compiler.release>17</maven.compiler.release>
         <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
-        <central-publishing-maven-plugin.version>0.8.0</central-publishing-maven-plugin.version>
+        <central-publishing-maven-plugin.version>0.11.0</central-publishing-maven-plugin.version>
         <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
 
         <maven-scm-plugin.version>2.2.1</maven-scm-plugin.version>
@@ -420,7 +420,7 @@
             <plugin>
                 <groupId>org.basepom.maven</groupId>
                 <artifactId>duplicate-finder-maven-plugin</artifactId>
-                <version>1.4.0</version>
+                <version>2.0.1</version>
                 <executions>
                     <execution>
                         <id>duplicate-check</id>
@@ -499,14 +499,11 @@
                              instead of the plugin default "artifactId-version". -->
                         <tagNameFormat>v@{project.version}</tagNameFormat>
                     </configuration>
-                    <dependencies>
-                        <dependency>
-                            <groupId>org.apache.maven.scm</groupId>
-                            <artifactId>maven-scm-provider-gitexe</artifactId>
-                            <version>1.9.2</version>
-                        </dependency>
-                    </dependencies>
-
+                    <!-- No explicit maven-scm-provider-gitexe dependency override here:
+                         maven-release-plugin 3.3.1 already brings in a consistent, matching
+                         set of maven-scm-* 2.2.1 artifacts transitively. Pinning an old
+                         provider version (e.g. 1.9.2) mixes incompatible SCM API classes and
+                         causes NoSuchMethodError at runtime (AbstractGitScmProvider.getLogger()). -->
                 </plugin>
             </plugins>
         </pluginManagement>
