@@ -92,5 +92,31 @@
             <artifactId>weld-jta</artifactId>
             <version>5.1.0.Final</version>
         </dependency>
+        <!-- weld-web above (org.jboss.weld.module:weld-web) statically initializes
+             org.jboss.weld.module.web.WeldWebModule, which eagerly references
+             jakarta.el.ExpressionFactory - regardless of whether the consuming test actually
+             uses EL/JSP. Since weld4-starter is the module that brings in weld-web, it - not
+             ioc-unit-validate - is the correct owner of this dependency; every consumer of
+             weld4-starter (i.e. every IocUnit test) needs it transitively at compile scope. -->
+        <dependency>
+            <groupId>jakarta.el</groupId>
+            <artifactId>jakarta.el-api</artifactId>
+            <version>5.0.1</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>jakarta.el</artifactId>
+            <version>4.0.2</version>
+            <scope>compile</scope>
+            <exclusions>
+                <!-- Avoid a dependency-convergence conflict with our own jakarta.el-api:5.0.1
+                     pin above; this artifact's own transitive is an older 4.0.0. -->
+                <exclusion>
+                    <groupId>jakarta.el</groupId>
+                    <artifactId>jakarta.el-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
     </dependencies>
 </project>

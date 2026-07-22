@@ -47,9 +47,23 @@ declare, without any explicit version:
 </dependency>
 ```
 
-That's it — `hibernate-validator`, `hibernate-validator-cdi`, and a working EL implementation
-(`jakarta.el:jakarta.el-api` + `org.glassfish:jakarta.el`) are pulled in automatically at
+That's it — `hibernate-validator` and `hibernate-validator-cdi` are pulled in automatically at
 `compile` scope by `ioc-unit-validate` itself, so a standalone Weld SE test JVM (which, unlike a
 real WildFly container, has nothing else to supply these) has everything it needs to build a
 real `jakarta.validation.ValidatorFactory`. You do **not** need to declare
-`hibernate-validator`/`hibernate-validator-cdi`/`jakarta.el` yourself.
+`hibernate-validator`/`hibernate-validator-cdi` yourself.
+
+A working EL implementation (`jakarta.el:jakarta.el-api` + `org.glassfish:jakarta.el`), also
+required to build a `ValidatorFactory`, is supplied separately by `weld4-starter` (which every
+IocUnit test already depends on) — see the [weld-starter README](../../weld-starter/README.md)
+for why it lives there instead of here.
+
+## When to use this module standalone
+
+Use `ioc-unit-validate` on its own (without `ioc-unit-resteasy`) whenever a test is purely about
+CDI/service-level Bean Validation: enforcing `@NotNull`/`@Size`/custom constraints on method
+parameters or return values, or injecting/using a real `Validator`/`ValidatorFactory` directly —
+with no JAX-RS/REST layer involved at all. Only add `ioc-unit-resteasy` as well if the same test
+also needs to dispatch requests through a mocked REST endpoint; `ioc-unit-resteasy`'s own
+`resteasy-validator-provider` wires RESTEasy's `@Valid` interceptor but does not itself provide a
+CDI `ValidatorFactory` bean.

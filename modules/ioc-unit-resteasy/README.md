@@ -73,6 +73,20 @@ That's it — `resteasy-core`, `resteasy-client`, `resteasy-jackson2-provider`,
 standalone Weld SE test JVM without you declaring any of them yourself. You do **not** need to
 add `resteasy-core`/`resteasy-jackson2-provider` to your own pom.
 
+Note: `resteasy-validator-provider` only wires RESTEasy's own `@Valid` request/response
+interceptor into the mock dispatcher — it does **not** by itself provide a CDI
+`jakarta.validation.ValidatorFactory` bean. If a test needs real Bean Validation constraint
+violations enforced (not just RESTEasy's interceptor plumbing), add `ioc-unit-validate` as well.
+
+## When to use this module standalone
+
+Use `ioc-unit-resteasy` on its own (without `ioc-unit-validate`) whenever a test is purely about
+the REST/JAX-RS layer: resource dispatch, marshalling/unmarshalling, providers, exception
+mapping, authorization/roles (`@TestAuth`) — with no need to assert on actual Bean Validation
+constraint violations. Combine it with `ioc-unit-validate` only when a test needs to verify that
+invalid REST request bodies actually trigger Bean Validation end-to-end through a JAX-RS
+resource.
+
 ## Restassured included
 
 `rest-assured` is also pulled in automatically at `compile` scope by `ioc-unit-resteasy` — no

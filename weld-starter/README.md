@@ -15,6 +15,11 @@ flows transitively into any consumer that depends on it.
   `compile` scope (both are `provided` in `ioc-unit`/`ioc-unit-contexts`/`ioc-unit-resteasy`/
   `ioc-unit-ejb` for real-container use, but nothing else supplies them for a standalone Weld SE
   bootstrap — see the root [README's dependency-management section](../README.md#dependency-management-bom-first)).
+  It also declares `jakarta.el:jakarta.el-api:5.0.1` and `org.glassfish:jakarta.el:4.0.2` at
+  `compile` scope: `weld-web`'s `WeldWebModule` eagerly loads `jakarta.el.ExpressionFactory`
+  during Weld container startup, regardless of whether the test itself uses EL/JSP, so this must
+  live here — not in `ioc-unit-validate` — to reach *every* IocUnit test that depends on
+  `weld4-starter`, whether or not `ioc-unit-validate` is also used.
 
 > Older `weld1-starter`/`weld2-starter`/`weld3-starter` modules (targeting `javaee-api` 7.0/8.0)
 > have been removed from this reactor; only `weld4-starter` (Jakarta EE namespace) remains.

@@ -22,6 +22,26 @@ ioc-unit (formerly ejb-cdi-unit)
 * to work with ExceptionMappers, ObjectMappers, everything annotated by @Provider
 * not if you want to check the authentication and authorization support.
 
+Use this module **standalone** (without `ioc-unit-validate`) whenever the test is purely about the
+REST/JAX-RS layer: resource dispatch, marshalling/unmarshalling, providers, exception mapping,
+authorization. Note: `resteasy-validator-provider` (pulled in automatically, see below) only wires
+RESTEasy's own `@Valid` request/response interceptor — it does **not** by itself produce a CDI
+`jakarta.validation.ValidatorFactory` bean. If your test needs real Bean Validation constraint
+violations enforced (not just RESTEasy's interceptor plumbing), add `ioc-unit-validate` as well.
+
+# Where can ioc-unit-validate help
+## My Testcode needs
+* real `jakarta.validation` (Bean Validation) constraints (`@NotNull`, `@Size`, custom
+  constraints, ...) to actually be enforced on CDI bean method parameters/return values or on
+  injected objects, throwing `ConstraintViolationException` like a real container would.
+* a real, injectable `jakarta.validation.ValidatorFactory`/`Validator`, without any REST/JAX-RS
+  layer involved.
+
+Use this module **standalone** (without `ioc-unit-resteasy`) for plain CDI/service-level tests
+that validate objects or method arguments directly — no HTTP dispatch needed. Combine it with
+`ioc-unit-resteasy` only when a test needs to verify that invalid REST request bodies actually
+trigger Bean Validation end-to-end through a JAX-RS resource.
+
 # Where can ioc-unit help
 ## My Testcode needs to
 * Inject Testalternatives in an easy way, without having to do big configurations in extra beans.xml 
@@ -309,8 +329,12 @@ but that a *standalone* Weld SE test JVM (as bootstrapped by `weld4-starter`) ha
 supply. For exactly these, the owning module declares them at `compile` scope instead, so they
 flow to you automatically without any extra declaration on your side:
 
-* `weld4-starter`: `weld-spi`, `weld-api`.
-* `ioc-unit-validate`: `hibernate-validator`, `hibernate-validator-cdi`, `jakarta.el:jakarta.el-api`, `org.glassfish:jakarta.el`.
+* `weld4-starter`: `weld-spi`, `weld-api`, `jakarta.el:jakarta.el-api`, `org.glassfish:jakarta.el`
+  (the EL implementation is required because `weld-web`, which `weld4-starter` also declares,
+  eagerly touches `jakarta.el.ExpressionFactory` during Weld container startup — it lives here,
+  not in `ioc-unit-validate`, so it flows to *every* IocUnit test, whether or not `ioc-unit-validate`
+  is used).
+* `ioc-unit-validate`: `hibernate-validator`, `hibernate-validator-cdi`.
 * `ioc-unit-resteasy`: `resteasy-core`, `resteasy-client`, `resteasy-jackson2-provider`, `resteasy-validator-provider`, `rest-assured`, `reactive-streams`, `json-patch`.
 
 See each module's own README for the full picture of what it needs, and what (if anything) is
@@ -368,10 +392,13 @@ Notes:
   detail), so ioc-unit still pins its own Weld version internally. This only affects
   ioc-unit's own build/test classpath, not yours.
 * `jakarta.el` is intentionally still pinned and supplied at `compile` scope by
-  `ioc-unit-validate` rather than taken from the WildFly BOM, since WildFly manages EL under a
-  different artifact (`org.jboss.spec.jakarta.el:jboss-el-api_5.0_spec`) than the
-  `jakarta.el:jakarta.el-api` / `org.glassfish:jakarta.el` GAs used here — and a standalone Weld SE
-  test JVM has no WildFly container to supply either one anyway.
+  `weld4-starter` (not `ioc-unit-validate` — see above) rather than taken from the WildFly BOM,
+  since WildFly manages EL under a different artifact
+  (`org.jboss.spec.jakarta.el:jboss-el-api_5.0_spec`) than the `jakarta.el:jakarta.el-api` /
+  `org.glassfish:jakarta.el` GAs used here — and a standalone Weld SE test JVM has no WildFly
+  container to supply either one anyway. Every IocUnit test depends on `weld4-starter`, so this
+  is available regardless of which other ioc-unit modules (e.g. `ioc-unit-validate`,
+  `ioc-unit-resteasy`) you do or don't include.
 * Requires Java 17+ and Maven 3.8+ (enforced by the reactor's `maven-enforcer-plugin`).
 
 The usage does not differ very much from cdi-unit:
