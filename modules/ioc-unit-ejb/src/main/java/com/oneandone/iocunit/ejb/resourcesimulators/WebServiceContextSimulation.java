@@ -190,6 +190,11 @@ public class WebServiceContextSimulation implements WebServiceContext {
         }
 
         @Override
+        public void sendRedirect(String location, int sc, boolean clearBuffer) throws IOException {
+            status = sc;
+        }
+
+        @Override
         public void setDateHeader(String name, long date) {
             // dummy
         }

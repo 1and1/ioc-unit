@@ -118,7 +118,7 @@ public class IocUnitHttpServletResponse implements HttpServletResponse {
     }
 
     public void addIntHeader(String key, int value) {
-        String stringValue = new Integer(value).toString();
+        String stringValue = Integer.toString(value);
         addHeader(key, stringValue);
     }
 
@@ -141,6 +141,15 @@ public class IocUnitHttpServletResponse implements HttpServletResponse {
         wasRedirectSent = true;
     }
 
+    public void sendRedirect(String location, int sc, boolean clearBuffer) throws IOException {
+        setStatus(sc);
+        setHeader("Location", location);
+        wasRedirectSent = true;
+        if (clearBuffer) {
+            resetBuffer();
+        }
+    }
+
     public void setDateHeader(String key, long date) {
         setHeader(key, getDateString(date));
     }
@@ -152,7 +161,7 @@ public class IocUnitHttpServletResponse implements HttpServletResponse {
     }
 
     public void setIntHeader(String key, int value) {
-        String stringValue = new Integer(value).toString();
+        String stringValue = Integer.toString(value);
         setHeader(key, stringValue);
     }
 
