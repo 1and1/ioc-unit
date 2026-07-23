@@ -65,20 +65,30 @@ public class TestExtensionServices implements TestExtensionService {
     @Override
     public List<Extension> getExtensions() {
         List<Extension> result = new ArrayList<>();
+        // Hibernate Validator 9.x (Jakarta Validation 3.1+)
         try {
-            Class<?> c = Class.forName("org.hibernate.validator.cdi.internal.ValidationExtension");
-            result.add((Extension) c.newInstance());
+            Class<?> c = Class.forName("org.hibernate.validator.cdi.ValidationExtension");
+            result.add((Extension) c.getDeclaredConstructor().newInstance());
         } catch (NoClassDefFoundError e) {
 
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+        } catch (ReflectiveOperationException e) {
+
+        }
+        // Hibernate Validator 8.x / 6.x (older package layouts)
+        try {
+            Class<?> c = Class.forName("org.hibernate.validator.cdi.internal.ValidationExtension");
+            result.add((Extension) c.getDeclaredConstructor().newInstance());
+        } catch (NoClassDefFoundError e) {
+
+        } catch (ReflectiveOperationException e) {
 
         }
         try {
             Class<?> c = Class.forName("org.hibernate.validator.internal.cdi.ValidationExtension");
-            result.add((Extension) c.newInstance());
+            result.add((Extension) c.getDeclaredConstructor().newInstance());
         } catch (NoClassDefFoundError e) {
 
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+        } catch (ReflectiveOperationException e) {
 
         }
         result.add(new ValidateTestExtension());

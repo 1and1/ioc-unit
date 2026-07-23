@@ -1,0 +1,2 @@
+org.hibernate.validator.cdi.ValidationExtension
+com.oneandone.iocunit.validate.ValidateTestExtension
