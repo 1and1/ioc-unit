@@ -3,19 +3,28 @@ package com.oneandone.iocunit.ejb.persistence;
 import java.util.List;
 import java.util.Map;
 
+import jakarta.persistence.CacheRetrieveMode;
+import jakarta.persistence.CacheStoreMode;
+import jakarta.persistence.ConnectionConsumer;
+import jakarta.persistence.ConnectionFunction;
 import jakarta.persistence.EntityGraph;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.FindOption;
 import jakarta.persistence.FlushModeType;
 import jakarta.persistence.LockModeType;
+import jakarta.persistence.LockOption;
 import jakarta.persistence.Query;
+import jakarta.persistence.RefreshOption;
 import jakarta.persistence.StoredProcedureQuery;
 import jakarta.persistence.TransactionRequiredException;
 import jakarta.persistence.TypedQuery;
+import jakarta.persistence.TypedQueryReference;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaDelete;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.CriteriaSelect;
 import jakarta.persistence.criteria.CriteriaUpdate;
 import jakarta.persistence.metamodel.Metamodel;
 
@@ -92,8 +101,23 @@ class EntityManagerDelegate implements EntityManager {
     }
 
     @Override
+    public <T> T find(final Class<T> entityClass, final Object primaryKey, final FindOption... options) {
+        return getEmbeddedEntityManager().find(entityClass, primaryKey, options);
+    }
+
+    @Override
+    public <T> T find(final EntityGraph<T> entityGraph, final Object primaryKey, final FindOption... options) {
+        return getEmbeddedEntityManager().find(entityGraph, primaryKey, options);
+    }
+
+    @Override
     public <T> T getReference(final Class<T> entityClass, final Object primaryKey) {
         return getEmbeddedEntityManager().getReference(entityClass, primaryKey);
+    }
+
+    @Override
+    public <T> T getReference(final T entity) {
+        return getEmbeddedEntityManager().getReference(entity);
     }
 
     @Override
@@ -122,6 +146,11 @@ class EntityManagerDelegate implements EntityManager {
     }
 
     @Override
+    public void lock(final Object entity, final LockModeType lockMode, final LockOption... lockOptions) {
+        getEmbeddedEntityManager(true).lock(entity, lockMode, lockOptions);
+    }
+
+    @Override
     public void refresh(final Object entity) {
         getEmbeddedEntityManager(true).refresh(entity);
     }
@@ -139,6 +168,11 @@ class EntityManagerDelegate implements EntityManager {
     @Override
     public void refresh(final Object entity, final LockModeType lockMode, final Map<String, Object> properties) {
         getEmbeddedEntityManager(true).refresh(entity, lockMode, properties);
+    }
+
+    @Override
+    public void refresh(final Object entity, final RefreshOption... refreshOptions) {
+        getEmbeddedEntityManager(true).refresh(entity, refreshOptions);
     }
 
     @Override
@@ -162,6 +196,26 @@ class EntityManagerDelegate implements EntityManager {
     }
 
     @Override
+    public void setCacheRetrieveMode(final CacheRetrieveMode cacheRetrieveMode) {
+        getEmbeddedEntityManager().setCacheRetrieveMode(cacheRetrieveMode);
+    }
+
+    @Override
+    public void setCacheStoreMode(final CacheStoreMode cacheStoreMode) {
+        getEmbeddedEntityManager().setCacheStoreMode(cacheStoreMode);
+    }
+
+    @Override
+    public CacheRetrieveMode getCacheRetrieveMode() {
+        return getEmbeddedEntityManager().getCacheRetrieveMode();
+    }
+
+    @Override
+    public CacheStoreMode getCacheStoreMode() {
+        return getEmbeddedEntityManager().getCacheStoreMode();
+    }
+
+    @Override
     public void setProperty(final String propertyName, final Object value) {
         getEmbeddedEntityManager().setProperty(propertyName, value);
     }
@@ -179,6 +233,16 @@ class EntityManagerDelegate implements EntityManager {
     @Override
     public <T> TypedQuery<T> createQuery(final CriteriaQuery<T> criteriaQuery) {
         return getEmbeddedEntityManager().createQuery(criteriaQuery);
+    }
+
+    @Override
+    public <T> TypedQuery<T> createQuery(final CriteriaSelect<T> criteriaSelect) {
+        return getEmbeddedEntityManager().createQuery(criteriaSelect);
+    }
+
+    @Override
+    public <T> TypedQuery<T> createQuery(final TypedQueryReference<T> typedQueryReference) {
+        return getEmbeddedEntityManager().createQuery(typedQueryReference);
     }
 
     @Override
@@ -310,6 +374,16 @@ class EntityManagerDelegate implements EntityManager {
     @Override
     public <T> List<EntityGraph<? super T>> getEntityGraphs(Class<T> entityClass) {
         return getEmbeddedEntityManager().getEntityGraphs(entityClass);
+    }
+
+    @Override
+    public <C> void runWithConnection(final ConnectionConsumer<C> action) {
+        getEmbeddedEntityManager().runWithConnection(action);
+    }
+
+    @Override
+    public <C, T> T callWithConnection(final ConnectionFunction<C, T> function) {
+        return getEmbeddedEntityManager().callWithConnection(function);
     }
 
 }

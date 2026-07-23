@@ -181,8 +181,10 @@ public class Jpa2PUTest {
                                 .setLockMode(LockModeType.PESSIMISTIC_WRITE).getSingleResult();
                 fail("expected PersistenceException because of two updates");
             } catch (PersistenceException e) {
-
-                assert e.getCause().getClass().getName().contains("Pessimistic");
+                // Hibernate 7 (H2) may report a lock-wait timeout either as a PessimisticLockException
+                // or as its subclass LockTimeoutException, depending on the exact contention detected.
+                String causeName = e.getCause().getClass().getName();
+                assert causeName.contains("Pessimistic") || causeName.contains("LockTimeoutException");
             }
         }
     }

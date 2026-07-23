@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import jakarta.persistence.CacheRetrieveMode;
+import jakarta.persistence.CacheStoreMode;
 import jakarta.persistence.FlushModeType;
 import jakarta.persistence.LockModeType;
 import jakarta.persistence.Parameter;
@@ -36,6 +38,13 @@ public class QueryDelegate implements Query {
 
     public Object getSingleResult() {
         Object o = query.getSingleResult();
+        this.entityManagerDelegate.clearIfNoTransaction();
+        return o;
+    }
+
+    @Override
+    public Object getSingleResultOrNull() {
+        Object o = query.getSingleResultOrNull();
         this.entityManagerDelegate.clearIfNoTransaction();
         return o;
     }
@@ -156,6 +165,36 @@ public class QueryDelegate implements Query {
 
     public LockModeType getLockMode() {
         return query.getLockMode();
+    }
+
+    @Override
+    public Query setCacheRetrieveMode(final CacheRetrieveMode cacheRetrieveMode) {
+        return query.setCacheRetrieveMode(cacheRetrieveMode);
+    }
+
+    @Override
+    public Query setCacheStoreMode(final CacheStoreMode cacheStoreMode) {
+        return query.setCacheStoreMode(cacheStoreMode);
+    }
+
+    @Override
+    public CacheRetrieveMode getCacheRetrieveMode() {
+        return query.getCacheRetrieveMode();
+    }
+
+    @Override
+    public CacheStoreMode getCacheStoreMode() {
+        return query.getCacheStoreMode();
+    }
+
+    @Override
+    public Query setTimeout(final Integer timeout) {
+        return query.setTimeout(timeout);
+    }
+
+    @Override
+    public Integer getTimeout() {
+        return query.getTimeout();
     }
 
     public <T> T unwrap(final Class<T> cls) {

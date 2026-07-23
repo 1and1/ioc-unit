@@ -4,6 +4,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import jakarta.persistence.CacheRetrieveMode;
+import jakarta.persistence.CacheStoreMode;
 import jakarta.persistence.FlushModeType;
 import jakarta.persistence.Parameter;
 import jakarta.persistence.ParameterMode;
@@ -77,6 +79,21 @@ public class StoredProcedureQueryDelegate extends QueryDelegate implements Store
     }
 
     @Override
+    public StoredProcedureQuery setCacheRetrieveMode(final CacheRetrieveMode cacheRetrieveMode) {
+        return storedProcedureQuery.setCacheRetrieveMode(cacheRetrieveMode);
+    }
+
+    @Override
+    public StoredProcedureQuery setCacheStoreMode(final CacheStoreMode cacheStoreMode) {
+        return storedProcedureQuery.setCacheStoreMode(cacheStoreMode);
+    }
+
+    @Override
+    public StoredProcedureQuery setTimeout(final Integer timeout) {
+        return storedProcedureQuery.setTimeout(timeout);
+    }
+
+    @Override
     public StoredProcedureQuery registerStoredProcedureParameter(final int position, final Class type, final ParameterMode mode) {
         return storedProcedureQuery.registerStoredProcedureParameter(position, type, mode);
     }
@@ -120,6 +137,13 @@ public class StoredProcedureQueryDelegate extends QueryDelegate implements Store
     @Override
     public Object getSingleResult() {
         Object res = storedProcedureQuery.getSingleResult();
+        this.getEntityManagerDelegate().clearIfNoTransaction();
+        return res;
+    }
+
+    @Override
+    public Object getSingleResultOrNull() {
+        Object res = storedProcedureQuery.getSingleResultOrNull();
         this.getEntityManagerDelegate().clearIfNoTransaction();
         return res;
     }

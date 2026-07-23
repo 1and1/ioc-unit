@@ -130,6 +130,16 @@ public class TestPersistenceFactory extends XmlAwarePersistenceFactory {
             }
 
             @Override
+            public String getScopeAnnotationName() {
+                return null;
+            }
+
+            @Override
+            public List<String> getQualifierAnnotationNames() {
+                return Collections.emptyList();
+            }
+
+            @Override
             public PersistenceUnitTransactionType getTransactionType() {
                 return PersistenceUnitTransactionType.RESOURCE_LOCAL;
             }
@@ -305,6 +315,16 @@ public class TestPersistenceFactory extends XmlAwarePersistenceFactory {
                 @Override
                 public String getPersistenceProviderClassName() {
                     throw new RuntimeException("not implemented");
+                }
+
+                @Override
+                public String getScopeAnnotationName() {
+                    return null;
+                }
+
+                @Override
+                public List<String> getQualifierAnnotationNames() {
+                    return Collections.emptyList();
                 }
 
                 @Override

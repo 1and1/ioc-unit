@@ -4,19 +4,28 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
+import jakarta.persistence.CacheRetrieveMode;
+import jakarta.persistence.CacheStoreMode;
+import jakarta.persistence.ConnectionConsumer;
+import jakarta.persistence.ConnectionFunction;
 import jakarta.persistence.EntityGraph;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.FindOption;
 import jakarta.persistence.FlushModeType;
 import jakarta.persistence.LockModeType;
+import jakarta.persistence.LockOption;
 import jakarta.persistence.Query;
+import jakarta.persistence.RefreshOption;
 import jakarta.persistence.StoredProcedureQuery;
 import jakarta.persistence.TransactionRequiredException;
 import jakarta.persistence.TypedQuery;
+import jakarta.persistence.TypedQueryReference;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaDelete;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.CriteriaSelect;
 import jakarta.persistence.criteria.CriteriaUpdate;
 import jakarta.persistence.metamodel.Metamodel;
 import jakarta.transaction.Status;
@@ -133,9 +142,27 @@ public class EntityManagerDelegate implements EntityManager, Serializable {
     }
 
     @Override
+    public <T> T find(final Class<T> entityClass, final Object primaryKey, final FindOption... options) {
+        clearIfNoTransaction();
+        return getEntityManager().find(entityClass, primaryKey, options);
+    }
+
+    @Override
+    public <T> T find(final EntityGraph<T> entityGraph, final Object primaryKey, final FindOption... options) {
+        clearIfNoTransaction();
+        return getEntityManager().find(entityGraph, primaryKey, options);
+    }
+
+    @Override
     public <T> T getReference(final Class<T> entityClass, final Object primaryKey) {
         clearIfNoTransaction();
         return getEntityManager().getReference(entityClass, primaryKey);
+    }
+
+    @Override
+    public <T> T getReference(final T entity) {
+        clearIfNoTransaction();
+        return getEntityManager().getReference(entity);
     }
 
     @Override
@@ -166,6 +193,12 @@ public class EntityManagerDelegate implements EntityManager, Serializable {
     }
 
     @Override
+    public void lock(final Object entity, final LockModeType lockMode, final LockOption... lockOptions) {
+        needTransaction();
+        getEntityManager().lock(entity, lockMode, lockOptions);
+    }
+
+    @Override
     public void refresh(final Object entity) {
         needTransaction();
         getEntityManager().refresh(entity);
@@ -190,6 +223,12 @@ public class EntityManagerDelegate implements EntityManager, Serializable {
     }
 
     @Override
+    public void refresh(final Object entity, final RefreshOption... refreshOptions) {
+        needTransaction();
+        getEntityManager().refresh(entity, refreshOptions);
+    }
+
+    @Override
     public void clear() {
         getEntityManager().clear();
     }
@@ -208,6 +247,26 @@ public class EntityManagerDelegate implements EntityManager, Serializable {
     public LockModeType getLockMode(final Object entity) {
         needTransaction();
         return getEntityManager().getLockMode(entity);
+    }
+
+    @Override
+    public void setCacheRetrieveMode(final CacheRetrieveMode cacheRetrieveMode) {
+        getEntityManager().setCacheRetrieveMode(cacheRetrieveMode);
+    }
+
+    @Override
+    public void setCacheStoreMode(final CacheStoreMode cacheStoreMode) {
+        getEntityManager().setCacheStoreMode(cacheStoreMode);
+    }
+
+    @Override
+    public CacheRetrieveMode getCacheRetrieveMode() {
+        return getEntityManager().getCacheRetrieveMode();
+    }
+
+    @Override
+    public CacheStoreMode getCacheStoreMode() {
+        return getEntityManager().getCacheStoreMode();
     }
 
     @Override
@@ -230,6 +289,18 @@ public class EntityManagerDelegate implements EntityManager, Serializable {
     public <T> TypedQuery<T> createQuery(final CriteriaQuery<T> criteriaQuery) {
         clearIfNoTransaction();
         return new TypedQueryDelegate(getEntityManager().createQuery(criteriaQuery), this);
+    }
+
+    @Override
+    public <T> TypedQuery<T> createQuery(final CriteriaSelect<T> criteriaSelect) {
+        clearIfNoTransaction();
+        return new TypedQueryDelegate(getEntityManager().createQuery(criteriaSelect), this);
+    }
+
+    @Override
+    public <T> TypedQuery<T> createQuery(final TypedQueryReference<T> typedQueryReference) {
+        clearIfNoTransaction();
+        return new TypedQueryDelegate(getEntityManager().createQuery(typedQueryReference), this);
     }
 
     @Override
@@ -377,5 +448,15 @@ public class EntityManagerDelegate implements EntityManager, Serializable {
     public <T> List<EntityGraph<? super T>> getEntityGraphs(final Class<T> entityClass) {
         clearIfNoTransaction();
         return getEntityManager().getEntityGraphs(entityClass);
+    }
+
+    @Override
+    public <C> void runWithConnection(final ConnectionConsumer<C> action) {
+        getEntityManager().runWithConnection(action);
+    }
+
+    @Override
+    public <C, T> T callWithConnection(final ConnectionFunction<C, T> function) {
+        return getEntityManager().callWithConnection(function);
     }
 }

@@ -120,6 +120,16 @@ public class XmlLessPersistenceFactory extends XmlLessPersistenceFactoryBase {
             }
 
             @Override
+            public String getScopeAnnotationName() {
+                return null;
+            }
+
+            @Override
+            public List<String> getQualifierAnnotationNames() {
+                return Collections.emptyList();
+            }
+
+            @Override
             public PersistenceUnitTransactionType getTransactionType() {
                 return PersistenceUnitTransactionType.RESOURCE_LOCAL;
             }
@@ -281,6 +291,16 @@ public class XmlLessPersistenceFactory extends XmlLessPersistenceFactoryBase {
                 @Override
                 public String getPersistenceProviderClassName() {
                     throw new RuntimeException("not implemented");
+                }
+
+                @Override
+                public String getScopeAnnotationName() {
+                    return null;
+                }
+
+                @Override
+                public List<String> getQualifierAnnotationNames() {
+                    return Collections.emptyList();
                 }
 
                 @Override

@@ -107,4 +107,25 @@ public class SimulatedEntityTransaction implements EntityTransaction {
             throw new RuntimeException(e);
         }
     }
+
+    /**
+     * Set the transaction timeout.
+     *
+     * @param timeout the timeout in seconds, or null to use the default
+     */
+    @Override
+    public void setTimeout(final Integer timeout) {
+        // Simulated transactions do not support a configurable timeout.
+    }
+
+    /**
+     * Get the transaction timeout.
+     *
+     * @return the timeout in seconds, or null if the default is used
+     */
+    @Override
+    public Integer getTimeout() {
+        // Simulated transactions do not support a configurable timeout.
+        return null;
+    }
 }

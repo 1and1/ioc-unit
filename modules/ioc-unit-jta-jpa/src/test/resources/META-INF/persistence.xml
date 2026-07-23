@@ -5,6 +5,7 @@
     <persistence-unit name="test" transaction-type="JTA">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <class>com.oneandone.iocunit.jtajpa.helpers.TestEntityH2</class>
+        <class>com.oneandone.iocunit.jtajpa.helpers.TestEntity</class>
         <properties>
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
@@ -22,6 +23,8 @@
     </persistence-unit>
     <persistence-unit name="q1" transaction-type="JTA">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <class>com.oneandone.iocunit.jtajpa.helpers.TestEntity</class>
+        <class>com.oneandone.iocunit.jtajpa.helpers.TestEntityH2</class>
         <properties>
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
@@ -36,6 +39,8 @@
     </persistence-unit>
     <persistence-unit name="q2" transaction-type="JTA">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <class>com.oneandone.iocunit.jtajpa.helpers.TestEntity</class>
+        <class>com.oneandone.iocunit.jtajpa.helpers.TestEntityH2</class>
         <properties>
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.hbm2ddl.auto" value="validate"/>

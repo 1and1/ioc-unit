@@ -31,7 +31,7 @@
     <properties>
         <!-- WildFly platform alignment: Jakarta specs, Hibernate, RESTEasy, Narayana etc.
              are managed by the imported WildFly BOMs below and must not be re-pinned here. -->
-        <wildfly.version>39.0.1.Final</wildfly.version>
+        <wildfly.version>41.0.0.Final</wildfly.version>
         <!--maven.javadoc.skip>true</maven.javadoc.skip-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 

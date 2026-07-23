@@ -10,7 +10,7 @@ import com.oneandone.iocunit.jtajpa.beans.NotSuppBean;
 import com.oneandone.iocunit.jtajpa.beans.ReqNewBean;
 import com.oneandone.iocunit.jtajpa.beans.RequiredBean;
 import com.oneandone.iocunit.jtajpa.beans.SupportsBean;
-import com.oneandone.iocunit.jtajpa.helpers.TestEntity;
+import com.oneandone.iocunit.jtajpa.helpers.TestEntityH2;
 
 /**
  * @author aschoerk
@@ -71,7 +71,7 @@ public class TestBeanBase {
     }
 
     protected void writing() {
-        TestEntity testEntity = new TestEntity();
+        TestEntityH2 testEntity = new TestEntityH2();
         entityManager.persist(testEntity);
         entityManager.createNativeQuery("Select 1");
     }

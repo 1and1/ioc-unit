@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Stream;
 
+import jakarta.persistence.CacheRetrieveMode;
+import jakarta.persistence.CacheStoreMode;
 import jakarta.persistence.FlushModeType;
 import jakarta.persistence.LockModeType;
 import jakarta.persistence.Parameter;
@@ -39,6 +41,13 @@ public class TypedQueryDelegate<X> extends QueryDelegate implements TypedQuery<X
     @Override
     public X getSingleResult() {
         X res = (X) typedQuery.getSingleResult();
+        this.getEntityManagerDelegate().clearIfNoTransaction();
+        return res;
+    }
+
+    @Override
+    public X getSingleResultOrNull() {
+        X res = (X) typedQuery.getSingleResultOrNull();
         this.getEntityManagerDelegate().clearIfNoTransaction();
         return res;
     }
@@ -111,5 +120,20 @@ public class TypedQueryDelegate<X> extends QueryDelegate implements TypedQuery<X
     @Override
     public TypedQuery setLockMode(final LockModeType lockMode) {
         return typedQuery.setLockMode(lockMode);
+    }
+
+    @Override
+    public TypedQuery<X> setCacheRetrieveMode(final CacheRetrieveMode cacheRetrieveMode) {
+        return typedQuery.setCacheRetrieveMode(cacheRetrieveMode);
+    }
+
+    @Override
+    public TypedQuery<X> setCacheStoreMode(final CacheStoreMode cacheStoreMode) {
+        return typedQuery.setCacheStoreMode(cacheStoreMode);
+    }
+
+    @Override
+    public TypedQuery<X> setTimeout(final Integer timeout) {
+        return typedQuery.setTimeout(timeout);
     }
 }

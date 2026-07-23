@@ -159,7 +159,7 @@ public class ConnectionDelegate implements Connection {
         }
         if(jdbcConnectionAccess != null) {
             try {
-                Method method = jdbcConnectionAccess.getClass().getMethod("releaseConnection", Connection.class);
+                Method method = JdbcConnectionAccess.class.getMethod("releaseConnection", Connection.class);
                 method.invoke(jdbcConnectionAccess, connection);
             } catch (Exception e) {
                 throw new RuntimeException(e);

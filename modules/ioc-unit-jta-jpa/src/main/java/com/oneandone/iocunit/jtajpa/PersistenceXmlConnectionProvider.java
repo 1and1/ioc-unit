@@ -2,17 +2,17 @@ package com.oneandone.iocunit.jtajpa;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.hibernate.jpa.boot.internal.ParsedPersistenceXmlDescriptor;
-import org.hibernate.jpa.boot.internal.PersistenceXmlParser;
+import org.hibernate.jpa.boot.spi.PersistenceUnitDescriptor;
+import org.hibernate.jpa.boot.spi.PersistenceXmlParser;
 
 import com.arjuna.ats.jdbc.TransactionalDriver;
 import com.oneandone.iocunit.jtajpa.internal.ConnectionProviderBase;
@@ -36,12 +36,13 @@ public class PersistenceXmlConnectionProvider extends ConnectionProviderBase {
             throw new RuntimeException("Expected JtaEntityManagerFactoryBase to be defined with persistence-unit-name and entitymanager-Producer.");
         }
         Map<String, String> tmp = new HashMap<>();
-        List<ParsedPersistenceXmlDescriptor> units = PersistenceXmlParser.locatePersistenceUnits(tmp);
-        Optional<ParsedPersistenceXmlDescriptor> pu = units.stream().filter(u -> u.getName().equals(puName)).findFirst();
-        if(!pu.isPresent()) {
+        PersistenceXmlParser parser = PersistenceXmlParser.create(tmp);
+        List<URL> persistenceXmlUrls = parser.getClassLoaderService().locateResources("META-INF/persistence.xml");
+        Map<String, PersistenceUnitDescriptor> units = parser.parse(persistenceXmlUrls);
+        PersistenceUnitDescriptor descriptor = units.get(puName);
+        if(descriptor == null) {
             throw new RuntimeException("Persistenceunit: " + puName + " not found");
         }
-        ParsedPersistenceXmlDescriptor descriptor = pu.get();
         Properties props = descriptor.getProperties();
         try {
             url = (String) props.get("jakarta.persistence.jdbc.url");
