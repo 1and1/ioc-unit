@@ -2,7 +2,6 @@ package com.oneandone.iocunit.ejb.persistence;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.management.ManagementFactory;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -16,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 import jakarta.enterprise.context.ApplicationScoped;
@@ -374,8 +373,6 @@ public class TestPersistenceFactory extends XmlAwarePersistenceFactory {
         }
     }
 
-    AtomicInteger count = new AtomicInteger(0);
-
     private void initEclipseLinkProperties(final HashMap<String, Object> properties) {
         properties.put("jakarta.persistence.jdbc.driver","org.h2.Driver");
         String db = getDbNameOrMem();
@@ -404,11 +401,14 @@ public class TestPersistenceFactory extends XmlAwarePersistenceFactory {
     }
 
     private String getDbNameOrMem() {
+        // Same fix as XmlLessPersistenceFactory.getDbNameOrMem(): a UUID guarantees a unique
+        // on-disk H2 file per factory instance, instead of relying on process-name + a counter
+        // that resets to 1 for every freshly constructed factory (which is not unique across
+        // test classes sharing the same forked JVM and the same getFilenamePrefix()).
         return getFilenamePrefix() == null ? "mem:test" : "file:" + System.getProperty("java.io.tmpdir")
                                                           + File.separatorChar
                                                           + getFilenamePrefix()
-                                                          + ManagementFactory.getRuntimeMXBean().getName()
-                                                          + count.incrementAndGet();
+                                                          + UUID.randomUUID();
     }
 
     protected String getFilenamePrefix() {

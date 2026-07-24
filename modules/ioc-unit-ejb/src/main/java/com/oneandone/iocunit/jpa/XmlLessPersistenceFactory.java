@@ -2,7 +2,6 @@ package com.oneandone.iocunit.jpa;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.management.ManagementFactory;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 import jakarta.enterprise.context.ApplicationScoped;
@@ -341,8 +340,6 @@ public class XmlLessPersistenceFactory extends XmlLessPersistenceFactoryBase {
         }
     }
 
-    AtomicInteger count = new AtomicInteger(0);
-
     private void initEclipseLinkProperties(final HashMap<String, Object> properties) {
         properties.put("jakarta.persistence.jdbc.driver","org.h2.Driver");
         String db = getDbNameOrMem();
@@ -374,11 +371,16 @@ public class XmlLessPersistenceFactory extends XmlLessPersistenceFactoryBase {
     }
 
     private String getDbNameOrMem() {
+        // Use a random UUID instead of process-name/counter based naming: the latter is not
+        // actually unique (the process name is constant for the whole JVM fork, and the counter
+        // always starts at 0 for a freshly constructed factory instance), so two different
+        // PersistenceFactory subclasses using the same getFilenamePrefix() could end up pointing
+        // at the very same on-disk H2 file when run within the same Surefire fork, silently
+        // sharing (and polluting) each other's tables depending on test execution order.
         return getFilenamePrefix() == null ? "mem:test" : "file:" + System.getProperty("java.io.tmpdir")
                                                           + File.separatorChar
                                                           + getFilenamePrefix()
-                                                          + ManagementFactory.getRuntimeMXBean().getName()
-                                                          + count.incrementAndGet();
+                                                          + UUID.randomUUID();
     }
 
     protected String getFilenamePrefix() {
