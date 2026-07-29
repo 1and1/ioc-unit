@@ -69,7 +69,7 @@
 
         <deployment.port>10099</deployment.port>
         <deployment.targetdir>${basedir}/target/</deployment.targetdir>
-        <mysql.connector.version>8.0.33</mysql.connector.version>
+        <mysql-connector-j.version>9.3.0</mysql-connector-j.version>
         <h2.version>2.4.240</h2.version>
         <hamcrest.version>2.1</hamcrest.version>
 
