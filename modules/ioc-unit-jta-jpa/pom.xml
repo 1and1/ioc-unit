@@ -93,6 +93,44 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
+            <!-- Hibernate needs a JAXB runtime to parse persistence.xml. WildFly consumers
+                 get hibernate-core as a provided-scope module with transitive dependencies
+                 stripped by the BOM, so the JAXB runtime is not pulled in automatically.
+                 Declare it explicitly so ioc-unit-jta-jpa's standalone test classpath is
+                 complete. -->
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <!-- jaxb-core/jaxb-runtime need istack-commons-runtime at runtime. The WildFly
+                 BOM strips it from transitive dependencies, so declare it explicitly. -->
+            <groupId>com.sun.istack</groupId>
+            <artifactId>istack-commons-runtime</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <!-- Hibernate 6.6+ split its internal model introspection into hibernate-models.
+                 WildFly provides it as a module but the BOM strips it from hibernate-core's
+                 transitive dependencies, so declare it explicitly for standalone tests. -->
+            <groupId>org.hibernate.models</groupId>
+            <artifactId>hibernate-models</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <!-- Jandex-backed variant of hibernate-models, also stripped by the BOM. -->
+            <groupId>org.hibernate.models</groupId>
+            <artifactId>hibernate-models-jandex</artifactId>
+            <version>1.1.1</version>
+            <scope>compile</scope>
+        </dependency>
+        <!-- antlr4-runtime variant also stripped by the BOM. -->
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr4-runtime</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <scope>test</scope>
@@ -118,7 +156,7 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.7.3</version>
+            <version>42.7.11</version>
             <scope>test</scope>
         </dependency>
         <dependency>
