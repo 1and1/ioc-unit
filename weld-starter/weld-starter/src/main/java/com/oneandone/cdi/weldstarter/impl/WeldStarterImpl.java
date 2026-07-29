@@ -2,6 +2,7 @@ package com.oneandone.cdi.weldstarter.impl;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.net.MalformedURLException;
@@ -72,23 +73,17 @@ public class WeldStarterImpl implements WeldStarter {
                     }
                 });
         weldSetup.getServices().add(serviceConfig);
-        this.version = Formats.version(WeldBootstrap.class.getPackage());
+        this.version = resolveWeldVersion();
         System.setProperty("org.jboss.weld.bootstrap.concurrentDeployment", "false");
 
         Weld weld = new Weld("WeldStarter" + weldSetup.getNewInstanceNumber()) {
 
             protected Deployment createDeployment(final ResourceLoader resourceLoader, final CDI11Bootstrap bootstrap) {
-
                 final ServiceRegistry services = new SimpleServiceRegistry();
                 weldSetup.registerServices(services);
-
                 final BeanDeploymentArchive oneDeploymentArchive = createOneDeploymentArchive(weldSetup, services);
-
                 oneDeploymentArchive.getServices().add(ResourceLoader.class, resourceLoader);
-
-                Deployment res = new Post1Deployment(services, oneDeploymentArchive, weldSetup.getExtensions());
-
-                return res;
+                return new Post1Deployment(services, oneDeploymentArchive, weldSetup.getExtensions());
             }
 
             @Override
@@ -96,6 +91,7 @@ public class WeldStarterImpl implements WeldStarter {
                 return true;
             }
         };
+
         try {
             weld.disableDiscovery();
             container = weld.initialize();
@@ -178,14 +174,14 @@ public class WeldStarterImpl implements WeldStarter {
 
     @Override
     public <T> T get(final Class<T> clazz, Annotation... qualifiers) {
-        return container.instance().select(clazz, qualifiers).get();
+        return container.select().select(clazz, qualifiers).get();
     }
     public WeldContainer getContainer() {
         return container;
     }
 
     public Instance<Object> getContainerInstance() {
-        return getContainer().instance();
+        return getContainer().select();
     }
 
 
@@ -228,7 +224,28 @@ public class WeldStarterImpl implements WeldStarter {
 
     @Override
     public String getVersion() {
-        return Formats.version(WeldBootstrap.class.getPackage());
+        return resolveWeldVersion();
+    }
+
+    /**
+     * Resolves the Weld runtime version in a way that is compatible with both Weld 5.x
+     * ({@code Formats.version(Package)}) and Weld 6.x ({@code Formats.version()}).
+     * The {@code Package}-taking overload was deprecated in Weld 5 and removed in Weld 6.
+     */
+    private static String resolveWeldVersion() {
+        try {
+            Method noArgVersion = Formats.class.getMethod("version");
+            return (String) noArgVersion.invoke(null);
+        } catch (NoSuchMethodException e) {
+            try {
+                Method packageVersion = Formats.class.getMethod("version", Package.class);
+                return (String) packageVersion.invoke(null, WeldBootstrap.class.getPackage());
+            } catch (Exception ex) {
+                throw new RuntimeException("Unable to resolve Weld version", ex);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Unable to resolve Weld version", e);
+        }
     }
 
     @Override
@@ -244,12 +261,8 @@ public class WeldStarterImpl implements WeldStarter {
     @Override
     public Extension createExtension(String className) {
         try {
-            return (Extension) (Class.forName(className).newInstance());
-        } catch (InstantiationException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
+            return (Extension) (Class.forName(className).getDeclaredConstructor().newInstance());
+        } catch (InstantiationException | ClassNotFoundException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
     }

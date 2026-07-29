@@ -33,16 +33,16 @@
                 <scope>test</scope>
             </dependency>
             <!-- Now that this pom inherits ioc-unit-parent's dependencyManagement (which imports
-                 the WildFly BOMs), jakarta.enterprise.cdi-api:4.0.1 transitively pulls
-                 jakarta.el-api:5.0.0 - which conflicts with weld-starter's own explicit
-                 jakarta.el-api:5.0.1 pin (needed for weld-web's WeldWebModule, see
+                 the WildFly BOMs), jakarta.enterprise.cdi-api:4.1.0 transitively pulls
+                 jakarta.el-api:6.0.1 - which conflicts with weld-starter's own explicit
+                 jakarta.el-api pin (needed for weld-web's WeldWebModule, see
                  weld-starter/pom.xml) and fails the inherited dependencyConvergence enforcer
                  rule. Pin jakarta.el-api here so the whole weld-starter subtree converges on one
                  version instead of each module resolving it independently. -->
             <dependency>
                 <groupId>jakarta.el</groupId>
                 <artifactId>jakarta.el-api</artifactId>
-                <version>5.0.1</version>
+                <version>6.0.1</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

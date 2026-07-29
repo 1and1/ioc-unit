@@ -18,20 +18,12 @@
 
     <properties>
         <!-- These two are genuinely separate Weld release trains (confirmed by inspecting
-             WildFly 39.0.1.Final's own modules/system/layers/base/org/jboss/weld/ tree):
-             weld-spi/weld-api lag behind at 5.0.SP3 while weld-core-impl/weld-web/weld-jta
-             are at 5.1.6.Final. Re-verify both against the target WildFly release's own
+             WildFly 41.0.0.Final's own modules/system/layers/base/org/jboss/weld/ tree):
+             weld-spi/weld-api are at 6.0.Final while weld-core-impl/weld-web/weld-jta
+             are at 6.0.4.Final. Re-verify both against the target WildFly release's own
              bundled Weld jars whenever the WildFly version this project targets changes. -->
-        <weld-spi-api.version>5.0.SP3</weld-spi-api.version>
-        <!-- NOTE: WildFly 39.0.1.Final actually bundles weld-core-impl/weld-web/weld-jta at
-             5.1.6.Final (confirmed by inspecting its modules/ tree), but bumping to that
-             version here breaks 5 ioc-unit-analyzer tests under excludedclasses/ with
-             WELD-001408 (producer field on an abstract superclass no longer resolves once
-             its owning subclass is excluded) - a real CDI/Weld behavior change between
-             5.1.0.Final and 5.1.6.Final, not a simple patch-compatible bump. Deliberately
-             left at 5.1.0.Final until that regression is root-caused/fixed; see
-             .idea/codeReview for the investigation notes. -->
-        <weld-engine.version>5.1.0.Final</weld-engine.version>
+        <weld-spi-api.version>6.0.Final</weld-spi-api.version>
+        <weld-engine.version>6.0.4.Final</weld-engine.version>
     </properties>
 
     <licenses>
@@ -93,6 +85,16 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
+            <!-- Weld API 6+ depends on jakarta.enterprise.cdi-el-api, but WildFly's BOM manages
+                 weld-api with an exclusion of all transitive dependencies. Declare this
+                 explicitly so weld-starter consumers get it on the test classpath even when
+                 the consuming project imports the WildFly BOM. -->
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.cdi-el-api</artifactId>
+            <version>4.1.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>org.jboss.weld.se</groupId>
             <artifactId>weld-se-core</artifactId>
             <version>${weld-engine.version}</version>
@@ -121,17 +123,17 @@
         <dependency>
             <groupId>jakarta.el</groupId>
             <artifactId>jakarta.el-api</artifactId>
-            <version>5.0.1</version>
+            <version>6.0.1</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.glassfish</groupId>
             <artifactId>jakarta.el</artifactId>
-            <version>4.0.2</version>
+            <version>5.0.0-M1</version>
             <scope>compile</scope>
             <exclusions>
-                <!-- Avoid a dependency-convergence conflict with our own jakarta.el-api:5.0.1
-                     pin above; this artifact's own transitive is an older 4.0.0. -->
+                <!-- Avoid a dependency-convergence conflict with our own jakarta.el-api:6.0.1
+                     pin above; this artifact's own transitive is an older version. -->
                 <exclusion>
                     <groupId>jakarta.el</groupId>
                     <artifactId>jakarta.el-api</artifactId>

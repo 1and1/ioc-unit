@@ -85,11 +85,11 @@
 
         <!-- Weld is not part of the WildFly BOM (container-internal); keep pinned.
              weld-spi and weld-api are always bundled by WildFly at the same version as each
-             other (confirmed for WildFly 39.0.1.Final: both weld-spi-5.0.SP3.jar and
-             weld-api-5.0.SP3.jar), so one property drives both "provided"-scope
+             other (confirmed for WildFly 41.0.0.Final: both weld-spi-6.0.Final.jar and
+             weld-api-6.0.Final.jar), so one property drives both "provided"-scope
              dependencyManagement entries below (used by ioc-unit/ioc-unit-contexts/
              ioc-unit-resteasy for real-container use). -->
-        <weld-spi-api.version>5.0.SP3</weld-spi-api.version>
+        <weld-spi-api.version>6.0.Final</weld-spi-api.version>
         <!-- jakarta.el:jakarta.el-api is NOT managed under this GA by the WildFly BOM
              (WildFly manages org.jboss.spec.jakarta.el:jboss-el-api_5.0_spec instead),
              so it stays explicitly pinned where used. -->

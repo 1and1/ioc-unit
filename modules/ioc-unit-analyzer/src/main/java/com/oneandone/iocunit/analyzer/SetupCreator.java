@@ -45,14 +45,14 @@ public class SetupCreator {
                     weldSetup.addExtensionObject(producerConfig);
                 }
                 else {
-                    weldSetup.addExtensionObject(extensionClass.newInstance());
+                    weldSetup.addExtensionObject(extensionClass.getDeclaredConstructor().newInstance());
                 }
             }
             for (Extension e : configuration.getElseClasses().extensionObjects) {
                 Class<? extends Extension> extensionClass = e.getClass();
                 final Constructor<?>[] declaredConstructors = extensionClass.getDeclaredConstructors();
                 if(declaredConstructors.length == 1 && declaredConstructors[0].getParameters().length == 0) {
-                    weldSetup.addExtensionObject(extensionClass.newInstance());
+                    weldSetup.addExtensionObject(extensionClass.getDeclaredConstructor().newInstance());
                 }
                 else {
                     weldSetup.addExtensionObject(e);
@@ -84,13 +84,14 @@ public class SetupCreator {
                     .filter(c -> c.getAnnotation(Priority.class) == null)
                     .collect(Collectors.toList());
         } catch (NoClassDefFoundError e) {
-            ;
+            // empty catch block
         }
         weldSetup.setEnabledInterceptors(interceptorsToEnable);
         handleWeldExtensions(method, weldSetup);
         for (Extension e : findExtensions()) {
             weldSetup.addExtensionObject(e);
         }
+        weldSetup.addExtensionObject(new AbstractSuperclassProducerExtension(configuration.getObligatory()));
         return weldSetup;
     }
 }
