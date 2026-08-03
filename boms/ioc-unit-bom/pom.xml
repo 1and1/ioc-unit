@@ -9,7 +9,7 @@
          testcontainers-bom and org.junit:junit-bom are published (no parent). -->
     <groupId>net.oneandone.ioc-unit</groupId>
     <artifactId>ioc-unit-bom</artifactId>
-    <version>6.0.0-SNAPSHOT</version>
+    <version>6.0.0</version>
     <packaging>pom</packaging>
 
     <name>net.oneandone.ioc-unit:ioc-unit-bom</name>
@@ -46,7 +46,7 @@
         <url>https://github.com/1and1/ioc-unit</url>
         <connection>scm:git:ssh://git@github.com/1and1/ioc-unit.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/1and1/ioc-unit.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>v6.0.0</tag>
     </scm>
 
     <issueManagement>
